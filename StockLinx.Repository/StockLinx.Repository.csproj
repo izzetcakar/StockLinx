@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -11,8 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Repositories\EF Core\" />
     <Folder Include="UnitOfWork\" />
-    <Folder Include="Repositories\" />
   </ItemGroup>
 
 	<ItemGroup>

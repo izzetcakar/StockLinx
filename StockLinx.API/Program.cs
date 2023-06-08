@@ -10,6 +10,13 @@ using Swashbuckle.AspNetCore.Filters;
 using System.Text.Json.Serialization;
 using System.Text;
 using System.Reflection;
+using StockLinx.Core.UnitOfWork;
+using StockLinx.Core.Repositories;
+using StockLinx.Repository.Repositories.EF_Core;
+using StockLinx.Core.Services;
+using StockLinx.Service.Services;
+using StockLinx.Repository.UnitOfWork;
+using StockLinx.Service.Mapping;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,7 +44,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped(typeof(IService<>), typeof(Service<>));
 builder.Services.AddAutoMapper(typeof(MapProfile));
 builder.Services.AddHttpContextAccessor();
