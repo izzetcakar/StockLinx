@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -8,11 +8,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\StockLinx.Core\StockLinx.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Repositories\EF Core\" />
-    <Folder Include="UnitOfWork\" />
   </ItemGroup>
 
 	<ItemGroup>
