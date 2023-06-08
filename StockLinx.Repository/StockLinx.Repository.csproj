@@ -6,4 +6,13 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\StockLinx.Core\StockLinx.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="UnitOfWork\" />
+    <Folder Include="Repositories\" />
+  </ItemGroup>
+
 </Project>

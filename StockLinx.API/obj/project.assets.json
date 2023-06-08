@@ -88,6 +88,42 @@
         "frameworkReferences": [
           "Microsoft.AspNetCore.App"
         ]
+      },
+      "StockLinx.Core/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "compile": {
+          "bin/placeholder/StockLinx.Core.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/StockLinx.Core.dll": {}
+        }
+      },
+      "StockLinx.Repository/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "dependencies": {
+          "StockLinx.Core": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/StockLinx.Repository.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/StockLinx.Repository.dll": {}
+        }
+      },
+      "StockLinx.Service/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "dependencies": {
+          "StockLinx.Repository": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/StockLinx.Service.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/StockLinx.Service.dll": {}
+        }
       }
     }
   },
@@ -216,10 +252,26 @@
         "swashbuckle.aspnetcore.swaggerui.6.2.3.nupkg.sha512",
         "swashbuckle.aspnetcore.swaggerui.nuspec"
       ]
+    },
+    "StockLinx.Core/1.0.0": {
+      "type": "project",
+      "path": "../StockLinx.Core/StockLinx.Core.csproj",
+      "msbuildProject": "../StockLinx.Core/StockLinx.Core.csproj"
+    },
+    "StockLinx.Repository/1.0.0": {
+      "type": "project",
+      "path": "../StockLinx.Repository/StockLinx.Repository.csproj",
+      "msbuildProject": "../StockLinx.Repository/StockLinx.Repository.csproj"
+    },
+    "StockLinx.Service/1.0.0": {
+      "type": "project",
+      "path": "../StockLinx.Service/StockLinx.Service.csproj",
+      "msbuildProject": "../StockLinx.Service/StockLinx.Service.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net6.0": [
+      "StockLinx.Service >= 1.0.0",
       "Swashbuckle.AspNetCore >= 6.2.3"
     ]
   },
@@ -256,7 +308,11 @@
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\LENOVO\\Documents\\GitHub\\StockLinx\\StockLinx.Service\\StockLinx.Service.csproj": {
+              "projectPath": "C:\\Users\\LENOVO\\Documents\\GitHub\\StockLinx\\StockLinx.Service\\StockLinx.Service.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
