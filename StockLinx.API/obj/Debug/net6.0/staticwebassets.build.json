@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "iFYJ5FLWI0D4hg5Z7QdI1YO8vABOKmVtATfrKvgfGy4=",
+  "Source": "StockLinx.API",
+  "BasePath": "_content/StockLinx.API",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

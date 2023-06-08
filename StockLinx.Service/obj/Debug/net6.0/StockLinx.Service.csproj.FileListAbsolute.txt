@@ -1,0 +1,17 @@
+C:\Users\LENOVO\Documents\GitHub\StockLinx\StockLinx.Service\bin\Debug\net6.0\StockLinx.Service.deps.json
+C:\Users\LENOVO\Documents\GitHub\StockLinx\StockLinx.Service\bin\Debug\net6.0\StockLinx.Service.dll
+C:\Users\LENOVO\Documents\GitHub\StockLinx\StockLinx.Service\bin\Debug\net6.0\StockLinx.Service.pdb
+C:\Users\LENOVO\Documents\GitHub\StockLinx\StockLinx.Service\bin\Debug\net6.0\StockLinx.Core.dll
+C:\Users\LENOVO\Documents\GitHub\StockLinx\StockLinx.Service\bin\Debug\net6.0\StockLinx.Repository.dll
+C:\Users\LENOVO\Documents\GitHub\StockLinx\StockLinx.Service\bin\Debug\net6.0\StockLinx.Repository.pdb
+C:\Users\LENOVO\Documents\GitHub\StockLinx\StockLinx.Service\bin\Debug\net6.0\StockLinx.Core.pdb
+C:\Users\LENOVO\Documents\GitHub\StockLinx\StockLinx.Service\obj\Debug\net6.0\StockLinx.Service.csproj.AssemblyReference.cache
+C:\Users\LENOVO\Documents\GitHub\StockLinx\StockLinx.Service\obj\Debug\net6.0\StockLinx.Service.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\LENOVO\Documents\GitHub\StockLinx\StockLinx.Service\obj\Debug\net6.0\StockLinx.Service.AssemblyInfoInputs.cache
+C:\Users\LENOVO\Documents\GitHub\StockLinx\StockLinx.Service\obj\Debug\net6.0\StockLinx.Service.AssemblyInfo.cs
+C:\Users\LENOVO\Documents\GitHub\StockLinx\StockLinx.Service\obj\Debug\net6.0\StockLinx.Service.csproj.CoreCompileInputs.cache
+C:\Users\LENOVO\Documents\GitHub\StockLinx\StockLinx.Service\obj\Debug\net6.0\StockLinx.Service.csproj.CopyComplete
+C:\Users\LENOVO\Documents\GitHub\StockLinx\StockLinx.Service\obj\Debug\net6.0\StockLinx.Service.dll
+C:\Users\LENOVO\Documents\GitHub\StockLinx\StockLinx.Service\obj\Debug\net6.0\refint\StockLinx.Service.dll
+C:\Users\LENOVO\Documents\GitHub\StockLinx\StockLinx.Service\obj\Debug\net6.0\StockLinx.Service.pdb
+C:\Users\LENOVO\Documents\GitHub\StockLinx\StockLinx.Service\obj\Debug\net6.0\ref\StockLinx.Service.dll
