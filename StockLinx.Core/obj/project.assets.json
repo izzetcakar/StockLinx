@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\LENOVO\\Documents\\GitHub\\StockLinx\\StockLinx\\StockLinx.csproj",
-      "projectName": "StockLinx",
-      "projectPath": "C:\\Users\\LENOVO\\Documents\\GitHub\\StockLinx\\StockLinx\\StockLinx.csproj",
+      "projectUniqueName": "C:\\Users\\LENOVO\\Documents\\GitHub\\StockLinx\\StockLinx.Core\\StockLinx.Core.csproj",
+      "projectName": "StockLinx.Core",
+      "projectPath": "C:\\Users\\LENOVO\\Documents\\GitHub\\StockLinx\\StockLinx.Core\\StockLinx.Core.csproj",
       "packagesPath": "C:\\Users\\LENOVO\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\LENOVO\\Documents\\GitHub\\StockLinx\\StockLinx\\obj\\",
+      "outputPath": "C:\\Users\\LENOVO\\Documents\\GitHub\\StockLinx\\StockLinx.Core\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
