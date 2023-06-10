@@ -1,6 +1,9 @@
-﻿namespace StockLinx.Core.Entities
+﻿using StockLinx.Core.Models;
+
+namespace StockLinx.Core.Entities
 {
-    public class Company
+    public class Company : BaseEntity
     {
+        public string Name { get; set; }
     }
 }
