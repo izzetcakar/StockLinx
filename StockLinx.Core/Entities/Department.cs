@@ -1,12 +1,19 @@
-﻿namespace StockLinx.Core.Entities
+﻿using StockLinx.Core.Models;
+
+namespace StockLinx.Core.Entities
 {
-    public class Department
+    public class Department : BaseEntity
     {
-        public Guid Id { get; set; }
-        public Guid CompanyId { get; set; }
-        public Guid ManagerId { get; set; }
-        public Guid LocationId { get; set; }
-        public Guid ImageId { get; set; }
-        public string Title { get; set; }
+        public string Name { get; set; }
+        public Guid? CompanyId { get; set; }
+        public Guid? LocationId { get; set; }
+        public Guid? ManagerId { get; set; }
+        public Guid? ImageId { get; set; }
+        public string? Notes { get; set; }
+        public IEnumerable<User>? Users { get; set; }
+        public Company? Company { get; set; }
+        public Location? Location { get; set; }
+        public User? Manager { get; set; }
+        public Image? Image { get; set; }
     }
 }

@@ -2,18 +2,12 @@
 
 namespace StockLinx.Core.Entities
 {
-    public class Consumable : BaseEntity
+    public class Consumable : BaseProduct
     {
-        public Guid CategoryId { get; set; }
-        public Guid CompanyId { get; set; }
-        public Guid ImageId { get; set; }
-        public Category Category { get; set; }
-        public Company Company { get; set; }
-        public Image Image { get; set; }
-        public string Name { get; set; }
-        public int Quantity { get; set; }
-        public double PurchaseCost { get; set; }
-        public DateTime PurchaseDate { get; set; }
-        public string? Notes { get; set; }
+        public int? Tag { get; set; }
+        public int CheckinCounter { get; set; }
+        public int CheckoutCounter { get; set; }
+        public string? ModelNo { get; set; }
+        public string? ItemNo { get; set; }
     }
 }
