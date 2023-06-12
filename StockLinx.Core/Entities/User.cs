@@ -9,7 +9,6 @@ namespace StockLinx.Core.Models
         public Guid? ManagerId { get; set; }
         public Guid? DepartmentId { get; set; }
         public Guid? LocationId { get; set; }
-        public User? Manager { get; set; }
         public Image? Image { get; set; }
         public Company? Company { get; set; }
         public Department? Department { get; set; }
@@ -17,8 +16,8 @@ namespace StockLinx.Core.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Password { get; set; }
+        public string Email { get; set; }
         public string? AdminLvl { get; set; }
-        public string? Email { get; set; }
         public string? Language { get; set; }
         public string EmployeeNo { get; set; }
         public string? JobTitle { get; set; }
@@ -27,5 +26,9 @@ namespace StockLinx.Core.Models
         public string? PhoneNo { get; set; }
         public string? Website { get; set; }
         public string? Notes { get; set; }
+
+        //Relates
+        public ICollection<Department> Departments { get; set; }
+        public ICollection<DeployedProduct> DeployedProducts { get; set;}
     }
 }

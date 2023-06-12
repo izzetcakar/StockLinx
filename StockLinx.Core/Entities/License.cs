@@ -8,8 +8,11 @@
         public DateTime? ExpirationDate { get; set; }
         public DateTime? TerminationDate { get; set; }
         public bool? Maintained { get; set; }
-        public bool Reassignable { get; set; }
+        public bool? Reassignable { get; set; }
         public string ProductKey { get; set; }
         public Supplier? Supplier { get; set; }
+
+        //Relates
+        public ICollection<DeployedProduct> DeployedProducts { get; set; }
     }
 }

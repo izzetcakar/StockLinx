@@ -9,5 +9,8 @@ namespace StockLinx.Core.Models
         public int? Warranty { get; set; }
         public Manufacturer? Manufacturer { get; set; }
         public Supplier? Supplier { get; set; }
+
+        //Relates
+        public ICollection<DeployedProduct>? DeployedProducts { get; set;}
     }
 }

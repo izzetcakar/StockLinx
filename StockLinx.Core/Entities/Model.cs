@@ -13,5 +13,8 @@ namespace StockLinx.Core.Models
         public Image? Image { get; set; }
         public Manufacturer? Manufacturer { get; set; }
         public string? Notes { get; set; }
+
+        //Relates
+        public ICollection<Asset> Assets { get; set; }
     }
 }
