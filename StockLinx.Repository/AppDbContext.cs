@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using StockLinx.Core.Entities;
+using StockLinx.Core.Models;
 using System.Reflection;
 
 namespace StockLinx.Repository
@@ -9,7 +11,21 @@ namespace StockLinx.Repository
         {
         }
 
-        //public DbSet<Model> ModelTable { get; set; }
+        public DbSet<Accessory> Accessories { get; set; }
+        public DbSet<Asset> Assets { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Company> Companies { get; set; }
+        public DbSet<Component> Components { get; set; }
+        public DbSet<Consumable> Consumables { get; set; }
+        public DbSet<Department> Departments { get; set; }
+        public DbSet<DeployedProduct> DeployedProducts { get; set; }
+        public DbSet<Image> Images { get; set; }
+        public DbSet<License> Licenses { get; set; }
+        public DbSet<Location> Locations { get; set; }
+        public DbSet<Manufacturer> Manufacturers { get; set; }
+        public DbSet<Model> Models { get; set; }
+        public DbSet<Supplier> Suppliers { get; set; }
+        public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
