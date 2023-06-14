@@ -3,11 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.Models;
 using StockLinx.Core.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StockLinx.Repository.Repositories.EF_Core
 {

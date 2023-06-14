@@ -13,13 +13,11 @@ namespace StockLinx.Service.Services
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUserRepository _userRepository;
-        private readonly IMapper _mapper;
 
         public UserService(IRepository<User> repository, IUnitOfWork unitOfWork,
-            IUserRepository userRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor) : base(repository, unitOfWork)
+            IUserRepository userRepository, IHttpContextAccessor httpContextAccessor) : base(repository, unitOfWork)
         {
             _userRepository = userRepository;
-            _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
         }
 
