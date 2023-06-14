@@ -1,12 +1,13 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StockLinx.Core.Services
+namespace StockLinx.Repository.Repositories.EF_Core
 {
-    internal interface ICategoryService
+    internal class CategoryRepository
     {
     }
 }
