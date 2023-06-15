@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Others;
-using StockLinx.Core.Models;
+using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 
 namespace StockLinx.Repository.Repositories.EF_Core

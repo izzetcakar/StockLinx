@@ -1,6 +1,12 @@
-﻿namespace StockLinx.Repository.Repositories.EF_Core
+﻿using StockLinx.Core.Entities;
+using StockLinx.Core.Repositories;
+
+namespace StockLinx.Repository.Repositories.EF_Core
 {
-    public class ConsumableRepository
+    public class ConsumableRepository : Repository<Consumable>, IConsumableRepository
     {
+        public ConsumableRepository(AppDbContext dbContext) : base(dbContext)
+        {
+        }
     }
 }
