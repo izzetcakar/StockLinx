@@ -6,8 +6,6 @@ namespace StockLinx.Core.Entities
     {
         public string Name { get; set; }
         public Guid? ImageId { get; set; }
-        public Image? Image { get; set; }
-        public Location? Location { get; set; }
         public Guid? LocationId { get; set; }
         public string? ContactName { get; set; }
         public string? Phone { get; set; }
@@ -15,6 +13,8 @@ namespace StockLinx.Core.Entities
         public string? Email { get; set; }
         public string? Url { get; set; }
         public string? Notes { get; set; }
+        public Image? Image { get; set; }
+        public Location? Location { get; set; }
 
         //Relates
         public ICollection<Accessory> Accessories { get; set; }
