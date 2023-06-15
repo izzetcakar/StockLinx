@@ -1,4 +1,4 @@
-﻿using StockLinx.Core.Models;
+﻿using StockLinx.Core.Entities;
 
 namespace StockLinx.Core.DTOs.Generic
 {

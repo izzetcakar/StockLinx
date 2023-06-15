@@ -1,7 +1,4 @@
-﻿using StockLinx.Core.Entities;
-using StockLinx.Core.Models;
-
-namespace StockLinx.Core.DTOs.Others
+﻿namespace StockLinx.Core.DTOs.Others
 {
     public class UserLoginDto
     {
