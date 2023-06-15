@@ -1,6 +1,14 @@
-﻿namespace StockLinx.Service.Services
+﻿using StockLinx.Core.Entities;
+using StockLinx.Core.Repositories;
+using StockLinx.Core.Services;
+using StockLinx.Core.UnitOfWork;
+
+namespace StockLinx.Service.Services
 {
-    internal class ConsumableService
+    public class ConsumableService : Service<Consumable>, IConsumableService
     {
+        public ConsumableService(IRepository<Consumable> repository, IUnitOfWork unitOfWork) : base(repository, unitOfWork)
+        {
+        }
     }
 }

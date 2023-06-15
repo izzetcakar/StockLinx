@@ -1,6 +1,14 @@
-﻿namespace StockLinx.Service.Services
+﻿using StockLinx.Core.Entities;
+using StockLinx.Core.Repositories;
+using StockLinx.Core.Services;
+using StockLinx.Core.UnitOfWork;
+
+namespace StockLinx.Service.Services
 {
-    internal class ComponentService
+    public class ComponentService : Service<Component>, IComponentService
     {
+        public ComponentService(IRepository<Component> repository, IUnitOfWork unitOfWork) : base(repository, unitOfWork)
+        {
+        }
     }
 }
