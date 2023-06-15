@@ -1,5 +1,5 @@
 ﻿using StockLinx.Core.DTOs.Others;
-using StockLinx.Core.Models;
+using StockLinx.Core.Entities;
 
 namespace StockLinx.Core.Repositories
 {

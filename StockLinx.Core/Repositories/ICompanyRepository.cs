@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using StockLinx.Core.Entities;
 
 namespace StockLinx.Core.Repositories
 {
-    internal interface ICompanyRepository
+    public interface ICompanyRepository : IRepository<Company>
     {
     }
 }
