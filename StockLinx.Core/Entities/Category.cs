@@ -1,6 +1,4 @@
-﻿using StockLinx.Core.Models;
-
-namespace StockLinx.Core.Entities
+﻿namespace StockLinx.Core.Entities
 {
     public enum CategoryType
     {

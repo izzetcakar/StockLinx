@@ -1,6 +1,4 @@
-﻿using StockLinx.Core.Entities;
-
-namespace StockLinx.Core.Models
+﻿namespace StockLinx.Core.Entities
 {
     public class User : BaseEntity
     {

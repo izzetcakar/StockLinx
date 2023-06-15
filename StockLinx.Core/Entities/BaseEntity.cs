@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace StockLinx.Core.Models
+namespace StockLinx.Core.Entities
 {
     public abstract class BaseEntity 
     {
