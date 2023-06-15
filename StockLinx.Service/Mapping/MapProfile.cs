@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.Entities;
-using StockLinx.Core.Models;
 
 namespace StockLinx.Service.Mapping
 {
