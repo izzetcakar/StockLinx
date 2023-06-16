@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
+using StockLinx.Core.Entities;
 using StockLinx.Core.Services;
 
 namespace StockLinx.API.Controllers
@@ -32,6 +33,20 @@ namespace StockLinx.API.Controllers
         {
             var image = await _imageService.GetByIdAsync(id);
             return CreateActionResult(CustomResponseDto<Image>.Success(200, image));
+        }
+
+        [HttpGet("getByPath/{path}")]
+        public IActionResult GetByPath(string path)
+        {
+            string uploadDir = Path.Combine(Directory.GetCurrentDirectory(), "Resources/Images");
+            if (!Directory.Exists(uploadDir))
+            {
+                Directory.CreateDirectory(uploadDir);
+            }
+
+            string filePath = Path.Combine(uploadDir, path);
+            var imageFile = System.IO.File.OpenRead(filePath);
+            return File(imageFile, "image/jpeg");
         }
 
         [HttpPost]
