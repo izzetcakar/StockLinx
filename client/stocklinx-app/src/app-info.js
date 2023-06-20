@@ -1,5 +1,4 @@
 const appInfo = {
-    title: 'Devapp'
+  title: "StocklinxApp",
 };
 export default appInfo;
-

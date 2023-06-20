@@ -5,7 +5,7 @@ import UserPanel from "../user-panel/UserPanel";
 import "./Header.scss";
 import { Template } from "devextreme-react/core/template";
 
-export default function Header({ menuToggleEnabled, toggleMenu }) {
+export default function Header({ menuToggleEnabled, title, toggleMenu }) {
   return (
     <header className={"header-component"}>
       <Toolbar className={"header-toolbar"}>
@@ -17,6 +17,12 @@ export default function Header({ menuToggleEnabled, toggleMenu }) {
         >
           <Button icon="menu" stylingMode="text" onClick={toggleMenu} />
         </Item>
+        <Item
+          location={"before"}
+          cssClass={"header-title"}
+          text={title}
+          visible={!!title}
+        />
         <Item
           location={"after"}
           locateInMenu={"auto"}

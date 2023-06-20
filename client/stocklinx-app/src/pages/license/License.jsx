@@ -1,7 +1,7 @@
 import React from "react";
 
 const License = () => {
-  return <div></div>;
+  return <div>License Page</div>;
 };
 
 export default License;

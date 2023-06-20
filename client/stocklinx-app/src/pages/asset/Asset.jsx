@@ -1,7 +1,7 @@
 import React from "react";
 
 const Asset = () => {
-  return <div></div>;
+  return <div>Asset Page</div>;
 };
 
 export default Asset;

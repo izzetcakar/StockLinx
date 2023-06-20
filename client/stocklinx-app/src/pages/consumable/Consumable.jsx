@@ -1,7 +1,7 @@
 import React from "react";
 
 const Consumable = () => {
-  return <div></div>;
+  return <div>Consumable Page</div>;
 };
 
 export default Consumable;
