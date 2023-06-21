@@ -13,36 +13,36 @@ namespace StockLinx.API.Controllers
     public class DepartmentController : CustomBaseController
     {
         private readonly IMapper _mapper;
-        private readonly IConsumableService _consumableService;
-        public ConsumableController(IMapper mapper, IConsumableService consumableService)
+        private readonly IDepartmentService _departmentService;
+        public DepartmentController(IMapper mapper, IDepartmentService departmentService)
         {
             _mapper = mapper;
-            _consumableService = consumableService;
+            _departmentService = departmentService;
         }
 
         [HttpGet]
         public async Task<IActionResult> All()
         {
-            var consumables = await _consumableService.GetAllAsync();
-            return CreateActionResult(CustomResponseDto<List<Consumable>>.Success(200, consumables.ToList()));
+            var departments = await _departmentService.GetAllAsync();
+            return CreateActionResult(CustomResponseDto<List<Department>>.Success(200, departments.ToList()));
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var consumable = await _consumableService.GetByIdAsync(id);
-            return CreateActionResult(CustomResponseDto<Consumable>.Success(200, consumable));
+            var department = await _departmentService.GetByIdAsync(id);
+            return CreateActionResult(CustomResponseDto<Department>.Success(200, department));
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(ConsumableDto consumableDto)
+        public async Task<IActionResult> Add(DepartmentDto departmentDto)
         {
             //Create
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(ConsumableDto consumableDto)
+        public async Task<IActionResult> Update(DepartmentDto departmentDto)
         {
             //Update
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
@@ -51,8 +51,8 @@ namespace StockLinx.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var consumable = await _consumableService.GetByIdAsync(id);
-            await _consumableService.RemoveAsync(consumable);
+            var department = await _departmentService.GetByIdAsync(id);
+            await _departmentService.RemoveAsync(department);
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
         }
     }

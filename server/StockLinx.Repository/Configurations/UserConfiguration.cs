@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using StockLinx.Core.Models;
+using StockLinx.Core.Entities;
 
 namespace StockLinx.Repository.Configurations
 {

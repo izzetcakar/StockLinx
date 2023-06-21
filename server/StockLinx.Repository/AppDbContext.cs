@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.Entities;
-using StockLinx.Core.Models;
 using System.Reflection;
 
 namespace StockLinx.Repository

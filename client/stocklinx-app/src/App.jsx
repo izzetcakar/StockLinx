@@ -11,17 +11,17 @@ import { useScreenSizeClass } from "./utils/media-query";
 import Content from "./Content";
 import UnauthenticatedContent from "./UnauthenticatedContent";
 import { useSelector } from "react-redux";
+import { checkEmpty } from "./functions/checkEmpty";
 
 function App() {
-  // const userRedux = useSelector((state) => state.user.user);
-  const userRedux = {};
+  const userRedux = useSelector((state) => state.user.user);
   const { loading } = useAuth();
 
   if (loading) {
     return <LoadPanel visible={true} />;
   }
 
-  if (userRedux) {
+  if (checkEmpty(userRedux)) {
     return <Content />;
   }
 
