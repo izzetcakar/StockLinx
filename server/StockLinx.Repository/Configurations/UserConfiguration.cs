@@ -9,7 +9,6 @@ namespace StockLinx.Repository.Configurations
         public void Configure(EntityTypeBuilder<User> builder)
         {
             builder.HasKey(x => x.Id);
-            builder.Property(x => x.StartDate).IsRequired();
             builder.Property(x => x.Email).IsRequired();
             builder.Property(x => x.Password).IsRequired();
             builder.Property(x => x.FirstName).IsRequired();
