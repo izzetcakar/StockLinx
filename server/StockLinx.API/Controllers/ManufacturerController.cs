@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.Entities;
@@ -36,9 +37,11 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(ManufacturerDto manufacturerDto)
+        public async Task<IActionResult> Add(ManufacturerCreateDto manufacturerCreateDto)
         {
-            // Create
+            var newManufacturer = _mapper.Map<Manufacturer>(manufacturerCreateDto);
+            newManufacturer.Id = Guid.NewGuid();
+            await _manufacturerService.AddAsync(newManufacturer);
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
         }
 

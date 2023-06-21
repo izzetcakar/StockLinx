@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.Entities;
@@ -35,9 +36,9 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(ConsumableDto consumableDto)
+        public async Task<IActionResult> Add(ConsumableCreateDto createDto)
         {
-            //Create
+            await _consumableService.CreateConsumableAsync(createDto);
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
         }
 
