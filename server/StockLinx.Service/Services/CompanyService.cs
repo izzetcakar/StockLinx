@@ -1,4 +1,6 @@
-﻿using StockLinx.Core.Entities;
+﻿using AutoMapper;
+using StockLinx.Core.DTOs.Create;
+using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 using StockLinx.Core.Services;
 using StockLinx.Core.UnitOfWork;
@@ -7,8 +9,17 @@ namespace StockLinx.Service.Services
 {
     public class CompanyService : Service<Company>, ICompanyService
     {
-        public CompanyService(IRepository<Company> repository, IUnitOfWork unitOfWork) : base(repository, unitOfWork)
+        private readonly IMapper _mapper;
+        public CompanyService(IRepository<Company> repository, IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork)
         {
+            _mapper = mapper;
+        }
+
+        public async Task CreateCompanyAsync(CompanyCreateDto createDto)
+        {
+            var newCompany = _mapper.Map<Company>(createDto);
+            newCompany.Id = Guid.NewGuid();
+            await AddAsync(newCompany);
         }
     }
 }
