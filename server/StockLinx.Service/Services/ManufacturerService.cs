@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using StockLinx.Core.DTOs.Create;
+using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 using StockLinx.Core.Services;
@@ -21,5 +22,15 @@ namespace StockLinx.Service.Services
             newManufacturer.Id = Guid.NewGuid();
             await AddAsync(newManufacturer);
         }
+        public Task UpdateManufacturerAsync(ManufacturerUpdateDto updateDto)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteManufacturerAsync(Guid manufacturerId)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

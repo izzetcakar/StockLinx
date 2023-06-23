@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using StockLinx.Core.DTOs.Create;
+using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 using StockLinx.Core.Services;
@@ -20,6 +21,15 @@ namespace StockLinx.Service.Services
             var newCategory = _mapper.Map<Category>(createDto);
             newCategory.Id = Guid.NewGuid();
             await AddAsync(newCategory);
+        }
+        public Task UpdateCategoryAsync(CategoryUpdateDto updateDto)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteCategoryAsync(Guid categoryId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

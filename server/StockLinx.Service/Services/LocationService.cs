@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using StockLinx.Core.DTOs.Create;
+using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 using StockLinx.Core.Services;
@@ -21,5 +22,15 @@ namespace StockLinx.Service.Services
             newLocation.Id = Guid.NewGuid();
             await AddAsync(newLocation);
         }
+        public Task UpdateLocationAsync(LocationUpdateDto updateDto)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteLocationAsync(Guid locationId)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

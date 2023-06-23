@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using StockLinx.Core.DTOs.Create;
+using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 using StockLinx.Core.Services;
@@ -29,5 +30,15 @@ namespace StockLinx.Service.Services
             await AddAsync(newImage);
             await _unitOfWork.CommitAsync();
         }
+        public Task UpdateImageAsync(ImageUpdateDto updateDto)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteImageAsync(Guid imageId)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

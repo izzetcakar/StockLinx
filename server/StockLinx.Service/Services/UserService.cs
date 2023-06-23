@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using StockLinx.Core.DTOs.Others;
+using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 using StockLinx.Core.Services;
@@ -47,6 +48,15 @@ namespace StockLinx.Service.Services
         public async Task<User> Register(User user)
         {
             return await _userRepository.Register(user);
+        }
+
+        public Task UpdateUserAsync(UserUpdateDto updateDto)
+        {
+            throw new NotImplementedException();
+        }
+        public Task DeleteUserAsync(Guid userId)
+        {
+            throw new NotImplementedException();
         }
     }
 }
