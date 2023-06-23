@@ -1,12 +1,5 @@
 ﻿namespace StockLinx.Core.Entities
 {
-    public enum CategoryType
-    {
-        Asset,
-        Accessory,
-        Component,
-        Consumable
-    }
     public class Category : BaseEntity
     {
         public string Name { get; set; }

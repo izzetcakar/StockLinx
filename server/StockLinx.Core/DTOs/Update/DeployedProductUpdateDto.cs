@@ -1,6 +1,6 @@
-﻿namespace StockLinx.Core.Entities
+﻿namespace StockLinx.Core.DTOs.Update
 {
-    public class DeployedProduct : BaseEntity
+    public class DeployedProductUpdateDto : BaseUpdateDto
     {
         public Guid UserId { get; set; }
         public Guid? AccessoryId { get; set; }
@@ -10,11 +10,5 @@
         public Guid? LicenseId { get; set; }
         public DateTime AssignDate { get; set; }
         public string? Notes { get; set; }
-        public User AssignedUser { get; set; }
-        public Accessory Accessory { get; set; }
-        public Asset Asset { get; set; }
-        public Component Component { get; set; }
-        public Consumable Consumable { get; set; }
-        public License License { get; set; }
     }
 }

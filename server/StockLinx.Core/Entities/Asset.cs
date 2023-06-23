@@ -1,10 +1,6 @@
 ﻿namespace StockLinx.Core.Entities
 {
-    public enum Status
-    {
-        Deployable,
-        Deployed
-    }
+
     public class Asset : BaseProduct
     {
         public Guid? ModelId { get; set; }

@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <Folder Include="DTOs\List\" />
-    <Folder Include="DTOs\Update\" />
   </ItemGroup>
 
 	<ItemGroup>
