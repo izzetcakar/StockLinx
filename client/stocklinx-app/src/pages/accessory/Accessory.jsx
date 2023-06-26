@@ -227,7 +227,7 @@ const Accessory = ({ Id }) => {
         <Column dataField="locationId" caption="Location">
           <Lookup dataSource={locations} displayExpr="name" valueExpr="id" />
         </Column>
-        <Column dataField="company" caption="Company">
+        <Column dataField="companyId" caption="Company">
           <Lookup dataSource={companies} displayExpr="name" valueExpr="id" />
         </Column>
         <Column dataField="supplierId" caption="Supplier" alignment={"center"}>
