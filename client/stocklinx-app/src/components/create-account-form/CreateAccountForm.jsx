@@ -34,11 +34,19 @@ export default function CreateAccountForm() {
     <form className={"create-account-form"} onSubmit={onSubmit}>
       <Form formData={formData.current} disabled={loading}>
         <Item
-          dataField={"userName"}
+          dataField={"firstName"}
           editorType={"dxTextBox"}
-          editorOptions={userNameEditorOptions}
+          editorOptions={firstNameEditorOptions}
         >
-          <RequiredRule message="Username is required" />
+          <RequiredRule message="First Name is required" />
+          <Label visible={false} />
+        </Item>
+        <Item
+          dataField={"lastName"}
+          editorType={"dxTextBox"}
+          editorOptions={lastNameEditorOptions}
+        >
+          <RequiredRule message="Last Name is required" />
           <Label visible={false} />
         </Item>
         <Item
@@ -89,11 +97,14 @@ export default function CreateAccountForm() {
     </form>
   );
 }
-const userNameEditorOptions = {
+const firstNameEditorOptions = {
   stylingMode: "filled",
-  placeholder: "Username",
+  placeholder: "First Name",
 };
-
+const lastNameEditorOptions = {
+  stylingMode: "filled",
+  placeholder: "Last Name",
+};
 const emailEditorOptions = {
   stylingMode: "filled",
   placeholder: "Email",

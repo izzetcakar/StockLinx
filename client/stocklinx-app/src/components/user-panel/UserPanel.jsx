@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 export default function UserPanel({ menuMode }) {
   const { signOut } = useAuth();
   const navigate = useNavigate();
-  const userRedux = useSelector((state) => state.user.user);
+  const user = useSelector((state) => state.user.user);
 
   function navigateToProfile() {
     navigate("/profile");
@@ -32,9 +32,9 @@ export default function UserPanel({ menuMode }) {
   return (
     <div className={"user-panel"}>
       <div className={"user-info"}>
-        <div className={"user-name"}>{userRedux?.userName}</div>
-        <div>-</div>
-        <div className="user-name">{userRedux?.email}</div>
+        <div className={"user-name"}>{user?.email}</div>
+        {/* <div>-</div>
+        <div className="user-name">{user?.email}</div> */}
       </div>
       {menuMode === "context" && (
         <ContextMenu

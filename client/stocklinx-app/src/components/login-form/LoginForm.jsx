@@ -6,6 +6,7 @@ import Form, {
   ButtonItem,
   ButtonOptions,
   RequiredRule,
+  EmailRule,
 } from "devextreme-react/form";
 import LoadIndicator from "devextreme-react/load-indicator";
 import notify from "devextreme/ui/notify";
@@ -42,11 +43,12 @@ export default function LoginForm() {
     <form className={"login-form"} onSubmit={onSubmit}>
       <Form formData={formData.current} disabled={loading}>
         <Item
-          dataField={"userName"}
+          dataField={"email"}
           editorType={"dxTextBox"}
-          editorOptions={userNameEditorOptions}
+          editorOptions={emailEditorOptions}
         >
-          <RequiredRule message="Username is required" />
+          <RequiredRule message="Email is required" />
+          <EmailRule message="Email is invalid" />
           <Label visible={false} />
         </Item>
         <Item
@@ -89,7 +91,9 @@ const passwordEditorOptions = {
   placeholder: "Password",
   mode: "password",
 };
-const userNameEditorOptions = {
+
+const emailEditorOptions = {
   stylingMode: "filled",
-  placeholder: "Username",
+  placeholder: "Email",
+  mode: "email",
 };
