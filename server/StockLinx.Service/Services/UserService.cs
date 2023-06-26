@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
@@ -13,15 +14,17 @@ namespace StockLinx.Service.Services
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUserRepository _userRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
         public UserService(IRepository<User> repository, IUnitOfWork unitOfWork,
             IUserRepository userRepository, IHttpContextAccessor httpContextAccessor) : base(repository, unitOfWork)
         {
             _userRepository = userRepository;
             _httpContextAccessor = httpContextAccessor;
+            _unitOfWork = unitOfWork;
         }
 
-        public string GetMyName()
+        public string GetIdByToken()
         {
             var result = string.Empty;
             if (_httpContextAccessor.HttpContext != null)
@@ -37,7 +40,16 @@ namespace StockLinx.Service.Services
 
         public async Task<User> Login(UserLoginDto userLoginDto)
         {
-            return await _userRepository.Login(userLoginDto);
+
+            var isExist = await _userRepository.AnyAsync(x => x.Email == userLoginDto.Email && x.Password == userLoginDto.Password);
+            if (!isExist)
+            {
+                throw new Exception("User is not found");
+            }
+            else
+            {
+                return await _userRepository.Where(x => x.Email == userLoginDto.Email && x.Password == userLoginDto.Password).SingleOrDefaultAsync();
+            }
         }
 
         public Task Logout()
@@ -47,7 +59,23 @@ namespace StockLinx.Service.Services
 
         public async Task<User> Register(User user)
         {
-            return await _userRepository.Register(user);
+            var employeeNoExist = await _userRepository.AnyAsync(x => x.EmployeeNo == user.EmployeeNo);
+            var emailExist = await _userRepository.AnyAsync(x => x.Email == user.Email);
+
+            if (employeeNoExist)
+            {
+                throw new Exception("EmployeeNo already exists");
+            }
+            else if (emailExist)
+            {
+                throw new Exception("Email already exists");
+            }
+            else
+            {
+                await AddAsync(user);
+                await _unitOfWork.CommitAsync();
+                return await _userRepository.Where(x => x.Email == user.Email).SingleOrDefaultAsync();
+            }
         }
 
         public Task UpdateUserAsync(UserUpdateDto updateDto)

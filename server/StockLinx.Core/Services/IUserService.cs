@@ -9,7 +9,7 @@ namespace StockLinx.Core.Services
         Task<User> Login(UserLoginDto userLoginDto);
         Task Logout();
         Task<User> Register(User user);
-        string GetMyName();
+        string GetIdByToken();
         Task UpdateUserAsync(UserUpdateDto updateDto);
         Task DeleteUserAsync(Guid userId);
     }
