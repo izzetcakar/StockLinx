@@ -34,10 +34,10 @@ const Accessory = ({ Id }) => {
   const categories = useSelector((state) => state.category.categories);
   const locations = useSelector((state) => state.location.locations);
   const companies = useSelector((state) => state.company.companies);
+  const suppliers = useSelector((state) => state.supplier.suppliers);
   const manufacturers = useSelector(
     (state) => state.manufacturer.manufacturers
   );
-  const suppliers = useSelector((state) => state.supplier.suppliers);
 
   const notesEditorOptions = { height: "auto" };
   const allowedPageSizes = [5, 10, 20, 50, 100];
@@ -51,6 +51,7 @@ const Accessory = ({ Id }) => {
       refreshDataGrid();
     }
   }, [Id]);
+
   const columns = [
     { label: "Name", value: "name" },
     { label: "Quantity", value: "quantity" },
@@ -174,8 +175,8 @@ const Accessory = ({ Id }) => {
               <Item dataField="categoryId" />
               <Item dataField="locationId" />
               <Item dataField="companyId" />
-              <Item dataField="manufacturerId" />
               <Item dataField="supplierId" />
+              <Item dataField="manufacturerId" />
               <Item
                 dataField="note"
                 itemType="dxTextArea"
@@ -223,13 +224,15 @@ const Accessory = ({ Id }) => {
         <Column dataField="conseptId" caption="Consept">
           <Lookup dataSource={locations} displayExpr="name" valueExpr="id" />
         </Column>
-        <companies dataField="locationId" caption="Location">
+        <Column dataField="locationId" caption="Location">
           <Lookup dataSource={locations} displayExpr="name" valueExpr="id" />
-        </companies>
+        </Column>
         <Column dataField="company" caption="Company">
           <Lookup dataSource={companies} displayExpr="name" valueExpr="id" />
         </Column>
-
+        <Column dataField="supplierId" caption="Supplier" alignment={"center"}>
+          <Lookup dataSource={suppliers} valueExpr="id" displayExpr="name" />
+        </Column>
         <Column
           dataField="manufacturerId"
           caption="Manufacturer"
@@ -240,9 +243,6 @@ const Accessory = ({ Id }) => {
             valueExpr="id"
             displayExpr="name"
           />
-        </Column>
-        <Column dataField="supplierId" caption="Supplier" alignment={"center"}>
-          <Lookup dataSource={suppliers} valueExpr="id" displayExpr="name" />
         </Column>
 
         <Column dataField="note" caption="Note" />
