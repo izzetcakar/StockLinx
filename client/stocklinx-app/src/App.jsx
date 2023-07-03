@@ -1,5 +1,5 @@
-import "devextreme/dist/css/dx.common.css";
 import "./themes/generated/theme.base.css";
+import "devextreme/dist/css/dx.common.css";
 import "./themes/generated/theme.additional.css";
 import "./dx-styles.scss";
 import React from "react";
