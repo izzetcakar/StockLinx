@@ -2,8 +2,8 @@
 {
     public class Company : BaseEntity
     {
-        public string Name { get; set; }
         public Guid? ImageId { get; set; }
+        public string Name { get; set; }
         public Image? Image { get; set; }
 
         //Relates

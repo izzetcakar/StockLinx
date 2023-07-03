@@ -11,15 +11,15 @@
         public string LastName { get; set; }
         public string Password { get; set; }
         public string Email { get; set; }
-        public bool? IsAdmin { get; set; }
         public string? Language { get; set; }
         public string EmployeeNo { get; set; }
         public string? JobTitle { get; set; }
-        public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
         public string? PhoneNo { get; set; }
         public string? Website { get; set; }
         public string? Notes { get; set; }
+        public bool? IsAdmin { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
         public Image? Image { get; set; }
         public Company? Company { get; set; }
         public Department? Department { get; set; }
@@ -27,6 +27,6 @@
 
         //Relates
         public ICollection<Department> Departments { get; set; }
-        public ICollection<DeployedProduct> DeployedProducts { get; set;}
+        public ICollection<DeployedProduct> DeployedProducts { get; set; }
     }
 }
