@@ -1,29 +1,41 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { request } from "../server/api";
-const requestUrl = "Product/";
+const allowedReq = ["Accessory", "Asset", "Component", "Consumable", "License"];
 
-export const getAllProducts = createAsyncThunk("products/getAll", async () => {
-  const response = await request({
-    requestUrl: requestUrl,
-    apiType: "get",
-  });
-  return response.data;
-});
-export const getProductById = createAsyncThunk(
-  "products/getById",
-  async (Id) => {
+const checkReqValid = (requestUrl, rejectWithValue) => {
+  if (!allowedReq.includes(requestUrl)) {
+    rejectWithValue("Request Url is not valid");
+  }
+};
+
+export const getAllProducts = createAsyncThunk(
+  "products/getAll",
+  async (requestUrl, { fulfillWithValue, rejectWithValue }) => {
+    checkReqValid(requestUrl, rejectWithValue);
     const response = await request({
-      requestUrl: requestUrl + `${Id}`,
+      requestUrl: requestUrl + "/",
       apiType: "get",
     });
-    return response.data;
+    return fulfillWithValue({ type: requestUrl, data: response.data });
+  }
+);
+export const getProductById = createAsyncThunk(
+  "products/getById",
+  async (requestUrl, id, { fulfillWithValue, rejectWithValue }) => {
+    checkReqValid(requestUrl, rejectWithValue);
+    const response = await request({
+      requestUrl: requestUrl + "/" + `${id}`,
+      apiType: "get",
+    });
+    return fulfillWithValue(response.data);
   }
 );
 export const createProduct = createAsyncThunk(
   "products/create",
-  async (product, { fulfillWithValue, rejectWithValue }) => {
+  async (requestUrl, product, { fulfillWithValue, rejectWithValue }) => {
+    checkReqValid(requestUrl, rejectWithValue);
     const response = await request({
-      requestUrl: requestUrl,
+      requestUrl: requestUrl + "/",
       queryData: product,
       apiType: "post",
     });
@@ -36,9 +48,10 @@ export const createProduct = createAsyncThunk(
 );
 export const updateProduct = createAsyncThunk(
   "products/update",
-  async (product, { rejectWithValue, fulfillWithValue }) => {
+  async (requestUrl, product, { rejectWithValue, fulfillWithValue }) => {
+    checkReqValid(requestUrl, rejectWithValue);
     const response = await request({
-      requestUrl: requestUrl,
+      requestUrl: requestUrl + "/",
       queryData: product,
       apiType: "put",
     });
@@ -51,9 +64,10 @@ export const updateProduct = createAsyncThunk(
 );
 export const removeProduct = createAsyncThunk(
   "products/remove",
-  async (Id, { rejectWithValue, fulfillWithValue }) => {
+  async (requestUrl, id, { rejectWithValue, fulfillWithValue }) => {
+    checkReqValid(requestUrl, rejectWithValue);
     const response = await request({
-      requestUrl: requestUrl + `${Id}`,
+      requestUrl: requestUrl + "/" + `${id}`,
       apiType: "delete",
     });
     if (!response.success) {
@@ -63,11 +77,25 @@ export const removeProduct = createAsyncThunk(
     }
   }
 );
+const matchRequest = (requestUrl) => {
+  switch (requestUrl) {
+    case "Accessory":
+      return "accessories";
+    case "Asset":
+      return "assets";
+    case "Component":
+      return "components";
+    case "Consumable":
+      return "consumables";
+    case "License":
+      return "licenses";
+  }
+};
 
 const productSlice = createSlice({
   name: "product",
   initialState: {
-    accessories: [],
+    accessories: ["test acc"],
     assets: [],
     components: [],
     consumables: [],
@@ -85,7 +113,10 @@ const productSlice = createSlice({
   },
   extraReducers(builder) {
     builder.addCase(getAllProducts.fulfilled, (state, action) => {
-      state.products = action.payload;
+      const { type, data } = action.payload;
+      state[matchRequest(type)] = data;
+      state.status = "fulfilled";
+      state.error = null;
     });
   },
 });
