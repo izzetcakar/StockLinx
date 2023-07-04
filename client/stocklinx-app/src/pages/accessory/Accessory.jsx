@@ -15,7 +15,6 @@ import DataGrid, {
   Export,
   Selection,
   Toolbar,
-  ColumnChooser,
   ColumnFixing,
   LoadPanel,
 } from "devextreme-react/data-grid";
@@ -24,20 +23,19 @@ import { useDispatch, useSelector } from "react-redux";
 import DataSource from "devextreme/data/data_source";
 import { Button } from "devextreme-react";
 import { notifyError } from "../../functions/notifyError";
+import { getAllProducts } from "../../redux/productReducer";
 
 const Accessory = ({ Id }) => {
   const dispatch = useDispatch();
   const effect = useRef(false);
   const selectedItemKeys = useRef([]);
-  const images = useSelector((state) => state.image.images);
-  const accessories = useSelector((state) => state.listItem.accessories);
-  const categories = useSelector((state) => state.category.categories);
-  const locations = useSelector((state) => state.location.locations);
-  const companies = useSelector((state) => state.company.companies);
-  const suppliers = useSelector((state) => state.supplier.suppliers);
-  const manufacturers = useSelector(
-    (state) => state.manufacturer.manufacturers
-  );
+  const accessories = useSelector((state) => state.product.accessories);
+  const images = useSelector((state) => state.image.items);
+  const categories = useSelector((state) => state.category.items);
+  const locations = useSelector((state) => state.location.items);
+  const companies = useSelector((state) => state.company.items);
+  const manufacturers = useSelector((state) => state.manufacturer.items);
+  const suppliers = useSelector((state) => state.supplier.items);
 
   const notesEditorOptions = { height: "auto" };
   const allowedPageSizes = [5, 10, 20, 50, 100];
@@ -52,21 +50,6 @@ const Accessory = ({ Id }) => {
     }
   }, [Id]);
 
-  const columns = [
-    { label: "Name", value: "name" },
-    { label: "Quantity", value: "quantity" },
-    { label: "SerialNo", value: "serialNo" },
-    { label: "PurchaseDate", value: "purchaseDate" },
-    { label: "PurchaseCost", value: "purchaseCost" },
-    { label: "OrderNo", value: "orderNo" },
-    { label: "Notes", value: "notes" },
-    { label: "Image", value: "imageId" },
-    { label: "Category", value: "categoryId" },
-    { label: "Location", value: "locationId" },
-    { label: "Company", value: "companyId" },
-    { label: "Manufacturer", value: "manufacturerId" },
-    { label: "Supplier", value: "supplierId" },
-  ];
   const refreshDataGrid = () => {
     // dispatch(getAccessories());
   };
@@ -75,7 +58,7 @@ const Accessory = ({ Id }) => {
     store: {
       type: "array",
       data: JSON.parse(JSON.stringify(accessories)),
-      key: "id",
+      // key: "id",
     },
   });
   const onExporting = (e) => {
@@ -127,17 +110,13 @@ const Accessory = ({ Id }) => {
 
   return (
     <React.Fragment>
-      {/* <div style={{ fontSize: "2em", marginBottom: "0.3em" }}>
-        {checklist?.title}
-      </div> */}
       <DataGrid
         className={"dx-card wide-card"}
         dataSource={accessoryData}
         height={"100%"}
         showBorders={true}
         focusedRowEnabled={true}
-        defaultFocusedRowIndex={0}
-        columnAutoWidth={false}
+        columnAutoWidth={true}
         columnHidingEnabled={false}
         selectedRowKeys={selectedItemKeys.current}
         onRowInserting={onRowInserting}
@@ -170,13 +149,13 @@ const Accessory = ({ Id }) => {
               <Item dataField="purchaseCost" />
               <Item dataField="orderNo" />
               <Item dataField="notes" />
-              <Item dataField="warranty" />
               <Item dataField="imageId" />
               <Item dataField="categoryId" />
               <Item dataField="locationId" />
               <Item dataField="companyId" />
-              <Item dataField="supplierId" />
               <Item dataField="manufacturerId" />
+              <Item dataField="supplierId" />
+              <Item dataField="warranty" />
               <Item
                 dataField="note"
                 itemType="dxTextArea"
@@ -193,28 +172,27 @@ const Accessory = ({ Id }) => {
           showInfo={true}
           allowedPageSizes={allowedPageSizes}
         />
-        <FilterRow visible={true} />
-        {/* <Column dataField={"id"} width={90} hidingPriority={2} /> */}
-        <Column dataField="name" caption="Name" alignment={"center"}>
+        <FilterRow visible={false} />
+        <Column dataField="name" caption="Name" dataType="string">
           <RequiredRule message="Name is required" />
         </Column>
-        <Column dataField="quantity" caption="Quantity" alignment={"center"}>
+        <Column dataField="quantity" caption="Quantity" dataType="number">
           <RequiredRule message="Quantity is required" />
           <RangeRule message="Quantity should be minimum 1" min={1} />
         </Column>
-        <Column dataField="serialNo" caption="Serial No" alignment={"center"} />
+        <Column dataField="serialNo" caption="Serial No" dataType="string" />
         <Column
           dataField="purchaseDate"
           caption="Purchase Date"
-          alignment={"center"}
+          dataType="date"
         />
         <Column
           dataField="purchaseCost"
           caption="Purchase Cost"
-          alignment={"center"}
+          dataType="number"
         />
-        <Column dataField="orderNo" caption="Order No" alignment={"center"} />
-        <Column dataField="cost" caption="Cost" alignment={"center"} />
+        <Column dataField="orderNo" caption="Order No" dataType="string" />
+        <Column dataField="cost" caption="Cost" dataType="number" />
         <Column dataField="imageId" caption="Image">
           <Lookup dataSource={images} displayExpr="title" valueExpr="id" />
         </Column>
@@ -230,52 +208,30 @@ const Accessory = ({ Id }) => {
         <Column dataField="companyId" caption="Company">
           <Lookup dataSource={companies} displayExpr="name" valueExpr="id" />
         </Column>
-        <Column dataField="supplierId" caption="Supplier" alignment={"center"}>
-          <Lookup dataSource={suppliers} valueExpr="id" displayExpr="name" />
-        </Column>
-        <Column
-          dataField="manufacturerId"
-          caption="Manufacturer"
-          alignment={"center"}
-        >
+        <Column dataField="manufacturerId" caption="Manufacturer">
           <Lookup
             dataSource={manufacturers}
             valueExpr="id"
             displayExpr="name"
           />
         </Column>
-
-        <Column dataField="note" caption="Note" />
+        <Column dataField="supplierId" caption="Supplier">
+          <Lookup dataSource={suppliers} valueExpr="id" displayExpr="name" />
+        </Column>
+        <Column dataField="warranty" caption="Warranty" dataType="number" />
+        <Column dataField="note" caption="Note" dataType="string" />
         <Selection mode="multiple" />
         <Toolbar>
           <Item location="before">
             <Button onClick={deleteRecords} icon="trash" text="Delete Items" />
           </Item>
-          <Item location="before">
-            <Button
-              type={"success"}
-              stylingMode="outlined"
-              name="shape-budget-download"
-              icon="export"
-              text="Download"
-              onClick={(e) =>
-                exportExcel({
-                  sheetName: "Accessories",
-                  columns: columns,
-                  fileName: "Accessories",
-                })
-              }
-            />
-          </Item>
           <Item name="addRowButton" showText="always" />
-          <Item name="columnChooserButton" />
           <Item location="after">
             <Button icon="refresh" onClick={refreshDataGrid} />
           </Item>
           <Item name="exportButton" />
         </Toolbar>
         <Export enabled={true} allowExportSelectedData={true} />
-        <ColumnChooser enabled={true} />
         <ColumnFixing enabled={true} />
       </DataGrid>
     </React.Fragment>
