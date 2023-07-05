@@ -1,12 +1,6 @@
-import Drawer from "devextreme-react/drawer";
-import ScrollView from "devextreme-react/scroll-view";
-import React, { useState, useCallback, useRef } from "react";
-import { useNavigate } from "react-router";
-import { Header, SideNavigationMenu, Footer } from "../../components";
+import React, { useState, useCallback } from "react";
+import { Header } from "../../components";
 import "./side-nav-outer-toolbar.scss";
-import { useScreenSize } from "../../utils/media-query";
-import { Template } from "devextreme-react/core/template";
-import { useMenuPatch } from "../../utils/patches";
 import "boxicons";
 import logo from "../../images/logo.png";
 
