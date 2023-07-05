@@ -1,53 +1,60 @@
-import Drawer from "devextreme-react/drawer";
-import ScrollView from "devextreme-react/scroll-view";
 import React, { useState, useCallback, useRef } from "react";
-import { useNavigate } from "react-router";
 import { Header, SideNavigationMenu, Footer } from "../../components";
 import "./side-nav-outer-toolbar.scss";
-import { useScreenSize } from "../../utils/media-query";
-import { Template } from "devextreme-react/core/template";
-import { useMenuPatch } from "../../utils/patches";
 import "boxicons";
 import logo from "../../images/logo.png";
+import { useScreenSize } from "../../utils/media-query";
+import { useMenuPatch } from "../../utils/patches";
+
+import Button from "devextreme-react/button";
+import Drawer from "devextreme-react/drawer";
+import ScrollView from "devextreme-react/scroll-view";
+import Toolbar, { Item } from "devextreme-react/toolbar";
+import { useNavigate } from "react-router";
+import { Template } from "devextreme-react/core/template";
 
 export default function SideNavOuterToolbar({ title, children }) {
-  const [navigationList, setNavigationList] = useState([
-    {
-      title: "Home",
-      icon: "home-alt",
-      color: "#737373",
-      elements: [{ title: "Test", icon: "bar-chart-alt-2", color: "#737373" }],
-      displayElements: false,
-    },
-    {
-      title: "Renevue",
-      icon: "bar-chart-alt-2",
-      color: "#737373",
-      elements: [{ title: "Test2", icon: "bar-chart-alt-2", color: "#737373" }],
-      displayElements: false,
-    },
-    {
-      title: "Notification",
-      icon: "bell",
-      color: "#737373",
-    },
-    {
-      title: "Analytics",
-      icon: "pie-chart-alt",
-      color: "#737373",
-    },
-    {
-      title: "Logout",
-      icon: "log-out",
-      color: "#737373",
-    },
-  ]);
   const scrollViewRef = useRef(null);
   const navigate = useNavigate();
   const { isXSmall, isLarge } = useScreenSize();
   const [patchCssClass, onMenuReady] = useMenuPatch();
   const [menuStatus, setMenuStatus] = useState(
     isLarge ? MenuStatus.Opened : MenuStatus.Closed
+  );
+
+  const temporaryOpenMenu = useCallback(() => {
+    setMenuStatus((prevMenuStatus) =>
+      prevMenuStatus === MenuStatus.Closed
+        ? MenuStatus.TemporaryOpened
+        : prevMenuStatus
+    );
+  }, []);
+
+  const onOutsideClick = useCallback(() => {
+    setMenuStatus((prevMenuStatus) =>
+      prevMenuStatus !== MenuStatus.Closed && !isLarge
+        ? MenuStatus.Closed
+        : prevMenuStatus
+    );
+    return menuStatus === MenuStatus.Closed ? true : false;
+  }, [isLarge]);
+
+  const onNavigationChanged = useCallback(
+    ({ itemData, event, node }) => {
+      if (menuStatus === MenuStatus.Closed || !itemData.path || node.selected) {
+        event.preventDefault();
+        return;
+      }
+
+      navigate(itemData.path);
+      scrollViewRef.current.instance.scrollTo(0);
+
+      if (!isLarge || menuStatus === MenuStatus.TemporaryOpened) {
+        setMenuStatus(MenuStatus.Closed);
+        event.stopPropagation();
+      }
+    },
+    [navigate, menuStatus, isLarge]
   );
 
   const toggleMenu = useCallback(({ event }) => {
@@ -100,7 +107,9 @@ export default function SideNavOuterToolbar({ title, children }) {
     </div>
   );
 }
-
+{
+  /* <box-icon name='search'></box-icon> */
+}
 const MenuStatus = {
   Closed: 1,
   Opened: 2,
