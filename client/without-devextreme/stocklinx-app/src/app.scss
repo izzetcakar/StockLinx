@@ -13,15 +13,21 @@
 
 .main-container {
   display: flex;
-  background-color: white;
+  background-color: #f4f0f0;
   width: 100vw;
   height: 100vh;
+  overflow: auto;
 
   .page {
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: 100%;
+    height: auto;
+    overflow: scroll;
+    background-color: white;
+    border-radius: 1rem;
+    padding: 1rem;
+    margin: 0.5rem;
     overflow: scroll;
   }
 }
