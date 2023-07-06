@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import "./sidebar.scss";
 import "boxicons";
 import logo from "../../images/logo.png";
@@ -63,6 +63,11 @@ export default function Sidebar() {
       target: "",
     },
   ]);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+
+  const handleLogoClick = () => {
+    setIsSidebarCollapsed(!isSidebarCollapsed);
+  };
 
   const navigate = useNavigate();
 
@@ -85,10 +90,15 @@ export default function Sidebar() {
       navigate(item.target);
     }
   };
+  useEffect(() => {
+    console.log(`sidebar-container ${isSidebarCollapsed ? "collapsed" : ""}`);
+  }, [isSidebarCollapsed]);
 
   return (
-    <div className="sidebar-container">
-      <div className="navigation-item">
+    <div
+      className={`sidebar-container ${isSidebarCollapsed ? "collapsed" : ""}`}
+    >
+      <div className="navigation-item" onClick={() => handleLogoClick()}>
         <img src={logo} className="icon" />
         <div className="title">Stocklinx</div>
       </div>
@@ -105,7 +115,9 @@ export default function Sidebar() {
             {item?.elements ? (
               <div
                 className={
-                  item?.displayElements ? "arrow-down-open" : "arrow-down"
+                  item?.displayElements
+                    ? "arrow-down arrow-down-open"
+                    : "arrow-down"
                 }
               >
                 <box-icon name="chevron-down" size="1.4rem" color="#737373" />
