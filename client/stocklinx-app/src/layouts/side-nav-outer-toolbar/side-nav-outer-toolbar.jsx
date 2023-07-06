@@ -2,42 +2,9 @@ import React, { useState, useCallback } from "react";
 import { Header } from "../../components";
 import "./side-nav-outer-toolbar.scss";
 import "boxicons";
-import logo from "../../images/logo.png";
 
 export default function SideNavOuterToolbar({ title, children }) {
-  const [navigationList, setNavigationList] = useState([
-    {
-      title: "Home",
-      icon: "home-alt",
-      color: "#737373",
-      elements: [{ title: "Test", icon: "bar-chart-alt-2", color: "#737373" }],
-      displayElements: false,
-    },
-    {
-      title: "Renevue",
-      icon: "bar-chart-alt-2",
-      color: "#737373",
-      elements: [{ title: "Test2", icon: "bar-chart-alt-2", color: "#737373" }],
-      displayElements: false,
-    },
-    {
-      title: "Notification",
-      icon: "bell",
-      color: "#737373",
-    },
-    {
-      title: "Analytics",
-      icon: "pie-chart-alt",
-      color: "#737373",
-    },
-    {
-      title: "Logout",
-      icon: "log-out",
-      color: "#737373",
-    },
-  ]);
   const scrollViewRef = useRef(null);
-  const navigate = useNavigate();
   const { isXSmall, isLarge } = useScreenSize();
   const [patchCssClass, onMenuReady] = useMenuPatch();
   const [menuStatus, setMenuStatus] = useState(
