@@ -58,7 +58,7 @@ const Accessory = ({ Id }) => {
     store: {
       type: "array",
       data: JSON.parse(JSON.stringify(accessories)),
-      // key: "id",
+      key: "id",
     },
   });
   const onExporting = (e) => {
@@ -134,7 +134,7 @@ const Accessory = ({ Id }) => {
           allowDeleting={true}
         >
           <Popup
-            title="List Item Info"
+            title="Accessory Info"
             showTitle={true}
             width={700}
             height={525}
