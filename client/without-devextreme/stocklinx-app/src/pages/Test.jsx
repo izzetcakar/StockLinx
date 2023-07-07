@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./test.scss";
 import GridTable from "../components/datagrid/GridTable";
 
@@ -19,6 +19,8 @@ function appComponent(value) {
   );
 }
 const Test = () => {
+  const [a, s] = useState(false);
+
   const columns = [
     {
       dataField: "Owner",
@@ -42,7 +44,6 @@ const Test = () => {
       renderComponent: appComponent,
     },
   ];
-
   const data = [
     {
       Owner: "Madison Carter",
@@ -78,6 +79,7 @@ const Test = () => {
       <div className="title">Computers</div>
       <div className="description">Description</div>
       <GridTable data={data} columns={columns} />
+      <button onClick={() => s(!a)}>{a.toString()}</button>
     </div>
   );
 };
