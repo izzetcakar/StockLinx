@@ -23,6 +23,7 @@ import Sidebar from "./components/sidebar/Sidebar";
 import LoginForm from "./components/login-form/LoginForm";
 import CreateAccountForm from "./components/create-account-form/CreateAccountForm";
 import { useSelector } from "react-redux";
+import Test from "./pages/test";
 
 const Layout = () => {
   const userRedux = {
@@ -44,7 +45,9 @@ const Layout = () => {
   if (checkEmpty(userRedux)) {
     return (
       <div className="main-container">
-        <Sidebar />
+        <div>
+          <Sidebar />
+        </div>
         <div className="page">
           <Outlet />
         </div>
@@ -95,6 +98,10 @@ const router = createBrowserRouter([
       {
         path: "/user",
         element: <User />,
+      },
+      {
+        path: "/test",
+        element: <Test />,
       },
     ],
   },
