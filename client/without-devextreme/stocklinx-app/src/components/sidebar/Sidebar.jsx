@@ -57,6 +57,12 @@ export default function Sidebar() {
       target: "/model",
     },
     {
+      title: "Test",
+      icon: "pie-chart-alt",
+      color: "#737373",
+      target: "/test",
+    },
+    {
       title: "Logout",
       icon: "log-out",
       color: "#737373",
@@ -90,9 +96,6 @@ export default function Sidebar() {
       navigate(item.target);
     }
   };
-  useEffect(() => {
-    console.log(`sidebar-container ${isSidebarCollapsed ? "collapsed" : ""}`);
-  }, [isSidebarCollapsed]);
 
   return (
     <div
