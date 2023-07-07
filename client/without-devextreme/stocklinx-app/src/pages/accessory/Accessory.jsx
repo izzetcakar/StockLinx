@@ -125,6 +125,8 @@ const Accessory = ({ Id }) => {
         onSelectionChanged={selectionChanged}
         allowColumnReordering={true}
         allowColumnResizing={true}
+        showColumnLines={false}
+        showRowLines={false}
       >
         <LoadPanel enabled={true} />
         <Editing
