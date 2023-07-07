@@ -20,7 +20,7 @@
 
       .property {
         font-weight: bold;
-        padding: 0.5rem;
+        padding: 0.7rem;
         padding-bottom: 0;
         border-bottom: 1px solid #ccc;
         text-overflow: ellipsis;
@@ -31,7 +31,7 @@
       .data-value {
         display: flex;
         align-items: center;
-        padding: 0.5rem;
+        padding: 0.5rem 0.7rem;
         white-space: nowrap;
         text-overflow: ellipsis;
         overflow: hidden;
