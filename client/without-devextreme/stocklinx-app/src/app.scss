@@ -7,9 +7,9 @@
 //   height: 100%;
 // }
 
-::-webkit-scrollbar {
-  display: none;
-}
+// ::-webkit-scrollbar {
+//   display: none;
+// }
 
 .main-container {
   display: flex;
@@ -29,5 +29,8 @@
     padding: 1rem;
     margin: 0.5rem;
     overflow: scroll;
+  }
+  .page::-webkit-scrollbar {
+    display: none;
   }
 }
