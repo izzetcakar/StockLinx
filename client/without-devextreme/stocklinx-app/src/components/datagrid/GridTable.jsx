@@ -31,10 +31,10 @@ const GridTable = ({ data, columns, hasColumnLines }) => {
     return (
       <div className="edit-container">
         <div className="element" onClick={() => console.log(data[rowIndex])}>
-          <box-icon type="solid" name="edit-alt" size="1.5rem"></box-icon>
+          <box-icon type="solid" name="edit-alt" size="1.5rem" />
         </div>
         <div className="element" onClick={() => console.log(rowIndex)}>
-          <box-icon type="solid" name="x-square" size="1.5rem"></box-icon>
+          <box-icon type="solid" name="x-square" size="1.5rem" />
         </div>
       </div>
     );
@@ -82,7 +82,7 @@ const GridTable = ({ data, columns, hasColumnLines }) => {
     if (typeof value === "boolean") {
       const name = value ? "check" : "x";
       const color = value ? "#63bd4f" : "#ed6b6b";
-      return <box-icon size="1.5rem" name={name} color={color}></box-icon>;
+      return <box-icon size="1.5rem" name={name} color={color} />;
     }
 
     return value;
@@ -116,7 +116,6 @@ const GridTable = ({ data, columns, hasColumnLines }) => {
       },
     ];
   };
-
   const handleTableStyle = () => {
     const style = {};
     if (hasColumnLines) {
