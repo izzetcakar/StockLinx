@@ -9,12 +9,13 @@ import { getIndexesFromArray } from "../../functions/getIndexesFromArray";
 const pageSizes = [1, 3, 5];
 
 const GridTable = ({
-  data,
-  columns,
+  data = [],
+  columns = [],
   hasColumnLines = false,
   showPageSizeSelector = true,
   showPageSizeInfo = true,
   showPageSize = true,
+  noDataText = "No Data to Display",
 }) => {
   const [gridData, setGridData] = useState([]);
   const [propertyDataStyle, setPropertyDataStyle] = useState({});
@@ -57,6 +58,7 @@ const GridTable = ({
     if (!showPageSizeSelector && !showPageSizeInfo) {
       return null;
     }
+
     return (
       <div className="page-size-container">
         {showPageSizeSelector ? (
@@ -67,7 +69,7 @@ const GridTable = ({
                   item === selectedPageSize ? "selected" : ""
                 }`}
                 key={item}
-                onClick={() => setSelectedPageSize(item)}
+                onClick={() => handleSelectedPageSize(item)}
               >
                 {item}
               </div>
@@ -107,6 +109,10 @@ const GridTable = ({
         renderComponent: EditObjectComponent,
       },
     ];
+  };
+  const handleSelectedPageSize = (newSize) => {
+    setSelectedPageSize(newSize);
+    setSelectedIndexes([]);
   };
   const selectObject = (index) => {
     setSelectedIndexes((prevIndexes) => {
@@ -200,28 +206,42 @@ const GridTable = ({
   };
 
   return (
-    <div className="table-container">
-      <div className="columns-data-container">
-        {handleColumnsEmpty(columns).map((column, columnIndex) => (
-          <div
-            className="property-data"
-            key={columnIndex}
-            style={
-              column.dataField === "Edit" && hasColumnLines
-                ? { ...propertyDataStyle, borderLeft: "0" }
-                : propertyDataStyle
-            }
-          >
-            <GridColumn {...column} />
-            {filterData().map((_, rowIndex) => (
-              <div className="data-value" key={rowIndex}>
-                {renderValue(rowIndex, column)}
+    <div
+      className={
+        checkEmpty(data) ? "table-container" : "table-container no-data"
+      }
+    >
+      {checkEmpty(data) ? (
+        <>
+          <div className="columns-data-container">
+            {handleColumnsEmpty(columns).map((column, columnIndex) => (
+              <div
+                className="property-data"
+                key={columnIndex}
+                style={
+                  column.dataField === "Edit" && hasColumnLines
+                    ? { ...propertyDataStyle, borderLeft: "0" }
+                    : propertyDataStyle
+                }
+              >
+                <GridColumn {...column} />
+                {filterData().map((_, rowIndex) => (
+                  <div className="data-value" key={rowIndex}>
+                    {renderValue(rowIndex, column)}
+                  </div>
+                ))}
               </div>
             ))}
           </div>
-        ))}
-      </div>
-      {showPageSize ? <PageSizeComponent /> : null}
+          {showPageSize ? (
+            <div className="page-end-container">
+              <PageSizeComponent />
+            </div>
+          ) : null}
+        </>
+      ) : (
+        <div>{noDataText}</div>
+      )}
     </div>
   );
 };
