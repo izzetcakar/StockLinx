@@ -52,7 +52,6 @@
   .columns-data-container {
     display: flex;
     overflow-x: auto;
-
     .property-data {
       display: flex;
       flex-direction: column;
@@ -65,7 +64,6 @@
       .property {
         font-weight: bold;
         padding: 0.7rem;
-        padding-bottom: 0;
         border-bottom: 1px solid #ccc;
         text-overflow: ellipsis;
         white-space: nowrap;
