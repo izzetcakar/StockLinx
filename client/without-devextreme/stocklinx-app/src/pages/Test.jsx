@@ -19,8 +19,24 @@ function appComponent(value) {
   );
 }
 const Test = () => {
-  const [a, s] = useState(false);
-
+  const [options, setOptions] = useState([
+    {
+      option: "hasColumnLines",
+      value: false,
+    },
+    {
+      option: "showPageSize",
+      value: true,
+    },
+    {
+      option: "showPageSizeSelector",
+      value: true,
+    },
+    {
+      option: "showPageSizeInfo",
+      value: true,
+    },
+  ]);
   const columns = [
     {
       dataField: "Owner",
@@ -73,13 +89,48 @@ const Test = () => {
       Apllications: 265,
     },
   ];
-
+  const handleOptions = (target) => {
+    let newOptions = [...options].map((item, index) => {
+      if (index === target) {
+        return { ...item, value: !item.value };
+      } else {
+        return item;
+      }
+    });
+    setOptions(newOptions);
+  };
   return (
     <div className="page-data">
       <div className="title">Computers</div>
       <div className="description">Description</div>
-      <GridTable data={data} columns={columns} />
-      <button onClick={() => s(!a)}>{a.toString()}</button>
+      <GridTable
+        data={data}
+        columns={columns}
+        hasColumnLines={options[0].value}
+        showPageSize={options[1].value}
+        showPageSizeSelector={options[2].value}
+        showPageSizeInfo={options[3].value}
+      />
+      <div
+        className="button-container"
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "1rem",
+        }}
+      >
+        {options.map((item, index) => (
+          <button
+            key={index}
+            onClick={() => handleOptions(index)}
+            style={{
+              width: "220px",
+            }}
+          >
+            {item.option} - {item.value.toString()}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };
