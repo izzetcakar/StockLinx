@@ -20,13 +20,12 @@ namespace StockLinx.Service.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task AddImageAsync(ImageCreateDto imageCreateDto)
+        public async Task AddImageAsync(ImageCreateDto imageCreateDto, Guid targetId)
         {
-            Guid newId = Guid.NewGuid();
-            string path = newId + "-" + imageCreateDto.FileName;
+            string path = targetId + "-" + imageCreateDto.FileName;
             string base64 = imageCreateDto.Base64Image.Substring(imageCreateDto.Base64Image.IndexOf(',') + 1);
             ImageHandler.UploadBase64AsFile(base64, path);
-            var newImage = new Image { Id = newId, Path = path, CreatedDate = DateTime.UtcNow };
+            var newImage = new Image { Id = targetId, Path = path, CreatedDate = DateTime.UtcNow };
             await AddAsync(newImage);
             await _unitOfWork.CommitAsync();
         }
