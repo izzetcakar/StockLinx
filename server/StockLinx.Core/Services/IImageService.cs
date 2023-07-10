@@ -6,7 +6,7 @@ namespace StockLinx.Core.Services
 {
     public interface IImageService : IService<Image>
     {
-        Task AddImageAsync(ImageCreateDto createDto);
+        Task AddImageAsync(ImageCreateDto createDto,Guid targetId);
         Task UpdateImageAsync(ImageUpdateDto updateDto);
         Task DeleteImageAsync(Guid imageId);
     }
