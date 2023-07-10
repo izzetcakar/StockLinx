@@ -170,7 +170,7 @@ const Accessory = ({ Id }) => {
         <Pager
           visible={true}
           showPageSizeSelector={true}
-          showInfo={true}
+          showInfo={false}
           allowedPageSizes={allowedPageSizes}
         />
         <FilterRow visible={false} />
