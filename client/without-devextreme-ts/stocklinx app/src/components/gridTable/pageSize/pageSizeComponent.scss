@@ -1,0 +1,32 @@
+.page-size-container {
+  display: flex;
+  flex: 1;
+  height: fit-content;
+  padding: 0.7rem;
+  overflow: auto;
+  justify-content: space-between;
+  align-items: center;
+
+  .size-container {
+    display: flex;
+    height: fit-content;
+    gap: 0.7rem;
+    margin-right: auto;
+
+    .size {
+      padding: 0.5rem 0.8rem;
+      border-radius: 4px;
+      transition: all ease 0.2s;
+      cursor: pointer;
+    }
+    .size.selected {
+      background-color: #aeaeae;
+    }
+    .size:hover {
+      background-color: #dad9d9;
+    }
+  }
+  .selected-count-container {
+    margin-left: auto;
+  }
+}

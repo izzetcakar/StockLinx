@@ -24,7 +24,7 @@ import DataSource from "devextreme/data/data_source";
 import { Button } from "devextreme-react";
 import { notifyError } from "../../functions/notifyError";
 import { getAllProducts } from "../../redux/productReducer";
-import GridTable from "../../components/datagrid/GridTable";
+import GridTable from "../../components/gridTable/GridTable";
 
 const Accessory = ({ Id }) => {
   const dispatch = useDispatch();

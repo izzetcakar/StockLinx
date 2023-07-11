@@ -1,24 +1,12 @@
 import React, { useState } from "react";
-import "./test.scss";
-import GridTable from "../components/gridTable/GridTable";
+import "devextreme/data/odata/store";
+import GridTable from "../../components/gridTable/GridTable";
 
-function titleComponent(value) {
-  return <div style={{ fontWeight: "bold" }}>{value}</div>;
+interface AccessoryProps {
+
 }
-function appComponent(value) {
-  return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        width: "100%",
-      }}
-    >
-      {value}
-    </div>
-  );
-}
-const Test = () => {
+
+const Accessory: React.FC<AccessoryProps> = () => {
   const [options, setOptions] = useState([
     {
       option: "hasColumnLines",
@@ -37,6 +25,7 @@ const Test = () => {
       value: true,
     },
   ]);
+
   const columns = [
     {
       dataField: "Owner",
@@ -60,6 +49,7 @@ const Test = () => {
       renderComponent: appComponent,
     },
   ];
+
   const data = [
     {
       Owner: "Madison Carter",
@@ -89,8 +79,9 @@ const Test = () => {
       Apllications: 265,
     },
   ];
-  const handleOptions = (target) => {
-    let newOptions = [...options].map((item, index) => {
+
+  const handleOptions = (target: number) => {
+    const newOptions = [...options].map((item, index) => {
       if (index === target) {
         return { ...item, value: !item.value };
       } else {
@@ -99,10 +90,30 @@ const Test = () => {
     });
     setOptions(newOptions);
   };
+
+  function titleComponent(value: string) {
+    return <div style={{ fontWeight: "bold" }}>{value}</div>;
+  }
+
+  function appComponent(value: number) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          width: "100%",
+        }}
+      >
+        {value}
+      </div>
+    );
+  }
+
   return (
-    <div className="page-data">
-      <div className="title">Computers</div>
-      <div className="description">Description</div>
+    <div
+      className="datagrid-wrapper"
+      style={{ display: "flex", flexDirection: "column", gap: "2rem" }}
+    >
       <GridTable
         data={data}
         columns={columns}
@@ -135,4 +146,4 @@ const Test = () => {
   );
 };
 
-export default Test;
+export default Accessory;

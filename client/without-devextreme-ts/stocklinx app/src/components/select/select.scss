@@ -1,0 +1,32 @@
+.select-container {
+  .checkbox {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+  }
+
+  .checkbox-input {
+    position: absolute;
+    width: 1.375em;
+    height: 1.375em;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .checkbox-input:checked + .checkbox-icon .tick {
+    stroke-dashoffset: 0;
+  }
+
+  .checkbox-icon {
+    width: 1.375em;
+    height: 1.375em;
+    flex-shrink: 0;
+    overflow: visible;
+  }
+
+  .tick {
+    stroke-dasharray: 20px;
+    stroke-dashoffset: 20px;
+    transition: stroke-dashoffset 0.1s ease-out;
+  }
+}

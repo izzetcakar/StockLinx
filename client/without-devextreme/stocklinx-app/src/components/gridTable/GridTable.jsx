@@ -5,8 +5,9 @@ import SelectCheckbox from "../select/SelectCheckbox";
 import { hasAllElements } from "../../functions/hasAllElements";
 import { deepCopy } from "../../functions/deepCopy";
 import { getIndexesFromArray } from "../../functions/getIndexesFromArray";
-
-const pageSizes = [1, 3, 5];
+import EditComponent from "./edit/EditComponent";
+import SelectComponent from "./select/SelectComponent";
+import PageSizeComponent from "./pageSize/PageSizeComponent";
 
 const GridTable = ({
   data = [],
@@ -16,6 +17,7 @@ const GridTable = ({
   showPageSizeInfo = true,
   showPageSize = true,
   noDataText = "No Data to Display",
+  pageSizes = [1, 3, 5],
 }) => {
   const [gridData, setGridData] = useState([]);
   const [propertyDataStyle, setPropertyDataStyle] = useState({});
@@ -30,63 +32,6 @@ const GridTable = ({
     handleTableStyle();
   }, [hasColumnLines]);
 
-  const EditObjectComponent = ({ rowIndex }) => {
-    return (
-      <div className="edit-container">
-        <div
-          className="element"
-          onClick={() => console.log(gridData[rowIndex])}
-        >
-          <box-icon type="solid" name="edit-alt" size="1.5rem" />
-        </div>
-        <div className="element" onClick={() => console.log(rowIndex)}>
-          <box-icon type="solid" name="x-square" size="1.5rem" />
-        </div>
-      </div>
-    );
-  };
-  const SelectObjectComponent = ({ rowIndex, isChecked, selectFunc }) => {
-    return (
-      <SelectCheckbox
-        selectFunc={() => selectFunc(rowIndex)}
-        selectId={rowIndex}
-        isChecked={isChecked}
-      />
-    );
-  };
-  const PageSizeComponent = () => {
-    if (!showPageSizeSelector && !showPageSizeInfo) {
-      return null;
-    }
-
-    return (
-      <div className="page-size-container">
-        {showPageSizeSelector ? (
-          <div className="size-container">
-            {pageSizes.map((item) => (
-              <div
-                className={`size ${
-                  item === selectedPageSize ? "selected" : ""
-                }`}
-                key={item}
-                onClick={() => handleSelectedPageSize(item)}
-              >
-                {item}
-              </div>
-            ))}
-          </div>
-        ) : null}
-
-        {showPageSizeInfo ? (
-          <div className="selected-count-container">
-            Page {selectedIndexes.length} of{" "}
-            {Math.min(selectedPageSize, gridData.length)} (
-            {selectedIndexes.length} items)
-          </div>
-        ) : null}
-      </div>
-    );
-  };
   const addToolComponents = (columns) => {
     return [
       {
@@ -94,10 +39,10 @@ const GridTable = ({
         caption: "",
         dataType: "action",
         renderComponent: (rowIndex) => (
-          <SelectObjectComponent
+          <SelectComponent
             rowIndex={rowIndex}
             isChecked={selectedIndexes.includes(rowIndex)}
-            selectFunc={selectObject}
+            selectFunc={handleSelectRow}
           />
         ),
       },
@@ -106,15 +51,12 @@ const GridTable = ({
         dataField: "Edit",
         caption: "",
         dataType: "action",
-        renderComponent: EditObjectComponent,
+        renderComponent: EditComponent,
       },
     ];
   };
-  const handleSelectedPageSize = (newSize) => {
-    setSelectedPageSize(newSize);
-    setSelectedIndexes([]);
-  };
-  const selectObject = (index) => {
+
+  const handleSelectRow = (index) => {
     setSelectedIndexes((prevIndexes) => {
       if (prevIndexes.includes(index)) {
         return prevIndexes.filter((i) => i !== index);
@@ -130,37 +72,32 @@ const GridTable = ({
       setSelectedIndexes(getIndexesFromArray(gridData));
     }
   };
-  const renderValue = (rowIndex, column) => {
+  const renderColumnValue = (rowIndex, column) => {
     const value = gridData[rowIndex][column.dataField];
 
     if (column.dataField === "Edit") {
-      return <EditObjectComponent rowIndex={rowIndex} />;
+      return <EditComponent rowIndex={rowIndex} />;
     }
-
     if (column.dataField === "Select") {
       return (
-        <SelectObjectComponent
+        <SelectComponent
           rowIndex={rowIndex}
           isChecked={selectedIndexes.includes(rowIndex)}
-          selectFunc={selectObject}
+          selectFunc={handleSelectRow}
         />
       );
     }
-
     if (column.renderComponent) {
       return column.renderComponent(value);
     }
-
     if (value === null || value === undefined) {
       return "";
     }
-
     if (typeof value === "boolean") {
       const name = value ? "check" : "x";
       const color = value ? "#63bd4f" : "#ed6b6b";
       return <box-icon size="1.5rem" name={name} color={color} />;
     }
-
     return value;
   };
   const handleColumnsEmpty = (columns) => {
@@ -205,6 +142,11 @@ const GridTable = ({
     return <div className="property">{caption}</div>;
   };
 
+  const handleSelectedPageSize = (newSize) => {
+    setSelectedPageSize(newSize);
+    setSelectedIndexes([]);
+  };
+
   return (
     <div
       className={
@@ -227,17 +169,24 @@ const GridTable = ({
                 <GridColumn {...column} />
                 {filterData().map((_, rowIndex) => (
                   <div className="data-value" key={rowIndex}>
-                    {renderValue(rowIndex, column)}
+                    {renderColumnValue(rowIndex, column)}
                   </div>
                 ))}
               </div>
             ))}
           </div>
-          {showPageSize ? (
-            <div className="page-end-container">
-              <PageSizeComponent />
-            </div>
-          ) : null}
+          <div className="page-end-container">
+            <PageSizeComponent
+              showPageSize={showPageSize}
+              showPageSizeInfo={showPageSizeInfo}
+              showPageSizeSelector={showPageSizeSelector}
+              allItemsCount={gridData.length}
+              handleSelectedPageSize={handleSelectedPageSize}
+              pageSizes={pageSizes}
+              selectedCount={selectedIndexes.length}
+              selectedSize={selectedPageSize}
+            />
+          </div>
         </>
       ) : (
         <div>{noDataText}</div>

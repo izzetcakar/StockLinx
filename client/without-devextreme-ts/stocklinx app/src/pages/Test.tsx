@@ -2,22 +2,6 @@ import React, { useState } from "react";
 import "./test.scss";
 import GridTable from "../components/gridTable/GridTable";
 
-function titleComponent(value) {
-  return <div style={{ fontWeight: "bold" }}>{value}</div>;
-}
-function appComponent(value) {
-  return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        width: "100%",
-      }}
-    >
-      {value}
-    </div>
-  );
-}
 const Test = () => {
   const [options, setOptions] = useState([
     {
@@ -37,12 +21,28 @@ const Test = () => {
       value: true,
     },
   ]);
+  const TitleComponent: React.FC<{ value: string }> = ({ value }) => {
+    return <div style={{ fontWeight: "bold" }}>{value}</div>;
+  };
+  const AppComponent: React.FC<{ value: number }> = ({ value }) => {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          width: "100%",
+        }}
+      >
+        {value}
+      </div>
+    );
+  };
   const columns = [
     {
       dataField: "Owner",
       caption: "Owner",
       dataType: "string",
-      renderComponent: titleComponent,
+      renderComponent: TitleComponent,
     },
     { dataField: "LastCheck", caption: "Last Check", dataType: "string" },
     { dataField: "OSversion", caption: "OS Version", dataType: "string" },
@@ -57,7 +57,7 @@ const Test = () => {
       dataField: "Apllications",
       caption: "Apllications",
       dataType: "number",
-      renderComponent: appComponent,
+      renderComponent: AppComponent,
     },
   ];
   const data = [
@@ -89,8 +89,8 @@ const Test = () => {
       Apllications: 265,
     },
   ];
-  const handleOptions = (target) => {
-    let newOptions = [...options].map((item, index) => {
+  const handleOptions = (target: number) => {
+    const newOptions = [...options].map((item, index) => {
       if (index === target) {
         return { ...item, value: !item.value };
       } else {
@@ -99,10 +99,12 @@ const Test = () => {
     });
     setOptions(newOptions);
   };
+
   return (
-    <div className="page-data">
-      <div className="title">Computers</div>
-      <div className="description">Description</div>
+    <div
+      className="datagrid-wrapper"
+      style={{ display: "flex", flexDirection: "column", gap: "2rem" }}
+    >
       <GridTable
         data={data}
         columns={columns}
@@ -110,6 +112,7 @@ const Test = () => {
         showPageSize={options[1].value}
         showPageSizeSelector={options[2].value}
         showPageSizeInfo={options[3].value}
+        cellCssClass="testClass"
       />
       <div
         className="button-container"

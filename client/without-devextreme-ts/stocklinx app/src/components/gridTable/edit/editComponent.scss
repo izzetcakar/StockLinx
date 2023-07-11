@@ -1,0 +1,18 @@
+.edit-container {
+  display: flex;
+  height: fit-content;
+  width: fit-content;
+  align-items: center;
+
+  gap: 5px;
+  justify-content: space-between;
+  .element {
+    flex: 1;
+    padding: 0.2rem 0.3rem;
+    cursor: pointer;
+  }
+  :hover {
+    border-radius: 4px;
+    background-color: #b3b3b3;
+  }
+}

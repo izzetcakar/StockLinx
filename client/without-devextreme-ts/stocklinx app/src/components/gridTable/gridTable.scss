@@ -1,0 +1,110 @@
+.table-container.no-data {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.table-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+  width: fit-content;
+  box-shadow: 0 2px 4px #0000006d;
+  overflow-x: auto;
+  color: black;
+
+  .table-edit-wrapper {
+    display: flex;
+    width: 100%;
+  }
+  .page-end-container {
+    border-top: 1px solid #ccc;
+  }
+  // .row-edit-container {
+  //   display: flex;
+  //   flex-direction: column;
+  //   border-left: 1px solid #ccc;
+  //   height: 100%;
+  //   justify-content: flex-end;
+  //   margin-bottom: 10px;
+  // }
+  // .row-select-container {
+  //   display: flex;
+  //   flex-direction: column;
+  //   border-right: 1px solid #ccc;
+  //   height: 100%;
+  //   margin-bottom: 10px;
+  //   .select-element {
+  //     flex: 1;
+  //     padding: 0.7rem;
+  //   }
+  // }
+  .table-content-container {
+    display: flex;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+  }
+  .column-container {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    .column-title {
+      font-weight: bold;
+      border-bottom: 1px solid #ccc;
+    }
+    .cell {
+      display: flex;
+      align-items: center;
+      padding: 1rem;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      flex: 1;
+    }
+  }
+  .column-container.column-select {
+    border-right: 1px solid #ccc;
+  }
+  .column-container.column-edit {
+    border-left: 1px solid #ccc;
+  }
+  .column-container + .column-container {
+    border-left: 1px solid #ccc;
+  }
+}
+
+.table-edit-wrapper::-webkit-scrollbar {
+  display: none;
+}
+.table-content-container::-webkit-scrollbar {
+  display: block;
+  height: 10px;
+}
+
+.table-content-container::-webkit-scrollbar-track {
+  // background-color: #f1f1f1;
+  margin: 0 0.5rem;
+}
+
+.table-content-container::-webkit-scrollbar-track:hover {
+  // background-color: #eaeaea;
+  border-radius: 4px;
+}
+
+.table-content-container::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 4px;
+}
+
+.table-content-container::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+}
+
+.table-content-container::-webkit-scrollbar-thumb:active {
+  background-color: #333;
+}
+
+.table-content-container::-webkit-scrollbar-corner {
+  background-color: transparent;
+}
