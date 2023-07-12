@@ -78,8 +78,9 @@
   display: none;
 }
 .table-content-container::-webkit-scrollbar {
-  display: block;
+  display: inline;
   height: 10px;
+  width: 2rem;
 }
 
 .table-content-container::-webkit-scrollbar-track {
