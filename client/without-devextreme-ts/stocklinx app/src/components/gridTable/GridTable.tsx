@@ -214,14 +214,13 @@ const GridTable: React.FC<GridTableProps> = ({
               ))}
             </div>
             <div className="column-container column-edit">
-              <div className="cell ccolumn-title"></div>
+              <div className="cell column-title"></div>
               {getIndexesFromArray(filterData()).map((_, index) => (
                 <div className="cell" key={index}>
                   <EditComponent gridData={gridData} rowIndex={index} key={index} />
                 </div>
               ))}
             </div>
-
           </div>
           <div className="page-end-container">
             <PageSizeComponent
