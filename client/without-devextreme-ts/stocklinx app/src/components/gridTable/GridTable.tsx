@@ -206,7 +206,8 @@ const GridTable: React.FC<GridTableProps> = ({
                     <GridColumn {...column} />
                   </div>
                   {filterData().map((_, rowIndex) => (
-                    <div className={`cell ${cellCssClass}`} key={rowIndex}>
+                    <div className={selectedIndexes.includes(rowIndex) ?
+                      `cell selected-cell ${cellCssClass}` : `cell ${cellCssClass}`} key={rowIndex}>
                       {renderColumnValue(rowIndex, column)}
                     </div>
                   ))}
