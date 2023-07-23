@@ -2,24 +2,26 @@ import React, { useState } from "react";
 import "./sidebar.scss";
 import "boxicons";
 import logo from "../../images/logo.png";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { checkEmpty } from "../../functions/checkEmpty";
 
 interface NavigationItem {
   title: string;
   icon: string;
   color: string;
-  elements?: NavigationItem[];
-  displayElements?: boolean;
-  target?: string;
+  subItems?: NavigationItem[];
+  isExpanded?: boolean;
+  target: string;
 }
 
 const Sidebar: React.FC = () => {
+  const location = useLocation();
   const [navigationList, setNavigationList] = useState<NavigationItem[]>([
     {
       title: "Home",
       icon: "home-alt",
       color: "#737373",
-      elements: [
+      subItems: [
         {
           title: "Test",
           icon: "bar-chart-alt-2",
@@ -27,7 +29,8 @@ const Sidebar: React.FC = () => {
           color: "#737373",
         },
       ],
-      displayElements: false,
+      isExpanded: false,
+      target: "/"
     },
     {
       title: "Accessory",
@@ -88,8 +91,8 @@ const Sidebar: React.FC = () => {
   };
   const handleNavElements = (target: number) => {
     const newList = navigationList.map((item, index) => {
-      if (item?.elements && target === index) {
-        return { ...item, displayElements: !item.displayElements };
+      if (item?.subItems && target === index) {
+        return { ...item, isExpanded: !item.isExpanded };
       } else {
         return item;
       }
@@ -97,7 +100,7 @@ const Sidebar: React.FC = () => {
     setNavigationList(newList);
   };
   const navigateUser = (item: NavigationItem, index: number) => {
-    if (item?.elements) {
+    if (checkEmpty(item.subItems)) {
       handleNavElements(index);
     } else {
       handleNavElements(-1);
@@ -107,37 +110,39 @@ const Sidebar: React.FC = () => {
   const hideAllDisplayElements = () => {
     setNavigationList((prev) =>
       prev.map((item) => {
-        if (item?.displayElements && item?.elements) {
-          return { ...item, displayElements: false };
+        if (item?.isExpanded && item?.subItems) {
+          return { ...item, isExpanded: false };
         } else {
           return item;
         }
       })
     );
   }
-
+  const checkIfSelected = (item: NavigationItem) => {
+    return (item.target === location.pathname);
+  }
   return (
     <div
       className={`sidebar-container ${isSidebarCollapsed ? "collapsed" : ""}`}
     >
-      <div className="navigation-item" onClick={handleLogoClick}>
+      <div className="navigation-item" onClick={() => handleLogoClick()}>
         <img src={logo} className="icon" alt="Logo" />
         <div className="title">Stocklinx</div>
       </div>
       {navigationList.map((item, index) => (
         <React.Fragment key={index}>
           <div
-            className="navigation-item"
+            className={checkIfSelected(item) ? "navigation-item selected" : "navigation-item"}
             onClick={() => navigateUser(item, index)}
           >
             <div className="icon">
-              <i className={`bx bx-${item.icon}`} style={{ fontSize: "1.4rem", color: item.color }}></i>
+              <i className={`bx bx-${item.icon}`} style={{ fontSize: "1.4rem", color: item.target === location.pathname ? "white" : item.color }}></i>
             </div>
             <div className="title">{item.title}</div>
-            {item?.elements ? (
+            {checkEmpty(item?.subItems) ? (
               <div
                 className={
-                  item?.displayElements
+                  item?.isExpanded
                     ? "arrow-down arrow-down-open"
                     : "arrow-down"
                 }
@@ -146,16 +151,17 @@ const Sidebar: React.FC = () => {
               </div>
             ) : null}
           </div>
-          {item?.displayElements && item.elements
-            ? item.elements.map((el, nestedIndex) => (
+          {item?.isExpanded && item.subItems
+            ? item.subItems.map((subItem, nestedIndex) => (
               <div
-                className="navigation-element"
+                className={checkIfSelected(subItem) ? "navigation-element selected" : "navigation-element"}
                 key={`${index}-${nestedIndex}`}
+                onClick={() => navigateUser(subItem, nestedIndex)}
               >
                 <div className="icon">
-                  <i className={`bx bx-${el.icon}`} style={{ fontSize: "1.4rem", color: el.color }}></i>
+                  <i className={`bx bx-${subItem.icon}`} style={{ fontSize: "1.4rem", color: checkIfSelected(subItem) ? "white" : subItem.color }}></i>
                 </div>
-                <div className="title">{el.title}</div>
+                <div className="title">{subItem.title}</div>
               </div>
             ))
             : null}

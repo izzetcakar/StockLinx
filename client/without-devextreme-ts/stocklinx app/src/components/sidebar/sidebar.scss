@@ -21,14 +21,18 @@
 .sidebar-container {
   display: flex;
   flex-direction: column;
-  width: 200px;
+  width: 250px;
   height: 100%;
   color: #737373;
   transition: all ease 0.7s;
   user-select: none;
-  overflow: scroll;
+  overflow-y: scroll;
   background-color: white;
 
+  .navigation-item.selected {
+    background-color: #596b76;
+    color: white;
+  }
   .navigation-item {
     display: flex;
     height: fit-content;
@@ -43,7 +47,7 @@
   }
   .navigation-element {
     display: flex;
-    width: 100%;
+    width: auto;
     height: fit-content;
     align-items: center;
     text-align: center;
@@ -52,6 +56,13 @@
     cursor: pointer;
     margin-top: 8px;
     // background-color: #bebebe;
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+  }
+  .navigation-element.selected {
+    background-color: #596b76;
+    color: white;
   }
   .icon {
     object-fit: cover;
@@ -66,6 +77,9 @@
     text-align: start;
     margin: 0 1rem;
     font-weight: bold;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 
@@ -97,7 +111,7 @@
 .sidebar-container .navigation-item:not(:first-child):hover {
   background-color: #bababa;
   .title {
-    color: white;
+    color: #596b76;
   }
 }
 .sidebar-container .navigation-element:hover {

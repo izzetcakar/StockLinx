@@ -3,7 +3,6 @@ import "devextreme/data/odata/store";
 import GridTable from "../../components/gridTable/GridTable";
 
 interface AccessoryProps {
-
 }
 
 const Accessory: React.FC<AccessoryProps> = () => {
@@ -26,12 +25,26 @@ const Accessory: React.FC<AccessoryProps> = () => {
     },
   ]);
 
+  function appComponent({ value }: any) {
+    console.log(value)
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          width: "100%",
+        }}
+      >
+        {value}
+      </div>
+    );
+  }
   const columns = [
     {
       dataField: "Owner",
       caption: "Owner",
       dataType: "string",
-      renderComponent: titleComponent,
+      // renderComponent: titleComponent,
     },
     { dataField: "LastCheck", caption: "Last Check", dataType: "string" },
     { dataField: "OSversion", caption: "OS Version", dataType: "string" },
@@ -95,19 +108,6 @@ const Accessory: React.FC<AccessoryProps> = () => {
     return <div style={{ fontWeight: "bold" }}>{value}</div>;
   }
 
-  function appComponent(value: number) {
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          width: "100%",
-        }}
-      >
-        {value}
-      </div>
-    );
-  }
 
   return (
     <div
