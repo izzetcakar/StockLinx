@@ -17,8 +17,11 @@ const DropDown: React.FC<DropDownProps> = ({ columns, visibleColumns, onChange }
     };
 
     return (
-        <div className="dropdown-container">
-            <div className="dropdown-title" onClick={() => handleVisible()}>Columns</div>
+        <div>
+            <div className="dropdown-container" onClick={() => handleVisible()}>
+                <div className="dropdown-title" >Columns</div>
+                <i className='bx bx-chevron-down' style={{ fontSize: "1.4rem", color: "#737373" }}></i>
+            </div>
             <div className={`dropdown-content ${visible ? 'visible' : ''}`}>
                 {columns.map((column, index) => (
                     <div className="dropdown-element" key={index}>

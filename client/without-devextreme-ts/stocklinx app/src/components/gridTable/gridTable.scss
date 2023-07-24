@@ -29,6 +29,8 @@
     display: flex;
     overflow: auto;
     flex-wrap: nowrap;
+    width: 100%;
+    font-size: 0.9em;
   }
   .column-container {
     display: flex;
@@ -38,6 +40,7 @@
     .column-title {
       font-weight: bold;
       border-bottom: 1px solid #ccc;
+      font-size: 1em;
     }
     .cell {
       display: flex;
@@ -56,9 +59,12 @@
   }
   .column-select {
     // border-right: 1px solid #ccc;
+    padding-bottom: 10px;
   }
   .column-edit {
+    justify-content: flex-end;
     border-left: 1px solid #ccc;
+    padding-bottom: 10px;
   }
   .column-container + .column-container {
     border-left: 1px solid #ccc;

@@ -76,7 +76,7 @@ const GridTable: React.FC<GridTableProps> = ({
     });
   };
   const handleSelectAll = () => {
-    if (hasAllElements(getIndexesFromArray(datagrid), selectedIndexes)) {
+    if (hasAllElements(getIndexesFromArray(filterData()), selectedIndexes)) {
       setSelectedIndexes([]);
     } else {
       setSelectedIndexes(getIndexesFromArray(datagrid));
@@ -144,6 +144,9 @@ const GridTable: React.FC<GridTableProps> = ({
     setSelectedIndexes([]);
   };
 
+  if (!checkEmpty(data)) {
+    return <div className="table-container no-data">{noDataText}</div>
+  }
   return (
     <div
       className={
@@ -155,7 +158,7 @@ const GridTable: React.FC<GridTableProps> = ({
         visibleColumns={visibleColumns}
         handleVisibleColumns={handleVisibleColumns}
       />
-      {checkEmpty(data) ? (
+      {checkEmpty(data) && checkEmpty(visibleColumns) ? (
         <>
           <div className="table-edit-wrapper">
             <div className="column-container column-select" >
