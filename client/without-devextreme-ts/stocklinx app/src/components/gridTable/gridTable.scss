@@ -12,7 +12,6 @@
   width: fit-content;
   box-shadow: 0 2px 4px #0000006d;
   overflow-x: auto;
-  overflow-y: scroll;
   color: black;
   max-height: 100%;
 
@@ -21,13 +20,14 @@
     width: 100%;
     max-height: 100%;
     overflow: hidden;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
   }
   .page-end-container {
-    border-top: 1px solid #ccc;
   }
   .table-content-container {
     display: flex;
-    overflow-x: auto;
+    overflow: auto;
     flex-wrap: nowrap;
   }
   .column-container {
@@ -55,7 +55,7 @@
     }
   }
   .column-select {
-    border-right: 1px solid #ccc;
+    // border-right: 1px solid #ccc;
   }
   .column-edit {
     border-left: 1px solid #ccc;
