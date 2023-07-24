@@ -113,6 +113,7 @@ const Test = () => {
         showPageSizeSelector={options[2].value}
         showPageSizeInfo={options[3].value}
         cellCssClass="testClass"
+        pageSizes={[1, 2, 5]}
       />
       <div
         className="button-container"
