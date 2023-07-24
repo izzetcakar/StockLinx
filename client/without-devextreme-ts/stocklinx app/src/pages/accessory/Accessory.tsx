@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import "devextreme/data/odata/store";
 import GridTable from "../../components/gridTable/GridTable";
 
 interface AccessoryProps {
@@ -26,7 +25,6 @@ const Accessory: React.FC<AccessoryProps> = () => {
   ]);
 
   function appComponent({ value }: any) {
-    console.log(value)
     return (
       <div
         style={{
@@ -44,7 +42,7 @@ const Accessory: React.FC<AccessoryProps> = () => {
       dataField: "Owner",
       caption: "Owner",
       dataType: "string",
-      // renderComponent: titleComponent,
+      renderComponent: titleComponent,
     },
     { dataField: "LastCheck", caption: "Last Check", dataType: "string" },
     { dataField: "OSversion", caption: "OS Version", dataType: "string" },
@@ -104,7 +102,7 @@ const Accessory: React.FC<AccessoryProps> = () => {
     setOptions(newOptions);
   };
 
-  function titleComponent(value: string) {
+  function titleComponent({ value }: any) {
     return <div style={{ fontWeight: "bold" }}>{value}</div>;
   }
 
