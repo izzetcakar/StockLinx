@@ -100,6 +100,19 @@ const Test = () => {
     setOptions(newOptions);
   };
 
+  const onStartEdit = (row: object) => {
+    console.log("start edit", row);
+  };
+  const onRowInsert = () => {
+    console.log("insert");
+  };
+  const onRowUpdate = (row: object) => {
+    console.log("update", row);
+  };
+  const onRowDelete = (row: object) => {
+    console.log("delete", row);
+  };
+
   return (
     <div
       className="datagrid-wrapper"
@@ -114,6 +127,11 @@ const Test = () => {
         showPageSizeInfo={options[3].value}
         cellCssClass="testClass"
         pageSizes={[1, 2, 5]}
+        enableEdit={true}
+        onRowInsert={onRowInsert}
+        onRowUpdate={onRowUpdate}
+        onRowDelete={onRowDelete}
+        onStartEdit={onStartEdit}
       />
       <div
         className="button-container"
