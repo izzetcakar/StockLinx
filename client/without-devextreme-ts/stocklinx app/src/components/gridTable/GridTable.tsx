@@ -22,6 +22,11 @@ interface GridTableProps {
   pageSizes?: number[];
   gridCssClass?: string;
   cellCssClass?: string;
+  enableEdit?: boolean;
+  onRowInsert: () => void;
+  onRowUpdate: (row: object) => void;
+  onRowDelete: (row: object) => void;
+  onStartEdit?: (row: object) => void;
 }
 const GridTable: React.FC<GridTableProps> = ({
   data = [],
@@ -33,7 +38,12 @@ const GridTable: React.FC<GridTableProps> = ({
   noDataText = "No Data to Display",
   pageSizes = [1, 3, 5],
   gridCssClass = "",
-  cellCssClass = ""
+  cellCssClass = "",
+  enableEdit = false,
+  onRowInsert = () => { },
+  onRowUpdate = () => { },
+  onRowDelete = () => { },
+  onStartEdit = () => { },
 }) => {
   const [datagridColumns, setDatagridColumns] = useState<Column[]>(columns);
   const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
@@ -203,14 +213,21 @@ const GridTable: React.FC<GridTableProps> = ({
                 ) : null
               ))}
             </div>
-            <div className="column-container column-edit">
+            {enableEdit ? <div className="column-container column-edit">
               <div className="cell column-title"></div>
               {getIndexesFromArray(filterData()).map((_, index) => (
                 <div className="cell" key={index}>
-                  <EditComponent datagrid={datagrid} rowIndex={index} key={index} />
+                  <EditComponent
+                    datagrid={datagrid}
+                    rowIndex={index}
+                    onRowUpdate={onRowUpdate}
+                    onRowDelete={onRowDelete}
+                    onStartEdit={onStartEdit}
+                    key={index}
+                  />
                 </div>
               ))}
-            </div>
+            </div> : null}
           </div>
           <div className="page-end-container">
             <PageSizeComponent
