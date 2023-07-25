@@ -11,8 +11,9 @@ interface ToolbarProps {
     columns: Column[];
     visibleColumns: string[];
     handleVisibleColumns: (columnCaption: string) => void;
+    onRowInsert?: () => void;
 }
-const Toolbar: React.FC<ToolbarProps> = ({ columns, visibleColumns, handleVisibleColumns }) => {
+const Toolbar: React.FC<ToolbarProps> = ({ columns, visibleColumns, handleVisibleColumns, onRowInsert }) => {
 
     return (
         <div className="toolbar-container">
@@ -20,12 +21,20 @@ const Toolbar: React.FC<ToolbarProps> = ({ columns, visibleColumns, handleVisibl
                 <div className="toolbar-element-content">
                     <Dropdown columns={columns} onChange={handleVisibleColumns} visibleColumns={visibleColumns} />
                 </div>
+            </div>
+            <div className="toolbar-element">
                 <div className="toolbar-element-content">
                     <div className="toolbar-element-icon">
                         <i className='bx bx-refresh'></i>
                     </div>
                 </div>
-
+            </div>
+            <div className="toolbar-element">
+                <div className="toolbar-element-content">
+                    <div className="toolbar-element-icon" onClick={onRowInsert}>
+                        <i className='bx bx-plus'></i>
+                    </div>
+                </div>
             </div>
         </div>
     )
