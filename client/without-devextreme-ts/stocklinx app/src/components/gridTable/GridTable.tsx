@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import "./gridTable.scss";
 import { checkEmpty } from "../../functions/checkEmpty";
 import SelectCheckbox from "../select/SelectCheckbox";
@@ -28,6 +28,7 @@ interface GridTableProps {
   onRowDelete: (row: object) => void;
   onStartEdit?: (row: object) => void;
 }
+
 const GridTable: React.FC<GridTableProps> = ({
   data = [],
   columns = [],
@@ -55,49 +56,43 @@ const GridTable: React.FC<GridTableProps> = ({
   useEffect(() => {
     setDatagrid(deepCopy(data));
   }, [data]);
+
   useEffect(() => {
     handleTableStyle();
   }, [hasColumnLines]);
+
   useEffect(() => {
     setDatagridColumns(handleColumnsEmpty(columns));
-  }, [columns]);
-  useEffect(() => {
-    setVisibleColumns(setVisibleColumnsToAll());
-  }, [columns]);
+    setVisibleColumns(columns.map((item) => item.caption));
+  }, [columns, datagrid]);
 
   const handleVisibleColumns = (columnCaption: string): void => {
-    if (visibleColumns.includes(columnCaption)) {
-      setVisibleColumns(visibleColumns.filter((item) => item !== columnCaption));
-    } else {
-      setVisibleColumns([...visibleColumns, columnCaption]);
-    }
+    setVisibleColumns((prevVisibleColumns) =>
+      prevVisibleColumns.includes(columnCaption)
+        ? prevVisibleColumns.filter((item) => item !== columnCaption)
+        : [...prevVisibleColumns, columnCaption]
+    );
   };
-  const setVisibleColumnsToAll = useCallback(() => {
-    return columns.map((item) => item.caption);
-  }, [columns]);
 
   const handleSelectRow = (index: number) => {
-    setSelectedIndexes((prevIndexes) => {
-      if (prevIndexes.includes(index)) {
-        return prevIndexes.filter((i) => i !== index);
-      } else {
-        return [...prevIndexes, index];
-      }
-    });
+    setSelectedIndexes((prevIndexes) =>
+      prevIndexes.includes(index)
+        ? prevIndexes.filter((i) => i !== index)
+        : [...prevIndexes, index]
+    );
   };
+
   const handleSelectAll = () => {
-    if (hasAllElements(getIndexesFromArray(filterData()), selectedIndexes)) {
-      setSelectedIndexes([]);
-    } else {
-      setSelectedIndexes(getIndexesFromArray(datagrid));
-    }
+    setSelectedIndexes((prevIndexes) =>
+      hasAllElements(getIndexesFromArray(filterData()), prevIndexes)
+        ? []
+        : getIndexesFromArray(datagrid)
+    );
   };
+
   const renderColumnValue = (rowIndex: number, column: Column) => {
     const value = (datagrid[rowIndex] as { [key: string]: any })[column.dataField];
 
-    // if (column.dataField === "Edit") {
-    //   return <EditComponent datagrid={datagrid} rowIndex={rowIndex} />;
-    // }
     if (column.dataField === "Select") {
       return (
         <SelectComponent
@@ -116,37 +111,36 @@ const GridTable: React.FC<GridTableProps> = ({
     if (value === null || value === undefined) {
       return "";
     }
+
     if (typeof value === "boolean") {
       const name = value ? "check" : "x";
       const color = value ? "#63bd4f" : "#ed6b6b";
       return <i className={`bx bx-${name}`} style={{ fontSize: "1.5rem", color: color }} />;
     }
+
     return value;
   };
-  const handleColumnsEmpty = useCallback((columns: Column[]): Column[] => {
-    if (!checkEmpty(columns) && checkEmpty(datagrid)) {
+
+  const handleColumnsEmpty = (cols: Column[]): Column[] => {
+    if (!checkEmpty(cols) && checkEmpty(datagrid)) {
       const newColumns: Column[] = Object.keys(datagrid[0]).map((dataField) => ({
         dataField,
         caption: dataField,
         dataType: typeof dataField,
       }));
-      setVisibleColumns(newColumns.map((column) => column.caption));
       return newColumns;
     }
-    setVisibleColumns(columns.map((column) => column.caption));
-    return columns;
-  }, [columns, datagrid]);
-  const handleTableStyle = () => {
-    const style: React.CSSProperties = {
-      borderLeft: hasColumnLines ? "1px solid #ccc" : "none",
-    };
-    setPropertyDataStyle(style);
+    return cols;
   };
+
+  const handleTableStyle = () => {
+    setPropertyDataStyle({
+      borderLeft: hasColumnLines ? "1px solid #ccc" : "none",
+    });
+  };
+
   const filterData = () => {
     return datagrid.slice(0, selectedPageSize);
-  };
-  const GridColumn: React.FC<Column> = ({ dataField, caption }) => {
-    return caption;
   };
 
   const handleSelectedPageSize = (newSize: number) => {
@@ -155,14 +149,11 @@ const GridTable: React.FC<GridTableProps> = ({
   };
 
   if (!checkEmpty(data)) {
-    return <div className="table-container no-data">{noDataText}</div>
+    return <div className="table-container no-data">{noDataText}</div>;
   }
+
   return (
-    <div
-      className={
-        checkEmpty(data) ? `table-container ${gridCssClass}` : "table-container no-data"
-      }
-    >
+    <div className={`table-container ${checkEmpty(data) ? gridCssClass : "no-data"}`}>
       <Toolbar
         columns={datagridColumns}
         visibleColumns={visibleColumns}
@@ -172,7 +163,7 @@ const GridTable: React.FC<GridTableProps> = ({
       {checkEmpty(data) && checkEmpty(visibleColumns) ? (
         <>
           <div className="table-edit-wrapper">
-            <div className="column-container column-select" >
+            <div className="column-container column-select">
               <div className="cell column-title">
                 <SelectCheckbox
                   selectFunc={handleSelectAll}
@@ -184,7 +175,7 @@ const GridTable: React.FC<GridTableProps> = ({
                 />
               </div>
               {getIndexesFromArray(filterData()).map((_, index) => (
-                <div className="cell" key={index} >
+                <div className="cell" key={index}>
                   <SelectComponent
                     rowIndex={index}
                     isChecked={selectedIndexes.includes(index)}
@@ -194,41 +185,44 @@ const GridTable: React.FC<GridTableProps> = ({
               ))}
             </div>
             <div className="table-content-container">
-              {datagridColumns.map((column, columnIndex) => (visibleColumns.includes(column.caption) ?
-                (
-                  <div
-                    className="column-container"
-                    key={columnIndex}
-                    style={propertyDataStyle}
-                  >
+              {datagridColumns.map((column, columnIndex) =>
+                visibleColumns.includes(column.caption) ? (
+                  <div className="column-container" key={columnIndex} style={propertyDataStyle}>
                     <div className="cell column-title">
-                      <GridColumn {...column} />
+                      {column.caption}
                     </div>
                     {filterData().map((_, rowIndex) => (
-                      <div className={selectedIndexes.includes(rowIndex) ?
-                        `cell selected-cell ${cellCssClass}` : `cell ${cellCssClass}`} key={rowIndex}>
+                      <div
+                        className={
+                          selectedIndexes.includes(rowIndex)
+                            ? `cell selected-cell ${cellCssClass}`
+                            : `cell ${cellCssClass}`
+                        }
+                        key={rowIndex}
+                      >
                         {renderColumnValue(rowIndex, column)}
                       </div>
                     ))}
                   </div>
                 ) : null
-              ))}
+              )}
             </div>
-            {enableEdit ? <div className="column-container column-edit">
-              <div className="cell column-title"></div>
-              {getIndexesFromArray(filterData()).map((_, index) => (
-                <div className="cell" key={index}>
-                  <EditComponent
-                    datagrid={datagrid}
-                    rowIndex={index}
-                    onRowUpdate={onRowUpdate}
-                    onRowDelete={onRowDelete}
-                    onStartEdit={onStartEdit}
-                    key={index}
-                  />
-                </div>
-              ))}
-            </div> : null}
+            {enableEdit && (
+              <div className="column-container column-edit">
+                <div className="cell column-title"></div>
+                {getIndexesFromArray(filterData()).map((_, index) => (
+                  <div className="cell" key={index}>
+                    <EditComponent
+                      datagrid={datagrid}
+                      rowIndex={index}
+                      onRowUpdate={onRowUpdate}
+                      onRowDelete={onRowDelete}
+                      onStartEdit={onStartEdit}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
           <div className="page-end-container">
             <PageSizeComponent
