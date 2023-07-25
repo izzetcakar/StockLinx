@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import "./test.scss";
 import GridTable from "../components/gridTable/GridTable";
+import CustomPopup from "../components/popup/CustomPopup";
+import CustomForm from "../components/form/CustomForm";
 
 const Test = () => {
+  const editData = useRef<object>({});
+  const [formVisible, setFormVisible] = useState<boolean>(false);
   const [options, setOptions] = useState([
     {
       option: "hasColumnLines",
@@ -100,17 +104,26 @@ const Test = () => {
     setOptions(newOptions);
   };
 
+  const handleFormVisible = () => {
+    setFormVisible((prevFormVisible) => !prevFormVisible);
+  };
   const onStartEdit = (row: object) => {
-    console.log("start edit", row);
+    editData.current = row;
   };
   const onRowInsert = () => {
     console.log("insert");
+    editData.current = {};
+    handleFormVisible();
   };
   const onRowUpdate = (row: object) => {
     console.log("update", row);
+    handleFormVisible();
   };
   const onRowDelete = (row: object) => {
     console.log("delete", row);
+  };
+  const handleUpdate = (data: object) => {
+    console.log("updateSubmit", data);
   };
 
   return (
@@ -153,6 +166,18 @@ const Test = () => {
           </button>
         ))}
       </div>
+      <CustomPopup
+        visible={formVisible}
+        title="Custom Form"
+        showTitle={true}
+        showCloseButton={true}
+        dragEnabled={false}
+        height={400}
+        width={300}
+        hideOnOutsideClick={true}
+        handleClose={handleFormVisible}
+        renderContent={() => <CustomForm object={editData.current} submitFunc={handleUpdate} columns={columns} />}
+      />
     </div>
   );
 };
