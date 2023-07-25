@@ -167,6 +167,7 @@ const GridTable: React.FC<GridTableProps> = ({
         columns={datagridColumns}
         visibleColumns={visibleColumns}
         handleVisibleColumns={handleVisibleColumns}
+        onRowInsert={onRowInsert}
       />
       {checkEmpty(data) && checkEmpty(visibleColumns) ? (
         <>
