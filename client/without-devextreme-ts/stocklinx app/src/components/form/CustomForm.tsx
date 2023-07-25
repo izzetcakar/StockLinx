@@ -33,7 +33,7 @@ const CustomForm: React.FC<CustomFormProps> = ({
     };
 
     const handleColumnsEmpty = (cols: Column[]): Column[] => {
-        if (!checkEmpty(cols) && checkEmpty(data)) {
+        if (!checkEmpty(cols)) {
             const newColumns: Column[] = Object.keys(data).map((dataField) => ({
                 dataField,
                 caption: dataField,
