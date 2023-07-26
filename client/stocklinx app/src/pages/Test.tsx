@@ -8,24 +8,7 @@ import TestForm from "../components/form/TestForm";
 const Test = () => {
   const editData = useRef<object>({});
   const [formVisible, setFormVisible] = useState<boolean>(false);
-  const [options, setOptions] = useState([
-    {
-      option: "hasColumnLines",
-      value: false,
-    },
-    {
-      option: "showPageSize",
-      value: true,
-    },
-    {
-      option: "showPageSizeSelector",
-      value: true,
-    },
-    {
-      option: "showPageSizeInfo",
-      value: true,
-    },
-  ]);
+  const [showColumnLines, setShowColumnLines] = useState<boolean>(false);
   const TitleComponent: React.FC<{ value: string }> = ({ value }) => {
     return <div style={{ fontWeight: "bold" }}>{value}</div>;
   };
@@ -127,6 +110,7 @@ const Test = () => {
   };
 
   const openEditModel = () => modals.open({
+    modalId: 'edit-modal',
     title: 'Update',
     children: (
       <TestForm object={editData.current} submitFunc={handleUpdate} columns={columns} />
@@ -141,13 +125,11 @@ const Test = () => {
       <GridTable
         data={data}
         columns={columns}
-        hasColumnLines={options[0].value}
-        showPageSize={options[1].value}
-        showPageSizeSelector={options[2].value}
-        showPageSizeInfo={options[3].value}
+        hasColumnLines={showColumnLines}
         cellCssClass="testClass"
         pageSizes={[1, 2, 5]}
         enableEdit={true}
+        showPageSize={true}
         onRowInsert={onRowInsert}
         onRowUpdate={onRowUpdate}
         onRowDelete={onRowDelete}
@@ -161,17 +143,14 @@ const Test = () => {
           gap: "1rem",
         }}
       >
-        {options.map((item, index) => (
-          <button
-            key={index}
-            onClick={() => handleOptions(index)}
-            style={{
-              width: "220px",
-            }}
-          >
-            {item.option} - {item.value.toString()}
-          </button>
-        ))}
+        <button
+          onClick={() => setShowColumnLines(prev => !prev)}
+          style={{
+            width: "220px",
+          }}
+        >
+          hasColumnLines: {showColumnLines ? "true" : "false"}
+        </button>
       </div>
       <CustomPopup
         visible={formVisible}
@@ -185,7 +164,6 @@ const Test = () => {
         handleClose={handleFormVisible}
         renderContent={() => <TestForm object={editData.current} submitFunc={handleUpdate} columns={columns} />}
       />
-
     </div>
   );
 };
