@@ -117,3 +117,38 @@ export interface ILocation extends BaseEntity {
   currency: string | null;
   notes: string | null;
 }
+export interface IManufacturer extends BaseEntity {
+  imagePath: string | null;
+  name: string;
+  supportPhone: string | null;
+  supportEmail: string | null;
+  website: string | null;
+}
+export interface ISupplier extends BaseEntity {
+  imagePath: string | null;
+  locationId: string | null;
+  name: string;
+  contactName: string | null;
+  contactPhone: string | null;
+  contactEmail: string | null;
+  website: string | null;
+  notes: string | null;
+  fax: string | null;
+}
+export interface IUser extends BaseEntity {
+  imagePath: string | null;
+  companyId: string | null;
+  departmentId: string | null;
+  locationId: string | null;
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  phone: string | null;
+  language: string | null;
+  jobTitle: string | null;
+  website: string | null;
+  startDate: Date | null;
+  endDate: Date | null;
+  notes: string | null;
+}
