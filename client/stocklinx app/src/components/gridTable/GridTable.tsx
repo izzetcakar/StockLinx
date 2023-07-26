@@ -135,7 +135,7 @@ const GridTable: React.FC<GridTableProps> = ({
 
   const handleTableStyle = () => {
     setPropertyDataStyle({
-      borderLeft: hasColumnLines ? "1px solid #ccc" : "none",
+      borderLeft: hasColumnLines ? "0.0625rem solid #ced4da" : "none",
     });
   };
 
