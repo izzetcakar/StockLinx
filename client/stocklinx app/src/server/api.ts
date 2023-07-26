@@ -1,13 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import { ApiResponse } from "../interfaces/interfaces";
 
 const BASE_URL: string = import.meta.env.VITE_REACT_APP_BASE_URL as string;
-
-interface ApiResponse<T> {
-  data: T | null;
-  message: string;
-  success: boolean;
-  status?: number;
-}
 
 const getToken = (): string => {
   var userData = localStorage.getItem("token");
@@ -15,6 +9,13 @@ const getToken = (): string => {
   var user = JSON.parse(userData);
   return user;
 };
+
+interface BackendResponse<T> {
+  data: T | T[] | null;
+  errors: string[] | null;
+  successMessage: string | null;
+  statusCode: number | null;
+}
 
 export const request = async <T>({
   requestUrl,
@@ -25,7 +26,9 @@ export const request = async <T>({
   apiType: "get" | "delete" | "deleteAll" | "put" | "post";
   queryData?: any;
 }): Promise<ApiResponse<T>> => {
-  let data: T | null, status: number, response: AxiosResponse<T>;
+  let data: T | T[] | null;
+  let status: number;
+  let backendResponse: BackendResponse<T>;
   const axiosConfig: AxiosRequestConfig = {
     headers: {
       "Access-Control-Allow-Private-Network": "true",
@@ -42,60 +45,64 @@ export const request = async <T>({
   try {
     switch (apiType) {
       case "get":
-        response = await axios.get<T>(`${BASE_URL}${requestUrl}`, axiosConfig);
+        const getResponse = await axios.get<BackendResponse<T>>(
+          `${BASE_URL}${requestUrl}`,
+          axiosConfig
+        );
+        backendResponse = getResponse.data;
+        status = getResponse.status;
         break;
       case "delete":
-        response = await axios.delete<T>(
-          `${BASE_URL}${requestUrl}`,
-          axiosConfig
-        );
-        break;
       case "deleteAll":
-        response = await axios.delete<T>(
+        const deleteResponse = await axios.delete<BackendResponse<T>>(
           `${BASE_URL}${requestUrl}`,
           axiosConfig
         );
+        backendResponse = deleteResponse.data;
+        status = deleteResponse.status;
         break;
       case "put":
-        response = await axios.put<T>(
+        const putResponse = await axios.put<BackendResponse<T>>(
           `${BASE_URL}${requestUrl}`,
           queryData,
           axiosConfig
         );
+        backendResponse = putResponse.data;
+        status = putResponse.status;
         break;
       case "post":
-        response = await axios.post<T>(
+        const postResponse = await axios.post<BackendResponse<T>>(
           `${BASE_URL}${requestUrl}`,
           queryData,
           axiosConfig
         );
+        backendResponse = postResponse.data;
+        status = postResponse.status;
         break;
       default:
         throw new Error("Invalid API type");
     }
-    data = response.data;
-    status = response.status;
-    switch (status) {
-      case 200 || 201:
-        return {
-          data: data as T,
-          message: "Success",
-          success: true,
-          status,
-        };
-      case 204:
-        return { data: null, message: "Login Error", success: true, status };
-      default:
-        return { data: null, message: "Api Error", success: true, status };
-    }
+
+    data = backendResponse.data;
+    status = backendResponse.statusCode || 200;
+
+    const successMessage = backendResponse.successMessage;
+
+    return {
+      data,
+      message: successMessage ? successMessage : "Success",
+      success: true,
+      status,
+    };
   } catch (error: any) {
-    const message = error.response?.data.errors[0] ?? "Network Error";
+    const message = error.response?.data.errors?.[0] ?? "Network Error";
     status = error.response?.status ?? 500;
+
     switch (status) {
       case 400:
         return {
           data: null,
-          message: `${status} - Bad Request. Message: ${
+          message: `${message} - Bad Request. Message: ${
             error.response?.data ?? ""
           }`,
           success: false,
@@ -104,35 +111,35 @@ export const request = async <T>({
       case 401:
         return {
           data: null,
-          message: `${status} - Unauthorized`,
+          message: `${message} - Unauthorized`,
           success: false,
           status,
         };
       case 403:
         return {
           data: null,
-          message: `${status} - Forbidden`,
+          message: `${message} - Forbidden`,
           success: false,
           status,
         };
       case 404:
         return {
           data: null,
-          message: `${status} - Page Not Found`,
+          message: `${message} - Page Not Found`,
           success: false,
           status,
         };
       case 408:
         return {
           data: null,
-          message: `${status} - Timeout Error`,
+          message: `${message} - Timeout Error`,
           success: false,
           status,
         };
       case 409:
         return {
           data: null,
-          message: `${status} - Record already exists`,
+          message: `${message} - Record already exists`,
           success: false,
           status,
         };
