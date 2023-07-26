@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Column } from '../gridTable/interfaces/interfaces';
-import { TextInput, Checkbox, Button, Group, Box, NumberInput } from '@mantine/core';
+import { TextInput, Checkbox, Button, Group, Box, NumberInput, FileInput, rem } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { DateInput } from '@mantine/dates';
+import { closeModal } from '@mantine/modals';
+import { IconUpload } from '@tabler/icons-react';
+import { toBase64 } from '../../functions/Image';
 
 interface TestFormProps {
     object?: object;
@@ -12,6 +15,7 @@ interface TestFormProps {
 
 const TestForm: React.FC<TestFormProps> = ({
 }) => {
+    const [value, setValue] = React.useState<File | null>(null);
     const form = useForm({
         initialValues: {
             Owner: "",
@@ -26,10 +30,23 @@ const TestForm: React.FC<TestFormProps> = ({
             Owner: (value: string) => (/(?!^$)([^\s])/.test(value) ? null : 'Owner should not be empty'),
         },
     });
+    const handleSubmit = (data: object) => {
+        console.log(data);
+        closeModal("edit-modal");
+    };
+    useEffect(() => {
+        console.log(value);
+    }, [value])
+
+    const handleImage = async (image: File | null) => {
+        if (!image) return;
+        var img = await toBase64(image);
+        console.log(img);
+    }
 
     return (
         <Box maw="auto" mx="auto">
-            <form onSubmit={form.onSubmit((values) => console.log(values))}>
+            <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
                 <TextInput
                     withAsterisk
                     label="Owner"
@@ -72,8 +89,10 @@ const TestForm: React.FC<TestFormProps> = ({
                     label="Apllications"
                     {...form.getInputProps('Apllications')}
                 />
+                <FileInput label="Upload image" placeholder="Upload image" accept="image/png,image/jpeg" value={value} onChange={setValue} icon={<IconUpload size={rem(14)} />} />
                 <Group position="right" mt="md">
-                    <Button type="submit" color='dark'>Submit</Button>
+                    <Button fullWidth type="submit" color='dark'>Submit</Button>
+                    <Button fullWidth color='dark' onClick={() => handleImage(value)}>Show</Button>
                 </Group>
             </form>
         </Box>
