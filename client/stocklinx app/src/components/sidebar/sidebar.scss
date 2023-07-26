@@ -1,6 +1,6 @@
 .sidebar-container.collapsed {
   width: 80px;
-  transition: all ease 0.7s;
+  transition: all ease 0.5s;
 
   .navigation-item {
     width: fit-content;
@@ -24,7 +24,7 @@
   width: 250px;
   height: 100%;
   color: #737373;
-  transition: all ease 0.7s;
+  transition: all ease 0.5s;
   user-select: none;
   overflow-y: scroll;
   background-color: white;
