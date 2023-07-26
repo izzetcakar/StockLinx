@@ -1,80 +1,93 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { request } from "../server/api";
+import { generateId } from "../functions/generateId";
+import { ILocation } from "../interfaces/interfaces";
 const requestUrl = "Location/";
-interface Location {}
 
-export const getAllLocations = createAsyncThunk<Location[]>(
+const baseLocation: ILocation = {
+  id: generateId(),
+  name: "",
+  createdDate: null,
+  updatedDate: null,
+  deletedDate: null,
+  imagePath: null,
+  address: null,
+  city: null,
+  state: null,
+  address2: null,
+  country: null,
+  currency: null,
+  notes: null,
+  zipCode: null,
+};
+
+export const getAllLocations = createAsyncThunk(
   "locations/getAll",
-  async (): Promise<Location[]> => {
-    const response = await request<Location[]>({
-      requestUrl: "Location/",
+  async (_, { fulfillWithValue, rejectWithValue }) => {
+    const response = await request<ILocation>({
+      requestUrl: requestUrl,
       apiType: "get",
     });
-    return response.data as Location[];
+    if (!response.success) return fulfillWithValue(response.data);
+    return rejectWithValue(response.message);
   }
 );
 export const getLocationById = createAsyncThunk(
   "locations/getById",
-  async (Id): Promise<Location> => {
-    const response = await request({
+  async (Id: string, { fulfillWithValue, rejectWithValue }) => {
+    const response = await request<ILocation>({
       requestUrl: requestUrl + `${Id}`,
       apiType: "get",
     });
-    return response.data as Location;
+    if (!response.success) return fulfillWithValue(response.data);
+    return rejectWithValue(response.message);
   }
 );
 export const createLocation = createAsyncThunk(
   "locations/create",
-  async (location, { fulfillWithValue, rejectWithValue }) => {
-    const response = await request({
+  async (location: ILocation, { fulfillWithValue, rejectWithValue }) => {
+    const response = await request<ILocation>({
       requestUrl: requestUrl,
       queryData: location,
       apiType: "post",
     });
-    if (!response.success) {
-      return rejectWithValue(response.message);
-    } else {
-      return fulfillWithValue(null);
-    }
+    if (!response.success) return fulfillWithValue(null);
+    return rejectWithValue(response.message);
   }
 );
 export const updateLocation = createAsyncThunk(
   "locations/update",
-  async (location, { rejectWithValue, fulfillWithValue }) => {
-    const response = await request({
+  async (location: ILocation, { fulfillWithValue, rejectWithValue }) => {
+    const response = await request<ILocation>({
       requestUrl: requestUrl,
       queryData: location,
       apiType: "put",
     });
-    if (!response.success) {
-      return rejectWithValue(response.message);
-    } else {
-      return fulfillWithValue(null);
-    }
+    if (!response.success) return fulfillWithValue(null);
+    return rejectWithValue(response.message);
   }
 );
 export const removeLocation = createAsyncThunk(
   "locations/remove",
-  async (Id, { rejectWithValue, fulfillWithValue }) => {
-    const response = await request({
+  async (Id: string, { fulfillWithValue, rejectWithValue }) => {
+    const response = await request<ILocation>({
       requestUrl: requestUrl + `${Id}`,
       apiType: "delete",
     });
-    if (!response.success) {
-      return rejectWithValue(response.message);
-    } else {
-      return fulfillWithValue(null);
-    }
+    if (!response.success) return fulfillWithValue(null);
+    return rejectWithValue(response.message);
   }
 );
 interface State {
-  items: Location[];
+  location: ILocation;
+  locations: ILocation[];
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
 }
 
 const initialState: State = {
-  items: [],
+  location: baseLocation,
+  locations: [],
   status: "idle",
   error: null,
 };
@@ -83,22 +96,55 @@ const locationSlice = createSlice({
   name: "location",
   initialState,
   reducers: {
-    clearLocations: (state) => {
-      state.items = [];
+    setLocation: (state, action: PayloadAction<ILocation>) => {
+      state.location = action.payload;
     },
-    setLocations: (state, action) => {
-      state.items = action.payload;
+    setLocations: (state, action: PayloadAction<ILocation[]>) => {
+      state.locations = action.payload;
+    },
+    clearLocation: (state) => {
+      state.location = baseLocation;
+    },
+    clearLocations: (state) => {
+      state.locations = [];
     },
   },
   extraReducers(builder) {
-    builder.addCase(
-      getAllLocations.fulfilled,
-      (state, action: PayloadAction<Location[]>) => {
-        state.items = action.payload;
-      }
-    );
+    builder.addCase(getAllLocations.fulfilled, (state, action) => {
+      state.error = null;
+      state.locations = action.payload as ILocation[];
+    });
+    builder.addCase(getAllLocations.rejected, (state, action) => {
+      state.error = action.payload as string;
+    });
+    builder.addCase(getLocationById.fulfilled, (state, action) => {
+      state.location = action.payload as ILocation;
+      state.error = null;
+    });
+    builder.addCase(getLocationById.rejected, (state, action) => {
+      state.error = action.payload as string;
+    });
+    builder.addCase(createLocation.rejected, (state, action) => {
+      state.error = action.payload as string;
+    });
+    builder.addCase(createLocation.fulfilled, (state) => {
+      state.error = null;
+    });
+    builder.addCase(updateLocation.rejected, (state, action) => {
+      state.error = action.payload as string;
+    });
+    builder.addCase(updateLocation.fulfilled, (state) => {
+      state.error = null;
+    });
+    builder.addCase(removeLocation.rejected, (state, action) => {
+      state.error = action.payload as string;
+    });
+    builder.addCase(removeLocation.fulfilled, (state) => {
+      state.error = null;
+    });
   },
 });
 
-export const { setLocations, clearLocations } = locationSlice.actions;
+export const { setLocation, setLocations, clearLocation, clearLocations } =
+  locationSlice.actions;
 export default locationSlice.reducer;
