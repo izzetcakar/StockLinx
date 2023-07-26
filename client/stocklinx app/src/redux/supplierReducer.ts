@@ -1,80 +1,92 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { request } from "../server/api";
+import { generateId } from "../functions/generateId";
+import { ISupplier } from "../interfaces/interfaces";
 const requestUrl = "Supplier/";
-interface Supplier {}
 
-export const getAllSuppliers = createAsyncThunk<Supplier[]>(
+const baseSupplier: ISupplier = {
+  id: generateId(),
+  name: "",
+  createdDate: null,
+  updatedDate: null,
+  deletedDate: null,
+  imagePath: null,
+  contactName: null,
+  contactEmail: null,
+  contactPhone: null,
+  fax: null,
+  notes: null,
+  locationId: null,
+  website: null,
+};
+
+export const getAllSuppliers = createAsyncThunk(
   "suppliers/getAll",
-  async (): Promise<Supplier[]> => {
-    const response = await request<Supplier[]>({
-      requestUrl: "Supplier/",
+  async (_, { fulfillWithValue, rejectWithValue }) => {
+    const response = await request<ISupplier>({
+      requestUrl: requestUrl,
       apiType: "get",
     });
-    return response.data as Supplier[];
+    if (!response.success) return fulfillWithValue(response.data);
+    return rejectWithValue(response.message);
   }
 );
 export const getSupplierById = createAsyncThunk(
   "suppliers/getById",
-  async (Id): Promise<Supplier> => {
-    const response = await request({
+  async (Id: string, { fulfillWithValue, rejectWithValue }) => {
+    const response = await request<ISupplier>({
       requestUrl: requestUrl + `${Id}`,
       apiType: "get",
     });
-    return response.data as Supplier;
+    if (!response.success) return fulfillWithValue(response.data);
+    return rejectWithValue(response.message);
   }
 );
 export const createSupplier = createAsyncThunk(
   "suppliers/create",
-  async (supplier, { fulfillWithValue, rejectWithValue }) => {
-    const response = await request({
+  async (supplier: ISupplier, { fulfillWithValue, rejectWithValue }) => {
+    const response = await request<ISupplier>({
       requestUrl: requestUrl,
       queryData: supplier,
       apiType: "post",
     });
-    if (!response.success) {
-      return rejectWithValue(response.message);
-    } else {
-      return fulfillWithValue(null);
-    }
+    if (!response.success) return fulfillWithValue(null);
+    return rejectWithValue(response.message);
   }
 );
 export const updateSupplier = createAsyncThunk(
   "suppliers/update",
-  async (supplier, { rejectWithValue, fulfillWithValue }) => {
-    const response = await request({
+  async (supplier: ISupplier, { fulfillWithValue, rejectWithValue }) => {
+    const response = await request<ISupplier>({
       requestUrl: requestUrl,
       queryData: supplier,
       apiType: "put",
     });
-    if (!response.success) {
-      return rejectWithValue(response.message);
-    } else {
-      return fulfillWithValue(null);
-    }
+    if (!response.success) return fulfillWithValue(null);
+    return rejectWithValue(response.message);
   }
 );
 export const removeSupplier = createAsyncThunk(
   "suppliers/remove",
-  async (Id, { rejectWithValue, fulfillWithValue }) => {
-    const response = await request({
+  async (Id: string, { fulfillWithValue, rejectWithValue }) => {
+    const response = await request<ISupplier>({
       requestUrl: requestUrl + `${Id}`,
       apiType: "delete",
     });
-    if (!response.success) {
-      return rejectWithValue(response.message);
-    } else {
-      return fulfillWithValue(null);
-    }
+    if (!response.success) return fulfillWithValue(null);
+    return rejectWithValue(response.message);
   }
 );
 interface State {
-  items: Supplier[];
+  supplier: ISupplier;
+  suppliers: ISupplier[];
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
 }
 
 const initialState: State = {
-  items: [],
+  supplier: baseSupplier,
+  suppliers: [],
   status: "idle",
   error: null,
 };
@@ -83,22 +95,55 @@ const supplierSlice = createSlice({
   name: "supplier",
   initialState,
   reducers: {
-    clearSuppliers: (state) => {
-      state.items = [];
+    setSupplier: (state, action: PayloadAction<ISupplier>) => {
+      state.supplier = action.payload;
     },
-    setSuppliers: (state, action) => {
-      state.items = action.payload;
+    setSuppliers: (state, action: PayloadAction<ISupplier[]>) => {
+      state.suppliers = action.payload;
+    },
+    clearSupplier: (state) => {
+      state.supplier = baseSupplier;
+    },
+    clearSuppliers: (state) => {
+      state.suppliers = [];
     },
   },
   extraReducers(builder) {
-    builder.addCase(
-      getAllSuppliers.fulfilled,
-      (state, action: PayloadAction<Supplier[]>) => {
-        state.items = action.payload;
-      }
-    );
+    builder.addCase(getAllSuppliers.fulfilled, (state, action) => {
+      state.error = null;
+      state.suppliers = action.payload as ISupplier[];
+    });
+    builder.addCase(getAllSuppliers.rejected, (state, action) => {
+      state.error = action.payload as string;
+    });
+    builder.addCase(getSupplierById.fulfilled, (state, action) => {
+      state.supplier = action.payload as ISupplier;
+      state.error = null;
+    });
+    builder.addCase(getSupplierById.rejected, (state, action) => {
+      state.error = action.payload as string;
+    });
+    builder.addCase(createSupplier.rejected, (state, action) => {
+      state.error = action.payload as string;
+    });
+    builder.addCase(createSupplier.fulfilled, (state) => {
+      state.error = null;
+    });
+    builder.addCase(updateSupplier.rejected, (state, action) => {
+      state.error = action.payload as string;
+    });
+    builder.addCase(updateSupplier.fulfilled, (state) => {
+      state.error = null;
+    });
+    builder.addCase(removeSupplier.rejected, (state, action) => {
+      state.error = action.payload as string;
+    });
+    builder.addCase(removeSupplier.fulfilled, (state) => {
+      state.error = null;
+    });
   },
 });
 
-export const { setSuppliers, clearSuppliers } = supplierSlice.actions;
+export const { setSupplier, setSuppliers, clearSupplier, clearSuppliers } =
+  supplierSlice.actions;
 export default supplierSlice.reducer;
