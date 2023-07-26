@@ -1,17 +1,39 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { request } from "../server/api";
+import { IUser } from "../interfaces/interfaces";
 const requestUrl = "User/";
 
-interface User {}
+const baseUser: IUser = {
+  id: "",
+  firstName: "",
+  lastName: "",
+  createdDate: null,
+  updatedDate: null,
+  deletedDate: null,
+  imagePath: null,
+  email: "",
+  password: "",
+  phone: null,
+  notes: null,
+  locationId: null,
+  website: null,
+  companyId: null,
+  departmentId: null,
+  startDate: null,
+  endDate: null,
+  jobTitle: null,
+  language: null,
+};
 
 export const getAllUsers = createAsyncThunk(
-  "user/getAll",
-  async (): Promise<User[]> => {
-    const response = await request<User[]>({
+  "suppliers/getAll",
+  async (_, { fulfillWithValue, rejectWithValue }) => {
+    const response = await request<IUser>({
       requestUrl: requestUrl,
       apiType: "get",
     });
-    return response.data as User[];
+    if (!response.success) return fulfillWithValue(response.data);
+    return rejectWithValue(response.message);
   }
 );
 // export const login = createAsyncThunk(
@@ -48,24 +70,25 @@ export const getAllUsers = createAsyncThunk(
 // );
 export const getUserWithToken = createAsyncThunk(
   "user/getWithToken",
-  async (): Promise<User> => {
+  async (_, { fulfillWithValue, rejectWithValue }) => {
     const response = await request<User>({
       requestUrl: requestUrl + "getWithToken",
       apiType: "get",
     });
-    return response.data as User;
+    if (!response.success) return rejectWithValue(response.data);
+    return fulfillWithValue(response.data);
   }
 );
 
 interface State {
-  user: User;
-  users: User[];
+  user: IUser | null;
+  users: IUser[];
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
 }
 
 const initialState: State = {
-  user: {},
+  user: baseUser,
   users: [],
   status: "idle",
   error: null,
@@ -76,25 +99,22 @@ const userItemSlice = createSlice({
   initialState,
   reducers: {
     clearUser: (state) => {
-      state.user = {};
+      state.user = baseUser;
       localStorage.removeItem("token");
     },
   },
   extraReducers(builder) {
-    builder.addCase(
-      getAllUsers.fulfilled,
-      (state, action: PayloadAction<User[]>) => {
-        state.users = action.payload;
-      }
-    );
-    builder.addCase(
-      getUserWithToken.fulfilled,
-      (state, action: PayloadAction<User>) => {
-        state.user = action.payload;
-      }
-    );
-    builder.addCase(getUserWithToken.rejected, (state) => {
-      state.user = {};
+    builder.addCase(getAllUsers.fulfilled, (state, action) => {
+      state.users = action.payload as IUser[];
+      state.error = null;
+    });
+    builder.addCase(getUserWithToken.fulfilled, (state, action) => {
+      state.user = action.payload;
+      state.error = null;
+    });
+    builder.addCase(getUserWithToken.rejected, (state, action) => {
+      state.user = null;
+      state.error = action.payload as string;
     });
     // builder.addCase(login.rejected, (state, action) => {
     //   state.user = {};
