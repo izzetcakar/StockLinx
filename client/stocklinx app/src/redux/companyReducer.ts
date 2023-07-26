@@ -1,80 +1,85 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { request } from "../server/api";
+import { generateId } from "../functions/generateId";
+import { ICompany } from "../interfaces/interfaces";
 const requestUrl = "Company/";
-interface Company {}
 
-export const getAllCompanies = createAsyncThunk<Company[]>(
+const baseCompany: ICompany = {
+  id: generateId(),
+  name: "",
+  createdDate: null,
+  updatedDate: null,
+  deletedDate: null,
+  imagePath: null,
+};
+
+export const getAllCompanies = createAsyncThunk(
   "companies/getAll",
-  async (): Promise<Company[]> => {
-    const response = await request<Company[]>({
-      requestUrl: "Company/",
+  async (_, { fulfillWithValue, rejectWithValue }) => {
+    const response = await request<ICompany>({
+      requestUrl: requestUrl,
       apiType: "get",
     });
-    return response.data as Company[];
+    if (!response.success) return fulfillWithValue(response.data);
+    return rejectWithValue(response.message);
   }
 );
 export const getCompanyById = createAsyncThunk(
   "companies/getById",
-  async (Id): Promise<Company> => {
-    const response = await request({
+  async (Id: string, { fulfillWithValue, rejectWithValue }) => {
+    const response = await request<ICompany>({
       requestUrl: requestUrl + `${Id}`,
       apiType: "get",
     });
-    return response.data as Company;
+    if (!response.success) return fulfillWithValue(response.data);
+    return rejectWithValue(response.message);
   }
 );
 export const createCompany = createAsyncThunk(
   "companies/create",
-  async (company, { fulfillWithValue, rejectWithValue }) => {
-    const response = await request({
+  async (company: ICompany, { fulfillWithValue, rejectWithValue }) => {
+    const response = await request<ICompany>({
       requestUrl: requestUrl,
       queryData: company,
       apiType: "post",
     });
-    if (!response.success) {
-      return rejectWithValue(response.message);
-    } else {
-      return fulfillWithValue(null);
-    }
+    if (!response.success) return fulfillWithValue(null);
+    return rejectWithValue(response.message);
   }
 );
 export const updateCompany = createAsyncThunk(
   "companies/update",
-  async (company, { rejectWithValue, fulfillWithValue }) => {
-    const response = await request({
+  async (company: ICompany, { fulfillWithValue, rejectWithValue }) => {
+    const response = await request<ICompany>({
       requestUrl: requestUrl,
       queryData: company,
       apiType: "put",
     });
-    if (!response.success) {
-      return rejectWithValue(response.message);
-    } else {
-      return fulfillWithValue(null);
-    }
+    if (!response.success) return fulfillWithValue(null);
+    return rejectWithValue(response.message);
   }
 );
 export const removeCompany = createAsyncThunk(
   "companies/remove",
-  async (Id, { rejectWithValue, fulfillWithValue }) => {
-    const response = await request({
+  async (Id: string, { fulfillWithValue, rejectWithValue }) => {
+    const response = await request<ICompany>({
       requestUrl: requestUrl + `${Id}`,
       apiType: "delete",
     });
-    if (!response.success) {
-      return rejectWithValue(response.message);
-    } else {
-      return fulfillWithValue(null);
-    }
+    if (!response.success) return fulfillWithValue(null);
+    return rejectWithValue(response.message);
   }
 );
 interface State {
-  items: Company[];
+  company: ICompany;
+  companies: ICompany[];
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
 }
 
 const initialState: State = {
-  items: [],
+  company: baseCompany,
+  companies: [],
   status: "idle",
   error: null,
 };
@@ -83,22 +88,55 @@ const companySlice = createSlice({
   name: "company",
   initialState,
   reducers: {
-    clearCompanies: (state) => {
-      state.items = [];
+    setCompany: (state, action: PayloadAction<ICompany>) => {
+      state.company = action.payload;
     },
-    setCompanies: (state, action) => {
-      state.items = action.payload;
+    setCompanies: (state, action: PayloadAction<ICompany[]>) => {
+      state.companies = action.payload;
+    },
+    clearCompany: (state) => {
+      state.company = baseCompany;
+    },
+    clearCompanies: (state) => {
+      state.companies = [];
     },
   },
   extraReducers(builder) {
-    builder.addCase(
-      getAllCompanies.fulfilled,
-      (state, action: PayloadAction<Company[]>) => {
-        state.items = action.payload;
-      }
-    );
+    builder.addCase(getAllCompanies.fulfilled, (state, action) => {
+      state.error = null;
+      state.companies = action.payload as ICompany[];
+    });
+    builder.addCase(getAllCompanies.rejected, (state, action) => {
+      state.error = action.payload as string;
+    });
+    builder.addCase(getCompanyById.fulfilled, (state, action) => {
+      state.company = action.payload as ICompany;
+      state.error = null;
+    });
+    builder.addCase(getCompanyById.rejected, (state, action) => {
+      state.error = action.payload as string;
+    });
+    builder.addCase(createCompany.rejected, (state, action) => {
+      state.error = action.payload as string;
+    });
+    builder.addCase(createCompany.fulfilled, (state) => {
+      state.error = null;
+    });
+    builder.addCase(updateCompany.rejected, (state, action) => {
+      state.error = action.payload as string;
+    });
+    builder.addCase(updateCompany.fulfilled, (state) => {
+      state.error = null;
+    });
+    builder.addCase(removeCompany.rejected, (state, action) => {
+      state.error = action.payload as string;
+    });
+    builder.addCase(removeCompany.fulfilled, (state) => {
+      state.error = null;
+    });
   },
 });
 
-export const { setCompanies, clearCompanies } = companySlice.actions;
+export const { setCompany, setCompanies, clearCompany, clearCompanies } =
+  companySlice.actions;
 export default companySlice.reducer;
