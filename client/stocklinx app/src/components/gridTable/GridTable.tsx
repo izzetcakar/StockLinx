@@ -10,6 +10,7 @@ import PageSizeComponent from "./pageSize/PageSizeComponent";
 import Toolbar from "./toolbar/Toolbar";
 import { Column } from "./interfaces/interfaces";
 import { Checkbox } from '@mantine/core';
+import { ScrollArea } from '@mantine/core';
 
 interface GridTableProps {
   data?: object[];
@@ -41,10 +42,10 @@ const GridTable: React.FC<GridTableProps> = ({
   gridCssClass = "",
   cellCssClass = "",
   enableEdit = false,
-  onRowInsert = () => { },
-  onRowUpdate = () => { },
-  onRowDelete = () => { },
-  onStartEdit = () => { },
+  onRowInsert = () => console.log("insert"),
+  onRowUpdate = () => console.log("update"),
+  onRowDelete = () => console.log("delete"),
+  onStartEdit = () => console.log("start edit"),
 }) => {
   const [datagridColumns, setDatagridColumns] = useState<Column[]>(columns);
   const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
@@ -91,7 +92,7 @@ const GridTable: React.FC<GridTableProps> = ({
   };
 
   const renderColumnValue = (rowIndex: number, column: Column) => {
-    const value = (datagrid[rowIndex] as { [key: string]: any })[column.dataField];
+    const value = (datagrid[rowIndex] as { [key: string]: React.ReactNode | string | number | boolean | null })[column.dataField];
 
     // if (column.dataField === "Select") {
     //   return (
@@ -184,29 +185,31 @@ const GridTable: React.FC<GridTableProps> = ({
                 </div>
               ))}
             </div>
-            <div className="table-content-container">
-              {datagridColumns.map((column, columnIndex) =>
-                visibleColumns.includes(column.caption) ? (
-                  <div className="column-container" key={columnIndex} style={propertyDataStyle}>
-                    <div className="cell column-title">
-                      {column.caption}
-                    </div>
-                    {filterData().map((_, rowIndex) => (
-                      <div
-                        className={
-                          selectedIndexes.includes(rowIndex)
-                            ? `cell selected-cell ${cellCssClass}`
-                            : `cell ${cellCssClass}`
-                        }
-                        key={rowIndex}
-                      >
-                        {renderColumnValue(rowIndex, column)}
+            <ScrollArea >
+              <div className="table-content-container">
+                {datagridColumns.map((column, columnIndex) =>
+                  visibleColumns.includes(column.caption) ? (
+                    <div className="column-container" key={columnIndex} style={propertyDataStyle}>
+                      <div className="cell column-title">
+                        {column.caption}
                       </div>
-                    ))}
-                  </div>
-                ) : null
-              )}
-            </div>
+                      {filterData().map((_, rowIndex) => (
+                        <div
+                          className={
+                            selectedIndexes.includes(rowIndex)
+                              ? `cell selected-cell ${cellCssClass}`
+                              : `cell ${cellCssClass}`
+                          }
+                          key={rowIndex}
+                        >
+                          {renderColumnValue(rowIndex, column)}
+                        </div>
+                      ))}
+                    </div>
+                  ) : null
+                )}
+              </div>
+            </ScrollArea>
             {enableEdit && (
               <div className="column-container column-edit">
                 <div className="cell column-title"></div>
