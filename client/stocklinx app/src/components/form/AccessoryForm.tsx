@@ -6,39 +6,69 @@ import { DateInput } from '@mantine/dates';
 import { closeModal } from '@mantine/modals';
 import { IconUpload } from '@tabler/icons-react';
 import { modals } from '@mantine/modals';
+import { IAccessory } from '../../interfaces/interfaces';
 
 interface AccessoryFormProps {
-    object?: object;
+    object?: IAccessory;
     columns?: Column[];
     submitFunc: (data: object) => void;
 }
 
 const AccessoryForm: React.FC<AccessoryFormProps> = ({
+    object = {
+        categoryId: "",
+        locationId: "",
+        companyId: "",
+        statusId: "",
+        imagePath: "",
+        name: "",
+        serialNo: "",
+        orderNo: "",
+        purchaseCost: 0,
+        purchaseDate: "",
+        quantity: 0,
+        checkInCounter: 0,
+        checkOutCounter: 0,
+    },
     submitFunc = () => console.log("submit"),
 }) => {
     const [value, setValue] = useState<File | null>(null);
     const form = useForm({
-        initialValues: {
-            Owner: "",
-            LastCheck: null,
-            OSversion: "",
-            PasswordManager: false,
-            HDencrypted: false,
-            AVinstalled: false,
-            Apllications: 0,
+        initialValues: object || {
+            categoryId: "",
+            locationId: "",
+            companyId: "",
+            statusId: "",
+            imagePath: "",
+            name: "",
+            serialNo: "",
+            orderNo: "",
+            purchaseCost: 0,
+            purchaseDate: "",
+            quantity: 0,
+            checkInCounter: 0,
+            checkOutCounter: 0,
         },
         validate: {
-            Owner: (value: string) => (/(?!^$)([^\s])/.test(value) ? null : 'Owner should not be empty'),
+            name: (value: string) => (/(?!^$)([^\s])/.test(value) ? null : 'Name should not be empty'),
+            quantity: (value: number) => {
+                return value !== null && value >= 0 ? null : 'Quantity must be a non-negative number';
+            },
+            purchaseCost: (value: number) => {
+                return value >= 0 ? null : 'PurchaseCost must be null or a non-negative number';
+            },
+            checkInCounter: (value: number) => {
+                return value >= 0 ? null : 'CheckInCounter must be null or a non-negative number';
+            },
+            checkOutCounter: (value: number) => {
+                return value >= 0 ? null : 'CheckOutCounter must be null or a non-negative number';
+            },
         },
     });
     const handleSubmit = (data: object) => {
         console.log(data);
         closeModal("edit-modal");
     };
-    useEffect(() => {
-        console.log(value);
-    }, [value])
-
     const openNextModel = () => modals.open({
         modalId: 'next-modal',
         title: 'Page 2',
