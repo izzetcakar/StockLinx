@@ -94,16 +94,6 @@ const GridTable: React.FC<GridTableProps> = ({
   const renderColumnValue = (rowIndex: number, column: Column) => {
     const value = (datagrid[rowIndex] as { [key: string]: React.ReactNode | string | number | boolean | null })[column.dataField];
 
-    // if (column.dataField === "Select") {
-    //   return (
-    //     <SelectComponent
-    //       rowIndex={rowIndex}
-    //       isChecked={selectedIndexes.includes(rowIndex)}
-    //       selectFunc={handleSelectRow}
-    //     />
-    //   );
-    // }
-
     if (column.renderComponent) {
       const RenderComponent = column.renderComponent;
       return <RenderComponent value={value} />;
