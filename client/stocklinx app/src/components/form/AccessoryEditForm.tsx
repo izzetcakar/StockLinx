@@ -1,40 +1,24 @@
-import React, { useEffect, useState } from 'react'
-import { Column } from '../gridTable/interfaces/interfaces';
+import React, { useState } from 'react'
 import { TextInput, Checkbox, Button, Group, Box, NumberInput, FileInput, rem } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { DateInput } from '@mantine/dates';
 import { closeModal } from '@mantine/modals';
 import { IconUpload } from '@tabler/icons-react';
 import { modals } from '@mantine/modals';
-import { IAccessory } from '../../interfaces/interfaces';
+import { useAppSelector } from '../../hooks';
+import { RootState } from '../../redux/store';
 
 interface AccessoryFormProps {
-    object?: IAccessory;
-    columns?: Column[];
     submitFunc: (data: object) => void;
 }
 
 const AccessoryForm: React.FC<AccessoryFormProps> = ({
-    object = {
-        categoryId: "",
-        locationId: "",
-        companyId: "",
-        statusId: "",
-        imagePath: "",
-        name: "",
-        serialNo: "",
-        orderNo: "",
-        purchaseCost: 0,
-        purchaseDate: "",
-        quantity: 0,
-        checkInCounter: 0,
-        checkOutCounter: 0,
-    },
     submitFunc = () => console.log("submit"),
 }) => {
     const [value, setValue] = useState<File | null>(null);
+    const accessory = useAppSelector((state: RootState) => state.accessory.accessory);
     const form = useForm({
-        initialValues: object || {
+        initialValues: accessory || {
             categoryId: "",
             locationId: "",
             companyId: "",
@@ -67,6 +51,7 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({
     });
     const handleSubmit = (data: object) => {
         console.log(data);
+        submitFunc(data);
         closeModal("edit-modal");
     };
     const openNextModel = () => modals.open({
