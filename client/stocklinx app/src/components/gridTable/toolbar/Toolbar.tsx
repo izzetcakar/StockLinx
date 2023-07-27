@@ -3,7 +3,6 @@ import "./toolbar.scss";
 import { Column } from '../interfaces/interfaces';
 import Dropdown from './Dropdown';
 
-//create props for refresh data, filter data, and handle visible columns dropdown and search
 interface ToolbarProps {
     refreshData?: () => void;
     filterData?: () => void;
