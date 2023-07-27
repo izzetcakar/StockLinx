@@ -16,7 +16,7 @@ interface CustomFormProps {
 const CustomForm: React.FC<CustomFormProps> = ({
     object = {},
     columns = [],
-    submitFunc = () => { },
+    submitFunc = () => console.log("submit"),
 }) => {
     const [dataColumns, setDataColumns] = useState<Column[]>(columns);
     const [data, setData] = useState<object>(object);
@@ -29,7 +29,7 @@ const CustomForm: React.FC<CustomFormProps> = ({
         setDataColumns(handleColumnsEmpty(columns));
     }, [columns]);
 
-    const handleData = (property: string, value: any) => {
+    const handleData = (property: string, value: number | string | boolean | null) => {
         setData((prev) => ({ ...prev, [property]: value }));
     };
 
@@ -46,7 +46,7 @@ const CustomForm: React.FC<CustomFormProps> = ({
     };
 
     const renderData = (column: Column) => {
-        let value = (data as { [key: string]: any })[column.dataField];
+        let value = (data as { [key: string]: number | string | boolean | null })[column.dataField];
 
         // if (column.renderComponent) {
         //     const RenderComponent = column.renderComponent;
@@ -56,7 +56,7 @@ const CustomForm: React.FC<CustomFormProps> = ({
         if (column.dataType === "boolean") {
             return (
                 <Checkbox
-                    checked={value}
+                    checked={value as boolean}
                     onChange={() => handleData(column.dataField, !value)}
                     color="dark"
                 />
@@ -72,8 +72,8 @@ const CustomForm: React.FC<CustomFormProps> = ({
                 id={"form-input-" + column.dataField}
                 name={"form-input-" + column.dataField}
                 type={column.dataType}
-                value={value}
-                onChange={(e: any) => handleData(column.dataField, e.target.value)}>
+                value={value as number | string}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleData(column.dataField, e.target.value as number | string | null)}>
             </input>
         )
     };
