@@ -2,12 +2,15 @@ import React, { useRef, useState } from "react";
 import "./accessory.scss";
 import { modals } from '@mantine/modals';
 import TestForm from "../../components/form/TestForm";
-import AccessoryForm from "../../components/form/AccessoryForm";
+import AccessoryForm from "../../components/form/AccessoryEditForm";
 import GridTable from "../../components/gridTable/GridTable";
 import CustomPopup from "../../components/popup/CustomPopup";
+import { IAccessory } from "../../interfaces/interfaces";
+import { useAppDispatch } from "../../hooks";
+import { clearAccessory, setAccessory } from "../../redux/accessoryReducer";
 
 const Accessory = () => {
-  const editData = useRef<object>({});
+  const dispatch = useAppDispatch();
   const [formVisible, setFormVisible] = useState<boolean>(false);
   const [showColumnLines, setShowColumnLines] = useState<boolean>(false);
   const TitleComponent: React.FC<{ value: string }> = ({ value }) => {
@@ -82,11 +85,11 @@ const Accessory = () => {
     setFormVisible((prevFormVisible) => !prevFormVisible);
   };
   const onStartEdit = (row: object) => {
-    editData.current = row;
+    dispatch(setAccessory(row as IAccessory));
   };
   const onRowInsert = () => {
     console.log("insert");
-    editData.current = {};
+    clearAccessory();
     openEditModel();
   };
   const onRowUpdate = (row: object) => {
@@ -104,7 +107,7 @@ const Accessory = () => {
     modalId: 'edit-modal',
     title: 'Update',
     children: (
-      <AccessoryForm object={editData.current} submitFunc={handleUpdate} columns={columns} />
+      <AccessoryForm submitFunc={handleUpdate} columns={columns} />
     ),
   });
 
@@ -153,7 +156,7 @@ const Accessory = () => {
         width={300}
         hideOnOutsideClick={false}
         handleClose={handleFormVisible}
-        renderContent={() => <TestForm object={editData.current} submitFunc={handleUpdate} columns={columns} />}
+        renderContent={() => <TestForm submitFunc={handleUpdate} columns={columns} />}
       />
     </div>
   );
