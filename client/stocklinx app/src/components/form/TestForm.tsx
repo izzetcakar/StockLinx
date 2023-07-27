@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Column } from '../gridTable/interfaces/interfaces';
 import { TextInput, Checkbox, Button, Group, Box, NumberInput, FileInput, rem } from '@mantine/core';
 import { useForm } from '@mantine/form';
@@ -6,7 +6,6 @@ import { DateInput } from '@mantine/dates';
 import { closeModal } from '@mantine/modals';
 import { IconUpload } from '@tabler/icons-react';
 import { toBase64 } from '../../functions/Image';
-
 interface TestFormProps {
     object?: object;
     columns?: Column[];
@@ -14,8 +13,9 @@ interface TestFormProps {
 }
 
 const TestForm: React.FC<TestFormProps> = ({
+    submitFunc = () => console.log("submit"),
 }) => {
-    const [value, setValue] = React.useState<File | null>(null);
+    const [value, setValue] = useState<File | null>(null);
     const form = useForm({
         initialValues: {
             Owner: "",
@@ -37,11 +37,11 @@ const TestForm: React.FC<TestFormProps> = ({
     useEffect(() => {
         console.log(value);
     }, [value])
-
     const handleImage = async (image: File | null) => {
         if (!image) return;
-        var img = await toBase64(image);
+        const img = await toBase64(image);
         console.log(img);
+        submitFunc({ ...form.values, image: img });
     }
 
     return (
