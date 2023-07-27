@@ -4,6 +4,7 @@ import GridTable from "../components/gridTable/GridTable";
 import CustomPopup from "../components/popup/CustomPopup";
 import { modals } from '@mantine/modals';
 import TestForm from "../components/form/TestForm";
+import AccessoryForm from "../components/form/AccessoryForm";
 
 const Test = () => {
   const editData = useRef<object>({});
@@ -77,17 +78,6 @@ const Test = () => {
       Apllications: 265,
     },
   ];
-  const handleOptions = (target: number) => {
-    const newOptions = [...options].map((item, index) => {
-      if (index === target) {
-        return { ...item, value: !item.value };
-      } else {
-        return item;
-      }
-    });
-    setOptions(newOptions);
-  };
-
   const handleFormVisible = () => {
     setFormVisible((prevFormVisible) => !prevFormVisible);
   };
@@ -100,6 +90,7 @@ const Test = () => {
     openEditModel();
   };
   const onRowUpdate = (row: object) => {
+    console.log(row);
     openEditModel();
   };
   const onRowDelete = (row: object) => {
@@ -113,7 +104,7 @@ const Test = () => {
     modalId: 'edit-modal',
     title: 'Update',
     children: (
-      <TestForm object={editData.current} submitFunc={handleUpdate} columns={columns} />
+      <AccessoryForm object={editData.current} submitFunc={handleUpdate} columns={columns} />
     ),
   });
 
