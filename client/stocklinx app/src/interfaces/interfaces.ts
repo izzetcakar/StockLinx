@@ -38,13 +38,13 @@ interface IBaseProduct extends BaseEntity {
   serialNo: string | null;
   orderNo: string | null;
   notes: string | null;
-  quantity: number;
   purchaseCost: number | null;
   purchaseDate: Date | null;
   checkInCounter: number | null;
   checkOutCounter: number | null;
 }
 export interface IAccessory extends IBaseProduct {
+  quantity: number | null;
   manufacturerId: string | null;
   supplierId: string | null;
   warrantyDate: Date | null;
@@ -53,6 +53,12 @@ export interface IAsset extends IBaseProduct {
   manufacturerId: string | null;
   modelId: string | null;
   tagNo: string | null;
+  overageAssets?: [
+    {
+      serialNo: string;
+      tagNo: string;
+    }
+  ];
 }
 export interface IComponent extends IBaseProduct {}
 export interface ILicense extends IBaseProduct {
@@ -64,11 +70,13 @@ export interface ILicense extends IBaseProduct {
   reaassignable: boolean;
   expirationDate: Date | null;
   terminationDate: Date | null;
+  quantity: number | null;
 }
 export interface IConsumable extends IBaseProduct {
   modelNo: string | null;
   itemNo: string | null;
   tagNo: string | null;
+  quantity: number | null;
 }
 export interface IModel extends BaseEntity {
   manufacturerId: string | null;
