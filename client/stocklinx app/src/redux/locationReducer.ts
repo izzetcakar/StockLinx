@@ -3,23 +3,6 @@ import { request } from "../server/api";
 import { ILocation } from "../interfaces/interfaces";
 const requestUrl = "Location/";
 
-const baseLocation: ILocation = {
-  id: "",
-  name: "",
-  createdDate: null,
-  updatedDate: null,
-  deletedDate: null,
-  imagePath: null,
-  address: null,
-  city: null,
-  state: null,
-  address2: null,
-  country: null,
-  currency: null,
-  notes: null,
-  zipCode: null,
-};
-
 export const getAllLocations = createAsyncThunk(
   "locations/getAll",
   async (_, { fulfillWithValue, rejectWithValue }) => {
@@ -78,14 +61,14 @@ export const removeLocation = createAsyncThunk(
   }
 );
 interface State {
-  location: ILocation;
+  location: ILocation | null;
   locations: ILocation[];
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
 }
 
 const initialState: State = {
-  location: baseLocation,
+  location: null,
   locations: [],
   status: "idle",
   error: null,
@@ -102,7 +85,7 @@ const locationSlice = createSlice({
       state.locations = action.payload;
     },
     clearLocation: (state) => {
-      state.location = baseLocation;
+      state.location = null;
     },
     clearLocations: (state) => {
       state.locations = [];

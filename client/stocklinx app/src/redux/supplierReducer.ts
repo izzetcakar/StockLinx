@@ -3,22 +3,6 @@ import { request } from "../server/api";
 import { ISupplier } from "../interfaces/interfaces";
 const requestUrl = "Supplier/";
 
-const baseSupplier: ISupplier = {
-  id: "",
-  name: "",
-  createdDate: null,
-  updatedDate: null,
-  deletedDate: null,
-  imagePath: null,
-  contactName: null,
-  contactEmail: null,
-  contactPhone: null,
-  fax: null,
-  notes: null,
-  locationId: null,
-  website: null,
-};
-
 export const getAllSuppliers = createAsyncThunk(
   "suppliers/getAll",
   async (_, { fulfillWithValue, rejectWithValue }) => {
@@ -77,14 +61,14 @@ export const removeSupplier = createAsyncThunk(
   }
 );
 interface State {
-  supplier: ISupplier;
+  supplier: ISupplier | null;
   suppliers: ISupplier[];
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
 }
 
 const initialState: State = {
-  supplier: baseSupplier,
+  supplier: null,
   suppliers: [],
   status: "idle",
   error: null,
@@ -101,7 +85,7 @@ const supplierSlice = createSlice({
       state.suppliers = action.payload;
     },
     clearSupplier: (state) => {
-      state.supplier = baseSupplier;
+      state.supplier = null;
     },
     clearSuppliers: (state) => {
       state.suppliers = [];

@@ -3,15 +3,6 @@ import { request } from "../server/api";
 import { ICompany } from "../interfaces/interfaces";
 const requestUrl = "Company/";
 
-const baseCompany: ICompany = {
-  id: "",
-  name: "",
-  createdDate: null,
-  updatedDate: null,
-  deletedDate: null,
-  imagePath: null,
-};
-
 export const getAllCompanies = createAsyncThunk(
   "companies/getAll",
   async (_, { fulfillWithValue, rejectWithValue }) => {
@@ -70,14 +61,14 @@ export const removeCompany = createAsyncThunk(
   }
 );
 interface State {
-  company: ICompany;
+  company: ICompany | null;
   companies: ICompany[];
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
 }
 
 const initialState: State = {
-  company: baseCompany,
+  company: null,
   companies: [],
   status: "idle",
   error: null,
@@ -94,7 +85,7 @@ const companySlice = createSlice({
       state.companies = action.payload;
     },
     clearCompany: (state) => {
-      state.company = baseCompany;
+      state.company = null;
     },
     clearCompanies: (state) => {
       state.companies = [];

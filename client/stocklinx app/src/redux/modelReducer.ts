@@ -3,19 +3,6 @@ import { request } from "../server/api";
 import { IModel } from "../interfaces/interfaces";
 const requestUrl = "Model/";
 
-const baseModel: IModel = {
-  id: "",
-  name: "",
-  createdDate: null,
-  updatedDate: null,
-  deletedDate: null,
-  imagePath: null,
-  categoryId: null,
-  manufacturerId: null,
-  modelNo: null,
-  notes: null,
-};
-
 export const getAllModels = createAsyncThunk(
   "models/getAll",
   async (_, { fulfillWithValue, rejectWithValue }) => {
@@ -74,14 +61,14 @@ export const removeModel = createAsyncThunk(
   }
 );
 interface State {
-  model: IModel;
+  model: IModel | null;
   models: IModel[];
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
 }
 
 const initialState: State = {
-  model: baseModel,
+  model: null,
   models: [],
   status: "idle",
   error: null,
@@ -98,7 +85,7 @@ const modelSlice = createSlice({
       state.models = action.payload;
     },
     clearModel: (state) => {
-      state.model = baseModel;
+      state.model = null;
     },
     clearModels: (state) => {
       state.models = [];

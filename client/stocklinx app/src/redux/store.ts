@@ -10,17 +10,26 @@ import manufacturerReducer from "./manufacturerReducer";
 import modelReducer from "./modelReducer";
 // import productReducer from "./productReducer";
 import supplierReducer from "./supplierReducer";
+import accessoryReducer from "./accessoryReducer";
+import assetReducer from "./assetReducer";
+import componentReducer from "./componentReducer";
+import licenseReducer from "./licenseReducer";
+import consumableReducer from "./consumableReducer";
 
 const store = configureStore({
   reducer: {
     user: userReducer,
+    accessory: accessoryReducer,
+    asset: assetReducer,
+    component: componentReducer,
+    license: licenseReducer,
+    consumable: consumableReducer,
     category: categoryReducer,
     company: companyReducer,
     department: departmentReducer,
     location: locationReducer,
     manufacturer: manufacturerReducer,
     model: modelReducer,
-    // product: productReducer,
     supplier: supplierReducer,
   },
   middleware: (getDefaultMiddleware) =>

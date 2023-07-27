@@ -3,19 +3,6 @@ import { request } from "../server/api";
 import { IDepartment } from "../interfaces/interfaces";
 const requestUrl = "Department/";
 
-const baseDepartment: IDepartment = {
-  id: "",
-  name: "",
-  createdDate: null,
-  updatedDate: null,
-  deletedDate: null,
-  imagePath: null,
-  companyId: null,
-  locationId: null,
-  managerId: null,
-  notes: null,
-};
-
 export const getAllDepartments = createAsyncThunk(
   "departments/getAll",
   async (_, { fulfillWithValue, rejectWithValue }) => {
@@ -74,14 +61,14 @@ export const removeDepartment = createAsyncThunk(
   }
 );
 interface State {
-  department: IDepartment;
+  department: IDepartment | null;
   departments: IDepartment[];
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
 }
 
 const initialState: State = {
-  department: baseDepartment,
+  department: null,
   departments: [],
   status: "idle",
   error: null,
@@ -98,7 +85,7 @@ const departmentSlice = createSlice({
       state.departments = action.payload;
     },
     clearDepartment: (state) => {
-      state.department = baseDepartment;
+      state.department = null;
     },
     clearDepartments: (state) => {
       state.departments = [];

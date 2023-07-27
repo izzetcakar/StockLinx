@@ -3,15 +3,6 @@ import { request } from "../server/api";
 import { ICategory } from "../interfaces/interfaces";
 const requestUrl = "Category/";
 
-const baseCategory: ICategory = {
-  id: "",
-  name: "",
-  createdDate: null,
-  updatedDate: null,
-  deletedDate: null,
-  imagePath: null,
-};
-
 export const getAllCategories = createAsyncThunk(
   "categories/getAll",
   async (_, { fulfillWithValue, rejectWithValue }) => {
@@ -70,14 +61,14 @@ export const removeCategory = createAsyncThunk(
   }
 );
 interface State {
-  category: ICategory;
+  category: ICategory | null;
   categories: ICategory[];
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
 }
 
 const initialState: State = {
-  category: baseCategory,
+  category: null,
   categories: [],
   status: "idle",
   error: null,
@@ -94,7 +85,7 @@ const categorySlice = createSlice({
       state.categories = action.payload;
     },
     clearCategory: (state) => {
-      state.category = baseCategory;
+      state.category = null;
     },
     clearCategories: (state) => {
       state.categories = [];

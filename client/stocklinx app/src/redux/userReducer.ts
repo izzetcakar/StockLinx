@@ -3,28 +3,6 @@ import { request } from "../server/api";
 import { IUser } from "../interfaces/interfaces";
 const requestUrl = "User/";
 
-const baseUser: IUser = {
-  id: "",
-  firstName: "",
-  lastName: "",
-  createdDate: null,
-  updatedDate: null,
-  deletedDate: null,
-  imagePath: null,
-  email: "",
-  password: "",
-  phone: null,
-  notes: null,
-  locationId: null,
-  website: null,
-  companyId: null,
-  departmentId: null,
-  startDate: null,
-  endDate: null,
-  jobTitle: null,
-  language: null,
-};
-
 export const getAllUsers = createAsyncThunk(
   "suppliers/getAll",
   async (_, { fulfillWithValue, rejectWithValue }) => {
@@ -88,7 +66,7 @@ interface State {
 }
 
 const initialState: State = {
-  user: baseUser,
+  user: null,
   users: [],
   status: "idle",
   error: null,
@@ -99,7 +77,7 @@ const userItemSlice = createSlice({
   initialState,
   reducers: {
     clearUser: (state) => {
-      state.user = baseUser;
+      state.user = null;
       localStorage.removeItem("token");
     },
   },
