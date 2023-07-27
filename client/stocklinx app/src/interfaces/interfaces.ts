@@ -35,14 +35,14 @@ interface IBaseProduct extends BaseEntity {
   statusId: string;
   imagePath: string | null;
   name: string;
-  serialNo: string;
-  orderNo: string;
-  notes: string;
+  serialNo: string | null;
+  orderNo: string | null;
+  notes: string | null;
   quantity: number;
-  purchaseCost: number;
+  purchaseCost: number | null;
   purchaseDate: Date | null;
-  checkInCounter: number;
-  checkOutCounter: number;
+  checkInCounter: number | null;
+  checkOutCounter: number | null;
 }
 export interface IAccessory extends IBaseProduct {
   manufacturerId: string | null;
