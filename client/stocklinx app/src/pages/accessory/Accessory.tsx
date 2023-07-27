@@ -1,30 +1,19 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
+import "./accessory.scss";
+import { modals } from '@mantine/modals';
+import TestForm from "../../components/form/TestForm";
+import AccessoryForm from "../../components/form/AccessoryForm";
 import GridTable from "../../components/gridTable/GridTable";
+import CustomPopup from "../../components/popup/CustomPopup";
 
-interface AccessoryProps {
-}
-
-const Accessory: React.FC<AccessoryProps> = () => {
-  const [options, setOptions] = useState([
-    {
-      option: "hasColumnLines",
-      value: false,
-    },
-    {
-      option: "showPageSize",
-      value: true,
-    },
-    {
-      option: "showPageSizeSelector",
-      value: true,
-    },
-    {
-      option: "showPageSizeInfo",
-      value: true,
-    },
-  ]);
-
-  function appComponent({ value }: any) {
+const Accessory = () => {
+  const editData = useRef<object>({});
+  const [formVisible, setFormVisible] = useState<boolean>(false);
+  const [showColumnLines, setShowColumnLines] = useState<boolean>(false);
+  const TitleComponent: React.FC<{ value: string }> = ({ value }) => {
+    return <div style={{ fontWeight: "bold" }}>{value}</div>;
+  };
+  const AppComponent: React.FC<{ value: number }> = ({ value }) => {
     return (
       <div
         style={{
@@ -36,13 +25,13 @@ const Accessory: React.FC<AccessoryProps> = () => {
         {value}
       </div>
     );
-  }
+  };
   const columns = [
     {
       dataField: "Owner",
       caption: "Owner",
       dataType: "string",
-      renderComponent: titleComponent,
+      renderComponent: TitleComponent,
     },
     { dataField: "LastCheck", caption: "Last Check", dataType: "string" },
     { dataField: "OSversion", caption: "OS Version", dataType: "string" },
@@ -57,10 +46,9 @@ const Accessory: React.FC<AccessoryProps> = () => {
       dataField: "Apllications",
       caption: "Apllications",
       dataType: "number",
-      renderComponent: appComponent,
+      renderComponent: AppComponent,
     },
   ];
-
   const data = [
     {
       Owner: "Madison Carter",
@@ -90,22 +78,35 @@ const Accessory: React.FC<AccessoryProps> = () => {
       Apllications: 265,
     },
   ];
-
-  const handleOptions = (target: number) => {
-    const newOptions = [...options].map((item, index) => {
-      if (index === target) {
-        return { ...item, value: !item.value };
-      } else {
-        return item;
-      }
-    });
-    setOptions(newOptions);
+  const handleFormVisible = () => {
+    setFormVisible((prevFormVisible) => !prevFormVisible);
+  };
+  const onStartEdit = (row: object) => {
+    editData.current = row;
+  };
+  const onRowInsert = () => {
+    console.log("insert");
+    editData.current = {};
+    openEditModel();
+  };
+  const onRowUpdate = (row: object) => {
+    console.log(row);
+    openEditModel();
+  };
+  const onRowDelete = (row: object) => {
+    console.log("delete", row);
+  };
+  const handleUpdate = (data: object) => {
+    console.log("updateSubmit", data);
   };
 
-  function titleComponent({ value }: any) {
-    return <div style={{ fontWeight: "bold" }}>{value}</div>;
-  }
-
+  const openEditModel = () => modals.open({
+    modalId: 'edit-modal',
+    title: 'Update',
+    children: (
+      <AccessoryForm object={editData.current} submitFunc={handleUpdate} columns={columns} />
+    ),
+  });
 
   return (
     <div
@@ -115,10 +116,15 @@ const Accessory: React.FC<AccessoryProps> = () => {
       <GridTable
         data={data}
         columns={columns}
-        hasColumnLines={options[0].value}
-        showPageSize={options[1].value}
-        showPageSizeSelector={options[2].value}
-        showPageSizeInfo={options[3].value}
+        hasColumnLines={showColumnLines}
+        cellCssClass="testClass"
+        pageSizes={[1, 2, 5]}
+        enableEdit={true}
+        showPageSize={true}
+        onRowInsert={onRowInsert}
+        onRowUpdate={onRowUpdate}
+        onRowDelete={onRowDelete}
+        onStartEdit={onStartEdit}
       />
       <div
         className="button-container"
@@ -128,18 +134,27 @@ const Accessory: React.FC<AccessoryProps> = () => {
           gap: "1rem",
         }}
       >
-        {options.map((item, index) => (
-          <button
-            key={index}
-            onClick={() => handleOptions(index)}
-            style={{
-              width: "220px",
-            }}
-          >
-            {item.option} - {item.value.toString()}
-          </button>
-        ))}
+        <button
+          onClick={() => setShowColumnLines(prev => !prev)}
+          style={{
+            width: "220px",
+          }}
+        >
+          hasColumnLines: {showColumnLines ? "true" : "false"}
+        </button>
       </div>
+      <CustomPopup
+        visible={formVisible}
+        title="Custom Form"
+        showTitle={true}
+        showCloseButton={true}
+        dragEnabled={false}
+        height={"fit-content"}
+        width={300}
+        hideOnOutsideClick={false}
+        handleClose={handleFormVisible}
+        renderContent={() => <TestForm object={editData.current} submitFunc={handleUpdate} columns={columns} />}
+      />
     </div>
   );
 };
