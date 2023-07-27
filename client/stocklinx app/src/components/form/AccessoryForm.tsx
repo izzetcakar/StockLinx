@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Column } from '../gridTable/interfaces/interfaces';
 import { TextInput, Checkbox, Button, Group, Box, NumberInput, FileInput, rem } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { DateInput } from '@mantine/dates';
 import { closeModal } from '@mantine/modals';
 import { IconUpload } from '@tabler/icons-react';
-import { toBase64 } from '../../functions/Image';
+import { modals } from '@mantine/modals';
 
 interface AccessoryFormProps {
     object?: object;
@@ -14,8 +14,9 @@ interface AccessoryFormProps {
 }
 
 const AccessoryForm: React.FC<AccessoryFormProps> = ({
+    submitFunc = () => console.log("submit"),
 }) => {
-    const [value, setValue] = React.useState<File | null>(null);
+    const [value, setValue] = useState<File | null>(null);
     const form = useForm({
         initialValues: {
             Owner: "",
@@ -38,11 +39,13 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({
         console.log(value);
     }, [value])
 
-    const handleImage = async (image: File | null) => {
-        if (!image) return;
-        var img = await toBase64(image);
-        console.log(img);
-    }
+    const openNextModel = () => modals.open({
+        modalId: 'next-modal',
+        title: 'Page 2',
+        children: (
+            <Button fullWidth onClick={() => closeModal("next-modal")} color='dark'>Back</Button>
+        ),
+    });
 
     return (
         <Box maw="auto" mx="auto">
@@ -91,8 +94,8 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({
                 />
                 <FileInput label="Upload image" placeholder="Upload image" accept="image/png,image/jpeg" value={value} onChange={setValue} icon={<IconUpload size={rem(14)} />} />
                 <Group position="right" mt="md">
-                    <Button fullWidth type="submit" color='dark'>Submit</Button>
-                    <Button fullWidth color='dark' onClick={() => handleImage(value)}>Show</Button>
+                    <Button type="submit" color='dark'>Submit</Button>
+                    <Button onClick={() => openNextModel()} color='dark'>Next Modal</Button>
                 </Group>
             </form>
         </Box>
