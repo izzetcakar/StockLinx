@@ -1,11 +1,10 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { request } from "../server/api";
-import { generateId } from "../functions/generateId";
 import { ILocation } from "../interfaces/interfaces";
 const requestUrl = "Location/";
 
 const baseLocation: ILocation = {
-  id: generateId(),
+  id: "",
   name: "",
   createdDate: null,
   updatedDate: null,

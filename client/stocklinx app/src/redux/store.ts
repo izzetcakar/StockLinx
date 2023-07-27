@@ -5,7 +5,6 @@ import userReducer from "./userReducer";
 import categoryReducer from "./categoryReducer";
 import companyReducer from "./companyReducer";
 import departmentReducer from "./departmentReducer";
-import imageReducer from "./imageReducer";
 import locationReducer from "./locationReducer";
 import manufacturerReducer from "./manufacturerReducer";
 import modelReducer from "./modelReducer";
@@ -18,7 +17,6 @@ const store = configureStore({
     category: categoryReducer,
     company: companyReducer,
     department: departmentReducer,
-    image: imageReducer,
     location: locationReducer,
     manufacturer: manufacturerReducer,
     model: modelReducer,

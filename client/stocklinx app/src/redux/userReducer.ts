@@ -1,4 +1,4 @@
-import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { request } from "../server/api";
 import { IUser } from "../interfaces/interfaces";
 const requestUrl = "User/";
@@ -71,7 +71,7 @@ export const getAllUsers = createAsyncThunk(
 export const getUserWithToken = createAsyncThunk(
   "user/getWithToken",
   async (_, { fulfillWithValue, rejectWithValue }) => {
-    const response = await request<User>({
+    const response = await request<IUser>({
       requestUrl: requestUrl + "getWithToken",
       apiType: "get",
     });
@@ -109,7 +109,7 @@ const userItemSlice = createSlice({
       state.error = null;
     });
     builder.addCase(getUserWithToken.fulfilled, (state, action) => {
-      state.user = action.payload;
+      state.user = action.payload as IUser;
       state.error = null;
     });
     builder.addCase(getUserWithToken.rejected, (state, action) => {
