@@ -18,7 +18,7 @@ const AssetEditForm: React.FC<AssetEditFormProps> = ({
     const [value, setValue] = useState<File | null>(null);
     const asset = useAppSelector((state: RootState) => state.asset.asset);
     const form = useForm({
-        initialValues: asset || {
+        initialValues: { ...asset } || {
             id: "",
             manufacturerId: "",
             modelId: "",
@@ -37,23 +37,19 @@ const AssetEditForm: React.FC<AssetEditFormProps> = ({
             orderNo: "",
             purchaseDate: "",
             purchaseCost: 0,
-            quantity: 0,
             checkInCounter: 0,
             checkOutCounter: 0,
         },
         validate: {
-            name: (value: string) => (/(?!^$)([^\s])/.test(value) ? null : 'Name should not be empty'),
-            quantity: (value: number) => {
-                return value !== null && value >= 0 ? null : 'Quantity must be a non-negative number';
+            name: (value: string | null | undefined) => { return value && (/(?!^$)([^\s])/.test(value) ? null : 'Name should not be empty') },
+            purchaseCost: (value: number | null | undefined) => {
+                return value && value >= 0 ? null : 'PurchaseCost must be null or a non-negative number';
             },
-            purchaseCost: (value: number) => {
-                return value >= 0 ? null : 'PurchaseCost must be null or a non-negative number';
+            checkInCounter: (value: number | null | undefined) => {
+                return value && value >= 0 ? null : 'CheckInCounter must be null or a non-negative number';
             },
-            checkInCounter: (value: number) => {
-                return value >= 0 ? null : 'CheckInCounter must be null or a non-negative number';
-            },
-            checkOutCounter: (value: number) => {
-                return value >= 0 ? null : 'CheckOutCounter must be null or a non-negative number';
+            checkOutCounter: (value: number | null | undefined) => {
+                return value && value >= 0 ? null : 'CheckOutCounter must be null or a non-negative number';
             },
         },
     });
