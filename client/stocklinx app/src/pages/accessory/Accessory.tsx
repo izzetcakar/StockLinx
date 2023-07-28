@@ -107,7 +107,7 @@ const Accessory = () => {
     modalId: 'edit-modal',
     title: 'Update',
     children: (
-      <AccessoryForm submitFunc={handleUpdate} columns={columns} />
+      <AccessoryForm submitFunc={handleUpdate} />
     ),
   });
 
