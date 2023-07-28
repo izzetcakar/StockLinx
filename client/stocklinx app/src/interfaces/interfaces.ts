@@ -17,6 +17,16 @@ export interface ApiResponse<T> {
   success: boolean;
   status?: number;
 }
+export enum ApiStatus {
+  Idle,
+  Success,
+  Loading,
+  Failed,
+}
+export interface SelectData {
+  value: string;
+  label: string;
+}
 
 //Server side interfaces
 interface BaseEntity {
@@ -25,7 +35,7 @@ interface BaseEntity {
   updatedDate?: Date | null;
   deletedDate?: Date | null;
 }
-export interface IStatus extends BaseEntity {
+export interface IProductStatus extends BaseEntity {
   name: string;
 }
 interface IBaseProduct extends BaseEntity {
@@ -63,11 +73,10 @@ export interface IAsset extends IBaseProduct {
 export interface IComponent extends IBaseProduct {}
 export interface ILicense extends IBaseProduct {
   supplierId: string | null;
-  licenseNo: string | null;
   licenseKey: string;
   licenseEmail: string | null;
   maintained: boolean;
-  reaassignable: boolean;
+  reassignable: boolean;
   expirationDate: Date | null;
   terminationDate: Date | null;
   quantity: number | null;
@@ -145,18 +154,18 @@ export interface ISupplier extends BaseEntity {
 }
 export interface IUser extends BaseEntity {
   imagePath: string | null;
-  companyId: string | null;
-  departmentId: string | null;
+  companyId: string;
+  departmentId: string;
   locationId: string | null;
   firstName: string;
   lastName: string;
   email: string;
   password: string;
-  phone: string | null;
+  phoneNo: string | null;
   language: string | null;
   jobTitle: string | null;
   website: string | null;
-  startDate: Date | null;
+  startDate: Date;
   endDate: Date | null;
   notes: string | null;
 }
