@@ -4,7 +4,7 @@ import GridTable from "../components/gridTable/GridTable";
 import CustomPopup from "../components/popup/CustomPopup";
 import { modals } from '@mantine/modals';
 import TestForm from "../components/form/TestForm";
-import AccessoryForm from "../components/form/AccessoryForm";
+import AccessoryEditForm from "../components/form/AccessoryEditForm";
 
 const Test = () => {
   const editData = useRef<object>({});
@@ -104,7 +104,7 @@ const Test = () => {
     modalId: 'edit-modal',
     title: 'Update',
     children: (
-      <AccessoryForm object={editData.current} submitFunc={handleUpdate} columns={columns} />
+      <AccessoryEditForm submitFunc={handleUpdate} />
     ),
   });
 
