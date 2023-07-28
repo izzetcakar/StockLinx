@@ -18,13 +18,13 @@ namespace StockLinx.Repository
         public DbSet<Consumable> Consumables { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<DeployedProduct> DeployedProducts { get; set; }
-        public DbSet<Image> Images { get; set; }
         public DbSet<License> Licenses { get; set; }
         public DbSet<Location> Locations { get; set; }
         public DbSet<Manufacturer> Manufacturers { get; set; }
         public DbSet<Model> Models { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<ProductStatus> ProductStatuses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

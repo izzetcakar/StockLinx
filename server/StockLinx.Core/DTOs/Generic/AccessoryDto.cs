@@ -4,6 +4,7 @@
     {
         public Guid? ManufacturerId { get; set; }
         public Guid? SupplierId { get; set; }
-        public int? Warranty { get; set; }
+        public int Quantity { get; set; }
+        public DateTime? WarrantyDate { get; set; }
     }
 }

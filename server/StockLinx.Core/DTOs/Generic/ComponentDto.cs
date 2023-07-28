@@ -2,5 +2,6 @@
 {
     public class ComponentDto : BaseProductDto
     {
+        public int Quantity { get; set; }
     }
 }

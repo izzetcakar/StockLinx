@@ -2,14 +2,14 @@
 {
     public class SupplierCreateDto
     {
-        public string Name { get; set; }
-        public Guid? ImageId { get; set; }
         public Guid? LocationId { get; set; }
+        public string Name { get; set; }
+        public string? ImagePath { get; set; }
         public string? ContactName { get; set; }
-        public string? Phone { get; set; }
+        public string? ContactPhone { get; set; }
+        public string? ContactEmail { get; set; }
+        public string? Website { get; set; }
         public string? Fax { get; set; }
-        public string? Email { get; set; }
-        public string? Url { get; set; }
         public string? Notes { get; set; }
     }
 }

@@ -1,11 +1,10 @@
-﻿using StockLinx.Core.DTOs.Generic;
-
-namespace StockLinx.Core.DTOs.Create
+﻿namespace StockLinx.Core.DTOs.Create
 {
     public class AccessoryCreateDto : BaseProductCreateDto
     {
         public Guid? ManufacturerId { get; set; }
         public Guid? SupplierId { get; set; }
-        public int? Warranty { get; set; }
+        public int Quantity { get; set; }
+        public DateTime? WarrantyDate { get; set; }
     }
 }

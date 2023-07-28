@@ -1,9 +1,8 @@
 ﻿namespace StockLinx.Core.Entities
 {
-    public class Company : BaseEntity
+    public class ProductStatus : BaseEntity
     {
-        public string Name { get; set; }
-        public string? ImagePath { get; set; }
+        public string name;
 
         //Relates
         public ICollection<Asset> Assets { get; set; }
@@ -11,7 +10,6 @@
         public ICollection<Component> Components { get; set; }
         public ICollection<Consumable> Consumables { get; set; }
         public ICollection<License> Licenses { get; set; }
-        public ICollection<Department> Departments { get; set; }
-        public ICollection<User> Users { get; set; }
+        public ICollection<Model> Models { get; set; }
     }
 }

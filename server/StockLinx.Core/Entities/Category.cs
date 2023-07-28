@@ -2,10 +2,8 @@
 {
     public class Category : BaseEntity
     {
-        public Guid? ImageId { get; set; }
-        public CategoryType Type { get; set; }
         public string Name { get; set; }
-        public Image? Image { get; set; }
+        public string? ImagePath { get; set; }
 
         //Relates
         public ICollection<Asset> Assets { get; set; }

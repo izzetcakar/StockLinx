@@ -2,5 +2,6 @@
 {
     public class ComponentUpdateDto : BaseProductUpdateDto
     {
+        public int Quantity { get; set; }
     }
 }

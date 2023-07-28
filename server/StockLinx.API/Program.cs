@@ -61,8 +61,6 @@ builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 builder.Services.AddScoped<IDeployedProductRepository, DeployedProductRepository>();
 builder.Services.AddScoped<IDeployedProductService, DeployedProductService>();
-builder.Services.AddScoped<IImageRepository, ImageRepository>();
-builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddScoped<ILicenseRepository, LicenseRepository>();
 builder.Services.AddScoped<ILicenseService, LicenseService>();
 builder.Services.AddScoped<ILocationRepository, LocationRepository>();

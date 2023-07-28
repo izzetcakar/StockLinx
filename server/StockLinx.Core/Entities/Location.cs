@@ -2,17 +2,16 @@
 {
     public class Location : BaseEntity
     {
-        public Guid? ParentId { get; set; }
-        public Guid? ImageId { get; set; }
+        public string? ImagePath { get; set; }
         public string Name { get; set; }
-        public string? City { get; set; }
-        public string? State { get; set; }
+        public string City { get; set; }
         public string Country { get; set; }
+        public string? State { get; set; }
         public string? Address { get; set; }
         public string? Address2 { get; set; }
-        public string? Zip { get; set; }
-        public double? Currency { get; set; }
-        public Image? Image { get; set; }
+        public string? ZipCode { get; set; }
+        public string? Currency { get; set; }
+        public string? Notes { get; set; }
 
         //Relates
         public ICollection<Asset> Assets { get; set; }

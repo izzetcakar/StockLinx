@@ -1,8 +1,7 @@
 ﻿namespace StockLinx.Core.DTOs.Generic
 {
-    public class CompanyDto : BaseDto
+    public class ProductStatusDto : BaseDto
     {
         public string Name { get; set; }
-        public string? ImagePath { get; set; }
     }
 }

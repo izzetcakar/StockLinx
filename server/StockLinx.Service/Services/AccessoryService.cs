@@ -6,8 +6,6 @@ using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 using StockLinx.Core.Services;
 using StockLinx.Core.UnitOfWork;
-using StockLinx.Repository.Repositories.EF_Core;
-using StockLinx.Repository.UnitOfWork;
 
 namespace StockLinx.Service.Services
 {
@@ -17,13 +15,11 @@ namespace StockLinx.Service.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<Accessory> _accessoryRepository;
         private readonly ILogger<AccessoryService> _logger;
-        private readonly IImageService _imageService;
-        public AccessoryService(IRepository<Accessory> repository,IAccessoryRepository accessoryRepository,IImageService imageService
+        public AccessoryService(IRepository<Accessory> repository,IAccessoryRepository accessoryRepository
             ,IUnitOfWork unitOfWork, IMapper mapper,ILogger<AccessoryService> logger) : base(repository, unitOfWork)
         {
             _mapper = mapper;
             _accessoryRepository = accessoryRepository;
-            _imageService = imageService;
             _unitOfWork = unitOfWork;
             _logger = logger;
         }
@@ -66,10 +62,10 @@ namespace StockLinx.Service.Services
                 updatedAccessory.UpdatedDate = DateTime.UtcNow;
                 _accessoryRepository.Update(accessoryInDb, updatedAccessory);
 
-                if (updateDto?.Image != null)
-                {
-                    await _imageService.AddImageAsync(updateDto.Image, (Guid)accessoryId);
-                }
+                //if (updateDto?.Image != null)
+                //{
+                //    await _imageService.AddImageAsync(updateDto.Image, (Guid)accessoryId);
+                //}
 
                 await _unitOfWork.CommitAsync();
             }

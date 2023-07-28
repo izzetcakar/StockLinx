@@ -27,8 +27,6 @@ namespace StockLinx.Service.Mapping
             CreateMap<Department, DepartmentCreateDto>().ReverseMap();
             CreateMap<DeployedProduct, DeployedProductDto>().ReverseMap();
             CreateMap<DeployedProduct, DeployedProductCreateDto>().ReverseMap();
-            CreateMap<Image, ImageDto>().ReverseMap();
-            CreateMap<Image, ImageCreateDto>().ReverseMap();
             CreateMap<License, LicenseDto>().ReverseMap();
             CreateMap<License, LicenseCreateDto>().ReverseMap();
             CreateMap<Location, LocationDto>().ReverseMap();
@@ -39,6 +37,7 @@ namespace StockLinx.Service.Mapping
             CreateMap<Model, ModelCreateDto>().ReverseMap();
             CreateMap<Supplier, SupplierDto>().ReverseMap();
             CreateMap<Supplier, SupplierCreateDto>().ReverseMap();
+            CreateMap<ProductStatus,ProductStatusDto>().ReverseMap();
             CreateMap<User, UserDto>().ReverseMap();
             CreateMap<User, UserCreateDto>().ReverseMap();
         }
