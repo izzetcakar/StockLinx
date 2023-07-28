@@ -1,6 +1,6 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { request } from "../server/api";
-import { ICategory } from "../interfaces/interfaces";
+import { ApiStatus, ICategory, SelectData } from "../interfaces/interfaces";
 const requestUrl = "Category/";
 
 export const getAllCategories = createAsyncThunk(
@@ -63,18 +63,20 @@ export const removeCategory = createAsyncThunk(
 interface State {
   category: ICategory | null;
   categories: ICategory[];
-  status: "idle" | "loading" | "succeeded" | "failed";
+  selectData: SelectData[];
+  status: ApiStatus;
   error: string | null;
 }
 
 const initialState: State = {
   category: null,
   categories: [],
-  status: "idle",
+  selectData: [],
+  status: ApiStatus.Idle,
   error: null,
 };
 
-const categorySlice = createSlice({
+const categorieslice = createSlice({
   name: "category",
   initialState,
   reducers: {
@@ -94,7 +96,17 @@ const categorySlice = createSlice({
   extraReducers(builder) {
     builder.addCase(getAllCategories.fulfilled, (state, action) => {
       state.error = null;
-      state.categories = action.payload as ICategory[];
+      const newCategories = action.payload as ICategory[];
+      state.categories = newCategories;
+      state.selectData = newCategories.map((category) => {
+        return {
+          value: category.id,
+          label: category.name,
+        };
+      });
+    });
+    builder.addCase(getAllCategories.pending, (state) => {
+      state.status = ApiStatus.Loading;
     });
     builder.addCase(getAllCategories.rejected, (state, action) => {
       state.error = action.payload as string;
@@ -103,30 +115,42 @@ const categorySlice = createSlice({
       state.category = action.payload as ICategory;
       state.error = null;
     });
-    builder.addCase(getCategoryById.rejected, (state, action) => {
-      state.error = action.payload as string;
+    builder.addCase(getCategoryById.pending, (state) => {
+      state.status = ApiStatus.Loading;
     });
-    builder.addCase(createCategory.rejected, (state, action) => {
+    builder.addCase(getCategoryById.rejected, (state, action) => {
       state.error = action.payload as string;
     });
     builder.addCase(createCategory.fulfilled, (state) => {
       state.error = null;
     });
-    builder.addCase(updateCategory.rejected, (state, action) => {
+    builder.addCase(createCategory.pending, (state) => {
+      state.status = ApiStatus.Loading;
+    });
+    builder.addCase(createCategory.rejected, (state, action) => {
       state.error = action.payload as string;
     });
     builder.addCase(updateCategory.fulfilled, (state) => {
       state.error = null;
     });
-    builder.addCase(removeCategory.rejected, (state, action) => {
+    builder.addCase(updateCategory.pending, (state) => {
+      state.status = ApiStatus.Loading;
+    });
+    builder.addCase(updateCategory.rejected, (state, action) => {
       state.error = action.payload as string;
     });
     builder.addCase(removeCategory.fulfilled, (state) => {
       state.error = null;
     });
+    builder.addCase(removeCategory.pending, (state) => {
+      state.status = ApiStatus.Loading;
+    });
+    builder.addCase(removeCategory.rejected, (state, action) => {
+      state.error = action.payload as string;
+    });
   },
 });
 
 export const { setCategory, setCategories, clearCategory, clearCategories } =
-  categorySlice.actions;
-export default categorySlice.reducer;
+  categorieslice.actions;
+export default categorieslice.reducer;

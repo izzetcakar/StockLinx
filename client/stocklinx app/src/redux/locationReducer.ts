@@ -1,6 +1,6 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { request } from "../server/api";
-import { ILocation } from "../interfaces/interfaces";
+import { ApiStatus, ILocation, SelectData } from "../interfaces/interfaces";
 const requestUrl = "Location/";
 
 export const getAllLocations = createAsyncThunk(
@@ -63,14 +63,16 @@ export const removeLocation = createAsyncThunk(
 interface State {
   location: ILocation | null;
   locations: ILocation[];
-  status: "idle" | "loading" | "succeeded" | "failed";
+  selectData: SelectData[];
+  status: ApiStatus;
   error: string | null;
 }
 
 const initialState: State = {
   location: null,
   locations: [],
-  status: "idle",
+  selectData: [],
+  status: ApiStatus.Idle,
   error: null,
 };
 
@@ -94,7 +96,17 @@ const locationSlice = createSlice({
   extraReducers(builder) {
     builder.addCase(getAllLocations.fulfilled, (state, action) => {
       state.error = null;
-      state.locations = action.payload as ILocation[];
+      const newLocations = action.payload as ILocation[];
+      state.locations = newLocations;
+      state.selectData = newLocations.map((location) => {
+        return {
+          value: location.id,
+          label: location.name,
+        };
+      });
+    });
+    builder.addCase(getAllLocations.pending, (state) => {
+      state.status = ApiStatus.Loading;
     });
     builder.addCase(getAllLocations.rejected, (state, action) => {
       state.error = action.payload as string;
@@ -103,26 +115,38 @@ const locationSlice = createSlice({
       state.location = action.payload as ILocation;
       state.error = null;
     });
-    builder.addCase(getLocationById.rejected, (state, action) => {
-      state.error = action.payload as string;
+    builder.addCase(getLocationById.pending, (state) => {
+      state.status = ApiStatus.Loading;
     });
-    builder.addCase(createLocation.rejected, (state, action) => {
+    builder.addCase(getLocationById.rejected, (state, action) => {
       state.error = action.payload as string;
     });
     builder.addCase(createLocation.fulfilled, (state) => {
       state.error = null;
     });
-    builder.addCase(updateLocation.rejected, (state, action) => {
+    builder.addCase(createLocation.pending, (state) => {
+      state.status = ApiStatus.Loading;
+    });
+    builder.addCase(createLocation.rejected, (state, action) => {
       state.error = action.payload as string;
     });
     builder.addCase(updateLocation.fulfilled, (state) => {
       state.error = null;
     });
-    builder.addCase(removeLocation.rejected, (state, action) => {
+    builder.addCase(updateLocation.pending, (state) => {
+      state.status = ApiStatus.Loading;
+    });
+    builder.addCase(updateLocation.rejected, (state, action) => {
       state.error = action.payload as string;
     });
     builder.addCase(removeLocation.fulfilled, (state) => {
       state.error = null;
+    });
+    builder.addCase(removeLocation.pending, (state) => {
+      state.status = ApiStatus.Loading;
+    });
+    builder.addCase(removeLocation.rejected, (state, action) => {
+      state.error = action.payload as string;
     });
   },
 });

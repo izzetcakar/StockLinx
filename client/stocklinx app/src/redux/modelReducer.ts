@@ -1,6 +1,6 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { request } from "../server/api";
-import { IModel } from "../interfaces/interfaces";
+import { ApiStatus, IModel, SelectData } from "../interfaces/interfaces";
 const requestUrl = "Model/";
 
 export const getAllModels = createAsyncThunk(
@@ -63,14 +63,16 @@ export const removeModel = createAsyncThunk(
 interface State {
   model: IModel | null;
   models: IModel[];
-  status: "idle" | "loading" | "succeeded" | "failed";
+  selectData: SelectData[];
+  status: ApiStatus;
   error: string | null;
 }
 
 const initialState: State = {
   model: null,
   models: [],
-  status: "idle",
+  selectData: [],
+  status: ApiStatus.Idle,
   error: null,
 };
 
@@ -94,7 +96,17 @@ const modelSlice = createSlice({
   extraReducers(builder) {
     builder.addCase(getAllModels.fulfilled, (state, action) => {
       state.error = null;
-      state.models = action.payload as IModel[];
+      const newModels = action.payload as IModel[];
+      state.models = newModels;
+      state.selectData = newModels.map((model) => {
+        return {
+          value: model.id,
+          label: model.name,
+        };
+      });
+    });
+    builder.addCase(getAllModels.pending, (state) => {
+      state.status = ApiStatus.Loading;
     });
     builder.addCase(getAllModels.rejected, (state, action) => {
       state.error = action.payload as string;
@@ -103,26 +115,38 @@ const modelSlice = createSlice({
       state.model = action.payload as IModel;
       state.error = null;
     });
-    builder.addCase(getModelById.rejected, (state, action) => {
-      state.error = action.payload as string;
+    builder.addCase(getModelById.pending, (state) => {
+      state.status = ApiStatus.Loading;
     });
-    builder.addCase(createModel.rejected, (state, action) => {
+    builder.addCase(getModelById.rejected, (state, action) => {
       state.error = action.payload as string;
     });
     builder.addCase(createModel.fulfilled, (state) => {
       state.error = null;
     });
-    builder.addCase(updateModel.rejected, (state, action) => {
+    builder.addCase(createModel.pending, (state) => {
+      state.status = ApiStatus.Loading;
+    });
+    builder.addCase(createModel.rejected, (state, action) => {
       state.error = action.payload as string;
     });
     builder.addCase(updateModel.fulfilled, (state) => {
       state.error = null;
     });
-    builder.addCase(removeModel.rejected, (state, action) => {
+    builder.addCase(updateModel.pending, (state) => {
+      state.status = ApiStatus.Loading;
+    });
+    builder.addCase(updateModel.rejected, (state, action) => {
       state.error = action.payload as string;
     });
     builder.addCase(removeModel.fulfilled, (state) => {
       state.error = null;
+    });
+    builder.addCase(removeModel.pending, (state) => {
+      state.status = ApiStatus.Loading;
+    });
+    builder.addCase(removeModel.rejected, (state, action) => {
+      state.error = action.payload as string;
     });
   },
 });

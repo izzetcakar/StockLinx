@@ -1,6 +1,6 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { request } from "../server/api";
-import { IManufacturer } from "../interfaces/interfaces";
+import { ApiStatus, IManufacturer, SelectData } from "../interfaces/interfaces";
 const requestUrl = "Manufacturer/";
 
 export const getAllManufacturers = createAsyncThunk(
@@ -69,14 +69,16 @@ export const removeManufacturer = createAsyncThunk(
 interface State {
   manufacturer: IManufacturer | null;
   manufacturers: IManufacturer[];
-  status: "idle" | "loading" | "succeeded" | "failed";
+  selectData: SelectData[];
+  status: ApiStatus;
   error: string | null;
 }
 
 const initialState: State = {
   manufacturer: null,
   manufacturers: [],
-  status: "idle",
+  selectData: [],
+  status: ApiStatus.Idle,
   error: null,
 };
 
@@ -100,7 +102,17 @@ const manufacturerSlice = createSlice({
   extraReducers(builder) {
     builder.addCase(getAllManufacturers.fulfilled, (state, action) => {
       state.error = null;
-      state.manufacturers = action.payload as IManufacturer[];
+      const newManufacturers = action.payload as IManufacturer[];
+      state.manufacturers = newManufacturers;
+      state.selectData = newManufacturers.map((manufacturer) => {
+        return {
+          value: manufacturer.id,
+          label: manufacturer.name,
+        };
+      });
+    });
+    builder.addCase(getAllManufacturers.pending, (state) => {
+      state.status = ApiStatus.Loading;
     });
     builder.addCase(getAllManufacturers.rejected, (state, action) => {
       state.error = action.payload as string;
@@ -109,26 +121,38 @@ const manufacturerSlice = createSlice({
       state.manufacturer = action.payload as IManufacturer;
       state.error = null;
     });
-    builder.addCase(getManufacturerById.rejected, (state, action) => {
-      state.error = action.payload as string;
+    builder.addCase(getManufacturerById.pending, (state) => {
+      state.status = ApiStatus.Loading;
     });
-    builder.addCase(createManufacturer.rejected, (state, action) => {
+    builder.addCase(getManufacturerById.rejected, (state, action) => {
       state.error = action.payload as string;
     });
     builder.addCase(createManufacturer.fulfilled, (state) => {
       state.error = null;
     });
-    builder.addCase(updateManufacturer.rejected, (state, action) => {
+    builder.addCase(createManufacturer.pending, (state) => {
+      state.status = ApiStatus.Loading;
+    });
+    builder.addCase(createManufacturer.rejected, (state, action) => {
       state.error = action.payload as string;
     });
     builder.addCase(updateManufacturer.fulfilled, (state) => {
       state.error = null;
     });
-    builder.addCase(removeManufacturer.rejected, (state, action) => {
+    builder.addCase(updateManufacturer.pending, (state) => {
+      state.status = ApiStatus.Loading;
+    });
+    builder.addCase(updateManufacturer.rejected, (state, action) => {
       state.error = action.payload as string;
     });
     builder.addCase(removeManufacturer.fulfilled, (state) => {
       state.error = null;
+    });
+    builder.addCase(removeManufacturer.pending, (state) => {
+      state.status = ApiStatus.Loading;
+    });
+    builder.addCase(removeManufacturer.rejected, (state, action) => {
+      state.error = action.payload as string;
     });
   },
 });

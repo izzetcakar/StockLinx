@@ -15,6 +15,7 @@ import assetReducer from "./assetReducer";
 import componentReducer from "./componentReducer";
 import licenseReducer from "./licenseReducer";
 import consumableReducer from "./consumableReducer";
+import productStatusReducer from "./productStatusReducer";
 
 const store = configureStore({
   reducer: {
@@ -31,6 +32,7 @@ const store = configureStore({
     manufacturer: manufacturerReducer,
     model: modelReducer,
     supplier: supplierReducer,
+    productStatus: productStatusReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
