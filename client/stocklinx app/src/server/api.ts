@@ -1,12 +1,12 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import { ApiResponse } from "../interfaces/interfaces";
 
 const BASE_URL: string = import.meta.env.VITE_REACT_APP_BASE_URL as string;
 
 const getToken = (): string => {
-  var userData = localStorage.getItem("token");
+  const userData = localStorage.getItem("token");
   if (userData === null) return "";
-  var user = JSON.parse(userData);
+  const user = JSON.parse(userData) as string;
   return user;
 };
 
@@ -24,7 +24,7 @@ export const request = async <T>({
 }: {
   requestUrl: string;
   apiType: "get" | "delete" | "deleteAll" | "put" | "post";
-  queryData?: any;
+  queryData?: T | T[] | null;
 }): Promise<ApiResponse<T>> => {
   let data: T | T[] | null;
   let status: number;
