@@ -29,7 +29,7 @@ export interface SelectData {
 }
 
 //Server side interfaces
-interface BaseEntity {
+export interface BaseEntity {
   id: string;
   createdDate?: Date | null;
   updatedDate?: Date | null;
@@ -42,7 +42,7 @@ interface IBaseProduct extends BaseEntity {
   categoryId: string | null;
   locationId: string | null;
   companyId: string | null;
-  statusId: string;
+  statusId: string | null;
   imagePath: string | null;
   name: string;
   serialNo: string | null;
@@ -50,11 +50,11 @@ interface IBaseProduct extends BaseEntity {
   notes: string | null;
   purchaseCost: number | null;
   purchaseDate: Date | null;
-  checkInCounter: number | null;
-  checkOutCounter: number | null;
+  checkInCounter?: number | null;
+  checkOutCounter?: number | null;
 }
 export interface IAccessory extends IBaseProduct {
-  quantity: number | null;
+  quantity: number;
   manufacturerId: string | null;
   supplierId: string | null;
   warrantyDate: Date | null;
@@ -70,7 +70,9 @@ export interface IAsset extends IBaseProduct {
     }
   ];
 }
-export interface IComponent extends IBaseProduct {}
+export interface IComponent extends IBaseProduct {
+  quantity: number;
+}
 export interface ILicense extends IBaseProduct {
   supplierId: string | null;
   licenseKey: string;
@@ -79,13 +81,13 @@ export interface ILicense extends IBaseProduct {
   reassignable: boolean;
   expirationDate: Date | null;
   terminationDate: Date | null;
-  quantity: number | null;
+  quantity: number;
 }
 export interface IConsumable extends IBaseProduct {
   modelNo: string | null;
   itemNo: string | null;
   tagNo: string | null;
-  quantity: number | null;
+  quantity: number;
 }
 export interface IModel extends BaseEntity {
   manufacturerId: string | null;
@@ -100,8 +102,8 @@ export interface ICategory extends BaseEntity {
   name: string;
 }
 export interface ICompany extends BaseEntity {
-  imagePath: string | null;
   name: string;
+  imagePath: string | null;
 }
 export interface IDepartment extends BaseEntity {
   companyId: string | null;
