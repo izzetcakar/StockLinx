@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import "./accessory.scss";
 import { modals } from '@mantine/modals';
 import TestForm from "../../components/form/TestForm";
-import AccessoryForm from "../../components/form/AccessoryEditForm";
+import AccessoryForm from "../../components/form/product/accessory/AccessoryEditForm";
 import GridTable from "../../components/gridTable/GridTable";
 import CustomPopup from "../../components/popup/CustomPopup";
 import { IAccessory } from "../../interfaces/interfaces";
