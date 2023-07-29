@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { modals } from '@mantine/modals';
 import TestForm from "../../components/form/TestForm";
-import AssetForm from "../../components/form/AssetEditForm";
+import AssetForm from "../../components/form/product/asset/AssetEditForm";
 import GridTable from "../../components/gridTable/GridTable";
 import CustomPopup from "../../components/popup/CustomPopup";
 import { IAsset } from "../../interfaces/interfaces";
 import { useAppDispatch } from "../../hooks";
 import { clearAsset, setAsset } from "../../redux/assetReducer";
-import AssetCreateForm from "../../components/form/AssetCreateForm";
+import AssetCreateForm from "../../components/form/product/asset/AssetCreateForm";
 
 const Asset = () => {
   const dispatch = useAppDispatch();
