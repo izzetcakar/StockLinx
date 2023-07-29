@@ -26,7 +26,8 @@ namespace StockLinx.API.Controllers
         public async Task<IActionResult> All()
         {
             var licenses = await _licenseService.GetAllAsync();
-            return CreateActionResult(CustomResponseDto<List<License>>.Success(200, licenses.ToList()));
+            var licenseDtos = _mapper.Map<List<LicenseDto>>(licenses).ToList();
+            return CreateActionResult(CustomResponseDto<List<LicenseDto>>.Success(200, licenseDtos));
         }
 
         [HttpGet("{id}")]

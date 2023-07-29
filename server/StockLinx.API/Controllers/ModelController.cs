@@ -26,7 +26,8 @@ namespace StockLinx.API.Controllers
         public async Task<IActionResult> All()
         {
             var models = await _modelService.GetAllAsync();
-            return CreateActionResult(CustomResponseDto<List<Model>>.Success(200, models.ToList()));
+            var modelDtos = _mapper.Map<List<ModelDto>>(models).ToList();
+            return CreateActionResult(CustomResponseDto<List<ModelDto>>.Success(200, modelDtos));
         }
 
         [HttpGet("{id}")]

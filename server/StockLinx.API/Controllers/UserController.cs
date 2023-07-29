@@ -33,7 +33,8 @@ namespace StockLinx.API.Controllers
         public async Task<IActionResult> All()
         {
             var users = await _userService.GetAllAsync();
-            return CreateActionResult(CustomResponseDto<List<User>>.Success(200, users.ToList()));
+            var userDtos = _mapper.Map<List<UserDto>>(users).ToList();
+            return CreateActionResult(CustomResponseDto<List<UserDto>>.Success(200, userDtos));
         }
 
         [HttpGet("{id}")]
