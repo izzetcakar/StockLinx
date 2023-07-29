@@ -4,7 +4,10 @@ import GridTable from "../components/gridTable/GridTable";
 import CustomPopup from "../components/popup/CustomPopup";
 import { modals } from '@mantine/modals';
 import TestForm from "../components/form/TestForm";
-import AccessoryEditForm from "../components/form/AccessoryEditForm";
+import AccessoryEditForm from "../components/form/product/accessory/AccessoryEditForm";
+import CompanyCreateForm from "../components/form/company/CompanyCreateForm";
+import CompanyEditForm from "../components/form/company/CompanyEditForm";
+import { ICompany } from "../interfaces/interfaces";
 
 const Test = () => {
   const editData = useRef<object>({});
@@ -100,13 +103,20 @@ const Test = () => {
     console.log("updateSubmit", data);
   };
 
+  const company: ICompany = {
+    id: "4468e4ec-274b-423a-8e66-e613c2850159",
+    name: "qwe",
+    imagePath: "https://picsum.photos/200/300",
+  }
   const openEditModel = () => modals.open({
     modalId: 'edit-modal',
     title: 'Update',
     children: (
-      <AccessoryEditForm submitFunc={handleUpdate} />
+      <CompanyEditForm company={company} submitFunc={handleUpdate} />
     ),
   });
+
+
 
   return (
     <div
