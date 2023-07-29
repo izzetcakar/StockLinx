@@ -5,6 +5,7 @@ using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 using StockLinx.Core.Services;
 using StockLinx.Core.UnitOfWork;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace StockLinx.Service.Services
 {
@@ -20,6 +21,15 @@ namespace StockLinx.Service.Services
         {
             var newCompany = _mapper.Map<Company>(createDto);
             newCompany.Id = Guid.NewGuid();
+            newCompany.CreatedDate = DateTime.UtcNow;
+
+            //Check if newCompany.ImagePath is base64 or not and not null
+            if (newCompany.ImagePath != null && newCompany.ImagePath.Contains("data:image/png;base64,"))
+            {
+                string base64 = newCompany.ImagePath.Substring(newCompany.ImagePath.IndexOf(',') + 1);
+                string path = newCompany.Name + DateTime.Now.ToString("yyyyMMddHHmmss");
+                ImageHandler.UploadBase64AsFile(base64, path);
+            } 
             await AddAsync(newCompany);
         }
         public Task UpdateCompanyAsync(CompanyUpdateDto updateDto)
