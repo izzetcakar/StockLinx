@@ -23,21 +23,38 @@ namespace StockLinx.Service.Services
             _httpContextAccessor = httpContextAccessor;
             _unitOfWork = unitOfWork;
         }
-
-        public string GetIdByToken()
+        public Guid GetIdByToken()
         {
-            var result = string.Empty;
             if (_httpContextAccessor.HttpContext != null)
             {
-                result = _httpContextAccessor.HttpContext.User.FindFirstValue("UserId");
-                return result;
+                string userIdString = _httpContextAccessor.HttpContext.User.FindFirstValue("UserId");
+                if (Guid.TryParse(userIdString, out Guid userIdGuid))
+                {
+                    return userIdGuid;
+                }
+                else
+                {
+                    throw new FormatException("Invalid UserId format");
+                }
             }
             else
             {
                 throw new NotImplementedException("Invalid Token");
             }
         }
-
+        public async Task<User> GetCurrentUser()
+        {
+            var userId = GetIdByToken();
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user == null)
+            {
+                throw new Exception("User is not found");
+            }
+            else
+            {
+                return user;
+            }
+        }
         public async Task<User> Login(UserLoginDto userLoginDto)
         {
 
