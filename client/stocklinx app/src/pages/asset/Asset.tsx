@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { modals } from '@mantine/modals';
 import TestForm from "../../components/form/TestForm";
-import AssetForm from "../../components/form/product/asset/AssetEditForm";
+import AssetForm from "../../components/form/product/asset/AssetForm";
 import GridTable from "../../components/gridTable/GridTable";
 import CustomPopup from "../../components/popup/CustomPopup";
 import { IAsset } from "../../interfaces/interfaces";
 import { useAppDispatch } from "../../hooks";
 import { clearAsset, setAsset } from "../../redux/assetReducer";
-import AssetCreateForm from "../../components/form/product/asset/AssetCreateForm";
 
 const Asset = () => {
   const dispatch = useAppDispatch();
@@ -95,7 +94,29 @@ const Asset = () => {
   };
   const onRowUpdate = (row: object) => {
     console.log(row);
-    openEditModel();
+    openEditModel({
+      id: "asdas",
+      manufacturerId: null,
+      modelId: null,
+      notes: "notes",
+      createdDate: null,
+      deletedDate: null,
+      updatedDate: null,
+      categoryId: null,
+      locationId: null,
+      companyId: "",
+      statusId: null,
+      imagePath: "",
+      name: "Name",
+      orderNo: "",
+      purchaseDate: null,
+      purchaseCost: 100,
+      checkInCounter: null,
+      checkOutCounter: null,
+      serialNo: "",
+      tagNo: "",
+      overageAssets: null,
+    });
   };
   const onRowDelete = (row: object) => {
     console.log("delete", row);
@@ -104,18 +125,18 @@ const Asset = () => {
     console.log("updateSubmit", data);
   };
 
-  const openEditModel = () => modals.open({
+  const openEditModel = (asset: IAsset) => modals.open({
     modalId: 'edit-modal',
     title: 'Update',
     children: (
-      <AssetForm submitFunc={handleUpdate} />
+      <AssetForm asset={asset} submitFunc={handleUpdate} />
     ),
   });
   const openCreateModel = () => modals.open({
     modalId: 'asset-create-modal',
     title: 'Create New Asset',
     children: (
-      <AssetCreateForm submitFunc={handleUpdate} />
+      <AssetForm submitFunc={handleUpdate} />
     ),
     size: 'xl',
   });
