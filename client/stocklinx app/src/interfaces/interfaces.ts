@@ -63,12 +63,14 @@ export interface IAsset extends IBaseProduct {
   manufacturerId: string | null;
   modelId: string | null;
   tagNo: string | null;
-  overageAssets?: [
-    {
-      serialNo: string;
-      tagNo: string;
-    }
-  ];
+  overageAssets?:
+    | [
+        {
+          serialNo: string;
+          tagNo: string;
+        }
+      ]
+    | null;
 }
 export interface IComponent extends IBaseProduct {
   quantity: number;
