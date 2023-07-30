@@ -109,12 +109,10 @@ namespace StockLinx.API.Controllers
         [HttpGet("getWithToken"), Authorize]
         public async Task<IActionResult> GetUser()
         {
-            var userId = _userService.GetIdByToken();
-            Guid newGuid = new Guid(userId);
-            var newUser = _userService.GetByIdAsync(newGuid).Result;
-            if (newUser != null)
+            var user = _userService.GetCurrentUser();
+            if (user != null)
             {
-                return CreateActionResult(CustomResponseDto<UserDto>.Success(200, _mapper.Map<UserDto>(newUser)));
+                return CreateActionResult(CustomResponseDto<UserDto>.Success(200, _mapper.Map<UserDto>(user)));
             }
             else
             {
