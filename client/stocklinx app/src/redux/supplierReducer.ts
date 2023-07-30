@@ -1,6 +1,6 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { request } from "../server/api";
-import { ISupplier } from "../interfaces/interfaces";
+import { ApiStatus, ISupplier, SelectData } from "../interfaces/interfaces";
 const requestUrl = "Supplier/";
 
 export const getAllSuppliers = createAsyncThunk(
@@ -63,18 +63,20 @@ export const removeSupplier = createAsyncThunk(
 interface State {
   supplier: ISupplier | null;
   suppliers: ISupplier[];
-  status: "idle" | "loading" | "succeeded" | "failed";
+  selectData: SelectData[];
+  status: ApiStatus;
   error: string | null;
 }
 
 const initialState: State = {
   supplier: null,
   suppliers: [],
-  status: "idle",
+  selectData: [],
+  status: ApiStatus.Idle,
   error: null,
 };
 
-const supplierSlice = createSlice({
+const supplierslice = createSlice({
   name: "supplier",
   initialState,
   reducers: {
@@ -94,7 +96,17 @@ const supplierSlice = createSlice({
   extraReducers(builder) {
     builder.addCase(getAllSuppliers.fulfilled, (state, action) => {
       state.error = null;
-      state.suppliers = action.payload as ISupplier[];
+      const newSuppliers = action.payload as ISupplier[];
+      state.suppliers = newSuppliers;
+      state.selectData = newSuppliers.map((supplier) => {
+        return {
+          value: supplier.id,
+          label: supplier.name,
+        };
+      });
+    });
+    builder.addCase(getAllSuppliers.pending, (state) => {
+      state.status = ApiStatus.Loading;
     });
     builder.addCase(getAllSuppliers.rejected, (state, action) => {
       state.error = action.payload as string;
@@ -103,30 +115,42 @@ const supplierSlice = createSlice({
       state.supplier = action.payload as ISupplier;
       state.error = null;
     });
-    builder.addCase(getSupplierById.rejected, (state, action) => {
-      state.error = action.payload as string;
+    builder.addCase(getSupplierById.pending, (state) => {
+      state.status = ApiStatus.Loading;
     });
-    builder.addCase(createSupplier.rejected, (state, action) => {
+    builder.addCase(getSupplierById.rejected, (state, action) => {
       state.error = action.payload as string;
     });
     builder.addCase(createSupplier.fulfilled, (state) => {
       state.error = null;
     });
-    builder.addCase(updateSupplier.rejected, (state, action) => {
+    builder.addCase(createSupplier.pending, (state) => {
+      state.status = ApiStatus.Loading;
+    });
+    builder.addCase(createSupplier.rejected, (state, action) => {
       state.error = action.payload as string;
     });
     builder.addCase(updateSupplier.fulfilled, (state) => {
       state.error = null;
     });
-    builder.addCase(removeSupplier.rejected, (state, action) => {
+    builder.addCase(updateSupplier.pending, (state) => {
+      state.status = ApiStatus.Loading;
+    });
+    builder.addCase(updateSupplier.rejected, (state, action) => {
       state.error = action.payload as string;
     });
     builder.addCase(removeSupplier.fulfilled, (state) => {
       state.error = null;
     });
+    builder.addCase(removeSupplier.pending, (state) => {
+      state.status = ApiStatus.Loading;
+    });
+    builder.addCase(removeSupplier.rejected, (state, action) => {
+      state.error = action.payload as string;
+    });
   },
 });
 
 export const { setSupplier, setSuppliers, clearSupplier, clearSuppliers } =
-  supplierSlice.actions;
-export default supplierSlice.reducer;
+  supplierslice.actions;
+export default supplierslice.reducer;
