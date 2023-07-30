@@ -1,13 +1,14 @@
-import { Group, LoadingOverlay, Text } from '@mantine/core';
-import React, { forwardRef } from 'react'
+import React from 'react'
+import { IMantinSelectProps, IMantineSelectData } from '../interfaces/interfaces'
+import { Box, Group, LoadingOverlay, Select, Text } from '@mantine/core';
+import { forwardRef } from 'react';
+import { IconChevronDown } from '@tabler/icons-react';
 
-const MantineSelect = () => {
-    interface ItemProps extends React.ComponentPropsWithoutRef<'div'> {
-        value: string
-        label: string;
-    }
-    const SelectItem = forwardRef<HTMLDivElement, ItemProps>(
-        ({ value, label, ...others }: ItemProps, ref) => (
+const MantineSelect: React.FC<IMantinSelectProps<T>> = (props) => {
+    const { form, data, label, propTag } = props;
+
+    const SelectItem = forwardRef<HTMLDivElement, IMantineSelectData>(
+        ({ value, label, ...others }: IMantineSelectData, ref) => (
             <div ref={ref} {...others}>
                 <Group noWrap>
                     <LoadingOverlay visible={false} />
@@ -23,9 +24,29 @@ const MantineSelect = () => {
 
         )
     );
+
     return (
-        { SelectItem }
+        <Box pos="relative" key={propTag}>
+            <Select
+                label={label}
+                placeholder="Pick one"
+                data={data}
+                {...form.getInputProps(propTag)}
+                transitionProps={{
+                    transition: "pop-top-left",
+                    duration: 80,
+                    timingFunction: "ease",
+                }}
+                itemComponent={SelectItem}
+                searchable
+                clearable
+                allowDeselect
+                dropdownPosition="flip"
+                nothingFound="No options"
+                rightSection={<IconChevronDown size="1rem" />}
+                styles={{ rightSection: { pointerEvents: 'none' } }}
+            />
+        </Box>
     )
 }
-
-export default MantineSelect
+export default MantineSelect;
