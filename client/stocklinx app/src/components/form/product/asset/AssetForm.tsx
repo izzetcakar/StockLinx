@@ -1,39 +1,25 @@
-import React, { forwardRef, useState } from "react";
-import {
-    TextInput,
-    Button,
-    Group,
-    NumberInput,
-    FileInput,
-    ActionIcon,
-    Select,
-    Textarea,
-    Flex,
-    rem,
-    Container,
-    Text,
-    ScrollArea,
-    LoadingOverlay,
-    Box,
-    Image,
-} from "@mantine/core";
-import { useForm } from "@mantine/form";
-import { DateInput } from "@mantine/dates";
-import { closeModal } from "@mantine/modals";
-import { IconUpload } from "@tabler/icons-react";
-import { modals } from "@mantine/modals";
-import { IconTrash } from "@tabler/icons-react";
+import React from 'react'
+import { TextInput, Button, Group, NumberInput, FileInput, rem, Image, ScrollArea, Flex, Container, ActionIcon, Textarea, Text } from '@mantine/core';
+import { useForm } from '@mantine/form';
+import { DateInput } from '@mantine/dates';
+import { closeModal } from '@mantine/modals';
+import { IconPlus, IconTrash, IconUpload } from '@tabler/icons-react';
+import { modals } from '@mantine/modals';
+import { IAsset } from '../../../../interfaces/interfaces';
+import { handleImageChange } from '../../functions/formFunctions';
+import MantineSelect from '../../components/MantineSelect';
+import { RootState } from '../../../../redux/store';
+import { useAppSelector } from '../../../../hooks';
+import { IMantinSelectProps } from '../../interfaces/interfaces';
 import { v4 as uuidv4 } from "uuid";
-import { IconChevronDown, IconPlus } from "@tabler/icons-react";
-import { RootState } from "../../../../redux/store";
-import { useAppSelector } from "../../../../hooks";
-import { handleImageChange, handleSelectComponent } from "../../functions/formFunctions";
 
-interface AssetCreateFormProps {
+interface AssetFormProps {
+    asset?: IAsset;
     submitFunc: (data: object) => void;
 }
 
-const AssetCreateForm: React.FC<AssetCreateFormProps> = ({
+const AssetForm: React.FC<AssetFormProps> = ({
+    asset,
     submitFunc = () => console.log("submit"),
 }) => {
     const manufacturerSelectData = useAppSelector(
@@ -55,8 +41,8 @@ const AssetCreateForm: React.FC<AssetCreateFormProps> = ({
         (state: RootState) => state.productStatus.selectData
     );
 
-    const form = useForm({
-        initialValues: {
+    const form = useForm<IAsset>({
+        initialValues: asset ? { ...asset } : {
             id: uuidv4(),
             manufacturerId: null,
             modelId: null,
@@ -66,7 +52,7 @@ const AssetCreateForm: React.FC<AssetCreateFormProps> = ({
             updatedDate: null,
             categoryId: null,
             locationId: null,
-            companyId: null,
+            companyId: "",
             statusId: null,
             imagePath: "",
             name: "",
@@ -77,34 +63,19 @@ const AssetCreateForm: React.FC<AssetCreateFormProps> = ({
             checkOutCounter: null,
             serialNo: "",
             tagNo: "",
-            overageAssets: [
-                // {
-                //     serialNo: "",
-                //     tagNo: ""
-                // }
-            ],
+            overageAssets: null,
         },
         validate: {
             name: (value: string) =>
                 /(?!^$)([^\s])/.test(value) ? null : "Name should not be empty",
-            purchaseCost: (value: number) => {
-                return value >= 0
+            purchaseCost: (value: number | null) => {
+                return value && value >= 0
                     ? null
                     : "PurchaseCost must be null or a non-negative number";
             },
-            checkInCounter: (value: number) => {
-                return value >= 0
-                    ? null
-                    : "CheckInCounter must be null or a non-negative number";
-            },
-            checkOutCounter: (value: number) => {
-                return value >= 0
-                    ? null
-                    : "CheckOutCounter must be null or a non-negative number";
-            },
         },
     });
-    const overageAssetFields = form.values.overageAssets.map((_, index) => (
+    const overageAssetFields = form.values?.overageAssets?.map((_, index) => (
         <Group key={index} mt="xs">
             <Text mah="fit-content">{index + 1}. Asset</Text>
             <TextInput
@@ -144,95 +115,49 @@ const AssetCreateForm: React.FC<AssetCreateFormProps> = ({
             ),
         });
 
-
-
+    const selectComponentData: IMantinSelectProps<IAsset>[] = [
+        {
+            form: form,
+            data: manufacturerSelectData,
+            label: "Manufacturer",
+            propTag: "manufacturerId",
+        },
+        {
+            form: form,
+            data: modelSelectData,
+            label: "Model",
+            propTag: "modelId",
+        },
+        {
+            form: form,
+            data: categorySelectData,
+            label: "Category",
+            propTag: "categoryId",
+        },
+        {
+            form: form,
+            data: locationSelectData,
+            label: "Location",
+            propTag: "locationId",
+        },
+        {
+            form: form,
+            data: companySelectData,
+            label: "Company",
+            propTag: "companyId",
+        },
+        {
+            form: form,
+            data: productStatusSelectData,
+            label: "Status",
+            propTag: "statusId",
+        },
+    ]
     return (
-        <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
+        <form onSubmit={form.onSubmit((values) => handleSubmit(values))} >
             <ScrollArea type="auto">
                 <Flex direction="column" gap={10} mx="auto" maw="auto" px={40}>
-                    {handleSelectComponent(form, [{ value: "1", label: "test" },
-                    { value: "2", label: "test2" },
-                    { value: "3", label: "test3" }], "Manufacturer", "manufacturerId")}
-                    <Select
-                        label="Model"
-                        placeholder="Pick one"
-                        data={modelSelectData}
-                        {...form.getInputProps("modelId")}
-                        transitionProps={{
-                            transition: "pop-top-left",
-                            duration: 80,
-                            timingFunction: "ease",
-                        }}
-                        searchable
-                        clearable
-                        allowDeselect
-                        dropdownPosition="flip"
-                        nothingFound="No options"
-                    ></Select>
-                    <Select
-                        label="Category"
-                        placeholder="Pick one"
-                        data={categorySelectData}
-                        {...form.getInputProps("categoryId")}
-                        transitionProps={{
-                            transition: "pop-top-left",
-                            duration: 80,
-                            timingFunction: "ease",
-                        }}
-                        searchable
-                        clearable
-                        allowDeselect
-                        dropdownPosition="flip"
-                        nothingFound="No options"
-                    ></Select>
-                    <Select
-                        label="Location"
-                        placeholder="Pick one"
-                        data={locationSelectData}
-                        {...form.getInputProps("locationId")}
-                        transitionProps={{
-                            transition: "pop-top-left",
-                            duration: 80,
-                            timingFunction: "ease",
-                        }}
-                        searchable
-                        clearable
-                        allowDeselect
-                        dropdownPosition="flip"
-                        nothingFound="No options"
-                    ></Select>
-                    <Select
-                        label="Company"
-                        placeholder="Pick one"
-                        data={companySelectData}
-                        {...form.getInputProps("companyId")}
-                        transitionProps={{
-                            transition: "pop-top-left",
-                            duration: 80,
-                            timingFunction: "ease",
-                        }}
-                        searchable
-                        clearable
-                        allowDeselect
-                        dropdownPosition="flip"
-                        nothingFound="No options"
-                    ></Select>
-                    <Select
-                        label="Status"
-                        placeholder="Pick one"
-                        data={productStatusSelectData}
-                        {...form.getInputProps("statusId")}
-                        transitionProps={{
-                            transition: "pop-top-left",
-                            duration: 80,
-                            timingFunction: "ease",
-                        }}
-                        searchable
-                        clearable
-                        allowDeselect
-                        dropdownPosition="flip"
-                        nothingFound="No options"
-                    ></Select>
+                    {selectComponentData.map((item) => <MantineSelect form={item.form} data={item.data} label={item.label} propTag={item.propTag} key={item.propTag} />)}
                     <Textarea
                         placeholder="Your notes here"
                         label="Note"
@@ -266,7 +191,6 @@ const AssetCreateForm: React.FC<AssetCreateFormProps> = ({
                             </ActionIcon>
                         </Container>
                     </Flex>
-
                     <TextInput
                         label="Serial No"
                         placeholder="Serial No"
@@ -313,8 +237,8 @@ const AssetCreateForm: React.FC<AssetCreateFormProps> = ({
                     </Group>
                 </Flex>
             </ScrollArea>
-        </form>
+        </form >
     );
-};
+}
 
-export default AssetCreateForm;
+export default AssetForm
