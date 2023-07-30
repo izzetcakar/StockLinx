@@ -11,10 +11,10 @@
         public string? Notes { get; set; }
         public DateTime AssignDate { get; set; }
         public User AssignedUser { get; set; }
-        public Accessory Accessory { get; set; }
-        public Asset Asset { get; set; }
-        public Component Component { get; set; }
-        public Consumable Consumable { get; set; }
-        public License License { get; set; }
+        public Accessory? Accessory { get; set; }
+        public Asset? Asset { get; set; }
+        public Component? Component { get; set; }
+        public Consumable? Consumable { get; set; }
+        public License? License { get; set; }
     }
 }
