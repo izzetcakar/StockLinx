@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using StockLinx.Repository;
@@ -11,9 +12,11 @@ using StockLinx.Repository;
 namespace StockLinx.Repository.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230730143110_companyIdRequired")]
+    partial class companyIdRequired
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -451,18 +454,22 @@ namespace StockLinx.Repository.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("AccessoryId")
+                        .IsRequired()
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("AssetId")
+                        .IsRequired()
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("AssignDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid?>("ComponentId")
+                        .IsRequired()
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("ConsumableId")
+                        .IsRequired()
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
@@ -472,6 +479,7 @@ namespace StockLinx.Repository.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid?>("LicenseId")
+                        .IsRequired()
                         .HasColumnType("uuid");
 
                     b.Property<string>("Notes")
@@ -1069,27 +1077,32 @@ namespace StockLinx.Repository.Migrations
                     b.HasOne("StockLinx.Core.Entities.Accessory", "Accessory")
                         .WithMany("DeployedProducts")
                         .HasForeignKey("AccessoryId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
 
                     b.HasOne("StockLinx.Core.Entities.Asset", "Asset")
                         .WithMany("DeployedProducts")
                         .HasForeignKey("AssetId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
 
                     b.HasOne("StockLinx.Core.Entities.Component", "Component")
                         .WithMany("DeployedProducts")
                         .HasForeignKey("ComponentId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
 
                     b.HasOne("StockLinx.Core.Entities.Consumable", "Consumable")
                         .WithMany("DeployedProducts")
                         .HasForeignKey("ConsumableId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
 
                     b.HasOne("StockLinx.Core.Entities.License", "License")
                         .WithMany("DeployedProducts")
                         .HasForeignKey("LicenseId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
 
                     b.HasOne("StockLinx.Core.Entities.User", "AssignedUser")
                         .WithMany("DeployedProducts")
