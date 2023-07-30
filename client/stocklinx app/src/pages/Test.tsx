@@ -4,7 +4,7 @@ import GridTable from "../components/gridTable/GridTable";
 import CustomPopup from "../components/popup/CustomPopup";
 import { modals } from '@mantine/modals';
 import TestForm from "../components/form/TestForm";
-import AccessoryEditForm from "../components/form/product/accessory/AccessoryEditForm";
+import AccessoryEditForm from "../components/form/product/accessory/AccessoryForm";
 import CompanyCreateForm from "../components/form/company/CompanyCreateForm";
 import CompanyEditForm from "../components/form/company/CompanyEditForm";
 import { ICompany } from "../interfaces/interfaces";
