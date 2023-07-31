@@ -90,11 +90,11 @@ const Asset = () => {
   const onRowInsert = () => {
     console.log("insert");
     clearAsset();
-    openCreateModel();
+    openAssetModal();
   };
   const onRowUpdate = (row: object) => {
     console.log(row);
-    openEditModel({
+    openAssetModal({
       id: "asdas",
       manufacturerId: null,
       modelId: null,
@@ -107,7 +107,7 @@ const Asset = () => {
       companyId: "",
       statusId: null,
       imagePath: "",
-      name: "Name",
+      name: "Update Asset",
       orderNo: "",
       purchaseDate: null,
       purchaseCost: 100,
@@ -125,20 +125,12 @@ const Asset = () => {
     console.log("updateSubmit", data);
   };
 
-  const openEditModel = (asset: IAsset) => modals.open({
+  const openAssetModal = (asset?: IAsset) => modals.open({
     modalId: 'edit-modal',
     title: 'Update',
     children: (
       <AssetForm asset={asset} submitFunc={handleUpdate} />
     ),
-  });
-  const openCreateModel = () => modals.open({
-    modalId: 'asset-create-modal',
-    title: 'Create New Asset',
-    children: (
-      <AssetForm submitFunc={handleUpdate} />
-    ),
-    size: 'xl',
   });
 
   return (
