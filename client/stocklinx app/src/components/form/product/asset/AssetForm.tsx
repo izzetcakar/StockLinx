@@ -58,7 +58,7 @@ const AssetForm: React.FC<AssetFormProps> = ({
             name: "",
             orderNo: "",
             purchaseDate: null,
-            purchaseCost: 0,
+            purchaseCost: null,
             checkInCounter: null,
             checkOutCounter: null,
             serialNo: "",
@@ -69,9 +69,9 @@ const AssetForm: React.FC<AssetFormProps> = ({
             name: (value: string) =>
                 /(?!^$)([^\s])/.test(value) ? null : "Name should not be empty",
             purchaseCost: (value: number | null) => {
-                return value && value >= 0
-                    ? null
-                    : "PurchaseCost must be null or a non-negative number";
+                if (value !== null || undefined) {
+                    return value && value >= 0 ? null : 'Purchase cost must be a non-negative number';
+                }
             },
         },
     });
@@ -210,11 +210,11 @@ const AssetForm: React.FC<AssetFormProps> = ({
                         {...form.getInputProps("purchaseDate")}
                     />
                     <NumberInput
-                        defaultValue={0}
-                        min={0}
                         placeholder="Purchase Cost"
                         label="Purchase Cost"
                         {...form.getInputProps("purchaseCost")}
+                        value={form.values.purchaseCost ? form.values.purchaseCost : ""}
+                        precision={2}
                     />
                     <FileInput
                         label="Upload image"

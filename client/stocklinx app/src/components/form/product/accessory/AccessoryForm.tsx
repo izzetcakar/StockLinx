@@ -57,7 +57,7 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({
             purchaseCost: null,
             purchaseDate: null,
             warrantyDate: null,
-            quantity: 0,
+            quantity: 1,
             notes: "",
         },
         validate: {
@@ -66,7 +66,9 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({
                 return value >= 0 ? null : 'Quantity must be a non-negative number';
             },
             purchaseCost: (value: number | null) => {
-                return value === null || value >= 0 ? null : 'PurchaseCost must be null or a non-negative number';
+                if (value !== null || undefined) {
+                    return value && value >= 0 ? null : 'Purchase cost must be a non-negative number';
+                }
             },
         },
     });
@@ -126,7 +128,15 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({
         <form onSubmit={form.onSubmit((values) => handleSubmit(values))} >
             <ScrollArea type="auto">
                 <Flex direction="column" gap={10} mx="auto" maw="auto" px={40}>
-                    {selectComponentData.map((item) => <MantineSelect form={item.form} data={item.data} label={item.label} propTag={item.propTag} key={item.propTag} />)}
+                    {selectComponentData.map((item) =>
+                        <MantineSelect
+                            form={item.form}
+                            data={item.data}
+                            label={item.label}
+                            propTag={item.propTag}
+                            key={item.propTag}
+                        />
+                    )}
                     <TextInput
                         label="Name"
                         placeholder="New Name"
@@ -143,11 +153,11 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({
                         {...form.getInputProps("orderNo")}
                     />
                     <NumberInput
-                        defaultValue={0}
-                        min={0}
                         placeholder="Purchase Cost"
                         label="Purchase Cost"
                         {...form.getInputProps("purchaseCost")}
+                        value={form.values.purchaseCost ? form.values.purchaseCost : ""}
+                        precision={2}
                     />
                     <DateInput
                         clearable

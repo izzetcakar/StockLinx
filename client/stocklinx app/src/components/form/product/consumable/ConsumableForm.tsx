@@ -22,12 +22,6 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
     consumable,
     submitFunc = () => console.log("submit"),
 }) => {
-    const manufacturerSelectData = useAppSelector(
-        (state: RootState) => state.manufacturer.selectData
-    );
-    const supplierSelectData = useAppSelector(
-        (state: RootState) => state.supplier.selectData
-    );
     const categorySelectData = useAppSelector(
         (state: RootState) => state.category.selectData
     );
@@ -66,7 +60,9 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
                 return value >= 1 ? null : 'Quantity must be greater than 0';
             },
             purchaseCost: (value: number | null) => {
-                return value === null || value >= 0 ? null : 'PurchaseCost must be null or a non-negative number';
+                if (value !== null || undefined) {
+                    return value && value >= 0 ? null : 'Purchase cost must be a non-negative number';
+                }
             },
         },
     });
@@ -146,11 +142,11 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
                         {...form.getInputProps("orderNo")}
                     />
                     <NumberInput
-                        defaultValue={0}
-                        min={0}
                         placeholder="Purchase Cost"
                         label="Purchase Cost"
                         {...form.getInputProps("purchaseCost")}
+                        value={form.values.purchaseCost ? form.values.purchaseCost : ""}
+                        precision={2}
                     />
                     <DateInput
                         clearable
