@@ -90,11 +90,28 @@ const Accessory = () => {
   const onRowInsert = () => {
     console.log("insert");
     clearAccessory();
-    openEditModel();
+    openAccessoryModal();
   };
   const onRowUpdate = (row: object) => {
     console.log(row);
-    openEditModel();
+    openAccessoryModal({
+      id: "asdas",
+      manufacturerId: null,
+      supplierId: null,
+      categoryId: "",
+      locationId: "",
+      companyId: "",
+      statusId: "",
+      name: "Update Accessory",
+      imagePath: "",
+      serialNo: "",
+      orderNo: "",
+      purchaseCost: 100,
+      purchaseDate: null,
+      warrantyDate: null,
+      quantity: 1,
+      notes: "",
+    });
   };
   const onRowDelete = (row: object) => {
     console.log("delete", row);
@@ -103,11 +120,11 @@ const Accessory = () => {
     console.log("updateSubmit", data);
   };
 
-  const openEditModel = () => modals.open({
-    modalId: 'edit-modal',
+  const openAccessoryModal = (accessory?: IAccessory) => modals.open({
+    modalId: 'accessory-modal',
     title: 'Update',
     children: (
-      <AccessoryForm submitFunc={handleUpdate} />
+      <AccessoryForm accessory={accessory} submitFunc={handleUpdate} />
     ),
   });
 
