@@ -11,10 +11,14 @@ namespace StockLinx.Service.Services
 {
     public class CompanyService : Service<Company>, ICompanyService
     {
+        private readonly ICompanyRepository _companyRepository;
         private readonly IMapper _mapper;
-        public CompanyService(IRepository<Company> repository, IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork)
+        private readonly IUnitOfWork _unitOfWork;
+        public CompanyService(IRepository<Company> repository, ICompanyRepository companyRepository,IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork)
         {
+            _companyRepository = companyRepository;
             _mapper = mapper;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task CreateCompanyAsync(CompanyCreateDto createDto)
@@ -29,18 +33,34 @@ namespace StockLinx.Service.Services
                 string base64 = newCompany.ImagePath.Substring(newCompany.ImagePath.IndexOf(',') + 1);
                 string path = newCompany.Name + DateTime.Now.ToString("yyyyMMddHHmmss");
                 ImageHandler.UploadBase64AsFile(base64, path);
-            } 
+            }
             await AddAsync(newCompany);
         }
-        public Task UpdateCompanyAsync(CompanyUpdateDto updateDto)
+        public async Task UpdateCompanyAsync(CompanyUpdateDto updateDto)
         {
-            throw new NotImplementedException();
+            var companyInDb = await GetByIdAsync(updateDto.Id);
+            if (companyInDb == null)
+            {
+                throw new ArgumentNullException(nameof(updateDto.Id), "The ID of the company to update is null.");
+            }
+            var updatedCompany = _mapper.Map<Company>(updateDto);
+            updatedCompany.UpdatedDate = DateTime.UtcNow;
+            await UpdateAsync(companyInDb, updatedCompany);
+            await _unitOfWork.CommitAsync();
         }
 
-        public Task DeleteCompanyAsync(Guid companyId)
+        public async Task DeleteCompanyAsync(Guid companyId)
         {
-            throw new NotImplementedException();
+            if (companyId == Guid.Empty)
+            {
+                throw new ArgumentNullException(nameof(companyId), "The ID of the company to delete is null.");
+            }
+            var company = await GetByIdAsync(companyId);
+            if (company == null)
+            {
+                throw new ArgumentNullException(nameof(company), "The company to delete is null.");
+            }
+            await RemoveAsync(company);
         }
-
     }
 }

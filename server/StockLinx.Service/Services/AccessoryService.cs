@@ -13,7 +13,7 @@ namespace StockLinx.Service.Services
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IRepository<Accessory> _accessoryRepository;
+        private readonly IAccessoryRepository _accessoryRepository;
         private readonly ILogger<AccessoryService> _logger;
         public AccessoryService(IRepository<Accessory> repository,IAccessoryRepository accessoryRepository
             ,IUnitOfWork unitOfWork, IMapper mapper,ILogger<AccessoryService> logger) : base(repository, unitOfWork)
@@ -31,7 +31,6 @@ namespace StockLinx.Service.Services
             {
                 throw new ArgumentNullException(nameof(createDto), "The accessory create DTO is null.");
             }
-
             try
             {
                 var newAccessory = _mapper.Map<Accessory>(createDto);
@@ -39,6 +38,7 @@ namespace StockLinx.Service.Services
                 newAccessory.Id = accessoryId;
                 newAccessory.CreatedDate = DateTime.UtcNow;
                 await _accessoryRepository.AddAsync(newAccessory);
+                await _unitOfWork.CommitAsync();
             }
             catch (Exception ex)
             {
@@ -83,6 +83,8 @@ namespace StockLinx.Service.Services
             {
                 throw new ArgumentNullException(nameof(accessoryId), "The ID of the accessory to delete is null.");
             }
+            await RemoveAsync(accessoryInDb);
+            await _unitOfWork.CommitAsync();
         }
 
 

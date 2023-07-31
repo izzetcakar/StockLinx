@@ -5,31 +5,61 @@ using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 using StockLinx.Core.Services;
 using StockLinx.Core.UnitOfWork;
+using StockLinx.Repository.UnitOfWork;
 
 namespace StockLinx.Service.Services
 {
     public class CategoryService : Service<Category>, ICategoryService
     {
         private readonly IMapper _mapper;
-        public CategoryService(IRepository<Category> repository, IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork)
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ICategoryRepository _categoryRepository;
+        public CategoryService(IRepository<Category> repository, ICategoryRepository categoryRepository, IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork)
         {
             _mapper = mapper;
+            _unitOfWork = unitOfWork;
+            _categoryRepository = categoryRepository;
         }
-
         public async Task CreateCategoryAsync(CategoryCreateDto createDto)
         {
             var newCategory = _mapper.Map<Category>(createDto);
             newCategory.Id = Guid.NewGuid();
+            newCategory.CreatedDate = DateTime.UtcNow;
+
+            //Check if newCategory.ImagePath is base64 or not and not null
+            if (newCategory.ImagePath != null && newCategory.ImagePath.Contains("data:image/png;base64,"))
+            {
+                string base64 = newCategory.ImagePath.Substring(newCategory.ImagePath.IndexOf(',') + 1);
+                string path = newCategory.Name + DateTime.Now.ToString("yyyyMMddHHmmss");
+                ImageHandler.UploadBase64AsFile(base64, path);
+            }
             await AddAsync(newCategory);
         }
-        public Task UpdateCategoryAsync(CategoryUpdateDto updateDto)
+        public async Task UpdateCategoryAsync(CategoryUpdateDto updateDto)
         {
-            throw new NotImplementedException();
+            var categoryInDb = await GetByIdAsync(updateDto.Id);
+            if (categoryInDb == null)
+            {
+                throw new ArgumentNullException(nameof(updateDto.Id), "The ID of the category to update is null.");
+            }
+            var updatedCategory = _mapper.Map<Category>(updateDto);
+            updatedCategory.UpdatedDate = DateTime.UtcNow;
+            await UpdateAsync(categoryInDb, updatedCategory);
+            await _unitOfWork.CommitAsync();
         }
 
-        public Task DeleteCategoryAsync(Guid categoryId)
+        public async Task DeleteCategoryAsync(Guid categoryId)
         {
-            throw new NotImplementedException();
+            if (categoryId == Guid.Empty)
+            {
+                throw new ArgumentNullException(nameof(categoryId), "The ID of the category to delete is null.");
+            }
+            var category = await GetByIdAsync(categoryId);
+            if (category == null)
+            {
+                throw new ArgumentNullException(nameof(category), "The category to delete is null.");
+            }
+            await RemoveAsync(category);
         }
     }
 }
