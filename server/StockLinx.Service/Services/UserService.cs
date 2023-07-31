@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
@@ -14,14 +16,16 @@ namespace StockLinx.Service.Services
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUserRepository _userRepository;
+        private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
         public UserService(IRepository<User> repository, IUnitOfWork unitOfWork,
-            IUserRepository userRepository, IHttpContextAccessor httpContextAccessor) : base(repository, unitOfWork)
+            IUserRepository userRepository,IMapper mapper, IHttpContextAccessor httpContextAccessor) : base(repository, unitOfWork)
         {
             _userRepository = userRepository;
             _httpContextAccessor = httpContextAccessor;
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
         public Guid GetIdByToken()
         {
@@ -74,8 +78,13 @@ namespace StockLinx.Service.Services
             throw new NotImplementedException();
         }
 
-        public async Task<User> Register(User user)
+        public async Task<User> Register(UserCreateDto createUser)
         {
+            var user = _mapper.Map<User>(createUser);
+            var userId = Guid.NewGuid();
+            user.Id = userId;
+            user.CreatedDate = DateTime.UtcNow;
+            user.IsAdmin = false;
             var employeeNoExist = await _userRepository.AnyAsync(x => x.EmployeeNo == user.EmployeeNo);
             var emailExist = await _userRepository.AnyAsync(x => x.Email == user.Email);
 
@@ -91,7 +100,8 @@ namespace StockLinx.Service.Services
             {
                 await AddAsync(user);
                 await _unitOfWork.CommitAsync();
-                return await _userRepository.Where(x => x.Email == user.Email).SingleOrDefaultAsync();
+                var returnedUser = await _userRepository.Where(x => x.Id == userId).SingleOrDefaultAsync();
+                return returnedUser;
             }
         }
 
@@ -99,6 +109,7 @@ namespace StockLinx.Service.Services
         {
             throw new NotImplementedException();
         }
+
         public Task DeleteUserAsync(Guid userId)
         {
             throw new NotImplementedException();

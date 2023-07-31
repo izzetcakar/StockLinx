@@ -83,12 +83,9 @@ namespace StockLinx.API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(UserCreateDto userDto)
         {
-            var newUser = _mapper.Map<User>(userDto);
-            newUser.Id = Guid.NewGuid();
-            newUser.IsAdmin = false;
             try
             {
-                var user = await _userService.Register(newUser);
+                var user = await _userService.Register(userDto);
                 if (user != null)
                 {
                     TokenDto token = new TokenDto();
