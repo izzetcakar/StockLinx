@@ -92,10 +92,10 @@ export interface IConsumable extends IBaseProduct {
   quantity: number;
 }
 export interface IModel extends BaseEntity {
-  manufacturerId: string | null;
   categoryId: string | null;
-  imagePath: string | null;
+  manufacturerId: string | null;
   name: string;
+  imagePath: string | null;
   modelNo: string | null;
   notes: string | null;
 }
@@ -108,7 +108,7 @@ export interface ICompany extends BaseEntity {
   imagePath: string | null;
 }
 export interface IDepartment extends BaseEntity {
-  companyId: string | null;
+  companyId: string;
   locationId: string | null;
   managerId: string | null;
   imagePath: string | null;
@@ -127,34 +127,34 @@ export interface IDeployedProduct extends BaseEntity {
   notes: string | null;
 }
 export interface ILocation extends BaseEntity {
-  imagePath: string | null;
   name: string;
-  city: string | null;
-  country: string | null;
+  imagePath: string | null;
+  country: string;
+  state: string | null;
+  city: string;
   address: string | null;
   address2: string | null;
   zipCode: string | null;
-  state: string | null;
   currency: string | null;
   notes: string | null;
 }
 export interface IManufacturer extends BaseEntity {
-  imagePath: string | null;
   name: string;
+  imagePath: string | null;
   supportPhone: string | null;
   supportEmail: string | null;
   website: string | null;
 }
 export interface ISupplier extends BaseEntity {
-  imagePath: string | null;
   locationId: string | null;
   name: string;
+  imagePath: string | null;
   contactName: string | null;
   contactPhone: string | null;
   contactEmail: string | null;
   website: string | null;
-  notes: string | null;
   fax: string | null;
+  notes: string | null;
 }
 export interface IUser extends BaseEntity {
   imagePath: string | null;
