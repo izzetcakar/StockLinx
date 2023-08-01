@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
+using StockLinx.Core.DTOs.Others;
+using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 
 namespace StockLinx.Service.Mapping
@@ -40,6 +42,8 @@ namespace StockLinx.Service.Mapping
             CreateMap<ProductStatus,ProductStatusDto>().ReverseMap();
             CreateMap<User, UserDto>().ReverseMap();
             CreateMap<User, UserCreateDto>().ReverseMap();
+            CreateMap<User, UserLoginDto>().ReverseMap();
+            CreateMap<User, UserUpdateDto>().ReverseMap();
         }
     }
 }
