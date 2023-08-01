@@ -1,5 +1,5 @@
 export const checkEmpty = (
-  obj: object | Array<object>
+  obj: object | Array<object> | null | undefined
 ): boolean | object | Array<object> => {
   if (Array.isArray(obj)) {
     return obj.length > 0 ? obj : false;
