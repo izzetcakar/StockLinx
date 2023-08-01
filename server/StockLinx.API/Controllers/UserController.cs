@@ -10,8 +10,6 @@ using StockLinx.Core.Services;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace StockLinx.API.Controllers
 {
     [Route("api/[controller]")]
@@ -36,21 +34,18 @@ namespace StockLinx.API.Controllers
             var userDtos = _mapper.Map<List<UserDto>>(users).ToList();
             return CreateActionResult(CustomResponseDto<List<UserDto>>.Success(200, userDtos));
         }
-
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
             var user = await _userService.GetByIdAsync(id);
             return CreateActionResult(CustomResponseDto<User>.Success(200, user));
         }
-
         [HttpPut]
         public async Task<IActionResult> Update(UserDto userDto)
         {
             // Update
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
         }
-
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
@@ -58,7 +53,6 @@ namespace StockLinx.API.Controllers
             await _userService.RemoveAsync(user);
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
         }
-
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserLoginDto userLoginDto)
         {
@@ -77,9 +71,7 @@ namespace StockLinx.API.Controllers
             {
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
             }
-
         }
-
         [HttpPost("register")]
         public async Task<IActionResult> Register(UserCreateDto userDto)
         {
@@ -102,18 +94,25 @@ namespace StockLinx.API.Controllers
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
             }
         }
-
         [HttpGet("getWithToken"), Authorize]
         public async Task<IActionResult> GetUser()
         {
-            var user = _userService.GetCurrentUser();
-            if (user != null)
+            try
             {
-                return CreateActionResult(CustomResponseDto<UserDto>.Success(200, _mapper.Map<UserDto>(user)));
+                var user = await _userService.GetCurrentUser();
+                if (user != null)
+                {
+                    var userDto = _mapper.Map<UserDto>(user);
+                    return CreateActionResult(CustomResponseDto<UserDto>.Success(200, userDto));
+                }
+                else
+                {
+                    return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(404, "User is not found"));
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(404, "User is not found"));
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
             }
         }
         private string CreateToken(User user)
