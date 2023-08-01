@@ -13,7 +13,7 @@ const MantineSelect: React.FC<IMantinSelectProps<T>> = (props) => {
                 <Group noWrap>
                     <LoadingOverlay visible={false} />
                     <div>
-                        <Text size="sm">{value}</Text>
+                        {/* <Text size="sm">{value}</Text> */}
                         <Text size="xs" opacity={0.65}>
                             {label}
                         </Text>
