@@ -27,11 +27,6 @@ import Company from "./pages/company/Company";
 const Layout = () => {
   const navigate = useNavigate();
   const userRedux = useAppSelector((state: RootState) => state.user.user);
-  // const { loading } = useAuth();
-
-  // if (loading) {
-  //   return <LoadPanel visible={true} />;
-  // }
 
   if (checkEmpty(userRedux)) {
     return (
