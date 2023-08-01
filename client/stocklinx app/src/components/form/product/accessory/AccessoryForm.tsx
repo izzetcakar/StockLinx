@@ -195,6 +195,7 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({
                         placeholder="Your notes here"
                         label="Note"
                         {...form.getInputProps("notes")}
+                        value={form.values.notes || ""}
                     />
                     <Group position="right" mt="md">
                         <Button type="submit" color="dark">

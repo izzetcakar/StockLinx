@@ -5,12 +5,13 @@ import { closeModal } from '@mantine/modals';
 import { IconUpload } from '@tabler/icons-react';
 import { modals } from '@mantine/modals';
 import { v4 as uuidv4 } from "uuid";
-import { IDepartment } from '../../../interfaces/interfaces';
+import { ApiStatus, IDepartment } from '../../../interfaces/interfaces';
 import { handleImageChange } from '../functions/formFunctions';
-import { useAppSelector } from '../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../hooks';
 import { RootState } from '../../../redux/store';
 import { IMantinSelectProps } from '../interfaces/interfaces';
 import MantineSelect from '../components/MantineSelect';
+import { getAllCompanies } from '../../../redux/companyReducer';
 
 interface DepartmentFormProps {
     department?: IDepartment;
@@ -21,7 +22,9 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
     department,
     submitFunc = () => console.log("submit"),
 }) => {
+    const dispatch = useAppDispatch();
     const companySelectData = useAppSelector((state: RootState) => state.company.selectData);
+    const companyApiStatus = useAppSelector((state: RootState) => state.company.status);
     const locationSelectData = useAppSelector((state: RootState) => state.location.selectData);
 
     const form = useForm<IDepartment>({
@@ -56,6 +59,8 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
             data: companySelectData,
             label: "Company",
             propTag: "companyId",
+            refreshData: () => handleRefreshData(),
+            loading: companyApiStatus === ApiStatus.Loading,
         },
         {
             form: form,
@@ -64,6 +69,9 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
             propTag: "locationId",
         },
     ]
+    const handleRefreshData = async () => {
+        await dispatch(getAllCompanies());
+    }
 
     return (
         <form onSubmit={form.onSubmit((values) => handleSubmit(values))} >
@@ -76,6 +84,8 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
                             label={selectData.label}
                             propTag={selectData.propTag}
                             key={selectData.propTag}
+                            refreshData={selectData?.refreshData}
+                            loading={selectData?.loading}
                         />
                     )}
                     <TextInput
@@ -98,6 +108,7 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
                         placeholder="Your notes here"
                         label="Note"
                         {...form.getInputProps("notes")}
+                        value={form.values.notes || ""}
                     />
                     <Group position="right" mt="md">
                         <Button type="submit" color="dark">

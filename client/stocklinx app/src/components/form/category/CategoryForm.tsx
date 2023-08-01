@@ -61,11 +61,6 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
                         }
                     />
                     <Image maw={240} mx="auto" radius="md" src={form.values.imagePath} alt="Random image" />
-                    <Textarea
-                        placeholder="Your notes here"
-                        label="Note"
-                        {...form.getInputProps("notes")}
-                    />
                     <Group position="right" mt="md">
                         <Button type="submit" color="dark">
                             Submit

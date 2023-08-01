@@ -158,11 +158,6 @@ const AssetForm: React.FC<AssetFormProps> = ({
             <ScrollArea type="auto">
                 <Flex direction="column" gap={10} mx="auto" maw="auto" px={40}>
                     {selectComponentData.map((item) => <MantineSelect form={item.form} data={item.data} label={item.label} propTag={item.propTag} key={item.propTag} />)}
-                    <Textarea
-                        placeholder="Your notes here"
-                        label="Note"
-                        {...form.getInputProps("notes")}
-                    />
                     <TextInput
                         label="Name"
                         placeholder="New Name"
@@ -227,6 +222,12 @@ const AssetForm: React.FC<AssetFormProps> = ({
                         }
                     />
                     <Image maw={240} mx="auto" radius="md" src={form.values.imagePath} alt="Random image" />
+                    <Textarea
+                        placeholder="Your notes here"
+                        label="Note"
+                        {...form.getInputProps("notes")}
+                        value={form.values.notes || ""}
+                    />
                     <Group position="right" mt="md">
                         <Button type="submit" color="dark">
                             Submit

@@ -5,20 +5,19 @@ import { forwardRef } from 'react';
 import { IconChevronDown } from '@tabler/icons-react';
 
 const MantineSelect: React.FC<IMantinSelectProps<T>> = (props) => {
-    const { form, data, label, propTag } = props;
+    const { form, data, label, propTag, refreshData, loading } = props;
 
     const SelectItem = forwardRef<HTMLDivElement, IMantineSelectData>(
         ({ value, label, ...others }: IMantineSelectData, ref) => (
             <div ref={ref} {...others}>
                 <Group noWrap>
-                    <LoadingOverlay visible={false} />
+                    <LoadingOverlay visible={loading ? loading : false} />
                     <div>
                         {/* <Text size="sm">{value}</Text> */}
                         <Text size="xs" opacity={0.65}>
                             {label}
                         </Text>
                     </div>
-
                 </Group>
             </div>
 
@@ -43,6 +42,7 @@ const MantineSelect: React.FC<IMantinSelectProps<T>> = (props) => {
                 allowDeselect
                 dropdownPosition="flip"
                 nothingFound="No options"
+                onDropdownOpen={refreshData}
                 rightSection={<IconChevronDown size="1rem" />}
                 styles={{ rightSection: { pointerEvents: 'none' } }}
             />

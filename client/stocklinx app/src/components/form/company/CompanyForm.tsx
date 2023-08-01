@@ -1,5 +1,5 @@
 import React from 'react'
-import { TextInput, Button, Group, FileInput, rem, Image, ScrollArea, Flex, Textarea } from '@mantine/core';
+import { TextInput, Button, Group, FileInput, rem, Image, ScrollArea, Flex } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { closeModal } from '@mantine/modals';
 import { IconUpload } from '@tabler/icons-react';
@@ -61,11 +61,6 @@ const CompanyForm: React.FC<CompanyFormProps> = ({
                         }
                     />
                     <Image maw={240} mx="auto" radius="md" src={form.values.imagePath} alt="Random image" />
-                    <Textarea
-                        placeholder="Your notes here"
-                        label="Note"
-                        {...form.getInputProps("notes")}
-                    />
                     <Group position="right" mt="md">
                         <Button type="submit" color="dark">
                             Submit
