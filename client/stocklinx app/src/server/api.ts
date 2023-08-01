@@ -95,7 +95,8 @@ export const request = async <T>({
       status,
     };
   } catch (error: any) {
-    const message = error.response?.data.errors?.[0] ?? "Network Error";
+    const message: string =
+      (error.response?.data.errors?.[0] as string) ?? "Network Error";
     status = error.response?.status ?? 500;
 
     switch (status) {
