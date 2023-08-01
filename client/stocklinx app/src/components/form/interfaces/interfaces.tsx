@@ -9,4 +9,6 @@ export interface IMantinSelectProps<T> {
     data: IMantineSelectData[];
     label: string;
     propTag: string;
+    refreshData?: () => void;
+    loading?: boolean;
 }
