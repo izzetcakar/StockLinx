@@ -97,6 +97,7 @@ const companieslice = createSlice({
   extraReducers(builder) {
     builder.addCase(getAllCompanies.fulfilled, (state, action) => {
       state.error = null;
+      state.status = ApiStatus.Success;
       const newCompanies = action.payload as ICompany[];
       state.companies = newCompanies;
       state.selectData = newCompanies.map((company) => {
@@ -111,10 +112,12 @@ const companieslice = createSlice({
     });
     builder.addCase(getAllCompanies.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(getCompanyById.fulfilled, (state, action) => {
       state.company = action.payload as ICompany;
       state.error = null;
+      state.status = ApiStatus.Success;
     });
     builder.addCase(getCompanyById.pending, (state) => {
       state.status = ApiStatus.Loading;

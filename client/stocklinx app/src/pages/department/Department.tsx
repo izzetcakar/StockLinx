@@ -121,6 +121,7 @@ const Department = () => {
                 pageSizes={[1, 2, 5]}
                 enableEdit={true}
                 showPageSize={true}
+                refreshData={fetchData}
                 onRowInsert={onRowInsert}
                 onRowUpdate={onRowUpdate}
                 onRowDelete={onRowDelete}

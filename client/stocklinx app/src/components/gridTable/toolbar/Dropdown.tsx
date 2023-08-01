@@ -1,8 +1,8 @@
 import React from "react";
 import { Column } from "../interfaces/interfaces";
-import { Checkbox } from "@mantine/core";
 import "./toolbar.scss";
-
+import { Menu, Button } from '@mantine/core';
+import { IconChevronDown } from '@tabler/icons-react';
 interface DropDownProps {
     columns: Column[];
     visibleColumns: string[];
@@ -10,31 +10,30 @@ interface DropDownProps {
 }
 
 const DropDown: React.FC<DropDownProps> = ({ columns, visibleColumns, onChange }) => {
-    const [visible, setVisible] = React.useState<boolean>(false);
-
-    const handleVisible = () => {
-        setVisible(!visible);
-    };
 
     return (
-        <div>
-            <div className="dropdown-container" onClick={() => handleVisible()}>
-                <div className="dropdown-title" >Columns</div>
-                <i className='bx bx-chevron-down' style={{ fontSize: "1.4rem", color: "#737373" }}></i>
-            </div>
-            <div className={`dropdown-content ${visible ? 'visible' : ''}`}>
+        <Menu
+            withArrow
+            closeOnItemClick={false}
+        >
+            <Menu.Target>
+                <Button variant="default" color="dark" size="xs" rightIcon={<IconChevronDown size={20} />}>Columns</Button>
+            </Menu.Target>
+
+            <Menu.Dropdown >
                 {columns.map((column, index) => (
-                    <div className="dropdown-element" key={index}>
-                        <Checkbox
-                            checked={visibleColumns.includes(column.caption)}
-                            onChange={() => onChange(column.caption)}
-                            color="dark"
-                        />
-                        <div className="title">{column.caption}</div>
-                    </div>
+                    <Menu.Item
+                        key={index}
+                        onClick={() => onChange(column.caption)}
+                        bg={visibleColumns.includes(column.caption) ? '#eaeaea' : 'transparent'}
+                        mb={4}
+                        py={4}
+                    >
+                        {column.caption}
+                    </Menu.Item>
                 ))}
-            </div>
-        </div>
+            </Menu.Dropdown>
+        </Menu>
     );
 };
 

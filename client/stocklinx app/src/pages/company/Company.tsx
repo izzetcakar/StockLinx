@@ -1,15 +1,15 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { modals } from "@mantine/modals";
 import TestForm from "../../components/form/TestForm";
 import GridTable from "../../components/gridTable/GridTable";
 import CustomPopup from "../../components/popup/CustomPopup";
 import { ICompany } from "../../interfaces/interfaces";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { clearCompany, setCompany } from "../../redux/companyReducer";
+import { clearCompany, getAllCompanies, setCompany } from "../../redux/companyReducer";
 import { RootState } from "../../redux/store";
 import CompanyForm from "../../components/form/company/CompanyForm";
 
-const Company = () => {
+const Company = async () => {
     const dispatch = useAppDispatch();
     const [formVisible, setFormVisible] = useState<boolean>(false);
     const companies = useAppSelector(
@@ -23,6 +23,8 @@ const Company = () => {
             dataType: "string",
         },
     ];
+
+    await dispatch(getAllCompanies());
 
     const handleFormVisible = () => {
         setFormVisible((prevFormVisible) => !prevFormVisible);
@@ -45,7 +47,6 @@ const Company = () => {
     const handleUpdate = (data: object) => {
         console.log("updateSubmit", data);
     };
-
     const openCompanyModal = (company?: ICompany) =>
         modals.open({
             modalId: "company-modal",

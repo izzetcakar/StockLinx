@@ -9,8 +9,7 @@ import SelectComponent from "./select/SelectComponent";
 import PageSizeComponent from "./pageSize/PageSizeComponent";
 import Toolbar from "./toolbar/Toolbar";
 import { Column } from "./interfaces/interfaces";
-import { Checkbox } from '@mantine/core';
-import { ScrollArea } from '@mantine/core';
+import { Checkbox, LoadingOverlay } from '@mantine/core';
 
 interface GridTableProps {
   data?: object[];
@@ -21,9 +20,9 @@ interface GridTableProps {
   showPageSize?: boolean;
   noDataText?: string;
   pageSizes?: number[];
-  gridCssClass?: string;
   cellCssClass?: string;
   enableEdit?: boolean;
+  refreshData?: () => Promise<void> | void;
   onRowInsert: () => void;
   onRowUpdate: (row: object) => void;
   onRowDelete: (row: object) => void;
@@ -39,9 +38,9 @@ const GridTable: React.FC<GridTableProps> = ({
   showPageSizeInfo = true,
   noDataText = "No Data to Display",
   pageSizes = [1, 3, 5],
-  gridCssClass = "",
   cellCssClass = "",
   enableEdit = false,
+  refreshData,
   onRowInsert = () => console.log("insert"),
   onRowUpdate = () => console.log("update"),
   onRowDelete = () => console.log("delete"),
@@ -53,6 +52,7 @@ const GridTable: React.FC<GridTableProps> = ({
   const [propertyDataStyle, setPropertyDataStyle] = useState<React.CSSProperties>({});
   const [selectedIndexes, setSelectedIndexes] = useState<number[]>([]);
   const [selectedPageSize, setSelectedPageSize] = useState<number>(pageSizes[0]);
+  const [loadingVisible, setLoadingVisible] = useState<boolean>(false);
 
   useEffect(() => {
     setDatagrid(deepCopy(data));
@@ -139,100 +139,112 @@ const GridTable: React.FC<GridTableProps> = ({
     setSelectedIndexes([]);
   };
 
-  if (!checkEmpty(data)) {
-    return <div className="table-container no-data">{noDataText}</div>;
-  }
+  const handleLoadingVisible = (visible: boolean) => {
+    setLoadingVisible(visible);
+  };
+  const handleRefreshData = async () => {
+    if (!refreshData) {
+      return;
+    }
+    handleLoadingVisible(true);
+    await refreshData();
+    handleLoadingVisible(false);
+  };
+
+  // if (!checkEmpty(data)) {
+  //   return <div className="table-container no-data">{noDataText}</div>;
+  // }
 
   return (
-    <div className={`table-container ${checkEmpty(data) ? gridCssClass : "no-data"}`}>
+    <div className="table-container">
+      <LoadingOverlay visible={loadingVisible} loaderProps={{ color: 'black' }} />
       <Toolbar
         columns={datagridColumns}
         visibleColumns={visibleColumns}
         handleVisibleColumns={handleVisibleColumns}
         onRowInsert={onRowInsert}
+        refreshData={handleRefreshData}
       />
-      {checkEmpty(data) && checkEmpty(visibleColumns) ? (
-        <>
-          <div className="table-edit-wrapper">
-            <div className="column-container column-select">
-              <div className="cell column-title">
-                <Checkbox
-                  checked={hasAllElements(
-                    getIndexesFromArray(filterData()),
-                    selectedIndexes
-                  )}
-                  onChange={handleSelectAll}
-                  color="dark"
-                />
-              </div>
-              {getIndexesFromArray(filterData()).map((_, index) => (
-                <div className="cell" key={index}>
-                  <SelectComponent
-                    rowIndex={index}
-                    isChecked={selectedIndexes.includes(index)}
-                    selectFunc={handleSelectRow}
-                  />
-                </div>
-              ))}
-            </div>
 
-            <div className="table-content-container">
-              {datagridColumns.map((column, columnIndex) =>
-                visibleColumns.includes(column.caption) ? (
-                  <div className="column-container" key={columnIndex} style={propertyDataStyle}>
-                    <div className="cell column-title">
-                      {column.caption}
-                    </div>
-                    {filterData().map((_, rowIndex) => (
-                      <div
-                        className={
-                          selectedIndexes.includes(rowIndex)
-                            ? `cell selected-cell ${cellCssClass}`
-                            : `cell ${cellCssClass}`
-                        }
-                        key={rowIndex}
-                      >
-                        {renderColumnValue(rowIndex, column)}
-                      </div>
-                    ))}
-                  </div>
-                ) : null
+
+      <div className="table-edit-wrapper">
+        <div className="column-container column-select">
+          <div className="cell column-title">
+            <Checkbox
+              checked={hasAllElements(
+                getIndexesFromArray(filterData()),
+                selectedIndexes
               )}
+              disabled={!checkEmpty(filterData())}
+              onChange={handleSelectAll}
+              color="dark"
+            />
+          </div>
+          {getIndexesFromArray(filterData()).map((_, index) => (
+            <div className="cell" key={index}>
+              <SelectComponent
+                rowIndex={index}
+                isChecked={selectedIndexes.includes(index)}
+                selectFunc={handleSelectRow}
+              />
             </div>
-
-            {enableEdit && (
-              <div className="column-container column-edit">
-                <div className="cell column-title"></div>
-                {getIndexesFromArray(filterData()).map((_, index) => (
-                  <div className="cell" key={index}>
-                    <EditComponent
-                      datagrid={datagrid}
-                      rowIndex={index}
-                      onRowUpdate={onRowUpdate}
-                      onRowDelete={onRowDelete}
-                      onStartEdit={onStartEdit}
-                    />
+          ))}
+        </div>
+        <div className="table-content-container">
+          {datagridColumns.map((column, columnIndex) =>
+            visibleColumns.includes(column.caption) ? (
+              <div className="column-container" key={columnIndex} style={propertyDataStyle}>
+                <div className="cell column-title">
+                  {column.caption}
+                </div>
+                {filterData().map((_, rowIndex) => (
+                  <div
+                    className={
+                      selectedIndexes.includes(rowIndex)
+                        ? `cell selected-cell ${cellCssClass}`
+                        : `cell ${cellCssClass}`
+                    }
+                    key={rowIndex}
+                  >
+                    {renderColumnValue(rowIndex, column)}
                   </div>
                 ))}
               </div>
-            )}
+            ) : null
+          )}
+        </div>
+
+        {enableEdit && (
+          <div className="column-container column-edit">
+            <div className="cell column-title"></div>
+            {getIndexesFromArray(filterData()).map((_, index) => (
+              <div className="cell" key={index}>
+                <EditComponent
+                  datagrid={datagrid}
+                  rowIndex={index}
+                  onRowUpdate={onRowUpdate}
+                  onRowDelete={onRowDelete}
+                  onStartEdit={onStartEdit}
+                />
+              </div>
+            ))}
           </div>
-          <div className="page-end-container">
-            <PageSizeComponent
-              showPageSize={showPageSize}
-              showPageSizeInfo={showPageSizeInfo}
-              showPageSizeSelector={showPageSizeSelector}
-              allItemsCount={datagrid.length}
-              handleSizeSelect={handleSelectedPageSize}
-              pageSizes={pageSizes}
-              selectedCount={selectedIndexes.length}
-              selectedSize={selectedPageSize}
-            />
-          </div>
-        </>
-      ) : (
-        <div>{noDataText}</div>
-      )}
+        )}
+      </div>
+      <div className="page-end-container">
+        <PageSizeComponent
+          showPageSize={showPageSize}
+          showPageSizeInfo={showPageSizeInfo}
+          showPageSizeSelector={showPageSizeSelector}
+          allItemsCount={datagrid.length}
+          handleSizeSelect={handleSelectedPageSize}
+          pageSizes={pageSizes}
+          selectedCount={selectedIndexes.length}
+          selectedSize={selectedPageSize}
+        />
+      </div>
+
+
     </div>
   );
 };

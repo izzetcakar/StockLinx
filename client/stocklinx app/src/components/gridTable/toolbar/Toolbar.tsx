@@ -2,9 +2,11 @@ import React from 'react'
 import "./toolbar.scss";
 import { Column } from '../interfaces/interfaces';
 import Dropdown from './Dropdown';
+import { ActionIcon } from '@mantine/core';
+import { IconPlus, IconRefresh } from '@tabler/icons-react';
 
 interface ToolbarProps {
-    refreshData?: () => void;
+    refreshData?: () => Promise<void> | void;
     filterData?: () => void;
     handleSearch?: () => void;
     columns: Column[];
@@ -12,7 +14,7 @@ interface ToolbarProps {
     handleVisibleColumns: (columnCaption: string) => void;
     onRowInsert?: () => void;
 }
-const Toolbar: React.FC<ToolbarProps> = ({ columns, visibleColumns, handleVisibleColumns, onRowInsert }) => {
+const Toolbar: React.FC<ToolbarProps> = ({ columns, visibleColumns, refreshData, handleVisibleColumns, onRowInsert }) => {
 
     return (
         <div className="toolbar-container">
@@ -22,18 +24,14 @@ const Toolbar: React.FC<ToolbarProps> = ({ columns, visibleColumns, handleVisibl
                 </div>
             </div>
             <div className="toolbar-element">
-                <div className="toolbar-element-content">
-                    <div className="toolbar-element-icon">
-                        <i className='bx bx-refresh'></i>
-                    </div>
-                </div>
+                <ActionIcon onClick={refreshData}>
+                    <IconRefresh color='black' size={20} />
+                </ActionIcon>
             </div>
             <div className="toolbar-element">
-                <div className="toolbar-element-content">
-                    <div className="toolbar-element-icon" onClick={onRowInsert}>
-                        <i className='bx bx-plus'></i>
-                    </div>
-                </div>
+                <ActionIcon onClick={onRowInsert}>
+                    <IconPlus color='black' size={20} />
+                </ActionIcon>
             </div>
         </div>
     )
