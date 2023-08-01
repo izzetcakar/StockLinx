@@ -1,35 +1,40 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { request } from "../server/api";
-import { IUser } from "../interfaces/interfaces";
+import {
+  ApiStatus,
+  IToken,
+  IUser,
+  IUserLoginDto,
+} from "../interfaces/interfaces";
 const requestUrl = "User/";
 
 export const getAllUsers = createAsyncThunk(
-  "suppliers/getAll",
+  "user/getAll",
   async (_, { fulfillWithValue, rejectWithValue }) => {
     const response = await request<IUser>({
       requestUrl: requestUrl,
       apiType: "get",
     });
-    if (!response.success) return fulfillWithValue(response.data);
+    if (response.success) return fulfillWithValue(response.data);
     return rejectWithValue(response.message);
   }
 );
-// export const login = createAsyncThunk(
-//   "user/login",
-//   async (inputUser, { rejectWithValue, fulfillWithValue }) => {
-//     const response = await request({
-//       requestUrl: requestUrl + "login",
-//       queryData: inputUser,
-//       apiType: "post",
-//     });
-//     if (!response.success) {
-//       return rejectWithValue(response.message);
-//     } else {
-//       localStorage.setItem("token", JSON.stringify(response.data.token));
-//       return fulfillWithValue(null);
-//     }
-//   }
-// );
+export const signInUser = createAsyncThunk(
+  "user/login",
+  async (inputUser: IUserLoginDto, { rejectWithValue, fulfillWithValue }) => {
+    const response = await request<IUserLoginDto>({
+      requestUrl: requestUrl + "login",
+      queryData: inputUser,
+      apiType: "post",
+    });
+    if (response.success) {
+      localStorage.setItem("token", JSON.stringify(response.data?.token));
+      return fulfillWithValue(null);
+    } else {
+      return rejectWithValue(response.message);
+    }
+  }
+);
 // export const register = createAsyncThunk(
 //   "user/register",
 //   async (inputUser, { rejectWithValue, fulfillWithValue }) => {
@@ -61,14 +66,14 @@ export const getUserWithToken = createAsyncThunk(
 interface State {
   user: IUser | null;
   users: IUser[];
-  status: "idle" | "loading" | "succeeded" | "failed";
+  status: ApiStatus;
   error: string | null;
 }
 
 const initialState: State = {
   user: null,
   users: [],
-  status: "idle",
+  status: ApiStatus.Idle,
   error: null,
 };
 
@@ -94,10 +99,18 @@ const userItemSlice = createSlice({
       state.user = null;
       state.error = action.payload as string;
     });
-    // builder.addCase(login.rejected, (state, action) => {
-    //   state.user = {};
-    // });
-    // builder.addCase(login.fulfilled, (state, action) => {});
+    builder.addCase(signInUser.fulfilled, (state, action) => {
+      state.status = ApiStatus.Success;
+      state.error = null;
+    });
+    builder.addCase(signInUser.pending, (state, action) => {
+      state.status = ApiStatus.Loading;
+      state.error = null;
+    });
+    builder.addCase(signInUser.rejected, (state, action) => {
+      state.error = action.payload as string;
+      state.status = ApiStatus.Idle;
+    });
     // builder.addCase(register.rejected, (state, action) => {
     //   state.user = null;
     // });

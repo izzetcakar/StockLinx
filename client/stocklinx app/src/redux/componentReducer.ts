@@ -10,7 +10,7 @@ export const getAllComponents = createAsyncThunk(
       requestUrl: requestUrl,
       apiType: "get",
     });
-    if (!response.success) return fulfillWithValue(response.data);
+    if (response.success) return fulfillWithValue(response.data);
     return rejectWithValue(response.message);
   }
 );
@@ -21,7 +21,7 @@ export const getComponentById = createAsyncThunk(
       requestUrl: requestUrl + `${Id}`,
       apiType: "get",
     });
-    if (!response.success) return fulfillWithValue(response.data);
+    if (response.success) return fulfillWithValue(response.data);
     return rejectWithValue(response.message);
   }
 );
@@ -33,7 +33,7 @@ export const createComponent = createAsyncThunk(
       queryData: component,
       apiType: "post",
     });
-    if (!response.success) return fulfillWithValue(null);
+    if (response.success) return fulfillWithValue(null);
     return rejectWithValue(response.message);
   }
 );
@@ -45,7 +45,7 @@ export const updateComponent = createAsyncThunk(
       queryData: component,
       apiType: "put",
     });
-    if (!response.success) return fulfillWithValue(null);
+    if (response.success) return fulfillWithValue(null);
     return rejectWithValue(response.message);
   }
 );
@@ -56,7 +56,7 @@ export const removeComponent = createAsyncThunk(
       requestUrl: requestUrl + `${Id}`,
       apiType: "delete",
     });
-    if (!response.success) return fulfillWithValue(null);
+    if (response.success) return fulfillWithValue(null);
     return rejectWithValue(response.message);
   }
 );

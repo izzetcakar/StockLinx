@@ -1,6 +1,6 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { request } from "../server/api";
-import { IDepartment } from "../interfaces/interfaces";
+import { ApiStatus, IDepartment } from "../interfaces/interfaces";
 const requestUrl = "Department/";
 
 export const getAllDepartments = createAsyncThunk(
@@ -10,7 +10,7 @@ export const getAllDepartments = createAsyncThunk(
       requestUrl: requestUrl,
       apiType: "get",
     });
-    if (!response.success) return fulfillWithValue(response.data);
+    if (response.success) return fulfillWithValue(response.data);
     return rejectWithValue(response.message);
   }
 );
@@ -21,7 +21,7 @@ export const getDepartmentById = createAsyncThunk(
       requestUrl: requestUrl + `${Id}`,
       apiType: "get",
     });
-    if (!response.success) return fulfillWithValue(response.data);
+    if (response.success) return fulfillWithValue(response.data);
     return rejectWithValue(response.message);
   }
 );
@@ -33,7 +33,7 @@ export const createDepartment = createAsyncThunk(
       queryData: department,
       apiType: "post",
     });
-    if (!response.success) return fulfillWithValue(null);
+    if (response.success) return fulfillWithValue(null);
     return rejectWithValue(response.message);
   }
 );
@@ -45,7 +45,7 @@ export const updateDepartment = createAsyncThunk(
       queryData: department,
       apiType: "put",
     });
-    if (!response.success) return fulfillWithValue(null);
+    if (response.success) return fulfillWithValue(null);
     return rejectWithValue(response.message);
   }
 );
@@ -56,21 +56,21 @@ export const removeDepartment = createAsyncThunk(
       requestUrl: requestUrl + `${Id}`,
       apiType: "delete",
     });
-    if (!response.success) return fulfillWithValue(null);
+    if (response.success) return fulfillWithValue(null);
     return rejectWithValue(response.message);
   }
 );
 interface State {
   department: IDepartment | null;
   departments: IDepartment[];
-  status: "idle" | "loading" | "succeeded" | "failed";
+  status: ApiStatus;
   error: string | null;
 }
 
 const initialState: State = {
   department: null,
   departments: [],
-  status: "idle",
+  status: ApiStatus.Idle,
   error: null,
 };
 
@@ -94,7 +94,11 @@ const departmentSlice = createSlice({
   extraReducers(builder) {
     builder.addCase(getAllDepartments.fulfilled, (state, action) => {
       state.error = null;
+      state.status = ApiStatus.Success;
       state.departments = action.payload as IDepartment[];
+    });
+    builder.addCase(getAllDepartments.pending, (state) => {
+      state.status = ApiStatus.Loading;
     });
     builder.addCase(getAllDepartments.rejected, (state, action) => {
       state.error = action.payload as string;

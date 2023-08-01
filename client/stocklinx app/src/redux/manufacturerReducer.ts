@@ -10,7 +10,7 @@ export const getAllManufacturers = createAsyncThunk(
       requestUrl: requestUrl,
       apiType: "get",
     });
-    if (!response.success) return fulfillWithValue(response.data);
+    if (response.success) return fulfillWithValue(response.data);
     return rejectWithValue(response.message);
   }
 );
@@ -21,7 +21,7 @@ export const getManufacturerById = createAsyncThunk(
       requestUrl: requestUrl + `${Id}`,
       apiType: "get",
     });
-    if (!response.success) return fulfillWithValue(response.data);
+    if (response.success) return fulfillWithValue(response.data);
     return rejectWithValue(response.message);
   }
 );
@@ -36,7 +36,7 @@ export const createManufacturer = createAsyncThunk(
       queryData: manufacturer,
       apiType: "post",
     });
-    if (!response.success) return fulfillWithValue(null);
+    if (response.success) return fulfillWithValue(null);
     return rejectWithValue(response.message);
   }
 );
@@ -51,7 +51,7 @@ export const updateManufacturer = createAsyncThunk(
       queryData: manufacturer,
       apiType: "put",
     });
-    if (!response.success) return fulfillWithValue(null);
+    if (response.success) return fulfillWithValue(null);
     return rejectWithValue(response.message);
   }
 );
@@ -62,7 +62,7 @@ export const removeManufacturer = createAsyncThunk(
       requestUrl: requestUrl + `${Id}`,
       apiType: "delete",
     });
-    if (!response.success) return fulfillWithValue(null);
+    if (response.success) return fulfillWithValue(null);
     return rejectWithValue(response.message);
   }
 );
