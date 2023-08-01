@@ -1,4 +1,3 @@
-import React from "react";
 import { checkEmpty } from "./functions/checkEmpty";
 // import { AuthProvider, useAuth } from "./contexts/auth";
 import {
@@ -6,35 +5,28 @@ import {
   RouterProvider,
   Route,
   Outlet,
+  useNavigate,
 } from "react-router-dom";
-import LoadPanel from "devextreme-react/load-panel";
 import "./app.scss";
 import Accessory from "./pages/accessory/Accessory";
 import Asset from "./pages/asset/Asset";
 import Component from "./pages/component/Component";
 import Consumable from "./pages/consumable/Consumable";
-import Generic from "./pages/generic/Generic";
 import Home from "./pages/home/Home";
 import License from "./pages/license/License";
 import Model from "./pages/model/Model";
-import Department from "./pages/people/Department";
-import User from "./pages/people/User";
 import Sidebar from "./components/sidebar/Sidebar";
 import Test from "./pages/Test";
-import Login from "./pages/login/Login";
-import Register from "./pages/register/Register";
+import Login from "./pages/user/Login";
+import Register from "./pages/user/Register";
+import Department from "./pages/department/Department";
+import { useAppSelector } from "./hooks";
+import { RootState } from "./redux/store";
+import Company from "./pages/company/Company";
 
 const Layout = () => {
-  const userRedux = {
-    createdDate: "2023-06-23T10:26:20.567788Z",
-    email: "admin@gmail.com",
-    employeeNo: "1",
-    firstName: "adminF",
-    id: "b4701e6b-7170-4504-ae3a-999e40c28fe3",
-    isAdmin: false,
-    lastName: "adminL",
-    password: "123",
-  };
+  const navigate = useNavigate();
+  const userRedux = useAppSelector((state: RootState) => state.user.user);
   // const { loading } = useAuth();
 
   // if (loading) {
@@ -53,8 +45,10 @@ const Layout = () => {
       </div>
     );
   }
-
-  return <Login />;
+  else {
+    navigate("/login");
+    return <Login />;
+  }
 };
 
 const router = createBrowserRouter([
@@ -91,12 +85,12 @@ const router = createBrowserRouter([
         element: <Model />,
       },
       {
-        path: "/department",
-        element: <Department />,
+        path: "/company",
+        element: <Company />,
       },
       {
-        path: "/user",
-        element: <User />,
+        path: "/department",
+        element: <Department />,
       },
       {
         path: "/test",
