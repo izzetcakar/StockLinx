@@ -11,7 +11,7 @@ namespace StockLinx.Service.Services
 {
     public class LocationService : Service<Location>, ILocationService
     {
-        private readonly ILocationRepository _locationRepository
+        private readonly ILocationRepository _locationRepository;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         public LocationService(IRepository<Location> repository, ILocationRepository locationRepository,IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork)
