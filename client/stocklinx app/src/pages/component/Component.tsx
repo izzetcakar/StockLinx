@@ -1,10 +1,136 @@
-interface ComponentProps {
+import React, { useState } from "react";
+import { modals } from "@mantine/modals";
+import TestForm from "../../components/form/TestForm";
+import ComponentForm from "../../components/form/product/component/ComponentForm";
+import GridTable from "../../components/gridTable/GridTable";
+import CustomPopup from "../../components/popup/CustomPopup";
+import { IComponent } from "../../interfaces/interfaces";
+import { useAppDispatch, useAppSelector } from "../../hooks";
+import { clearComponent, setComponent } from "../../redux/componentReducer";
+import { RootState } from "../../redux/store";
 
-}
-const Component: React.FC<ComponentProps> = () => {
+const Component = () => {
+  const dispatch = useAppDispatch();
+  const [formVisible, setFormVisible] = useState<boolean>(false);
+  const components = useAppSelector(
+    (state: RootState) => state.component.components
+  );
+  const categories = useAppSelector(
+    (state: RootState) => state.category.categories
+  );
 
-  return (<div>
-    Component
-  </div>)
+  const getCategoryById: React.FC<{ value: string }> = ({ value }) => {
+    const category = categories.find((category) => category.id === value);
+    return <div>{category?.name}</div>;
+  };
+  const columns = [
+    {
+      dataField: "categoryId",
+      caption: "Category",
+      dataType: "string",
+      renderComponent: getCategoryById,
+    },
+    {
+      dataField: "locationId",
+      caption: "Location",
+      dataType: "string",
+    },
+    {
+      dataField: "companyId",
+      caption: "Company",
+      dataType: "string",
+    },
+    {
+      dataField: "statusId",
+      caption: "Status",
+      dataType: "string",
+    },
+    {
+      dataField: "name",
+      caption: "Name",
+      dataType: "string",
+    },
+    { dataField: "serialNo", caption: "Serial No", dataType: "string" },
+    { dataField: "orderNo", caption: "Order No", dataType: "string" },
+    {
+      dataField: "purchaseCost",
+      caption: "Purchase Cost",
+      dataType: "number",
+    },
+    {
+      dataField: "quantity",
+      caption: "Quantity",
+      dataType: "number",
+    },
+    { dataField: "purchaseDate", caption: "Purchase Date", dataType: "date" },
+    { dataField: "notes", caption: "Notes", dataType: "string" },
+  ];
+
+  const handleFormVisible = () => {
+    setFormVisible((prevFormVisible) => !prevFormVisible);
+  };
+  const onStartEdit = (row: object) => {
+    dispatch(setComponent(row as IComponent));
+  };
+  const onRowInsert = () => {
+    console.log("insert");
+    clearComponent();
+    openComponentModal();
+  };
+  const onRowUpdate = (row: object) => {
+    console.log(row);
+    openComponentModal(row as IComponent);
+  };
+  const onRowDelete = (row: object) => {
+    console.log("delete", row);
+  };
+  const handleUpdate = (data: object) => {
+    console.log("updateSubmit", data);
+  };
+
+  const openComponentModal = (component?: IComponent) =>
+    modals.open({
+      modalId: "component-modal",
+      title: "Update",
+      children: (
+        <ComponentForm component={component} submitFunc={handleUpdate} />
+      ),
+    });
+
+  return (
+    <div
+      className="datagrid-wrapper"
+      style={{ display: "flex", flexDirection: "column", gap: "2rem" }}
+    >
+      <GridTable
+        data={components}
+        columns={columns}
+        hasColumnLines={false}
+        cellCssClass="testClass"
+        pageSizes={[1, 2, 5]}
+        enableEdit={true}
+        showPageSize={true}
+        onRowInsert={onRowInsert}
+        onRowUpdate={onRowUpdate}
+        onRowDelete={onRowDelete}
+        onStartEdit={onStartEdit}
+      />
+      <CustomPopup
+        visible={formVisible}
+        title="Custom Form"
+        showTitle={true}
+        showCloseButton={true}
+        dragEnabled={false}
+        height={"fit-content"}
+        width={300}
+        hideOnOutsideClick={false}
+        handleClose={handleFormVisible}
+        renderContent={() => (
+          <TestForm submitFunc={handleUpdate} columns={columns} />
+        )}
+      />
+    </div>
+  );
 };
+
 export default Component;
