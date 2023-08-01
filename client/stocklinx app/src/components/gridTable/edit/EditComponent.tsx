@@ -2,7 +2,7 @@ import React from "react";
 import "./editComponent.scss";
 
 interface EditComponentProps {
-  datagrid: any[];
+  datagrid: object[];
   rowIndex: number;
   onRowUpdate: (row: object) => void;
   onRowDelete: (row: object) => void;

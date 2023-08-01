@@ -175,31 +175,31 @@ const GridTable: React.FC<GridTableProps> = ({
                 </div>
               ))}
             </div>
-            <ScrollArea >
-              <div className="table-content-container">
-                {datagridColumns.map((column, columnIndex) =>
-                  visibleColumns.includes(column.caption) ? (
-                    <div className="column-container" key={columnIndex} style={propertyDataStyle}>
-                      <div className="cell column-title">
-                        {column.caption}
-                      </div>
-                      {filterData().map((_, rowIndex) => (
-                        <div
-                          className={
-                            selectedIndexes.includes(rowIndex)
-                              ? `cell selected-cell ${cellCssClass}`
-                              : `cell ${cellCssClass}`
-                          }
-                          key={rowIndex}
-                        >
-                          {renderColumnValue(rowIndex, column)}
-                        </div>
-                      ))}
+
+            <div className="table-content-container">
+              {datagridColumns.map((column, columnIndex) =>
+                visibleColumns.includes(column.caption) ? (
+                  <div className="column-container" key={columnIndex} style={propertyDataStyle}>
+                    <div className="cell column-title">
+                      {column.caption}
                     </div>
-                  ) : null
-                )}
-              </div>
-            </ScrollArea>
+                    {filterData().map((_, rowIndex) => (
+                      <div
+                        className={
+                          selectedIndexes.includes(rowIndex)
+                            ? `cell selected-cell ${cellCssClass}`
+                            : `cell ${cellCssClass}`
+                        }
+                        key={rowIndex}
+                      >
+                        {renderColumnValue(rowIndex, column)}
+                      </div>
+                    ))}
+                  </div>
+                ) : null
+              )}
+            </div>
+
             {enableEdit && (
               <div className="column-container column-edit">
                 <div className="cell column-title"></div>

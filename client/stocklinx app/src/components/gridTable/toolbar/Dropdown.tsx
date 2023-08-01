@@ -1,6 +1,6 @@
 import React from "react";
 import { Column } from "../interfaces/interfaces";
-import SelectCheckbox from "../../select/SelectCheckbox";
+import { Checkbox } from "@mantine/core";
 import "./toolbar.scss";
 
 interface DropDownProps {
@@ -25,10 +25,10 @@ const DropDown: React.FC<DropDownProps> = ({ columns, visibleColumns, onChange }
             <div className={`dropdown-content ${visible ? 'visible' : ''}`}>
                 {columns.map((column, index) => (
                     <div className="dropdown-element" key={index}>
-                        <SelectCheckbox
-                            selectId={"Visible" + column.caption}
-                            isChecked={visibleColumns.includes(column.caption)}
-                            selectFunc={() => onChange(column.caption)}
+                        <Checkbox
+                            checked={visibleColumns.includes(column.caption)}
+                            onChange={() => onChange(column.caption)}
+                            color="dark"
                         />
                         <div className="title">{column.caption}</div>
                     </div>
@@ -38,4 +38,4 @@ const DropDown: React.FC<DropDownProps> = ({ columns, visibleColumns, onChange }
     );
 };
 
-export default React.memo(DropDown);
+export default DropDown;

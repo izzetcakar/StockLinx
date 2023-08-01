@@ -2,19 +2,24 @@
   display: flex;
   flex: 1;
   height: fit-content;
-  padding: 0.7rem;
+  padding: 10px;
   overflow: auto;
   justify-content: space-between;
   align-items: center;
-
+  font-size: 0.7em;
   .size-container {
     display: flex;
     height: fit-content;
-    gap: 0.7rem;
+    gap: 10px;
     margin-right: auto;
 
     .size {
-      padding: 0.5rem 0.8rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: auto;
+      max-height: fit-content;
+      padding: 4px 10px 4px 10px;
       border-radius: 4px;
       transition: all ease 0.2s;
       cursor: pointer;
