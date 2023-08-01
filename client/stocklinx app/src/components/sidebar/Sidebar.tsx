@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./sidebar.scss";
 import "boxicons";
-import logo from "../../images/logo.png";
+import logo from "/logo.png";
 import { useLocation, useNavigate } from "react-router-dom";
 import { checkEmpty } from "../../functions/checkEmpty";
 
@@ -69,6 +69,18 @@ const Sidebar: React.FC = () => {
       target: "/model",
     },
     {
+      title: "Company",
+      icon: "pie-chart-alt",
+      color: "#737373",
+      target: "/company",
+    },
+    {
+      title: "Department",
+      icon: "pie-chart-alt",
+      color: "#737373",
+      target: "/department",
+    },
+    {
       title: "Test",
       icon: "pie-chart-alt",
       color: "#737373",
@@ -104,9 +116,11 @@ const Sidebar: React.FC = () => {
       handleNavElements(index);
     } else {
       handleNavElements(-1);
-      navigate(item.target!);
+      navigate(item.target);
     }
   };
+
+
   const hideAllDisplayElements = () => {
     setNavigationList((prev) =>
       prev.map((item) => {
