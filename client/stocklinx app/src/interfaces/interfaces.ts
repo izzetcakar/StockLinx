@@ -54,9 +54,9 @@ interface IBaseProduct extends BaseEntity {
   checkOutCounter?: number | null;
 }
 export interface IAccessory extends IBaseProduct {
-  quantity: number;
   manufacturerId: string | null;
   supplierId: string | null;
+  quantity: number;
   warrantyDate: Date | null;
 }
 export interface IAsset extends IBaseProduct {
@@ -83,7 +83,6 @@ export interface ILicense extends IBaseProduct {
   reassignable: boolean;
   expirationDate: Date | null;
   terminationDate: Date | null;
-  quantity: number;
 }
 export interface IConsumable extends IBaseProduct {
   modelNo: string | null;
@@ -172,4 +171,11 @@ export interface IUser extends BaseEntity {
   startDate: Date;
   endDate: Date | null;
   notes: string | null;
+}
+export interface IUserLoginDto {
+  email: string;
+  password: string;
+}
+export interface IToken {
+  token: string;
 }
