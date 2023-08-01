@@ -1,9 +1,9 @@
 import React from 'react'
-import { TextInput, Checkbox, Button, Group, Box, NumberInput, FileInput, rem, Image, ScrollArea, Flex, Textarea, Container, ActionIcon } from '@mantine/core';
+import { TextInput, Button, Group, NumberInput, FileInput, rem, Image, ScrollArea, Flex, Textarea } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { DateInput } from '@mantine/dates';
 import { closeModal } from '@mantine/modals';
-import { IconPlus, IconUpload } from '@tabler/icons-react';
+import { IconUpload } from '@tabler/icons-react';
 import { modals } from '@mantine/modals';
 import { IAccessory } from '../../../../interfaces/interfaces';
 import { v4 as uuidv4 } from "uuid";
