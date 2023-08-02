@@ -11,32 +11,36 @@ const MantineSelect: React.FC<IMantinSelectProps<T>> = (props) => {
         ({ value, label, ...others }: IMantineSelectData, ref) => (
             <div ref={ref} {...others}>
                 <Group noWrap>
-                    <LoadingOverlay visible={loading ? loading : false} />
-                    <div>
-                        {/* <Text size="sm">{value}</Text> */}
-                        <Text size="xs" opacity={0.65}>
-                            {label}
-                        </Text>
-                    </div>
+                    {/* <Text size="sm">{value}</Text> */}
+                    <Text size="xs" opacity={0.65}>
+                        {label}
+                    </Text>
                 </Group>
             </div>
-
         )
     );
+
+    const LoadingItem = () => (
+        <Box w="100%" h="auto" py={20} >
+            <LoadingOverlay visible={loading ? loading : false} />
+        </Box>
+    );
+
+    const spareData: IMantineSelectData[] = [{ value: '', label: '' },];
 
     return (
         <Box pos="relative" key={propTag}>
             <Select
                 label={label}
                 placeholder="Pick one"
-                data={data}
+                data={loading ? spareData : data}
                 {...form.getInputProps(propTag)}
                 transitionProps={{
                     transition: "pop-top-left",
                     duration: 80,
                     timingFunction: "ease",
                 }}
-                itemComponent={SelectItem}
+                itemComponent={loading ? LoadingItem : SelectItem}
                 searchable
                 clearable
                 allowDeselect
