@@ -3,49 +3,32 @@ import { modals } from "@mantine/modals";
 import TestForm from "../../components/form/TestForm";
 import GridTable from "../../components/gridTable/GridTable";
 import CustomPopup from "../../components/popup/CustomPopup";
-import { ApiStatus, IDepartment } from "../../interfaces/interfaces";
+import { IDepartment } from "../../interfaces/interfaces";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { clearDepartment, getAllDepartments, setDepartment } from "../../redux/departmentReducer";
 import { RootState } from "../../redux/store";
 import DepartmentForm from "../../components/form/department/DepartmentForm";
-import { getNameFromArray } from "../../functions/getNameFromArray";
 import { Column } from "../../components/gridTable/interfaces/interfaces";
-import { LoadingOverlay } from "@mantine/core";
 import { getAllCompanies } from "../../redux/companyReducer";
+import { CompanyNameComponent, LocationNameComponent } from "../../components/customComponents/TableComponents";
 
 const Department = () => {
     const dispatch = useAppDispatch();
     const [formVisible, setFormVisible] = useState<boolean>(false);
-    const departments = useAppSelector(
-        (state: RootState) => state.department.departments
-    );
-    const departmentStatus = useAppSelector(
-        (state: RootState) => state.department.status
-    );
-    const companies = useAppSelector(
-        (state: RootState) => state.company.companies
-    );
-    const locations = useAppSelector(
-        (state: RootState) => state.location.locations
-    );
-    const users = useAppSelector(
-        (state: RootState) => state.user.users
-    );
-    const NameComponent: React.FC<{ value: string }> = ({ value }) => {
-        return <div style={{ fontWeight: "bold" }}>{getNameFromArray(companies, value)}</div>;
-    };
+    const departments = useAppSelector((state: RootState) => state.department.departments);
 
     const columns: Column[] = [
         {
             dataField: "companyId",
             caption: "Company",
             dataType: "string",
-            renderComponent: NameComponent,
+            renderComponent: CompanyNameComponent,
         },
         {
             dataField: "locationId",
             caption: "Location",
             dataType: "string",
+            renderComponent: LocationNameComponent
         },
         {
             dataField: "managerId",
