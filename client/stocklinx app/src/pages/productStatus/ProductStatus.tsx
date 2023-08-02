@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from "../../hooks";
 import { clearProductStatus, setProductStatus } from "../../redux/productStatusReducer";
 import { RootState } from "../../redux/store";
 import ProductStatusForm from "../../components/form/productStatus/ProductStatusForm";
+import { Column } from "../../components/gridTable/interfaces/interfaces";
 
 const ProductStatus = () => {
     const dispatch = useAppDispatch();
@@ -16,7 +17,7 @@ const ProductStatus = () => {
         (state: RootState) => state.productStatus.productStatuses
     );
 
-    const columns = [
+    const columns: Column[] = [
         {
             dataField: "name",
             caption: "Name",
