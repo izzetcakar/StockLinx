@@ -105,6 +105,7 @@ const Accessory = () => {
     children: (
       <AccessoryForm accessory={accessory} submitFunc={handleUpdate} />
     ),
+    xOffset: "auto",
   });
 
   return (
