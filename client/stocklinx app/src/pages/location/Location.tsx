@@ -7,7 +7,7 @@ import { ILocation } from "../../interfaces/interfaces";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { clearLocation, setLocation } from "../../redux/locationReducer";
 import { RootState } from "../../redux/store";
-import LocationForm from "../../components/form/location/Location";
+import LocationForm from "../../components/form/location/LocationForm";
 import { Column } from "../../components/gridTable/interfaces/interfaces";
 
 const Location = () => {
