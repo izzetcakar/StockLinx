@@ -27,6 +27,10 @@ export interface SelectData {
   value: string;
   label: string;
 }
+export interface IdentifiableItem {
+  id: string;
+  name: string;
+}
 
 //Server side interfaces
 export interface BaseEntity {
