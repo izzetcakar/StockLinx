@@ -1,9 +1,6 @@
-interface ItemWithIdAndName {
-  id: string;
-  name: string;
-}
+import { IdentifiableItem } from "../interfaces/interfaces";
 
-export const getNameFromArray = <T extends ItemWithIdAndName>(
+export const getNameFromArray = <T extends IdentifiableItem>(
   array: T[],
   id: string
 ): string => {
