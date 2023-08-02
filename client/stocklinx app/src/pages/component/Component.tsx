@@ -8,6 +8,8 @@ import { IComponent } from "../../interfaces/interfaces";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { clearComponent, setComponent } from "../../redux/componentReducer";
 import { RootState } from "../../redux/store";
+import { CategoryNameComponent, CompanyNameComponent, LocationNameComponent, StatusNameComponent } from "../../components/customComponents/TableComponents";
+import { Column } from "../../components/gridTable/interfaces/interfaces";
 
 const Component = () => {
   const dispatch = useAppDispatch();
@@ -19,31 +21,30 @@ const Component = () => {
     (state: RootState) => state.category.categories
   );
 
-  const getCategoryById: React.FC<{ value: string }> = ({ value }) => {
-    const category = categories.find((category) => category.id === value);
-    return <div>{category?.name}</div>;
-  };
-  const columns = [
+  const columns: Column[] = [
     {
       dataField: "categoryId",
       caption: "Category",
       dataType: "string",
-      renderComponent: getCategoryById,
+      renderComponent: CategoryNameComponent,
     },
     {
       dataField: "locationId",
       caption: "Location",
       dataType: "string",
+      renderComponent: LocationNameComponent
     },
     {
       dataField: "companyId",
       caption: "Company",
       dataType: "string",
+      renderComponent: CompanyNameComponent
     },
     {
       dataField: "statusId",
       caption: "Status",
       dataType: "string",
+      renderComponent: StatusNameComponent
     },
     {
       dataField: "name",
