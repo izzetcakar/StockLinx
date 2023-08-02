@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from "../../hooks";
 import { clearManufacturer, setManufacturer } from "../../redux/manufacturerReducer";
 import { RootState } from "../../redux/store";
 import ManufacturerForm from "../../components/form/manufacturer/ManufacturerForm";
+import { Column } from "../../components/gridTable/interfaces/interfaces";
 
 const Manufacturer = () => {
     const dispatch = useAppDispatch();
@@ -16,7 +17,7 @@ const Manufacturer = () => {
         (state: RootState) => state.manufacturer.manufacturers
     );
 
-    const columns = [
+    const columns: Column[] = [
         {
             dataField: "name",
             caption: "Name",
