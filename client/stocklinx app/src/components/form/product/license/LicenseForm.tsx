@@ -5,13 +5,18 @@ import { DateInput } from '@mantine/dates';
 import { closeModal } from '@mantine/modals';
 import { IconUpload } from '@tabler/icons-react';
 import { modals } from '@mantine/modals';
-import { ILicense } from '../../../../interfaces/interfaces';
+import { ApiStatus, ILicense } from '../../../../interfaces/interfaces';
 import { v4 as uuidv4 } from "uuid";
 import { handleImageChange } from '../../functions/formFunctions';
-import { useAppSelector } from '../../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { RootState } from '../../../../redux/store';
 import { IMantinSelectProps } from '../../interfaces/interfaces';
 import MantineSelect from '../../components/MantineSelect';
+import { getAllCategories } from '../../../../redux/categoryReducer';
+import { getAllCompanies } from '../../../../redux/companyReducer';
+import { getAllLocations } from '../../../../redux/locationReducer';
+import { getAllProductStatuses } from '../../../../redux/productStatusReducer';
+import { getAllSuppliers } from '../../../../redux/supplierReducer';
 
 interface LicenseFormProps {
     license?: ILicense;
@@ -22,21 +27,17 @@ const LicenseForm: React.FC<LicenseFormProps> = ({
     license,
     submitFunc = () => console.log("submit"),
 }) => {
-    const supplierSelectData = useAppSelector(
-        (state: RootState) => state.supplier.selectData
-    );
-    const categorySelectData = useAppSelector(
-        (state: RootState) => state.category.selectData
-    );
-    const locationSelectData = useAppSelector(
-        (state: RootState) => state.location.selectData
-    );
-    const companySelectData = useAppSelector(
-        (state: RootState) => state.company.selectData
-    );
-    const productStatusSelectData = useAppSelector(
-        (state: RootState) => state.productStatus.selectData
-    );
+    const dispatch = useAppDispatch();
+    const categorySelectData = useAppSelector((state: RootState) => state.category.selectData);
+    const categoryApiStatus = useAppSelector((state: RootState) => state.category.status);
+    const companySelectData = useAppSelector((state: RootState) => state.company.selectData);
+    const companyApiStatus = useAppSelector((state: RootState) => state.company.status);
+    const supplierSelectData = useAppSelector((state: RootState) => state.supplier.selectData);
+    const supplierApiStatus = useAppSelector((state: RootState) => state.supplier.status);
+    const locationSelectData = useAppSelector((state: RootState) => state.location.selectData);
+    const locationApiStatus = useAppSelector((state: RootState) => state.location.status);
+    const productStatusSelectData = useAppSelector((state: RootState) => state.productStatus.selectData);
+    const productStatusApiStatus = useAppSelector((state: RootState) => state.productStatus.status);
 
     const form = useForm<ILicense>({
         initialValues: license ? { ...license } : {
@@ -58,15 +59,11 @@ const LicenseForm: React.FC<LicenseFormProps> = ({
             purchaseDate: null,
             expirationDate: null,
             terminationDate: null,
-            quantity: 1,
             notes: null,
         },
         validate: {
             name: (value: string) => (/(?!^$)([^\s])/.test(value) ? null : 'Name should not be empty'),
             licenseEmail: (value) => (value && /^\S+@\S+$/.test(value) ? null : 'Invalid email'),
-            quantity: (value: number) => {
-                return value >= 1 ? null : 'Quantity must be greater than 0';
-            },
             purchaseCost: (value: number | null) => {
                 if (value !== null || undefined) {
                     return value && value >= 0 ? null : 'Purchase cost must be a non-negative number';
@@ -93,30 +90,40 @@ const LicenseForm: React.FC<LicenseFormProps> = ({
             data: categorySelectData,
             label: "Category",
             propTag: "categoryId",
+            refreshData: () => dispatch(getAllCategories()),
+            loading: categoryApiStatus === ApiStatus.Loading,
         },
         {
             form: form,
             data: companySelectData,
             label: "Company",
             propTag: "companyId",
+            refreshData: () => dispatch(getAllCompanies()),
+            loading: companyApiStatus === ApiStatus.Loading,
         },
         {
             form: form,
             data: locationSelectData,
             label: "Location",
             propTag: "locationId",
+            refreshData: () => dispatch(getAllLocations()),
+            loading: locationApiStatus === ApiStatus.Loading,
         },
         {
             form: form,
             data: productStatusSelectData,
             label: "Status",
             propTag: "statusId",
+            refreshData: () => dispatch(getAllProductStatuses()),
+            loading: productStatusApiStatus === ApiStatus.Loading,
         },
         {
             form: form,
             data: supplierSelectData,
             label: "Supplier",
             propTag: "supplierId",
+            refreshData: () => dispatch(getAllSuppliers()),
+            loading: supplierApiStatus === ApiStatus.Loading,
         },
     ]
 
@@ -124,8 +131,17 @@ const LicenseForm: React.FC<LicenseFormProps> = ({
         <form onSubmit={form.onSubmit((values) => handleSubmit(values))} >
             <ScrollArea type="auto">
                 <Flex direction="column" gap={10} mx="auto" maw="auto" px={40}>
-                    {selectComponentData.map((item) => <MantineSelect form={item.form} data={item.data} label={item.label} propTag={item.propTag} key={item.propTag} />)}
-                    <TextInput
+                    {selectComponentData.map((selectData) =>
+                        <MantineSelect
+                            key={selectData.propTag}
+                            form={selectData.form}
+                            data={selectData.data}
+                            label={selectData.label}
+                            propTag={selectData.propTag}
+                            refreshData={selectData?.refreshData}
+                            loading={selectData?.loading}
+                        />
+                    )}                    <TextInput
                         label="Name"
                         placeholder="New Name"
                         {...form.getInputProps("name")}

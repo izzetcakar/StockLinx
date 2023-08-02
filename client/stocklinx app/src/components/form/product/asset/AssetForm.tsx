@@ -5,13 +5,16 @@ import { DateInput } from '@mantine/dates';
 import { closeModal } from '@mantine/modals';
 import { IconPlus, IconTrash, IconUpload } from '@tabler/icons-react';
 import { modals } from '@mantine/modals';
-import { IAsset } from '../../../../interfaces/interfaces';
+import { ApiStatus, IAsset } from '../../../../interfaces/interfaces';
 import { handleImageChange } from '../../functions/formFunctions';
 import MantineSelect from '../../components/MantineSelect';
 import { RootState } from '../../../../redux/store';
-import { useAppSelector } from '../../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { IMantinSelectProps } from '../../interfaces/interfaces';
 import { v4 as uuidv4 } from "uuid";
+import { getAllManufacturers } from '../../../../redux/manufacturerReducer';
+import { getAllModels } from '../../../../redux/modelReducer';
+import { getAllCategories } from '../../../../redux/categoryReducer';
 
 interface AssetFormProps {
     asset?: IAsset;
@@ -22,24 +25,19 @@ const AssetForm: React.FC<AssetFormProps> = ({
     asset,
     submitFunc = () => console.log("submit"),
 }) => {
-    const manufacturerSelectData = useAppSelector(
-        (state: RootState) => state.manufacturer.selectData
-    );
-    const modelSelectData = useAppSelector(
-        (state: RootState) => state.model.selectData
-    );
-    const categorySelectData = useAppSelector(
-        (state: RootState) => state.category.selectData
-    );
-    const locationSelectData = useAppSelector(
-        (state: RootState) => state.location.selectData
-    );
-    const companySelectData = useAppSelector(
-        (state: RootState) => state.company.selectData
-    );
-    const productStatusSelectData = useAppSelector(
-        (state: RootState) => state.productStatus.selectData
-    );
+    const dispatch = useAppDispatch();
+    const manufacturerSelectData = useAppSelector((state: RootState) => state.manufacturer.selectData);
+    const manufacturerApiStatus = useAppSelector((state: RootState) => state.manufacturer.status);
+    const modelSelectData = useAppSelector((state: RootState) => state.model.selectData);
+    const modelApiStatus = useAppSelector((state: RootState) => state.model.status);
+    const categorySelectData = useAppSelector((state: RootState) => state.category.selectData);
+    const categoryApiStatus = useAppSelector((state: RootState) => state.category.status);
+    const locationSelectData = useAppSelector((state: RootState) => state.location.selectData);
+    const locationApiStatus = useAppSelector((state: RootState) => state.location.status);
+    const companySelectData = useAppSelector((state: RootState) => state.company.selectData);
+    const companyApiStatus = useAppSelector((state: RootState) => state.company.status);
+    const productStatusSelectData = useAppSelector((state: RootState) => state.productStatus.selectData);
+    const productStatusApiStatus = useAppSelector((state: RootState) => state.productStatus.status);
 
     const form = useForm<IAsset>({
         initialValues: asset ? { ...asset } : {
@@ -121,44 +119,65 @@ const AssetForm: React.FC<AssetFormProps> = ({
             data: manufacturerSelectData,
             label: "Manufacturer",
             propTag: "manufacturerId",
+            refreshData: () => dispatch(getAllManufacturers()),
+            loading: manufacturerApiStatus === ApiStatus.Loading,
         },
         {
             form: form,
             data: modelSelectData,
             label: "Model",
             propTag: "modelId",
+            refreshData: () => dispatch(getAllModels()),
+            loading: modelApiStatus === ApiStatus.Loading,
         },
         {
             form: form,
             data: categorySelectData,
             label: "Category",
             propTag: "categoryId",
+            refreshData: () => dispatch(getAllCategories()),
+            loading: categoryApiStatus === ApiStatus.Loading,
         },
         {
             form: form,
             data: locationSelectData,
             label: "Location",
             propTag: "locationId",
+            refreshData: () => dispatch(getAllLocations()),
+            loading: locationApiStatus === ApiStatus.Loading,
         },
         {
             form: form,
             data: companySelectData,
             label: "Company",
             propTag: "companyId",
+            refreshData: () => dispatch(getAllCompanies()),
+            loading: companyApiStatus === ApiStatus.Loading,
         },
         {
             form: form,
             data: productStatusSelectData,
             label: "Status",
             propTag: "statusId",
+            refreshData: () => dispatch(getAllProductStatuses()),
+            loading: productStatusApiStatus === ApiStatus.Loading,
         },
     ]
     return (
         <form onSubmit={form.onSubmit((values) => handleSubmit(values))} >
             <ScrollArea type="auto">
                 <Flex direction="column" gap={10} mx="auto" maw="auto" px={40}>
-                    {selectComponentData.map((item) => <MantineSelect form={item.form} data={item.data} label={item.label} propTag={item.propTag} key={item.propTag} />)}
-                    <TextInput
+                    {selectComponentData.map((selectData) =>
+                        <MantineSelect
+                            key={selectData.propTag}
+                            form={selectData.form}
+                            data={selectData.data}
+                            label={selectData.label}
+                            propTag={selectData.propTag}
+                            refreshData={selectData?.refreshData}
+                            loading={selectData?.loading}
+                        />
+                    )}                    <TextInput
                         label="Name"
                         placeholder="New Name"
                         {...form.getInputProps("name")}

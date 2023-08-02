@@ -5,12 +5,14 @@ import { closeModal } from '@mantine/modals';
 import { IconUpload } from '@tabler/icons-react';
 import { modals } from '@mantine/modals';
 import { v4 as uuidv4 } from "uuid";
-import { IModel } from '../../../interfaces/interfaces';
+import { ApiStatus, IModel } from '../../../interfaces/interfaces';
 import { handleImageChange } from '../functions/formFunctions';
-import { useAppSelector } from '../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../hooks';
 import { RootState } from '../../../redux/store';
 import { IMantinSelectProps } from '../interfaces/interfaces';
 import MantineSelect from '../components/MantineSelect';
+import { getAllCategories } from '../../../redux/categoryReducer';
+import { getAllManufacturers } from '../../../redux/manufacturerReducer';
 
 interface ModelFormProps {
     model?: IModel;
@@ -21,8 +23,11 @@ const ModelForm: React.FC<ModelFormProps> = ({
     model,
     submitFunc = () => console.log("submit"),
 }) => {
+    const dispatch = useAppDispatch();
     const categorySelectData = useAppSelector((state: RootState) => state.category.selectData);
+    const categoryApiStatus = useAppSelector((state: RootState) => state.category.status);
     const manufacturerSelectData = useAppSelector((state: RootState) => state.manufacturer.selectData);
+    const manufacturerApiStatus = useAppSelector((state: RootState) => state.manufacturer.status);
 
     const form = useForm<IModel>({
         initialValues: model ? { ...model } : {
@@ -56,12 +61,16 @@ const ModelForm: React.FC<ModelFormProps> = ({
             data: categorySelectData,
             label: "Category",
             propTag: "categoryId",
+            refreshData: () => dispatch(getAllCategories()),
+            loading: categoryApiStatus === ApiStatus.Loading,
         },
         {
             form: form,
             data: manufacturerSelectData,
             label: "Manufacturer",
             propTag: "manufacturerId",
+            refreshData: () => dispatch(getAllManufacturers()),
+            loading: manufacturerApiStatus === ApiStatus.Loading,
         },
     ]
 

@@ -5,13 +5,17 @@ import { DateInput } from '@mantine/dates';
 import { closeModal } from '@mantine/modals';
 import { IconUpload } from '@tabler/icons-react';
 import { modals } from '@mantine/modals';
-import { IComponent } from '../../../../interfaces/interfaces';
+import { ApiStatus, IComponent } from '../../../../interfaces/interfaces';
 import { v4 as uuidv4 } from "uuid";
 import { handleImageChange } from '../../functions/formFunctions';
-import { useAppSelector } from '../../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { RootState } from '../../../../redux/store';
 import { IMantinSelectProps } from '../../interfaces/interfaces';
 import MantineSelect from '../../components/MantineSelect';
+import { getAllCategories } from '../../../../redux/categoryReducer';
+import { getAllLocations } from '../../../../redux/locationReducer';
+import { getAllCompanies } from '../../../../redux/companyReducer';
+import { getAllProductStatuses } from '../../../../redux/productStatusReducer';
 
 interface ComponentFormProps {
     component?: IComponent;
@@ -22,18 +26,15 @@ const ComponentForm: React.FC<ComponentFormProps> = ({
     component,
     submitFunc = () => console.log("submit"),
 }) => {
-    const categorySelectData = useAppSelector(
-        (state: RootState) => state.category.selectData
-    );
-    const locationSelectData = useAppSelector(
-        (state: RootState) => state.location.selectData
-    );
-    const companySelectData = useAppSelector(
-        (state: RootState) => state.company.selectData
-    );
-    const productStatusSelectData = useAppSelector(
-        (state: RootState) => state.productStatus.selectData
-    );
+    const dispatch = useAppDispatch();
+    const categorySelectData = useAppSelector((state: RootState) => state.category.selectData);
+    const categoryApiStatus = useAppSelector((state: RootState) => state.category.status);
+    const locationSelectData = useAppSelector((state: RootState) => state.location.selectData);
+    const locationApiStatus = useAppSelector((state: RootState) => state.location.status);
+    const companySelectData = useAppSelector((state: RootState) => state.company.selectData);
+    const companyApiStatus = useAppSelector((state: RootState) => state.company.status);
+    const productStatusSelectData = useAppSelector((state: RootState) => state.productStatus.selectData);
+    const productStatusApiStatus = useAppSelector((state: RootState) => state.productStatus.status);
 
     const form = useForm<IComponent>({
         initialValues: component ? { ...component } : {
@@ -82,24 +83,32 @@ const ComponentForm: React.FC<ComponentFormProps> = ({
             data: categorySelectData,
             label: "Category",
             propTag: "categoryId",
+            refreshData: () => dispatch(getAllCategories()),
+            loading: categoryApiStatus === ApiStatus.Loading,
         },
         {
             form: form,
             data: locationSelectData,
             label: "Location",
             propTag: "locationId",
+            refreshData: () => dispatch(getAllLocations()),
+            loading: locationApiStatus === ApiStatus.Loading,
         },
         {
             form: form,
             data: companySelectData,
             label: "Company",
             propTag: "companyId",
+            refreshData: () => dispatch(getAllCompanies()),
+            loading: companyApiStatus === ApiStatus.Loading,
         },
         {
             form: form,
             data: productStatusSelectData,
             label: "Status",
             propTag: "statusId",
+            refreshData: () => dispatch(getAllProductStatuses()),
+            loading: productStatusApiStatus === ApiStatus.Loading,
         },
     ]
 
@@ -107,8 +116,17 @@ const ComponentForm: React.FC<ComponentFormProps> = ({
         <form onSubmit={form.onSubmit((values) => handleSubmit(values))} >
             <ScrollArea type="auto">
                 <Flex direction="column" gap={10} mx="auto" maw="auto" px={40}>
-                    {selectComponentData.map((item) => <MantineSelect form={item.form} data={item.data} label={item.label} propTag={item.propTag} key={item.propTag} />)}
-                    <TextInput
+                    {selectComponentData.map((selectData) =>
+                        <MantineSelect
+                            key={selectData.propTag}
+                            form={selectData.form}
+                            data={selectData.data}
+                            label={selectData.label}
+                            propTag={selectData.propTag}
+                            refreshData={selectData?.refreshData}
+                            loading={selectData?.loading}
+                        />
+                    )}                    <TextInput
                         label="Name"
                         placeholder="New Name"
                         {...form.getInputProps("name")}

@@ -12,6 +12,7 @@ import { RootState } from '../../../redux/store';
 import { IMantinSelectProps } from '../interfaces/interfaces';
 import MantineSelect from '../components/MantineSelect';
 import { getAllCompanies } from '../../../redux/companyReducer';
+import { getAllLocations } from '../../../redux/locationReducer';
 
 interface DepartmentFormProps {
     department?: IDepartment;
@@ -26,6 +27,7 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
     const companySelectData = useAppSelector((state: RootState) => state.company.selectData);
     const companyApiStatus = useAppSelector((state: RootState) => state.company.status);
     const locationSelectData = useAppSelector((state: RootState) => state.location.selectData);
+    const locationApiStatus = useAppSelector((state: RootState) => state.location.status);
 
     const form = useForm<IDepartment>({
         initialValues: department ? { ...department } : {
@@ -59,7 +61,7 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
             data: companySelectData,
             label: "Company",
             propTag: "companyId",
-            refreshData: () => handleRefreshData(),
+            refreshData: () => dispatch(getAllCompanies()),
             loading: companyApiStatus === ApiStatus.Loading,
         },
         {
@@ -67,11 +69,10 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
             data: locationSelectData,
             label: "Location",
             propTag: "locationId",
+            refreshData: () => dispatch(getAllLocations()),
+            loading: locationApiStatus === ApiStatus.Loading,
         },
     ]
-    const handleRefreshData = async () => {
-        await dispatch(getAllCompanies());
-    }
 
     return (
         <form onSubmit={form.onSubmit((values) => handleSubmit(values))} >
@@ -79,11 +80,11 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
                 <Flex direction="column" gap={10} mx="auto" maw="auto" px={40}>
                     {selectComponentData.map((selectData) =>
                         <MantineSelect
+                            key={selectData.propTag}
                             form={selectData.form}
                             data={selectData.data}
                             label={selectData.label}
                             propTag={selectData.propTag}
-                            key={selectData.propTag}
                             refreshData={selectData?.refreshData}
                             loading={selectData?.loading}
                         />
