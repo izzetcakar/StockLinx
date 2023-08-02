@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { modals } from "@mantine/modals";
 import TestForm from "../../components/form/TestForm";
 import GridTable from "../../components/gridTable/GridTable";
@@ -9,7 +9,7 @@ import { clearCompany, getAllCompanies, setCompany } from "../../redux/companyRe
 import { RootState } from "../../redux/store";
 import CompanyForm from "../../components/form/company/CompanyForm";
 
-const Company = async () => {
+const Company = () => {
     const dispatch = useAppDispatch();
     const [formVisible, setFormVisible] = useState<boolean>(false);
     const companies = useAppSelector(
@@ -24,7 +24,9 @@ const Company = async () => {
         },
     ];
 
-    await dispatch(getAllCompanies());
+    useEffect(() => {
+        dispatch(getAllCompanies());
+    }, []);
 
     const handleFormVisible = () => {
         setFormVisible((prevFormVisible) => !prevFormVisible);
@@ -65,7 +67,6 @@ const Company = async () => {
                 data={companies}
                 columns={columns}
                 hasColumnLines={false}
-                cellCssClass="testClass"
                 pageSizes={[1, 2, 5]}
                 enableEdit={true}
                 showPageSize={true}
