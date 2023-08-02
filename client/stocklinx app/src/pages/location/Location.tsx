@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from "../../hooks";
 import { clearLocation, setLocation } from "../../redux/locationReducer";
 import { RootState } from "../../redux/store";
 import LocationForm from "../../components/form/location/Location";
+import { Column } from "../../components/gridTable/interfaces/interfaces";
 
 const Location = () => {
     const dispatch = useAppDispatch();
@@ -16,7 +17,7 @@ const Location = () => {
         (state: RootState) => state.location.locations
     );
 
-    const columns = [
+    const columns: Column[] = [
         {
             dataField: "name",
             caption: "Name",
