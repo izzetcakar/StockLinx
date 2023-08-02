@@ -55,16 +55,19 @@ const ManufacturerForm: React.FC<ManufacturerFormProps> = ({
                         label="Support Phone"
                         placeholder="Support Phone"
                         {...form.getInputProps("supportPhone")}
+                        value={form.values.supportPhone || ""}
                     />
                     <TextInput
                         label="Support Email"
                         placeholder="Support Email"
                         {...form.getInputProps("supportEmail")}
+                        value={form.values.supportEmail || ""}
                     />
                     <TextInput
                         label="Website"
                         placeholder="Website"
                         {...form.getInputProps("website")}
+                        value={form.values.website || ""}
                     />
                     <FileInput
                         label="Upload image"

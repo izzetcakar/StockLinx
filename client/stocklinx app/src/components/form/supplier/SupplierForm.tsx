@@ -76,26 +76,31 @@ const SupplierForm: React.FC<SupplierFormProps> = ({
                         label="Contact Name"
                         placeholder="Contact Name"
                         {...form.getInputProps("contactName")}
+                        value={form.values.contactName || ""}
                     />
                     <TextInput
                         label="Contact Phone"
                         placeholder="Contact Phone"
                         {...form.getInputProps("contactPhone")}
+                        value={form.values.contactPhone || ""}
                     />
                     <TextInput
                         label="Contact Email"
                         placeholder="Contact Email"
                         {...form.getInputProps("contactEmail")}
+                        value={form.values.contactEmail || ""}
                     />
                     <TextInput
                         label="Website"
                         placeholder="Website"
                         {...form.getInputProps("website")}
+                        value={form.values.website || ""}
                     />
                     <TextInput
                         label="Fax"
                         placeholder="Fax"
                         {...form.getInputProps("fax")}
+                        value={form.values.fax || ""}
                     />
                     <FileInput
                         label="Upload image"

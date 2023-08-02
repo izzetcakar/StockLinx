@@ -96,6 +96,7 @@ const ModelForm: React.FC<ModelFormProps> = ({
                         label="Model No"
                         placeholder="Model No"
                         {...form.getInputProps("modelNo")}
+                        value={form.values.modelNo || ""}
                     />
                     <FileInput
                         label="Upload image"

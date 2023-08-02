@@ -150,57 +150,32 @@ const LicenseForm: React.FC<LicenseFormProps> = ({
                         label="License Email"
                         placeholder="License Email"
                         {...form.getInputProps("licenseEmail")}
+                        value={form.values.licenseEmail || ""}
                     />
                     <TextInput
                         label="License Key"
                         placeholder="License Key"
                         {...form.getInputProps("licenseKey")}
+                        value={form.values.licenseKey || ""}
                     />
                     <TextInput
                         label="Serial No"
                         placeholder="Serial No"
                         {...form.getInputProps("serialNo")}
-                    />
-                    <TextInput
-                        label="Model No"
-                        placeholder="Model No"
-                        {...form.getInputProps("modelNo")}
-                    />
-                    <TextInput
-                        label="Item No"
-                        placeholder="Item No"
-                        {...form.getInputProps("itemNo")}
-                    />
-                    <TextInput
-                        label="Tag No"
-                        placeholder="Tag No"
-                        {...form.getInputProps("tagNo")}
+                        value={form.values.serialNo || ""}
                     />
                     <TextInput
                         label="Order No"
                         placeholder="Order No"
                         {...form.getInputProps("orderNo")}
+                        value={form.values.orderNo || ""}
                     />
                     <NumberInput
                         placeholder="Purchase Cost"
                         label="Purchase Cost"
                         {...form.getInputProps("purchaseCost")}
-                        value={form.values.purchaseCost ? form.values.purchaseCost : ""}
+                        value={form.values.purchaseCost || ""}
                         precision={2}
-                    />
-                    <DateInput
-                        clearable
-                        label="Purchase Date"
-                        placeholder="Purchase Date"
-                        valueFormat="DD/MM/YYYY"
-                        {...form.getInputProps("purchaseDate")}
-                    />
-                    <DateInput
-                        clearable
-                        label="Purchase Date"
-                        placeholder="Purchase Date"
-                        valueFormat="DD/MM/YYYY"
-                        {...form.getInputProps("purchaseDate")}
                     />
                     <DateInput
                         clearable
@@ -233,10 +208,12 @@ const LicenseForm: React.FC<LicenseFormProps> = ({
                     <Checkbox
                         label="Maintained"
                         {...form.getInputProps('maintained', { type: 'checkbox' })}
+                        checked={form.values.maintained || false}
                     />
                     <Checkbox
                         label="Reassignable"
                         {...form.getInputProps('reassignable', { type: 'checkbox' })}
+                        checked={form.values.reassignable || false}
                     />
                     <FileInput
                         label="Upload image"

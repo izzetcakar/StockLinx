@@ -15,6 +15,7 @@ import { v4 as uuidv4 } from "uuid";
 import { getAllManufacturers } from '../../../../redux/manufacturerReducer';
 import { getAllModels } from '../../../../redux/modelReducer';
 import { getAllCategories } from '../../../../redux/categoryReducer';
+import { getAllLocations } from '../../../../redux/locationReducer';
 
 interface AssetFormProps {
     asset?: IAsset;
@@ -43,22 +44,17 @@ const AssetForm: React.FC<AssetFormProps> = ({
         initialValues: asset ? { ...asset } : {
             id: uuidv4(),
             manufacturerId: null,
-            modelId: null,
-            notes: "",
-            createdDate: null,
-            deletedDate: null,
-            updatedDate: null,
             categoryId: null,
             locationId: null,
             companyId: "",
             statusId: null,
+            modelId: null,
+            notes: "",
             imagePath: "",
             name: "",
             orderNo: "",
             purchaseDate: null,
             purchaseCost: null,
-            checkInCounter: null,
-            checkOutCounter: null,
             serialNo: "",
             tagNo: "",
             overageAssets: null,
@@ -81,12 +77,14 @@ const AssetForm: React.FC<AssetFormProps> = ({
                 withAsterisk
                 sx={{ flex: 1 }}
                 {...form.getInputProps(`overageAssets.${index}.serialNo`)}
+                value={form.values.overageAssets?.find((_, arrIndex) => arrIndex === index)?.serialNo || ""}
             />
             <TextInput
                 placeholder="Tag No"
                 withAsterisk
                 sx={{ flex: 1 }}
                 {...form.getInputProps(`overageAssets.${index}.tagNo`)}
+                value={form.values.overageAssets?.find((_, arrIndex) => arrIndex === index)?.tagNo || ""}
             />
             <ActionIcon
                 color="red"
@@ -188,6 +186,7 @@ const AssetForm: React.FC<AssetFormProps> = ({
                                 label="Tag No"
                                 placeholder="Tag No"
                                 {...form.getInputProps("tagNo")}
+                                value={form.values.tagNo || ""}
                             />
                         </Container>
                         <Container size="1rem" px={0} mah={"100%"} maw={28}>
@@ -209,12 +208,14 @@ const AssetForm: React.FC<AssetFormProps> = ({
                         label="Serial No"
                         placeholder="Serial No"
                         {...form.getInputProps("serialNo")}
+                        value={form.values.serialNo || ""}
                     />
                     {overageAssetFields}
                     <TextInput
                         label="Order No"
                         placeholder="New Order No"
                         {...form.getInputProps("orderNo")}
+                        value={form.values.orderNo || ""}
                     />
                     <DateInput
                         clearable
@@ -227,7 +228,7 @@ const AssetForm: React.FC<AssetFormProps> = ({
                         placeholder="Purchase Cost"
                         label="Purchase Cost"
                         {...form.getInputProps("purchaseCost")}
-                        value={form.values.purchaseCost ? form.values.purchaseCost : ""}
+                        value={form.values.purchaseCost || ""}
                         precision={2}
                     />
                     <FileInput

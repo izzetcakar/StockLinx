@@ -161,17 +161,19 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({
                         label="Serial No"
                         placeholder="Serial No"
                         {...form.getInputProps("serialNo")}
+                        value={form.values.serialNo || ""}
                     />
                     <TextInput
                         label="Order No"
                         placeholder="New Order No"
                         {...form.getInputProps("orderNo")}
+                        value={form.values.orderNo || ""}
                     />
                     <NumberInput
                         placeholder="Purchase Cost"
                         label="Purchase Cost"
                         {...form.getInputProps("purchaseCost")}
-                        value={form.values.purchaseCost ? form.values.purchaseCost : ""}
+                        value={form.values.purchaseCost || ""}
                         precision={2}
                     />
                     <DateInput
