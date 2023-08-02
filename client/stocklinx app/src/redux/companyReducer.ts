@@ -10,7 +10,6 @@ export const getAllCompanies = createAsyncThunk(
       requestUrl: requestUrl,
       apiType: "get",
     });
-    console;
     if (response.success) return fulfillWithValue(response.data);
     return rejectWithValue(response.message);
   }
@@ -96,8 +95,6 @@ const companieslice = createSlice({
   },
   extraReducers(builder) {
     builder.addCase(getAllCompanies.fulfilled, (state, action) => {
-      state.error = null;
-      state.status = ApiStatus.Success;
       const newCompanies = action.payload as ICompany[];
       state.companies = newCompanies;
       state.selectData = newCompanies.map((company) => {
@@ -106,8 +103,11 @@ const companieslice = createSlice({
           label: company.name,
         };
       });
+      state.error = null;
+      state.status = ApiStatus.Success;
     });
     builder.addCase(getAllCompanies.pending, (state) => {
+      state.error = null;
       state.status = ApiStatus.Loading;
     });
     builder.addCase(getAllCompanies.rejected, (state, action) => {
@@ -120,37 +120,48 @@ const companieslice = createSlice({
       state.status = ApiStatus.Success;
     });
     builder.addCase(getCompanyById.pending, (state) => {
+      state.error = null;
       state.status = ApiStatus.Loading;
     });
     builder.addCase(getCompanyById.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(createCompany.fulfilled, (state) => {
       state.error = null;
+      state.status = ApiStatus.Success;
     });
     builder.addCase(createCompany.pending, (state) => {
+      state.error = null;
       state.status = ApiStatus.Loading;
     });
     builder.addCase(createCompany.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(updateCompany.fulfilled, (state) => {
       state.error = null;
+      state.status = ApiStatus.Success;
     });
     builder.addCase(updateCompany.pending, (state) => {
+      state.error = null;
       state.status = ApiStatus.Loading;
     });
     builder.addCase(updateCompany.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(removeCompany.fulfilled, (state) => {
       state.error = null;
+      state.status = ApiStatus.Success;
     });
     builder.addCase(removeCompany.pending, (state) => {
+      state.error = null;
       state.status = ApiStatus.Loading;
     });
     builder.addCase(removeCompany.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
   },
 });

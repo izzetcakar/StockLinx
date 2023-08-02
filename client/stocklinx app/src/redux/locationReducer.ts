@@ -76,7 +76,7 @@ const initialState: State = {
   error: null,
 };
 
-const locationSlice = createSlice({
+const locationslice = createSlice({
   name: "location",
   initialState,
   reducers: {
@@ -95,7 +95,6 @@ const locationSlice = createSlice({
   },
   extraReducers(builder) {
     builder.addCase(getAllLocations.fulfilled, (state, action) => {
-      state.error = null;
       const newLocations = action.payload as ILocation[];
       state.locations = newLocations;
       state.selectData = newLocations.map((location) => {
@@ -104,53 +103,69 @@ const locationSlice = createSlice({
           label: location.name,
         };
       });
+      state.error = null;
+      state.status = ApiStatus.Success;
     });
     builder.addCase(getAllLocations.pending, (state) => {
+      state.error = null;
       state.status = ApiStatus.Loading;
     });
     builder.addCase(getAllLocations.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(getLocationById.fulfilled, (state, action) => {
       state.location = action.payload as ILocation;
       state.error = null;
+      state.status = ApiStatus.Success;
     });
     builder.addCase(getLocationById.pending, (state) => {
+      state.error = null;
       state.status = ApiStatus.Loading;
     });
     builder.addCase(getLocationById.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(createLocation.fulfilled, (state) => {
       state.error = null;
+      state.status = ApiStatus.Success;
     });
     builder.addCase(createLocation.pending, (state) => {
+      state.error = null;
       state.status = ApiStatus.Loading;
     });
     builder.addCase(createLocation.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(updateLocation.fulfilled, (state) => {
       state.error = null;
+      state.status = ApiStatus.Success;
     });
     builder.addCase(updateLocation.pending, (state) => {
+      state.error = null;
       state.status = ApiStatus.Loading;
     });
     builder.addCase(updateLocation.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(removeLocation.fulfilled, (state) => {
       state.error = null;
+      state.status = ApiStatus.Success;
     });
     builder.addCase(removeLocation.pending, (state) => {
+      state.error = null;
       state.status = ApiStatus.Loading;
     });
     builder.addCase(removeLocation.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
   },
 });
 
 export const { setLocation, setLocations, clearLocation, clearLocations } =
-  locationSlice.actions;
-export default locationSlice.reducer;
+  locationslice.actions;
+export default locationslice.reducer;

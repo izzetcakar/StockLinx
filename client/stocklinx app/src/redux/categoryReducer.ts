@@ -95,7 +95,6 @@ const categorieslice = createSlice({
   },
   extraReducers(builder) {
     builder.addCase(getAllCategories.fulfilled, (state, action) => {
-      state.error = null;
       const newCategories = action.payload as ICategory[];
       state.categories = newCategories;
       state.selectData = newCategories.map((category) => {
@@ -104,49 +103,65 @@ const categorieslice = createSlice({
           label: category.name,
         };
       });
+      state.error = null;
+      state.status = ApiStatus.Success;
     });
     builder.addCase(getAllCategories.pending, (state) => {
+      state.error = null;
       state.status = ApiStatus.Loading;
     });
     builder.addCase(getAllCategories.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(getCategoryById.fulfilled, (state, action) => {
       state.category = action.payload as ICategory;
       state.error = null;
+      state.status = ApiStatus.Success;
     });
     builder.addCase(getCategoryById.pending, (state) => {
+      state.error = null;
       state.status = ApiStatus.Loading;
     });
     builder.addCase(getCategoryById.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(createCategory.fulfilled, (state) => {
       state.error = null;
+      state.status = ApiStatus.Success;
     });
     builder.addCase(createCategory.pending, (state) => {
+      state.error = null;
       state.status = ApiStatus.Loading;
     });
     builder.addCase(createCategory.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(updateCategory.fulfilled, (state) => {
       state.error = null;
+      state.status = ApiStatus.Success;
     });
     builder.addCase(updateCategory.pending, (state) => {
+      state.error = null;
       state.status = ApiStatus.Loading;
     });
     builder.addCase(updateCategory.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(removeCategory.fulfilled, (state) => {
       state.error = null;
+      state.status = ApiStatus.Success;
     });
     builder.addCase(removeCategory.pending, (state) => {
+      state.error = null;
       state.status = ApiStatus.Loading;
     });
     builder.addCase(removeCategory.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
   },
 });

@@ -1,6 +1,6 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { request } from "../server/api";
-import { IComponent } from "../interfaces/interfaces";
+import { ApiStatus, IComponent, SelectData } from "../interfaces/interfaces";
 const requestUrl = "Component/";
 
 export const getAllComponents = createAsyncThunk(
@@ -63,18 +63,20 @@ export const removeComponent = createAsyncThunk(
 interface State {
   component: IComponent | null;
   components: IComponent[];
-  status: "idle" | "loading" | "succeeded" | "failed";
+  selectData: SelectData[];
+  status: ApiStatus;
   error: string | null;
 }
 
 const initialState: State = {
   component: null,
   components: [],
-  status: "idle",
+  selectData: [],
+  status: ApiStatus.Idle,
   error: null,
 };
 
-const componentSlice = createSlice({
+const componentslice = createSlice({
   name: "component",
   initialState,
   reducers: {
@@ -93,40 +95,77 @@ const componentSlice = createSlice({
   },
   extraReducers(builder) {
     builder.addCase(getAllComponents.fulfilled, (state, action) => {
+      const newComponents = action.payload as IComponent[];
+      state.components = newComponents;
+      state.selectData = newComponents.map((component) => {
+        return {
+          value: component.id,
+          label: component.name,
+        };
+      });
       state.error = null;
-      state.components = action.payload as IComponent[];
+      state.status = ApiStatus.Success;
+    });
+    builder.addCase(getAllComponents.pending, (state) => {
+      state.error = null;
+      state.status = ApiStatus.Loading;
     });
     builder.addCase(getAllComponents.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(getComponentById.fulfilled, (state, action) => {
       state.component = action.payload as IComponent;
       state.error = null;
+      state.status = ApiStatus.Success;
+    });
+    builder.addCase(getComponentById.pending, (state) => {
+      state.error = null;
+      state.status = ApiStatus.Loading;
     });
     builder.addCase(getComponentById.rejected, (state, action) => {
       state.error = action.payload as string;
-    });
-    builder.addCase(createComponent.rejected, (state, action) => {
-      state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(createComponent.fulfilled, (state) => {
       state.error = null;
+      state.status = ApiStatus.Success;
     });
-    builder.addCase(updateComponent.rejected, (state, action) => {
+    builder.addCase(createComponent.pending, (state) => {
+      state.error = null;
+      state.status = ApiStatus.Loading;
+    });
+    builder.addCase(createComponent.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(updateComponent.fulfilled, (state) => {
       state.error = null;
+      state.status = ApiStatus.Success;
     });
-    builder.addCase(removeComponent.rejected, (state, action) => {
+    builder.addCase(updateComponent.pending, (state) => {
+      state.error = null;
+      state.status = ApiStatus.Loading;
+    });
+    builder.addCase(updateComponent.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(removeComponent.fulfilled, (state) => {
       state.error = null;
+      state.status = ApiStatus.Success;
+    });
+    builder.addCase(removeComponent.pending, (state) => {
+      state.error = null;
+      state.status = ApiStatus.Loading;
+    });
+    builder.addCase(removeComponent.rejected, (state, action) => {
+      state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
   },
 });
 
 export const { setComponent, setComponents, clearComponent, clearComponents } =
-  componentSlice.actions;
-export default componentSlice.reducer;
+  componentslice.actions;
+export default componentslice.reducer;

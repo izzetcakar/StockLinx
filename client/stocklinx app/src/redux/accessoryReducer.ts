@@ -1,6 +1,6 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { request } from "../server/api";
-import { IAccessory } from "../interfaces/interfaces";
+import { ApiStatus, IAccessory, SelectData } from "../interfaces/interfaces";
 const requestUrl = "Accessory/";
 
 export const getAllAccessories = createAsyncThunk(
@@ -63,18 +63,20 @@ export const removeAccessory = createAsyncThunk(
 interface State {
   accessory: IAccessory | null;
   accessories: IAccessory[];
-  status: "idle" | "loading" | "succeeded" | "failed";
+  selectData: SelectData[];
+  status: ApiStatus;
   error: string | null;
 }
 
 const initialState: State = {
   accessory: null,
   accessories: [],
-  status: "idle",
+  selectData: [],
+  status: ApiStatus.Idle,
   error: null,
 };
 
-const accessorySlice = createSlice({
+const accessorieslice = createSlice({
   name: "accessory",
   initialState,
   reducers: {
@@ -93,36 +95,73 @@ const accessorySlice = createSlice({
   },
   extraReducers(builder) {
     builder.addCase(getAllAccessories.fulfilled, (state, action) => {
+      const newAccessories = action.payload as IAccessory[];
+      state.accessories = newAccessories;
+      state.selectData = newAccessories.map((accessory) => {
+        return {
+          value: accessory.id,
+          label: accessory.name,
+        };
+      });
       state.error = null;
-      state.accessories = action.payload as IAccessory[];
+      state.status = ApiStatus.Success;
+    });
+    builder.addCase(getAllAccessories.pending, (state) => {
+      state.error = null;
+      state.status = ApiStatus.Loading;
     });
     builder.addCase(getAllAccessories.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(getAccessoryById.fulfilled, (state, action) => {
       state.accessory = action.payload as IAccessory;
       state.error = null;
+      state.status = ApiStatus.Success;
+    });
+    builder.addCase(getAccessoryById.pending, (state) => {
+      state.error = null;
+      state.status = ApiStatus.Loading;
     });
     builder.addCase(getAccessoryById.rejected, (state, action) => {
       state.error = action.payload as string;
-    });
-    builder.addCase(createAccessory.rejected, (state, action) => {
-      state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(createAccessory.fulfilled, (state) => {
       state.error = null;
+      state.status = ApiStatus.Success;
     });
-    builder.addCase(updateAccessory.rejected, (state, action) => {
+    builder.addCase(createAccessory.pending, (state) => {
+      state.error = null;
+      state.status = ApiStatus.Loading;
+    });
+    builder.addCase(createAccessory.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(updateAccessory.fulfilled, (state) => {
       state.error = null;
+      state.status = ApiStatus.Success;
     });
-    builder.addCase(removeAccessory.rejected, (state, action) => {
+    builder.addCase(updateAccessory.pending, (state) => {
+      state.error = null;
+      state.status = ApiStatus.Loading;
+    });
+    builder.addCase(updateAccessory.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(removeAccessory.fulfilled, (state) => {
       state.error = null;
+      state.status = ApiStatus.Success;
+    });
+    builder.addCase(removeAccessory.pending, (state) => {
+      state.error = null;
+      state.status = ApiStatus.Loading;
+    });
+    builder.addCase(removeAccessory.rejected, (state, action) => {
+      state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
   },
 });
@@ -132,5 +171,5 @@ export const {
   setAccessories,
   clearAccessory,
   clearAccessories,
-} = accessorySlice.actions;
-export default accessorySlice.reducer;
+} = accessorieslice.actions;
+export default accessorieslice.reducer;

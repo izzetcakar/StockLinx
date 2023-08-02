@@ -76,7 +76,7 @@ const initialState: State = {
   error: null,
 };
 
-const modelSlice = createSlice({
+const modelslice = createSlice({
   name: "model",
   initialState,
   reducers: {
@@ -95,7 +95,6 @@ const modelSlice = createSlice({
   },
   extraReducers(builder) {
     builder.addCase(getAllModels.fulfilled, (state, action) => {
-      state.error = null;
       const newModels = action.payload as IModel[];
       state.models = newModels;
       state.selectData = newModels.map((model) => {
@@ -104,53 +103,69 @@ const modelSlice = createSlice({
           label: model.name,
         };
       });
+      state.error = null;
+      state.status = ApiStatus.Success;
     });
     builder.addCase(getAllModels.pending, (state) => {
+      state.error = null;
       state.status = ApiStatus.Loading;
     });
     builder.addCase(getAllModels.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(getModelById.fulfilled, (state, action) => {
       state.model = action.payload as IModel;
       state.error = null;
+      state.status = ApiStatus.Success;
     });
     builder.addCase(getModelById.pending, (state) => {
+      state.error = null;
       state.status = ApiStatus.Loading;
     });
     builder.addCase(getModelById.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(createModel.fulfilled, (state) => {
       state.error = null;
+      state.status = ApiStatus.Success;
     });
     builder.addCase(createModel.pending, (state) => {
+      state.error = null;
       state.status = ApiStatus.Loading;
     });
     builder.addCase(createModel.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(updateModel.fulfilled, (state) => {
       state.error = null;
+      state.status = ApiStatus.Success;
     });
     builder.addCase(updateModel.pending, (state) => {
+      state.error = null;
       state.status = ApiStatus.Loading;
     });
     builder.addCase(updateModel.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(removeModel.fulfilled, (state) => {
       state.error = null;
+      state.status = ApiStatus.Success;
     });
     builder.addCase(removeModel.pending, (state) => {
+      state.error = null;
       state.status = ApiStatus.Loading;
     });
     builder.addCase(removeModel.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
   },
 });
 
 export const { setModel, setModels, clearModel, clearModels } =
-  modelSlice.actions;
-export default modelSlice.reducer;
+  modelslice.actions;
+export default modelslice.reducer;

@@ -86,7 +86,7 @@ const initialState: State = {
   error: null,
 };
 
-const productStatusesSlice = createSlice({
+const productStatuseslice = createSlice({
   name: "productStatus",
   initialState,
   reducers: {
@@ -105,7 +105,6 @@ const productStatusesSlice = createSlice({
   },
   extraReducers(builder) {
     builder.addCase(getAllProductStatuses.fulfilled, (state, action) => {
-      state.error = null;
       const newProductStatuses = action.payload as IProductStatus[];
       state.productStatuses = newProductStatuses;
       state.selectData = newProductStatuses.map((productStatus) => {
@@ -114,49 +113,65 @@ const productStatusesSlice = createSlice({
           label: productStatus.name,
         };
       });
+      state.error = null;
+      state.status = ApiStatus.Success;
     });
     builder.addCase(getAllProductStatuses.pending, (state) => {
+      state.error = null;
       state.status = ApiStatus.Loading;
     });
     builder.addCase(getAllProductStatuses.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(getProductStatusById.fulfilled, (state, action) => {
       state.productStatus = action.payload as IProductStatus;
       state.error = null;
+      state.status = ApiStatus.Success;
     });
     builder.addCase(getProductStatusById.pending, (state) => {
+      state.error = null;
       state.status = ApiStatus.Loading;
     });
     builder.addCase(getProductStatusById.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(createProductStatus.fulfilled, (state) => {
       state.error = null;
+      state.status = ApiStatus.Success;
     });
     builder.addCase(createProductStatus.pending, (state) => {
+      state.error = null;
       state.status = ApiStatus.Loading;
     });
     builder.addCase(createProductStatus.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(updateProductStatus.fulfilled, (state) => {
       state.error = null;
+      state.status = ApiStatus.Success;
     });
     builder.addCase(updateProductStatus.pending, (state) => {
+      state.error = null;
       state.status = ApiStatus.Loading;
     });
     builder.addCase(updateProductStatus.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(removeProductStatus.fulfilled, (state) => {
       state.error = null;
+      state.status = ApiStatus.Success;
     });
     builder.addCase(removeProductStatus.pending, (state) => {
+      state.error = null;
       state.status = ApiStatus.Loading;
     });
     builder.addCase(removeProductStatus.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
   },
 });
@@ -166,5 +181,5 @@ export const {
   setProductStatuses,
   clearProductStatus,
   clearProductStatuses,
-} = productStatusesSlice.actions;
-export default productStatusesSlice.reducer;
+} = productStatuseslice.actions;
+export default productStatuseslice.reducer;

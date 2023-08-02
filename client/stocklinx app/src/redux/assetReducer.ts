@@ -1,6 +1,6 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { request } from "../server/api";
-import { IAsset } from "../interfaces/interfaces";
+import { ApiStatus, IAsset, SelectData } from "../interfaces/interfaces";
 const requestUrl = "Asset/";
 
 export const getAllAssets = createAsyncThunk(
@@ -63,18 +63,20 @@ export const removeAsset = createAsyncThunk(
 interface State {
   asset: IAsset | null;
   assets: IAsset[];
-  status: "idle" | "loading" | "succeeded" | "failed";
+  selectData: SelectData[];
+  status: ApiStatus;
   error: string | null;
 }
 
 const initialState: State = {
   asset: null,
   assets: [],
-  status: "idle",
+  selectData: [],
+  status: ApiStatus.Idle,
   error: null,
 };
 
-const assetSlice = createSlice({
+const assetslice = createSlice({
   name: "asset",
   initialState,
   reducers: {
@@ -93,40 +95,77 @@ const assetSlice = createSlice({
   },
   extraReducers(builder) {
     builder.addCase(getAllAssets.fulfilled, (state, action) => {
+      const newAssets = action.payload as IAsset[];
+      state.assets = newAssets;
+      state.selectData = newAssets.map((asset) => {
+        return {
+          value: asset.id,
+          label: asset.name,
+        };
+      });
       state.error = null;
-      state.assets = action.payload as IAsset[];
+      state.status = ApiStatus.Success;
+    });
+    builder.addCase(getAllAssets.pending, (state) => {
+      state.error = null;
+      state.status = ApiStatus.Loading;
     });
     builder.addCase(getAllAssets.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(getAssetById.fulfilled, (state, action) => {
       state.asset = action.payload as IAsset;
       state.error = null;
+      state.status = ApiStatus.Success;
+    });
+    builder.addCase(getAssetById.pending, (state) => {
+      state.error = null;
+      state.status = ApiStatus.Loading;
     });
     builder.addCase(getAssetById.rejected, (state, action) => {
       state.error = action.payload as string;
-    });
-    builder.addCase(createAsset.rejected, (state, action) => {
-      state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(createAsset.fulfilled, (state) => {
       state.error = null;
+      state.status = ApiStatus.Success;
     });
-    builder.addCase(updateAsset.rejected, (state, action) => {
+    builder.addCase(createAsset.pending, (state) => {
+      state.error = null;
+      state.status = ApiStatus.Loading;
+    });
+    builder.addCase(createAsset.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(updateAsset.fulfilled, (state) => {
       state.error = null;
+      state.status = ApiStatus.Success;
     });
-    builder.addCase(removeAsset.rejected, (state, action) => {
+    builder.addCase(updateAsset.pending, (state) => {
+      state.error = null;
+      state.status = ApiStatus.Loading;
+    });
+    builder.addCase(updateAsset.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(removeAsset.fulfilled, (state) => {
       state.error = null;
+      state.status = ApiStatus.Success;
+    });
+    builder.addCase(removeAsset.pending, (state) => {
+      state.error = null;
+      state.status = ApiStatus.Loading;
+    });
+    builder.addCase(removeAsset.rejected, (state, action) => {
+      state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
   },
 });
 
 export const { setAsset, setAssets, clearAsset, clearAssets } =
-  assetSlice.actions;
-export default assetSlice.reducer;
+  assetslice.actions;
+export default assetslice.reducer;

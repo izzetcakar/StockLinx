@@ -82,7 +82,7 @@ const initialState: State = {
   error: null,
 };
 
-const manufacturerSlice = createSlice({
+const manufacturerslice = createSlice({
   name: "manufacturer",
   initialState,
   reducers: {
@@ -101,7 +101,6 @@ const manufacturerSlice = createSlice({
   },
   extraReducers(builder) {
     builder.addCase(getAllManufacturers.fulfilled, (state, action) => {
-      state.error = null;
       const newManufacturers = action.payload as IManufacturer[];
       state.manufacturers = newManufacturers;
       state.selectData = newManufacturers.map((manufacturer) => {
@@ -110,49 +109,65 @@ const manufacturerSlice = createSlice({
           label: manufacturer.name,
         };
       });
+      state.error = null;
+      state.status = ApiStatus.Success;
     });
     builder.addCase(getAllManufacturers.pending, (state) => {
+      state.error = null;
       state.status = ApiStatus.Loading;
     });
     builder.addCase(getAllManufacturers.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(getManufacturerById.fulfilled, (state, action) => {
       state.manufacturer = action.payload as IManufacturer;
       state.error = null;
+      state.status = ApiStatus.Success;
     });
     builder.addCase(getManufacturerById.pending, (state) => {
+      state.error = null;
       state.status = ApiStatus.Loading;
     });
     builder.addCase(getManufacturerById.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(createManufacturer.fulfilled, (state) => {
       state.error = null;
+      state.status = ApiStatus.Success;
     });
     builder.addCase(createManufacturer.pending, (state) => {
+      state.error = null;
       state.status = ApiStatus.Loading;
     });
     builder.addCase(createManufacturer.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(updateManufacturer.fulfilled, (state) => {
       state.error = null;
+      state.status = ApiStatus.Success;
     });
     builder.addCase(updateManufacturer.pending, (state) => {
+      state.error = null;
       state.status = ApiStatus.Loading;
     });
     builder.addCase(updateManufacturer.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(removeManufacturer.fulfilled, (state) => {
       state.error = null;
+      state.status = ApiStatus.Success;
     });
     builder.addCase(removeManufacturer.pending, (state) => {
+      state.error = null;
       state.status = ApiStatus.Loading;
     });
     builder.addCase(removeManufacturer.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
   },
 });
@@ -162,5 +177,5 @@ export const {
   setManufacturers,
   clearManufacturer,
   clearManufacturers,
-} = manufacturerSlice.actions;
-export default manufacturerSlice.reducer;
+} = manufacturerslice.actions;
+export default manufacturerslice.reducer;

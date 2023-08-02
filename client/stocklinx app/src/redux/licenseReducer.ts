@@ -1,6 +1,6 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { request } from "../server/api";
-import { ILicense } from "../interfaces/interfaces";
+import { ApiStatus, ILicense, SelectData } from "../interfaces/interfaces";
 const requestUrl = "License/";
 
 export const getAllLicenses = createAsyncThunk(
@@ -63,18 +63,20 @@ export const removeLicense = createAsyncThunk(
 interface State {
   license: ILicense | null;
   licenses: ILicense[];
-  status: "idle" | "loading" | "succeeded" | "failed";
+  selectData: SelectData[];
+  status: ApiStatus;
   error: string | null;
 }
 
 const initialState: State = {
   license: null,
   licenses: [],
-  status: "idle",
+  selectData: [],
+  status: ApiStatus.Idle,
   error: null,
 };
 
-const licenseSlice = createSlice({
+const licenseslice = createSlice({
   name: "license",
   initialState,
   reducers: {
@@ -93,40 +95,77 @@ const licenseSlice = createSlice({
   },
   extraReducers(builder) {
     builder.addCase(getAllLicenses.fulfilled, (state, action) => {
+      const newLicenses = action.payload as ILicense[];
+      state.licenses = newLicenses;
+      state.selectData = newLicenses.map((license) => {
+        return {
+          value: license.id,
+          label: license.name,
+        };
+      });
       state.error = null;
-      state.licenses = action.payload as ILicense[];
+      state.status = ApiStatus.Success;
+    });
+    builder.addCase(getAllLicenses.pending, (state) => {
+      state.error = null;
+      state.status = ApiStatus.Loading;
     });
     builder.addCase(getAllLicenses.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(getLicenseById.fulfilled, (state, action) => {
       state.license = action.payload as ILicense;
       state.error = null;
+      state.status = ApiStatus.Success;
+    });
+    builder.addCase(getLicenseById.pending, (state) => {
+      state.error = null;
+      state.status = ApiStatus.Loading;
     });
     builder.addCase(getLicenseById.rejected, (state, action) => {
       state.error = action.payload as string;
-    });
-    builder.addCase(createLicense.rejected, (state, action) => {
-      state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(createLicense.fulfilled, (state) => {
       state.error = null;
+      state.status = ApiStatus.Success;
     });
-    builder.addCase(updateLicense.rejected, (state, action) => {
+    builder.addCase(createLicense.pending, (state) => {
+      state.error = null;
+      state.status = ApiStatus.Loading;
+    });
+    builder.addCase(createLicense.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(updateLicense.fulfilled, (state) => {
       state.error = null;
+      state.status = ApiStatus.Success;
     });
-    builder.addCase(removeLicense.rejected, (state, action) => {
+    builder.addCase(updateLicense.pending, (state) => {
+      state.error = null;
+      state.status = ApiStatus.Loading;
+    });
+    builder.addCase(updateLicense.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(removeLicense.fulfilled, (state) => {
       state.error = null;
+      state.status = ApiStatus.Success;
+    });
+    builder.addCase(removeLicense.pending, (state) => {
+      state.error = null;
+      state.status = ApiStatus.Loading;
+    });
+    builder.addCase(removeLicense.rejected, (state, action) => {
+      state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
   },
 });
 
 export const { setLicense, setLicenses, clearLicense, clearLicenses } =
-  licenseSlice.actions;
-export default licenseSlice.reducer;
+  licenseslice.actions;
+export default licenseslice.reducer;

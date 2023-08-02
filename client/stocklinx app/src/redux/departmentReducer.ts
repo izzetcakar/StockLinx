@@ -1,6 +1,6 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { request } from "../server/api";
-import { ApiStatus, IDepartment } from "../interfaces/interfaces";
+import { ApiStatus, IDepartment, SelectData } from "../interfaces/interfaces";
 const requestUrl = "Department/";
 
 export const getAllDepartments = createAsyncThunk(
@@ -63,6 +63,7 @@ export const removeDepartment = createAsyncThunk(
 interface State {
   department: IDepartment | null;
   departments: IDepartment[];
+  selectData: SelectData[];
   status: ApiStatus;
   error: string | null;
 }
@@ -70,11 +71,12 @@ interface State {
 const initialState: State = {
   department: null,
   departments: [],
+  selectData: [],
   status: ApiStatus.Idle,
   error: null,
 };
 
-const departmentSlice = createSlice({
+const departmentslice = createSlice({
   name: "department",
   initialState,
   reducers: {
@@ -93,40 +95,73 @@ const departmentSlice = createSlice({
   },
   extraReducers(builder) {
     builder.addCase(getAllDepartments.fulfilled, (state, action) => {
+      const newDepartments = action.payload as IDepartment[];
+      state.departments = newDepartments;
+      state.selectData = newDepartments.map((department) => {
+        return {
+          value: department.id,
+          label: department.name,
+        };
+      });
       state.error = null;
       state.status = ApiStatus.Success;
-      state.departments = action.payload as IDepartment[];
     });
     builder.addCase(getAllDepartments.pending, (state) => {
+      state.error = null;
       state.status = ApiStatus.Loading;
     });
     builder.addCase(getAllDepartments.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(getDepartmentById.fulfilled, (state, action) => {
       state.department = action.payload as IDepartment;
       state.error = null;
+      state.status = ApiStatus.Success;
+    });
+    builder.addCase(getDepartmentById.pending, (state) => {
+      state.error = null;
+      state.status = ApiStatus.Loading;
     });
     builder.addCase(getDepartmentById.rejected, (state, action) => {
       state.error = action.payload as string;
-    });
-    builder.addCase(createDepartment.rejected, (state, action) => {
-      state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(createDepartment.fulfilled, (state) => {
       state.error = null;
+      state.status = ApiStatus.Success;
     });
-    builder.addCase(updateDepartment.rejected, (state, action) => {
+    builder.addCase(createDepartment.pending, (state) => {
+      state.error = null;
+      state.status = ApiStatus.Loading;
+    });
+    builder.addCase(createDepartment.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(updateDepartment.fulfilled, (state) => {
       state.error = null;
+      state.status = ApiStatus.Success;
     });
-    builder.addCase(removeDepartment.rejected, (state, action) => {
+    builder.addCase(updateDepartment.pending, (state) => {
+      state.error = null;
+      state.status = ApiStatus.Loading;
+    });
+    builder.addCase(updateDepartment.rejected, (state, action) => {
       state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
     builder.addCase(removeDepartment.fulfilled, (state) => {
       state.error = null;
+      state.status = ApiStatus.Success;
+    });
+    builder.addCase(removeDepartment.pending, (state) => {
+      state.error = null;
+      state.status = ApiStatus.Loading;
+    });
+    builder.addCase(removeDepartment.rejected, (state, action) => {
+      state.error = action.payload as string;
+      state.status = ApiStatus.Failed;
     });
   },
 });
@@ -136,5 +171,5 @@ export const {
   setDepartments,
   clearDepartment,
   clearDepartments,
-} = departmentSlice.actions;
-export default departmentSlice.reducer;
+} = departmentslice.actions;
+export default departmentslice.reducer;
