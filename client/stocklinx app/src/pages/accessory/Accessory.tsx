@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "./accessory.scss";
 import { modals } from '@mantine/modals';
 import TestForm from "../../components/form/TestForm";
@@ -9,58 +9,56 @@ import { IAccessory } from "../../interfaces/interfaces";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { clearAccessory, setAccessory } from "../../redux/accessoryReducer";
 import { RootState } from "../../redux/store";
+import {
+  CategoryNameComponent,
+  CompanyNameComponent,
+  LocationNameComponent,
+  ManufacturerNameComponent,
+  StatusNameComponent,
+  SupplierNameComponent
+} from "../../components/customComponents/TableComponents";
 
 const Accessory = () => {
   const dispatch = useAppDispatch();
   const accessories = useAppSelector((state: RootState) => state.accessory.accessories);
-  const categories = useAppSelector((state: RootState) => state.category.categories);
-  // const locations = useAppSelector((state: RootState) => state.location.locations);
-  // const companies = useAppSelector((state: RootState) => state.company.companies);
-  // const productStatuses = useAppSelector((state: RootState) => state.productStatus.productStatuses);
-  // const manufacturers = useAppSelector((state: RootState) => state.manufacturer.manufacturers);
-  // const models = useAppSelector((state: RootState) => state.model.models);
-
   const [formVisible, setFormVisible] = useState<boolean>(false);
 
-  const getCategoryById: React.FC<{ value: string }> = ({ value }) => {
-    const category = categories.find((category) => category.id === value);
-    return (
-      <div>
-        {category?.name}
-      </div>
-    );
-  };
   const columns = [
     {
       dataField: "categoryId",
       caption: "Category",
       dataType: "string",
-      renderComponent: getCategoryById,
+      renderComponent: CategoryNameComponent,
     },
     {
       dataField: "locationId",
       caption: "Location",
       dataType: "string",
+      renderComponent: LocationNameComponent,
     },
     {
       dataField: "companyId",
       caption: "Company",
       dataType: "string",
+      renderComponent: CompanyNameComponent,
     },
     {
       dataField: "manufacturerId",
       caption: "Manufacturer",
       dataType: "string",
+      renderComponent: ManufacturerNameComponent,
     },
     {
       dataField: "supplierId",
       caption: "Supplier",
       dataType: "string",
+      renderComponent: SupplierNameComponent,
     },
     {
       dataField: "statusId",
       caption: "Status",
       dataType: "string",
+      renderComponent: StatusNameComponent,
     },
     {
       dataField: "name",
