@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { modals } from '@mantine/modals';
 import TestForm from "../../components/form/TestForm";
 import AssetForm from "../../components/form/product/asset/AssetForm";
@@ -8,53 +8,50 @@ import { IAsset } from "../../interfaces/interfaces";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { clearAsset, setAsset } from "../../redux/assetReducer";
 import { RootState } from "../../redux/store";
+import { CategoryNameComponent, CompanyNameComponent, LocationNameComponent, ManufacturerNameComponent, ModelNameComponent, StatusNameComponent } from "../../components/customComponents/TableComponents";
+import { Column } from "../../components/gridTable/interfaces/interfaces";
 
 const Asset = () => {
   const dispatch = useAppDispatch();
   const [formVisible, setFormVisible] = useState<boolean>(false);
   const assets = useAppSelector((state: RootState) => state.asset.assets);
-  const categories = useAppSelector((state: RootState) => state.category.categories);
 
-
-  const getCategoryById: React.FC<{ value: string }> = ({ value }) => {
-    const category = categories.find((category) => category.id === value);
-    return (
-      <div>
-        {category?.name}
-      </div>
-    );
-  };
-  const columns = [
+  const columns: Column[] = [
     {
       dataField: "categoryId",
       caption: "Category",
       dataType: "string",
-      renderComponent: getCategoryById,
+      renderComponent: CategoryNameComponent,
     },
     {
       dataField: "locationId",
       caption: "Location",
       dataType: "string",
+      renderComponent: LocationNameComponent,
     },
     {
       dataField: "companyId",
       caption: "Company",
       dataType: "string",
+      renderComponent: CompanyNameComponent
     },
     {
       dataField: "manufacturerId",
       caption: "Manufacturer",
       dataType: "string",
+      renderComponent: ManufacturerNameComponent
     },
     {
       dataField: "modelId",
       caption: "Model",
       dataType: "string",
+      renderComponent: ModelNameComponent
     },
     {
       dataField: "statusId",
       caption: "Status",
       dataType: "string",
+      renderComponent: StatusNameComponent
     },
     {
       dataField: "name",
