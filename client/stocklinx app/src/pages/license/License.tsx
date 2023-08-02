@@ -8,6 +8,8 @@ import { ILicense } from "../../interfaces/interfaces";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { clearLicense, setLicense } from "../../redux/licenseReducer";
 import { RootState } from "../../redux/store";
+import { Column } from "../../components/gridTable/interfaces/interfaces";
+import { CategoryNameComponent, CompanyNameComponent, LocationNameComponent, StatusNameComponent, SupplierNameComponent } from "../../components/customComponents/TableComponents";
 
 const License = () => {
   const dispatch = useAppDispatch();
@@ -15,40 +17,37 @@ const License = () => {
   const licenses = useAppSelector(
     (state: RootState) => state.license.licenses
   );
-  const categories = useAppSelector(
-    (state: RootState) => state.category.categories
-  );
 
-  const getCategoryById: React.FC<{ value: string }> = ({ value }) => {
-    const category = categories.find((category) => category.id === value);
-    return <div>{category?.name}</div>;
-  };
-  const columns = [
+  const columns: Column[] = [
     {
       dataField: "categoryId",
       caption: "Category",
       dataType: "string",
-      renderComponent: getCategoryById,
+      renderComponent: CategoryNameComponent,
     },
     {
       dataField: "locationId",
       caption: "Location",
       dataType: "string",
+      renderComponent: LocationNameComponent,
     },
     {
       dataField: "companyId",
       caption: "Company",
       dataType: "string",
+      renderComponent: CompanyNameComponent,
     },
     {
       dataField: "supplierId",
       caption: "Supplier",
       dataType: "string",
+      renderComponent: SupplierNameComponent,
     },
     {
       dataField: "statusId",
       caption: "Status",
       dataType: "string",
+      renderComponent: StatusNameComponent,
     },
     {
       dataField: "name",
