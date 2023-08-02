@@ -8,6 +8,8 @@ import { useAppDispatch, useAppSelector } from "../../hooks";
 import { clearSupplier, setSupplier } from "../../redux/supplierReducer";
 import { RootState } from "../../redux/store";
 import SupplierForm from "../../components/form/supplier/SupplierForm";
+import { Column } from "../../components/gridTable/interfaces/interfaces";
+import { LocationNameComponent } from "../../components/customComponents/TableComponents";
 
 const Supplier = () => {
     const dispatch = useAppDispatch();
@@ -16,11 +18,12 @@ const Supplier = () => {
         (state: RootState) => state.supplier.suppliers
     );
 
-    const columns = [
+    const columns: Column[] = [
         {
             dataField: "locationId",
             caption: "Location",
             dataType: "string",
+            renderComponent: LocationNameComponent
         },
         {
             dataField: "name",
