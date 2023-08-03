@@ -1,10 +1,11 @@
 import React from 'react'
 import { IMantinSelectProps, IMantineSelectData } from '../interfaces/interfaces'
 import { useDisclosure } from '@mantine/hooks';
-import { Box, Group, LoadingOverlay, Select, Text, FocusTrap, Button } from '@mantine/core';
+import { Box, Group, LoadingOverlay, Select, Text, FocusTrap, Button, Notification } from '@mantine/core';
+import { IconX } from '@tabler/icons-react';
 
 const MantineSelect: React.FC<IMantinSelectProps<T>> = (props) => {
-    const { form, data, label, propTag, refreshData, loading } = props;
+    const { form, data, label, propTag, refreshData, loading, error } = props;
 
     const SelectItem = React.forwardRef<HTMLDivElement, IMantineSelectData>(
         ({ label, ...others }: IMantineSelectData, ref) => (
@@ -29,12 +30,12 @@ const MantineSelect: React.FC<IMantinSelectProps<T>> = (props) => {
         )
     );
     const dropDownOpenHandler = async () => {
-        console.log(active);
-        await refreshData();
-        if (!loading) {
-            toggle();
+        if (refreshData) {
+            await refreshData();
+            if (!loading) {
+                toggle();
+            }
         }
-        console.log(active);
     }
 
     const spareData: IMantineSelectData[] = [{ value: null, label: '' }];
@@ -65,6 +66,8 @@ const MantineSelect: React.FC<IMantinSelectProps<T>> = (props) => {
                     disabled={loading}
                 />
             </FocusTrap>
+
+
         </Box>
     )
 }
