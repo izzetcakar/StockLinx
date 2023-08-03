@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
+using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Services;
 using System.IdentityModel.Tokens.Jwt;
@@ -41,9 +42,9 @@ namespace StockLinx.API.Controllers
             return CreateActionResult(CustomResponseDto<User>.Success(200, user));
         }
         [HttpPut]
-        public async Task<IActionResult> Update(UserDto userDto)
+        public async Task<IActionResult> Update(UserUpdateDto updateDto)
         {
-            // Update
+            await _userService.UpdateUserAsync(updateDto);
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
         }
         [HttpDelete("{id}")]
