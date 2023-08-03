@@ -11,4 +11,5 @@ export interface IMantinSelectProps<T> {
     propTag: string;
     refreshData?: () => void;
     loading?: boolean;
+    error?: string | null;
 }
