@@ -17,7 +17,7 @@ const DropDown: React.FC<DropDownProps> = ({ columns, visibleColumns, onChange }
             closeOnItemClick={false}
         >
             <Menu.Target>
-                <Button variant="default" color="dark" size="xs" rightIcon={<IconChevronDown size={20} />}>Columns</Button>
+                <Button variant="default" color="dark" size="xs" rightIcon={<IconChevronDown size={16} />}>Columns</Button>
             </Menu.Target>
 
             <Menu.Dropdown >

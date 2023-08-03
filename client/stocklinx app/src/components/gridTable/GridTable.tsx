@@ -24,9 +24,9 @@ interface GridTableProps {
   enableEdit?: boolean;
   refreshData?: () => Promise<void> | void;
   onRowInsert: () => void;
-  onRowUpdate: (row: object) => void;
-  onRowDelete: (row: object) => void;
-  onStartEdit?: (row: object) => void;
+  onRowUpdate: (row: object) => Promise<void> | void;
+  onRowRemove: (row: object) => Promise<void> | void;
+  onStartEdit?: (row: object) => Promise<void> | void;
 }
 
 const GridTable: React.FC<GridTableProps> = ({
@@ -43,7 +43,7 @@ const GridTable: React.FC<GridTableProps> = ({
   refreshData,
   onRowInsert = () => console.log("insert"),
   onRowUpdate = () => console.log("update"),
-  onRowDelete = () => console.log("delete"),
+  onRowRemove = () => console.log("delete"),
   onStartEdit = () => console.log("start edit"),
 }) => {
   const [datagridColumns, setDatagridColumns] = useState<Column[]>(columns);
@@ -166,7 +166,6 @@ const GridTable: React.FC<GridTableProps> = ({
         refreshData={handleRefreshData}
       />
 
-
       <div className="table-edit-wrapper">
         <div className="column-container column-select">
           <div className="cell column-title">
@@ -223,8 +222,9 @@ const GridTable: React.FC<GridTableProps> = ({
                   datagrid={datagrid}
                   rowIndex={index}
                   onRowUpdate={onRowUpdate}
-                  onRowDelete={onRowDelete}
+                  onRowRemove={onRowRemove}
                   onStartEdit={onStartEdit}
+                  refreshData={refreshData}
                 />
               </div>
             ))}

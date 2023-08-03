@@ -4,40 +4,41 @@ import "./editComponent.scss";
 interface EditComponentProps {
   datagrid: object[];
   rowIndex: number;
-  onRowUpdate: (row: object) => void;
-  onRowDelete: (row: object) => void;
-  onStartEdit?: (row: object) => void;
+  refreshData?: () => Promise<void> | void;
+  onRowUpdate: (row: object) => Promise<void> | void;
+  onRowRemove: (row: object) => Promise<void> | void;
+  onStartEdit?: (row: object) => Promise<void> | void;
 }
 
 const EditComponent: React.FC<EditComponentProps> = ({
   datagrid,
   rowIndex,
-  onRowUpdate,
-  onRowDelete,
+  refreshData,
+  onRowRemove,
   onStartEdit,
 }) => {
 
-  const handleEditClick = () => {
+  const onEditHandler = async () => {
     const row = datagrid[rowIndex];
-    if (onStartEdit) {
-      onStartEdit(row);
+    if (onStartEdit && refreshData) {
+      await onStartEdit(row);
     }
-    onRowUpdate(row);
   };
 
-  const handleDeleteClick = () => {
+  const onRemoveHandler = async () => {
     const row = datagrid[rowIndex];
-    if (onRowDelete) {
-      onRowDelete(row);
+    if (onRowRemove && refreshData) {
+      await onRowRemove(row);
+      await refreshData();
     }
   };
 
   return (
     <div className="edit-container">
-      <div className="element" onClick={handleEditClick}>
+      <div className="element" onClick={onEditHandler}>
         <i className="bx bx-edit-alt"></i>
       </div>
-      <div className="element" onClick={handleDeleteClick}>
+      <div className="element" onClick={onRemoveHandler}>
         <i className="bx bxs-x-square"></i>
       </div>
     </div>
