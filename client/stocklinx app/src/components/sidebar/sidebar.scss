@@ -112,14 +112,12 @@
 .navigation-item:last-child {
   margin-top: auto;
   margin-bottom: 1rem;
-  .icon {
-    padding-right: 0;
-    margin-left: 1.3rem;
-  }
+  // .icon {
+  //   padding-right: 0;
+  //   margin-left: 1.3rem;
+  // }
 }
-.navigation-item.logo {
-  cursor: default;
-}
+
 .sidebar-container .navigation-item:not(:first-child):hover {
   background-color: #677381;
   .title {
