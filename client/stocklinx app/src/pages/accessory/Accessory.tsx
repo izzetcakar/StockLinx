@@ -1,13 +1,10 @@
-import { useState } from "react";
 import "./accessory.scss";
 import { modals } from '@mantine/modals';
-import TestForm from "../../components/form/TestForm";
 import AccessoryForm from "../../components/form/product/accessory/AccessoryForm";
 import GridTable from "../../components/gridTable/GridTable";
-import CustomPopup from "../../components/popup/CustomPopup";
 import { IAccessory } from "../../interfaces/interfaces";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { clearAccessory, setAccessory } from "../../redux/accessoryReducer";
+import { clearAccessory, createAccessory, getAccessoryById, getAllAccessories, removeAccessory, setAccessory, updateAccessory } from "../../redux/accessoryReducer";
 import { RootState } from "../../redux/store";
 import {
   CategoryNameComponent,
@@ -17,11 +14,17 @@ import {
   StatusNameComponent,
   SupplierNameComponent
 } from "../../components/customComponents/TableComponents";
+import { getAllManufacturers } from "../../redux/manufacturerReducer";
+import { getAllSuppliers } from "../../redux/supplierReducer";
+import { getAllCategories } from "../../redux/categoryReducer";
+import { getAllLocations } from "../../redux/locationReducer";
+import { getAllCompanies } from "../../redux/companyReducer";
+import { getAllProductStatuses } from "../../redux/productStatusReducer";
 
 const Accessory = () => {
   const dispatch = useAppDispatch();
+  const accessory = useAppSelector((state: RootState) => state.accessory.accessory);
   const accessories = useAppSelector((state: RootState) => state.accessory.accessories);
-  const [formVisible, setFormVisible] = useState<boolean>(false);
 
   const columns = [
     {
@@ -77,11 +80,10 @@ const Accessory = () => {
     { dataField: "warrantyDate", caption: "Warranty Date", dataType: "date" },
     { dataField: "notes", caption: "Notes", dataType: "string" },
   ];
-  const handleFormVisible = () => {
-    setFormVisible((prevFormVisible) => !prevFormVisible);
-  };
-  const onStartEdit = (row: object) => {
-    dispatch(setAccessory(row as IAccessory));
+  const onStartEdit = async (row: object) => {
+    const id = (row as IAccessory).id;
+    await dispatch(getAccessoryById(id as string));
+    openAccessoryModal(accessory as IAccessory);
   };
   const onRowInsert = () => {
     console.log("insert");
@@ -92,11 +94,16 @@ const Accessory = () => {
     console.log(row);
     openAccessoryModal(row as IAccessory);
   };
-  const onRowDelete = (row: object) => {
-    console.log("delete", row);
+  const onRowRemove = async (row: object) => {
+    const id = (row as IAccessory).id;
+    await dispatch(removeAccessory(id as string));
+    await dispatch(getAllAccessories());
   };
-  const handleUpdate = (data: object) => {
-    console.log("updateSubmit", data);
+  const handleUpdate = async (data: object) => {
+    const id = (data as IAccessory).id;
+    console.log(id);
+    id ? await dispatch(updateAccessory(data as IAccessory)) : await dispatch(createAccessory(data as IAccessory));
+    await dispatch(getAllAccessories());
   };
 
   const openAccessoryModal = (accessory?: IAccessory) => modals.open({
@@ -107,6 +114,15 @@ const Accessory = () => {
     ),
     xOffset: "auto",
   });
+  const refreshData = async () => {
+    await dispatch(getAllAccessories());
+    await dispatch(getAllManufacturers());
+    await dispatch(getAllSuppliers());
+    await dispatch(getAllCategories());
+    await dispatch(getAllLocations());
+    await dispatch(getAllCompanies());
+    await dispatch(getAllProductStatuses());
+  };
 
   return (
     <div
@@ -120,12 +136,13 @@ const Accessory = () => {
         pageSizes={[1, 2, 5]}
         enableEdit={true}
         showPageSize={true}
+        refreshData={refreshData}
         onRowInsert={onRowInsert}
         onRowUpdate={onRowUpdate}
-        onRowDelete={onRowDelete}
+        onRowRemove={onRowRemove}
         onStartEdit={onStartEdit}
       />
-      <CustomPopup
+      {/* <CustomPopup
         visible={formVisible}
         title="Custom Form"
         showTitle={true}
@@ -136,7 +153,7 @@ const Accessory = () => {
         hideOnOutsideClick={false}
         handleClose={handleFormVisible}
         renderContent={() => <TestForm submitFunc={handleUpdate} columns={columns} />}
-      />
+      /> */}
     </div>
   );
 };

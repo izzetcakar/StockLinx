@@ -99,7 +99,7 @@ const accessorieslice = createSlice({
       state.accessories = newAccessories;
       state.selectData = newAccessories.map((accessory) => {
         return {
-          value: accessory.id,
+          value: accessory.id as string,
           label: accessory.name,
         };
       });

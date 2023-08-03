@@ -18,10 +18,11 @@ import { getAllCategories } from '../../../../redux/categoryReducer';
 import { getAllLocations } from '../../../../redux/locationReducer';
 import { getAllCompanies } from '../../../../redux/companyReducer';
 import { getAllProductStatuses } from '../../../../redux/productStatusReducer';
+import { notifications } from '@mantine/notifications';
 
 interface AccessoryFormProps {
-    accessory?: IAccessory;
-    submitFunc: (data: object) => void;
+    accessory?: IAccessory | null;
+    submitFunc: (data: object) => Promise<void>;
 }
 
 const AccessoryForm: React.FC<AccessoryFormProps> = ({
@@ -29,6 +30,7 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({
     submitFunc = () => console.log("submit"),
 }) => {
     const dispatch = useAppDispatch();
+    const accessoryApiStatus = useAppSelector((state: RootState) => state.accessory.status);
     const manufacturerSelectData = useAppSelector((state: RootState) => state.manufacturer.selectData);
     const manufacturerApiStatus = useAppSelector((state: RootState) => state.manufacturer.status);
     const supplierSelectData = useAppSelector((state: RootState) => state.supplier.selectData);
@@ -41,25 +43,26 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({
     const companyApiStatus = useAppSelector((state: RootState) => state.company.status);
     const productStatusSelectData = useAppSelector((state: RootState) => state.productStatus.selectData);
     const productStatusApiStatus = useAppSelector((state: RootState) => state.productStatus.status);
+    const productStatusError = useAppSelector((state: RootState) => state.productStatus.error);
 
     const form = useForm<IAccessory>({
         initialValues: accessory ? { ...accessory } : {
-            id: uuidv4(),
+            id: null,
             manufacturerId: null,
             supplierId: null,
-            categoryId: "",
-            locationId: "",
-            companyId: "",
-            statusId: "",
+            categoryId: null,
+            locationId: null,
+            companyId: null,
+            statusId: null,
             name: "",
             imagePath: "",
-            serialNo: "",
-            orderNo: "",
+            serialNo: null,
+            orderNo: null,
             purchaseCost: null,
             purchaseDate: null,
             warrantyDate: null,
             quantity: 1,
-            notes: "",
+            notes: null,
         },
         validate: {
             name: (value: string) => (/(?!^$)([^\s])/.test(value) ? null : 'Name should not be empty'),
@@ -73,10 +76,21 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({
             },
         },
     });
-    const handleSubmit = (data: object) => {
-        console.log(data);
-        submitFunc(data);
-        closeModal("edit-modal");
+    const handleSubmit = async (data: object) => {
+        openNotification();
+        await submitFunc(data);
+        notifications.hide("create-accessory-notification");
+    };
+    const openNotification = () => {
+        notifications.show({
+            id: 'create-accessory-notification',
+            loading: accessoryApiStatus === ApiStatus.Loading,
+            message: 'Creating accessory',
+            autoClose: false,
+            withCloseButton: false,
+            color: "dark",
+            radius: "md",
+        });
     };
     const openNextModel = () => modals.open({
         modalId: 'next-modal',
@@ -133,13 +147,14 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({
             label: "Status",
             propTag: "statusId",
             refreshData: () => dispatch(getAllProductStatuses()),
-            loading: productStatusApiStatus === ApiStatus.Loading
+            loading: productStatusApiStatus === ApiStatus.Loading,
+            error: "asdasd"
         },
     ]
 
     return (
-        <form onSubmit={form.onSubmit((values) => handleSubmit(values))} >
-            <ScrollArea type="auto">
+        <ScrollArea.Autosize type="always" offsetScrollbars mah={600}>
+            <form onSubmit={form.onSubmit((values) => handleSubmit(values))} >
                 <Flex direction="column" gap={10} mx="auto" maw="auto" px={40}>
                     {selectComponentData.map((selectData) =>
                         <MantineSelect
@@ -156,6 +171,7 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({
                         label="Name"
                         placeholder="New Name"
                         {...form.getInputProps("name")}
+                        withAsterisk
                     />
                     <TextInput
                         label="Serial No"
@@ -223,8 +239,8 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({
                         </Button>
                     </Group>
                 </Flex>
-            </ScrollArea>
-        </form >
+            </form >
+        </ScrollArea.Autosize>
     );
 }
 
