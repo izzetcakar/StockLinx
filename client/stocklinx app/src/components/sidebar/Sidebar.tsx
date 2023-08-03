@@ -139,9 +139,9 @@ const Sidebar: React.FC = () => {
     <div
       className={`sidebar-container ${isSidebarCollapsed ? "collapsed" : ""}`}
     >
-      <div className="navigation-item" onClick={() => handleLogoClick()}>
+      <div className="navigation-item logo" onClick={() => handleLogoClick()}>
         <img src={logo} className="icon" alt="Logo" />
-        <div className="title">Stocklinx</div>
+        {/* <div className="title">Stocklinx</div> */}
       </div>
       {navigationList.map((item, index) => (
         <React.Fragment key={index}>
