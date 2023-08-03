@@ -34,7 +34,7 @@ export interface IdentifiableItem {
 
 //Server side interfaces
 export interface BaseEntity {
-  id: string;
+  id: string | null;
   createdDate?: Date | null;
   updatedDate?: Date | null;
   deletedDate?: Date | null;
