@@ -1,6 +1,7 @@
 import React from 'react'
 import { IMantinSelectProps, IMantineSelectData } from '../interfaces/interfaces'
-import { Box, Group, LoadingOverlay, Select, Text } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+import { Box, Group, LoadingOverlay, Select, Text, FocusTrap, Button } from '@mantine/core';
 
 const MantineSelect: React.FC<IMantinSelectProps<T>> = (props) => {
     const { form, data, label, propTag, refreshData, loading } = props;
@@ -27,36 +28,43 @@ const MantineSelect: React.FC<IMantinSelectProps<T>> = (props) => {
             </div>
         )
     );
-    const test = () => {
-        <Box w="100%" h="auto" py={20} >
-            <LoadingOverlay visible={loading ? loading : false} />
-        </Box>
+    const dropDownOpenHandler = async () => {
+        console.log(active);
+        await refreshData();
+        if (!loading) {
+            toggle();
+        }
+        console.log(active);
     }
 
     const spareData: IMantineSelectData[] = [{ value: null, label: '' }];
+    const [active, { toggle }] = useDisclosure(false);
 
     return (
         <Box pos="relative" key={propTag}>
-            <Select
-                label={label}
-                placeholder="Pick one"
-                data={loading ? spareData : data}
-                {...form.getInputProps(propTag)}
-                transitionProps={{
-                    transition: "pop-top-left",
-                    duration: 80,
-                    timingFunction: "ease",
-                }}
-                clearable
-                itemComponent={loading ? LoadingItem : SelectItem}
-                allowDeselect
-                dropdownPosition="flip"
-                nothingFound="No options"
-                onDropdownOpen={refreshData}
-                // rightSection={<IconChevronDown size="1rem" />}
-                // styles={{ rightSection: { pointerEvents: 'none' } }}
-                disabled={loading}
-            />
+            <FocusTrap active={active}>
+                <Select
+                    label={label}
+                    placeholder="Pick one"
+                    data={loading ? spareData : data}
+                    {...form.getInputProps(propTag)}
+                    transitionProps={{
+                        transition: "pop-top-left",
+                        duration: 80,
+                        timingFunction: "ease",
+                    }}
+                    clearable
+                    itemComponent={loading ? LoadingItem : SelectItem}
+                    allowDeselect
+                    dropdownPosition="flip"
+                    nothingFound="No options"
+                    onDropdownOpen={dropDownOpenHandler}
+                    onDropdownClose={toggle}
+                    // rightSection={<IconChevronDown size="1rem" />}
+                    // styles={{ rightSection: { pointerEvents: 'none' } }}
+                    disabled={loading}
+                />
+            </FocusTrap>
         </Box>
     )
 }
