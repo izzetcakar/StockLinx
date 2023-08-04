@@ -6,7 +6,6 @@ import { closeModal } from '@mantine/modals';
 import { IconUpload } from '@tabler/icons-react';
 import { modals } from '@mantine/modals';
 import { ApiStatus, IAccessory } from '../../../../interfaces/interfaces';
-import { v4 as uuidv4 } from "uuid";
 import { handleImageChange } from '../../functions/formFunctions';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { RootState } from '../../../../redux/store';
@@ -43,7 +42,6 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({
     const companyApiStatus = useAppSelector((state: RootState) => state.company.status);
     const productStatusSelectData = useAppSelector((state: RootState) => state.productStatus.selectData);
     const productStatusApiStatus = useAppSelector((state: RootState) => state.productStatus.status);
-    const productStatusError = useAppSelector((state: RootState) => state.productStatus.error);
 
     const form = useForm<IAccessory>({
         initialValues: accessory ? { ...accessory } : {

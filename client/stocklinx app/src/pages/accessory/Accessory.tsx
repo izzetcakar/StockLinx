@@ -4,7 +4,7 @@ import AccessoryForm from "../../components/form/product/accessory/AccessoryForm
 import GridTable from "../../components/gridTable/GridTable";
 import { IAccessory } from "../../interfaces/interfaces";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { clearAccessory, createAccessory, getAccessoryById, getAllAccessories, removeAccessory, setAccessory, updateAccessory } from "../../redux/accessoryReducer";
+import { clearAccessory, createAccessory, getAccessoryById, getAllAccessories, removeAccessory, setAccessory, updateAccessory } from "../../redux/reducers/accessory-reducer";
 import { RootState } from "../../redux/store";
 import {
   CategoryNameComponent,
