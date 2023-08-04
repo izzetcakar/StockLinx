@@ -3,14 +3,14 @@ import { ApiResponse } from "../interfaces/interfaces";
 
 const BASE_URL: string = import.meta.env.VITE_REACT_APP_BASE_URL as string;
 
-const getToken = (): string => {
+export const getToken = (): string => {
   const userData = localStorage.getItem("token");
   if (userData === null) return "";
   const user = JSON.parse(userData) as string;
   return user;
 };
 
-interface BackendResponse<T> {
+export interface BackendResponse<T> {
   data: T | T[] | null;
   errors: string[] | null;
   successMessage: string | null;
