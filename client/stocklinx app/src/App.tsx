@@ -20,13 +20,13 @@ import Test from "./pages/Test";
 import Login from "./pages/user/Login";
 import Register from "./pages/user/Register";
 import Department from "./pages/department/Department";
-import { useAppSelector } from "./hooks";
-import { RootState } from "./redux/store";
 import Company from "./pages/company/Company";
+import { useSelector } from "react-redux";
+import { RootState } from "./redux/rootReducer";
 
 const Layout = () => {
   const navigate = useNavigate();
-  const userRedux = useAppSelector((state: RootState) => state.user.user);
+  const userRedux = useSelector((state: RootState) => state.user.user);
 
   if (checkEmpty(userRedux)) {
     return (
