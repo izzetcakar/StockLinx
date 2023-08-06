@@ -5,7 +5,8 @@ const BASE_URL: string = import.meta.env.VITE_REACT_APP_BASE_URL as string;
 
 export const getToken = (): string => {
   const userData = localStorage.getItem("token");
-  if (userData === null) return "";
+  console.log("userData", userData);
+  if (userData === null || userData === undefined) return "";
   const user = JSON.parse(userData) as string;
   return user;
 };
@@ -15,6 +16,12 @@ export interface BackendResponse<T> {
   errors: string[] | null;
   successMessage: string | null;
   statusCode: number | null;
+}
+export interface ClientApiResponse<T> {
+  data: T | T[] | null;
+  message: string;
+  success: boolean;
+  status: number;
 }
 
 export const request = async <T>({
