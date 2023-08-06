@@ -4,18 +4,19 @@ import TestForm from "../../components/form/TestForm";
 import GridTable from "../../components/gridTable/GridTable";
 import CustomPopup from "../../components/popup/CustomPopup";
 import { IDepartment } from "../../interfaces/interfaces";
-import { useAppDispatch, useAppSelector } from "../../hooks";
-import { clearDepartment, getAllDepartments, setDepartment } from "../../redux/departmentReducer";
-import { RootState } from "../../redux/store";
 import DepartmentForm from "../../components/form/department/DepartmentForm";
 import { Column } from "../../components/gridTable/interfaces/interfaces";
-import { getAllCompanies } from "../../redux/companyReducer";
 import { CompanyNameComponent, LocationNameComponent } from "../../components/customComponents/TableComponents";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/rootReducer";
+import { departmentActions } from "../../redux/department/actions";
+import { companyActions } from "../../redux/company/actions";
 
 const Department = () => {
-    const dispatch = useAppDispatch();
+    const dispatch = useDispatch();
     const [formVisible, setFormVisible] = useState<boolean>(false);
-    const departments = useAppSelector((state: RootState) => state.department.departments);
+    const departments = useSelector((state: RootState) => state.department.departments);
 
     const columns: Column[] = [
         {
@@ -51,11 +52,12 @@ const Department = () => {
         setFormVisible((prevFormVisible) => !prevFormVisible);
     };
     const onStartEdit = (row: object) => {
-        dispatch(setDepartment(row as IDepartment));
+        // dispatch(departmentActions.setDepartment(row as IDepartment));
+        openDepartmentModal(row as IDepartment);
     };
     const onRowInsert = () => {
         console.log("insert");
-        clearDepartment();
+        dispatch(departmentActions.clearDepartment());
         openDepartmentModal();
     };
     const onRowUpdate = (row: object) => {
@@ -67,6 +69,7 @@ const Department = () => {
     };
     const handleUpdate = (data: object) => {
         console.log("updateSubmit", data);
+        dispatch(departmentActions.update({ department: data as IDepartment }));
     };
 
     const openDepartmentModal = (department?: IDepartment) =>
@@ -79,17 +82,10 @@ const Department = () => {
             xOffset: "auto",
         });
 
-    const fetchData = useCallback(async () => {
-        await dispatch(getAllDepartments());
-        await dispatch(getAllCompanies());
-    }, [dispatch])
-
-    useEffect(() => {
-        fetchData();
-        return () => {
-            return;
-        };
-    }, [fetchData]);
+    const fetchData = () => {
+        dispatch(departmentActions.getAll());
+        dispatch(companyActions.getAll());
+    };
 
 
     return (
@@ -107,7 +103,7 @@ const Department = () => {
                 refreshData={fetchData}
                 onRowInsert={onRowInsert}
                 onRowUpdate={onRowUpdate}
-                onRowDelete={onRowDelete}
+                onRowRemove={onRowDelete}
                 onStartEdit={onStartEdit}
             />
             <CustomPopup

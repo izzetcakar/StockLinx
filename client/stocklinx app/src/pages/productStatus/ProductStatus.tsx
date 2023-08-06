@@ -4,18 +4,17 @@ import TestForm from "../../components/form/TestForm";
 import GridTable from "../../components/gridTable/GridTable";
 import CustomPopup from "../../components/popup/CustomPopup";
 import { IProductStatus } from "../../interfaces/interfaces";
-import { useAppDispatch, useAppSelector } from "../../hooks";
-import { clearProductStatus, setProductStatus } from "../../redux/productStatusReducer";
-import { RootState } from "../../redux/store";
 import ProductStatusForm from "../../components/form/productStatus/ProductStatusForm";
 import { Column } from "../../components/gridTable/interfaces/interfaces";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/rootReducer";
+import { productStatusActions } from "../../redux/productStatus/actions";
 
 const ProductStatus = () => {
-    const dispatch = useAppDispatch();
+    const dispatch = useDispatch();
     const [formVisible, setFormVisible] = useState<boolean>(false);
-    const productStatuses = useAppSelector(
-        (state: RootState) => state.productStatus.productStatuses
-    );
+    const productStatuses = useSelector((state: RootState) => state.productStatus.productStatuses);
 
     const columns: Column[] = [
         {
@@ -29,11 +28,11 @@ const ProductStatus = () => {
         setFormVisible((prevFormVisible) => !prevFormVisible);
     };
     const onStartEdit = (row: object) => {
-        dispatch(setProductStatus(row as IProductStatus));
+        dispatch(productStatusActions.setProductStatus(row as IProductStatus));
     };
     const onRowInsert = () => {
         console.log("insert");
-        clearProductStatus();
+        dispatch(productStatusActions.clearProductStatus());
         openProductStatusModal();
     };
     const onRowUpdate = (row: object) => {
@@ -71,7 +70,7 @@ const ProductStatus = () => {
                 showPageSize={true}
                 onRowInsert={onRowInsert}
                 onRowUpdate={onRowUpdate}
-                onRowDelete={onRowDelete}
+                onRowRemove={onRowDelete}
                 onStartEdit={onStartEdit}
             />
             <CustomPopup

@@ -1,22 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import logo from "/logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "@mantine/form";
-import { ApiStatus, IUserLoginDto } from "../../interfaces/interfaces";
-import { useAppDispatch, useAppSelector } from "../../hooks";
-import { RootState } from "../../redux/store";
-import { Box, Button, Flex, Image, LoadingOverlay, Paper, PasswordInput, TextInput } from "@mantine/core";
+import { IUserLoginDto } from "../../interfaces/interfaces";
+import { Button, Flex, Image, LoadingOverlay, Paper, PasswordInput, TextInput } from "@mantine/core";
 import "./user.scss";
-import { IconKey, IconMail, IconPassword, IconUser } from "@tabler/icons-react";
-import { getUserWithToken, signInUser } from "../../redux/userReducer";
+import { IconKey, IconMail } from "@tabler/icons-react";
 import { checkEmpty } from "../../functions/checkEmpty";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/rootReducer";
+import { userActions } from "../../redux/user/actions";
 
 const Login = () => {
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const user = useAppSelector((state: RootState) => state.user.user);
-  const userApiStatus = useAppSelector((state: RootState) => state.user.status);
-  const userError = useAppSelector((state: RootState) => state.user.error);
+  const user = useSelector((state: RootState) => state.user.user);
+  const userApiStatus = useSelector((state: RootState) => state.user.pending);
+  const userError = useSelector((state: RootState) => state.user.error);
   const signForm = useForm<IUserLoginDto>({
     initialValues: {
       email: "",
@@ -28,16 +29,15 @@ const Login = () => {
     },
   });
   useEffect(() => {
-    dispatch(getUserWithToken());
+    dispatch(userActions.getWithToken());
   }, []);
 
-  const handleSignIn = async () => {
-    await dispatch(signInUser(signForm.values));
-    await dispatch(getUserWithToken());
+  const handleSignIn = () => {
+    dispatch(userActions.signIn({ user: signForm.values }));
+    dispatch(userActions.getWithToken());
     if (checkEmpty(user)) {
       navigate("/home");
     }
-    userError && alert(userError);
   }
 
 
@@ -60,11 +60,12 @@ const Login = () => {
   return (
     <Flex w="100%" h="100vh" justify={"center"} align={"center"} bg={"#f4f0f0"}>
       <Paper shadow="xs" py="md" px={40} mah="90%" maw="90%">
-        <LoadingOverlay visible={userApiStatus === ApiStatus.Loading} />
+        <LoadingOverlay visible={userApiStatus} />
         <Flex direction="column" gap={10} maw="100%" bg={"white"} >
           <Image alt="..." src={logo} />
+          <button onClick={() => console.log(userApiStatus)}>asd</button>
           <form className="sign-form" onSubmit={signForm.onSubmit(
-            (values, _event) => { _event.stopPropagation(); handleSignIn(); },
+            (_, _event) => { _event.stopPropagation(); handleSignIn(); },
           )}>
             <Flex direction="column" gap={10} maw="100%" bg={"white"} >
               <TextInput mt="sm" label="Email" placeholder="Email" {...signForm.getInputProps('email')} icon={<IconMail size="1.2rem" />} />

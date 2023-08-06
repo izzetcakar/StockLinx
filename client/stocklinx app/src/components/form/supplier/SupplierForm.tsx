@@ -5,12 +5,13 @@ import { closeModal } from '@mantine/modals';
 import { IconUpload } from '@tabler/icons-react';
 import { modals } from '@mantine/modals';
 import { v4 as uuidv4 } from "uuid";
-import { ApiStatus, ISupplier } from '../../../interfaces/interfaces';
+import { ISupplier } from '../../../interfaces/interfaces';
 import { handleImageChange } from '../functions/formFunctions';
-import { useAppDispatch, useAppSelector } from '../../../hooks';
-import { RootState } from '../../../redux/store';
 import MantineSelect from '../components/MantineSelect';
-import { getAllLocations } from '../../../redux/locationReducer';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../redux/rootReducer';
+import { useDispatch } from 'react-redux';
+import { locationActions } from '../../../redux/location/actions';
 
 interface SupplierFormProps {
     supplier?: ISupplier;
@@ -21,9 +22,9 @@ const SupplierForm: React.FC<SupplierFormProps> = ({
     supplier,
     submitFunc = () => console.log("submit"),
 }) => {
-    const dispatch = useAppDispatch();
-    const locationSelectData = useAppSelector((state: RootState) => state.location.selectData);
-    const locationApiStatus = useAppSelector((state: RootState) => state.location.status);
+    const dispatch = useDispatch();
+    const locationSelectData = useSelector((state: RootState) => state.location.selectData);
+    const locationApiStatus = useSelector((state: RootState) => state.location.pending);
 
     const form = useForm<ISupplier>({
         initialValues: supplier ? { ...supplier } : {
@@ -64,8 +65,8 @@ const SupplierForm: React.FC<SupplierFormProps> = ({
                         data={locationSelectData}
                         label="Location"
                         propTag="locationId"
-                        refreshData={() => dispatch(getAllLocations())}
-                        loading={locationApiStatus === ApiStatus.Loading}
+                        refreshData={() => dispatch(locationActions.getAll())}
+                        loading={locationApiStatus}
                     />
                     <TextInput
                         label="Name"

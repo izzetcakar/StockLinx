@@ -4,18 +4,17 @@ import TestForm from "../../components/form/TestForm";
 import GridTable from "../../components/gridTable/GridTable";
 import CustomPopup from "../../components/popup/CustomPopup";
 import { ILocation } from "../../interfaces/interfaces";
-import { useAppDispatch, useAppSelector } from "../../hooks";
-import { clearLocation, setLocation } from "../../redux/locationReducer";
-import { RootState } from "../../redux/store";
 import LocationForm from "../../components/form/location/LocationForm";
 import { Column } from "../../components/gridTable/interfaces/interfaces";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/rootReducer";
+import { locationActions } from "../../redux/location/actions";
 
 const Location = () => {
-    const dispatch = useAppDispatch();
+    const dispatch = useDispatch();
     const [formVisible, setFormVisible] = useState<boolean>(false);
-    const locations = useAppSelector(
-        (state: RootState) => state.location.locations
-    );
+    const locations = useSelector((state: RootState) => state.location.locations);
 
     const columns: Column[] = [
         {
@@ -69,11 +68,11 @@ const Location = () => {
         setFormVisible((prevFormVisible) => !prevFormVisible);
     };
     const onStartEdit = (row: object) => {
-        dispatch(setLocation(row as ILocation));
+        dispatch(locationActions.setLocation(row as ILocation));
     };
     const onRowInsert = () => {
         console.log("insert");
-        clearLocation();
+        dispatch(locationActions.clearLocation());
         openLocationModal();
     };
     const onRowUpdate = (row: object) => {
@@ -111,7 +110,7 @@ const Location = () => {
                 showPageSize={true}
                 onRowInsert={onRowInsert}
                 onRowUpdate={onRowUpdate}
-                onRowDelete={onRowDelete}
+                onRowRemove={onRowDelete}
                 onStartEdit={onStartEdit}
             />
             <CustomPopup

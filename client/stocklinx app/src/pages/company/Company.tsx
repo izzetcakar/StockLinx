@@ -4,17 +4,16 @@ import TestForm from "../../components/form/TestForm";
 import GridTable from "../../components/gridTable/GridTable";
 import CustomPopup from "../../components/popup/CustomPopup";
 import { ICompany } from "../../interfaces/interfaces";
-import { useAppDispatch, useAppSelector } from "../../hooks";
-import { clearCompany, getAllCompanies, setCompany } from "../../redux/companyReducer";
-import { RootState } from "../../redux/store";
 import CompanyForm from "../../components/form/company/CompanyForm";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/rootReducer";
+import { companyActions } from "../../redux/company/actions";
 
 const Company = () => {
-    const dispatch = useAppDispatch();
+    const dispatch = useDispatch();
     const [formVisible, setFormVisible] = useState<boolean>(false);
-    const companies = useAppSelector(
-        (state: RootState) => state.company.companies
-    );
+    const companies = useSelector((state: RootState) => state.company.companies);
 
     const columns = [
         {
@@ -25,18 +24,18 @@ const Company = () => {
     ];
 
     useEffect(() => {
-        dispatch(getAllCompanies());
+        dispatch(companyActions.getAll());
     }, []);
 
     const handleFormVisible = () => {
         setFormVisible((prevFormVisible) => !prevFormVisible);
     };
     const onStartEdit = (row: object) => {
-        dispatch(setCompany(row as ICompany));
+        dispatch(companyActions.setCompany(row as ICompany));
     };
     const onRowInsert = () => {
         console.log("insert");
-        clearCompany();
+        dispatch(companyActions.clearCompany());
         openCompanyModal();
     };
     const onRowUpdate = (row: object) => {
@@ -72,7 +71,7 @@ const Company = () => {
                 showPageSize={true}
                 onRowInsert={onRowInsert}
                 onRowUpdate={onRowUpdate}
-                onRowDelete={onRowDelete}
+                onRowRemove={onRowDelete}
                 onStartEdit={onStartEdit}
             />
             <CustomPopup

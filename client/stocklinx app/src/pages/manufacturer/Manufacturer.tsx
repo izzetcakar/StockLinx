@@ -4,18 +4,17 @@ import TestForm from "../../components/form/TestForm";
 import GridTable from "../../components/gridTable/GridTable";
 import CustomPopup from "../../components/popup/CustomPopup";
 import { IManufacturer } from "../../interfaces/interfaces";
-import { useAppDispatch, useAppSelector } from "../../hooks";
-import { clearManufacturer, setManufacturer } from "../../redux/manufacturerReducer";
-import { RootState } from "../../redux/store";
 import ManufacturerForm from "../../components/form/manufacturer/ManufacturerForm";
 import { Column } from "../../components/gridTable/interfaces/interfaces";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/rootReducer";
+import { manufacturerActions } from "../../redux/manufacturer/actions";
 
 const Manufacturer = () => {
-    const dispatch = useAppDispatch();
+    const dispatch = useDispatch();
     const [formVisible, setFormVisible] = useState<boolean>(false);
-    const manufacturers = useAppSelector(
-        (state: RootState) => state.manufacturer.manufacturers
-    );
+    const manufacturers = useSelector((state: RootState) => state.manufacturer.manufacturers);
 
     const columns: Column[] = [
         {
@@ -44,11 +43,11 @@ const Manufacturer = () => {
         setFormVisible((prevFormVisible) => !prevFormVisible);
     };
     const onStartEdit = (row: object) => {
-        dispatch(setManufacturer(row as IManufacturer));
+        dispatch(manufacturerActions.setManufacturer(row as IManufacturer));
     };
     const onRowInsert = () => {
         console.log("insert");
-        clearManufacturer();
+        dispatch(manufacturerActions.clearManufacturer());
         openManufacturerModal();
     };
     const onRowUpdate = (row: object) => {
@@ -85,7 +84,7 @@ const Manufacturer = () => {
                 showPageSize={true}
                 onRowInsert={onRowInsert}
                 onRowUpdate={onRowUpdate}
-                onRowDelete={onRowDelete}
+                onRowRemove={onRowDelete}
                 onStartEdit={onStartEdit}
             />
             <CustomPopup

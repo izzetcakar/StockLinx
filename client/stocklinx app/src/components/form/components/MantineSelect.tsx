@@ -1,8 +1,7 @@
 import React from 'react'
 import { IMantinSelectProps, IMantineSelectData } from '../interfaces/interfaces'
 import { useDisclosure } from '@mantine/hooks';
-import { Box, Group, LoadingOverlay, Select, Text, FocusTrap, Button, Notification } from '@mantine/core';
-import { IconX } from '@tabler/icons-react';
+import { Box, Group, LoadingOverlay, Select, Text, FocusTrap } from '@mantine/core';
 
 const MantineSelect: React.FC<IMantinSelectProps<T>> = (props) => {
     const { form, data, label, propTag, refreshData, loading, error } = props;
@@ -29,12 +28,10 @@ const MantineSelect: React.FC<IMantinSelectProps<T>> = (props) => {
             </div>
         )
     );
-    const dropDownOpenHandler = async () => {
+    const dropDownOpenHandler = () => {
         if (refreshData) {
-            await refreshData();
-            if (!loading) {
-                toggle();
-            }
+            refreshData();
+            toggle();
         }
     }
 

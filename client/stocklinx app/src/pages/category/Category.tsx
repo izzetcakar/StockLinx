@@ -4,17 +4,16 @@ import TestForm from "../../components/form/TestForm";
 import GridTable from "../../components/gridTable/GridTable";
 import CustomPopup from "../../components/popup/CustomPopup";
 import { ICategory } from "../../interfaces/interfaces";
-import { useAppDispatch, useAppSelector } from "../../hooks";
-import { clearCategory, setCategory } from "../../redux/categoryReducer";
-import { RootState } from "../../redux/store";
 import CategoryForm from "../../components/form/category/CategoryForm";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/rootReducer";
+import { useDispatch } from "react-redux";
+import { categoryActions } from "../../redux/category/actions";
 
 const Category = () => {
-    const dispatch = useAppDispatch();
+    const dispatch = useDispatch();
     const [formVisible, setFormVisible] = useState<boolean>(false);
-    const categories = useAppSelector(
-        (state: RootState) => state.category.categories
-    );
+    const categories = useSelector((state: RootState) => state.category.categories);
 
     const columns = [
         {
@@ -28,11 +27,11 @@ const Category = () => {
         setFormVisible((prevFormVisible) => !prevFormVisible);
     };
     const onStartEdit = (row: object) => {
-        dispatch(setCategory(row as ICategory));
+        dispatch(categoryActions.setCategory(row as ICategory));
     };
     const onRowInsert = () => {
         console.log("insert");
-        clearCategory();
+        dispatch(categoryActions.clearCategory());
         openCategoryModal();
     };
     const onRowUpdate = (row: object) => {
@@ -70,7 +69,7 @@ const Category = () => {
                 showPageSize={true}
                 onRowInsert={onRowInsert}
                 onRowUpdate={onRowUpdate}
-                onRowDelete={onRowDelete}
+                onRowRemove={onRowDelete}
                 onStartEdit={onStartEdit}
             />
             <CustomPopup

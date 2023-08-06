@@ -7,12 +7,13 @@ import { modals } from '@mantine/modals';
 import { v4 as uuidv4 } from "uuid";
 import { ApiStatus, IModel } from '../../../interfaces/interfaces';
 import { handleImageChange } from '../functions/formFunctions';
-import { useAppDispatch, useAppSelector } from '../../../hooks';
-import { RootState } from '../../../redux/store';
 import { IMantinSelectProps } from '../interfaces/interfaces';
 import MantineSelect from '../components/MantineSelect';
-import { getAllCategories } from '../../../redux/categoryReducer';
-import { getAllManufacturers } from '../../../redux/manufacturerReducer';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../redux/rootReducer';
+import { categoryActions } from '../../../redux/category/actions';
+import { useDispatch } from 'react-redux';
+import { manufacturerActions } from '../../../redux/manufacturer/actions';
 
 interface ModelFormProps {
     model?: IModel;
@@ -23,11 +24,11 @@ const ModelForm: React.FC<ModelFormProps> = ({
     model,
     submitFunc = () => console.log("submit"),
 }) => {
-    const dispatch = useAppDispatch();
-    const categorySelectData = useAppSelector((state: RootState) => state.category.selectData);
-    const categoryApiStatus = useAppSelector((state: RootState) => state.category.status);
-    const manufacturerSelectData = useAppSelector((state: RootState) => state.manufacturer.selectData);
-    const manufacturerApiStatus = useAppSelector((state: RootState) => state.manufacturer.status);
+    const dispatch = useDispatch();
+    const categorySelectData = useSelector((state: RootState) => state.category.selectData);
+    const categoryApiStatus = useSelector((state: RootState) => state.category.pending);
+    const manufacturerSelectData = useSelector((state: RootState) => state.manufacturer.selectData);
+    const manufacturerApiStatus = useSelector((state: RootState) => state.manufacturer.pending);
 
     const form = useForm<IModel>({
         initialValues: model ? { ...model } : {
@@ -61,16 +62,16 @@ const ModelForm: React.FC<ModelFormProps> = ({
             data: categorySelectData,
             label: "Category",
             propTag: "categoryId",
-            refreshData: () => dispatch(getAllCategories()),
-            loading: categoryApiStatus === ApiStatus.Loading,
+            refreshData: () => dispatch(categoryActions.getAll()),
+            loading: categoryApiStatus,
         },
         {
             form: form,
             data: manufacturerSelectData,
             label: "Manufacturer",
             propTag: "manufacturerId",
-            refreshData: () => dispatch(getAllManufacturers()),
-            loading: manufacturerApiStatus === ApiStatus.Loading,
+            refreshData: () => dispatch(manufacturerActions.getAll()),
+            loading: manufacturerApiStatus,
         },
     ]
 

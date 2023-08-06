@@ -5,14 +5,15 @@ import { closeModal } from '@mantine/modals';
 import { IconUpload } from '@tabler/icons-react';
 import { modals } from '@mantine/modals';
 import { v4 as uuidv4 } from "uuid";
-import { ApiStatus, IDepartment } from '../../../interfaces/interfaces';
+import { IDepartment } from '../../../interfaces/interfaces';
 import { handleImageChange } from '../functions/formFunctions';
-import { useAppDispatch, useAppSelector } from '../../../hooks';
-import { RootState } from '../../../redux/store';
 import { IMantinSelectProps } from '../interfaces/interfaces';
 import MantineSelect from '../components/MantineSelect';
-import { getAllCompanies } from '../../../redux/companyReducer';
-import { getAllLocations } from '../../../redux/locationReducer';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../redux/rootReducer';
+import { companyActions } from '../../../redux/company/actions';
+import { useDispatch } from 'react-redux';
+import { locationActions } from '../../../redux/location/actions';
 
 interface DepartmentFormProps {
     department?: IDepartment;
@@ -23,11 +24,11 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
     department,
     submitFunc = () => console.log("submit"),
 }) => {
-    const dispatch = useAppDispatch();
-    const companySelectData = useAppSelector((state: RootState) => state.company.selectData);
-    const companyApiStatus = useAppSelector((state: RootState) => state.company.status);
-    const locationSelectData = useAppSelector((state: RootState) => state.location.selectData);
-    const locationApiStatus = useAppSelector((state: RootState) => state.location.status);
+    const dispatch = useDispatch();
+    const companySelectData = useSelector((state: RootState) => state.company.selectData);
+    const companyApiStatus = useSelector((state: RootState) => state.company.pending);
+    const locationSelectData = useSelector((state: RootState) => state.location.selectData);
+    const locationApiStatus = useSelector((state: RootState) => state.location.pending);
 
     const form = useForm<IDepartment>({
         initialValues: department ? { ...department } : {
@@ -61,16 +62,16 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
             data: companySelectData,
             label: "Company",
             propTag: "companyId",
-            refreshData: () => dispatch(getAllCompanies()),
-            loading: companyApiStatus === ApiStatus.Loading,
+            refreshData: () => dispatch(companyActions.getAll()),
+            loading: companyApiStatus,
         },
         {
             form: form,
             data: locationSelectData,
             label: "Location",
             propTag: "locationId",
-            refreshData: () => dispatch(getAllLocations()),
-            loading: locationApiStatus === ApiStatus.Loading,
+            refreshData: () => dispatch(locationActions.getAll()),
+            loading: locationApiStatus,
         },
     ]
 

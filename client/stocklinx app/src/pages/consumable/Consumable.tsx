@@ -5,21 +5,18 @@ import ConsumableForm from "../../components/form/product/consumable/ConsumableF
 import GridTable from "../../components/gridTable/GridTable";
 import CustomPopup from "../../components/popup/CustomPopup";
 import { IConsumable } from "../../interfaces/interfaces";
-import { useAppDispatch, useAppSelector } from "../../hooks";
-import { clearConsumable, setConsumable } from "../../redux/consumableReducer";
-import { RootState } from "../../redux/store";
 import { Column } from "../../components/gridTable/interfaces/interfaces";
 import { CategoryNameComponent, CompanyNameComponent, LocationNameComponent, StatusNameComponent } from "../../components/customComponents/TableComponents";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/rootReducer";
+import { consumableActions } from "../../redux/consumable/actions";
 
 const Consumable = () => {
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
   const [formVisible, setFormVisible] = useState<boolean>(false);
-  const consumables = useAppSelector(
-    (state: RootState) => state.consumable.consumables
-  );
-  const categories = useAppSelector(
-    (state: RootState) => state.category.categories
-  );
+  const consumables = useSelector((state: RootState) => state.consumable.consumables);
+  const categories = useSelector((state: RootState) => state.category.categories);
 
   const columns: Column[] = [
     {
@@ -82,11 +79,11 @@ const Consumable = () => {
     setFormVisible((prevFormVisible) => !prevFormVisible);
   };
   const onStartEdit = (row: object) => {
-    dispatch(setConsumable(row as IConsumable));
+    dispatch(consumableActions.setConsumable(row as IConsumable));
   };
   const onRowInsert = () => {
     console.log("insert");
-    clearConsumable();
+    dispatch(consumableActions.clearConsumable());
     openConsumableModal();
   };
   const onRowUpdate = (row: object) => {
@@ -124,7 +121,7 @@ const Consumable = () => {
         showPageSize={true}
         onRowInsert={onRowInsert}
         onRowUpdate={onRowUpdate}
-        onRowDelete={onRowDelete}
+        onRowRemove={onRowDelete}
         onStartEdit={onStartEdit}
       />
       <CustomPopup

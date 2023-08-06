@@ -5,21 +5,18 @@ import ComponentForm from "../../components/form/product/component/ComponentForm
 import GridTable from "../../components/gridTable/GridTable";
 import CustomPopup from "../../components/popup/CustomPopup";
 import { IComponent } from "../../interfaces/interfaces";
-import { useAppDispatch, useAppSelector } from "../../hooks";
-import { clearComponent, setComponent } from "../../redux/componentReducer";
-import { RootState } from "../../redux/store";
 import { CategoryNameComponent, CompanyNameComponent, LocationNameComponent, StatusNameComponent } from "../../components/customComponents/TableComponents";
 import { Column } from "../../components/gridTable/interfaces/interfaces";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/rootReducer";
+import { componentActions } from "../../redux/component/actions";
 
 const Component = () => {
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
   const [formVisible, setFormVisible] = useState<boolean>(false);
-  const components = useAppSelector(
-    (state: RootState) => state.component.components
-  );
-  const categories = useAppSelector(
-    (state: RootState) => state.category.categories
-  );
+  const components = useSelector((state: RootState) => state.component.components);
+  const categories = useSelector((state: RootState) => state.category.categories);
 
   const columns: Column[] = [
     {
@@ -71,11 +68,11 @@ const Component = () => {
     setFormVisible((prevFormVisible) => !prevFormVisible);
   };
   const onStartEdit = (row: object) => {
-    dispatch(setComponent(row as IComponent));
+    dispatch(componentActions.setComponent(row as IComponent));
   };
   const onRowInsert = () => {
     console.log("insert");
-    clearComponent();
+    dispatch(componentActions.clearComponent());
     openComponentModal();
   };
   const onRowUpdate = (row: object) => {
@@ -113,7 +110,7 @@ const Component = () => {
         showPageSize={true}
         onRowInsert={onRowInsert}
         onRowUpdate={onRowUpdate}
-        onRowDelete={onRowDelete}
+        onRowRemove={onRowDelete}
         onStartEdit={onStartEdit}
       />
       <CustomPopup

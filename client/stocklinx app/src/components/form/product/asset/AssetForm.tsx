@@ -5,17 +5,20 @@ import { DateInput } from '@mantine/dates';
 import { closeModal } from '@mantine/modals';
 import { IconPlus, IconTrash, IconUpload } from '@tabler/icons-react';
 import { modals } from '@mantine/modals';
-import { ApiStatus, IAsset } from '../../../../interfaces/interfaces';
+import { IAsset } from '../../../../interfaces/interfaces';
 import { handleImageChange } from '../../functions/formFunctions';
 import MantineSelect from '../../components/MantineSelect';
-import { RootState } from '../../../../redux/store';
-import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { IMantinSelectProps } from '../../interfaces/interfaces';
 import { v4 as uuidv4 } from "uuid";
-import { getAllManufacturers } from '../../../../redux/manufacturerReducer';
-import { getAllModels } from '../../../../redux/modelReducer';
-import { getAllCategories } from '../../../../redux/categoryReducer';
-import { getAllLocations } from '../../../../redux/locationReducer';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../redux/rootReducer';
+import { useDispatch } from 'react-redux';
+import { manufacturerActions } from '../../../../redux/manufacturer/actions';
+import { modelActions } from '../../../../redux/model/actions';
+import { categoryActions } from '../../../../redux/category/actions';
+import { locationActions } from '../../../../redux/location/actions';
+import { companyActions } from '../../../../redux/company/actions';
+import { productStatusActions } from '../../../../redux/productStatus/actions';
 
 interface AssetFormProps {
     asset?: IAsset;
@@ -26,19 +29,19 @@ const AssetForm: React.FC<AssetFormProps> = ({
     asset,
     submitFunc = () => console.log("submit"),
 }) => {
-    const dispatch = useAppDispatch();
-    const manufacturerSelectData = useAppSelector((state: RootState) => state.manufacturer.selectData);
-    const manufacturerApiStatus = useAppSelector((state: RootState) => state.manufacturer.status);
-    const modelSelectData = useAppSelector((state: RootState) => state.model.selectData);
-    const modelApiStatus = useAppSelector((state: RootState) => state.model.status);
-    const categorySelectData = useAppSelector((state: RootState) => state.category.selectData);
-    const categoryApiStatus = useAppSelector((state: RootState) => state.category.status);
-    const locationSelectData = useAppSelector((state: RootState) => state.location.selectData);
-    const locationApiStatus = useAppSelector((state: RootState) => state.location.status);
-    const companySelectData = useAppSelector((state: RootState) => state.company.selectData);
-    const companyApiStatus = useAppSelector((state: RootState) => state.company.status);
-    const productStatusSelectData = useAppSelector((state: RootState) => state.productStatus.selectData);
-    const productStatusApiStatus = useAppSelector((state: RootState) => state.productStatus.status);
+    const dispatch = useDispatch();
+    const manufacturerSelectData = useSelector((state: RootState) => state.manufacturer.selectData);
+    const manufacturerApiStatus = useSelector((state: RootState) => state.manufacturer.pending);
+    const modelSelectData = useSelector((state: RootState) => state.model.selectData);
+    const modelApiStatus = useSelector((state: RootState) => state.model.pending);
+    const categorySelectData = useSelector((state: RootState) => state.category.selectData);
+    const categoryApiStatus = useSelector((state: RootState) => state.category.pending);
+    const locationSelectData = useSelector((state: RootState) => state.location.selectData);
+    const locationApiStatus = useSelector((state: RootState) => state.location.pending);
+    const companySelectData = useSelector((state: RootState) => state.company.selectData);
+    const companyApiStatus = useSelector((state: RootState) => state.company.pending);
+    const productStatusSelectData = useSelector((state: RootState) => state.productStatus.selectData);
+    const productStatusApiStatus = useSelector((state: RootState) => state.productStatus.pending);
 
     const form = useForm<IAsset>({
         initialValues: asset ? { ...asset } : {
@@ -117,48 +120,48 @@ const AssetForm: React.FC<AssetFormProps> = ({
             data: manufacturerSelectData,
             label: "Manufacturer",
             propTag: "manufacturerId",
-            refreshData: () => dispatch(getAllManufacturers()),
-            loading: manufacturerApiStatus === ApiStatus.Loading,
+            refreshData: () => dispatch(manufacturerActions.getAll()),
+            loading: manufacturerApiStatus,
         },
         {
             form: form,
             data: modelSelectData,
             label: "Model",
             propTag: "modelId",
-            refreshData: () => dispatch(getAllModels()),
-            loading: modelApiStatus === ApiStatus.Loading,
+            refreshData: () => dispatch(modelActions.getAll()),
+            loading: modelApiStatus,
         },
         {
             form: form,
             data: categorySelectData,
             label: "Category",
             propTag: "categoryId",
-            refreshData: () => dispatch(getAllCategories()),
-            loading: categoryApiStatus === ApiStatus.Loading,
+            refreshData: () => dispatch(categoryActions.getAll()),
+            loading: categoryApiStatus,
         },
         {
             form: form,
             data: locationSelectData,
             label: "Location",
             propTag: "locationId",
-            refreshData: () => dispatch(getAllLocations()),
-            loading: locationApiStatus === ApiStatus.Loading,
+            refreshData: () => dispatch(locationActions.getAll()),
+            loading: locationApiStatus,
         },
         {
             form: form,
             data: companySelectData,
             label: "Company",
             propTag: "companyId",
-            refreshData: () => dispatch(getAllCompanies()),
-            loading: companyApiStatus === ApiStatus.Loading,
+            refreshData: () => dispatch(companyActions.getAll()),
+            loading: companyApiStatus,
         },
         {
             form: form,
             data: productStatusSelectData,
             label: "Status",
             propTag: "statusId",
-            refreshData: () => dispatch(getAllProductStatuses()),
-            loading: productStatusApiStatus === ApiStatus.Loading,
+            refreshData: () => dispatch(productStatusActions.getAll()),
+            loading: productStatusApiStatus,
         },
     ]
     return (

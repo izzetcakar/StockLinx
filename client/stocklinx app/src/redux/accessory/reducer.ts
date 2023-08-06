@@ -100,6 +100,26 @@ export default (state = initialState, action: AccessoryActions) => {
         error: action.payload.error,
         pending: false,
       };
+    case accessoryConst.SET_ACCESSORY:
+      return {
+        ...state,
+        accessory: action.payload,
+      };
+    case accessoryConst.CLEAR_ACCESSORY:
+      return {
+        ...state,
+        accessory: null,
+      };
+    case accessoryConst.SET_ACCESSORIES:
+      return {
+        ...state,
+        accessories: action.payload,
+      };
+    case accessoryConst.CLEAR_ACCESSORIES:
+      return {
+        ...state,
+        accessories: [],
+      };
     default:
       return { ...state };
   }

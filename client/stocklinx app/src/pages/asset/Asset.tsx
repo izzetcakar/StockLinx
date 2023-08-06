@@ -5,16 +5,17 @@ import AssetForm from "../../components/form/product/asset/AssetForm";
 import GridTable from "../../components/gridTable/GridTable";
 import CustomPopup from "../../components/popup/CustomPopup";
 import { IAsset } from "../../interfaces/interfaces";
-import { useAppDispatch, useAppSelector } from "../../hooks";
-import { clearAsset, setAsset } from "../../redux/assetReducer";
-import { RootState } from "../../redux/store";
 import { CategoryNameComponent, CompanyNameComponent, LocationNameComponent, ManufacturerNameComponent, ModelNameComponent, StatusNameComponent } from "../../components/customComponents/TableComponents";
 import { Column } from "../../components/gridTable/interfaces/interfaces";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/rootReducer";
+import { assetActions } from "../../redux/asset/actions";
+import { useDispatch } from "react-redux";
 
 const Asset = () => {
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
   const [formVisible, setFormVisible] = useState<boolean>(false);
-  const assets = useAppSelector((state: RootState) => state.asset.assets);
+  const assets = useSelector((state: RootState) => state.asset.assets);
 
   const columns: Column[] = [
     {
@@ -74,11 +75,11 @@ const Asset = () => {
     setFormVisible((prevFormVisible) => !prevFormVisible);
   };
   const onStartEdit = (row: object) => {
-    dispatch(setAsset(row as IAsset));
+    dispatch(assetActions.setAsset(row as IAsset));
   };
   const onRowInsert = () => {
     console.log("insert");
-    clearAsset();
+    dispatch(assetActions.clearAsset());
     openAssetModal();
   };
   const onRowUpdate = (row: object) => {
@@ -115,7 +116,7 @@ const Asset = () => {
         showPageSize={true}
         onRowInsert={onRowInsert}
         onRowUpdate={onRowUpdate}
-        onRowDelete={onRowDelete}
+        onRowRemove={onRowDelete}
         onStartEdit={onStartEdit}
       />
       <CustomPopup

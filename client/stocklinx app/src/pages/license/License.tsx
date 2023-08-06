@@ -5,18 +5,17 @@ import LicenseForm from "../../components/form/product/license/LicenseForm";
 import GridTable from "../../components/gridTable/GridTable";
 import CustomPopup from "../../components/popup/CustomPopup";
 import { ILicense } from "../../interfaces/interfaces";
-import { useAppDispatch, useAppSelector } from "../../hooks";
-import { clearLicense, setLicense } from "../../redux/licenseReducer";
-import { RootState } from "../../redux/store";
 import { Column } from "../../components/gridTable/interfaces/interfaces";
 import { CategoryNameComponent, CompanyNameComponent, LocationNameComponent, StatusNameComponent, SupplierNameComponent } from "../../components/customComponents/TableComponents";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/rootReducer";
+import { licenseActions } from "../../redux/license/actions";
 
 const License = () => {
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
   const [formVisible, setFormVisible] = useState<boolean>(false);
-  const licenses = useAppSelector(
-    (state: RootState) => state.license.licenses
-  );
+  const licenses = useSelector((state: RootState) => state.license.licenses);
 
   const columns: Column[] = [
     {
@@ -80,11 +79,11 @@ const License = () => {
     setFormVisible((prevFormVisible) => !prevFormVisible);
   };
   const onStartEdit = (row: object) => {
-    dispatch(setLicense(row as ILicense));
+    dispatch(licenseActions.setLicense(row as ILicense));
   };
   const onRowInsert = () => {
     console.log("insert");
-    clearLicense();
+    dispatch(licenseActions.clearLicense());
     openLicenseModal();
   };
   const onRowUpdate = (row: object) => {
@@ -122,7 +121,7 @@ const License = () => {
         showPageSize={true}
         onRowInsert={onRowInsert}
         onRowUpdate={onRowUpdate}
-        onRowDelete={onRowDelete}
+        onRowRemove={onRowDelete}
         onStartEdit={onStartEdit}
       />
       <CustomPopup

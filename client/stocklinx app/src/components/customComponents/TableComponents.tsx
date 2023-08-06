@@ -1,10 +1,10 @@
+import { useSelector } from "react-redux";
 import { getNameFromArray } from "../../functions/getNameFromArray";
-import { useAppSelector } from "../../hooks";
-import { RootState } from "../../redux/store";
+import { RootState } from "../../redux/rootReducer";
 
 
 export const CategoryNameComponent: React.FC<{ value: string | number | boolean | null }> = ({ value = "" }) => {
-    const categories = useAppSelector((state: RootState) => state.category.categories);
+    const categories = useSelector((state: RootState) => state.category.categories);
     const name = getNameFromArray(categories, value?.toString() as string);
     return (
         <div>
@@ -13,7 +13,7 @@ export const CategoryNameComponent: React.FC<{ value: string | number | boolean 
     );
 };
 export const LocationNameComponent: React.FC<{ value: string | number | boolean | null }> = ({ value = "" }) => {
-    const locations = useAppSelector((state: RootState) => state.location.locations);
+    const locations = useSelector((state: RootState) => state.location.locations);
     const name = getNameFromArray(locations, value?.toString() as string);
     return (
         <div>
@@ -22,7 +22,7 @@ export const LocationNameComponent: React.FC<{ value: string | number | boolean 
     );
 };
 export const CompanyNameComponent: React.FC<{ value: string | number | boolean | null }> = ({ value = "" }) => {
-    const companies = useAppSelector((state: RootState) => state.company.companies);
+    const companies = useSelector((state: RootState) => state.company.companies);
     const name = getNameFromArray(companies, value?.toString() as string);
     return (
         <div>
@@ -31,7 +31,7 @@ export const CompanyNameComponent: React.FC<{ value: string | number | boolean |
     );
 };
 export const ManufacturerNameComponent: React.FC<{ value: string | number | boolean | null }> = ({ value = "" }) => {
-    const manufacturers = useAppSelector((state: RootState) => state.manufacturer.manufacturers);
+    const manufacturers = useSelector((state: RootState) => state.manufacturer.manufacturers);
     const name = getNameFromArray(manufacturers, value?.toString() as string);
     return (
         <div>
@@ -40,7 +40,7 @@ export const ManufacturerNameComponent: React.FC<{ value: string | number | bool
     );
 };
 export const SupplierNameComponent: React.FC<{ value: string | number | boolean | null }> = ({ value = "" }) => {
-    const suppliers = useAppSelector((state: RootState) => state.supplier.suppliers);
+    const suppliers = useSelector((state: RootState) => state.supplier.suppliers);
     const name = getNameFromArray(suppliers, value?.toString() as string);
     return (
         <div>
@@ -49,7 +49,7 @@ export const SupplierNameComponent: React.FC<{ value: string | number | boolean 
     );
 };
 export const StatusNameComponent: React.FC<{ value: string | number | boolean | null }> = ({ value = "" }) => {
-    const productStatuses = useAppSelector((state: RootState) => state.productStatus.productStatuses);
+    const productStatuses = useSelector((state: RootState) => state.productStatus.productStatuses);
     const name = getNameFromArray(productStatuses, value?.toString() as string);
     return (
         <div>
@@ -58,7 +58,7 @@ export const StatusNameComponent: React.FC<{ value: string | number | boolean | 
     );
 };
 export const ModelNameComponent: React.FC<{ value: string | number | boolean | null }> = ({ value = "" }) => {
-    const models = useAppSelector((state: RootState) => state.model.models);
+    const models = useSelector((state: RootState) => state.model.models);
     const name = getNameFromArray(models, value?.toString() as string);
     return (
         <div>

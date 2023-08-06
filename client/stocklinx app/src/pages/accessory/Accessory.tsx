@@ -3,9 +3,6 @@ import { modals } from '@mantine/modals';
 import AccessoryForm from "../../components/form/product/accessory/AccessoryForm";
 import GridTable from "../../components/gridTable/GridTable";
 import { IAccessory } from "../../interfaces/interfaces";
-import { useAppDispatch, useAppSelector } from "../../hooks";
-import { clearAccessory, createAccessory, getAccessoryById, getAllAccessories, removeAccessory, setAccessory, updateAccessory } from "../../redux/reducers/accessory-reducer";
-import { RootState } from "../../redux/store";
 import {
   CategoryNameComponent,
   CompanyNameComponent,
@@ -14,17 +11,21 @@ import {
   StatusNameComponent,
   SupplierNameComponent
 } from "../../components/customComponents/TableComponents";
-import { getAllManufacturers } from "../../redux/manufacturerReducer";
-import { getAllSuppliers } from "../../redux/supplierReducer";
-import { getAllCategories } from "../../redux/categoryReducer";
-import { getAllLocations } from "../../redux/locationReducer";
-import { getAllCompanies } from "../../redux/companyReducer";
-import { getAllProductStatuses } from "../../redux/productStatusReducer";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/rootReducer";
+import { useDispatch } from "react-redux";
+import { accessoryActions } from "../../redux/accessory/actions";
+import { manufacturerActions } from "../../redux/manufacturer/actions";
+import { supplierActions } from "../../redux/supplier/actions";
+import { categoryActions } from "../../redux/category/actions";
+import { locationActions } from "../../redux/location/actions";
+import { companyActions } from "../../redux/company/actions";
+import { productStatusActions } from "../../redux/productStatus/actions";
 
 const Accessory = () => {
-  const dispatch = useAppDispatch();
-  const accessory = useAppSelector((state: RootState) => state.accessory.accessory);
-  const accessories = useAppSelector((state: RootState) => state.accessory.accessories);
+  const dispatch = useDispatch();
+  const accessory = useSelector((state: RootState) => state.accessory.accessory);
+  const accessories = useSelector((state: RootState) => state.accessory.accessories);
 
   const columns = [
     {
@@ -80,30 +81,30 @@ const Accessory = () => {
     { dataField: "warrantyDate", caption: "Warranty Date", dataType: "date" },
     { dataField: "notes", caption: "Notes", dataType: "string" },
   ];
-  const onStartEdit = async (row: object) => {
-    const id = (row as IAccessory).id;
-    await dispatch(getAccessoryById(id as string));
-    openAccessoryModal(accessory as IAccessory);
+  const onStartEdit = (row: object) => {
+    // const id = (row as IAccessory).id;
+    // dispatch(accessoryActions.get({ id: id as string }));
+    openAccessoryModal(row as IAccessory);
   };
   const onRowInsert = () => {
     console.log("insert");
-    clearAccessory();
+    dispatch(accessoryActions.clearAccessory());
     openAccessoryModal();
   };
   const onRowUpdate = (row: object) => {
     console.log(row);
     openAccessoryModal(row as IAccessory);
   };
-  const onRowRemove = async (row: object) => {
+  const onRowRemove = (row: object) => {
     const id = (row as IAccessory).id;
-    await dispatch(removeAccessory(id as string));
-    await dispatch(getAllAccessories());
+    dispatch(accessoryActions.remove({ id: id as string }));
+    dispatch(accessoryActions.getAll());
   };
-  const handleUpdate = async (data: object) => {
+  const handleUpdate = (data: object) => {
     const id = (data as IAccessory).id;
     console.log(id);
-    id ? await dispatch(updateAccessory(data as IAccessory)) : await dispatch(createAccessory(data as IAccessory));
-    await dispatch(getAllAccessories());
+    id ? dispatch(accessoryActions.update({ accessory: data as IAccessory })) : dispatch(accessoryActions.create({ accessory: data as IAccessory }));
+    dispatch(accessoryActions.getAll());
   };
 
   const openAccessoryModal = (accessory?: IAccessory) => modals.open({
@@ -114,14 +115,14 @@ const Accessory = () => {
     ),
     xOffset: "auto",
   });
-  const refreshData = async () => {
-    await dispatch(getAllAccessories());
-    await dispatch(getAllManufacturers());
-    await dispatch(getAllSuppliers());
-    await dispatch(getAllCategories());
-    await dispatch(getAllLocations());
-    await dispatch(getAllCompanies());
-    await dispatch(getAllProductStatuses());
+  const refreshData = () => {
+    dispatch(accessoryActions.getAll());
+    dispatch(manufacturerActions.getAll());
+    dispatch(supplierActions.getAll());
+    dispatch(categoryActions.getAll());
+    dispatch(locationActions.getAll());
+    dispatch(companyActions.getAll());
+    dispatch(productStatusActions.getAll());
   };
 
   return (

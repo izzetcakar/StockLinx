@@ -9,14 +9,20 @@ export interface AccessoryState {
   error: string | null;
 }
 
-export interface FetchAccessorySucccessPayload {
+export interface AccessorySucccessPayload {
   accessory: IAccessory;
 }
-export interface FetchAccessoriesSucccessPayload {
+export interface AccessoriesSucccessPayload {
   accessories: IAccessory[];
 }
-export interface FetchAccessoryFailurePayload {
+export interface AccessoryFailurePayload {
   error: string;
+}
+export interface AccessoryRequestPayload {
+  id: string;
+}
+export interface UpdateAccessoryRequestPayload {
+  accessory: IAccessory;
 }
 
 //GET
@@ -25,57 +31,77 @@ export interface FetchAccessoriesRequest {
 }
 export type FetchAccessoriesSuccess = {
   type: typeof accessoryConst.FETCH_ACCESSORIES_SUCCESS;
-  payload: FetchAccessoriesSucccessPayload;
+  payload: AccessoriesSucccessPayload;
 };
 export type FetchAccessoriesFailure = {
   type: typeof accessoryConst.FETCH_ACCESSORIES_FAILURE;
-  payload: FetchAccessoryFailurePayload;
+  payload: AccessoryFailurePayload;
 };
 //GET:/ID
 export interface FetchAccessoryRequest {
   type: typeof accessoryConst.FETCH_ACCESSORY_REQUEST;
+  payload: AccessoryRequestPayload;
 }
 export type FetchAccessorySuccess = {
   type: typeof accessoryConst.FETCH_ACCESSORY_SUCCESS;
-  payload: FetchAccessorySucccessPayload;
+  payload: AccessorySucccessPayload;
 };
 export type FetchAccessoryFailure = {
   type: typeof accessoryConst.FETCH_ACCESSORY_FAILURE;
-  payload: FetchAccessoryFailurePayload;
+  payload: AccessoryFailurePayload;
 };
 //POST
 export interface CreateAccessoryRequest {
   type: typeof accessoryConst.CREATE_ACCESSORY_REQUEST;
+  payload: UpdateAccessoryRequestPayload;
 }
 export type CreateAccessorySuccess = {
   type: typeof accessoryConst.CREATE_ACCESSORY_SUCCESS;
 };
 export type CreateAccessoryFailure = {
   type: typeof accessoryConst.CREATE_ACCESSORY_FAILURE;
-  payload: FetchAccessoryFailurePayload;
+  payload: AccessoryFailurePayload;
 };
 //PUT
 export interface UpdateAccessoryRequest {
   type: typeof accessoryConst.UPDATE_ACCESSORY_REQUEST;
+  payload: UpdateAccessoryRequestPayload;
 }
 export type UpdateAccessorySuccess = {
   type: typeof accessoryConst.UPDATE_ACCESSORY_SUCCESS;
 };
 export type UpdateAccessoryFailure = {
   type: typeof accessoryConst.UPDATE_ACCESSORY_FAILURE;
-  payload: FetchAccessoryFailurePayload;
+  payload: AccessoryFailurePayload;
 };
 //REMOVE
 export interface RemoveAccessoryRequest {
   type: typeof accessoryConst.REMOVE_ACCESSORY_REQUEST;
+  payload: AccessoryRequestPayload;
 }
 export type RemoveAccessorySuccess = {
   type: typeof accessoryConst.REMOVE_ACCESSORY_SUCCESS;
 };
 export type RemoveAccessoryFailure = {
   type: typeof accessoryConst.REMOVE_ACCESSORY_FAILURE;
-  payload: FetchAccessoryFailurePayload;
+  payload: AccessoryFailurePayload;
 };
+
+//CLIENT ACTION TYPES
+export interface SetAccessory {
+  type: typeof accessoryConst.SET_ACCESSORY;
+  payload: IAccessory | null;
+}
+export interface SetAccessories {
+  type: typeof accessoryConst.SET_ACCESSORIES;
+  payload: IAccessory[];
+}
+export interface ClearAccessory {
+  type: typeof accessoryConst.CLEAR_ACCESSORY;
+}
+export interface ClearAccessories {
+  type: typeof accessoryConst.CLEAR_ACCESSORIES;
+}
 
 export type AccessoryActions =
   | FetchAccessoriesRequest
@@ -92,4 +118,8 @@ export type AccessoryActions =
   | UpdateAccessoryFailure
   | RemoveAccessoryRequest
   | RemoveAccessorySuccess
-  | RemoveAccessoryFailure;
+  | RemoveAccessoryFailure
+  | SetAccessory
+  | SetAccessories
+  | ClearAccessory
+  | ClearAccessories;

@@ -5,17 +5,18 @@ import { DateInput } from '@mantine/dates';
 import { closeModal } from '@mantine/modals';
 import { IconUpload } from '@tabler/icons-react';
 import { modals } from '@mantine/modals';
-import { ApiStatus, IConsumable } from '../../../../interfaces/interfaces';
+import { IConsumable } from '../../../../interfaces/interfaces';
 import { v4 as uuidv4 } from "uuid";
 import { handleImageChange } from '../../functions/formFunctions';
-import { useAppDispatch, useAppSelector } from '../../../../hooks';
-import { RootState } from '../../../../redux/store';
 import { IMantinSelectProps } from '../../interfaces/interfaces';
 import MantineSelect from '../../components/MantineSelect';
-import { getAllCategories } from '../../../../redux/categoryReducer';
-import { getAllCompanies } from '../../../../redux/companyReducer';
-import { getAllLocations } from '../../../../redux/locationReducer';
-import { getAllProductStatuses } from '../../../../redux/productStatusReducer';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../redux/rootReducer';
+import { useDispatch } from 'react-redux';
+import { categoryActions } from '../../../../redux/category/actions';
+import { companyActions } from '../../../../redux/company/actions';
+import { locationActions } from '../../../../redux/location/actions';
+import { productStatusActions } from '../../../../redux/productStatus/actions';
 
 interface ConsumableFormProps {
     consumable?: IConsumable;
@@ -26,15 +27,15 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
     consumable,
     submitFunc = () => console.log("submit"),
 }) => {
-    const dispatch = useAppDispatch();
-    const categorySelectData = useAppSelector((state: RootState) => state.category.selectData);
-    const categoryApiStatus = useAppSelector((state: RootState) => state.category.status);
-    const locationSelectData = useAppSelector((state: RootState) => state.location.selectData);
-    const locationApiStatus = useAppSelector((state: RootState) => state.location.status);
-    const companySelectData = useAppSelector((state: RootState) => state.company.selectData);
-    const companyApiStatus = useAppSelector((state: RootState) => state.company.status);
-    const productStatusSelectData = useAppSelector((state: RootState) => state.productStatus.selectData);
-    const productStatusApiStatus = useAppSelector((state: RootState) => state.productStatus.status);
+    const dispatch = useDispatch();
+    const categorySelectData = useSelector((state: RootState) => state.category.selectData);
+    const categoryApiStatus = useSelector((state: RootState) => state.category.pending);
+    const locationSelectData = useSelector((state: RootState) => state.location.selectData);
+    const locationApiStatus = useSelector((state: RootState) => state.location.pending);
+    const companySelectData = useSelector((state: RootState) => state.company.selectData);
+    const companyApiStatus = useSelector((state: RootState) => state.company.pending);
+    const productStatusSelectData = useSelector((state: RootState) => state.productStatus.selectData);
+    const productStatusApiStatus = useSelector((state: RootState) => state.productStatus.pending);
 
     const form = useForm<IConsumable>({
         initialValues: consumable ? { ...consumable } : {
@@ -86,32 +87,32 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
             data: categorySelectData,
             label: "Category",
             propTag: "categoryId",
-            refreshData: () => dispatch(getAllCategories()),
-            loading: categoryApiStatus === ApiStatus.Loading,
+            refreshData: () => dispatch(categoryActions.getAll()),
+            loading: categoryApiStatus,
         },
         {
             form: form,
             data: companySelectData,
             label: "Company",
             propTag: "companyId",
-            refreshData: () => dispatch(getAllCompanies()),
-            loading: companyApiStatus === ApiStatus.Loading,
+            refreshData: () => dispatch(companyActions.getAll()),
+            loading: companyApiStatus,
         },
         {
             form: form,
             data: locationSelectData,
             label: "Location",
             propTag: "locationId",
-            refreshData: () => dispatch(getAllLocations()),
-            loading: locationApiStatus === ApiStatus.Loading,
+            refreshData: () => dispatch(locationActions.getAll()),
+            loading: locationApiStatus,
         },
         {
             form: form,
             data: productStatusSelectData,
             label: "Status",
             propTag: "statusId",
-            refreshData: () => dispatch(getAllProductStatuses()),
-            loading: productStatusApiStatus === ApiStatus.Loading,
+            refreshData: () => dispatch(productStatusActions.getAll()),
+            loading: productStatusApiStatus,
         },
     ]
 
