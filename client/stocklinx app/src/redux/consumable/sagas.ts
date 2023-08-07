@@ -1,48 +1,24 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { consumableActions } from "./actions";
 import { IConsumable } from "../../interfaces/interfaces";
-import { BackendResponse, request } from "../../server/api";
-import { checkEmpty } from "../../functions/checkEmpty";
 import { consumableConst } from "./constant";
 import { FetchConsumableRequest, UpdateConsumableRequest } from "./type";
-const requestUrl = "Consumable/";
+import { consumableRequests } from "./requests";
 
-const fetchConsumables = () => {
-  return request<IConsumable>({ requestUrl: requestUrl, apiType: "get" });
-};
-const fetchConsumable = (id: string) => {
-  return request<IConsumable>({
-    requestUrl: requestUrl + id,
-    apiType: "get",
-  });
-};
-const createConsumable = (consumable: IConsumable) => {
-  return request<IConsumable>({
-    requestUrl: requestUrl,
-    apiType: "post",
-    queryData: consumable,
-  });
-};
-const updateConsumable = (consumable: IConsumable) => {
-  return request<IConsumable>({
-    requestUrl: requestUrl,
-    apiType: "put",
-    queryData: consumable,
-  });
-};
-const removeConsumable = (id: string) => {
-  return request<IConsumable>({
-    requestUrl: requestUrl + id,
-    apiType: "delete",
-  });
-};
+interface IResponse {
+  data: IConsumable[] | IConsumable | null;
+  message: string;
+  success: boolean;
+  status: number;
+}
 
 function* fetchConsumablesSaga() {
   try {
-    const { data, message, success, status }: BackendResponse<IConsumable> =
-      yield call(fetchConsumables);
+    const { data, message, success, status }: IResponse = yield call(
+      consumableRequests.getAll
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(
         consumableActions.getAllSuccess({
@@ -60,10 +36,12 @@ function* fetchConsumablesSaga() {
 }
 function* fetchConsumableSaga(action: FetchConsumableRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<IConsumable> =
-      yield call(fetchConsumable, action.payload.id);
+    const { data, message, success, status }: IResponse = yield call(
+      consumableRequests.get,
+      action.payload.id
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(
         consumableActions.getSuccess({
@@ -81,10 +59,12 @@ function* fetchConsumableSaga(action: FetchConsumableRequest) {
 }
 function* createConsumableSaga(action: UpdateConsumableRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<IConsumable> =
-      yield call(createConsumable, action.payload.consumable);
+    const { data, message, success, status }: IResponse = yield call(
+      consumableRequests.create,
+      action.payload.consumable
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(consumableActions.createSuccess());
     }
@@ -98,10 +78,12 @@ function* createConsumableSaga(action: UpdateConsumableRequest) {
 }
 function* updateConsumableSaga(action: UpdateConsumableRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<IConsumable> =
-      yield call(updateConsumable, action.payload.consumable);
+    const { data, message, success, status }: IResponse = yield call(
+      consumableRequests.update,
+      action.payload.consumable
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(consumableActions.updateSuccess());
     }
@@ -115,10 +97,12 @@ function* updateConsumableSaga(action: UpdateConsumableRequest) {
 }
 function* removeConsumableSaga(action: FetchConsumableRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<IConsumable> =
-      yield call(removeConsumable, action.payload.id);
+    const { data, message, success, status }: IResponse = yield call(
+      consumableRequests.remove,
+      action.payload.id
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(consumableActions.removeSuccess());
     }

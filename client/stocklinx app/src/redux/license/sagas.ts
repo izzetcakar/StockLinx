@@ -1,48 +1,24 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { licenseActions } from "./actions";
 import { ILicense } from "../../interfaces/interfaces";
-import { BackendResponse, request } from "../../server/api";
-import { checkEmpty } from "../../functions/checkEmpty";
 import { licenseConst } from "./constant";
 import { FetchLicenseRequest, UpdateLicenseRequest } from "./type";
-const requestUrl = "License/";
+import { licenseRequests } from "./requests";
 
-const fetchLicenses = () => {
-  return request<ILicense>({ requestUrl: requestUrl, apiType: "get" });
-};
-const fetchLicense = (id: string) => {
-  return request<ILicense>({
-    requestUrl: requestUrl + id,
-    apiType: "get",
-  });
-};
-const createLicense = (license: ILicense) => {
-  return request<ILicense>({
-    requestUrl: requestUrl,
-    apiType: "post",
-    queryData: license,
-  });
-};
-const updateLicense = (license: ILicense) => {
-  return request<ILicense>({
-    requestUrl: requestUrl,
-    apiType: "put",
-    queryData: license,
-  });
-};
-const removeLicense = (id: string) => {
-  return request<ILicense>({
-    requestUrl: requestUrl + id,
-    apiType: "delete",
-  });
-};
+interface IResponse {
+  data: ILicense[] | ILicense | null;
+  message: string;
+  success: boolean;
+  status: number;
+}
 
 function* fetchLicensesSaga() {
   try {
-    const { data, message, success, status }: BackendResponse<ILicense> =
-      yield call(fetchLicenses);
+    const { data, message, success, status }: IResponse = yield call(
+      licenseRequests.getAll
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(
         licenseActions.getAllSuccess({
@@ -60,10 +36,12 @@ function* fetchLicensesSaga() {
 }
 function* fetchLicenseSaga(action: FetchLicenseRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<ILicense> =
-      yield call(fetchLicense, action.payload.id);
+    const { data, message, success, status }: IResponse = yield call(
+      licenseRequests.get,
+      action.payload.id
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(
         licenseActions.getSuccess({
@@ -81,10 +59,12 @@ function* fetchLicenseSaga(action: FetchLicenseRequest) {
 }
 function* createLicenseSaga(action: UpdateLicenseRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<ILicense> =
-      yield call(createLicense, action.payload.license);
+    const { data, message, success, status }: IResponse = yield call(
+      licenseRequests.create,
+      action.payload.license
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(licenseActions.createSuccess());
     }
@@ -98,10 +78,12 @@ function* createLicenseSaga(action: UpdateLicenseRequest) {
 }
 function* updateLicenseSaga(action: UpdateLicenseRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<ILicense> =
-      yield call(updateLicense, action.payload.license);
+    const { data, message, success, status }: IResponse = yield call(
+      licenseRequests.update,
+      action.payload.license
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(licenseActions.updateSuccess());
     }
@@ -115,10 +97,12 @@ function* updateLicenseSaga(action: UpdateLicenseRequest) {
 }
 function* removeLicenseSaga(action: FetchLicenseRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<ILicense> =
-      yield call(removeLicense, action.payload.id);
+    const { data, message, success, status }: IResponse = yield call(
+      licenseRequests.remove,
+      action.payload.id
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(licenseActions.removeSuccess());
     }

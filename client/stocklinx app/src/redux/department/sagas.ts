@@ -1,48 +1,24 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { departmentActions } from "./actions";
 import { IDepartment } from "../../interfaces/interfaces";
-import { BackendResponse, request } from "../../server/api";
-import { checkEmpty } from "../../functions/checkEmpty";
 import { departmentConst } from "./constant";
 import { FetchDepartmentRequest, UpdateDepartmentRequest } from "./type";
-const requestUrl = "Department/";
+import { departmentRequests } from "./requests";
 
-const fetchDepartments = () => {
-  return request<IDepartment>({ requestUrl: requestUrl, apiType: "get" });
-};
-const fetchDepartment = (id: string) => {
-  return request<IDepartment>({
-    requestUrl: requestUrl + id,
-    apiType: "get",
-  });
-};
-const createDepartment = (department: IDepartment) => {
-  return request<IDepartment>({
-    requestUrl: requestUrl,
-    apiType: "post",
-    queryData: department,
-  });
-};
-const updateDepartment = (department: IDepartment) => {
-  return request<IDepartment>({
-    requestUrl: requestUrl,
-    apiType: "put",
-    queryData: department,
-  });
-};
-const removeDepartment = (id: string) => {
-  return request<IDepartment>({
-    requestUrl: requestUrl + id,
-    apiType: "delete",
-  });
-};
+interface IResponse {
+  data: IDepartment[] | IDepartment | null;
+  message: string;
+  success: boolean;
+  status: number;
+}
 
 function* fetchDepartmentsSaga() {
   try {
-    const { data, message, success, status }: BackendResponse<IDepartment> =
-      yield call(fetchDepartments);
+    const { data, message, success, status }: IResponse = yield call(
+      departmentRequests.getAll
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(
         departmentActions.getAllSuccess({
@@ -60,10 +36,12 @@ function* fetchDepartmentsSaga() {
 }
 function* fetchDepartmentSaga(action: FetchDepartmentRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<IDepartment> =
-      yield call(fetchDepartment, action.payload.id);
+    const { data, message, success, status }: IResponse = yield call(
+      departmentRequests.get,
+      action.payload.id
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(
         departmentActions.getSuccess({
@@ -81,10 +59,12 @@ function* fetchDepartmentSaga(action: FetchDepartmentRequest) {
 }
 function* createDepartmentSaga(action: UpdateDepartmentRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<IDepartment> =
-      yield call(createDepartment, action.payload.department);
+    const { data, message, success, status }: IResponse = yield call(
+      departmentRequests.create,
+      action.payload.department
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(departmentActions.createSuccess());
     }
@@ -98,10 +78,12 @@ function* createDepartmentSaga(action: UpdateDepartmentRequest) {
 }
 function* updateDepartmentSaga(action: UpdateDepartmentRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<IDepartment> =
-      yield call(updateDepartment, action.payload.department);
+    const { data, message, success, status }: IResponse = yield call(
+      departmentRequests.update,
+      action.payload.department
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(departmentActions.updateSuccess());
     }
@@ -115,10 +97,12 @@ function* updateDepartmentSaga(action: UpdateDepartmentRequest) {
 }
 function* removeDepartmentSaga(action: FetchDepartmentRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<IDepartment> =
-      yield call(removeDepartment, action.payload.id);
+    const { data, message, success, status }: IResponse = yield call(
+      departmentRequests.remove,
+      action.payload.id
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(departmentActions.removeSuccess());
     }

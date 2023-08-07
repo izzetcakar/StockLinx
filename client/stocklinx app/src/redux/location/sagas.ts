@@ -1,48 +1,24 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { locationActions } from "./actions";
 import { ILocation } from "../../interfaces/interfaces";
-import { BackendResponse, request } from "../../server/api";
-import { checkEmpty } from "../../functions/checkEmpty";
 import { locationConst } from "./constant";
 import { FetchLocationRequest, UpdateLocationRequest } from "./type";
-const requestUrl = "Location/";
+import { locationRequests } from "./requests";
 
-const fetchLocations = () => {
-  return request<ILocation>({ requestUrl: requestUrl, apiType: "get" });
-};
-const fetchLocation = (id: string) => {
-  return request<ILocation>({
-    requestUrl: requestUrl + id,
-    apiType: "get",
-  });
-};
-const createLocation = (location: ILocation) => {
-  return request<ILocation>({
-    requestUrl: requestUrl,
-    apiType: "post",
-    queryData: location,
-  });
-};
-const updateLocation = (location: ILocation) => {
-  return request<ILocation>({
-    requestUrl: requestUrl,
-    apiType: "put",
-    queryData: location,
-  });
-};
-const removeLocation = (id: string) => {
-  return request<ILocation>({
-    requestUrl: requestUrl + id,
-    apiType: "delete",
-  });
-};
+interface IResponse {
+  data: ILocation[] | ILocation | null;
+  message: string;
+  success: boolean;
+  status: number;
+}
 
 function* fetchLocationsSaga() {
   try {
-    const { data, message, success, status }: BackendResponse<ILocation> =
-      yield call(fetchLocations);
+    const { data, message, success, status }: IResponse = yield call(
+      locationRequests.getAll
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(
         locationActions.getAllSuccess({
@@ -60,10 +36,12 @@ function* fetchLocationsSaga() {
 }
 function* fetchLocationSaga(action: FetchLocationRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<ILocation> =
-      yield call(fetchLocation, action.payload.id);
+    const { data, message, success, status }: IResponse = yield call(
+      locationRequests.get,
+      action.payload.id
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(
         locationActions.getSuccess({
@@ -81,10 +59,12 @@ function* fetchLocationSaga(action: FetchLocationRequest) {
 }
 function* createLocationSaga(action: UpdateLocationRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<ILocation> =
-      yield call(createLocation, action.payload.location);
+    const { data, message, success, status }: IResponse = yield call(
+      locationRequests.create,
+      action.payload.location
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(locationActions.createSuccess());
     }
@@ -98,10 +78,12 @@ function* createLocationSaga(action: UpdateLocationRequest) {
 }
 function* updateLocationSaga(action: UpdateLocationRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<ILocation> =
-      yield call(updateLocation, action.payload.location);
+    const { data, message, success, status }: IResponse = yield call(
+      locationRequests.update,
+      action.payload.location
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(locationActions.updateSuccess());
     }
@@ -115,10 +97,12 @@ function* updateLocationSaga(action: UpdateLocationRequest) {
 }
 function* removeLocationSaga(action: FetchLocationRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<ILocation> =
-      yield call(removeLocation, action.payload.id);
+    const { data, message, success, status }: IResponse = yield call(
+      locationRequests.remove,
+      action.payload.id
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(locationActions.removeSuccess());
     }

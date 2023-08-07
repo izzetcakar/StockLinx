@@ -1,48 +1,24 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { supplierActions } from "./actions";
 import { ISupplier } from "../../interfaces/interfaces";
-import { BackendResponse, request } from "../../server/api";
-import { checkEmpty } from "../../functions/checkEmpty";
 import { supplierConst } from "./constant";
 import { FetchSupplierRequest, UpdateSupplierRequest } from "./type";
-const requestUrl = "Supplier/";
+import { supplierRequests } from "./requests";
 
-const fetchSuppliers = () => {
-  return request<ISupplier>({ requestUrl: requestUrl, apiType: "get" });
-};
-const fetchSupplier = (id: string) => {
-  return request<ISupplier>({
-    requestUrl: requestUrl + id,
-    apiType: "get",
-  });
-};
-const createSupplier = (supplier: ISupplier) => {
-  return request<ISupplier>({
-    requestUrl: requestUrl,
-    apiType: "post",
-    queryData: supplier,
-  });
-};
-const updateSupplier = (supplier: ISupplier) => {
-  return request<ISupplier>({
-    requestUrl: requestUrl,
-    apiType: "put",
-    queryData: supplier,
-  });
-};
-const removeSupplier = (id: string) => {
-  return request<ISupplier>({
-    requestUrl: requestUrl + id,
-    apiType: "delete",
-  });
-};
+interface IResponse {
+  data: ISupplier[] | ISupplier | null;
+  message: string;
+  success: boolean;
+  status: number;
+}
 
 function* fetchSuppliersSaga() {
   try {
-    const { data, message, success, status }: BackendResponse<ISupplier> =
-      yield call(fetchSuppliers);
+    const { data, message, success, status }: IResponse = yield call(
+      supplierRequests.getAll
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(
         supplierActions.getAllSuccess({
@@ -60,10 +36,12 @@ function* fetchSuppliersSaga() {
 }
 function* fetchSupplierSaga(action: FetchSupplierRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<ISupplier> =
-      yield call(fetchSupplier, action.payload.id);
+    const { data, message, success, status }: IResponse = yield call(
+      supplierRequests.get,
+      action.payload.id
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(
         supplierActions.getSuccess({
@@ -81,10 +59,12 @@ function* fetchSupplierSaga(action: FetchSupplierRequest) {
 }
 function* createSupplierSaga(action: UpdateSupplierRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<ISupplier> =
-      yield call(createSupplier, action.payload.supplier);
+    const { data, message, success, status }: IResponse = yield call(
+      supplierRequests.create,
+      action.payload.supplier
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(supplierActions.createSuccess());
     }
@@ -98,10 +78,12 @@ function* createSupplierSaga(action: UpdateSupplierRequest) {
 }
 function* updateSupplierSaga(action: UpdateSupplierRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<ISupplier> =
-      yield call(updateSupplier, action.payload.supplier);
+    const { data, message, success, status }: IResponse = yield call(
+      supplierRequests.update,
+      action.payload.supplier
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(supplierActions.updateSuccess());
     }
@@ -115,10 +97,12 @@ function* updateSupplierSaga(action: UpdateSupplierRequest) {
 }
 function* removeSupplierSaga(action: FetchSupplierRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<ISupplier> =
-      yield call(removeSupplier, action.payload.id);
+    const { data, message, success, status }: IResponse = yield call(
+      supplierRequests.remove,
+      action.payload.id
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(supplierActions.removeSuccess());
     }

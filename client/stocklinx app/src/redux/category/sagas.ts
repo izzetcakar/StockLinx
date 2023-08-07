@@ -1,48 +1,25 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { categoryActions } from "./actions";
 import { ICategory } from "../../interfaces/interfaces";
-import { BackendResponse, request } from "../../server/api";
-import { checkEmpty } from "../../functions/checkEmpty";
+import { BackendResponse } from "../../server/api";
 import { categoryConst } from "./constant";
 import { FetchCategoryRequest, UpdateCategoryRequest } from "./type";
-const requestUrl = "Category/";
+import { categoryRequests } from "./requests";
 
-const fetchCategories = () => {
-  return request<ICategory>({ requestUrl: requestUrl, apiType: "get" });
-};
-const fetchCategory = (id: string) => {
-  return request<ICategory>({
-    requestUrl: requestUrl + id,
-    apiType: "get",
-  });
-};
-const createCategory = (category: ICategory) => {
-  return request<ICategory>({
-    requestUrl: requestUrl,
-    apiType: "post",
-    queryData: category,
-  });
-};
-const updateCategory = (category: ICategory) => {
-  return request<ICategory>({
-    requestUrl: requestUrl,
-    apiType: "put",
-    queryData: category,
-  });
-};
-const removeCategory = (id: string) => {
-  return request<ICategory>({
-    requestUrl: requestUrl + id,
-    apiType: "delete",
-  });
-};
+interface IResponse {
+  data: ICategory[] | ICategory | null;
+  message: string;
+  success: boolean;
+  status: number;
+}
 
 function* fetchCategoriesSaga() {
   try {
-    const { data, message, success, status }: BackendResponse<ICategory> =
-      yield call(fetchCategories);
+    const { data, message, success, status }: IResponse = yield call(
+      categoryRequests.getAll
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(
         categoryActions.getAllSuccess({
@@ -60,10 +37,12 @@ function* fetchCategoriesSaga() {
 }
 function* fetchCategorySaga(action: FetchCategoryRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<ICategory> =
-      yield call(fetchCategory, action.payload.id);
+    const { data, message, success, status }: IResponse = yield call(
+      categoryRequests.get,
+      action.payload.id
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(
         categoryActions.getSuccess({
@@ -81,10 +60,12 @@ function* fetchCategorySaga(action: FetchCategoryRequest) {
 }
 function* createCategorySaga(action: UpdateCategoryRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<ICategory> =
-      yield call(createCategory, action.payload.category);
+    const { data, message, success, status }: IResponse = yield call(
+      categoryRequests.create,
+      action.payload.category
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(categoryActions.createSuccess());
     }
@@ -98,10 +79,12 @@ function* createCategorySaga(action: UpdateCategoryRequest) {
 }
 function* updateCategorySaga(action: UpdateCategoryRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<ICategory> =
-      yield call(updateCategory, action.payload.category);
+    const { data, message, success, status }: IResponse = yield call(
+      categoryRequests.update,
+      action.payload.category
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(categoryActions.updateSuccess());
     }
@@ -115,10 +98,12 @@ function* updateCategorySaga(action: UpdateCategoryRequest) {
 }
 function* removeCategorySaga(action: FetchCategoryRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<ICategory> =
-      yield call(removeCategory, action.payload.id);
+    const { data, message, success, status }: IResponse = yield call(
+      categoryRequests.remove,
+      action.payload.id
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(categoryActions.removeSuccess());
     }

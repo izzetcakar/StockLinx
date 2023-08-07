@@ -1,48 +1,25 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { assetActions } from "./actions";
 import { IAsset } from "../../interfaces/interfaces";
-import { BackendResponse, request } from "../../server/api";
-import { checkEmpty } from "../../functions/checkEmpty";
+import { BackendResponse } from "../../server/api";
 import { assetConst } from "./constant";
 import { FetchAssetRequest, UpdateAssetRequest } from "./type";
-const requestUrl = "Asset/";
+import { assetRequests } from "./requests";
 
-const fetchAssets = () => {
-  return request<IAsset>({ requestUrl: requestUrl, apiType: "get" });
-};
-const fetchAsset = (id: string) => {
-  return request<IAsset>({
-    requestUrl: requestUrl + id,
-    apiType: "get",
-  });
-};
-const createAsset = (asset: IAsset) => {
-  return request<IAsset>({
-    requestUrl: requestUrl,
-    apiType: "post",
-    queryData: asset,
-  });
-};
-const updateAsset = (asset: IAsset) => {
-  return request<IAsset>({
-    requestUrl: requestUrl,
-    apiType: "put",
-    queryData: asset,
-  });
-};
-const removeAsset = (id: string) => {
-  return request<IAsset>({
-    requestUrl: requestUrl + id,
-    apiType: "delete",
-  });
-};
+interface IResponse {
+  data: IAsset[] | IAsset | null;
+  message: string;
+  success: boolean;
+  status: number;
+}
 
 function* fetchAssetsSaga() {
   try {
-    const { data, message, success, status }: BackendResponse<IAsset> =
-      yield call(fetchAssets);
+    const { data, message, success, status }: IResponse = yield call(
+      assetRequests.getAll
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(
         assetActions.getAllSuccess({
@@ -60,8 +37,10 @@ function* fetchAssetsSaga() {
 }
 function* fetchAssetSaga(action: FetchAssetRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<IAsset> =
-      yield call(fetchAsset, action.payload.id);
+    const { data, message, success, status }: IResponse = yield call(
+      assetRequests.get,
+      action.payload.id
+    );
     if (success !== undefined && !success) {
       throw new Error(message as string);
     } else {
@@ -81,10 +60,12 @@ function* fetchAssetSaga(action: FetchAssetRequest) {
 }
 function* createAssetSaga(action: UpdateAssetRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<IAsset> =
-      yield call(createAsset, action.payload.asset);
+    const { data, message, success, status }: IResponse = yield call(
+      assetRequests.create,
+      action.payload.asset
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(assetActions.createSuccess());
     }
@@ -98,10 +79,12 @@ function* createAssetSaga(action: UpdateAssetRequest) {
 }
 function* updateAssetSaga(action: UpdateAssetRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<IAsset> =
-      yield call(updateAsset, action.payload.asset);
+    const { data, message, success, status }: IResponse = yield call(
+      assetRequests.update,
+      action.payload.asset
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(assetActions.updateSuccess());
     }
@@ -115,10 +98,12 @@ function* updateAssetSaga(action: UpdateAssetRequest) {
 }
 function* removeAssetSaga(action: FetchAssetRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<IAsset> =
-      yield call(removeAsset, action.payload.id);
+    const { data, message, success, status }: IResponse = yield call(
+      assetRequests.remove,
+      action.payload.id
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(assetActions.removeSuccess());
     }

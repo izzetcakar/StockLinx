@@ -1,48 +1,24 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { modelActions } from "./actions";
 import { IModel } from "../../interfaces/interfaces";
-import { BackendResponse, request } from "../../server/api";
-import { checkEmpty } from "../../functions/checkEmpty";
 import { modelConst } from "./constant";
 import { FetchModelRequest, UpdateModelRequest } from "./type";
-const requestUrl = "Model/";
+import { modelRequests } from "./requests";
 
-const fetchModels = () => {
-  return request<IModel>({ requestUrl: requestUrl, apiType: "get" });
-};
-const fetchModel = (id: string) => {
-  return request<IModel>({
-    requestUrl: requestUrl + id,
-    apiType: "get",
-  });
-};
-const createModel = (model: IModel) => {
-  return request<IModel>({
-    requestUrl: requestUrl,
-    apiType: "post",
-    queryData: model,
-  });
-};
-const updateModel = (model: IModel) => {
-  return request<IModel>({
-    requestUrl: requestUrl,
-    apiType: "put",
-    queryData: model,
-  });
-};
-const removeModel = (id: string) => {
-  return request<IModel>({
-    requestUrl: requestUrl + id,
-    apiType: "delete",
-  });
-};
+interface IResponse {
+  data: IModel[] | IModel | null;
+  message: string;
+  success: boolean;
+  status: number;
+}
 
 function* fetchModelsSaga() {
   try {
-    const { data, message, success, status }: BackendResponse<IModel> =
-      yield call(fetchModels);
+    const { data, message, success, status }: IResponse = yield call(
+      modelRequests.getAll
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(
         modelActions.getAllSuccess({
@@ -60,10 +36,12 @@ function* fetchModelsSaga() {
 }
 function* fetchModelSaga(action: FetchModelRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<IModel> =
-      yield call(fetchModel, action.payload.id);
+    const { data, message, success, status }: IResponse = yield call(
+      modelRequests.get,
+      action.payload.id
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(
         modelActions.getSuccess({
@@ -81,8 +59,10 @@ function* fetchModelSaga(action: FetchModelRequest) {
 }
 function* createModelSaga(action: UpdateModelRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<IModel> =
-      yield call(createModel, action.payload.model);
+    const { data, message, success, status }: IResponse = yield call(
+      createModel,
+      action.payload.model
+    );
     if (success !== undefined && !success) {
       throw new Error(message as string);
     } else {
@@ -98,10 +78,12 @@ function* createModelSaga(action: UpdateModelRequest) {
 }
 function* updateModelSaga(action: UpdateModelRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<IModel> =
-      yield call(updateModel, action.payload.model);
+    const { data, message, success, status }: IResponse = yield call(
+      modelRequests.update,
+      action.payload.model
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(modelActions.updateSuccess());
     }
@@ -115,10 +97,12 @@ function* updateModelSaga(action: UpdateModelRequest) {
 }
 function* removeModelSaga(action: FetchModelRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<IModel> =
-      yield call(removeModel, action.payload.id);
+    const { data, message, success, status }: IResponse = yield call(
+      modelRequests.remove,
+      action.payload.id
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(modelActions.removeSuccess());
     }

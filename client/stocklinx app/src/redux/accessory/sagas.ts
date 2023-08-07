@@ -1,48 +1,23 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { accessoryActions } from "./actions";
 import { IAccessory } from "../../interfaces/interfaces";
-import { BackendResponse, request } from "../../server/api";
-import { checkEmpty } from "../../functions/checkEmpty";
 import { accessoryConst } from "./constant";
 import { FetchAccessoryRequest, UpdateAccessoryRequest } from "./type";
-const requestUrl = "Accessory/";
-
-const fetchAccessories = () => {
-  return request<IAccessory>({ requestUrl: requestUrl, apiType: "get" });
-};
-const fetchAccessory = (id: string) => {
-  return request<IAccessory>({
-    requestUrl: requestUrl + id,
-    apiType: "get",
-  });
-};
-const createAccessory = (accessory: IAccessory) => {
-  return request<IAccessory>({
-    requestUrl: requestUrl,
-    apiType: "post",
-    queryData: accessory,
-  });
-};
-const updateAccessory = (accessory: IAccessory) => {
-  return request<IAccessory>({
-    requestUrl: requestUrl,
-    apiType: "put",
-    queryData: accessory,
-  });
-};
-const removeAccessory = (id: string) => {
-  return request<IAccessory>({
-    requestUrl: requestUrl + id,
-    apiType: "delete",
-  });
-};
+import { accessoryRequests } from "./requests";
+interface IResponse {
+  data: IAccessory[] | IAccessory | null;
+  message: string;
+  success: boolean;
+  status: number;
+}
 
 function* fetchAccessoriesSaga() {
   try {
-    const { data, message, success, status }: BackendResponse<IAccessory> =
-      yield call(fetchAccessories);
+    const { data, message, success, status }: IResponse = yield call(
+      accessoryRequests.getAll
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(
         accessoryActions.getAllSuccess({
@@ -60,10 +35,12 @@ function* fetchAccessoriesSaga() {
 }
 function* fetchAccessorySaga(action: FetchAccessoryRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<IAccessory> =
-      yield call(fetchAccessory, action.payload.id);
+    const { data, message, success, status }: IResponse = yield call(
+      accessoryRequests.get,
+      action.payload.id
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(
         accessoryActions.getSuccess({
@@ -81,10 +58,12 @@ function* fetchAccessorySaga(action: FetchAccessoryRequest) {
 }
 function* createAccessorySaga(action: UpdateAccessoryRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<IAccessory> =
-      yield call(createAccessory, action.payload.accessory);
+    const { data, message, success, status }: IResponse = yield call(
+      accessoryRequests.create,
+      action.payload.accessory
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(accessoryActions.createSuccess());
     }
@@ -98,10 +77,12 @@ function* createAccessorySaga(action: UpdateAccessoryRequest) {
 }
 function* updateAccessorySaga(action: UpdateAccessoryRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<IAccessory> =
-      yield call(updateAccessory, action.payload.accessory);
+    const { data, message, success, status }: IResponse = yield call(
+      accessoryRequests.update,
+      action.payload.accessory
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(accessoryActions.updateSuccess());
     }
@@ -115,10 +96,12 @@ function* updateAccessorySaga(action: UpdateAccessoryRequest) {
 }
 function* removeAccessorySaga(action: FetchAccessoryRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<IAccessory> =
-      yield call(removeAccessory, action.payload.id);
+    const { data, message, success, status }: IResponse = yield call(
+      accessoryRequests.remove,
+      action.payload.id
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(accessoryActions.removeSuccess());
     }

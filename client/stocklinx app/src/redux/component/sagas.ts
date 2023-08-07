@@ -5,44 +5,22 @@ import { BackendResponse, request } from "../../server/api";
 import { checkEmpty } from "../../functions/checkEmpty";
 import { componentConst } from "./constant";
 import { FetchComponentRequest, UpdateComponentRequest } from "./type";
-const requestUrl = "Component/";
+import { componentRequests } from "./requests";
 
-const fetchComponents = () => {
-  return request<IComponent>({ requestUrl: requestUrl, apiType: "get" });
-};
-const fetchComponent = (id: string) => {
-  return request<IComponent>({
-    requestUrl: requestUrl + id,
-    apiType: "get",
-  });
-};
-const createComponent = (component: IComponent) => {
-  return request<IComponent>({
-    requestUrl: requestUrl,
-    apiType: "post",
-    queryData: component,
-  });
-};
-const updateComponent = (component: IComponent) => {
-  return request<IComponent>({
-    requestUrl: requestUrl,
-    apiType: "put",
-    queryData: component,
-  });
-};
-const removeComponent = (id: string) => {
-  return request<IComponent>({
-    requestUrl: requestUrl + id,
-    apiType: "delete",
-  });
-};
+interface IResponse {
+  data: IComponent[] | IComponent | null;
+  message: string;
+  success: boolean;
+  status: number;
+}
 
 function* fetchComponentsSaga() {
   try {
-    const { data, message, success, status }: BackendResponse<IComponent> =
-      yield call(fetchComponents);
+    const { data, message, success, status }: IResponse = yield call(
+      componentRequests.getAll
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(
         componentActions.getAllSuccess({
@@ -60,10 +38,12 @@ function* fetchComponentsSaga() {
 }
 function* fetchComponentSaga(action: FetchComponentRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<IComponent> =
-      yield call(fetchComponent, action.payload.id);
+    const { data, message, success, status }: IResponse = yield call(
+      componentRequests.get,
+      action.payload.id
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(
         componentActions.getSuccess({
@@ -81,10 +61,12 @@ function* fetchComponentSaga(action: FetchComponentRequest) {
 }
 function* createComponentSaga(action: UpdateComponentRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<IComponent> =
-      yield call(createComponent, action.payload.component);
+    const { data, message, success, status }: IResponse = yield call(
+      componentRequests.create,
+      action.payload.component
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(componentActions.createSuccess());
     }
@@ -98,10 +80,12 @@ function* createComponentSaga(action: UpdateComponentRequest) {
 }
 function* updateComponentSaga(action: UpdateComponentRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<IComponent> =
-      yield call(updateComponent, action.payload.component);
+    const { data, message, success, status }: IResponse = yield call(
+      componentRequests.update,
+      action.payload.component
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(componentActions.updateSuccess());
     }
@@ -115,10 +99,12 @@ function* updateComponentSaga(action: UpdateComponentRequest) {
 }
 function* removeComponentSaga(action: FetchComponentRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<IComponent> =
-      yield call(removeComponent, action.payload.id);
+    const { data, message, success, status }: IResponse = yield call(
+      componentRequests.remove,
+      action.payload.id
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(componentActions.removeSuccess());
     }

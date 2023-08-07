@@ -1,12 +1,16 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { userActions } from "./actions";
-import { IUser, IUserLoginDto } from "../../interfaces/interfaces";
-import { BackendResponse, request } from "../../server/api";
-import { checkEmpty } from "../../functions/checkEmpty";
 import { userConst } from "./constant";
 import { SignInRequest } from "./type";
-const requestUrl = "User/";
+import { userRequests } from "./requests";
+import { IUser } from "../../interfaces/interfaces";
 
+interface IResponse {
+  data: IUser[] | IUser | null;
+  message: string;
+  success: boolean;
+  status: number;
+}
 interface ISignInResponse {
   data: { token: string } | null;
   message: string;
@@ -14,35 +18,13 @@ interface ISignInResponse {
   status: number;
 }
 
-const fetchUsers = () => {
-  return request<IUser>({ requestUrl: requestUrl, apiType: "get" });
-};
-const fetchUser = () => {
-  return request<IUser>({
-    requestUrl: requestUrl,
-    apiType: "get",
-  });
-};
-const signIn = (loginDto: IUserLoginDto) => {
-  return request<IUserLoginDto>({
-    requestUrl: requestUrl + "login",
-    queryData: loginDto,
-    apiType: "post",
-  });
-};
-const getUserWithToken = () => {
-  return request<IUser>({
-    requestUrl: requestUrl + "getWithToken",
-    apiType: "get",
-  });
-};
-
 function* fetchUsersSaga() {
   try {
-    const { data, message, success, status }: BackendResponse<IUser> =
-      yield call(fetchUsers);
+    const { data, message, success, status }: IResponse = yield call(
+      userRequests.getAll
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(
         userActions.getAllSuccess({
@@ -60,10 +42,11 @@ function* fetchUsersSaga() {
 }
 function* fetchUsersaga(action: any) {
   try {
-    const { data, message, success, status }: BackendResponse<IUser> =
-      yield call(fetchUser);
+    const { data, message, success, status }: IResponse = yield call(
+      userRequests.get
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(
         userActions.getSuccess({
@@ -81,8 +64,10 @@ function* fetchUsersaga(action: any) {
 }
 function* signInSaga(action: SignInRequest) {
   try {
-    const response: ISignInResponse = yield call(signIn, action.payload.user);
-
+    const response: ISignInResponse = yield call(
+      userRequests.signIn,
+      action.payload.user
+    );
     if (!response.success) {
       throw new Error(response.message);
     } else {
@@ -99,10 +84,11 @@ function* signInSaga(action: SignInRequest) {
 }
 function* getUserWithTokenSaga() {
   try {
-    const { data, message, success, status }: BackendResponse<IUser> =
-      yield call(getUserWithToken);
+    const { data, message, success, status }: IResponse = yield call(
+      userRequests.getWithToken
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(
         userActions.getSuccess({

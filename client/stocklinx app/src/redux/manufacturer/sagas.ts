@@ -1,48 +1,24 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { manufacturerActions } from "./actions";
 import { IManufacturer } from "../../interfaces/interfaces";
-import { BackendResponse, request } from "../../server/api";
-import { checkEmpty } from "../../functions/checkEmpty";
 import { manufacturerConst } from "./constant";
 import { FetchManufacturerRequest, UpdateManufacturerRequest } from "./type";
-const requestUrl = "Manufacturer/";
+import { manufacturerRequests } from "./requests";
 
-const fetchManufacturers = () => {
-  return request<IManufacturer>({ requestUrl: requestUrl, apiType: "get" });
-};
-const fetchManufacturer = (id: string) => {
-  return request<IManufacturer>({
-    requestUrl: requestUrl + id,
-    apiType: "get",
-  });
-};
-const createManufacturer = (manufacturer: IManufacturer) => {
-  return request<IManufacturer>({
-    requestUrl: requestUrl,
-    apiType: "post",
-    queryData: manufacturer,
-  });
-};
-const updateManufacturer = (manufacturer: IManufacturer) => {
-  return request<IManufacturer>({
-    requestUrl: requestUrl,
-    apiType: "put",
-    queryData: manufacturer,
-  });
-};
-const removeManufacturer = (id: string) => {
-  return request<IManufacturer>({
-    requestUrl: requestUrl + id,
-    apiType: "delete",
-  });
-};
+interface IResponse {
+  data: IManufacturer[] | IManufacturer | null;
+  message: string;
+  success: boolean;
+  status: number;
+}
 
 function* fetchManufacturersSaga() {
   try {
-    const { data, message, success, status }: BackendResponse<IManufacturer> =
-      yield call(fetchManufacturers);
+    const { data, message, success, status }: IResponse = yield call(
+      manufacturerRequests.getAll
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(
         manufacturerActions.getAllSuccess({
@@ -60,10 +36,12 @@ function* fetchManufacturersSaga() {
 }
 function* fetchManufacturerSaga(action: FetchManufacturerRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<IManufacturer> =
-      yield call(fetchManufacturer, action.payload.id);
+    const { data, message, success, status }: IResponse = yield call(
+      manufacturerRequests.get,
+      action.payload.id
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(
         manufacturerActions.getSuccess({
@@ -81,10 +59,12 @@ function* fetchManufacturerSaga(action: FetchManufacturerRequest) {
 }
 function* createManufacturerSaga(action: UpdateManufacturerRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<IManufacturer> =
-      yield call(createManufacturer, action.payload.manufacturer);
+    const { data, message, success, status }: IResponse = yield call(
+      manufacturerRequests.create,
+      action.payload.manufacturer
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(manufacturerActions.createSuccess());
     }
@@ -98,10 +78,12 @@ function* createManufacturerSaga(action: UpdateManufacturerRequest) {
 }
 function* updateManufacturerSaga(action: UpdateManufacturerRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<IManufacturer> =
-      yield call(updateManufacturer, action.payload.manufacturer);
+    const { data, message, success, status }: IResponse = yield call(
+      manufacturerRequests.update,
+      action.payload.manufacturer
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(manufacturerActions.updateSuccess());
     }
@@ -115,10 +97,12 @@ function* updateManufacturerSaga(action: UpdateManufacturerRequest) {
 }
 function* removeManufacturerSaga(action: FetchManufacturerRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<IManufacturer> =
-      yield call(removeManufacturer, action.payload.id);
+    const { data, message, success, status }: IResponse = yield call(
+      manufacturerRequests.remove,
+      action.payload.id
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(manufacturerActions.removeSuccess());
     }

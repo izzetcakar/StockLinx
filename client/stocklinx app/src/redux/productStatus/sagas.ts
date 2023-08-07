@@ -1,48 +1,24 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { productStatusActions } from "./actions";
 import { IProductStatus } from "../../interfaces/interfaces";
-import { BackendResponse, request } from "../../server/api";
-import { checkEmpty } from "../../functions/checkEmpty";
 import { productStatusConst } from "./constant";
 import { FetchProductStatusRequest, UpdateProductStatusRequest } from "./type";
-const requestUrl = "ProductStatus/";
+import { productStatusRequests } from "./requests";
 
-const fetchProductStatuses = () => {
-  return request<IProductStatus>({ requestUrl: requestUrl, apiType: "get" });
-};
-const fetchProductStatus = (id: string) => {
-  return request<IProductStatus>({
-    requestUrl: requestUrl + id,
-    apiType: "get",
-  });
-};
-const createProductStatus = (productStatus: IProductStatus) => {
-  return request<IProductStatus>({
-    requestUrl: requestUrl,
-    apiType: "post",
-    queryData: productStatus,
-  });
-};
-const updateProductStatus = (productStatus: IProductStatus) => {
-  return request<IProductStatus>({
-    requestUrl: requestUrl,
-    apiType: "put",
-    queryData: productStatus,
-  });
-};
-const removeProductStatus = (id: string) => {
-  return request<IProductStatus>({
-    requestUrl: requestUrl + id,
-    apiType: "delete",
-  });
-};
+interface IResponse {
+  data: IProductStatus[] | IProductStatus | null;
+  message: string;
+  success: boolean;
+  status: number;
+}
 
 function* fetchProductStatusesSaga() {
   try {
-    const { data, message, success, status }: BackendResponse<IProductStatus> =
-      yield call(fetchProductStatuses);
+    const { data, message, success, status }: IResponse = yield call(
+      productStatusRequests.getAll
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(
         productStatusActions.getAllSuccess({
@@ -60,10 +36,12 @@ function* fetchProductStatusesSaga() {
 }
 function* fetchProductStatusSaga(action: FetchProductStatusRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<IProductStatus> =
-      yield call(fetchProductStatus, action.payload.id);
+    const { data, message, success, status }: IResponse = yield call(
+      productStatusRequests.get,
+      action.payload.id
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(
         productStatusActions.getSuccess({
@@ -81,10 +59,12 @@ function* fetchProductStatusSaga(action: FetchProductStatusRequest) {
 }
 function* createProductStatusSaga(action: UpdateProductStatusRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<IProductStatus> =
-      yield call(createProductStatus, action.payload.productStatus);
+    const { data, message, success, status }: IResponse = yield call(
+      productStatusRequests.create,
+      action.payload.productStatus
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(productStatusActions.createSuccess());
     }
@@ -98,10 +78,12 @@ function* createProductStatusSaga(action: UpdateProductStatusRequest) {
 }
 function* updateProductStatusSaga(action: UpdateProductStatusRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<IProductStatus> =
-      yield call(updateProductStatus, action.payload.productStatus);
+    const { data, message, success, status }: IResponse = yield call(
+      productStatusRequests.update,
+      action.payload.productStatus
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(productStatusActions.updateSuccess());
     }
@@ -115,10 +97,12 @@ function* updateProductStatusSaga(action: UpdateProductStatusRequest) {
 }
 function* removeProductStatusSaga(action: FetchProductStatusRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<IProductStatus> =
-      yield call(removeProductStatus, action.payload.id);
+    const { data, message, success, status }: IResponse = yield call(
+      productStatusRequests.remove,
+      action.payload.id
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(productStatusActions.removeSuccess());
     }

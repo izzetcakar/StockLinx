@@ -1,46 +1,23 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { companyActions } from "./actions";
 import { ICompany } from "../../interfaces/interfaces";
-import { BackendResponse, request } from "../../server/api";
-import { checkEmpty } from "../../functions/checkEmpty";
+import { BackendResponse } from "../../server/api";
 import { companyConst } from "./constant";
 import { FetchCompanyRequest, UpdateCompanyRequest } from "./type";
-const requestUrl = "Company/";
+import { companyRequests } from "./requests";
 
-const fetchCompanies = () => {
-  return request<ICompany>({ requestUrl: requestUrl, apiType: "get" });
-};
-const fetchCompany = (id: string) => {
-  return request<ICompany>({
-    requestUrl: requestUrl + id,
-    apiType: "get",
-  });
-};
-const createCompany = (company: ICompany) => {
-  return request<ICompany>({
-    requestUrl: requestUrl,
-    apiType: "post",
-    queryData: company,
-  });
-};
-const updateCompany = (company: ICompany) => {
-  return request<ICompany>({
-    requestUrl: requestUrl,
-    apiType: "put",
-    queryData: company,
-  });
-};
-const removeCompany = (id: string) => {
-  return request<ICompany>({
-    requestUrl: requestUrl + id,
-    apiType: "delete",
-  });
-};
+interface IResponse {
+  data: ICompany[] | ICompany | null;
+  message: string;
+  success: boolean;
+  status: number;
+}
 
 function* fetchCompaniesSaga() {
   try {
-    const { data, message, success, status }: BackendResponse<ICompany> =
-      yield call(fetchCompanies);
+    const { data, message, success, status }: IResponse = yield call(
+      companyRequests.getAll
+    );
     if (success !== undefined && !success) {
       throw new Error(message as string);
     } else {
@@ -60,10 +37,12 @@ function* fetchCompaniesSaga() {
 }
 function* fetchCompanySaga(action: FetchCompanyRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<ICompany> =
-      yield call(fetchCompany, action.payload.id);
+    const { data, message, success, status }: IResponse = yield call(
+      companyRequests.get,
+      action.payload.id
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(
         companyActions.getSuccess({
@@ -81,10 +60,12 @@ function* fetchCompanySaga(action: FetchCompanyRequest) {
 }
 function* createCompanySaga(action: UpdateCompanyRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<ICompany> =
-      yield call(createCompany, action.payload.company);
+    const { data, message, success, status }: IResponse = yield call(
+      companyRequests.create,
+      action.payload.company
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(companyActions.createSuccess());
     }
@@ -98,10 +79,12 @@ function* createCompanySaga(action: UpdateCompanyRequest) {
 }
 function* updateCompanySaga(action: UpdateCompanyRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<ICompany> =
-      yield call(updateCompany, action.payload.company);
+    const { data, message, success, status }: IResponse = yield call(
+      companyRequests.update,
+      action.payload.company
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(companyActions.updateSuccess());
     }
@@ -115,10 +98,12 @@ function* updateCompanySaga(action: UpdateCompanyRequest) {
 }
 function* removeCompanySaga(action: FetchCompanyRequest) {
   try {
-    const { data, message, success, status }: BackendResponse<ICompany> =
-      yield call(removeCompany, action.payload.id);
+    const { data, message, success, status }: IResponse = yield call(
+      companyRequests.remove,
+      action.payload.id
+    );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(companyActions.removeSuccess());
     }
