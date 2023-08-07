@@ -73,12 +73,16 @@
     color: white;
   }
   .icon {
-    object-fit: cover;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 0.5rem 0.8rem;
     border-radius: 4px;
+    object-fit: cover;
+  }
+  .logo {
+    width: 1.4rem;
+    height: 1.4rem;
   }
   .title {
     flex: 1;
@@ -91,7 +95,6 @@
     white-space: nowrap;
   }
 }
-
 .arrow-down {
   margin-left: auto;
   height: 1.4rem;
@@ -103,10 +106,8 @@
 .navigation-item:first-child {
   margin-top: 1rem;
   .icon {
-    width: 2rem;
-    height: 2rem;
     object-fit: contain;
-    padding: 0.5rem;
+    padding: 0.5rem 0.8rem;
   }
 }
 .navigation-item:last-child {
