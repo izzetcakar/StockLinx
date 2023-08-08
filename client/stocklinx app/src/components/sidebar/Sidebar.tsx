@@ -152,7 +152,7 @@ const Sidebar: React.FC = () => {
             onClick={() => navigateUser(item, index)}
           >
             <div className="icon">
-              <i className={`bx bx-${item.icon}`} style={{ fontSize: "1.4rem", color: item.target === location.pathname ? "white" : item.color }}></i>
+              <i className={`bx bx-${item.icon}`} style={{ fontSize: "1.4rem", color: item.target === location.pathname ? "white" : item.color }} />
             </div>
             <div className="title">{item.title}</div>
             {checkEmpty(item?.subItems) ? (
@@ -163,7 +163,7 @@ const Sidebar: React.FC = () => {
                     : "arrow-down"
                 }
               >
-                <i className='bx bx-chevron-down' style={{ fontSize: "1.4rem", color: "#737373" }}></i>
+                <i className='bx bx-chevron-down' style={{ fontSize: "1.4rem", color: "#737373" }} />
               </div>
             ) : null}
           </div>
@@ -175,7 +175,7 @@ const Sidebar: React.FC = () => {
                 onClick={() => navigateUser(subItem, nestedIndex)}
               >
                 <div className="icon">
-                  <i className={`bx bx-${subItem.icon}`} style={{ fontSize: "1.4rem", color: checkIfSelected(subItem) ? "white" : subItem.color }}></i>
+                  <i className={`bx bx-${subItem.icon}`} style={{ fontSize: "1.4rem", color: checkIfSelected(subItem) ? "white" : subItem.color }} />
                 </div>
                 <div className="title">{subItem.title}</div>
               </div>
