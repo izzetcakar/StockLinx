@@ -42,7 +42,7 @@ export interface BaseEntity {
 export interface IProductStatus extends BaseEntity {
   name: string;
 }
-interface IBaseProduct extends BaseEntity {
+export interface IBaseProduct extends BaseEntity {
   categoryId: string | null;
   locationId: string | null;
   companyId: string | null;
