@@ -4,7 +4,6 @@ import { useForm } from '@mantine/form';
 import { closeModal } from '@mantine/modals';
 import { IconUpload } from '@tabler/icons-react';
 import { modals } from '@mantine/modals';
-import { v4 as uuidv4 } from "uuid";
 import { ISupplier } from '../../../interfaces/interfaces';
 import { handleImageChange } from '../functions/formFunctions';
 import MantineSelect from '../components/MantineSelect';
@@ -28,7 +27,7 @@ const SupplierForm: React.FC<SupplierFormProps> = ({
 
     const form = useForm<ISupplier>({
         initialValues: supplier ? { ...supplier } : {
-            id: uuidv4(),
+            id: "",
             locationId: null,
             name: "",
             imagePath: null,
@@ -57,8 +56,8 @@ const SupplierForm: React.FC<SupplierFormProps> = ({
     });
 
     return (
-        <form onSubmit={form.onSubmit((values) => handleSubmit(values))} >
-            <ScrollArea type="auto">
+        <ScrollArea.Autosize type="always" offsetScrollbars mah={600}>
+            <form onSubmit={form.onSubmit((values) => handleSubmit(values))} >
                 <Flex direction="column" gap={10} mx="auto" maw="auto" px={40}>
                     <MantineSelect
                         form={form}
@@ -129,8 +128,8 @@ const SupplierForm: React.FC<SupplierFormProps> = ({
                         </Button>
                     </Group>
                 </Flex>
-            </ScrollArea>
-        </form >
+            </form >
+        </ScrollArea.Autosize>
     );
 }
 

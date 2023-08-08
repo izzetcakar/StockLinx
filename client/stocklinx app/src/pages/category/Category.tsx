@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { modals } from "@mantine/modals";
-import TestForm from "../../components/form/TestForm";
 import GridTable from "../../components/gridTable/GridTable";
 import CustomPopup from "../../components/popup/CustomPopup";
 import { ICategory } from "../../interfaces/interfaces";
@@ -55,10 +54,7 @@ const Category = () => {
         });
 
     return (
-        <div
-            className="datagrid-wrapper"
-            style={{ display: "flex", flexDirection: "column", gap: "2rem" }}
-        >
+        <div>
             <GridTable
                 data={categories}
                 columns={columns}
@@ -71,20 +67,6 @@ const Category = () => {
                 onRowUpdate={onRowUpdate}
                 onRowRemove={onRowDelete}
                 onStartEdit={onStartEdit}
-            />
-            <CustomPopup
-                visible={formVisible}
-                title="Custom Form"
-                showTitle={true}
-                showCloseButton={true}
-                dragEnabled={false}
-                height={"fit-content"}
-                width={300}
-                hideOnOutsideClick={false}
-                handleClose={handleFormVisible}
-                renderContent={() => (
-                    <TestForm submitFunc={handleUpdate} columns={columns} />
-                )}
             />
         </div>
     );

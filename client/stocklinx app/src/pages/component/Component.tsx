@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { modals } from "@mantine/modals";
-import TestForm from "../../components/form/TestForm";
 import ComponentForm from "../../components/form/product/component/ComponentForm";
 import GridTable from "../../components/gridTable/GridTable";
 import CustomPopup from "../../components/popup/CustomPopup";
@@ -16,7 +15,6 @@ const Component = () => {
   const dispatch = useDispatch();
   const [formVisible, setFormVisible] = useState<boolean>(false);
   const components = useSelector((state: RootState) => state.component.components);
-  const categories = useSelector((state: RootState) => state.category.categories);
 
   const columns: Column[] = [
     {
@@ -96,10 +94,7 @@ const Component = () => {
     });
 
   return (
-    <div
-      className="datagrid-wrapper"
-      style={{ display: "flex", flexDirection: "column", gap: "2rem" }}
-    >
+    <div>
       <GridTable
         data={components}
         columns={columns}
@@ -112,20 +107,6 @@ const Component = () => {
         onRowUpdate={onRowUpdate}
         onRowRemove={onRowDelete}
         onStartEdit={onStartEdit}
-      />
-      <CustomPopup
-        visible={formVisible}
-        title="Custom Form"
-        showTitle={true}
-        showCloseButton={true}
-        dragEnabled={false}
-        height={"fit-content"}
-        width={300}
-        hideOnOutsideClick={false}
-        handleClose={handleFormVisible}
-        renderContent={() => (
-          <TestForm submitFunc={handleUpdate} columns={columns} />
-        )}
       />
     </div>
   );

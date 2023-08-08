@@ -6,7 +6,6 @@ import { closeModal } from '@mantine/modals';
 import { IconUpload } from '@tabler/icons-react';
 import { modals } from '@mantine/modals';
 import { IConsumable } from '../../../../interfaces/interfaces';
-import { v4 as uuidv4 } from "uuid";
 import { handleImageChange } from '../../functions/formFunctions';
 import { IMantinSelectProps } from '../../interfaces/interfaces';
 import MantineSelect from '../../components/MantineSelect';
@@ -39,7 +38,7 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
 
     const form = useForm<IConsumable>({
         initialValues: consumable ? { ...consumable } : {
-            id: uuidv4(),
+            id: "",
             categoryId: null,
             companyId: null,
             locationId: null,
@@ -117,8 +116,8 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
     ]
 
     return (
-        <form onSubmit={form.onSubmit((values) => handleSubmit(values))} >
-            <ScrollArea type="auto">
+        <ScrollArea.Autosize type="always" offsetScrollbars mah={600}>
+            <form onSubmit={form.onSubmit((values) => handleSubmit(values))} >
                 <Flex direction="column" gap={10} mx="auto" maw="auto" px={40}>
                     {selectComponentData.map((selectData) =>
                         <MantineSelect
@@ -213,8 +212,8 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
                         </Button>
                     </Group>
                 </Flex>
-            </ScrollArea>
-        </form >
+            </form >
+        </ScrollArea.Autosize>
     );
 }
 

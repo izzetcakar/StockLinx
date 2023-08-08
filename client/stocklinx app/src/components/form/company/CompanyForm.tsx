@@ -4,7 +4,6 @@ import { useForm } from '@mantine/form';
 import { closeModal } from '@mantine/modals';
 import { IconUpload } from '@tabler/icons-react';
 import { modals } from '@mantine/modals';
-import { v4 as uuidv4 } from "uuid";
 import { ICompany } from '../../../interfaces/interfaces';
 import { handleImageChange } from '../functions/formFunctions';
 
@@ -20,7 +19,7 @@ const CompanyForm: React.FC<CompanyFormProps> = ({
 
     const form = useForm<ICompany>({
         initialValues: company ? { ...company } : {
-            id: uuidv4(),
+            id: "",
             name: "",
             imagePath: null,
         },
@@ -42,8 +41,8 @@ const CompanyForm: React.FC<CompanyFormProps> = ({
     });
 
     return (
-        <form onSubmit={form.onSubmit((values) => handleSubmit(values))} >
-            <ScrollArea type="auto">
+        <ScrollArea.Autosize type="always" offsetScrollbars mah={600}>
+            <form onSubmit={form.onSubmit((values) => handleSubmit(values))} >
                 <Flex direction="column" gap={10} mx="auto" maw="auto" px={40}>
                     <TextInput
                         label="Name"
@@ -70,8 +69,8 @@ const CompanyForm: React.FC<CompanyFormProps> = ({
                         </Button>
                     </Group>
                 </Flex>
-            </ScrollArea>
-        </form >
+            </form >
+        </ScrollArea.Autosize>
     );
 }
 

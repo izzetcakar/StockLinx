@@ -4,8 +4,7 @@ import { useForm } from '@mantine/form';
 import { closeModal } from '@mantine/modals';
 import { IconUpload } from '@tabler/icons-react';
 import { modals } from '@mantine/modals';
-import { v4 as uuidv4 } from "uuid";
-import { ApiStatus, IModel } from '../../../interfaces/interfaces';
+import { IModel } from '../../../interfaces/interfaces';
 import { handleImageChange } from '../functions/formFunctions';
 import { IMantinSelectProps } from '../interfaces/interfaces';
 import MantineSelect from '../components/MantineSelect';
@@ -32,7 +31,7 @@ const ModelForm: React.FC<ModelFormProps> = ({
 
     const form = useForm<IModel>({
         initialValues: model ? { ...model } : {
-            id: uuidv4(),
+            id: "",
             categoryId: null,
             manufacturerId: null,
             name: "",
@@ -76,8 +75,8 @@ const ModelForm: React.FC<ModelFormProps> = ({
     ]
 
     return (
-        <form onSubmit={form.onSubmit((values) => handleSubmit(values))} >
-            <ScrollArea type="auto">
+        <ScrollArea.Autosize type="always" offsetScrollbars mah={600}>
+            <form onSubmit={form.onSubmit((values) => handleSubmit(values))} >
                 <Flex direction="column" gap={10} mx="auto" maw="auto" px={40}>
                     {selectComponentData.map((selectData) =>
                         <MantineSelect
@@ -125,8 +124,8 @@ const ModelForm: React.FC<ModelFormProps> = ({
                         </Button>
                     </Group>
                 </Flex>
-            </ScrollArea>
-        </form >
+            </form >
+        </ScrollArea.Autosize>
     );
 }
 

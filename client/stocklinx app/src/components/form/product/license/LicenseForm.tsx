@@ -6,7 +6,6 @@ import { closeModal } from '@mantine/modals';
 import { IconUpload } from '@tabler/icons-react';
 import { modals } from '@mantine/modals';
 import { ILicense } from '../../../../interfaces/interfaces';
-import { v4 as uuidv4 } from "uuid";
 import { handleImageChange } from '../../functions/formFunctions';
 import { IMantinSelectProps } from '../../interfaces/interfaces';
 import MantineSelect from '../../components/MantineSelect';
@@ -42,7 +41,7 @@ const LicenseForm: React.FC<LicenseFormProps> = ({
 
     const form = useForm<ILicense>({
         initialValues: license ? { ...license } : {
-            id: uuidv4(),
+            id: "",
             categoryId: null,
             companyId: null,
             locationId: null,
@@ -129,8 +128,8 @@ const LicenseForm: React.FC<LicenseFormProps> = ({
     ]
 
     return (
-        <form onSubmit={form.onSubmit((values) => handleSubmit(values))} >
-            <ScrollArea type="auto">
+        <ScrollArea.Autosize type="always" offsetScrollbars mah={600}>
+            <form onSubmit={form.onSubmit((values) => handleSubmit(values))} >
                 <Flex direction="column" gap={10} mx="auto" maw="auto" px={40}>
                     {selectComponentData.map((selectData) =>
                         <MantineSelect
@@ -242,8 +241,8 @@ const LicenseForm: React.FC<LicenseFormProps> = ({
                         </Button>
                     </Group>
                 </Flex>
-            </ScrollArea>
-        </form >
+            </form >
+        </ScrollArea.Autosize>
     );
 }
 

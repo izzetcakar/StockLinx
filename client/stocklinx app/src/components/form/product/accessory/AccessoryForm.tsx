@@ -78,11 +78,11 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({
     const handleSubmit = (data: object) => {
         openNotification();
         submitFunc(data);
-        notifications.hide("create-accessory-notification");
+        notifications.hide("accessory-notification");
     };
     const openNotification = () => {
         notifications.show({
-            id: 'create-accessory-notification',
+            id: 'accessory-notification',
             loading: accessoryApiStatus,
             message: 'Creating accessory',
             autoClose: false,
@@ -91,7 +91,7 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({
             radius: "md",
         });
     };
-    const openNextModel = () => modals.open({
+    const openNextModal = () => modals.open({
         modalId: 'next-modal',
         title: 'Page 2',
         children: (
@@ -233,7 +233,7 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({
                         <Button type="submit" color="dark">
                             Submit
                         </Button>
-                        <Button onClick={() => openNextModel()} color="dark">
+                        <Button onClick={() => openNextModal()} color="dark">
                             Next Modal
                         </Button>
                     </Group>

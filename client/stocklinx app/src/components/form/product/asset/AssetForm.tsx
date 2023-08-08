@@ -9,7 +9,6 @@ import { IAsset } from '../../../../interfaces/interfaces';
 import { handleImageChange } from '../../functions/formFunctions';
 import MantineSelect from '../../components/MantineSelect';
 import { IMantinSelectProps } from '../../interfaces/interfaces';
-import { v4 as uuidv4 } from "uuid";
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../redux/rootReducer';
 import { useDispatch } from 'react-redux';
@@ -45,7 +44,7 @@ const AssetForm: React.FC<AssetFormProps> = ({
 
     const form = useForm<IAsset>({
         initialValues: asset ? { ...asset } : {
-            id: uuidv4(),
+            id: "",
             manufacturerId: null,
             categoryId: null,
             locationId: null,
@@ -165,8 +164,8 @@ const AssetForm: React.FC<AssetFormProps> = ({
         },
     ]
     return (
-        <form onSubmit={form.onSubmit((values) => handleSubmit(values))} >
-            <ScrollArea type="auto">
+        <ScrollArea.Autosize type="always" offsetScrollbars mah={600}>
+            <form onSubmit={form.onSubmit((values) => handleSubmit(values))} >
                 <Flex direction="column" gap={10} mx="auto" maw="auto" px={40}>
                     {selectComponentData.map((selectData) =>
                         <MantineSelect
@@ -260,8 +259,8 @@ const AssetForm: React.FC<AssetFormProps> = ({
                         </Button>
                     </Group>
                 </Flex>
-            </ScrollArea>
-        </form >
+            </form >
+        </ScrollArea.Autosize>
     );
 }
 
