@@ -1,4 +1,3 @@
-import "./accessory.scss";
 import { modals } from '@mantine/modals';
 import AccessoryForm from "../../components/form/product/accessory/AccessoryForm";
 import GridTable from "../../components/gridTable/GridTable";
@@ -21,10 +20,10 @@ import { categoryActions } from "../../redux/category/actions";
 import { locationActions } from "../../redux/location/actions";
 import { companyActions } from "../../redux/company/actions";
 import { productStatusActions } from "../../redux/productStatus/actions";
+import "./accessory.scss";
 
 const Accessory = () => {
   const dispatch = useDispatch();
-  const accessory = useSelector((state: RootState) => state.accessory.accessory);
   const accessories = useSelector((state: RootState) => state.accessory.accessories);
 
   const columns = [
@@ -103,10 +102,10 @@ const Accessory = () => {
   const handleUpdate = (data: object) => {
     const id = (data as IAccessory).id;
     console.log(id);
-    id ? dispatch(accessoryActions.update({ accessory: data as IAccessory })) : dispatch(accessoryActions.create({ accessory: data as IAccessory }));
+    id ? dispatch(accessoryActions.update({ accessory: data as IAccessory })) :
+      dispatch(accessoryActions.create({ accessory: data as IAccessory }));
     dispatch(accessoryActions.getAll());
   };
-
   const openAccessoryModal = (accessory?: IAccessory) => modals.open({
     modalId: 'accessory-modal',
     title: 'Update',
@@ -115,6 +114,7 @@ const Accessory = () => {
     ),
     xOffset: "auto",
   });
+
   const refreshData = () => {
     dispatch(accessoryActions.getAll());
     dispatch(manufacturerActions.getAll());
@@ -126,10 +126,7 @@ const Accessory = () => {
   };
 
   return (
-    <div
-      className="datagrid-wrapper"
-      style={{ display: "flex", flexDirection: "column", gap: "2rem" }}
-    >
+    <div>
       <GridTable
         data={accessories}
         columns={columns}
@@ -143,18 +140,6 @@ const Accessory = () => {
         onRowRemove={onRowRemove}
         onStartEdit={onStartEdit}
       />
-      {/* <CustomPopup
-        visible={formVisible}
-        title="Custom Form"
-        showTitle={true}
-        showCloseButton={true}
-        dragEnabled={false}
-        height={"fit-content"}
-        width={300}
-        hideOnOutsideClick={false}
-        handleClose={handleFormVisible}
-        renderContent={() => <TestForm submitFunc={handleUpdate} columns={columns} />}
-      /> */}
     </div>
   );
 };
