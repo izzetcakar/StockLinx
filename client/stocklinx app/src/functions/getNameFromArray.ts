@@ -1,6 +1,6 @@
-import { IdentifiableItem } from "../interfaces/interfaces";
+import { BaseEntity, IdentifiableItem } from "../interfaces/interfaces";
 
-export const getNameFromArray = <T extends IdentifiableItem>(
+export const getNameFromArray = <T extends BaseEntity>(
   array: T[],
   id: string
 ): string => {
