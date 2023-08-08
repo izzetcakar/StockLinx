@@ -15,7 +15,7 @@ interface IResponse {
 
 function* fetchCompaniesSaga() {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       companyRequests.getAll
     );
     if (success !== undefined && !success) {
@@ -37,7 +37,7 @@ function* fetchCompaniesSaga() {
 }
 function* fetchCompanySaga(action: FetchCompanyRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       companyRequests.get,
       action.payload.id
     );
@@ -60,7 +60,7 @@ function* fetchCompanySaga(action: FetchCompanyRequest) {
 }
 function* createCompanySaga(action: UpdateCompanyRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { message, success }: IResponse = yield call(
       companyRequests.create,
       action.payload.company
     );
@@ -79,7 +79,7 @@ function* createCompanySaga(action: UpdateCompanyRequest) {
 }
 function* updateCompanySaga(action: UpdateCompanyRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { message, success }: IResponse = yield call(
       companyRequests.update,
       action.payload.company
     );
@@ -98,7 +98,7 @@ function* updateCompanySaga(action: UpdateCompanyRequest) {
 }
 function* removeCompanySaga(action: FetchCompanyRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { message, success }: IResponse = yield call(
       companyRequests.remove,
       action.payload.id
     );

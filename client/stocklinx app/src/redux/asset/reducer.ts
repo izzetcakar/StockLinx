@@ -22,6 +22,10 @@ export default (state = initialState, action: AssetActions) => {
         pending: false,
         error: null,
         assets: action.payload.assets,
+        selectData: action.payload.assets.map((asset) => ({
+          value: asset.id as string,
+          label: asset.name,
+        })),
       };
     case assetConst.FETCH_ASSETS_FAILURE:
       return {

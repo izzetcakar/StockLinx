@@ -14,7 +14,7 @@ interface IResponse {
 
 function* fetchProductStatusesSaga() {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       productStatusRequests.getAll
     );
     if (success !== undefined && !success) {
@@ -36,7 +36,7 @@ function* fetchProductStatusesSaga() {
 }
 function* fetchProductStatusSaga(action: FetchProductStatusRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       productStatusRequests.get,
       action.payload.id
     );
@@ -59,7 +59,7 @@ function* fetchProductStatusSaga(action: FetchProductStatusRequest) {
 }
 function* createProductStatusSaga(action: UpdateProductStatusRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { message, success }: IResponse = yield call(
       productStatusRequests.create,
       action.payload.productStatus
     );
@@ -78,7 +78,7 @@ function* createProductStatusSaga(action: UpdateProductStatusRequest) {
 }
 function* updateProductStatusSaga(action: UpdateProductStatusRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { message, success }: IResponse = yield call(
       productStatusRequests.update,
       action.payload.productStatus
     );
@@ -97,7 +97,7 @@ function* updateProductStatusSaga(action: UpdateProductStatusRequest) {
 }
 function* removeProductStatusSaga(action: FetchProductStatusRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { message, success }: IResponse = yield call(
       productStatusRequests.remove,
       action.payload.id
     );

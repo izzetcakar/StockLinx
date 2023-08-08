@@ -20,7 +20,7 @@ interface ISignInResponse {
 
 function* fetchUsersSaga() {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       userRequests.getAll
     );
     if (success !== undefined && !success) {
@@ -42,9 +42,7 @@ function* fetchUsersSaga() {
 }
 function* fetchUsersaga(action: any) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
-      userRequests.get
-    );
+    const { data, message, success }: IResponse = yield call(userRequests.get);
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
@@ -84,7 +82,7 @@ function* signInSaga(action: SignInRequest) {
 }
 function* getUserWithTokenSaga() {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       userRequests.getWithToken
     );
     if (success !== undefined && !success) {

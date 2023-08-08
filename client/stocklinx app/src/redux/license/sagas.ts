@@ -14,7 +14,7 @@ interface IResponse {
 
 function* fetchLicensesSaga() {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       licenseRequests.getAll
     );
     if (success !== undefined && !success) {
@@ -36,7 +36,7 @@ function* fetchLicensesSaga() {
 }
 function* fetchLicenseSaga(action: FetchLicenseRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       licenseRequests.get,
       action.payload.id
     );
@@ -59,7 +59,7 @@ function* fetchLicenseSaga(action: FetchLicenseRequest) {
 }
 function* createLicenseSaga(action: UpdateLicenseRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { message, success }: IResponse = yield call(
       licenseRequests.create,
       action.payload.license
     );
@@ -78,7 +78,7 @@ function* createLicenseSaga(action: UpdateLicenseRequest) {
 }
 function* updateLicenseSaga(action: UpdateLicenseRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { message, success }: IResponse = yield call(
       licenseRequests.update,
       action.payload.license
     );
@@ -97,7 +97,7 @@ function* updateLicenseSaga(action: UpdateLicenseRequest) {
 }
 function* removeLicenseSaga(action: FetchLicenseRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { message, success }: IResponse = yield call(
       licenseRequests.remove,
       action.payload.id
     );

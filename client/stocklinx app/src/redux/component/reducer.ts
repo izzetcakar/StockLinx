@@ -22,6 +22,10 @@ export default (state = initialState, action: ComponentActions) => {
         pending: false,
         error: null,
         components: action.payload.components,
+        selectData: action.payload.components.map((component) => ({
+          value: component.id as string,
+          label: component.name,
+        })),
       };
     case componentConst.FETCH_COMPONENTS_FAILURE:
       return {

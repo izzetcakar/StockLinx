@@ -22,6 +22,10 @@ export default (state = initialState, action: LicenseActions) => {
         pending: false,
         error: null,
         licenses: action.payload.licenses,
+        selectData: action.payload.licenses.map((license) => ({
+          value: license.id as string,
+          label: license.name,
+        })),
       };
     case licenseConst.FETCH_LICENSES_FAILURE:
       return {

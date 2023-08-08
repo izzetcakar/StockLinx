@@ -22,6 +22,10 @@ export default (state = initialState, action: ProductStatusActions) => {
         pending: false,
         error: null,
         productStatuses: action.payload.productStatuses,
+        selectData: action.payload.productStatuses.map((productStatus) => ({
+          value: productStatus.id as string,
+          label: productStatus.name,
+        })),
       };
     case productStatusConst.FETCH_PRODUCTSTATUSES_FAILURE:
       return {

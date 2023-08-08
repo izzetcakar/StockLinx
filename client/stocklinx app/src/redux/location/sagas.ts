@@ -14,7 +14,7 @@ interface IResponse {
 
 function* fetchLocationsSaga() {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       locationRequests.getAll
     );
     if (success !== undefined && !success) {
@@ -36,7 +36,7 @@ function* fetchLocationsSaga() {
 }
 function* fetchLocationSaga(action: FetchLocationRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       locationRequests.get,
       action.payload.id
     );
@@ -59,7 +59,7 @@ function* fetchLocationSaga(action: FetchLocationRequest) {
 }
 function* createLocationSaga(action: UpdateLocationRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { message, success }: IResponse = yield call(
       locationRequests.create,
       action.payload.location
     );
@@ -78,7 +78,7 @@ function* createLocationSaga(action: UpdateLocationRequest) {
 }
 function* updateLocationSaga(action: UpdateLocationRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { message, success }: IResponse = yield call(
       locationRequests.update,
       action.payload.location
     );
@@ -97,7 +97,7 @@ function* updateLocationSaga(action: UpdateLocationRequest) {
 }
 function* removeLocationSaga(action: FetchLocationRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { message, success }: IResponse = yield call(
       locationRequests.remove,
       action.payload.id
     );

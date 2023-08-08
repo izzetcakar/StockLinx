@@ -14,7 +14,7 @@ interface IResponse {
 
 function* fetchDepartmentsSaga() {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       departmentRequests.getAll
     );
     if (success !== undefined && !success) {
@@ -36,7 +36,7 @@ function* fetchDepartmentsSaga() {
 }
 function* fetchDepartmentSaga(action: FetchDepartmentRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       departmentRequests.get,
       action.payload.id
     );
@@ -59,7 +59,7 @@ function* fetchDepartmentSaga(action: FetchDepartmentRequest) {
 }
 function* createDepartmentSaga(action: UpdateDepartmentRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { message, success }: IResponse = yield call(
       departmentRequests.create,
       action.payload.department
     );
@@ -78,7 +78,7 @@ function* createDepartmentSaga(action: UpdateDepartmentRequest) {
 }
 function* updateDepartmentSaga(action: UpdateDepartmentRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { message, success }: IResponse = yield call(
       departmentRequests.update,
       action.payload.department
     );
@@ -97,7 +97,7 @@ function* updateDepartmentSaga(action: UpdateDepartmentRequest) {
 }
 function* removeDepartmentSaga(action: FetchDepartmentRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { message, success }: IResponse = yield call(
       departmentRequests.remove,
       action.payload.id
     );

@@ -22,6 +22,10 @@ export default (state = initialState, action: LocationActions) => {
         pending: false,
         error: null,
         locations: action.payload.locations,
+        selectData: action.payload.locations.map((location) => ({
+          value: location.id as string,
+          label: location.name,
+        })),
       };
     case locationConst.FETCH_LOCATIONS_FAILURE:
       return {

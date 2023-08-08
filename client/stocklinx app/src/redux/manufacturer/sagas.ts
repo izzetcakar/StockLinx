@@ -14,7 +14,7 @@ interface IResponse {
 
 function* fetchManufacturersSaga() {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       manufacturerRequests.getAll
     );
     if (success !== undefined && !success) {
@@ -36,7 +36,7 @@ function* fetchManufacturersSaga() {
 }
 function* fetchManufacturerSaga(action: FetchManufacturerRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       manufacturerRequests.get,
       action.payload.id
     );
@@ -59,7 +59,7 @@ function* fetchManufacturerSaga(action: FetchManufacturerRequest) {
 }
 function* createManufacturerSaga(action: UpdateManufacturerRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { message, success }: IResponse = yield call(
       manufacturerRequests.create,
       action.payload.manufacturer
     );
@@ -78,7 +78,7 @@ function* createManufacturerSaga(action: UpdateManufacturerRequest) {
 }
 function* updateManufacturerSaga(action: UpdateManufacturerRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { message, success }: IResponse = yield call(
       manufacturerRequests.update,
       action.payload.manufacturer
     );
@@ -97,7 +97,7 @@ function* updateManufacturerSaga(action: UpdateManufacturerRequest) {
 }
 function* removeManufacturerSaga(action: FetchManufacturerRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { message, success }: IResponse = yield call(
       manufacturerRequests.remove,
       action.payload.id
     );

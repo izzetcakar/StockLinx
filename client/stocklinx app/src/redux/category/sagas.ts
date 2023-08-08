@@ -15,7 +15,7 @@ interface IResponse {
 
 function* fetchCategoriesSaga() {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       categoryRequests.getAll
     );
     if (success !== undefined && !success) {
@@ -37,7 +37,7 @@ function* fetchCategoriesSaga() {
 }
 function* fetchCategorySaga(action: FetchCategoryRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       categoryRequests.get,
       action.payload.id
     );
@@ -60,7 +60,7 @@ function* fetchCategorySaga(action: FetchCategoryRequest) {
 }
 function* createCategorySaga(action: UpdateCategoryRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { message, success }: IResponse = yield call(
       categoryRequests.create,
       action.payload.category
     );
@@ -79,7 +79,7 @@ function* createCategorySaga(action: UpdateCategoryRequest) {
 }
 function* updateCategorySaga(action: UpdateCategoryRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { message, success }: IResponse = yield call(
       categoryRequests.update,
       action.payload.category
     );
@@ -98,7 +98,7 @@ function* updateCategorySaga(action: UpdateCategoryRequest) {
 }
 function* removeCategorySaga(action: FetchCategoryRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { message, success }: IResponse = yield call(
       categoryRequests.remove,
       action.payload.id
     );

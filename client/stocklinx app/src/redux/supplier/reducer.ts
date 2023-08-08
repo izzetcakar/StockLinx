@@ -22,6 +22,10 @@ export default (state = initialState, action: SupplierActions) => {
         pending: false,
         error: null,
         suppliers: action.payload.suppliers,
+        selectData: action.payload.suppliers.map((supplier) => ({
+          value: supplier.id as string,
+          label: supplier.name,
+        })),
       };
     case supplierConst.FETCH_SUPPLIERS_FAILURE:
       return {

@@ -14,7 +14,7 @@ interface IResponse {
 
 function* fetchConsumablesSaga() {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       consumableRequests.getAll
     );
     if (success !== undefined && !success) {
@@ -36,7 +36,7 @@ function* fetchConsumablesSaga() {
 }
 function* fetchConsumableSaga(action: FetchConsumableRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       consumableRequests.get,
       action.payload.id
     );
@@ -59,7 +59,7 @@ function* fetchConsumableSaga(action: FetchConsumableRequest) {
 }
 function* createConsumableSaga(action: UpdateConsumableRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { message, success }: IResponse = yield call(
       consumableRequests.create,
       action.payload.consumable
     );
@@ -78,7 +78,7 @@ function* createConsumableSaga(action: UpdateConsumableRequest) {
 }
 function* updateConsumableSaga(action: UpdateConsumableRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { message, success }: IResponse = yield call(
       consumableRequests.update,
       action.payload.consumable
     );
@@ -97,7 +97,7 @@ function* updateConsumableSaga(action: UpdateConsumableRequest) {
 }
 function* removeConsumableSaga(action: FetchConsumableRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { message, success }: IResponse = yield call(
       consumableRequests.remove,
       action.payload.id
     );

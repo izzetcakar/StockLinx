@@ -13,7 +13,7 @@ interface IResponse {
 
 function* fetchAccessoriesSaga() {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       accessoryRequests.getAll
     );
     if (success !== undefined && !success) {
@@ -35,7 +35,7 @@ function* fetchAccessoriesSaga() {
 }
 function* fetchAccessorySaga(action: FetchAccessoryRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       accessoryRequests.get,
       action.payload.id
     );
@@ -58,7 +58,7 @@ function* fetchAccessorySaga(action: FetchAccessoryRequest) {
 }
 function* createAccessorySaga(action: UpdateAccessoryRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { message, success }: IResponse = yield call(
       accessoryRequests.create,
       action.payload.accessory
     );
@@ -77,7 +77,7 @@ function* createAccessorySaga(action: UpdateAccessoryRequest) {
 }
 function* updateAccessorySaga(action: UpdateAccessoryRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { message, success }: IResponse = yield call(
       accessoryRequests.update,
       action.payload.accessory
     );
@@ -96,7 +96,7 @@ function* updateAccessorySaga(action: UpdateAccessoryRequest) {
 }
 function* removeAccessorySaga(action: FetchAccessoryRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { message, success }: IResponse = yield call(
       accessoryRequests.remove,
       action.payload.id
     );

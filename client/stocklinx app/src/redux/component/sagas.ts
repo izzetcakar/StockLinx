@@ -16,7 +16,7 @@ interface IResponse {
 
 function* fetchComponentsSaga() {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       componentRequests.getAll
     );
     if (success !== undefined && !success) {
@@ -38,7 +38,7 @@ function* fetchComponentsSaga() {
 }
 function* fetchComponentSaga(action: FetchComponentRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       componentRequests.get,
       action.payload.id
     );
@@ -61,7 +61,7 @@ function* fetchComponentSaga(action: FetchComponentRequest) {
 }
 function* createComponentSaga(action: UpdateComponentRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { message, success }: IResponse = yield call(
       componentRequests.create,
       action.payload.component
     );
@@ -80,7 +80,7 @@ function* createComponentSaga(action: UpdateComponentRequest) {
 }
 function* updateComponentSaga(action: UpdateComponentRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { message, success }: IResponse = yield call(
       componentRequests.update,
       action.payload.component
     );
@@ -99,7 +99,7 @@ function* updateComponentSaga(action: UpdateComponentRequest) {
 }
 function* removeComponentSaga(action: FetchComponentRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { message, success }: IResponse = yield call(
       componentRequests.remove,
       action.payload.id
     );

@@ -22,6 +22,10 @@ export default (state = initialState, action: AccessoryActions) => {
         pending: false,
         error: null,
         accessories: action.payload.accessories,
+        selectData: action.payload.accessories.map((accessory) => ({
+          value: accessory.id as string,
+          label: accessory.name,
+        })),
       };
     case accessoryConst.FETCH_ACCESSORIES_FAILURE:
       return {

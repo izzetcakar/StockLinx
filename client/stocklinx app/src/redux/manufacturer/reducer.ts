@@ -22,6 +22,10 @@ export default (state = initialState, action: ManufacturerActions) => {
         pending: false,
         error: null,
         manufacturers: action.payload.manufacturers,
+        selectData: action.payload.manufacturers.map((manufacturer) => ({
+          value: manufacturer.id as string,
+          label: manufacturer.name,
+        })),
       };
     case manufacturerConst.FETCH_MANUFACTURERS_FAILURE:
       return {

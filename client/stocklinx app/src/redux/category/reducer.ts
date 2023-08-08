@@ -22,6 +22,10 @@ export default (state = initialState, action: CategoryActions) => {
         pending: false,
         error: null,
         categories: action.payload.categories,
+        selectData: action.payload.categories.map((category) => ({
+          value: category.id as string,
+          label: category.name,
+        })),
       };
     case categoryConst.FETCH_CATEGORIES_FAILURE:
       return {

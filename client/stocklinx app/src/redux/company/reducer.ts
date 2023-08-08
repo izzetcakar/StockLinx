@@ -22,6 +22,10 @@ export default (state = initialState, action: CompanyActions) => {
         pending: false,
         error: null,
         companies: action.payload.companies,
+        selectData: action.payload.companies.map((company) => ({
+          value: company.id as string,
+          label: company.name,
+        })),
       };
     case companyConst.FETCH_COMPANIES_FAILURE:
       return {

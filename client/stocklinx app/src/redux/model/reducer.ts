@@ -22,6 +22,10 @@ export default (state = initialState, action: ModelActions) => {
         pending: false,
         error: null,
         models: action.payload.models,
+        selectData: action.payload.models.map((model) => ({
+          value: model.id as string,
+          label: model.name,
+        })),
       };
     case modelConst.FETCH_MODELS_FAILURE:
       return {

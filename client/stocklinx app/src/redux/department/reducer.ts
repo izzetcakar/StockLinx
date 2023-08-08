@@ -22,6 +22,10 @@ export default (state = initialState, action: DepartmentActions) => {
         pending: false,
         error: null,
         departments: action.payload.departments,
+        selectData: action.payload.departments.map((department) => ({
+          value: department.id as string,
+          label: department.name,
+        })),
       };
     case departmentConst.FETCH_DEPARTMENTS_FAILURE:
       return {

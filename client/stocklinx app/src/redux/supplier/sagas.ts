@@ -14,7 +14,7 @@ interface IResponse {
 
 function* fetchSuppliersSaga() {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       supplierRequests.getAll
     );
     if (success !== undefined && !success) {
@@ -36,7 +36,7 @@ function* fetchSuppliersSaga() {
 }
 function* fetchSupplierSaga(action: FetchSupplierRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       supplierRequests.get,
       action.payload.id
     );
@@ -59,7 +59,7 @@ function* fetchSupplierSaga(action: FetchSupplierRequest) {
 }
 function* createSupplierSaga(action: UpdateSupplierRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { message, success }: IResponse = yield call(
       supplierRequests.create,
       action.payload.supplier
     );
@@ -78,7 +78,7 @@ function* createSupplierSaga(action: UpdateSupplierRequest) {
 }
 function* updateSupplierSaga(action: UpdateSupplierRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { message, success }: IResponse = yield call(
       supplierRequests.update,
       action.payload.supplier
     );
@@ -97,7 +97,7 @@ function* updateSupplierSaga(action: UpdateSupplierRequest) {
 }
 function* removeSupplierSaga(action: FetchSupplierRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { message, success }: IResponse = yield call(
       supplierRequests.remove,
       action.payload.id
     );

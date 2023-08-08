@@ -22,6 +22,10 @@ export default (state = initialState, action: ConsumableActions) => {
         pending: false,
         error: null,
         consumables: action.payload.consumables,
+        selectData: action.payload.consumables.map((consumable) => ({
+          value: consumable.id as string,
+          label: consumable.name,
+        })),
       };
     case consumableConst.FETCH_CONSUMABLES_FAILURE:
       return {

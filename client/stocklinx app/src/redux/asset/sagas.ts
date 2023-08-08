@@ -15,7 +15,7 @@ interface IResponse {
 
 function* fetchAssetsSaga() {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       assetRequests.getAll
     );
     if (success !== undefined && !success) {
@@ -37,7 +37,7 @@ function* fetchAssetsSaga() {
 }
 function* fetchAssetSaga(action: FetchAssetRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       assetRequests.get,
       action.payload.id
     );
@@ -60,7 +60,7 @@ function* fetchAssetSaga(action: FetchAssetRequest) {
 }
 function* createAssetSaga(action: UpdateAssetRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { message, success }: IResponse = yield call(
       assetRequests.create,
       action.payload.asset
     );
@@ -79,7 +79,7 @@ function* createAssetSaga(action: UpdateAssetRequest) {
 }
 function* updateAssetSaga(action: UpdateAssetRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { message, success }: IResponse = yield call(
       assetRequests.update,
       action.payload.asset
     );
@@ -98,7 +98,7 @@ function* updateAssetSaga(action: UpdateAssetRequest) {
 }
 function* removeAssetSaga(action: FetchAssetRequest) {
   try {
-    const { data, message, success, status }: IResponse = yield call(
+    const { message, success }: IResponse = yield call(
       assetRequests.remove,
       action.payload.id
     );
