@@ -5,7 +5,6 @@ const BASE_URL: string = import.meta.env.VITE_REACT_APP_BASE_URL as string;
 
 export const getToken = (): string => {
   const userData = localStorage.getItem("token");
-  console.log("userData", userData);
   if (userData === null || userData === undefined) return "";
   const user = JSON.parse(userData) as string;
   return user;
@@ -51,7 +50,7 @@ export const request = async <T>({
   };
   try {
     switch (apiType) {
-      case "get":
+      case "get": {
         const getResponse = await axios.get<BackendResponse<T>>(
           `${BASE_URL}${requestUrl}`,
           axiosConfig
@@ -59,16 +58,18 @@ export const request = async <T>({
         backendResponse = getResponse.data;
         status = getResponse.status;
         break;
+      }
       case "delete":
-      case "deleteAll":
-        const deleteResponse = await axios.delete<BackendResponse<T>>(
-          `${BASE_URL}${requestUrl}`,
-          axiosConfig
-        );
-        backendResponse = deleteResponse.data;
-        status = deleteResponse.status;
+        {
+          const deleteResponse = await axios.delete<BackendResponse<T>>(
+            `${BASE_URL}${requestUrl}`,
+            axiosConfig
+          );
+          backendResponse = deleteResponse.data;
+          status = deleteResponse.status;
+        }
         break;
-      case "put":
+      case "put": {
         const putResponse = await axios.put<BackendResponse<T>>(
           `${BASE_URL}${requestUrl}`,
           queryData,
@@ -77,7 +78,8 @@ export const request = async <T>({
         backendResponse = putResponse.data;
         status = putResponse.status;
         break;
-      case "post":
+      }
+      case "post": {
         const postResponse = await axios.post<BackendResponse<T>>(
           `${BASE_URL}${requestUrl}`,
           queryData,
@@ -86,6 +88,7 @@ export const request = async <T>({
         backendResponse = postResponse.data;
         status = postResponse.status;
         break;
+      }
       default:
         throw new Error("Invalid API type");
     }
