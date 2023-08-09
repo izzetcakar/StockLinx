@@ -43,7 +43,7 @@ const Accessory = () => {
       dataField: "companyId",
       caption: "Company",
       dataType: "string",
-      renderComponent: CompanyNameComponent,
+      renderComponent: CompanyNameComponent
     },
     {
       dataField: "manufacturerId",
