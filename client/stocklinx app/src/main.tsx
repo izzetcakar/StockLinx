@@ -10,8 +10,8 @@ import { Notifications } from '@mantine/notifications';
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
     <MantineProvider withNormalizeCSS withGlobalStyles>
+      <Notifications position="top-center" />
       <ModalsProvider>
-        <Notifications position="top-center" />
         <App />
       </ModalsProvider>
     </MantineProvider>
