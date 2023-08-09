@@ -1,3 +1,7 @@
+import {
+  closeNotification,
+  openNotification,
+} from "../../components/notification/notification";
 import { departmentConst } from "./constant";
 import { DepartmentActions, DepartmentState } from "./type";
 
@@ -12,11 +16,13 @@ const initialState: DepartmentState = {
 export default (state = initialState, action: DepartmentActions) => {
   switch (action.type) {
     case departmentConst.FETCH_DEPARTMENTS_REQUEST:
+      openNotification("Fetching", true);
       return {
         ...state,
         pending: true,
       };
     case departmentConst.FETCH_DEPARTMENTS_SUCCESS:
+      closeNotification();
       return {
         ...state,
         pending: false,
@@ -28,6 +34,7 @@ export default (state = initialState, action: DepartmentActions) => {
         })),
       };
     case departmentConst.FETCH_DEPARTMENTS_FAILURE:
+      closeNotification();
       return {
         ...state,
         pending: false,
@@ -35,11 +42,13 @@ export default (state = initialState, action: DepartmentActions) => {
         error: action.payload.error,
       };
     case departmentConst.FETCH_DEPARTMENT_REQUEST:
+      openNotification("Fetching", true);
       return {
         ...state,
         pending: true,
       };
     case departmentConst.FETCH_DEPARTMENT_SUCCESS:
+      closeNotification();
       return {
         ...state,
         pending: false,
@@ -47,6 +56,7 @@ export default (state = initialState, action: DepartmentActions) => {
         department: action.payload.department,
       };
     case departmentConst.FETCH_DEPARTMENT_FAILURE:
+      closeNotification();
       return {
         ...state,
         pending: false,
@@ -54,51 +64,60 @@ export default (state = initialState, action: DepartmentActions) => {
         error: action.payload.error,
       };
     case departmentConst.CREATE_DEPARTMENT_REQUEST:
+      openNotification("Creating", true);
       return {
         ...state,
         pending: true,
       };
     case departmentConst.CREATE_DEPARTMENT_SUCCESS:
+      closeNotification();
       return {
         ...state,
         error: null,
         pending: false,
       };
     case departmentConst.CREATE_DEPARTMENT_FAILURE:
+      closeNotification();
       return {
         ...state,
         error: action.payload.error,
         pending: false,
       };
     case departmentConst.UPDATE_DEPARTMENT_REQUEST:
+      openNotification("Updating", true);
       return {
         ...state,
         pending: true,
       };
     case departmentConst.UPDATE_DEPARTMENT_SUCCESS:
+      closeNotification();
       return {
         ...state,
         error: null,
         pending: false,
       };
     case departmentConst.UPDATE_DEPARTMENT_FAILURE:
+      closeNotification();
       return {
         ...state,
         error: action.payload.error,
         pending: false,
       };
     case departmentConst.REMOVE_DEPARTMENT_REQUEST:
+      openNotification("Removing", true);
       return {
         ...state,
         pending: true,
       };
     case departmentConst.REMOVE_DEPARTMENT_SUCCESS:
+      closeNotification();
       return {
         ...state,
         error: null,
         pending: false,
       };
     case departmentConst.REMOVE_DEPARTMENT_FAILURE:
+      closeNotification();
       return {
         ...state,
         error: action.payload.error,

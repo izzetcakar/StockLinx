@@ -1,3 +1,7 @@
+import {
+  closeNotification,
+  openNotification,
+} from "../../components/notification/notification";
 import { componentConst } from "./constant";
 import { ComponentActions, ComponentState } from "./type";
 
@@ -12,11 +16,13 @@ const initialState: ComponentState = {
 export default (state = initialState, action: ComponentActions) => {
   switch (action.type) {
     case componentConst.FETCH_COMPONENTS_REQUEST:
+      openNotification("Fetching", true);
       return {
         ...state,
         pending: true,
       };
     case componentConst.FETCH_COMPONENTS_SUCCESS:
+      closeNotification();
       return {
         ...state,
         pending: false,
@@ -28,6 +34,7 @@ export default (state = initialState, action: ComponentActions) => {
         })),
       };
     case componentConst.FETCH_COMPONENTS_FAILURE:
+      closeNotification();
       return {
         ...state,
         pending: false,
@@ -35,11 +42,13 @@ export default (state = initialState, action: ComponentActions) => {
         error: action.payload.error,
       };
     case componentConst.FETCH_COMPONENT_REQUEST:
+      openNotification("Fetching", true);
       return {
         ...state,
         pending: true,
       };
     case componentConst.FETCH_COMPONENT_SUCCESS:
+      closeNotification();
       return {
         ...state,
         pending: false,
@@ -47,6 +56,7 @@ export default (state = initialState, action: ComponentActions) => {
         component: action.payload.component,
       };
     case componentConst.FETCH_COMPONENT_FAILURE:
+      closeNotification();
       return {
         ...state,
         pending: false,
@@ -54,51 +64,60 @@ export default (state = initialState, action: ComponentActions) => {
         error: action.payload.error,
       };
     case componentConst.CREATE_COMPONENT_REQUEST:
+      openNotification("Creating", true);
       return {
         ...state,
         pending: true,
       };
     case componentConst.CREATE_COMPONENT_SUCCESS:
+      closeNotification();
       return {
         ...state,
         error: null,
         pending: false,
       };
     case componentConst.CREATE_COMPONENT_FAILURE:
+      closeNotification();
       return {
         ...state,
         error: action.payload.error,
         pending: false,
       };
     case componentConst.UPDATE_COMPONENT_REQUEST:
+      openNotification("Updating", true);
       return {
         ...state,
         pending: true,
       };
     case componentConst.UPDATE_COMPONENT_SUCCESS:
+      closeNotification();
       return {
         ...state,
         error: null,
         pending: false,
       };
     case componentConst.UPDATE_COMPONENT_FAILURE:
+      closeNotification();
       return {
         ...state,
         error: action.payload.error,
         pending: false,
       };
     case componentConst.REMOVE_COMPONENT_REQUEST:
+      openNotification("Removing", true);
       return {
         ...state,
         pending: true,
       };
     case componentConst.REMOVE_COMPONENT_SUCCESS:
+      closeNotification();
       return {
         ...state,
         error: null,
         pending: false,
       };
     case componentConst.REMOVE_COMPONENT_FAILURE:
+      closeNotification();
       return {
         ...state,
         error: action.payload.error,

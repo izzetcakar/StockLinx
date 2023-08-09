@@ -1,3 +1,7 @@
+import {
+  closeNotification,
+  openNotification,
+} from "../../components/notification/notification";
 import { consumableConst } from "./constant";
 import { ConsumableActions, ConsumableState } from "./type";
 
@@ -12,11 +16,13 @@ const initialState: ConsumableState = {
 export default (state = initialState, action: ConsumableActions) => {
   switch (action.type) {
     case consumableConst.FETCH_CONSUMABLES_REQUEST:
+      openNotification("Fetching", true);
       return {
         ...state,
         pending: true,
       };
     case consumableConst.FETCH_CONSUMABLES_SUCCESS:
+      closeNotification();
       return {
         ...state,
         pending: false,
@@ -28,6 +34,7 @@ export default (state = initialState, action: ConsumableActions) => {
         })),
       };
     case consumableConst.FETCH_CONSUMABLES_FAILURE:
+      closeNotification();
       return {
         ...state,
         pending: false,
@@ -35,11 +42,13 @@ export default (state = initialState, action: ConsumableActions) => {
         error: action.payload.error,
       };
     case consumableConst.FETCH_CONSUMABLE_REQUEST:
+      openNotification("Fetching", true);
       return {
         ...state,
         pending: true,
       };
     case consumableConst.FETCH_CONSUMABLE_SUCCESS:
+      closeNotification();
       return {
         ...state,
         pending: false,
@@ -47,6 +56,7 @@ export default (state = initialState, action: ConsumableActions) => {
         consumable: action.payload.consumable,
       };
     case consumableConst.FETCH_CONSUMABLE_FAILURE:
+      closeNotification();
       return {
         ...state,
         pending: false,
@@ -54,51 +64,60 @@ export default (state = initialState, action: ConsumableActions) => {
         error: action.payload.error,
       };
     case consumableConst.CREATE_CONSUMABLE_REQUEST:
+      openNotification("Creating", true);
       return {
         ...state,
         pending: true,
       };
     case consumableConst.CREATE_CONSUMABLE_SUCCESS:
+      closeNotification();
       return {
         ...state,
         error: null,
         pending: false,
       };
     case consumableConst.CREATE_CONSUMABLE_FAILURE:
+      closeNotification();
       return {
         ...state,
         error: action.payload.error,
         pending: false,
       };
     case consumableConst.UPDATE_CONSUMABLE_REQUEST:
+      openNotification("Updating", true);
       return {
         ...state,
         pending: true,
       };
     case consumableConst.UPDATE_CONSUMABLE_SUCCESS:
+      closeNotification();
       return {
         ...state,
         error: null,
         pending: false,
       };
     case consumableConst.UPDATE_CONSUMABLE_FAILURE:
+      closeNotification();
       return {
         ...state,
         error: action.payload.error,
         pending: false,
       };
     case consumableConst.REMOVE_CONSUMABLE_REQUEST:
+      openNotification("Removing", true);
       return {
         ...state,
         pending: true,
       };
     case consumableConst.REMOVE_CONSUMABLE_SUCCESS:
+      closeNotification();
       return {
         ...state,
         error: null,
         pending: false,
       };
     case consumableConst.REMOVE_CONSUMABLE_FAILURE:
+      closeNotification();
       return {
         ...state,
         error: action.payload.error,

@@ -1,3 +1,7 @@
+import {
+  closeNotification,
+  openNotification,
+} from "../../components/notification/notification";
 import { supplierConst } from "./constant";
 import { SupplierActions, SupplierState } from "./type";
 
@@ -12,11 +16,13 @@ const initialState: SupplierState = {
 export default (state = initialState, action: SupplierActions) => {
   switch (action.type) {
     case supplierConst.FETCH_SUPPLIERS_REQUEST:
+      openNotification("Fetching", true);
       return {
         ...state,
         pending: true,
       };
     case supplierConst.FETCH_SUPPLIERS_SUCCESS:
+      closeNotification();
       return {
         ...state,
         pending: false,
@@ -28,6 +34,7 @@ export default (state = initialState, action: SupplierActions) => {
         })),
       };
     case supplierConst.FETCH_SUPPLIERS_FAILURE:
+      closeNotification();
       return {
         ...state,
         pending: false,

@@ -1,3 +1,7 @@
+import {
+  closeNotification,
+  openNotification,
+} from "../../components/notification/notification";
 import { manufacturerConst } from "./constant";
 import { ManufacturerActions, ManufacturerState } from "./type";
 
@@ -12,11 +16,13 @@ const initialState: ManufacturerState = {
 export default (state = initialState, action: ManufacturerActions) => {
   switch (action.type) {
     case manufacturerConst.FETCH_MANUFACTURERS_REQUEST:
+      openNotification("Fetching", true);
       return {
         ...state,
         pending: true,
       };
     case manufacturerConst.FETCH_MANUFACTURERS_SUCCESS:
+      closeNotification();
       return {
         ...state,
         pending: false,
@@ -28,6 +34,7 @@ export default (state = initialState, action: ManufacturerActions) => {
         })),
       };
     case manufacturerConst.FETCH_MANUFACTURERS_FAILURE:
+      closeNotification();
       return {
         ...state,
         pending: false,
@@ -35,11 +42,13 @@ export default (state = initialState, action: ManufacturerActions) => {
         error: action.payload.error,
       };
     case manufacturerConst.FETCH_MANUFACTURER_REQUEST:
+      openNotification("Fetching", true);
       return {
         ...state,
         pending: true,
       };
     case manufacturerConst.FETCH_MANUFACTURER_SUCCESS:
+      closeNotification();
       return {
         ...state,
         pending: false,
@@ -47,6 +56,7 @@ export default (state = initialState, action: ManufacturerActions) => {
         manufacturer: action.payload.manufacturer,
       };
     case manufacturerConst.FETCH_MANUFACTURER_FAILURE:
+      closeNotification();
       return {
         ...state,
         pending: false,
@@ -54,51 +64,60 @@ export default (state = initialState, action: ManufacturerActions) => {
         error: action.payload.error,
       };
     case manufacturerConst.CREATE_MANUFACTURER_REQUEST:
+      openNotification("Creating", true);
       return {
         ...state,
         pending: true,
       };
     case manufacturerConst.CREATE_MANUFACTURER_SUCCESS:
+      closeNotification();
       return {
         ...state,
         error: null,
         pending: false,
       };
     case manufacturerConst.CREATE_MANUFACTURER_FAILURE:
+      closeNotification();
       return {
         ...state,
         error: action.payload.error,
         pending: false,
       };
     case manufacturerConst.UPDATE_MANUFACTURER_REQUEST:
+      openNotification("Updating", true);
       return {
         ...state,
         pending: true,
       };
     case manufacturerConst.UPDATE_MANUFACTURER_SUCCESS:
+      closeNotification();
       return {
         ...state,
         error: null,
         pending: false,
       };
     case manufacturerConst.UPDATE_MANUFACTURER_FAILURE:
+      closeNotification();
       return {
         ...state,
         error: action.payload.error,
         pending: false,
       };
     case manufacturerConst.REMOVE_MANUFACTURER_REQUEST:
+      openNotification("Removing", true);
       return {
         ...state,
         pending: true,
       };
     case manufacturerConst.REMOVE_MANUFACTURER_SUCCESS:
+      closeNotification();
       return {
         ...state,
         error: null,
         pending: false,
       };
     case manufacturerConst.REMOVE_MANUFACTURER_FAILURE:
+      closeNotification();
       return {
         ...state,
         error: action.payload.error,

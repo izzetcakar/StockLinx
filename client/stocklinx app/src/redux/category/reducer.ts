@@ -1,3 +1,7 @@
+import {
+  closeNotification,
+  openNotification,
+} from "../../components/notification/notification";
 import { categoryConst } from "./constant";
 import { CategoryActions, CategoryState } from "./type";
 
@@ -12,11 +16,13 @@ const initialState: CategoryState = {
 export default (state = initialState, action: CategoryActions) => {
   switch (action.type) {
     case categoryConst.FETCH_CATEGORIES_REQUEST:
+      openNotification("Fetching", true);
       return {
         ...state,
         pending: true,
       };
     case categoryConst.FETCH_CATEGORIES_SUCCESS:
+      closeNotification();
       return {
         ...state,
         pending: false,
@@ -28,6 +34,7 @@ export default (state = initialState, action: CategoryActions) => {
         })),
       };
     case categoryConst.FETCH_CATEGORIES_FAILURE:
+      closeNotification();
       return {
         ...state,
         pending: false,
@@ -35,11 +42,13 @@ export default (state = initialState, action: CategoryActions) => {
         error: action.payload.error,
       };
     case categoryConst.FETCH_CATEGORY_REQUEST:
+      openNotification("Fetching", true);
       return {
         ...state,
         pending: true,
       };
     case categoryConst.FETCH_CATEGORY_SUCCESS:
+      closeNotification();
       return {
         ...state,
         pending: false,
@@ -47,6 +56,7 @@ export default (state = initialState, action: CategoryActions) => {
         category: action.payload.category,
       };
     case categoryConst.FETCH_CATEGORY_FAILURE:
+      closeNotification();
       return {
         ...state,
         pending: false,
@@ -54,51 +64,60 @@ export default (state = initialState, action: CategoryActions) => {
         error: action.payload.error,
       };
     case categoryConst.CREATE_CATEGORY_REQUEST:
+      openNotification("Creating", true);
       return {
         ...state,
         pending: true,
       };
     case categoryConst.CREATE_CATEGORY_SUCCESS:
+      closeNotification();
       return {
         ...state,
         error: null,
         pending: false,
       };
     case categoryConst.CREATE_CATEGORY_FAILURE:
+      closeNotification();
       return {
         ...state,
         error: action.payload.error,
         pending: false,
       };
     case categoryConst.UPDATE_CATEGORY_REQUEST:
+      openNotification("Updating", true);
       return {
         ...state,
         pending: true,
       };
     case categoryConst.UPDATE_CATEGORY_SUCCESS:
+      closeNotification();
       return {
         ...state,
         error: null,
         pending: false,
       };
     case categoryConst.UPDATE_CATEGORY_FAILURE:
+      closeNotification();
       return {
         ...state,
         error: action.payload.error,
         pending: false,
       };
     case categoryConst.REMOVE_CATEGORY_REQUEST:
+      openNotification("Removing", true);
       return {
         ...state,
         pending: true,
       };
     case categoryConst.REMOVE_CATEGORY_SUCCESS:
+      closeNotification();
       return {
         ...state,
         error: null,
         pending: false,
       };
     case categoryConst.REMOVE_CATEGORY_FAILURE:
+      closeNotification();
       return {
         ...state,
         error: action.payload.error,

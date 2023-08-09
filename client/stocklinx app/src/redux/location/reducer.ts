@@ -1,3 +1,7 @@
+import {
+  closeNotification,
+  openNotification,
+} from "../../components/notification/notification";
 import { locationConst } from "./constant";
 import { LocationActions, LocationState } from "./type";
 
@@ -12,11 +16,13 @@ const initialState: LocationState = {
 export default (state = initialState, action: LocationActions) => {
   switch (action.type) {
     case locationConst.FETCH_LOCATIONS_REQUEST:
+      openNotification("Fetching", true);
       return {
         ...state,
         pending: true,
       };
     case locationConst.FETCH_LOCATIONS_SUCCESS:
+      closeNotification();
       return {
         ...state,
         pending: false,
@@ -28,6 +34,7 @@ export default (state = initialState, action: LocationActions) => {
         })),
       };
     case locationConst.FETCH_LOCATIONS_FAILURE:
+      closeNotification();
       return {
         ...state,
         pending: false,
@@ -35,11 +42,13 @@ export default (state = initialState, action: LocationActions) => {
         error: action.payload.error,
       };
     case locationConst.FETCH_LOCATION_REQUEST:
+      openNotification("Fetching", true);
       return {
         ...state,
         pending: true,
       };
     case locationConst.FETCH_LOCATION_SUCCESS:
+      closeNotification();
       return {
         ...state,
         pending: false,
@@ -47,6 +56,7 @@ export default (state = initialState, action: LocationActions) => {
         location: action.payload.location,
       };
     case locationConst.FETCH_LOCATION_FAILURE:
+      closeNotification();
       return {
         ...state,
         pending: false,
@@ -54,51 +64,60 @@ export default (state = initialState, action: LocationActions) => {
         error: action.payload.error,
       };
     case locationConst.CREATE_LOCATION_REQUEST:
+      openNotification("Creating", true);
       return {
         ...state,
         pending: true,
       };
     case locationConst.CREATE_LOCATION_SUCCESS:
+      closeNotification();
       return {
         ...state,
         error: null,
         pending: false,
       };
     case locationConst.CREATE_LOCATION_FAILURE:
+      closeNotification();
       return {
         ...state,
         error: action.payload.error,
         pending: false,
       };
     case locationConst.UPDATE_LOCATION_REQUEST:
+      openNotification("Updating", true);
       return {
         ...state,
         pending: true,
       };
     case locationConst.UPDATE_LOCATION_SUCCESS:
+      closeNotification();
       return {
         ...state,
         error: null,
         pending: false,
       };
     case locationConst.UPDATE_LOCATION_FAILURE:
+      closeNotification();
       return {
         ...state,
         error: action.payload.error,
         pending: false,
       };
     case locationConst.REMOVE_LOCATION_REQUEST:
+      openNotification("Removing", true);
       return {
         ...state,
         pending: true,
       };
     case locationConst.REMOVE_LOCATION_SUCCESS:
+      closeNotification();
       return {
         ...state,
         error: null,
         pending: false,
       };
     case locationConst.REMOVE_LOCATION_FAILURE:
+      closeNotification();
       return {
         ...state,
         error: action.payload.error,
