@@ -42,20 +42,34 @@
       display: flex;
       align-items: center;
       padding: 10px;
-      white-space: nowrap;
+      box-sizing: border-box;
+      // white-space: nowrap;
       text-overflow: ellipsis;
-      overflow: hidden;
+      overflow: auto;
       flex: 1;
       transition: all 0.2s ease-in-out;
+      position: relative;
+      // .test {
+      //   display: flex;
+      //   position: absolute;
+      //   height: 100%;
+      //   width: 100%;
+      //   bottom: 0;
+      //   top: 0;
+      //   left: 0;
+      //   right: 0;
+      // }
     }
     .cell.column-title {
+      display: flex;
+      justify-content: center;
       font-weight: bold;
       font-size: 1em;
       border-bottom: 1px solid #ced4da;
     }
     .selected-cell {
       background-color: #eaeaea;
-      transition: all 0.2s ease-in-out;
+      transition: all 0.1s ease-in-out;
     }
   }
   // .column-select {
