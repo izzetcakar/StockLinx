@@ -1,7 +1,7 @@
 
+import DepartmentForm from "../../forms/department/DepartmentForm";
 import { IDepartment } from "../../interfaces/interfaces";
 import { modals } from "@mantine/modals";
-import DepartmentForm from "../../components/form/department/DepartmentForm";
 
 export const closeModal = (modal: string) => modals.close(modal);
 export const openDepartmentModal = (

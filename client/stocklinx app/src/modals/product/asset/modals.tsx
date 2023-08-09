@@ -1,6 +1,6 @@
+import AssetForm from "../../../forms/product/asset/AssetForm";
 import { IAsset } from "../../../interfaces/interfaces";
 import { modals } from "@mantine/modals";
-import AssetForm from "../../../components/form/product/asset/AssetForm";
 
 export const closeModal = (modal: string) => modals.close(modal);
 export const openAssetModal = (

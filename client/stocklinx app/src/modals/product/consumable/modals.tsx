@@ -1,6 +1,6 @@
+import ConsumableForm from "../../../forms/product/consumable/ConsumableForm";
 import { IConsumable } from "../../../interfaces/interfaces";
 import { modals } from "@mantine/modals";
-import ConsumableForm from "../../../components/form/product/consumable/ConsumableForm";
 
 export const closeModal = (modal: string) => modals.close(modal);
 export const openConsumableModal = (

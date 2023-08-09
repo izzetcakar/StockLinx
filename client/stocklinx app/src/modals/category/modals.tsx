@@ -1,7 +1,7 @@
 
+import CategoryForm from "../../forms/category/CategoryForm";
 import { ICategory } from "../../interfaces/interfaces";
 import { modals } from "@mantine/modals";
-import CategoryForm from "../../components/form/category/CategoryForm";
 
 export const closeModal = (modal: string) => modals.close(modal);
 export const openCategoryModal = (

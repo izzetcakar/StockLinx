@@ -1,7 +1,7 @@
 
+import ManufacturerForm from "../../forms/manufacturer/ManufacturerForm";
 import { IManufacturer } from "../../interfaces/interfaces";
 import { modals } from "@mantine/modals";
-import ManufacturerForm from "../../components/form/manufacturer/ManufacturerForm";
 
 export const closeModal = (modal: string) => modals.close(modal);
 export const openManufacturerModal = (

@@ -1,7 +1,7 @@
 
+import CompanyForm from "../../forms/company/CompanyForm";
 import { ICompany } from "../../interfaces/interfaces";
 import { modals } from "@mantine/modals";
-import CompanyForm from "../../components/form/company/CompanyForm";
 
 export const closeModal = (modal: string) => modals.close(modal);
 export const openCompanyModal = (

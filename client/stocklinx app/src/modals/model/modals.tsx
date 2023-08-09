@@ -1,7 +1,7 @@
 
+import ModelForm from "../../forms/model/ModelForm";
 import { IModel } from "../../interfaces/interfaces";
 import { modals } from "@mantine/modals";
-import ModelForm from "../../components/form/model/ModelForm";
 
 export const closeModal = (modal: string) => modals.close(modal);
 export const openModelModal = (

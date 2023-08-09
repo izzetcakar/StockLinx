@@ -1,6 +1,6 @@
+import ComponentForm from "../../../forms/product/component/ComponentForm";
 import { IComponent } from "../../../interfaces/interfaces";
 import { modals } from "@mantine/modals";
-import ComponentForm from "../../../components/form/product/component/ComponentForm";
 
 export const closeModal = (modal: string) => modals.close(modal);
 export const openComponentModal = (
