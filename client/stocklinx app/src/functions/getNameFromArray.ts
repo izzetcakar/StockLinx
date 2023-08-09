@@ -1,9 +1,9 @@
-import { BaseEntity, IdentifiableItem } from "../interfaces/interfaces";
+import { BaseEntity } from "../interfaces/interfaces";
 
-export const getNameFromArray = <T extends BaseEntity>(
-  array: T[],
-  id: string
-): string => {
-  const item = array.find((item) => item?.id === id);
-  return item?.name || "";
+export const getNameFromArray = (array: BaseEntity[], id: string): string => {
+  const item = array.find((item) => item.id === id);
+  if (item) {
+    return item?.name;
+  }
+  return "";
 };
