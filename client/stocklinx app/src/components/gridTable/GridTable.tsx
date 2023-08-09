@@ -20,12 +20,14 @@ interface GridTableProps {
   showPageSize?: boolean;
   noDataText?: string;
   pageSizes?: number[];
-  cellCssClass?: string;
   enableEdit?: boolean;
   refreshData?: () => void;
   onRowInsert: () => void;
   onRowUpdate: (row: object) => void;
   onRowRemove: (row: object) => void;
+}
+interface RenderComponentProps {
+  value: string | number | boolean | null;
 }
 
 const GridTable: React.FC<GridTableProps> = ({
@@ -37,7 +39,6 @@ const GridTable: React.FC<GridTableProps> = ({
   showPageSizeInfo = true,
   noDataText = "No Data to Display",
   pageSizes = [1, 3, 5],
-  cellCssClass = "",
   enableEdit = false,
   refreshData,
   onRowInsert = () => console.log("insert"),
@@ -88,12 +89,14 @@ const GridTable: React.FC<GridTableProps> = ({
     );
   };
 
+
   const renderColumnValue = (rowIndex: number, column: Column) => {
-    const value = (datagrid[rowIndex] as { [key: string]: React.ReactNode | string | number | boolean | null })[column.dataField];
+    const value = (datagrid[rowIndex] as { [key: string]: string | number | boolean | null })[column.dataField];
 
     if (column.renderComponent) {
       const RenderComponent = column.renderComponent;
-      return <RenderComponent value={value} />;
+      const renderProps: RenderComponentProps = { value };
+      return <RenderComponent {...renderProps} />
     }
 
     if (value === null || value === undefined) {
@@ -191,8 +194,8 @@ const GridTable: React.FC<GridTableProps> = ({
                   <div
                     className={
                       selectedIndexes.includes(rowIndex)
-                        ? `cell selected-cell ${cellCssClass}`
-                        : `cell ${cellCssClass}`
+                        ? `cell selected-cell`
+                        : `cell`
                     }
                     key={rowIndex}
                   >
