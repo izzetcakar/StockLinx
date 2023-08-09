@@ -9,7 +9,7 @@ import SelectComponent from "./select/SelectComponent";
 import PageSizeComponent from "./pageSize/PageSizeComponent";
 import Toolbar from "./toolbar/Toolbar";
 import { Column } from "./interfaces/interfaces";
-import { Checkbox, LoadingOverlay } from '@mantine/core';
+import { Checkbox } from '@mantine/core';
 
 interface GridTableProps {
   data?: object[];
@@ -22,11 +22,10 @@ interface GridTableProps {
   pageSizes?: number[];
   cellCssClass?: string;
   enableEdit?: boolean;
-  refreshData?: () => Promise<void> | void;
+  refreshData?: () => void;
   onRowInsert: () => void;
-  onRowUpdate: (row: object) => Promise<void> | void;
-  onRowRemove: (row: object) => Promise<void> | void;
-  onStartEdit?: (row: object) => Promise<void> | void;
+  onRowUpdate: (row: object) => void;
+  onRowRemove: (row: object) => void;
 }
 
 const GridTable: React.FC<GridTableProps> = ({
@@ -44,7 +43,6 @@ const GridTable: React.FC<GridTableProps> = ({
   onRowInsert = () => console.log("insert"),
   onRowUpdate = () => console.log("update"),
   onRowRemove = () => console.log("delete"),
-  onStartEdit = () => console.log("start edit"),
 }) => {
   const [datagridColumns, setDatagridColumns] = useState<Column[]>(columns);
   const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
@@ -52,7 +50,6 @@ const GridTable: React.FC<GridTableProps> = ({
   const [propertyDataStyle, setPropertyDataStyle] = useState<React.CSSProperties>({});
   const [selectedIndexes, setSelectedIndexes] = useState<number[]>([]);
   const [selectedPageSize, setSelectedPageSize] = useState<number>(pageSizes[0]);
-  const [loadingVisible, setLoadingVisible] = useState<boolean>(false);
 
   useEffect(() => {
     setDatagrid(deepCopy(data));
@@ -139,16 +136,11 @@ const GridTable: React.FC<GridTableProps> = ({
     setSelectedIndexes([]);
   };
 
-  const handleLoadingVisible = (visible: boolean) => {
-    setLoadingVisible(visible);
-  };
-  const handleRefreshData = async () => {
+  const handleRefreshData = () => {
     if (!refreshData) {
       return;
     }
-    handleLoadingVisible(true);
-    await refreshData();
-    handleLoadingVisible(false);
+    refreshData();
   };
 
   // if (!checkEmpty(data)) {
@@ -157,7 +149,6 @@ const GridTable: React.FC<GridTableProps> = ({
 
   return (
     <div className="table-container">
-      <LoadingOverlay visible={loadingVisible} loaderProps={{ color: 'black' }} />
       <Toolbar
         columns={datagridColumns}
         visibleColumns={visibleColumns}
@@ -223,7 +214,6 @@ const GridTable: React.FC<GridTableProps> = ({
                   rowIndex={index}
                   onRowUpdate={onRowUpdate}
                   onRowRemove={onRowRemove}
-                  onStartEdit={onStartEdit}
                   refreshData={refreshData}
                 />
               </div>
