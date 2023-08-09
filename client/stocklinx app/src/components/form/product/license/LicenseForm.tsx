@@ -17,15 +17,14 @@ import { companyActions } from '../../../../redux/company/actions';
 import { locationActions } from '../../../../redux/location/actions';
 import { productStatusActions } from '../../../../redux/productStatus/actions';
 import { supplierActions } from '../../../../redux/supplier/actions';
+import { licenseActions } from '../../../../redux/license/actions';
 
 interface LicenseFormProps {
     license?: ILicense;
-    submitFunc: (data: object) => void;
 }
 
 const LicenseForm: React.FC<LicenseFormProps> = ({
     license,
-    submitFunc = () => console.log("submit"),
 }) => {
     const dispatch = useDispatch();
     const categorySelectData = useSelector((state: RootState) => state.category.selectData);
@@ -72,9 +71,9 @@ const LicenseForm: React.FC<LicenseFormProps> = ({
         },
     });
     const handleSubmit = (data: object) => {
-        console.log(data);
-        submitFunc(data);
-        closeModal("edit-modal");
+        license ? dispatch(licenseActions.update({ license: data as ILicense })) :
+            dispatch(licenseActions.create({ license: data as ILicense }));
+        dispatch(licenseActions.getAll());
     };
     const openNextModel = () => modals.open({
         modalId: 'next-modal',

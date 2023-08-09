@@ -13,15 +13,14 @@ import { RootState } from '../../../redux/rootReducer';
 import { companyActions } from '../../../redux/company/actions';
 import { useDispatch } from 'react-redux';
 import { locationActions } from '../../../redux/location/actions';
+import { departmentActions } from '../../../redux/department/actions';
 
 interface DepartmentFormProps {
     department?: IDepartment;
-    submitFunc: (data: object) => void;
 }
 
 const DepartmentForm: React.FC<DepartmentFormProps> = ({
     department,
-    submitFunc = () => console.log("submit"),
 }) => {
     const dispatch = useDispatch();
     const companySelectData = useSelector((state: RootState) => state.company.selectData);
@@ -44,9 +43,9 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
         },
     });
     const handleSubmit = (data: object) => {
-        console.log(data);
-        submitFunc(data);
-        closeModal("edit-modal");
+        department ? dispatch(departmentActions.update({ department: data as IDepartment })) :
+            dispatch(departmentActions.create({ department: data as IDepartment }));
+        dispatch(departmentActions.getAll());
     };
     const openNextModel = () => modals.open({
         modalId: 'next-modal',

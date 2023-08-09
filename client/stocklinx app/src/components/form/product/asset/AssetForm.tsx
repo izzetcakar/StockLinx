@@ -18,15 +18,14 @@ import { categoryActions } from '../../../../redux/category/actions';
 import { locationActions } from '../../../../redux/location/actions';
 import { companyActions } from '../../../../redux/company/actions';
 import { productStatusActions } from '../../../../redux/productStatus/actions';
+import { assetActions } from '../../../../redux/asset/actions';
 
 interface AssetFormProps {
     asset?: IAsset;
-    submitFunc: (data: object) => void;
 }
 
 const AssetForm: React.FC<AssetFormProps> = ({
     asset,
-    submitFunc = () => console.log("submit"),
 }) => {
     const dispatch = useDispatch();
     const manufacturerSelectData = useSelector((state: RootState) => state.manufacturer.selectData);
@@ -98,9 +97,9 @@ const AssetForm: React.FC<AssetFormProps> = ({
     ));
 
     const handleSubmit = (data: object) => {
-        console.log(data);
-        submitFunc(data);
-        //closeModal("asset-create-modal");
+        asset ? dispatch(assetActions.update({ asset: data as IAsset })) :
+            dispatch(assetActions.create({ asset: data as IAsset }));
+        dispatch(assetActions.getAll());
     };
     const openNextModel = () =>
         modals.open({

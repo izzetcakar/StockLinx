@@ -6,17 +6,17 @@ import { IconUpload } from '@tabler/icons-react';
 import { modals } from '@mantine/modals';
 import { ICategory } from '../../../interfaces/interfaces';
 import { handleImageChange } from '../functions/formFunctions';
+import { useDispatch } from 'react-redux';
+import { categoryActions } from '../../../redux/category/actions';
 
 interface CategoryFormProps {
     category?: ICategory;
-    submitFunc: (data: object) => void;
 }
 
 const CategoryForm: React.FC<CategoryFormProps> = ({
     category,
-    submitFunc = () => console.log("submit"),
 }) => {
-
+    const dispatch = useDispatch();
     const form = useForm<ICategory>({
         initialValues: category ? { ...category } : {
             id: "",
@@ -28,9 +28,9 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
         },
     });
     const handleSubmit = (data: object) => {
-        console.log(data);
-        submitFunc(data);
-        closeModal("edit-modal");
+        category ? dispatch(categoryActions.update({ category: data as ICategory })) :
+            dispatch(categoryActions.create({ category: data as ICategory }));
+        dispatch(categoryActions.getAll());
     };
     const openNextModel = () => modals.open({
         modalId: 'next-modal',

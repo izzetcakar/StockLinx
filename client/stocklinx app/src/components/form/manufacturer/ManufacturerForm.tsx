@@ -6,16 +6,17 @@ import { IconUpload } from '@tabler/icons-react';
 import { modals } from '@mantine/modals';
 import { IManufacturer } from '../../../interfaces/interfaces';
 import { handleImageChange } from '../functions/formFunctions';
+import { useDispatch } from 'react-redux';
+import { manufacturerActions } from '../../../redux/manufacturer/actions';
 
 interface ManufacturerFormProps {
     manufacturer?: IManufacturer;
-    submitFunc: (data: object) => void;
 }
 
 const ManufacturerForm: React.FC<ManufacturerFormProps> = ({
     manufacturer,
-    submitFunc = () => console.log("submit"),
 }) => {
+    const dispatch = useDispatch();
     const form = useForm<IManufacturer>({
         initialValues: manufacturer ? { ...manufacturer } : {
             id: "",
@@ -30,9 +31,9 @@ const ManufacturerForm: React.FC<ManufacturerFormProps> = ({
         },
     });
     const handleSubmit = (data: object) => {
-        console.log(data);
-        submitFunc(data);
-        closeModal("edit-modal");
+        manufacturer ? dispatch(manufacturerActions.update({ manufacturer: data as IManufacturer })) :
+            dispatch(manufacturerActions.create({ manufacturer: data as IManufacturer }));
+        dispatch(manufacturerActions.getAll());
     };
     const openNextModel = () => modals.open({
         modalId: 'next-modal',

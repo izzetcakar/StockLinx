@@ -1,6 +1,6 @@
 import React from 'react'
 import { IBaseProduct, IUser } from '../../interfaces/interfaces'
-import { Document, Page, Text, View, StyleSheet, Canvas, Font } from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet, Font } from '@react-pdf/renderer';
 import { PDFViewer } from '@react-pdf/renderer';
 
 Font.register({

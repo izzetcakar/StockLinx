@@ -13,15 +13,14 @@ import { RootState } from '../../../redux/rootReducer';
 import { categoryActions } from '../../../redux/category/actions';
 import { useDispatch } from 'react-redux';
 import { manufacturerActions } from '../../../redux/manufacturer/actions';
+import { modelActions } from '../../../redux/model/actions';
 
 interface ModelFormProps {
     model?: IModel;
-    submitFunc: (data: object) => void;
 }
 
 const ModelForm: React.FC<ModelFormProps> = ({
     model,
-    submitFunc = () => console.log("submit"),
 }) => {
     const dispatch = useDispatch();
     const categorySelectData = useSelector((state: RootState) => state.category.selectData);
@@ -44,9 +43,9 @@ const ModelForm: React.FC<ModelFormProps> = ({
         },
     });
     const handleSubmit = (data: object) => {
-        console.log(data);
-        submitFunc(data);
-        closeModal("edit-modal");
+        model ? dispatch(modelActions.update({ model: data as IModel })) :
+            dispatch(modelActions.create({ model: data as IModel }));
+        dispatch(modelActions.getAll());
     };
     const openNextModel = () => modals.open({
         modalId: 'next-modal',

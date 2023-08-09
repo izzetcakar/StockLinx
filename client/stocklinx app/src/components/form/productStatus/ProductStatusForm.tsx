@@ -4,17 +4,17 @@ import { useForm } from '@mantine/form';
 import { closeModal } from '@mantine/modals';
 import { modals } from '@mantine/modals';
 import { IProductStatus } from '../../../interfaces/interfaces';
+import { productStatusActions } from '../../../redux/productStatus/actions';
+import { useDispatch } from 'react-redux';
 
 interface ProductStatusFormProps {
     productStatus?: IProductStatus;
-    submitFunc: (data: object) => void;
 }
 
 const ProductStatusForm: React.FC<ProductStatusFormProps> = ({
     productStatus,
-    submitFunc = () => console.log("submit"),
 }) => {
-
+    const dispatch = useDispatch();
     const form = useForm<IProductStatus>({
         initialValues: productStatus ? { ...productStatus } : {
             id: "",
@@ -25,9 +25,9 @@ const ProductStatusForm: React.FC<ProductStatusFormProps> = ({
         },
     });
     const handleSubmit = (data: object) => {
-        console.log(data);
-        submitFunc(data);
-        closeModal("product-status-modal");
+        productStatus ? dispatch(productStatusActions.update({ productStatus: data as IProductStatus })) :
+            dispatch(productStatusActions.create({ productStatus: data as IProductStatus }));
+        dispatch(productStatusActions.getAll());
     };
     const openNextModel = () => modals.open({
         modalId: 'next-modal',

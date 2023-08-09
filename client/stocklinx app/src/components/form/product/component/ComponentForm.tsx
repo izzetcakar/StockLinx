@@ -16,15 +16,14 @@ import { categoryActions } from '../../../../redux/category/actions';
 import { locationActions } from '../../../../redux/location/actions';
 import { companyActions } from '../../../../redux/company/actions';
 import { productStatusActions } from '../../../../redux/productStatus/actions';
+import { componentActions } from '../../../../redux/component/actions';
 
 interface ComponentFormProps {
     component?: IComponent;
-    submitFunc: (data: object) => void;
 }
 
 const ComponentForm: React.FC<ComponentFormProps> = ({
     component,
-    submitFunc = () => console.log("submit"),
 }) => {
     const dispatch = useDispatch();
     const categorySelectData = useSelector((state: RootState) => state.category.selectData);
@@ -65,9 +64,9 @@ const ComponentForm: React.FC<ComponentFormProps> = ({
         },
     });
     const handleSubmit = (data: object) => {
-        console.log(data);
-        submitFunc(data);
-        closeModal("edit-modal");
+        component ? dispatch(componentActions.update({ component: data as IComponent })) :
+            dispatch(componentActions.create({ component: data as IComponent }));
+        dispatch(componentActions.getAll());
     };
     const openNextModel = () => modals.open({
         modalId: 'next-modal',

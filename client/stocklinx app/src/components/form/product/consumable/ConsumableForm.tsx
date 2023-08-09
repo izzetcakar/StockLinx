@@ -16,15 +16,14 @@ import { categoryActions } from '../../../../redux/category/actions';
 import { companyActions } from '../../../../redux/company/actions';
 import { locationActions } from '../../../../redux/location/actions';
 import { productStatusActions } from '../../../../redux/productStatus/actions';
+import { consumableActions } from '../../../../redux/consumable/actions';
 
 interface ConsumableFormProps {
     consumable?: IConsumable;
-    submitFunc: (data: object) => void;
 }
 
 const ConsumableForm: React.FC<ConsumableFormProps> = ({
     consumable,
-    submitFunc = () => console.log("submit"),
 }) => {
     const dispatch = useDispatch();
     const categorySelectData = useSelector((state: RootState) => state.category.selectData);
@@ -68,9 +67,9 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
         },
     });
     const handleSubmit = (data: object) => {
-        console.log(data);
-        submitFunc(data);
-        closeModal("edit-modal");
+        consumable ? dispatch(consumableActions.update({ consumable: data as IConsumable })) :
+            dispatch(consumableActions.create({ consumable: data as IConsumable }));
+        dispatch(consumableActions.getAll());
     };
     const openNextModel = () => modals.open({
         modalId: 'next-modal',

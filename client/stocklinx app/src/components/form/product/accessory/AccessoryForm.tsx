@@ -9,7 +9,6 @@ import { IAccessory } from '../../../../interfaces/interfaces';
 import { handleImageChange } from '../../functions/formFunctions';
 import { IMantinSelectProps } from '../../interfaces/interfaces';
 import MantineSelect from '../../components/MantineSelect';
-import { notifications } from '@mantine/notifications';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../redux/rootReducer';
 import { useDispatch } from 'react-redux';
@@ -19,30 +18,27 @@ import { categoryActions } from '../../../../redux/category/actions';
 import { locationActions } from '../../../../redux/location/actions';
 import { companyActions } from '../../../../redux/company/actions';
 import { productStatusActions } from '../../../../redux/productStatus/actions';
+import { accessoryActions } from '../../../../redux/accessory/actions';
 
 interface AccessoryFormProps {
     accessory?: IAccessory | null;
-    submitFunc: (data: object) => void;
 }
-
 const AccessoryForm: React.FC<AccessoryFormProps> = ({
     accessory,
-    submitFunc = () => console.log("submit"),
 }) => {
     const dispatch = useDispatch();
-    const accessoryApiStatus = useSelector((state: RootState) => state.accessory.pending);
     const manufacturerSelectData = useSelector((state: RootState) => state.manufacturer.selectData);
-    const manufacturerApiStatus = useSelector((state: RootState) => state.manufacturer.pending);
+    const manufacturerPending = useSelector((state: RootState) => state.manufacturer.pending);
     const supplierSelectData = useSelector((state: RootState) => state.supplier.selectData);
-    const supplierApiStatus = useSelector((state: RootState) => state.supplier.pending);
+    const supplierPending = useSelector((state: RootState) => state.supplier.pending);
     const categorySelectData = useSelector((state: RootState) => state.category.selectData);
-    const categoryApiStatus = useSelector((state: RootState) => state.category.pending);
+    const categoryPending = useSelector((state: RootState) => state.category.pending);
     const locationSelectData = useSelector((state: RootState) => state.location.selectData);
-    const locationApiStatus = useSelector((state: RootState) => state.location.pending);
+    const locationPending = useSelector((state: RootState) => state.location.pending);
     const companySelectData = useSelector((state: RootState) => state.company.selectData);
-    const companyApiStatus = useSelector((state: RootState) => state.company.pending);
+    const companyPending = useSelector((state: RootState) => state.company.pending);
     const productStatusSelectData = useSelector((state: RootState) => state.productStatus.selectData);
-    const productStatusApiStatus = useSelector((state: RootState) => state.productStatus.pending);
+    const productStatusPending = useSelector((state: RootState) => state.productStatus.pending);
 
     const form = useForm<IAccessory>({
         initialValues: accessory ? { ...accessory } : {
@@ -76,20 +72,9 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({
         },
     });
     const handleSubmit = (data: object) => {
-        openNotification();
-        submitFunc(data);
-        notifications.hide("accessory-notification");
-    };
-    const openNotification = () => {
-        notifications.show({
-            id: 'accessory-notification',
-            loading: accessoryApiStatus,
-            message: 'Creating accessory',
-            autoClose: false,
-            withCloseButton: false,
-            color: "dark",
-            radius: "md",
-        });
+        accessory ? dispatch(accessoryActions.update({ accessory: data as IAccessory })) :
+            dispatch(accessoryActions.create({ accessory: data as IAccessory }));
+        dispatch(accessoryActions.getAll());
     };
     const openNextModal = () => modals.open({
         modalId: 'next-modal',
@@ -106,7 +91,7 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({
             label: "Manufacturer",
             propTag: "manufacturerId",
             refreshData: () => dispatch(manufacturerActions.getAll()),
-            loading: manufacturerApiStatus
+            loading: manufacturerPending
         },
         {
             form: form,
@@ -114,7 +99,7 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({
             label: "Supplier",
             propTag: "supplierId",
             refreshData: () => dispatch(supplierActions.getAll()),
-            loading: supplierApiStatus
+            loading: supplierPending
         },
         {
             form: form,
@@ -122,7 +107,7 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({
             label: "Category",
             propTag: "categoryId",
             refreshData: () => dispatch(categoryActions.getAll()),
-            loading: categoryApiStatus
+            loading: categoryPending
         },
         {
             form: form,
@@ -130,7 +115,7 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({
             label: "Location",
             propTag: "locationId",
             refreshData: () => dispatch(locationActions.getAll()),
-            loading: locationApiStatus
+            loading: locationPending
         },
         {
             form: form,
@@ -138,7 +123,7 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({
             label: "Company",
             propTag: "companyId",
             refreshData: () => dispatch(companyActions.getAll()),
-            loading: companyApiStatus
+            loading: companyPending
         },
         {
             form: form,
@@ -146,7 +131,7 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({
             label: "Status",
             propTag: "statusId",
             refreshData: () => dispatch(productStatusActions.getAll()),
-            loading: productStatusApiStatus,
+            loading: productStatusPending,
             error: "asdasd"
         },
     ]
@@ -239,7 +224,7 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({
                     </Group>
                 </Flex>
             </form >
-        </ScrollArea.Autosize>
+        </ScrollArea.Autosize >
     );
 }
 

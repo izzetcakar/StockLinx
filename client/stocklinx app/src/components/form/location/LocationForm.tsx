@@ -6,16 +6,17 @@ import { IconUpload } from '@tabler/icons-react';
 import { modals } from '@mantine/modals';
 import { ILocation } from '../../../interfaces/interfaces';
 import { handleImageChange } from '../functions/formFunctions';
+import { locationActions } from '../../../redux/location/actions';
+import { useDispatch } from 'react-redux';
 
 interface LocationFormProps {
     location?: ILocation;
-    submitFunc: (data: object) => void;
 }
 
 const LocationForm: React.FC<LocationFormProps> = ({
     location,
-    submitFunc = () => console.log("submit"),
 }) => {
+    const dispatch = useDispatch();
     const form = useForm<ILocation>({
         initialValues: location ? { ...location } : {
             id: "",
@@ -35,9 +36,9 @@ const LocationForm: React.FC<LocationFormProps> = ({
         },
     });
     const handleSubmit = (data: object) => {
-        console.log(data);
-        submitFunc(data);
-        closeModal("edit-modal");
+        location ? dispatch(locationActions.update({ location: data as ILocation })) :
+            dispatch(locationActions.create({ location: data as ILocation }));
+        dispatch(locationActions.getAll());
     };
     const openNextModel = () => modals.open({
         modalId: 'next-modal',

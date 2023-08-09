@@ -6,17 +6,17 @@ import { IconUpload } from '@tabler/icons-react';
 import { modals } from '@mantine/modals';
 import { ICompany } from '../../../interfaces/interfaces';
 import { handleImageChange } from '../functions/formFunctions';
+import { useDispatch } from 'react-redux';
+import { companyActions } from '../../../redux/company/actions';
 
 interface CompanyFormProps {
     company?: ICompany;
-    submitFunc: (data: object) => void;
 }
 
 const CompanyForm: React.FC<CompanyFormProps> = ({
     company,
-    submitFunc = () => console.log("submit"),
 }) => {
-
+    const dispatch = useDispatch();
     const form = useForm<ICompany>({
         initialValues: company ? { ...company } : {
             id: "",
@@ -28,9 +28,9 @@ const CompanyForm: React.FC<CompanyFormProps> = ({
         },
     });
     const handleSubmit = (data: object) => {
-        console.log(data);
-        submitFunc(data);
-        closeModal("edit-modal");
+        company ? dispatch(companyActions.update({ company: data as ICompany })) :
+            dispatch(companyActions.create({ company: data as ICompany }));
+        dispatch(companyActions.getAll());
     };
     const openNextModel = () => modals.open({
         modalId: 'next-modal',

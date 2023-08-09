@@ -11,15 +11,14 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/rootReducer';
 import { useDispatch } from 'react-redux';
 import { locationActions } from '../../../redux/location/actions';
+import { supplierActions } from '../../../redux/supplier/actions';
 
 interface SupplierFormProps {
     supplier?: ISupplier;
-    submitFunc: (data: object) => void;
 }
 
 const SupplierForm: React.FC<SupplierFormProps> = ({
     supplier,
-    submitFunc = () => console.log("submit"),
 }) => {
     const dispatch = useDispatch();
     const locationSelectData = useSelector((state: RootState) => state.location.selectData);
@@ -43,9 +42,9 @@ const SupplierForm: React.FC<SupplierFormProps> = ({
         },
     });
     const handleSubmit = (data: object) => {
-        console.log(data);
-        submitFunc(data);
-        closeModal("edit-modal");
+        supplier ? dispatch(supplierActions.update({ supplier: data as ISupplier })) :
+            dispatch(supplierActions.create({ supplier: data as ISupplier }));
+        dispatch(supplierActions.getAll());
     };
     const openNextSupplier = () => modals.open({
         modalId: 'next-modal',
