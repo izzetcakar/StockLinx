@@ -17,7 +17,6 @@ const Login = () => {
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.user.user);
   const userApiStatus = useSelector((state: RootState) => state.user.pending);
-  const userError = useSelector((state: RootState) => state.user.error);
   const signForm = useForm<IUserLoginDto>({
     initialValues: {
       email: "",
@@ -40,30 +39,12 @@ const Login = () => {
     }
   }
 
-
-  // const handleChange = (event) => {
-  //   setInputs((prev) => ({ ...prev, [event.target.id]: event.target.value }));
-  // };
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     await register(inputs);
-  //     navigate("/");
-  //   } catch (err) {
-  //     setError(err.response.data);
-  //     alert(err.response.data);
-  //   }
-  // };
-
-
   return (
     <Flex w="100%" h="100vh" justify={"center"} align={"center"} bg={"#f4f0f0"}>
       <Paper shadow="xs" py="md" px={40} mah="90%" maw="90%">
         <LoadingOverlay visible={userApiStatus} />
         <Flex direction="column" gap={10} maw="100%" bg={"white"} >
           <Image alt="..." src={logo} />
-          <button onClick={() => console.log(userApiStatus)}>asd</button>
           <form className="sign-form" onSubmit={signForm.onSubmit(
             (_, _event) => { _event.stopPropagation(); handleSignIn(); },
           )}>
