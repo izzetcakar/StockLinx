@@ -1,7 +1,7 @@
 
 import { IProductStatus } from "../../interfaces/interfaces";
 import { modals } from "@mantine/modals";
-import ProductStatusForm from "../../components/form/productStatus/ProductStatusForm";
+import ProductStatusForm from "../../forms/productStatus/ProductStatusForm";
 
 export const closeModal = (modal: string) => modals.close(modal);
 export const openProductStatusModal = (

@@ -1,6 +1,6 @@
 import { IAccessory } from "../../../interfaces/interfaces";
 import { modals } from "@mantine/modals";
-import AccessoryForm from "../../../components/form/product/accessory/AccessoryForm";
+import AccessoryForm from "../../../forms/product/accessory/AccessoryForm";
 
 export const closeModal = (modal: string) => modals.close(modal);
 export const openAccessoryModal = (
