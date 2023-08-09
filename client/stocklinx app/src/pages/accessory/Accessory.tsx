@@ -1,5 +1,3 @@
-import { modals } from '@mantine/modals';
-import AccessoryForm from "../../components/form/product/accessory/AccessoryForm";
 import GridTable from "../../components/gridTable/GridTable";
 import { IAccessory } from "../../interfaces/interfaces";
 import {
@@ -21,6 +19,9 @@ import { locationActions } from "../../redux/location/actions";
 import { companyActions } from "../../redux/company/actions";
 import { productStatusActions } from "../../redux/productStatus/actions";
 import "./accessory.scss";
+import { Text } from '@mantine/core';
+import { openAccessoryModal } from "../../modals/product/accessory/modals";
+import { modals } from "@mantine/modals";
 
 const Accessory = () => {
   const dispatch = useDispatch();
@@ -80,40 +81,17 @@ const Accessory = () => {
     { dataField: "warrantyDate", caption: "Warranty Date", dataType: "date" },
     { dataField: "notes", caption: "Notes", dataType: "string" },
   ];
-  const onStartEdit = (row: object) => {
-    // const id = (row as IAccessory).id;
-    // dispatch(accessoryActions.get({ id: id as string }));
-    openAccessoryModal(row as IAccessory);
-  };
   const onRowInsert = () => {
-    console.log("insert");
-    dispatch(accessoryActions.clearAccessory());
     openAccessoryModal();
   };
   const onRowUpdate = (row: object) => {
-    console.log(row);
-    openAccessoryModal(row as IAccessory);
+    const data = row as IAccessory;
+    openAccessoryModal(data);
   };
   const onRowRemove = (row: object) => {
-    const id = (row as IAccessory).id;
-    dispatch(accessoryActions.remove({ id: id as string }));
-    dispatch(accessoryActions.getAll());
+    const id: string = (row as IAccessory).id as string;
+    openConfirmModal(id);
   };
-  const handleUpdate = (data: object) => {
-    const id = (data as IAccessory).id;
-    console.log(id);
-    id ? dispatch(accessoryActions.update({ accessory: data as IAccessory })) :
-      dispatch(accessoryActions.create({ accessory: data as IAccessory }));
-    dispatch(accessoryActions.getAll());
-  };
-  const openAccessoryModal = (accessory?: IAccessory) => modals.open({
-    modalId: 'accessory-modal',
-    title: 'Update',
-    children: (
-      <AccessoryForm accessory={accessory} submitFunc={handleUpdate} />
-    ),
-    xOffset: "auto",
-  });
 
   const refreshData = () => {
     dispatch(accessoryActions.getAll());
@@ -124,6 +102,23 @@ const Accessory = () => {
     dispatch(companyActions.getAll());
     dispatch(productStatusActions.getAll());
   };
+
+  const openConfirmModal = (id: string) => modals.openConfirmModal({
+    title: 'Please confirm your action',
+    children: (
+      <Text size="sm">
+        Do you want to delete this item?
+      </Text>
+    ),
+    labels: { confirm: 'Confirm', cancel: 'Cancel' },
+    onCancel: () => console.log('Cancel'),
+    onConfirm: () => handleRemove(id),
+  });
+  const handleRemove = (id: string) => {
+    dispatch(accessoryActions.remove({ id: id }));
+    dispatch(accessoryActions.getAll());
+  };
+
 
   return (
     <div>
@@ -138,7 +133,6 @@ const Accessory = () => {
         onRowInsert={onRowInsert}
         onRowUpdate={onRowUpdate}
         onRowRemove={onRowRemove}
-        onStartEdit={onStartEdit}
       />
     </div>
   );
