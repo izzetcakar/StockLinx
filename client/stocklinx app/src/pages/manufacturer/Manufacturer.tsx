@@ -1,18 +1,15 @@
-import { useState } from "react";
-import { modals } from "@mantine/modals";
 import GridTable from "../../components/gridTable/GridTable";
-import CustomPopup from "../../components/popup/CustomPopup";
 import { IManufacturer } from "../../interfaces/interfaces";
-import ManufacturerForm from "../../components/form/manufacturer/ManufacturerForm";
 import { Column } from "../../components/gridTable/interfaces/interfaces";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { manufacturerActions } from "../../redux/manufacturer/actions";
+import { openManufacturerModal } from "../../modals/manufacturer/modals";
+import { genericConfirmModal } from "../../modals/generic/GenericModals";
 
 const Manufacturer = () => {
     const dispatch = useDispatch();
-    const [formVisible, setFormVisible] = useState<boolean>(false);
     const manufacturers = useSelector((state: RootState) => state.manufacturer.manufacturers);
 
     const columns: Column[] = [
@@ -37,37 +34,21 @@ const Manufacturer = () => {
             dataType: "string",
         },
     ];
-
-    const handleFormVisible = () => {
-        setFormVisible((prevFormVisible) => !prevFormVisible);
-    };
-    const onStartEdit = (row: object) => {
-        dispatch(manufacturerActions.setManufacturer(row as IManufacturer));
-    };
     const onRowInsert = () => {
-        console.log("insert");
-        dispatch(manufacturerActions.clearManufacturer());
         openManufacturerModal();
     };
     const onRowUpdate = (row: object) => {
-        console.log(row);
-        openManufacturerModal(row as IManufacturer);
+        const data = row as IManufacturer;
+        openManufacturerModal(data);
     };
-    const onRowDelete = (row: object) => {
-        console.log("delete", row);
-    };
-    const handleUpdate = (data: object) => {
-        console.log("updateSubmit", data);
+    const onRowRemove = (row: object) => {
+        const id: string = (row as IManufacturer).id as string;
+        genericConfirmModal(() => dispatch(manufacturerActions.remove({ id: id })));
     };
 
-    const openManufacturerModal = (manufacturer?: IManufacturer) =>
-        modals.open({
-            modalId: "manufacturer-modal",
-            title: "Update",
-            children: (
-                <ManufacturerForm manufacturer={manufacturer} submitFunc={handleUpdate} />
-            ),
-        });
+    const refreshData = () => {
+        dispatch(manufacturerActions.getAll());
+    };
 
     return (
         <div>
@@ -78,10 +59,10 @@ const Manufacturer = () => {
                 pageSizes={[1, 2, 5]}
                 enableEdit={true}
                 showPageSize={true}
+                refreshData={refreshData}
                 onRowInsert={onRowInsert}
                 onRowUpdate={onRowUpdate}
-                onRowRemove={onRowDelete}
-                onStartEdit={onStartEdit}
+                onRowRemove={onRowRemove}
             />
         </div>
     );

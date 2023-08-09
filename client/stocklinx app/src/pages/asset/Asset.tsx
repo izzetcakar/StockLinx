@@ -10,10 +10,17 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { assetActions } from "../../redux/asset/actions";
 import { useDispatch } from "react-redux";
+import { Text } from "@mantine/core";
+import { openAssetModal } from "../../modals/product/asset/modals";
+import { manufacturerActions } from "../../redux/manufacturer/actions";
+import { companyActions } from "../../redux/company/actions";
+import { productStatusActions } from "../../redux/productStatus/actions";
+import { categoryActions } from "../../redux/category/actions";
+import { locationActions } from "../../redux/location/actions";
+import { modelActions } from "../../redux/model/actions";
 
 const Asset = () => {
   const dispatch = useDispatch();
-  const [formVisible, setFormVisible] = useState<boolean>(false);
   const assets = useSelector((state: RootState) => state.asset.assets);
 
   const columns: Column[] = [
@@ -70,35 +77,44 @@ const Asset = () => {
     { dataField: "notes", caption: "Notes", dataType: "string" },
   ];
 
-  const handleFormVisible = () => {
-    setFormVisible((prevFormVisible) => !prevFormVisible);
-  };
-  const onStartEdit = (row: object) => {
-    dispatch(assetActions.setAsset(row as IAsset));
-  };
   const onRowInsert = () => {
-    console.log("insert");
-    dispatch(assetActions.clearAsset());
     openAssetModal();
   };
   const onRowUpdate = (row: object) => {
-    console.log(row);
-    openAssetModal(row as IAsset);
+    const data = row as IAsset;
+    openAssetModal(data);
   };
-  const onRowDelete = (row: object) => {
-    console.log("delete", row);
-  };
-  const handleUpdate = (data: object) => {
-    console.log("updateSubmit", data);
+  const onRowRemove = (row: object) => {
+    const id: string = (row as IAsset).id as string;
+    openConfirmModal(id);
   };
 
-  const openAssetModal = (asset?: IAsset) => modals.open({
-    modalId: 'asset-modal',
-    title: 'Update',
+  const handleRemove = (id: string) => {
+    dispatch(assetActions.remove({ id: id }));
+    dispatch(assetActions.getAll());
+  };
+
+  const openConfirmModal = (id: string) => modals.openConfirmModal({
+    title: 'Please confirm your action',
     children: (
-      <AssetForm asset={asset} submitFunc={handleUpdate} />
+      <Text size="sm">
+        Do you want to delete this item?
+      </Text>
     ),
+    labels: { confirm: 'Confirm', cancel: 'Cancel' },
+    onCancel: () => console.log('Cancel'),
+    onConfirm: () => handleRemove(id),
   });
+
+  const refreshData = () => {
+    dispatch(assetActions.getAll());
+    dispatch(manufacturerActions.getAll());
+    dispatch(categoryActions.getAll());
+    dispatch(locationActions.getAll());
+    dispatch(modelActions.getAll());
+    dispatch(companyActions.getAll());
+    dispatch(productStatusActions.getAll());
+  };
 
   return (
     <div>
@@ -110,10 +126,10 @@ const Asset = () => {
         pageSizes={[1, 2, 5]}
         enableEdit={true}
         showPageSize={true}
+        refreshData={refreshData}
         onRowInsert={onRowInsert}
         onRowUpdate={onRowUpdate}
-        onRowRemove={onRowDelete}
-        onStartEdit={onStartEdit}
+        onRowRemove={onRowRemove}
       />
     </div>
   );

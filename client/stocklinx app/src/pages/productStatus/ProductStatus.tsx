@@ -1,18 +1,15 @@
-import { useState } from "react";
-import { modals } from "@mantine/modals";
 import GridTable from "../../components/gridTable/GridTable";
-import CustomPopup from "../../components/popup/CustomPopup";
 import { IProductStatus } from "../../interfaces/interfaces";
-import ProductStatusForm from "../../components/form/productStatus/ProductStatusForm";
 import { Column } from "../../components/gridTable/interfaces/interfaces";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { productStatusActions } from "../../redux/productStatus/actions";
+import { openProductStatusModal } from "../../modals/productStatus/modals";
+import { genericConfirmModal } from "../../modals/generic/GenericModals";
 
 const ProductStatus = () => {
     const dispatch = useDispatch();
-    const [formVisible, setFormVisible] = useState<boolean>(false);
     const productStatuses = useSelector((state: RootState) => state.productStatus.productStatuses);
 
     const columns: Column[] = [
@@ -23,36 +20,21 @@ const ProductStatus = () => {
         },
     ];
 
-    const handleFormVisible = () => {
-        setFormVisible((prevFormVisible) => !prevFormVisible);
-    };
-    const onStartEdit = (row: object) => {
-        dispatch(productStatusActions.setProductStatus(row as IProductStatus));
-    };
     const onRowInsert = () => {
-        console.log("insert");
-        dispatch(productStatusActions.clearProductStatus());
         openProductStatusModal();
     };
     const onRowUpdate = (row: object) => {
-        console.log(row);
-        openProductStatusModal(row as IProductStatus);
+        const data = row as IProductStatus;
+        openProductStatusModal(data);
     };
-    const onRowDelete = (row: object) => {
-        console.log("delete", row);
-    };
-    const handleUpdate = (data: object) => {
-        console.log("updateSubmit", data);
+    const onRowRemove = (row: object) => {
+        const id: string = (row as IProductStatus).id as string;
+        genericConfirmModal(() => dispatch(productStatusActions.remove({ id: id })));
     };
 
-    const openProductStatusModal = (productStatus?: IProductStatus) =>
-        modals.open({
-            modalId: "productStatus-modal",
-            title: "Update",
-            children: (
-                <ProductStatusForm productStatus={productStatus} submitFunc={handleUpdate} />
-            ),
-        });
+    const refreshData = () => {
+        dispatch(productStatusActions.getAll());
+    };
 
     return (
         <div>
@@ -64,10 +46,10 @@ const ProductStatus = () => {
                 pageSizes={[1, 2, 5]}
                 enableEdit={true}
                 showPageSize={true}
+                refreshData={refreshData}
                 onRowInsert={onRowInsert}
                 onRowUpdate={onRowUpdate}
-                onRowRemove={onRowDelete}
-                onStartEdit={onStartEdit}
+                onRowRemove={onRowRemove}
             />
         </div>
     );

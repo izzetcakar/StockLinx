@@ -18,10 +18,9 @@ import { categoryActions } from "../../redux/category/actions";
 import { locationActions } from "../../redux/location/actions";
 import { companyActions } from "../../redux/company/actions";
 import { productStatusActions } from "../../redux/productStatus/actions";
-import "./accessory.scss";
-import { Text } from '@mantine/core';
 import { openAccessoryModal } from "../../modals/product/accessory/modals";
-import { modals } from "@mantine/modals";
+import { genericConfirmModal } from "../../modals/generic/GenericModals";
+import "./accessory.scss";
 
 const Accessory = () => {
   const dispatch = useDispatch();
@@ -90,7 +89,7 @@ const Accessory = () => {
   };
   const onRowRemove = (row: object) => {
     const id: string = (row as IAccessory).id as string;
-    openConfirmModal(id);
+    genericConfirmModal(() => dispatch(accessoryActions.remove({ id: id })));
   };
 
   const refreshData = () => {
@@ -101,22 +100,6 @@ const Accessory = () => {
     dispatch(locationActions.getAll());
     dispatch(companyActions.getAll());
     dispatch(productStatusActions.getAll());
-  };
-
-  const openConfirmModal = (id: string) => modals.openConfirmModal({
-    title: 'Please confirm your action',
-    children: (
-      <Text size="sm">
-        Do you want to delete this item?
-      </Text>
-    ),
-    labels: { confirm: 'Confirm', cancel: 'Cancel' },
-    onCancel: () => console.log('Cancel'),
-    onConfirm: () => handleRemove(id),
-  });
-  const handleRemove = (id: string) => {
-    dispatch(accessoryActions.remove({ id: id }));
-    dispatch(accessoryActions.getAll());
   };
 
 

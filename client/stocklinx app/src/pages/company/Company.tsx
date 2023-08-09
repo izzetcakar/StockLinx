@@ -1,17 +1,14 @@
-import { useEffect, useState } from "react";
-import { modals } from "@mantine/modals";
 import GridTable from "../../components/gridTable/GridTable";
-import CustomPopup from "../../components/popup/CustomPopup";
-import { ICompany } from "../../interfaces/interfaces";
-import CompanyForm from "../../components/form/company/CompanyForm";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
+import { openCompanyModal } from "../../modals/company/modals";
+import { genericConfirmModal } from "../../modals/generic/GenericModals";
 import { companyActions } from "../../redux/company/actions";
+import { ICompany } from "../../interfaces/interfaces";
 
 const Company = () => {
     const dispatch = useDispatch();
-    const [formVisible, setFormVisible] = useState<boolean>(false);
     const companies = useSelector((state: RootState) => state.company.companies);
 
     const columns = [
@@ -22,39 +19,20 @@ const Company = () => {
         },
     ];
 
-    useEffect(() => {
-        dispatch(companyActions.getAll());
-    }, []);
-
-    const handleFormVisible = () => {
-        setFormVisible((prevFormVisible) => !prevFormVisible);
-    };
-    const onStartEdit = (row: object) => {
-        dispatch(companyActions.setCompany(row as ICompany));
-    };
     const onRowInsert = () => {
-        console.log("insert");
-        dispatch(companyActions.clearCompany());
         openCompanyModal();
     };
     const onRowUpdate = (row: object) => {
-        console.log(row);
-        openCompanyModal(row as ICompany);
+        const data = row as ICompany;
+        openCompanyModal(data);
     };
-    const onRowDelete = (row: object) => {
-        console.log("delete", row);
+    const onRowRemove = (row: object) => {
+        const id: string = (row as ICompany).id as string;
+        genericConfirmModal(() => dispatch(companyActions.remove({ id: id })));
     };
-    const handleUpdate = (data: object) => {
-        console.log("updateSubmit", data);
+    const refreshData = () => {
+        dispatch(companyActions.getAll());
     };
-    const openCompanyModal = (company?: ICompany) =>
-        modals.open({
-            modalId: "company-modal",
-            title: "Update",
-            children: (
-                <CompanyForm company={company} submitFunc={handleUpdate} />
-            ),
-        });
 
     return (
         <div>
@@ -65,10 +43,10 @@ const Company = () => {
                 pageSizes={[1, 2, 5]}
                 enableEdit={true}
                 showPageSize={true}
+                refreshData={refreshData}
                 onRowInsert={onRowInsert}
                 onRowUpdate={onRowUpdate}
-                onRowRemove={onRowDelete}
-                onStartEdit={onStartEdit}
+                onRowRemove={onRowRemove}
             />
         </div>
     );

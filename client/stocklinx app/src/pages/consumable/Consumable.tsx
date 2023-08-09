@@ -1,8 +1,4 @@
-import { useState } from "react";
-import { modals } from "@mantine/modals";
-import ConsumableForm from "../../components/form/product/consumable/ConsumableForm";
 import GridTable from "../../components/gridTable/GridTable";
-import CustomPopup from "../../components/popup/CustomPopup";
 import { IConsumable } from "../../interfaces/interfaces";
 import { Column } from "../../components/gridTable/interfaces/interfaces";
 import { CategoryNameComponent, CompanyNameComponent, LocationNameComponent, StatusNameComponent } from "../../components/customComponents/TableComponents";
@@ -10,10 +6,15 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { consumableActions } from "../../redux/consumable/actions";
+import { openConsumableModal } from "../../modals/product/consumable/modals";
+import { genericConfirmModal } from "../../modals/generic/GenericModals";
+import { categoryActions } from "../../redux/category/actions";
+import { locationActions } from "../../redux/location/actions";
+import { companyActions } from "../../redux/company/actions";
+import { productStatusActions } from "../../redux/productStatus/actions";
 
 const Consumable = () => {
   const dispatch = useDispatch();
-  const [formVisible, setFormVisible] = useState<boolean>(false);
   const consumables = useSelector((state: RootState) => state.consumable.consumables);
 
   const columns: Column[] = [
@@ -73,36 +74,25 @@ const Consumable = () => {
     { dataField: "notes", caption: "Notes", dataType: "string" },
   ];
 
-  const handleFormVisible = () => {
-    setFormVisible((prevFormVisible) => !prevFormVisible);
-  };
-  const onStartEdit = (row: object) => {
-    dispatch(consumableActions.setConsumable(row as IConsumable));
-  };
   const onRowInsert = () => {
-    console.log("insert");
-    dispatch(consumableActions.clearConsumable());
     openConsumableModal();
   };
   const onRowUpdate = (row: object) => {
-    console.log(row);
-    openConsumableModal(row as IConsumable);
+    const data = row as IConsumable;
+    openConsumableModal(data);
   };
-  const onRowDelete = (row: object) => {
-    console.log("delete", row);
-  };
-  const handleUpdate = (data: object) => {
-    console.log("updateSubmit", data);
+  const onRowRemove = (row: object) => {
+    const id: string = (row as IConsumable).id as string;
+    genericConfirmModal(() => dispatch(consumableActions.remove({ id: id })));
   };
 
-  const openConsumableModal = (consumable?: IConsumable) =>
-    modals.open({
-      modalId: "consumable-modal",
-      title: "Update",
-      children: (
-        <ConsumableForm consumable={consumable} submitFunc={handleUpdate} />
-      ),
-    });
+  const refreshData = () => {
+    dispatch(consumableActions.getAll());
+    dispatch(categoryActions.getAll());
+    dispatch(locationActions.getAll());
+    dispatch(companyActions.getAll());
+    dispatch(productStatusActions.getAll());
+  };
 
   return (
     <div>
@@ -114,10 +104,10 @@ const Consumable = () => {
         pageSizes={[1, 2, 5]}
         enableEdit={true}
         showPageSize={true}
+        refreshData={refreshData}
         onRowInsert={onRowInsert}
         onRowUpdate={onRowUpdate}
-        onRowRemove={onRowDelete}
-        onStartEdit={onStartEdit}
+        onRowRemove={onRowRemove}
       />
     </div>
   );

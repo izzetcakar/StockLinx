@@ -1,9 +1,5 @@
-import { useState } from "react";
-import { modals } from "@mantine/modals";
 import GridTable from "../../components/gridTable/GridTable";
-import CustomPopup from "../../components/popup/CustomPopup";
 import { IDepartment } from "../../interfaces/interfaces";
-import DepartmentForm from "../../components/form/department/DepartmentForm";
 import { Column } from "../../components/gridTable/interfaces/interfaces";
 import { CompanyNameComponent, LocationNameComponent } from "../../components/customComponents/TableComponents";
 import { useDispatch } from "react-redux";
@@ -11,10 +7,13 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { departmentActions } from "../../redux/department/actions";
 import { companyActions } from "../../redux/company/actions";
+import { openDepartmentModal } from "../../modals/department/modals";
+import { genericConfirmModal } from "../../modals/generic/GenericModals";
+import { locationActions } from "../../redux/location/actions";
+import { userActions } from "../../redux/user/actions";
 
 const Department = () => {
     const dispatch = useDispatch();
-    const [formVisible, setFormVisible] = useState<boolean>(false);
     const departments = useSelector((state: RootState) => state.department.departments);
 
     const columns: Column[] = [
@@ -47,45 +46,24 @@ const Department = () => {
         },
     ];
 
-    const handleFormVisible = () => {
-        setFormVisible((prevFormVisible) => !prevFormVisible);
-    };
-    const onStartEdit = (row: object) => {
-        // dispatch(departmentActions.setDepartment(row as IDepartment));
-        openDepartmentModal(row as IDepartment);
-    };
     const onRowInsert = () => {
-        console.log("insert");
-        dispatch(departmentActions.clearDepartment());
         openDepartmentModal();
     };
     const onRowUpdate = (row: object) => {
-        console.log(row);
-        openDepartmentModal(row as IDepartment);
+        const data = row as IDepartment;
+        openDepartmentModal(data);
     };
-    const onRowDelete = (row: object) => {
-        console.log("delete", row);
-    };
-    const handleUpdate = (data: object) => {
-        console.log("updateSubmit", data);
-        dispatch(departmentActions.update({ department: data as IDepartment }));
+    const onRowRemove = (row: object) => {
+        const id: string = (row as IDepartment).id as string;
+        genericConfirmModal(() => dispatch(departmentActions.remove({ id: id })));
     };
 
-    const openDepartmentModal = (department?: IDepartment) =>
-        modals.open({
-            modalId: "department-modal",
-            title: "Update",
-            children: (
-                <DepartmentForm department={department} submitFunc={handleUpdate} />
-            ),
-            xOffset: "auto",
-        });
-
-    const fetchData = () => {
+    const refreshData = () => {
         dispatch(departmentActions.getAll());
         dispatch(companyActions.getAll());
+        dispatch(locationActions.getAll());
+        dispatch(userActions.getAll());
     };
-
 
     return (
         <div>
@@ -96,11 +74,10 @@ const Department = () => {
                 pageSizes={[1, 2, 5]}
                 enableEdit={true}
                 showPageSize={true}
-                refreshData={fetchData}
+                refreshData={refreshData}
                 onRowInsert={onRowInsert}
                 onRowUpdate={onRowUpdate}
-                onRowRemove={onRowDelete}
-                onStartEdit={onStartEdit}
+                onRowRemove={onRowRemove}
             />
         </div>
     );
