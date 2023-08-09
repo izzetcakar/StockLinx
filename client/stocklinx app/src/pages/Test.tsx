@@ -1,6 +1,5 @@
-import React from "react";
 import "./test.scss";
-import SubmissionForm from "../components/form/SubmissionForm";
+import SubmissionForm from "../forms/SubmissionForm";
 
 const Test = () => {
 
