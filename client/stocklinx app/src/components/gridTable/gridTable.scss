@@ -43,12 +43,11 @@
       align-items: center;
       padding: 10px;
       box-sizing: border-box;
-      // white-space: nowrap;
+      white-space: nowrap;
       text-overflow: ellipsis;
       overflow: auto;
       flex: 1;
       transition: all 0.2s ease-in-out;
-      position: relative;
       // .test {
       //   display: flex;
       //   position: absolute;
@@ -60,12 +59,20 @@
       //   right: 0;
       // }
     }
-    .cell.column-title {
+    .column-title {
       display: flex;
-      justify-content: center;
+      max-height: fit-content;
+      justify-content: flex-start;
+      align-items: center;
+      padding: 10px;
+      box-sizing: border-box;
+      white-space: nowrap;
+      text-overflow: ellipsis;
       font-weight: bold;
       font-size: 1em;
       border-bottom: 1px solid #ced4da;
+      transition: all 0.2s ease-in-out;
+      height: 41px;
     }
     .selected-cell {
       background-color: #eaeaea;
