@@ -159,10 +159,9 @@ const GridTable: React.FC<GridTableProps> = ({
         onRowInsert={onRowInsert}
         refreshData={handleRefreshData}
       />
-
       <div className="table-edit-wrapper">
         <div className="column-container column-select">
-          <div className="cell column-title">
+          <div className="column-title">
             <Checkbox
               checked={hasAllElements(
                 getIndexesFromArray(filterData()),
@@ -187,7 +186,7 @@ const GridTable: React.FC<GridTableProps> = ({
           {datagridColumns.map((column, columnIndex) =>
             visibleColumns.includes(column.caption) ? (
               <div className="column-container" key={columnIndex} style={propertyDataStyle}>
-                <div className="cell column-title">
+                <div className="column-title">
                   {column.caption}
                 </div>
                 {filterData().map((_, rowIndex) => (
@@ -206,10 +205,9 @@ const GridTable: React.FC<GridTableProps> = ({
             ) : null
           )}
         </div>
-
         {enableEdit && (
           <div className="column-container column-edit">
-            <div className="cell column-title"></div>
+            <div className="column-title"></div>
             {getIndexesFromArray(filterData()).map((_, index) => (
               <div className="cell" key={index}>
                 <EditComponent
@@ -236,8 +234,6 @@ const GridTable: React.FC<GridTableProps> = ({
           selectedSize={selectedPageSize}
         />
       </div>
-
-
     </div>
   );
 };
