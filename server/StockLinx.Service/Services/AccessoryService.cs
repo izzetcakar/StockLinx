@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
 using StockLinx.Core.DTOs.Create;
+using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
@@ -15,16 +16,14 @@ namespace StockLinx.Service.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IAccessoryRepository _accessoryRepository;
         private readonly ILogger<AccessoryService> _logger;
-        public AccessoryService(IRepository<Accessory> repository,IAccessoryRepository accessoryRepository
-            ,IUnitOfWork unitOfWork, IMapper mapper,ILogger<AccessoryService> logger) : base(repository, unitOfWork)
+        public AccessoryService(IRepository<Accessory> repository, IAccessoryRepository accessoryRepository
+            , IUnitOfWork unitOfWork, IMapper mapper, ILogger<AccessoryService> logger) : base(repository, unitOfWork)
         {
             _mapper = mapper;
             _accessoryRepository = accessoryRepository;
             _unitOfWork = unitOfWork;
             _logger = logger;
         }
-
-
         public async Task CreateAccessoryAsync(AccessoryCreateDto createDto)
         {
             if (createDto == null)
@@ -37,6 +36,12 @@ namespace StockLinx.Service.Services
                 var accessoryId = Guid.NewGuid();
                 newAccessory.Id = accessoryId;
                 newAccessory.CreatedDate = DateTime.UtcNow;
+                if (createDto.ImagePath != null)
+                {
+                    string fileName = $"Accessory - {newAccessory.Name} - {DateTime.UtcNow}";
+                    ImageHandler.UploadBase64AsFile(createDto.ImagePath, fileName);
+                    newAccessory.ImagePath = fileName;
+                }
                 await _accessoryRepository.AddAsync(newAccessory);
                 await _unitOfWork.CommitAsync();
             }
@@ -46,7 +51,6 @@ namespace StockLinx.Service.Services
                 throw;
             }
         }
-
         public async Task UpdateAccessoryAsync(AccessoryUpdateDto updateDto)
         {
             try
@@ -62,10 +66,12 @@ namespace StockLinx.Service.Services
                 updatedAccessory.UpdatedDate = DateTime.UtcNow;
                 _accessoryRepository.Update(accessoryInDb, updatedAccessory);
 
-                //if (updateDto?.Image != null)
-                //{
-                //    await _imageService.AddImageAsync(updateDto.Image, (Guid)accessoryId);
-                //}
+                if (updateDto?.ImagePath != null)
+                {
+                    string fileName = $"Accessory - {updatedAccessory.Name} - {DateTime.UtcNow}";
+                    ImageHandler.UploadBase64AsFile(updateDto.ImagePath, fileName);
+                    updatedAccessory.ImagePath = fileName;
+                }
 
                 await _unitOfWork.CommitAsync();
             }
@@ -75,7 +81,6 @@ namespace StockLinx.Service.Services
                 throw;
             }
         }
-
         public async Task DeleteAccessoryAsync(Guid accessoryId)
         {
             var accessoryInDb = await GetByIdAsync(accessoryId);
@@ -86,13 +91,11 @@ namespace StockLinx.Service.Services
             await RemoveAsync(accessoryInDb);
             await _unitOfWork.CommitAsync();
         }
-
-
-
-
-
-
-
-
+        public async Task<List<AccessoryDto>> GetAccessoriesAsync()
+        {
+            var accessories = await GetAllAsync();
+            var accessoryDtos = _mapper.Map<IEnumerable<AccessoryDto>>(accessories);
+            return accessoryDtos.ToList();
+        }
     }
 }
