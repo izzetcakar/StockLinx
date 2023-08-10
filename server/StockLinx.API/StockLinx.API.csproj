@@ -29,8 +29,4 @@
 		<PackageReference Include="System.IO.FileSystem" Version="4.3.0" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Resources\Images\" />
-	</ItemGroup>
-
 </Project>
