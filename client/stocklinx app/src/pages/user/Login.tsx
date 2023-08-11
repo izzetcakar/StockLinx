@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import logo from "/logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "@mantine/form";
