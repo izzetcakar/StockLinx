@@ -1,7 +1,6 @@
 import GridTable from "../../components/gridTable/GridTable";
 import { ISupplier } from "../../interfaces/interfaces";
 import { Column } from "../../components/gridTable/interfaces/interfaces";
-import { LocationNameComponent } from "../../components/customComponents/TableComponents";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
@@ -9,17 +8,19 @@ import { supplierActions } from "../../redux/supplier/actions";
 import { openSupplierModal } from "../../modals/supplier/modals";
 import { genericConfirmModal } from "../../modals/generic/GenericModals";
 import { locationActions } from "../../redux/location/actions";
+import { NameComponent } from "../../components/customComponents/TableComponents";
 
 const Supplier = () => {
     const dispatch = useDispatch();
     const suppliers = useSelector((state: RootState) => state.supplier.suppliers);
+    const locations = useSelector((state: RootState) => state.location.locations);
 
     const columns: Column[] = [
         {
             dataField: "locationId",
             caption: "Location",
             dataType: "string",
-            renderComponent: LocationNameComponent
+            renderComponent: (value: string) => NameComponent(value, locations)
         },
         {
             dataField: "name",

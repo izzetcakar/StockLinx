@@ -1,7 +1,6 @@
 import GridTable from "../../components/gridTable/GridTable";
 import { ILicense } from "../../interfaces/interfaces";
 import { Column } from "../../components/gridTable/interfaces/interfaces";
-import { CategoryNameComponent, CompanyNameComponent, LocationNameComponent, StatusNameComponent, SupplierNameComponent } from "../../components/customComponents/TableComponents";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
@@ -13,41 +12,47 @@ import { locationActions } from "../../redux/location/actions";
 import { companyActions } from "../../redux/company/actions";
 import { productStatusActions } from "../../redux/productStatus/actions";
 import { supplierActions } from "../../redux/supplier/actions";
+import { NameComponent } from "../../components/customComponents/TableComponents";
 
 const License = () => {
   const dispatch = useDispatch();
   const licenses = useSelector((state: RootState) => state.license.licenses);
+  const categories = useSelector((state: RootState) => state.category.categories);
+  const locations = useSelector((state: RootState) => state.location.locations);
+  const companies = useSelector((state: RootState) => state.company.companies);
+  const suppliers = useSelector((state: RootState) => state.supplier.suppliers);
+  const productStatuses = useSelector((state: RootState) => state.productStatus.productStatuses);
 
   const columns: Column[] = [
     {
       dataField: "categoryId",
       caption: "Category",
       dataType: "string",
-      renderComponent: CategoryNameComponent,
+      renderComponent: (value: string) => NameComponent(value, categories),
     },
     {
       dataField: "locationId",
       caption: "Location",
       dataType: "string",
-      renderComponent: LocationNameComponent,
+      renderComponent: (value: string) => NameComponent(value, locations),
     },
     {
       dataField: "companyId",
       caption: "Company",
       dataType: "string",
-      renderComponent: CompanyNameComponent,
+      renderComponent: (value: string) => NameComponent(value, companies),
     },
     {
       dataField: "supplierId",
       caption: "Supplier",
       dataType: "string",
-      renderComponent: SupplierNameComponent,
+      renderComponent: (value: string) => NameComponent(value, suppliers),
     },
     {
       dataField: "statusId",
       caption: "Status",
       dataType: "string",
-      renderComponent: StatusNameComponent,
+      renderComponent: (value: string) => NameComponent(value, productStatuses),
     },
     {
       dataField: "name",
@@ -103,7 +108,6 @@ const License = () => {
         data={licenses}
         columns={columns}
         hasColumnLines={false}
-        cellCssClass="testClass"
         pageSizes={[1, 2, 5]}
         enableEdit={true}
         showPageSize={true}

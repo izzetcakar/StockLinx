@@ -1,12 +1,7 @@
 import GridTable from "../../components/gridTable/GridTable";
 import { IAccessory } from "../../interfaces/interfaces";
 import {
-  CategoryNameComponent,
-  CompanyNameComponent,
-  LocationNameComponent,
-  ManufacturerNameComponent,
-  StatusNameComponent,
-  SupplierNameComponent
+  NameComponent,
 } from "../../components/customComponents/TableComponents";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
@@ -25,43 +20,49 @@ import "./accessory.scss";
 const Accessory = () => {
   const dispatch = useDispatch();
   const accessories = useSelector((state: RootState) => state.accessory.accessories);
+  const companies = useSelector((state: RootState) => state.company.companies);
+  const categories = useSelector((state: RootState) => state.category.categories);
+  const locations = useSelector((state: RootState) => state.location.locations);
+  const manufacturers = useSelector((state: RootState) => state.manufacturer.manufacturers);
+  const productStatuses = useSelector((state: RootState) => state.productStatus.productStatuses);
+  const suppliers = useSelector((state: RootState) => state.supplier.suppliers);
 
   const columns = [
     {
       dataField: "categoryId",
       caption: "Category",
       dataType: "string",
-      renderComponent: CategoryNameComponent,
+      renderComponent: (value: string) => NameComponent(value, categories),
     },
     {
       dataField: "locationId",
       caption: "Location",
       dataType: "string",
-      renderComponent: LocationNameComponent,
+      renderComponent: (value: string) => NameComponent(value, locations),
     },
     {
       dataField: "companyId",
       caption: "Company",
       dataType: "string",
-      renderComponent: CompanyNameComponent
+      renderComponent: (value: string) => NameComponent(value, companies),
     },
     {
       dataField: "manufacturerId",
       caption: "Manufacturer",
       dataType: "string",
-      renderComponent: ManufacturerNameComponent,
+      renderComponent: (value: string) => NameComponent(value, manufacturers),
     },
     {
       dataField: "supplierId",
       caption: "Supplier",
       dataType: "string",
-      renderComponent: SupplierNameComponent,
+      renderComponent: (value: string) => NameComponent(value, suppliers),
     },
     {
       dataField: "statusId",
       caption: "Status",
       dataType: "string",
-      renderComponent: StatusNameComponent,
+      renderComponent: (value: string) => NameComponent(value, productStatuses),
     },
     {
       dataField: "name",

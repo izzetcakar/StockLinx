@@ -1,10 +1,6 @@
-import { useState } from "react";
 import { modals } from '@mantine/modals';
-import AssetForm from "../../components/form/product/asset/AssetForm";
 import GridTable from "../../components/gridTable/GridTable";
-import CustomPopup from "../../components/popup/CustomPopup";
 import { IAsset } from "../../interfaces/interfaces";
-import { CategoryNameComponent, CompanyNameComponent, LocationNameComponent, ManufacturerNameComponent, ModelNameComponent, StatusNameComponent } from "../../components/customComponents/TableComponents";
 import { Column } from "../../components/gridTable/interfaces/interfaces";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
@@ -18,47 +14,54 @@ import { productStatusActions } from "../../redux/productStatus/actions";
 import { categoryActions } from "../../redux/category/actions";
 import { locationActions } from "../../redux/location/actions";
 import { modelActions } from "../../redux/model/actions";
+import { NameComponent } from '../../components/customComponents/TableComponents';
 
 const Asset = () => {
   const dispatch = useDispatch();
   const assets = useSelector((state: RootState) => state.asset.assets);
+  const categories = useSelector((state: RootState) => state.category.categories);
+  const locations = useSelector((state: RootState) => state.location.locations);
+  const companies = useSelector((state: RootState) => state.company.companies);
+  const manufacturers = useSelector((state: RootState) => state.manufacturer.manufacturers);
+  const models = useSelector((state: RootState) => state.model.models);
+  const productStatuses = useSelector((state: RootState) => state.productStatus.productStatuses);
 
   const columns: Column[] = [
     {
       dataField: "categoryId",
       caption: "Category",
       dataType: "string",
-      renderComponent: CategoryNameComponent,
+      renderComponent: (value: string) => NameComponent(value, categories),
     },
     {
       dataField: "locationId",
       caption: "Location",
       dataType: "string",
-      renderComponent: LocationNameComponent,
+      renderComponent: (value: string) => NameComponent(value, locations),
     },
     {
       dataField: "companyId",
       caption: "Company",
       dataType: "string",
-      renderComponent: CompanyNameComponent
+      renderComponent: (value: string) => NameComponent(value, companies),
     },
     {
       dataField: "manufacturerId",
       caption: "Manufacturer",
       dataType: "string",
-      renderComponent: ManufacturerNameComponent
+      renderComponent: (value: string) => NameComponent(value, manufacturers),
     },
     {
       dataField: "modelId",
       caption: "Model",
       dataType: "string",
-      renderComponent: ModelNameComponent
+      renderComponent: (value: string) => NameComponent(value, models),
     },
     {
       dataField: "statusId",
       caption: "Status",
       dataType: "string",
-      renderComponent: StatusNameComponent
+      renderComponent: (value: string) => NameComponent(value, productStatuses),
     },
     {
       dataField: "name",
@@ -122,7 +125,6 @@ const Asset = () => {
         data={assets}
         columns={columns}
         hasColumnLines={false}
-        cellCssClass="testClass"
         pageSizes={[1, 2, 5]}
         enableEdit={true}
         showPageSize={true}

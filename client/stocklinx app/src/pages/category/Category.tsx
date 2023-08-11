@@ -40,7 +40,6 @@ const Category = () => {
                 data={categories}
                 columns={columns}
                 hasColumnLines={false}
-                cellCssClass="testClass"
                 pageSizes={[1, 2, 5]}
                 enableEdit={true}
                 showPageSize={true}

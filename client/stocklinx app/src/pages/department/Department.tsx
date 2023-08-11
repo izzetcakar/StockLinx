@@ -1,7 +1,6 @@
 import GridTable from "../../components/gridTable/GridTable";
 import { IDepartment } from "../../interfaces/interfaces";
 import { Column } from "../../components/gridTable/interfaces/interfaces";
-import { CompanyNameComponent, LocationNameComponent } from "../../components/customComponents/TableComponents";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
@@ -11,23 +10,26 @@ import { openDepartmentModal } from "../../modals/department/modals";
 import { genericConfirmModal } from "../../modals/generic/GenericModals";
 import { locationActions } from "../../redux/location/actions";
 import { userActions } from "../../redux/user/actions";
+import { NameComponent } from "../../components/customComponents/TableComponents";
 
 const Department = () => {
     const dispatch = useDispatch();
     const departments = useSelector((state: RootState) => state.department.departments);
+    const companies = useSelector((state: RootState) => state.company.companies);
+    const locations = useSelector((state: RootState) => state.location.locations);
 
     const columns: Column[] = [
         {
             dataField: "companyId",
             caption: "Company",
             dataType: "string",
-            renderComponent: CompanyNameComponent,
+            renderComponent: (value: string) => NameComponent(value, companies)
         },
         {
             dataField: "locationId",
             caption: "Location",
             dataType: "string",
-            renderComponent: LocationNameComponent
+            renderComponent: (value: string) => NameComponent(value, locations)
         },
         {
             dataField: "managerId",
