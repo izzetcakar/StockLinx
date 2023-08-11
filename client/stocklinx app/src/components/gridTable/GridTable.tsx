@@ -26,9 +26,6 @@ interface GridTableProps {
   onRowUpdate: (row: object) => void;
   onRowRemove: (row: object) => void;
 }
-interface RenderComponentProps {
-  value: string | number | boolean | null;
-}
 
 const GridTable: React.FC<GridTableProps> = ({
   data = [],
@@ -37,7 +34,6 @@ const GridTable: React.FC<GridTableProps> = ({
   showPageSize = false,
   showPageSizeSelector = true,
   showPageSizeInfo = true,
-  noDataText = "No Data to Display",
   pageSizes = [1, 3, 5],
   enableEdit = false,
   refreshData,
@@ -89,14 +85,11 @@ const GridTable: React.FC<GridTableProps> = ({
     );
   };
 
-
   const renderColumnValue = (rowIndex: number, column: Column) => {
     const value = (datagrid[rowIndex] as { [key: string]: string | number | boolean | null })[column.dataField];
 
     if (column.renderComponent) {
-      const RenderComponent = column.renderComponent;
-      const renderProps: RenderComponentProps = { value };
-      return <RenderComponent {...renderProps} />
+      return column.renderComponent(value);
     }
 
     if (value === null || value === undefined) {
