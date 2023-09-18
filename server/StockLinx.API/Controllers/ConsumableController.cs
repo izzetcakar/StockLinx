@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
+using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Services;
 
@@ -44,9 +44,9 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(ConsumableDto consumableDto)
+        public async Task<IActionResult> Update(ConsumableUpdateDto updateDto)
         {
-            //Update
+            await _consumableService.UpdateConsumableAsync(updateDto);
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
         }
 

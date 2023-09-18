@@ -4,7 +4,7 @@ import { useDisclosure } from '@mantine/hooks';
 import { Box, Group, LoadingOverlay, Select, Text, FocusTrap } from '@mantine/core';
 
 const MantineSelect: React.FC<IMantinSelectProps<T>> = (props) => {
-    const { form, data, label, propTag, refreshData, loading, error } = props;
+    const { form, data, label, propTag, refreshData, loading } = props;
 
     const SelectItem = React.forwardRef<HTMLDivElement, IMantineSelectData>(
         ({ label, ...others }: IMantineSelectData, ref) => (

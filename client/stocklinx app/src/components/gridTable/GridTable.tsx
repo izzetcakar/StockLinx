@@ -91,11 +91,9 @@ const GridTable: React.FC<GridTableProps> = ({
     if (column.renderComponent) {
       return column.renderComponent(value);
     }
-
     if (value === null || value === undefined) {
       return "";
     }
-
     if (typeof value === "boolean") {
       const name = value ? "check" : "x";
       const color = value ? "#63bd4f" : "#ed6b6b";
@@ -208,7 +206,6 @@ const GridTable: React.FC<GridTableProps> = ({
                   rowIndex={index}
                   onRowUpdate={onRowUpdate}
                   onRowRemove={onRowRemove}
-                  refreshData={refreshData}
                 />
               </div>
             ))}

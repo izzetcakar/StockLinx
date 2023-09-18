@@ -4,7 +4,6 @@ import "./editComponent.scss";
 interface EditComponentProps {
   datagrid: object[];
   rowIndex: number;
-  refreshData?: () => void;
   onRowUpdate: (row: object) => void;
   onRowRemove: (row: object) => void;
 }
@@ -12,23 +11,21 @@ interface EditComponentProps {
 const EditComponent: React.FC<EditComponentProps> = ({
   datagrid,
   rowIndex,
-  refreshData,
   onRowRemove,
   onRowUpdate,
 }) => {
 
   const onEditHandler = () => {
     const row = datagrid[rowIndex];
-    if (onRowUpdate && refreshData) {
+    if (onRowUpdate) {
       onRowUpdate(row);
     }
   };
 
   const onRemoveHandler = () => {
     const row = datagrid[rowIndex];
-    if (onRowRemove && refreshData) {
+    if (onRowRemove) {
       onRowRemove(row);
-      refreshData();
     }
   };
 

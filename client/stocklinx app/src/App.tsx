@@ -3,7 +3,6 @@ import { checkEmpty } from "./functions/checkEmpty";
 import {
   createBrowserRouter,
   RouterProvider,
-  Route,
   Outlet,
   useNavigate,
 } from "react-router-dom";
