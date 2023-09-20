@@ -6,34 +6,6 @@
   align-items: center;
   gap: 10px;
   justify-content: flex-start;
-
-  .toolbar-element {
-    display: flex;
-    align-items: center;
-    width: fit-content;
-    height: 100%;
-
-    .toolbar-element-content {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: fit-content;
-      height: 100%;
-      .toolbar-element-icon {
-        display: flex;
-        width: fit-content;
-        height: fit-content;
-        font-size: 1.6rem;
-        padding: 0.2rem;
-        cursor: pointer;
-        margin-top: 4px;
-      }
-      .toolbar-element-icon:hover {
-        border-radius: 4px;
-        background-color: #b3b3b3;
-      }
-    }
-  }
 }
 .dropdown-container {
   display: flex;

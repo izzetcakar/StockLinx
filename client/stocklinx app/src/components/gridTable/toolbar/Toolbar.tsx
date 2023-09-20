@@ -2,8 +2,9 @@ import React from 'react'
 import "./toolbar.scss";
 import { Column } from '../interfaces/interfaces';
 import Dropdown from './Dropdown';
-import { ActionIcon } from '@mantine/core';
-import { IconPlus, IconRefresh } from '@tabler/icons-react';
+import icon_plus from "../../.././assets/icon_plus.png";
+import icon_refresh_outlined from "../../.././assets/icon_refresh_outlined.png";
+import ActionIconBtn from '../../generic/ActionIconBtn';
 
 interface ToolbarProps {
     refreshData?: () => Promise<void> | void;
@@ -23,16 +24,8 @@ const Toolbar: React.FC<ToolbarProps> = ({ columns, visibleColumns, refreshData,
                     <Dropdown columns={columns} onChange={handleVisibleColumns} visibleColumns={visibleColumns} />
                 </div>
             </div>
-            <div className="toolbar-element">
-                <ActionIcon onClick={refreshData}>
-                    <IconRefresh color='black' size={20} />
-                </ActionIcon>
-            </div>
-            <div className="toolbar-element">
-                <ActionIcon onClick={onRowInsert}>
-                    <IconPlus color='black' size={20} />
-                </ActionIcon>
-            </div>
+            {onRowInsert ? <ActionIconBtn submitFunc={onRowInsert} icon={icon_plus} /> : null}
+            {refreshData ? <ActionIconBtn submitFunc={refreshData} icon={icon_refresh_outlined} /> : null}
         </div>
     )
 }
