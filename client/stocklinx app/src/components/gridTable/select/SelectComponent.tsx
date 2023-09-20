@@ -1,5 +1,5 @@
 import React from "react";
-import { Checkbox } from '@mantine/core';
+import "./select.scss";
 
 interface SelectComponentProps {
   rowIndex: number;
@@ -13,7 +13,7 @@ const SelectComponent: React.FC<SelectComponentProps> = ({
   selectFunc,
 }) => {
   return (
-    <Checkbox checked={isChecked} onChange={() => selectFunc(rowIndex)} color="dark" />
+    <input type="checkbox" checked={isChecked} onChange={() => selectFunc(rowIndex)} />
   );
 };
 
