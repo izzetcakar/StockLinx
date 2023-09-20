@@ -7,14 +7,19 @@
   justify-content: space-between;
   .element {
     display: flex;
+    align-items: center;
+    justify-content: center;
     width: fit-content;
     height: fit-content;
-    font-size: 1.6rem;
-    padding: 0.2rem;
+    padding: 0.3rem;
     cursor: pointer;
+    .edit-icon {
+      width: 1.2rem;
+      height: 1.2rem;
+    }
   }
   .element:hover {
-    border-radius: 4px;
+    border-radius: 100%;
     background-color: #b3b3b3;
   }
 }

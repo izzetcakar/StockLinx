@@ -1,5 +1,8 @@
 import React from "react";
 import "./editComponent.scss";
+import icon_edit from "../../../assets/icon_pen.png";
+import icon_delete from "../../.././assets/icon_trash.png";
+
 
 interface EditComponentProps {
   datagrid: object[];
@@ -32,10 +35,10 @@ const EditComponent: React.FC<EditComponentProps> = ({
   return (
     <div className="edit-container">
       <div className="element" onClick={onEditHandler}>
-        <i className="bx bx-edit-alt"></i>
+        <img className="edit-icon" src={icon_edit} />
       </div>
       <div className="element" onClick={onRemoveHandler}>
-        <i className="bx bxs-x-square"></i>
+        <img className="edit-icon" src={icon_delete} />
       </div>
     </div>
   );
