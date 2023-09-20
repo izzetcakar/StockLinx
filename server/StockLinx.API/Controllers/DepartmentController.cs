@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
+using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Services;
 
@@ -44,9 +45,9 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(DepartmentDto departmentDto)
+        public async Task<IActionResult> Update(DepartmentUpdateDto updateDto)
         {
-            //Update
+            await _departmentService.UpdateDepartmentAsync(updateDto);
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
         }
 
