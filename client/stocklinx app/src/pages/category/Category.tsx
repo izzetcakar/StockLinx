@@ -40,7 +40,6 @@ const Category = () => {
                 data={categories}
                 columns={columns}
                 hasColumnLines={false}
-                pageSizes={[1, 2, 5]}
                 enableEdit={true}
                 showPageSize={true}
                 onRowInsert={onRowInsert}

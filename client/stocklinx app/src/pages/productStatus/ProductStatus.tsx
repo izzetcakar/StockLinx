@@ -42,7 +42,6 @@ const ProductStatus = () => {
                 data={productStatuses}
                 columns={columns}
                 hasColumnLines={false}
-                pageSizes={[1, 2, 5]}
                 enableEdit={true}
                 showPageSize={true}
                 refreshData={refreshData}

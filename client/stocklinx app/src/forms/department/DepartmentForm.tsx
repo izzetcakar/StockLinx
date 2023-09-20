@@ -45,7 +45,7 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
     const handleSubmit = (data: object) => {
         department ? dispatch(departmentActions.update({ department: data as IDepartment })) :
             dispatch(departmentActions.create({ department: data as IDepartment }));
-        dispatch(departmentActions.getAll());
+        modals.close('department-modal');
     };
     const openNextModel = () => modals.open({
         modalId: 'next-modal',

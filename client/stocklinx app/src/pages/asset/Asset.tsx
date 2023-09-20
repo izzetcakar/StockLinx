@@ -1,4 +1,3 @@
-import { modals } from '@mantine/modals';
 import GridTable from "../../components/gridTable/GridTable";
 import { IAsset } from "../../interfaces/interfaces";
 import { Column } from "../../components/gridTable/interfaces/interfaces";
@@ -6,7 +5,6 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { assetActions } from "../../redux/asset/actions";
 import { useDispatch } from "react-redux";
-import { Text } from "@mantine/core";
 import { openAssetModal } from "../../modals/product/asset/modals";
 import { manufacturerActions } from "../../redux/manufacturer/actions";
 import { companyActions } from "../../redux/company/actions";
@@ -15,6 +13,7 @@ import { categoryActions } from "../../redux/category/actions";
 import { locationActions } from "../../redux/location/actions";
 import { modelActions } from "../../redux/model/actions";
 import { NameComponent } from '../../components/customComponents/TableComponents';
+import { genericConfirmModal } from '../../modals/generic/GenericModals';
 
 const Asset = () => {
   const dispatch = useDispatch();
@@ -88,26 +87,9 @@ const Asset = () => {
     openAssetModal(data);
   };
   const onRowRemove = (row: object) => {
-    const id: string = (row as IAsset).id as string;
-    openConfirmModal(id);
+    const id: string = (row as IAsset).id;
+    genericConfirmModal(() => dispatch(assetActions.remove({ id: id })));
   };
-
-  const handleRemove = (id: string) => {
-    dispatch(assetActions.remove({ id: id }));
-    dispatch(assetActions.getAll());
-  };
-
-  const openConfirmModal = (id: string) => modals.openConfirmModal({
-    title: 'Please confirm your action',
-    children: (
-      <Text size="sm">
-        Do you want to delete this item?
-      </Text>
-    ),
-    labels: { confirm: 'Confirm', cancel: 'Cancel' },
-    onCancel: () => console.log('Cancel'),
-    onConfirm: () => handleRemove(id),
-  });
 
   const refreshData = () => {
     dispatch(assetActions.getAll());
@@ -125,7 +107,6 @@ const Asset = () => {
         data={assets}
         columns={columns}
         hasColumnLines={false}
-        pageSizes={[1, 2, 5]}
         enableEdit={true}
         showPageSize={true}
         refreshData={refreshData}

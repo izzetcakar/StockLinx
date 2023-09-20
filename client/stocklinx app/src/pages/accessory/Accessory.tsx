@@ -89,7 +89,7 @@ const Accessory = () => {
     openAccessoryModal(data);
   };
   const onRowRemove = (row: object) => {
-    const id: string = (row as IAccessory).id as string;
+    const id: string = (row as IAccessory).id;
     genericConfirmModal(() => dispatch(accessoryActions.remove({ id: id })));
   };
 
@@ -110,7 +110,6 @@ const Accessory = () => {
         data={accessories}
         columns={columns}
         hasColumnLines={false}
-        pageSizes={[1, 2, 5]}
         enableEdit={true}
         showPageSize={true}
         refreshData={refreshData}

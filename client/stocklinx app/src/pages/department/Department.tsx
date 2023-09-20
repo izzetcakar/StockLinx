@@ -56,7 +56,7 @@ const Department = () => {
         openDepartmentModal(data);
     };
     const onRowRemove = (row: object) => {
-        const id: string = (row as IDepartment).id as string;
+        const id: string = (row as IDepartment).id;
         genericConfirmModal(() => dispatch(departmentActions.remove({ id: id })));
     };
 
@@ -73,7 +73,6 @@ const Department = () => {
                 data={departments}
                 columns={columns}
                 hasColumnLines={false}
-                pageSizes={[1, 2, 5]}
                 enableEdit={true}
                 showPageSize={true}
                 refreshData={refreshData}
