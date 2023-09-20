@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import "./gridTable.scss";
 import { checkEmpty } from "../../functions/checkEmpty";
 import { hasAllElements } from "../../functions/hasAllElements";
 import { deepCopy } from "../../functions/deepCopy";
@@ -9,7 +8,7 @@ import SelectComponent from "./select/SelectComponent";
 import PageSizeComponent from "./pageSize/PageSizeComponent";
 import Toolbar from "./toolbar/Toolbar";
 import { Column } from "./interfaces/interfaces";
-import { Checkbox } from '@mantine/core';
+import "./gridTable.scss";
 
 interface GridTableProps {
   data?: object[];
@@ -34,7 +33,7 @@ const GridTable: React.FC<GridTableProps> = ({
   showPageSize = false,
   showPageSizeSelector = true,
   showPageSizeInfo = true,
-  pageSizes = [1, 3, 5],
+  pageSizes = [5, 20, 50],
   enableEdit = false,
   refreshData,
   onRowInsert = () => console.log("insert"),
@@ -141,6 +140,12 @@ const GridTable: React.FC<GridTableProps> = ({
   //   return <div className="table-container no-data">{noDataText}</div>;
   // }
 
+  const handleClassByIndex = (index: number) => {
+    return selectedIndexes.includes(index)
+      ? `cell selected-cell`
+      : `cell`;
+  }
+
   return (
     <div className="table-container">
       <Toolbar
@@ -151,20 +156,19 @@ const GridTable: React.FC<GridTableProps> = ({
         refreshData={handleRefreshData}
       />
       <div className="table-edit-wrapper">
-        <div className="column-container column-select">
+        <div className="column-container">
           <div className="column-title">
-            <Checkbox
-              checked={hasAllElements(
+            <SelectComponent
+              rowIndex={-1}
+              isChecked={hasAllElements(
                 getIndexesFromArray(filterData()),
                 selectedIndexes
               )}
-              disabled={!checkEmpty(filterData())}
-              onChange={handleSelectAll}
-              color="dark"
+              selectFunc={handleSelectAll}
             />
           </div>
           {getIndexesFromArray(filterData()).map((_, index) => (
-            <div className="cell" key={index}>
+            <div className={handleClassByIndex(index)} key={index}>
               <SelectComponent
                 rowIndex={index}
                 isChecked={selectedIndexes.includes(index)}
@@ -182,10 +186,7 @@ const GridTable: React.FC<GridTableProps> = ({
                 </div>
                 {filterData().map((_, rowIndex) => (
                   <div
-                    className={
-                      selectedIndexes.includes(rowIndex)
-                        ? `cell selected-cell`
-                        : `cell`
+                    className={handleClassByIndex(rowIndex)
                     }
                     key={rowIndex}
                   >
@@ -200,7 +201,7 @@ const GridTable: React.FC<GridTableProps> = ({
           <div className="column-container column-edit">
             <div className="column-title"></div>
             {getIndexesFromArray(filterData()).map((_, index) => (
-              <div className="cell" key={index}>
+              <div className={handleClassByIndex(index)} key={index}>
                 <EditComponent
                   datagrid={datagrid}
                   rowIndex={index}
