@@ -1,6 +1,6 @@
 import React from "react";
 import { Column } from "../interfaces/interfaces";
-import "./toolbar.scss";
+import "./tableToolbar.scss";
 import { Menu, Button } from '@mantine/core';
 import { IconChevronDown } from '@tabler/icons-react';
 interface DropDownProps {
