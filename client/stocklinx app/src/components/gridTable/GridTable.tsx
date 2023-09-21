@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { checkEmpty } from "../../functions/checkEmpty";
-import { hasAllElements } from "../../functions/hasAllElements";
 import { deepCopy } from "../../functions/deepCopy";
 import { getIndexesFromArray } from "../../functions/getIndexesFromArray";
 import EditComponent from "./edit/EditComponent";
-import SelectComponent from "./select/SelectComponent";
 import PageSizeComponent from "./pageSize/PageSizeComponent";
-import Toolbar from "./toolbar/Toolbar";
+import TableToolbar from "./tableToolbar/TableToolbar";
 import { Column } from "./interfaces/interfaces";
 import "./gridTable.scss";
+import TableSelectColumn from "./selection/TableSelectColumn";
 
 interface GridTableProps {
   data?: object[];
@@ -68,21 +67,7 @@ const GridTable: React.FC<GridTableProps> = ({
     );
   };
 
-  const handleSelectRow = (index: number) => {
-    setSelectedIndexes((prevIndexes) =>
-      prevIndexes.includes(index)
-        ? prevIndexes.filter((i) => i !== index)
-        : [...prevIndexes, index]
-    );
-  };
 
-  const handleSelectAll = () => {
-    setSelectedIndexes((prevIndexes) =>
-      hasAllElements(getIndexesFromArray(filterData()), prevIndexes)
-        ? []
-        : getIndexesFromArray(datagrid)
-    );
-  };
 
   const renderColumnValue = (rowIndex: number, column: Column) => {
     const value = (datagrid[rowIndex] as { [key: string]: string | number | boolean | null })[column.dataField];
@@ -107,7 +92,6 @@ const GridTable: React.FC<GridTableProps> = ({
       const newColumns: Column[] = Object.keys(datagrid[0]).map((dataField) => ({
         dataField,
         caption: dataField,
-        dataType: typeof dataField,
       }));
       return newColumns;
     }
@@ -148,7 +132,7 @@ const GridTable: React.FC<GridTableProps> = ({
 
   return (
     <div className="table-container">
-      <Toolbar
+      <TableToolbar
         columns={datagridColumns}
         visibleColumns={visibleColumns}
         handleVisibleColumns={handleVisibleColumns}
@@ -156,27 +140,13 @@ const GridTable: React.FC<GridTableProps> = ({
         refreshData={handleRefreshData}
       />
       <div className="table-edit-wrapper">
-        <div className="column-container">
-          <div className="column-title">
-            <SelectComponent
-              rowIndex={-1}
-              isChecked={hasAllElements(
-                getIndexesFromArray(filterData()),
-                selectedIndexes
-              )}
-              selectFunc={handleSelectAll}
-            />
-          </div>
-          {getIndexesFromArray(filterData()).map((_, index) => (
-            <div className={handleClassByIndex(index)} key={index}>
-              <SelectComponent
-                rowIndex={index}
-                isChecked={selectedIndexes.includes(index)}
-                selectFunc={handleSelectRow}
-              />
-            </div>
-          ))}
-        </div>
+        <TableSelectColumn
+          datagrid={datagrid}
+          selectedIndexes={selectedIndexes}
+          filterData={filterData}
+          setSelectedIndexes={setSelectedIndexes}
+          handleClassByIndex={handleClassByIndex}
+        />
         <div className="table-content-container">
           {datagridColumns.map((column, columnIndex) =>
             visibleColumns.includes(column.caption) ? (
