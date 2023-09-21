@@ -1,12 +1,12 @@
 import React from 'react'
-import "./toolbar.scss";
+import "./tableToolbar.scss";
 import { Column } from '../interfaces/interfaces';
 import Dropdown from './Dropdown';
 import icon_plus from "../../.././assets/icon_plus.png";
 import icon_refresh_outlined from "../../.././assets/icon_refresh_outlined.png";
 import ActionIconBtn from '../../generic/ActionIconBtn';
 
-interface ToolbarProps {
+interface TableToolbarProps {
     refreshData?: () => Promise<void> | void;
     filterData?: () => void;
     handleSearch?: () => void;
@@ -15,12 +15,12 @@ interface ToolbarProps {
     handleVisibleColumns: (columnCaption: string) => void;
     onRowInsert?: () => void;
 }
-const Toolbar: React.FC<ToolbarProps> = ({ columns, visibleColumns, refreshData, handleVisibleColumns, onRowInsert }) => {
+const TableToolbar: React.FC<TableToolbarProps> = ({ columns, visibleColumns, refreshData, handleVisibleColumns, onRowInsert }) => {
 
     return (
-        <div className="toolbar-container">
-            <div className="toolbar-element">
-                <div className="toolbar-element-content">
+        <div className="table-toolbar-container">
+            <div className="table-toolbar-element">
+                <div className="table-toolbar-element-content">
                     <Dropdown columns={columns} onChange={handleVisibleColumns} visibleColumns={visibleColumns} />
                 </div>
             </div>
@@ -30,4 +30,4 @@ const Toolbar: React.FC<ToolbarProps> = ({ columns, visibleColumns, refreshData,
     )
 }
 
-export default Toolbar
+export default TableToolbar
