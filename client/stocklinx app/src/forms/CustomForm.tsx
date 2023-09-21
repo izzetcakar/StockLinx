@@ -38,7 +38,6 @@ const CustomForm: React.FC<CustomFormProps> = ({
             const newColumns: Column[] = Object.keys(data).map((dataField) => ({
                 dataField,
                 caption: dataField,
-                dataType: typeof dataField,
             }));
             return newColumns;
         }
@@ -53,11 +52,11 @@ const CustomForm: React.FC<CustomFormProps> = ({
         //     return <RenderComponent value={value} />;
         // }
 
-        if (column.dataType === "boolean") {
+        if (typeof column === "boolean") {
             return (
                 <Checkbox
                     checked={value as boolean}
-                    onChange={() => handleData(column.dataField, !value)}
+                    onChange={() => handleData(typeof column, !value)}
                     color="dark"
                 />
             );
@@ -71,7 +70,7 @@ const CustomForm: React.FC<CustomFormProps> = ({
             <input
                 id={"form-input-" + column.dataField}
                 name={"form-input-" + column.dataField}
-                type={column.dataType}
+                type={typeof column}
                 value={value as number | string}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleData(column.dataField, e.target.value as number | string | null)}>
             </input>
