@@ -25,57 +25,48 @@ const Consumable = () => {
     {
       dataField: "categoryId",
       caption: "Category",
-      dataType: "string",
       renderComponent: (value: string) => NameComponent(value, categories),
     },
     {
       dataField: "locationId",
       caption: "Location",
-      dataType: "string",
       renderComponent: (value: string) => NameComponent(value, locations),
     },
     {
       dataField: "companyId",
       caption: "Company",
-      dataType: "string",
       renderComponent: (value: string) => NameComponent(value, companies),
     },
     {
       dataField: "statusId",
       caption: "Status",
-      dataType: "string",
       renderComponent: (value: string) => NameComponent(value, productStatuses),
     },
     {
       dataField: "name",
       caption: "Name",
-      dataType: "string",
     },
-    { dataField: "serialNo", caption: "Serial No", dataType: "string" },
-    { dataField: "orderNo", caption: "Order No", dataType: "string" },
+    { dataField: "serialNo", caption: "Serial No" },
+    { dataField: "orderNo", caption: "Order No" },
     {
       dataField: "modelNo",
       caption: "Model No",
-      dataType: "string",
     },
     {
       dataField: "itemNo",
       caption: "Item No",
-      dataType: "string",
     },
-    { dataField: "tagNo", caption: "Tag No", dataType: "string" },
+    { dataField: "tagNo", caption: "Tag No" },
     {
       dataField: "purchaseCost",
       caption: "Purchase Cost",
-      dataType: "number",
     },
     {
       dataField: "quantity",
       caption: "Quantity",
-      dataType: "number",
     },
-    { dataField: "purchaseDate", caption: "Purchase Date", dataType: "date" },
-    { dataField: "notes", caption: "Notes", dataType: "string" },
+    { dataField: "purchaseDate", caption: "Purchase Date" },
+    { dataField: "notes", caption: "Notes" },
   ];
 
   const onRowInsert = () => {

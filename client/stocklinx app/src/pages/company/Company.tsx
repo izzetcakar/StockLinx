@@ -15,7 +15,6 @@ const Company = () => {
         {
             dataField: "name",
             caption: "Name",
-            dataType: "string",
         },
     ];
 

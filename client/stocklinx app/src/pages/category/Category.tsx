@@ -15,7 +15,6 @@ const Category = () => {
         {
             dataField: "name",
             caption: "Name",
-            dataType: "string",
         },
     ];
 

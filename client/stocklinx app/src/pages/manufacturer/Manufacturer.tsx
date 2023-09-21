@@ -16,22 +16,18 @@ const Manufacturer = () => {
         {
             dataField: "name",
             caption: "Name",
-            dataType: "string",
         },
         {
             dataField: "supportPhone",
             caption: "Support Phone",
-            dataType: "string",
         },
         {
             dataField: "supportEmail",
             caption: "Support Email",
-            dataType: "string",
         },
         {
             dataField: "website",
             caption: "Website",
-            dataType: "string",
         },
     ];
     const onRowInsert = () => {

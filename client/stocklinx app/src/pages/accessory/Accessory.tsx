@@ -31,55 +31,47 @@ const Accessory = () => {
     {
       dataField: "categoryId",
       caption: "Category",
-      dataType: "string",
       renderComponent: (value: string) => NameComponent(value, categories),
     },
     {
       dataField: "locationId",
       caption: "Location",
-      dataType: "string",
       renderComponent: (value: string) => NameComponent(value, locations),
     },
     {
       dataField: "companyId",
       caption: "Company",
-      dataType: "string",
       renderComponent: (value: string) => NameComponent(value, companies),
     },
     {
       dataField: "manufacturerId",
       caption: "Manufacturer",
-      dataType: "string",
       renderComponent: (value: string) => NameComponent(value, manufacturers),
     },
     {
       dataField: "supplierId",
       caption: "Supplier",
-      dataType: "string",
       renderComponent: (value: string) => NameComponent(value, suppliers),
     },
     {
       dataField: "statusId",
       caption: "Status",
-      dataType: "string",
       renderComponent: (value: string) => NameComponent(value, productStatuses),
     },
     {
       dataField: "name",
       caption: "Name",
-      dataType: "string",
     },
-    { dataField: "serialNo", caption: "Serial No", dataType: "string" },
-    { dataField: "orderNo", caption: "Order No", dataType: "string" },
-    { dataField: "quantity", caption: "Quantity", dataType: "number" },
+    { dataField: "serialNo", caption: "Serial No" },
+    { dataField: "orderNo", caption: "Order No" },
+    { dataField: "quantity", caption: "Quantity" },
     {
       dataField: "purchaseCost",
       caption: "Purchase Cost",
-      dataType: "number",
     },
-    { dataField: "purchaseDate", caption: "Purchase Date", dataType: "date" },
-    { dataField: "warrantyDate", caption: "Warranty Date", dataType: "date" },
-    { dataField: "notes", caption: "Notes", dataType: "string" },
+    { dataField: "purchaseDate", caption: "Purchase Date" },
+    { dataField: "warrantyDate", caption: "Warranty Date" },
+    { dataField: "notes", caption: "Notes" },
   ];
   const onRowInsert = () => {
     openAccessoryModal();

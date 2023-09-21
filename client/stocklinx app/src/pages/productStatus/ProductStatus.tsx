@@ -16,7 +16,6 @@ const ProductStatus = () => {
         {
             dataField: "name",
             caption: "Name",
-            dataType: "string",
         },
     ];
 

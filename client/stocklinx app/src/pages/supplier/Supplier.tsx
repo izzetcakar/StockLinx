@@ -19,43 +19,35 @@ const Supplier = () => {
         {
             dataField: "locationId",
             caption: "Location",
-            dataType: "string",
             renderComponent: (value: string) => NameComponent(value, locations)
         },
         {
             dataField: "name",
             caption: "Name",
-            dataType: "string",
         },
         {
             dataField: "contactName",
             caption: "Contact Name",
-            dataType: "string",
         },
         {
             dataField: "contactPhone",
             caption: "Contact Phone",
-            dataType: "string",
         },
         {
             dataField: "contactEmail",
             caption: "Contact Email",
-            dataType: "string",
         },
         {
             dataField: "website",
             caption: "Website",
-            dataType: "string",
         },
         {
             dataField: "fax",
             caption: "Fax",
-            dataType: "string",
         },
         {
             dataField: "notes",
             caption: "Notes",
-            dataType: "string",
         },
     ];
 

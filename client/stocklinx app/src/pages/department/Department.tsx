@@ -22,29 +22,24 @@ const Department = () => {
         {
             dataField: "companyId",
             caption: "Company",
-            dataType: "string",
             renderComponent: (value: string) => NameComponent(value, companies)
         },
         {
             dataField: "locationId",
             caption: "Location",
-            dataType: "string",
             renderComponent: (value: string) => NameComponent(value, locations)
         },
         {
             dataField: "managerId",
             caption: "Manager",
-            dataType: "string",
         },
         {
             dataField: "name",
             caption: "Name",
-            dataType: "string",
         },
         {
             dataField: "notes",
             caption: "Notes",
-            dataType: "string",
         },
     ];
 
