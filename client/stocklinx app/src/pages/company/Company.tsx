@@ -6,48 +6,42 @@ import { openCompanyModal } from "../../modals/company/modals";
 import { genericConfirmModal } from "../../modals/generic/GenericModals";
 import { companyActions } from "../../redux/company/actions";
 import { ICompany } from "../../interfaces/interfaces";
+import { useColumns } from "./columns";
 
 const Company = () => {
-    const dispatch = useDispatch();
-    const companies = useSelector((state: RootState) => state.company.companies);
+  const dispatch = useDispatch();
+  const companies = useSelector((state: RootState) => state.company.companies);
 
-    const columns = [
-        {
-            dataField: "name",
-            caption: "Name",
-        },
-    ];
+  const onRowInsert = () => {
+    openCompanyModal();
+  };
+  const onRowUpdate = (row: object) => {
+    const data = row as ICompany;
+    openCompanyModal(data);
+  };
+  const onRowRemove = (row: object) => {
+    const id: string = (row as ICompany).id as string;
+    genericConfirmModal(() => dispatch(companyActions.remove({ id: id })));
+  };
+  const refreshData = () => {
+    dispatch(companyActions.getAll());
+  };
 
-    const onRowInsert = () => {
-        openCompanyModal();
-    };
-    const onRowUpdate = (row: object) => {
-        const data = row as ICompany;
-        openCompanyModal(data);
-    };
-    const onRowRemove = (row: object) => {
-        const id: string = (row as ICompany).id as string;
-        genericConfirmModal(() => dispatch(companyActions.remove({ id: id })));
-    };
-    const refreshData = () => {
-        dispatch(companyActions.getAll());
-    };
-
-    return (
-        <div>
-            <GridTable
-                data={companies}
-                columns={columns}
-                hasColumnLines={false}
-                enableEdit={true}
-                showPageSize={true}
-                refreshData={refreshData}
-                onRowInsert={onRowInsert}
-                onRowUpdate={onRowUpdate}
-                onRowRemove={onRowRemove}
-            />
-        </div>
-    );
+  return (
+    <div>
+      <GridTable
+        data={companies}
+        columns={useColumns()}
+        hasColumnLines={false}
+        enableEdit={true}
+        showPageSize={true}
+        refreshData={refreshData}
+        onRowInsert={onRowInsert}
+        onRowUpdate={onRowUpdate}
+        onRowRemove={onRowRemove}
+      />
+    </div>
+  );
 };
 
 export default Company;

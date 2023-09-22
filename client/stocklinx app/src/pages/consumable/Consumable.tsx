@@ -1,6 +1,5 @@
 import GridTable from "../../components/gridTable/GridTable";
 import { IConsumable } from "../../interfaces/interfaces";
-import { Column } from "../../components/gridTable/interfaces/interfaces";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
@@ -11,63 +10,12 @@ import { categoryActions } from "../../redux/category/actions";
 import { locationActions } from "../../redux/location/actions";
 import { companyActions } from "../../redux/company/actions";
 import { productStatusActions } from "../../redux/productStatus/actions";
-import { NameComponent } from "../../components/customComponents/TableComponents";
+import { useColumns } from "./columns";
 
 const Consumable = () => {
   const dispatch = useDispatch();
   const consumables = useSelector((state: RootState) => state.consumable.consumables);
-  const categories = useSelector((state: RootState) => state.category.categories);
-  const locations = useSelector((state: RootState) => state.location.locations);
-  const companies = useSelector((state: RootState) => state.company.companies);
-  const productStatuses = useSelector((state: RootState) => state.productStatus.productStatuses);
 
-  const columns: Column[] = [
-    {
-      dataField: "categoryId",
-      caption: "Category",
-      renderComponent: (value: string) => NameComponent(value, categories),
-    },
-    {
-      dataField: "locationId",
-      caption: "Location",
-      renderComponent: (value: string) => NameComponent(value, locations),
-    },
-    {
-      dataField: "companyId",
-      caption: "Company",
-      renderComponent: (value: string) => NameComponent(value, companies),
-    },
-    {
-      dataField: "statusId",
-      caption: "Status",
-      renderComponent: (value: string) => NameComponent(value, productStatuses),
-    },
-    {
-      dataField: "name",
-      caption: "Name",
-    },
-    { dataField: "serialNo", caption: "Serial No" },
-    { dataField: "orderNo", caption: "Order No" },
-    {
-      dataField: "modelNo",
-      caption: "Model No",
-    },
-    {
-      dataField: "itemNo",
-      caption: "Item No",
-    },
-    { dataField: "tagNo", caption: "Tag No" },
-    {
-      dataField: "purchaseCost",
-      caption: "Purchase Cost",
-    },
-    {
-      dataField: "quantity",
-      caption: "Quantity",
-    },
-    { dataField: "purchaseDate", caption: "Purchase Date" },
-    { dataField: "notes", caption: "Notes" },
-  ];
 
   const onRowInsert = () => {
     openConsumableModal();
@@ -93,7 +41,7 @@ const Consumable = () => {
     <div>
       <GridTable
         data={consumables}
-        columns={columns}
+        columns={useColumns()}
         hasColumnLines={false}
         enableEdit={true}
         showPageSize={true}

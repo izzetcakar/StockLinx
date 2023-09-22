@@ -1,8 +1,5 @@
 import GridTable from "../../components/gridTable/GridTable";
 import { IAccessory } from "../../interfaces/interfaces";
-import {
-  NameComponent,
-} from "../../components/customComponents/TableComponents";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { useDispatch } from "react-redux";
@@ -15,64 +12,15 @@ import { companyActions } from "../../redux/company/actions";
 import { productStatusActions } from "../../redux/productStatus/actions";
 import { openAccessoryModal } from "../../modals/product/accessory/modals";
 import { genericConfirmModal } from "../../modals/generic/GenericModals";
+import { useColumns } from "./columns";
 import "./accessory.scss";
 
 const Accessory = () => {
   const dispatch = useDispatch();
-  const accessories = useSelector((state: RootState) => state.accessory.accessories);
-  const companies = useSelector((state: RootState) => state.company.companies);
-  const categories = useSelector((state: RootState) => state.category.categories);
-  const locations = useSelector((state: RootState) => state.location.locations);
-  const manufacturers = useSelector((state: RootState) => state.manufacturer.manufacturers);
-  const productStatuses = useSelector((state: RootState) => state.productStatus.productStatuses);
-  const suppliers = useSelector((state: RootState) => state.supplier.suppliers);
+  const accessories = useSelector(
+    (state: RootState) => state.accessory.accessories
+  );
 
-  const columns = [
-    {
-      dataField: "categoryId",
-      caption: "Category",
-      renderComponent: (value: string) => NameComponent(value, categories),
-    },
-    {
-      dataField: "locationId",
-      caption: "Location",
-      renderComponent: (value: string) => NameComponent(value, locations),
-    },
-    {
-      dataField: "companyId",
-      caption: "Company",
-      renderComponent: (value: string) => NameComponent(value, companies),
-    },
-    {
-      dataField: "manufacturerId",
-      caption: "Manufacturer",
-      renderComponent: (value: string) => NameComponent(value, manufacturers),
-    },
-    {
-      dataField: "supplierId",
-      caption: "Supplier",
-      renderComponent: (value: string) => NameComponent(value, suppliers),
-    },
-    {
-      dataField: "statusId",
-      caption: "Status",
-      renderComponent: (value: string) => NameComponent(value, productStatuses),
-    },
-    {
-      dataField: "name",
-      caption: "Name",
-    },
-    { dataField: "serialNo", caption: "Serial No" },
-    { dataField: "orderNo", caption: "Order No" },
-    { dataField: "quantity", caption: "Quantity" },
-    {
-      dataField: "purchaseCost",
-      caption: "Purchase Cost",
-    },
-    { dataField: "purchaseDate", caption: "Purchase Date" },
-    { dataField: "warrantyDate", caption: "Warranty Date" },
-    { dataField: "notes", caption: "Notes" },
-  ];
   const onRowInsert = () => {
     openAccessoryModal();
   };
@@ -95,12 +43,11 @@ const Accessory = () => {
     dispatch(productStatusActions.getAll());
   };
 
-
   return (
     <div>
       <GridTable
         data={accessories}
-        columns={columns}
+        columns={useColumns()}
         hasColumnLines={false}
         enableEdit={true}
         showPageSize={true}

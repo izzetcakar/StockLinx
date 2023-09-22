@@ -1,6 +1,5 @@
 import GridTable from "../../components/gridTable/GridTable";
 import { IDepartment } from "../../interfaces/interfaces";
-import { Column } from "../../components/gridTable/interfaces/interfaces";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
@@ -10,38 +9,12 @@ import { openDepartmentModal } from "../../modals/department/modals";
 import { genericConfirmModal } from "../../modals/generic/GenericModals";
 import { locationActions } from "../../redux/location/actions";
 import { userActions } from "../../redux/user/actions";
-import { NameComponent } from "../../components/customComponents/TableComponents";
+import { useColumns } from "./columns";
 
 const Department = () => {
     const dispatch = useDispatch();
     const departments = useSelector((state: RootState) => state.department.departments);
-    const companies = useSelector((state: RootState) => state.company.companies);
-    const locations = useSelector((state: RootState) => state.location.locations);
 
-    const columns: Column[] = [
-        {
-            dataField: "companyId",
-            caption: "Company",
-            renderComponent: (value: string) => NameComponent(value, companies)
-        },
-        {
-            dataField: "locationId",
-            caption: "Location",
-            renderComponent: (value: string) => NameComponent(value, locations)
-        },
-        {
-            dataField: "managerId",
-            caption: "Manager",
-        },
-        {
-            dataField: "name",
-            caption: "Name",
-        },
-        {
-            dataField: "notes",
-            caption: "Notes",
-        },
-    ];
 
     const onRowInsert = () => {
         openDepartmentModal();
@@ -66,7 +39,7 @@ const Department = () => {
         <div>
             <GridTable
                 data={departments}
-                columns={columns}
+                columns={useColumns()}
                 hasColumnLines={false}
                 enableEdit={true}
                 showPageSize={true}
