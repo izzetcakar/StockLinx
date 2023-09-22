@@ -22,11 +22,9 @@ import { modals } from "@mantine/modals";
 import { IAsset } from "../../../interfaces/interfaces";
 import { handleImageChange } from "../../functions/formFunctions";
 import MantineSelect from "../../components/MantineSelect";
-import { IMantinSelectProps } from "../../interfaces/interfaces";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../redux/rootReducer";
 import { useDispatch } from "react-redux";
 import { assetActions } from "../../../redux/asset/actions";
+import { useSelectData } from "./selectData";
 
 interface AssetFormProps {
   asset?: IAsset;
@@ -34,24 +32,6 @@ interface AssetFormProps {
 
 const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
   const dispatch = useDispatch();
-  const manufacturerSelectData = useSelector(
-    (state: RootState) => state.manufacturer.selectData
-  );
-  const modelSelectData = useSelector(
-    (state: RootState) => state.model.selectData
-  );
-  const categorySelectData = useSelector(
-    (state: RootState) => state.category.selectData
-  );
-  const locationSelectData = useSelector(
-    (state: RootState) => state.location.selectData
-  );
-  const companySelectData = useSelector(
-    (state: RootState) => state.company.selectData
-  );
-  const productStatusSelectData = useSelector(
-    (state: RootState) => state.productStatus.selectData
-  );
 
   const form = useForm<IAsset>({
     initialValues: asset
@@ -135,49 +115,11 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
       ),
     });
 
-  const selectComponentData: IMantinSelectProps[] = [
-    {
-      data: manufacturerSelectData,
-      value: form.values.manufacturerId || "",
-      label: "Manufacturer",
-      propTag: "manufacturerId",
-    },
-    {
-      data: modelSelectData,
-      value: form.values.modelId || "",
-      label: "Model",
-      propTag: "modelId",
-    },
-    {
-      data: categorySelectData,
-      value: form.values.categoryId || "",
-      label: "Category",
-      propTag: "categoryId",
-    },
-    {
-      data: locationSelectData,
-      value: form.values.locationId || "",
-      label: "Location",
-      propTag: "locationId",
-    },
-    {
-      data: companySelectData,
-      value: form.values.companyId || "",
-      label: "Company",
-      propTag: "companyId",
-    },
-    {
-      data: productStatusSelectData,
-      value: form.values.statusId || "",
-      label: "Status",
-      propTag: "statusId",
-    },
-  ];
   return (
     <ScrollArea.Autosize type="always" offsetScrollbars mah={600}>
       <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
         <Flex direction="column" gap={10} mx="auto" maw="auto" px={40}>
-          {selectComponentData.map((selectData) => (
+          {useSelectData(form).map((selectData) => (
             <MantineSelect
               key={selectData.propTag}
               data={selectData.data}

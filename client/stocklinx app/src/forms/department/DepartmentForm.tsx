@@ -16,12 +16,10 @@ import { IconUpload } from "@tabler/icons-react";
 import { modals } from "@mantine/modals";
 import { IDepartment } from "../../interfaces/interfaces";
 import { handleImageChange } from "../functions/formFunctions";
-import { IMantinSelectProps } from "../interfaces/interfaces";
 import MantineSelect from "../components/MantineSelect";
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux/rootReducer";
 import { useDispatch } from "react-redux";
 import { departmentActions } from "../../redux/department/actions";
+import { useSelectData } from "./selectData";
 
 interface DepartmentFormProps {
   department?: IDepartment;
@@ -29,12 +27,6 @@ interface DepartmentFormProps {
 
 const DepartmentForm: React.FC<DepartmentFormProps> = ({ department }) => {
   const dispatch = useDispatch();
-  const companySelectData = useSelector(
-    (state: RootState) => state.company.selectData
-  );
-  const locationSelectData = useSelector(
-    (state: RootState) => state.location.selectData
-  );
 
   const form = useForm<IDepartment>({
     initialValues: department
@@ -69,26 +61,12 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({ department }) => {
         </Button>
       ),
     });
-  const selectComponentData: IMantinSelectProps[] = [
-    {
-      data: companySelectData,
-      value: form.values.companyId || "",
-      label: "Company",
-      propTag: "companyId",
-    },
-    {
-      data: locationSelectData,
-      value: form.values.locationId || "",
-      label: "Location",
-      propTag: "locationId",
-    },
-  ];
 
   return (
     <ScrollArea.Autosize type="always" offsetScrollbars mah={600}>
       <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
         <Flex direction="column" gap={10} mx="auto" maw="auto" px={40}>
-          {selectComponentData.map((selectData) => (
+          {useSelectData(form).map((selectData) => (
             <MantineSelect
               key={selectData.propTag}
               data={selectData.data}

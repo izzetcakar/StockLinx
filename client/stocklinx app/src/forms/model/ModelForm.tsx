@@ -16,12 +16,10 @@ import { IconUpload } from "@tabler/icons-react";
 import { modals } from "@mantine/modals";
 import { IModel } from "../../interfaces/interfaces";
 import { handleImageChange } from "../functions/formFunctions";
-import { IMantinSelectProps } from "../interfaces/interfaces";
 import MantineSelect from "../components/MantineSelect";
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux/rootReducer";
 import { useDispatch } from "react-redux";
 import { modelActions } from "../../redux/model/actions";
+import { useSelectData } from "./selectData";
 
 interface ModelFormProps {
   model?: IModel;
@@ -29,12 +27,6 @@ interface ModelFormProps {
 
 const ModelForm: React.FC<ModelFormProps> = ({ model }) => {
   const dispatch = useDispatch();
-  const categorySelectData = useSelector(
-    (state: RootState) => state.category.selectData
-  );
-  const manufacturerSelectData = useSelector(
-    (state: RootState) => state.manufacturer.selectData
-  );
 
   const form = useForm<IModel>({
     initialValues: model
@@ -69,26 +61,12 @@ const ModelForm: React.FC<ModelFormProps> = ({ model }) => {
         </Button>
       ),
     });
-  const selectComponentData: IMantinSelectProps[] = [
-    {
-      data: categorySelectData,
-      value: form.values.categoryId || "",
-      label: "Category",
-      propTag: "categoryId",
-    },
-    {
-      data: manufacturerSelectData,
-      value: form.values.manufacturerId || "",
-      label: "Manufacturer",
-      propTag: "manufacturerId",
-    },
-  ];
 
   return (
     <ScrollArea.Autosize type="always" offsetScrollbars mah={600}>
       <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
         <Flex direction="column" gap={10} mx="auto" maw="auto" px={40}>
-          {selectComponentData.map((selectData) => (
+          {useSelectData(form).map((selectData) => (
             <MantineSelect
               data={selectData.data}
               value={selectData.value}

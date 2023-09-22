@@ -18,12 +18,10 @@ import { IconUpload } from "@tabler/icons-react";
 import { modals } from "@mantine/modals";
 import { IComponent } from "../../../interfaces/interfaces";
 import { handleImageChange } from "../../functions/formFunctions";
-import { IMantinSelectProps } from "../../interfaces/interfaces";
 import MantineSelect from "../../components/MantineSelect";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../redux/rootReducer";
 import { useDispatch } from "react-redux";
 import { componentActions } from "../../../redux/component/actions";
+import { useSelectData } from "./selectData";
 
 interface ComponentFormProps {
   component?: IComponent;
@@ -31,18 +29,6 @@ interface ComponentFormProps {
 
 const ComponentForm: React.FC<ComponentFormProps> = ({ component }) => {
   const dispatch = useDispatch();
-  const categorySelectData = useSelector(
-    (state: RootState) => state.category.selectData
-  );
-  const locationSelectData = useSelector(
-    (state: RootState) => state.location.selectData
-  );
-  const companySelectData = useSelector(
-    (state: RootState) => state.company.selectData
-  );
-  const productStatusSelectData = useSelector(
-    (state: RootState) => state.productStatus.selectData
-  );
 
   const form = useForm<IComponent>({
     initialValues: component
@@ -94,38 +80,11 @@ const ComponentForm: React.FC<ComponentFormProps> = ({ component }) => {
       ),
     });
 
-  const selectComponentData: IMantinSelectProps[] = [
-    {
-      data: categorySelectData,
-      value: form.values.categoryId || "",
-      label: "Category",
-      propTag: "categoryId",
-    },
-    {
-      data: locationSelectData,
-      value: form.values.locationId || "",
-      label: "Location",
-      propTag: "locationId",
-    },
-    {
-      data: companySelectData,
-      value: form.values.companyId || "",
-      label: "Company",
-      propTag: "companyId",
-    },
-    {
-      data: productStatusSelectData,
-      value: form.values.statusId || "",
-      label: "Status",
-      propTag: "statusId",
-    },
-  ];
-
   return (
     <ScrollArea.Autosize type="always" offsetScrollbars mah={600}>
       <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
         <Flex direction="column" gap={10} mx="auto" maw="auto" px={40}>
-          {selectComponentData.map((selectData) => (
+          {useSelectData(form).map((selectData) => (
             <MantineSelect
               key={selectData.propTag}
               data={selectData.data}
