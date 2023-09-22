@@ -1,15 +1,11 @@
-import { UseFormReturnType } from "@mantine/form";
-
-export interface IMantineSelectData extends React.ComponentPropsWithoutRef<'div'> {
-    value: string;
-    label: string;
+export interface IMantineSelectData
+  extends React.ComponentPropsWithoutRef<"div"> {
+  value: string;
+  label: string;
 }
-export interface IMantinSelectProps<T> {
-    form: UseFormReturnType<T>;
-    data: IMantineSelectData[];
-    label: string;
-    propTag: string;
-    refreshData?: () => void;
-    loading?: boolean;
-    error?: string | null;
+export interface IMantinSelectProps {
+  data: IMantineSelectData[];
+  value: string;
+  label: string;
+  propTag: string;
 }
