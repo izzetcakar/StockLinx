@@ -13,6 +13,7 @@ import modelReducer from "./model/reducer";
 import supplierReducer from "./supplier/reducer";
 import productStatus from "./productStatus/reducer";
 import userReducer from "./user/reducer";
+import genericReducer from "./generic/reducer";
 
 const rootReducer = combineReducers({
   accessory: accessoryReducer,
@@ -29,6 +30,7 @@ const rootReducer = combineReducers({
   supplier: supplierReducer,
   productStatus: productStatus,
   user: userReducer,
+  generic: genericReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
