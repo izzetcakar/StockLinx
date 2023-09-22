@@ -98,3 +98,9 @@
 .table-container::-webkit-scrollbar {
   display: none;
 }
+.column-divider {
+  height: 1px;
+  border-width: 0;
+  color: #ced4da;
+  background-color: #ced4da;
+}

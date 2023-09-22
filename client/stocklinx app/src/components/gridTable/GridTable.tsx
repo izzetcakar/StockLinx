@@ -20,9 +20,9 @@ interface GridTableProps {
   pageSizes?: number[];
   enableEdit?: boolean;
   refreshData?: () => void;
-  onRowInsert: () => void;
-  onRowUpdate: (row: object) => void;
-  onRowRemove: (row: object) => void;
+  onRowInsert?: () => void;
+  onRowUpdate?: (row: object) => void;
+  onRowRemove?: (row: object) => void;
 }
 
 const GridTable: React.FC<GridTableProps> = ({
@@ -42,9 +42,12 @@ const GridTable: React.FC<GridTableProps> = ({
   const [datagridColumns, setDatagridColumns] = useState<Column[]>(columns);
   const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
   const [datagrid, setDatagrid] = useState<object[]>([]);
-  const [propertyDataStyle, setPropertyDataStyle] = useState<React.CSSProperties>({});
+  const [propertyDataStyle, setPropertyDataStyle] =
+    useState<React.CSSProperties>({});
   const [selectedIndexes, setSelectedIndexes] = useState<number[]>([]);
-  const [selectedPageSize, setSelectedPageSize] = useState<number>(pageSizes[0]);
+  const [selectedPageSize, setSelectedPageSize] = useState<number>(
+    pageSizes[0]
+  );
 
   useEffect(() => {
     setDatagrid(deepCopy(data));
@@ -67,10 +70,10 @@ const GridTable: React.FC<GridTableProps> = ({
     );
   };
 
-
-
   const renderColumnValue = (rowIndex: number, column: Column) => {
-    const value = (datagrid[rowIndex] as { [key: string]: string | number | boolean | null })[column.dataField];
+    const value = (
+      datagrid[rowIndex] as { [key: string]: string | number | boolean | null }
+    )[column.dataField];
 
     if (column.renderComponent) {
       return column.renderComponent(value);
@@ -81,7 +84,12 @@ const GridTable: React.FC<GridTableProps> = ({
     if (typeof value === "boolean") {
       const name = value ? "check" : "x";
       const color = value ? "#63bd4f" : "#ed6b6b";
-      return <i className={`bx bx-${name}`} style={{ fontSize: "1.5rem", color: color }} />;
+      return (
+        <i
+          className={`bx bx-${name}`}
+          style={{ fontSize: "1.5rem", color: color }}
+        />
+      );
     }
 
     return value;
@@ -89,10 +97,12 @@ const GridTable: React.FC<GridTableProps> = ({
 
   const handleColumnsEmpty = (cols: Column[]): Column[] => {
     if (!checkEmpty(cols) && checkEmpty(datagrid)) {
-      const newColumns: Column[] = Object.keys(datagrid[0]).map((dataField) => ({
-        dataField,
-        caption: dataField,
-      }));
+      const newColumns: Column[] = Object.keys(datagrid[0]).map(
+        (dataField) => ({
+          dataField,
+          caption: dataField,
+        })
+      );
       return newColumns;
     }
     return cols;
@@ -120,15 +130,9 @@ const GridTable: React.FC<GridTableProps> = ({
     refreshData();
   };
 
-  // if (!checkEmpty(data)) {
-  //   return <div className="table-container no-data">{noDataText}</div>;
-  // }
-
   const handleClassByIndex = (index: number) => {
-    return selectedIndexes.includes(index)
-      ? `cell selected-cell`
-      : `cell`;
-  }
+    return selectedIndexes.includes(index) ? `cell selected-cell` : `cell`;
+  };
 
   return (
     <div className="table-container">
@@ -150,16 +154,14 @@ const GridTable: React.FC<GridTableProps> = ({
         <div className="table-content-container">
           {datagridColumns.map((column, columnIndex) =>
             visibleColumns.includes(column.caption) ? (
-              <div className="column-container" key={columnIndex} style={propertyDataStyle}>
-                <div className="column-title">
-                  {column.caption}
-                </div>
+              <div
+                className="column-container"
+                key={columnIndex}
+                style={propertyDataStyle}
+              >
+                <div className="column-title">{column.caption}</div>
                 {filterData().map((_, rowIndex) => (
-                  <div
-                    className={handleClassByIndex(rowIndex)
-                    }
-                    key={rowIndex}
-                  >
+                  <div className={handleClassByIndex(rowIndex)} key={rowIndex}>
                     {renderColumnValue(rowIndex, column)}
                   </div>
                 ))}
@@ -167,21 +169,21 @@ const GridTable: React.FC<GridTableProps> = ({
             ) : null
           )}
         </div>
-        {enableEdit && (
+        {enableEdit ? (
           <div className="column-container column-edit">
             <div className="column-title"></div>
-            {getIndexesFromArray(filterData()).map((_, index) => (
-              <div className={handleClassByIndex(index)} key={index}>
+            {getIndexesFromArray(filterData()).map((_, rowIndex) => (
+              <div className={handleClassByIndex(rowIndex)} key={rowIndex}>
                 <EditComponent
                   datagrid={datagrid}
-                  rowIndex={index}
+                  rowIndex={rowIndex}
                   onRowUpdate={onRowUpdate}
                   onRowRemove={onRowRemove}
                 />
               </div>
             ))}
           </div>
-        )}
+        ) : null}
       </div>
       <div className="page-end-container">
         <PageSizeComponent
