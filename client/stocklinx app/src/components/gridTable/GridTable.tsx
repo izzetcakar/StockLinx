@@ -6,8 +6,8 @@ import EditComponent from "./edit/EditComponent";
 import PageSizeComponent from "./pageSize/PageSizeComponent";
 import TableToolbar from "./tableToolbar/TableToolbar";
 import { Column } from "./interfaces/interfaces";
-import "./gridTable.scss";
 import TableSelectColumn from "./selection/TableSelectColumn";
+import "./gridTable.scss";
 
 interface GridTableProps {
   data?: object[];
@@ -19,6 +19,7 @@ interface GridTableProps {
   noDataText?: string;
   pageSizes?: number[];
   enableEdit?: boolean;
+  enableSelection?: boolean;
   refreshData?: () => void;
   onRowInsert?: () => void;
   onRowUpdate?: (row: object) => void;
@@ -34,6 +35,7 @@ const GridTable: React.FC<GridTableProps> = ({
   showPageSizeInfo = true,
   pageSizes = [5, 20, 50],
   enableEdit = false,
+  enableSelection = false,
   refreshData,
   onRowInsert = () => console.log("insert"),
   onRowUpdate = () => console.log("update"),
@@ -144,13 +146,15 @@ const GridTable: React.FC<GridTableProps> = ({
         refreshData={handleRefreshData}
       />
       <div className="table-edit-wrapper">
-        <TableSelectColumn
-          datagrid={datagrid}
-          selectedIndexes={selectedIndexes}
-          filterData={filterData}
-          setSelectedIndexes={setSelectedIndexes}
-          handleClassByIndex={handleClassByIndex}
-        />
+        {enableSelection ? (
+          <TableSelectColumn
+            datagrid={datagrid}
+            selectedIndexes={selectedIndexes}
+            filterData={filterData}
+            setSelectedIndexes={setSelectedIndexes}
+            handleClassByIndex={handleClassByIndex}
+          />
+        ) : null}
         <div className="table-content-container">
           {datagridColumns.map((column, columnIndex) =>
             visibleColumns.includes(column.caption) ? (
@@ -172,11 +176,11 @@ const GridTable: React.FC<GridTableProps> = ({
         {enableEdit ? (
           <div className="column-container column-edit">
             <div className="column-title"></div>
-            {getIndexesFromArray(filterData()).map((_, rowIndex) => (
-              <div className={handleClassByIndex(rowIndex)} key={rowIndex}>
+            {getIndexesFromArray(filterData()).map((_, index) => (
+              <div className={handleClassByIndex(index)} key={index}>
                 <EditComponent
-                  datagrid={datagrid}
-                  rowIndex={rowIndex}
+                  data={datagrid}
+                  index={index}
                   onRowUpdate={onRowUpdate}
                   onRowRemove={onRowRemove}
                 />
