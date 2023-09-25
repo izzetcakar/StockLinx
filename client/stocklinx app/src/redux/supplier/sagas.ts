@@ -4,6 +4,7 @@ import { ISupplier } from "../../interfaces/interfaces";
 import { supplierConst } from "./constant";
 import { FetchSupplierRequest, UpdateSupplierRequest } from "./type";
 import { supplierRequests } from "./requests";
+import { genericActions } from "../generic/actions";
 
 interface IResponse {
   data: ISupplier[] | ISupplier | null;
@@ -13,6 +14,7 @@ interface IResponse {
 }
 
 function* fetchSuppliersSaga() {
+  yield put(genericActions.increaseLoading());
   try {
     const { data, message, success }: IResponse = yield call(
       supplierRequests.getAll
@@ -29,6 +31,7 @@ function* fetchSuppliersSaga() {
   } catch (e) {
     console.log(e);
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* fetchSupplierSaga(action: FetchSupplierRequest) {
   try {

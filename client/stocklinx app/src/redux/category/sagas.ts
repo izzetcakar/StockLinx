@@ -4,6 +4,7 @@ import { ICategory } from "../../interfaces/interfaces";
 import { categoryConst } from "./constant";
 import { FetchCategoryRequest, UpdateCategoryRequest } from "./type";
 import { categoryRequests } from "./requests";
+import { genericActions } from "../generic/actions";
 
 interface IResponse {
   data: ICategory[] | ICategory | null;
@@ -13,6 +14,7 @@ interface IResponse {
 }
 
 function* fetchCategoriesSaga() {
+  yield put(genericActions.increaseLoading());
   try {
     const { data, message, success }: IResponse = yield call(
       categoryRequests.getAll
@@ -29,6 +31,7 @@ function* fetchCategoriesSaga() {
   } catch (e) {
     console.log(e);
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* fetchCategorySaga(action: FetchCategoryRequest) {
   try {

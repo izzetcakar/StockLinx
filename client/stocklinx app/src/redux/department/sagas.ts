@@ -4,6 +4,7 @@ import { IDepartment } from "../../interfaces/interfaces";
 import { departmentConst } from "./constant";
 import { FetchDepartmentRequest, UpdateDepartmentRequest } from "./type";
 import { departmentRequests } from "./requests";
+import { genericActions } from "../generic/actions";
 
 interface IResponse {
   data: IDepartment[] | IDepartment | null;
@@ -13,6 +14,7 @@ interface IResponse {
 }
 
 function* fetchDepartmentsSaga() {
+  yield put(genericActions.increaseLoading());
   try {
     const { data, message, success }: IResponse = yield call(
       departmentRequests.getAll
@@ -29,6 +31,7 @@ function* fetchDepartmentsSaga() {
   } catch (e) {
     console.log(e);
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* fetchDepartmentSaga(action: FetchDepartmentRequest) {
   try {

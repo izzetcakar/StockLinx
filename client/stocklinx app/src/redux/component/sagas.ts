@@ -4,6 +4,7 @@ import { IComponent } from "../../interfaces/interfaces";
 import { componentConst } from "./constant";
 import { FetchComponentRequest, UpdateComponentRequest } from "./type";
 import { componentRequests } from "./requests";
+import { genericActions } from "../generic/actions";
 
 interface IResponse {
   data: IComponent[] | IComponent | null;
@@ -13,6 +14,7 @@ interface IResponse {
 }
 
 function* fetchComponentsSaga() {
+  yield put(genericActions.increaseLoading());
   try {
     const { data, message, success }: IResponse = yield call(
       componentRequests.getAll
@@ -29,6 +31,7 @@ function* fetchComponentsSaga() {
   } catch (e) {
     console.log(e);
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* fetchComponentSaga(action: FetchComponentRequest) {
   try {

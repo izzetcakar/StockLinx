@@ -4,6 +4,7 @@ import { IAsset } from "../../interfaces/interfaces";
 import { assetConst } from "./constant";
 import { FetchAssetRequest, UpdateAssetRequest } from "./type";
 import { assetRequests } from "./requests";
+import { genericActions } from "../generic/actions";
 
 interface IResponse {
   data: IAsset[] | IAsset | null;
@@ -13,6 +14,7 @@ interface IResponse {
 }
 
 function* fetchAssetsSaga() {
+  yield put(genericActions.increaseLoading());
   try {
     const { data, message, success }: IResponse = yield call(
       assetRequests.getAll
@@ -29,6 +31,7 @@ function* fetchAssetsSaga() {
   } catch (e) {
     console.log(e);
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* fetchAssetSaga(action: FetchAssetRequest) {
   try {

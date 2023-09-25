@@ -4,6 +4,7 @@ import { ICompany } from "../../interfaces/interfaces";
 import { companyConst } from "./constant";
 import { FetchCompanyRequest, UpdateCompanyRequest } from "./type";
 import { companyRequests } from "./requests";
+import { genericActions } from "../generic/actions";
 
 interface IResponse {
   data: ICompany[] | ICompany | null;
@@ -13,6 +14,7 @@ interface IResponse {
 }
 
 function* fetchCompaniesSaga() {
+  yield put(genericActions.increaseLoading());
   try {
     const { data, message, success }: IResponse = yield call(
       companyRequests.getAll
@@ -29,6 +31,7 @@ function* fetchCompaniesSaga() {
   } catch (e) {
     console.log(e);
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* fetchCompanySaga(action: FetchCompanyRequest) {
   try {

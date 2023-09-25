@@ -4,6 +4,7 @@ import { ILicense } from "../../interfaces/interfaces";
 import { licenseConst } from "./constant";
 import { FetchLicenseRequest, UpdateLicenseRequest } from "./type";
 import { licenseRequests } from "./requests";
+import { genericActions } from "../generic/actions";
 
 interface IResponse {
   data: ILicense[] | ILicense | null;
@@ -13,6 +14,7 @@ interface IResponse {
 }
 
 function* fetchLicensesSaga() {
+  yield put(genericActions.increaseLoading());
   try {
     const { data, message, success }: IResponse = yield call(
       licenseRequests.getAll
@@ -29,6 +31,7 @@ function* fetchLicensesSaga() {
   } catch (e) {
     console.log(e);
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* fetchLicenseSaga(action: FetchLicenseRequest) {
   try {

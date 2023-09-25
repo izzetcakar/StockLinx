@@ -4,6 +4,7 @@ import { IConsumable } from "../../interfaces/interfaces";
 import { consumableConst } from "./constant";
 import { FetchConsumableRequest, UpdateConsumableRequest } from "./type";
 import { consumableRequests } from "./requests";
+import { genericActions } from "../generic/actions";
 
 interface IResponse {
   data: IConsumable[] | IConsumable | null;
@@ -13,6 +14,7 @@ interface IResponse {
 }
 
 function* fetchConsumablesSaga() {
+  yield put(genericActions.increaseLoading());
   try {
     const { data, message, success }: IResponse = yield call(
       consumableRequests.getAll
@@ -29,6 +31,7 @@ function* fetchConsumablesSaga() {
   } catch (e) {
     console.log(e);
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* fetchConsumableSaga(action: FetchConsumableRequest) {
   try {

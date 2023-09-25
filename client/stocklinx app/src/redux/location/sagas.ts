@@ -4,6 +4,7 @@ import { ILocation } from "../../interfaces/interfaces";
 import { locationConst } from "./constant";
 import { FetchLocationRequest, UpdateLocationRequest } from "./type";
 import { locationRequests } from "./requests";
+import { genericActions } from "../generic/actions";
 
 interface IResponse {
   data: ILocation[] | ILocation | null;
@@ -13,6 +14,7 @@ interface IResponse {
 }
 
 function* fetchLocationsSaga() {
+  yield put(genericActions.increaseLoading());
   try {
     const { data, message, success }: IResponse = yield call(
       locationRequests.getAll
@@ -29,6 +31,7 @@ function* fetchLocationsSaga() {
   } catch (e) {
     console.log(e);
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* fetchLocationSaga(action: FetchLocationRequest) {
   try {

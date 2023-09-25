@@ -4,6 +4,7 @@ import { IManufacturer } from "../../interfaces/interfaces";
 import { manufacturerConst } from "./constant";
 import { FetchManufacturerRequest, UpdateManufacturerRequest } from "./type";
 import { manufacturerRequests } from "./requests";
+import { genericActions } from "../generic/actions";
 
 interface IResponse {
   data: IManufacturer[] | IManufacturer | null;
@@ -13,6 +14,7 @@ interface IResponse {
 }
 
 function* fetchManufacturersSaga() {
+  yield put(genericActions.increaseLoading());
   try {
     const { data, message, success }: IResponse = yield call(
       manufacturerRequests.getAll
@@ -29,6 +31,7 @@ function* fetchManufacturersSaga() {
   } catch (e) {
     console.log(e);
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* fetchManufacturerSaga(action: FetchManufacturerRequest) {
   try {

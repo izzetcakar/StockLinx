@@ -4,6 +4,7 @@ import { IProductStatus } from "../../interfaces/interfaces";
 import { productStatusConst } from "./constant";
 import { FetchProductStatusRequest, UpdateProductStatusRequest } from "./type";
 import { productStatusRequests } from "./requests";
+import { genericActions } from "../generic/actions";
 
 interface IResponse {
   data: IProductStatus[] | IProductStatus | null;
@@ -13,6 +14,7 @@ interface IResponse {
 }
 
 function* fetchProductStatusesSaga() {
+  yield put(genericActions.increaseLoading());
   try {
     const { data, message, success }: IResponse = yield call(
       productStatusRequests.getAll
@@ -29,6 +31,7 @@ function* fetchProductStatusesSaga() {
   } catch (e) {
     console.log(e);
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* fetchProductStatusSaga(action: FetchProductStatusRequest) {
   try {

@@ -4,6 +4,7 @@ import { IModel } from "../../interfaces/interfaces";
 import { modelConst } from "./constant";
 import { FetchModelRequest, UpdateModelRequest } from "./type";
 import { modelRequests } from "./requests";
+import { genericActions } from "../generic/actions";
 
 interface IResponse {
   data: IModel[] | IModel | null;
@@ -13,6 +14,7 @@ interface IResponse {
 }
 
 function* fetchModelsSaga() {
+  yield put(genericActions.increaseLoading());
   try {
     const { data, message, success }: IResponse = yield call(
       modelRequests.getAll
@@ -29,6 +31,7 @@ function* fetchModelsSaga() {
   } catch (e) {
     console.log(e);
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* fetchModelSaga(action: FetchModelRequest) {
   try {

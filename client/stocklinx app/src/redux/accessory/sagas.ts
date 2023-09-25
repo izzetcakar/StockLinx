@@ -4,6 +4,7 @@ import { IAccessory } from "../../interfaces/interfaces";
 import { accessoryConst } from "./constant";
 import { FetchAccessoryRequest, UpdateAccessoryRequest } from "./type";
 import { accessoryRequests } from "./requests";
+import { genericActions } from "../generic/actions";
 interface IResponse {
   data: IAccessory[] | IAccessory | null;
   message: string;
@@ -12,6 +13,7 @@ interface IResponse {
 }
 
 function* fetchAccessoriesSaga() {
+  yield put(genericActions.increaseLoading());
   try {
     const { data, message, success }: IResponse = yield call(
       accessoryRequests.getAll
@@ -28,6 +30,7 @@ function* fetchAccessoriesSaga() {
   } catch (e) {
     console.log(e);
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* fetchAccessorySaga(action: FetchAccessoryRequest) {
   try {
