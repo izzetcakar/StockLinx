@@ -8,8 +8,8 @@ import { Notifications } from '@mantine/notifications';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
-    <Notifications position="top-center" />
     <ModalsProvider>
+    <Notifications w={"fit-content"} />
       <App />
     </ModalsProvider>
   </Provider>,
