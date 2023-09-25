@@ -11,7 +11,6 @@ import {
   FetchUsersSucccessPayload,
   FetchUsersSuccess,
   FetchUserFailure,
-  FetchUserFailurePayload,
   FetchUserRequest,
   FetchUserSucccessPayload,
   FetchUsersuccess,
@@ -37,11 +36,8 @@ const getAllSuccess = (
   type: userConst.FETCH_USERS_SUCCESS,
   payload,
 });
-const getAllFailure = (
-  payload: FetchUserFailurePayload
-): FetchUsersFailure => ({
+const getAllFailure = (): FetchUsersFailure => ({
   type: userConst.FETCH_USERS_FAILURE,
-  payload,
 });
 const getWithToken = (): GetWithTokenRequest => ({
   type: userConst.GET_WITH_TOKEN_REQUEST,
@@ -52,11 +48,8 @@ const getWithTokenSuccess = (
   type: userConst.GET_WITH_TOKEN_SUCCESS,
   payload,
 });
-const getWithTokenFailure = (
-  payload: FetchUserFailurePayload
-): GetWithTokenFailure => ({
+const getWithTokenFailure = (): GetWithTokenFailure => ({
   type: userConst.GET_WITH_TOKEN_FAILURE,
-  payload,
 });
 
 //GET:/ID
@@ -67,9 +60,8 @@ const getSuccess = (payload: FetchUserSucccessPayload): FetchUsersuccess => ({
   type: userConst.FETCH_USER_SUCCESS,
   payload,
 });
-const getFailure = (payload: FetchUserFailurePayload): FetchUserFailure => ({
+const getFailure = (): FetchUserFailure => ({
   type: userConst.FETCH_USER_FAILURE,
-  payload,
 });
 
 //POST
@@ -79,11 +71,8 @@ const create = (): CreateUserRequest => ({
 const createSuccess = (): CreateUsersuccess => ({
   type: userConst.CREATE_USER_SUCCESS,
 });
-const createFailure = (
-  payload: FetchUserFailurePayload
-): CreateUserFailure => ({
+const createFailure = (): CreateUserFailure => ({
   type: userConst.CREATE_USER_FAILURE,
-  payload,
 });
 
 const signIn = (payload: SignInRequestPayload): SignInRequest => ({
@@ -93,9 +82,8 @@ const signIn = (payload: SignInRequestPayload): SignInRequest => ({
 const signInSuccess = (): SignInSuccess => ({
   type: userConst.SIGN_IN_SUCCESS,
 });
-const signInFailure = (payload: FetchUserFailurePayload): SignInFailure => ({
+const signInFailure = (): SignInFailure => ({
   type: userConst.SIGN_IN_FAILURE,
-  payload,
 });
 
 //PUT
@@ -105,11 +93,8 @@ const update = (): UpdateUserRequest => ({
 const updateSuccess = (): UpdateUsersuccess => ({
   type: userConst.UPDATE_USER_SUCCESS,
 });
-const updateFailure = (
-  payload: FetchUserFailurePayload
-): UpdateUserFailure => ({
+const updateFailure = (): UpdateUserFailure => ({
   type: userConst.UPDATE_USER_FAILURE,
-  payload,
 });
 
 //REMOVE
@@ -119,11 +104,8 @@ const remove = (): RemoveUserRequest => ({
 const removeSuccess = (): RemoveUsersuccess => ({
   type: userConst.REMOVE_USER_SUCCESS,
 });
-const removeFailure = (
-  payload: FetchUserFailurePayload
-): RemoveUserFailure => ({
+const removeFailure = (): RemoveUserFailure => ({
   type: userConst.REMOVE_USER_FAILURE,
-  payload,
 });
 
 export const userActions = {

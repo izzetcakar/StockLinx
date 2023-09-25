@@ -27,11 +27,7 @@ function* fetchLocationsSaga() {
       );
     }
   } catch (e) {
-    yield put(
-      locationActions.getAllFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* fetchLocationSaga(action: FetchLocationRequest) {
@@ -50,11 +46,7 @@ function* fetchLocationSaga(action: FetchLocationRequest) {
       );
     }
   } catch (e) {
-    yield put(
-      locationActions.getFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* createLocationSaga(action: UpdateLocationRequest) {
@@ -69,11 +61,7 @@ function* createLocationSaga(action: UpdateLocationRequest) {
       yield put(locationActions.createSuccess());
     }
   } catch (e) {
-    yield put(
-      locationActions.createFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* updateLocationSaga(action: UpdateLocationRequest) {
@@ -88,11 +76,7 @@ function* updateLocationSaga(action: UpdateLocationRequest) {
       yield put(locationActions.updateSuccess());
     }
   } catch (e) {
-    yield put(
-      locationActions.updateFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* removeLocationSaga(action: FetchLocationRequest) {
@@ -107,11 +91,7 @@ function* removeLocationSaga(action: FetchLocationRequest) {
       yield put(locationActions.removeSuccess());
     }
   } catch (e) {
-    yield put(
-      locationActions.removeFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 

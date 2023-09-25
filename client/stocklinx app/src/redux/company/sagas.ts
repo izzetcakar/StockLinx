@@ -1,7 +1,6 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { companyActions } from "./actions";
 import { ICompany } from "../../interfaces/interfaces";
-import { BackendResponse } from "../../server/api";
 import { companyConst } from "./constant";
 import { FetchCompanyRequest, UpdateCompanyRequest } from "./type";
 import { companyRequests } from "./requests";
@@ -28,11 +27,7 @@ function* fetchCompaniesSaga() {
       );
     }
   } catch (e) {
-    yield put(
-      companyActions.getAllFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* fetchCompanySaga(action: FetchCompanyRequest) {
@@ -51,11 +46,7 @@ function* fetchCompanySaga(action: FetchCompanyRequest) {
       );
     }
   } catch (e) {
-    yield put(
-      companyActions.getFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* createCompanySaga(action: UpdateCompanyRequest) {
@@ -70,11 +61,7 @@ function* createCompanySaga(action: UpdateCompanyRequest) {
       yield put(companyActions.createSuccess());
     }
   } catch (e) {
-    yield put(
-      companyActions.createFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* updateCompanySaga(action: UpdateCompanyRequest) {
@@ -89,11 +76,7 @@ function* updateCompanySaga(action: UpdateCompanyRequest) {
       yield put(companyActions.updateSuccess());
     }
   } catch (e) {
-    yield put(
-      companyActions.updateFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* removeCompanySaga(action: FetchCompanyRequest) {
@@ -108,11 +91,7 @@ function* removeCompanySaga(action: FetchCompanyRequest) {
       yield put(companyActions.removeSuccess());
     }
   } catch (e) {
-    yield put(
-      companyActions.removeFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 

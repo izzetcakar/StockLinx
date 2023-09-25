@@ -12,7 +12,6 @@ import {
   ManufacturersSucccessPayload,
   FetchManufacturersSuccess,
   FetchManufacturerFailure,
-  ManufacturerFailurePayload,
   FetchManufacturerRequest,
   FetchManufacturerSuccess,
   UpdateManufacturerFailure,
@@ -37,11 +36,8 @@ const getAllSuccess = (
   type: manufacturerConst.FETCH_MANUFACTURERS_SUCCESS,
   payload,
 });
-const getAllFailure = (
-  payload: ManufacturerFailurePayload
-): FetchManufacturersFailure => ({
+const getAllFailure = (): FetchManufacturersFailure => ({
   type: manufacturerConst.FETCH_MANUFACTURERS_FAILURE,
-  payload,
 });
 
 //GET:/ID
@@ -57,11 +53,8 @@ const getSuccess = (
   type: manufacturerConst.FETCH_MANUFACTURER_SUCCESS,
   payload,
 });
-const getFailure = (
-  payload: ManufacturerFailurePayload
-): FetchManufacturerFailure => ({
+const getFailure = (): FetchManufacturerFailure => ({
   type: manufacturerConst.FETCH_MANUFACTURER_FAILURE,
-  payload,
 });
 
 //POST
@@ -74,11 +67,8 @@ const create = (
 const createSuccess = (): CreateManufacturerSuccess => ({
   type: manufacturerConst.CREATE_MANUFACTURER_SUCCESS,
 });
-const createFailure = (
-  payload: ManufacturerFailurePayload
-): CreateManufacturerFailure => ({
+const createFailure = (): CreateManufacturerFailure => ({
   type: manufacturerConst.CREATE_MANUFACTURER_FAILURE,
-  payload,
 });
 
 //PUT
@@ -91,11 +81,8 @@ const update = (
 const updateSuccess = (): UpdateManufacturerSuccess => ({
   type: manufacturerConst.UPDATE_MANUFACTURER_SUCCESS,
 });
-const updateFailure = (
-  payload: ManufacturerFailurePayload
-): UpdateManufacturerFailure => ({
+const updateFailure = (): UpdateManufacturerFailure => ({
   type: manufacturerConst.UPDATE_MANUFACTURER_FAILURE,
-  payload,
 });
 
 //REMOVE
@@ -108,11 +95,8 @@ const remove = (
 const removeSuccess = (): RemoveManufacturerSuccess => ({
   type: manufacturerConst.REMOVE_MANUFACTURER_SUCCESS,
 });
-const removeFailure = (
-  payload: ManufacturerFailurePayload
-): RemoveManufacturerFailure => ({
+const removeFailure = (): RemoveManufacturerFailure => ({
   type: manufacturerConst.REMOVE_MANUFACTURER_FAILURE,
-  payload,
 });
 
 //CLIENT ACTIONS

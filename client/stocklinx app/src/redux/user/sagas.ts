@@ -33,14 +33,10 @@ function* fetchUsersSaga() {
       );
     }
   } catch (e) {
-    yield put(
-      userActions.getAllFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
-function* fetchUsersaga(action: any) {
+function* fetchUsersaga() {
   try {
     const { data, message, success }: IResponse = yield call(userRequests.get);
     if (success !== undefined && !success) {
@@ -53,11 +49,7 @@ function* fetchUsersaga(action: any) {
       );
     }
   } catch (e) {
-    yield put(
-      userActions.getAllFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* signInSaga(action: SignInRequest) {
@@ -73,11 +65,7 @@ function* signInSaga(action: SignInRequest) {
       yield put(userActions.signInSuccess());
     }
   } catch (e) {
-    yield put(
-      userActions.signInFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* getUserWithTokenSaga() {
@@ -95,11 +83,7 @@ function* getUserWithTokenSaga() {
       );
     }
   } catch (e) {
-    yield put(
-      userActions.getAllFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 

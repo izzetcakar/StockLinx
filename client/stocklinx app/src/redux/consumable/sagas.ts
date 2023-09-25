@@ -27,11 +27,7 @@ function* fetchConsumablesSaga() {
       );
     }
   } catch (e) {
-    yield put(
-      consumableActions.getAllFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* fetchConsumableSaga(action: FetchConsumableRequest) {
@@ -50,11 +46,7 @@ function* fetchConsumableSaga(action: FetchConsumableRequest) {
       );
     }
   } catch (e) {
-    yield put(
-      consumableActions.getFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* createConsumableSaga(action: UpdateConsumableRequest) {
@@ -69,11 +61,7 @@ function* createConsumableSaga(action: UpdateConsumableRequest) {
       yield put(consumableActions.createSuccess());
     }
   } catch (e) {
-    yield put(
-      consumableActions.createFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* updateConsumableSaga(action: UpdateConsumableRequest) {
@@ -88,11 +76,7 @@ function* updateConsumableSaga(action: UpdateConsumableRequest) {
       yield put(consumableActions.updateSuccess());
     }
   } catch (e) {
-    yield put(
-      consumableActions.updateFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* removeConsumableSaga(action: FetchConsumableRequest) {
@@ -107,11 +91,7 @@ function* removeConsumableSaga(action: FetchConsumableRequest) {
       yield put(consumableActions.removeSuccess());
     }
   } catch (e) {
-    yield put(
-      consumableActions.removeFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 

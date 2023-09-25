@@ -27,11 +27,7 @@ function* fetchLicensesSaga() {
       );
     }
   } catch (e) {
-    yield put(
-      licenseActions.getAllFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* fetchLicenseSaga(action: FetchLicenseRequest) {
@@ -50,11 +46,7 @@ function* fetchLicenseSaga(action: FetchLicenseRequest) {
       );
     }
   } catch (e) {
-    yield put(
-      licenseActions.getFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* createLicenseSaga(action: UpdateLicenseRequest) {
@@ -69,11 +61,7 @@ function* createLicenseSaga(action: UpdateLicenseRequest) {
       yield put(licenseActions.createSuccess());
     }
   } catch (e) {
-    yield put(
-      licenseActions.createFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* updateLicenseSaga(action: UpdateLicenseRequest) {
@@ -88,11 +76,7 @@ function* updateLicenseSaga(action: UpdateLicenseRequest) {
       yield put(licenseActions.updateSuccess());
     }
   } catch (e) {
-    yield put(
-      licenseActions.updateFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* removeLicenseSaga(action: FetchLicenseRequest) {
@@ -107,11 +91,7 @@ function* removeLicenseSaga(action: FetchLicenseRequest) {
       yield put(licenseActions.removeSuccess());
     }
   } catch (e) {
-    yield put(
-      licenseActions.removeFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 

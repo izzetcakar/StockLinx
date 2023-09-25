@@ -5,8 +5,6 @@ export interface SupplierState {
   supplier: ISupplier | null;
   suppliers: ISupplier[];
   selectData: SelectData[];
-  pending: boolean;
-  error: string | null;
 }
 
 export interface SupplierSucccessPayload {
@@ -14,9 +12,6 @@ export interface SupplierSucccessPayload {
 }
 export interface SuppliersSucccessPayload {
   suppliers: ISupplier[];
-}
-export interface SupplierFailurePayload {
-  error: string;
 }
 export interface SupplierRequestPayload {
   id: string;
@@ -35,7 +30,6 @@ export type FetchSuppliersSuccess = {
 };
 export type FetchSuppliersFailure = {
   type: typeof supplierConst.FETCH_SUPPLIERS_FAILURE;
-  payload: SupplierFailurePayload;
 };
 //GET:/ID
 export interface FetchSupplierRequest {
@@ -48,7 +42,6 @@ export type FetchSupplierSuccess = {
 };
 export type FetchSupplierFailure = {
   type: typeof supplierConst.FETCH_SUPPLIER_FAILURE;
-  payload: SupplierFailurePayload;
 };
 //POST
 export interface CreateSupplierRequest {
@@ -60,7 +53,6 @@ export type CreateSupplierSuccess = {
 };
 export type CreateSupplierFailure = {
   type: typeof supplierConst.CREATE_SUPPLIER_FAILURE;
-  payload: SupplierFailurePayload;
 };
 //PUT
 export interface UpdateSupplierRequest {
@@ -72,7 +64,6 @@ export type UpdateSupplierSuccess = {
 };
 export type UpdateSupplierFailure = {
   type: typeof supplierConst.UPDATE_SUPPLIER_FAILURE;
-  payload: SupplierFailurePayload;
 };
 //REMOVE
 export interface RemoveSupplierRequest {
@@ -84,7 +75,6 @@ export type RemoveSupplierSuccess = {
 };
 export type RemoveSupplierFailure = {
   type: typeof supplierConst.REMOVE_SUPPLIER_FAILURE;
-  payload: SupplierFailurePayload;
 };
 
 //CLIENT ACTION TYPES

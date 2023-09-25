@@ -12,7 +12,6 @@ import {
   SuppliersSucccessPayload,
   FetchSuppliersSuccess,
   FetchSupplierFailure,
-  SupplierFailurePayload,
   FetchSupplierRequest,
   FetchSupplierSuccess,
   UpdateSupplierFailure,
@@ -37,11 +36,8 @@ const getAllSuccess = (
   type: supplierConst.FETCH_SUPPLIERS_SUCCESS,
   payload,
 });
-const getAllFailure = (
-  payload: SupplierFailurePayload
-): FetchSuppliersFailure => ({
+const getAllFailure = (): FetchSuppliersFailure => ({
   type: supplierConst.FETCH_SUPPLIERS_FAILURE,
-  payload,
 });
 
 //GET:/ID
@@ -55,9 +51,8 @@ const getSuccess = (
   type: supplierConst.FETCH_SUPPLIER_SUCCESS,
   payload,
 });
-const getFailure = (payload: SupplierFailurePayload): FetchSupplierFailure => ({
+const getFailure = (): FetchSupplierFailure => ({
   type: supplierConst.FETCH_SUPPLIER_FAILURE,
-  payload,
 });
 
 //POST
@@ -70,11 +65,8 @@ const create = (
 const createSuccess = (): CreateSupplierSuccess => ({
   type: supplierConst.CREATE_SUPPLIER_SUCCESS,
 });
-const createFailure = (
-  payload: SupplierFailurePayload
-): CreateSupplierFailure => ({
+const createFailure = (): CreateSupplierFailure => ({
   type: supplierConst.CREATE_SUPPLIER_FAILURE,
-  payload,
 });
 
 //PUT
@@ -87,11 +79,8 @@ const update = (
 const updateSuccess = (): UpdateSupplierSuccess => ({
   type: supplierConst.UPDATE_SUPPLIER_SUCCESS,
 });
-const updateFailure = (
-  payload: SupplierFailurePayload
-): UpdateSupplierFailure => ({
+const updateFailure = (): UpdateSupplierFailure => ({
   type: supplierConst.UPDATE_SUPPLIER_FAILURE,
-  payload,
 });
 
 //REMOVE
@@ -102,11 +91,8 @@ const remove = (payload: SupplierRequestPayload): RemoveSupplierRequest => ({
 const removeSuccess = (): RemoveSupplierSuccess => ({
   type: supplierConst.REMOVE_SUPPLIER_SUCCESS,
 });
-const removeFailure = (
-  payload: SupplierFailurePayload
-): RemoveSupplierFailure => ({
+const removeFailure = (): RemoveSupplierFailure => ({
   type: supplierConst.REMOVE_SUPPLIER_FAILURE,
-  payload,
 });
 
 //CLIENT ACTIONS

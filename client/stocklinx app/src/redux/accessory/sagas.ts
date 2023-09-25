@@ -26,11 +26,7 @@ function* fetchAccessoriesSaga() {
       );
     }
   } catch (e) {
-    yield put(
-      accessoryActions.getAllFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* fetchAccessorySaga(action: FetchAccessoryRequest) {
@@ -49,11 +45,7 @@ function* fetchAccessorySaga(action: FetchAccessoryRequest) {
       );
     }
   } catch (e) {
-    yield put(
-      accessoryActions.getFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* createAccessorySaga(action: UpdateAccessoryRequest) {
@@ -68,11 +60,7 @@ function* createAccessorySaga(action: UpdateAccessoryRequest) {
       yield put(accessoryActions.createSuccess());
     }
   } catch (e) {
-    yield put(
-      accessoryActions.createFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* updateAccessorySaga(action: UpdateAccessoryRequest) {
@@ -87,11 +75,7 @@ function* updateAccessorySaga(action: UpdateAccessoryRequest) {
       yield put(accessoryActions.updateSuccess());
     }
   } catch (e) {
-    yield put(
-      accessoryActions.updateFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* removeAccessorySaga(action: FetchAccessoryRequest) {
@@ -106,11 +90,7 @@ function* removeAccessorySaga(action: FetchAccessoryRequest) {
       yield put(accessoryActions.removeSuccess());
     }
   } catch (e) {
-    yield put(
-      accessoryActions.removeFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 

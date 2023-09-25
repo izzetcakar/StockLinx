@@ -27,11 +27,7 @@ function* fetchSuppliersSaga() {
       );
     }
   } catch (e) {
-    yield put(
-      supplierActions.getAllFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* fetchSupplierSaga(action: FetchSupplierRequest) {
@@ -50,11 +46,7 @@ function* fetchSupplierSaga(action: FetchSupplierRequest) {
       );
     }
   } catch (e) {
-    yield put(
-      supplierActions.getFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* createSupplierSaga(action: UpdateSupplierRequest) {
@@ -69,11 +61,7 @@ function* createSupplierSaga(action: UpdateSupplierRequest) {
       yield put(supplierActions.createSuccess());
     }
   } catch (e) {
-    yield put(
-      supplierActions.createFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* updateSupplierSaga(action: UpdateSupplierRequest) {
@@ -88,11 +76,7 @@ function* updateSupplierSaga(action: UpdateSupplierRequest) {
       yield put(supplierActions.updateSuccess());
     }
   } catch (e) {
-    yield put(
-      supplierActions.updateFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* removeSupplierSaga(action: FetchSupplierRequest) {
@@ -107,11 +91,7 @@ function* removeSupplierSaga(action: FetchSupplierRequest) {
       yield put(supplierActions.removeSuccess());
     }
   } catch (e) {
-    yield put(
-      supplierActions.removeFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 

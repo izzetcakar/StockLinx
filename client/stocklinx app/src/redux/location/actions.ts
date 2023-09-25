@@ -12,7 +12,6 @@ import {
   LocationsSucccessPayload,
   FetchLocationsSuccess,
   FetchLocationFailure,
-  LocationFailurePayload,
   FetchLocationRequest,
   FetchLocationSuccess,
   UpdateLocationFailure,
@@ -37,11 +36,8 @@ const getAllSuccess = (
   type: locationConst.FETCH_LOCATIONS_SUCCESS,
   payload,
 });
-const getAllFailure = (
-  payload: LocationFailurePayload
-): FetchLocationsFailure => ({
+const getAllFailure = (): FetchLocationsFailure => ({
   type: locationConst.FETCH_LOCATIONS_FAILURE,
-  payload,
 });
 
 //GET:/ID
@@ -55,9 +51,8 @@ const getSuccess = (
   type: locationConst.FETCH_LOCATION_SUCCESS,
   payload,
 });
-const getFailure = (payload: LocationFailurePayload): FetchLocationFailure => ({
+const getFailure = (): FetchLocationFailure => ({
   type: locationConst.FETCH_LOCATION_FAILURE,
-  payload,
 });
 
 //POST
@@ -70,11 +65,8 @@ const create = (
 const createSuccess = (): CreateLocationSuccess => ({
   type: locationConst.CREATE_LOCATION_SUCCESS,
 });
-const createFailure = (
-  payload: LocationFailurePayload
-): CreateLocationFailure => ({
+const createFailure = (): CreateLocationFailure => ({
   type: locationConst.CREATE_LOCATION_FAILURE,
-  payload,
 });
 
 //PUT
@@ -87,11 +79,8 @@ const update = (
 const updateSuccess = (): UpdateLocationSuccess => ({
   type: locationConst.UPDATE_LOCATION_SUCCESS,
 });
-const updateFailure = (
-  payload: LocationFailurePayload
-): UpdateLocationFailure => ({
+const updateFailure = (): UpdateLocationFailure => ({
   type: locationConst.UPDATE_LOCATION_FAILURE,
-  payload,
 });
 
 //REMOVE
@@ -102,11 +91,8 @@ const remove = (payload: LocationRequestPayload): RemoveLocationRequest => ({
 const removeSuccess = (): RemoveLocationSuccess => ({
   type: locationConst.REMOVE_LOCATION_SUCCESS,
 });
-const removeFailure = (
-  payload: LocationFailurePayload
-): RemoveLocationFailure => ({
+const removeFailure = (): RemoveLocationFailure => ({
   type: locationConst.REMOVE_LOCATION_FAILURE,
-  payload,
 });
 
 //CLIENT ACTIONS

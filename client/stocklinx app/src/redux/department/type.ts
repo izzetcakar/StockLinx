@@ -5,8 +5,6 @@ export interface DepartmentState {
   department: IDepartment | null;
   departments: IDepartment[];
   selectData: SelectData[];
-  pending: boolean;
-  error: string | null;
 }
 
 export interface DepartmentSucccessPayload {
@@ -14,9 +12,6 @@ export interface DepartmentSucccessPayload {
 }
 export interface DepartmentsSucccessPayload {
   departments: IDepartment[];
-}
-export interface DepartmentFailurePayload {
-  error: string;
 }
 export interface DepartmentRequestPayload {
   id: string;
@@ -35,7 +30,6 @@ export type FetchDepartmentsSuccess = {
 };
 export type FetchDepartmentsFailure = {
   type: typeof departmentConst.FETCH_DEPARTMENTS_FAILURE;
-  payload: DepartmentFailurePayload;
 };
 //GET:/ID
 export interface FetchDepartmentRequest {
@@ -48,7 +42,6 @@ export type FetchDepartmentSuccess = {
 };
 export type FetchDepartmentFailure = {
   type: typeof departmentConst.FETCH_DEPARTMENT_FAILURE;
-  payload: DepartmentFailurePayload;
 };
 //POST
 export interface CreateDepartmentRequest {
@@ -60,7 +53,6 @@ export type CreateDepartmentSuccess = {
 };
 export type CreateDepartmentFailure = {
   type: typeof departmentConst.CREATE_DEPARTMENT_FAILURE;
-  payload: DepartmentFailurePayload;
 };
 //PUT
 export interface UpdateDepartmentRequest {
@@ -72,7 +64,6 @@ export type UpdateDepartmentSuccess = {
 };
 export type UpdateDepartmentFailure = {
   type: typeof departmentConst.UPDATE_DEPARTMENT_FAILURE;
-  payload: DepartmentFailurePayload;
 };
 //REMOVE
 export interface RemoveDepartmentRequest {
@@ -84,7 +75,6 @@ export type RemoveDepartmentSuccess = {
 };
 export type RemoveDepartmentFailure = {
   type: typeof departmentConst.REMOVE_DEPARTMENT_FAILURE;
-  payload: DepartmentFailurePayload;
 };
 
 //CLIENT ACTION TYPES

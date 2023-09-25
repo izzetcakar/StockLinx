@@ -1,7 +1,6 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { assetActions } from "./actions";
 import { IAsset } from "../../interfaces/interfaces";
-import { BackendResponse } from "../../server/api";
 import { assetConst } from "./constant";
 import { FetchAssetRequest, UpdateAssetRequest } from "./type";
 import { assetRequests } from "./requests";
@@ -28,11 +27,7 @@ function* fetchAssetsSaga() {
       );
     }
   } catch (e) {
-    yield put(
-      assetActions.getAllFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* fetchAssetSaga(action: FetchAssetRequest) {
@@ -51,11 +46,7 @@ function* fetchAssetSaga(action: FetchAssetRequest) {
       );
     }
   } catch (e) {
-    yield put(
-      assetActions.getFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* createAssetSaga(action: UpdateAssetRequest) {
@@ -70,11 +61,7 @@ function* createAssetSaga(action: UpdateAssetRequest) {
       yield put(assetActions.createSuccess());
     }
   } catch (e) {
-    yield put(
-      assetActions.createFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* updateAssetSaga(action: UpdateAssetRequest) {
@@ -89,11 +76,7 @@ function* updateAssetSaga(action: UpdateAssetRequest) {
       yield put(assetActions.updateSuccess());
     }
   } catch (e) {
-    yield put(
-      assetActions.updateFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* removeAssetSaga(action: FetchAssetRequest) {
@@ -108,11 +91,7 @@ function* removeAssetSaga(action: FetchAssetRequest) {
       yield put(assetActions.removeSuccess());
     }
   } catch (e) {
-    yield put(
-      assetActions.removeFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 

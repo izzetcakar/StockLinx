@@ -5,8 +5,6 @@ export interface LocationState {
   location: ILocation | null;
   locations: ILocation[];
   selectData: SelectData[];
-  pending: boolean;
-  error: string | null;
 }
 
 export interface LocationSucccessPayload {
@@ -14,9 +12,6 @@ export interface LocationSucccessPayload {
 }
 export interface LocationsSucccessPayload {
   locations: ILocation[];
-}
-export interface LocationFailurePayload {
-  error: string;
 }
 export interface LocationRequestPayload {
   id: string;
@@ -35,7 +30,6 @@ export type FetchLocationsSuccess = {
 };
 export type FetchLocationsFailure = {
   type: typeof locationConst.FETCH_LOCATIONS_FAILURE;
-  payload: LocationFailurePayload;
 };
 //GET:/ID
 export interface FetchLocationRequest {
@@ -48,7 +42,6 @@ export type FetchLocationSuccess = {
 };
 export type FetchLocationFailure = {
   type: typeof locationConst.FETCH_LOCATION_FAILURE;
-  payload: LocationFailurePayload;
 };
 //POST
 export interface CreateLocationRequest {
@@ -60,7 +53,6 @@ export type CreateLocationSuccess = {
 };
 export type CreateLocationFailure = {
   type: typeof locationConst.CREATE_LOCATION_FAILURE;
-  payload: LocationFailurePayload;
 };
 //PUT
 export interface UpdateLocationRequest {
@@ -72,7 +64,6 @@ export type UpdateLocationSuccess = {
 };
 export type UpdateLocationFailure = {
   type: typeof locationConst.UPDATE_LOCATION_FAILURE;
-  payload: LocationFailurePayload;
 };
 //REMOVE
 export interface RemoveLocationRequest {
@@ -84,7 +75,6 @@ export type RemoveLocationSuccess = {
 };
 export type RemoveLocationFailure = {
   type: typeof locationConst.REMOVE_LOCATION_FAILURE;
-  payload: LocationFailurePayload;
 };
 
 //CLIENT ACTION TYPES

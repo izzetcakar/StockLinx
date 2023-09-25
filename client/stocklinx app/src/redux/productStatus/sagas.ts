@@ -27,11 +27,7 @@ function* fetchProductStatusesSaga() {
       );
     }
   } catch (e) {
-    yield put(
-      productStatusActions.getAllFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* fetchProductStatusSaga(action: FetchProductStatusRequest) {
@@ -50,11 +46,7 @@ function* fetchProductStatusSaga(action: FetchProductStatusRequest) {
       );
     }
   } catch (e) {
-    yield put(
-      productStatusActions.getFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* createProductStatusSaga(action: UpdateProductStatusRequest) {
@@ -69,11 +61,7 @@ function* createProductStatusSaga(action: UpdateProductStatusRequest) {
       yield put(productStatusActions.createSuccess());
     }
   } catch (e) {
-    yield put(
-      productStatusActions.createFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* updateProductStatusSaga(action: UpdateProductStatusRequest) {
@@ -88,11 +76,7 @@ function* updateProductStatusSaga(action: UpdateProductStatusRequest) {
       yield put(productStatusActions.updateSuccess());
     }
   } catch (e) {
-    yield put(
-      productStatusActions.updateFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* removeProductStatusSaga(action: FetchProductStatusRequest) {
@@ -107,11 +91,7 @@ function* removeProductStatusSaga(action: FetchProductStatusRequest) {
       yield put(productStatusActions.removeSuccess());
     }
   } catch (e) {
-    yield put(
-      productStatusActions.removeFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 

@@ -27,11 +27,7 @@ function* fetchManufacturersSaga() {
       );
     }
   } catch (e) {
-    yield put(
-      manufacturerActions.getAllFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* fetchManufacturerSaga(action: FetchManufacturerRequest) {
@@ -50,11 +46,7 @@ function* fetchManufacturerSaga(action: FetchManufacturerRequest) {
       );
     }
   } catch (e) {
-    yield put(
-      manufacturerActions.getFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* createManufacturerSaga(action: UpdateManufacturerRequest) {
@@ -69,11 +61,7 @@ function* createManufacturerSaga(action: UpdateManufacturerRequest) {
       yield put(manufacturerActions.createSuccess());
     }
   } catch (e) {
-    yield put(
-      manufacturerActions.createFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* updateManufacturerSaga(action: UpdateManufacturerRequest) {
@@ -88,11 +76,7 @@ function* updateManufacturerSaga(action: UpdateManufacturerRequest) {
       yield put(manufacturerActions.updateSuccess());
     }
   } catch (e) {
-    yield put(
-      manufacturerActions.updateFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* removeManufacturerSaga(action: FetchManufacturerRequest) {
@@ -107,11 +91,7 @@ function* removeManufacturerSaga(action: FetchManufacturerRequest) {
       yield put(manufacturerActions.removeSuccess());
     }
   } catch (e) {
-    yield put(
-      manufacturerActions.removeFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 

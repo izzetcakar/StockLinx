@@ -5,8 +5,6 @@ export interface ComponentState {
   component: IComponent | null;
   components: IComponent[];
   selectData: SelectData[];
-  pending: boolean;
-  error: string | null;
 }
 
 export interface ComponentSucccessPayload {
@@ -14,9 +12,6 @@ export interface ComponentSucccessPayload {
 }
 export interface ComponentsSucccessPayload {
   components: IComponent[];
-}
-export interface ComponentFailurePayload {
-  error: string;
 }
 export interface ComponentRequestPayload {
   id: string;
@@ -35,7 +30,6 @@ export type FetchComponentsSuccess = {
 };
 export type FetchComponentsFailure = {
   type: typeof componentConst.FETCH_COMPONENTS_FAILURE;
-  payload: ComponentFailurePayload;
 };
 //GET:/ID
 export interface FetchComponentRequest {
@@ -48,7 +42,6 @@ export type FetchComponentSuccess = {
 };
 export type FetchComponentFailure = {
   type: typeof componentConst.FETCH_COMPONENT_FAILURE;
-  payload: ComponentFailurePayload;
 };
 //POST
 export interface CreateComponentRequest {
@@ -60,7 +53,6 @@ export type CreateComponentSuccess = {
 };
 export type CreateComponentFailure = {
   type: typeof componentConst.CREATE_COMPONENT_FAILURE;
-  payload: ComponentFailurePayload;
 };
 //PUT
 export interface UpdateComponentRequest {
@@ -72,7 +64,6 @@ export type UpdateComponentSuccess = {
 };
 export type UpdateComponentFailure = {
   type: typeof componentConst.UPDATE_COMPONENT_FAILURE;
-  payload: ComponentFailurePayload;
 };
 //REMOVE
 export interface RemoveComponentRequest {
@@ -84,7 +75,6 @@ export type RemoveComponentSuccess = {
 };
 export type RemoveComponentFailure = {
   type: typeof componentConst.REMOVE_COMPONENT_FAILURE;
-  payload: ComponentFailurePayload;
 };
 
 //CLIENT ACTION TYPES

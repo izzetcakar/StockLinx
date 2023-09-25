@@ -12,7 +12,6 @@ import {
   ModelsSucccessPayload,
   FetchModelsSuccess,
   FetchModelFailure,
-  ModelFailurePayload,
   FetchModelRequest,
   FetchModelSuccess,
   UpdateModelFailure,
@@ -35,9 +34,8 @@ const getAllSuccess = (payload: ModelsSucccessPayload): FetchModelsSuccess => ({
   type: modelConst.FETCH_MODELS_SUCCESS,
   payload,
 });
-const getAllFailure = (payload: ModelFailurePayload): FetchModelsFailure => ({
+const getAllFailure = (): FetchModelsFailure => ({
   type: modelConst.FETCH_MODELS_FAILURE,
-  payload,
 });
 
 //GET:/ID
@@ -49,9 +47,8 @@ const getSuccess = (payload: ModelSucccessPayload): FetchModelSuccess => ({
   type: modelConst.FETCH_MODEL_SUCCESS,
   payload,
 });
-const getFailure = (payload: ModelFailurePayload): FetchModelFailure => ({
+const getFailure = (): FetchModelFailure => ({
   type: modelConst.FETCH_MODEL_FAILURE,
-  payload,
 });
 
 //POST
@@ -62,9 +59,8 @@ const create = (payload: UpdateModelRequestPayload): CreateModelRequest => ({
 const createSuccess = (): CreateModelSuccess => ({
   type: modelConst.CREATE_MODEL_SUCCESS,
 });
-const createFailure = (payload: ModelFailurePayload): CreateModelFailure => ({
+const createFailure = (): CreateModelFailure => ({
   type: modelConst.CREATE_MODEL_FAILURE,
-  payload,
 });
 
 //PUT
@@ -75,9 +71,8 @@ const update = (payload: UpdateModelRequestPayload): UpdateModelRequest => ({
 const updateSuccess = (): UpdateModelSuccess => ({
   type: modelConst.UPDATE_MODEL_SUCCESS,
 });
-const updateFailure = (payload: ModelFailurePayload): UpdateModelFailure => ({
+const updateFailure = (): UpdateModelFailure => ({
   type: modelConst.UPDATE_MODEL_FAILURE,
-  payload,
 });
 
 //REMOVE
@@ -88,9 +83,8 @@ const remove = (payload: ModelRequestPayload): RemoveModelRequest => ({
 const removeSuccess = (): RemoveModelSuccess => ({
   type: modelConst.REMOVE_MODEL_SUCCESS,
 });
-const removeFailure = (payload: ModelFailurePayload): RemoveModelFailure => ({
+const removeFailure = (): RemoveModelFailure => ({
   type: modelConst.REMOVE_MODEL_FAILURE,
-  payload,
 });
 
 //CLIENT ACTIONS

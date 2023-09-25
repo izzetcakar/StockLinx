@@ -1,8 +1,6 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { componentActions } from "./actions";
 import { IComponent } from "../../interfaces/interfaces";
-import { BackendResponse, request } from "../../server/api";
-import { checkEmpty } from "../../functions/checkEmpty";
 import { componentConst } from "./constant";
 import { FetchComponentRequest, UpdateComponentRequest } from "./type";
 import { componentRequests } from "./requests";
@@ -29,11 +27,7 @@ function* fetchComponentsSaga() {
       );
     }
   } catch (e) {
-    yield put(
-      componentActions.getAllFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* fetchComponentSaga(action: FetchComponentRequest) {
@@ -52,11 +46,7 @@ function* fetchComponentSaga(action: FetchComponentRequest) {
       );
     }
   } catch (e) {
-    yield put(
-      componentActions.getFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* createComponentSaga(action: UpdateComponentRequest) {
@@ -71,11 +61,7 @@ function* createComponentSaga(action: UpdateComponentRequest) {
       yield put(componentActions.createSuccess());
     }
   } catch (e) {
-    yield put(
-      componentActions.createFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* updateComponentSaga(action: UpdateComponentRequest) {
@@ -90,11 +76,7 @@ function* updateComponentSaga(action: UpdateComponentRequest) {
       yield put(componentActions.updateSuccess());
     }
   } catch (e) {
-    yield put(
-      componentActions.updateFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* removeComponentSaga(action: FetchComponentRequest) {
@@ -109,11 +91,7 @@ function* removeComponentSaga(action: FetchComponentRequest) {
       yield put(componentActions.removeSuccess());
     }
   } catch (e) {
-    yield put(
-      componentActions.removeFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 

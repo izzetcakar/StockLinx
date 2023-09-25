@@ -5,8 +5,6 @@ export interface ConsumableState {
   consumable: IConsumable | null;
   consumables: IConsumable[];
   selectData: SelectData[];
-  pending: boolean;
-  error: string | null;
 }
 
 export interface ConsumableSucccessPayload {
@@ -14,9 +12,6 @@ export interface ConsumableSucccessPayload {
 }
 export interface ConsumablesSucccessPayload {
   consumables: IConsumable[];
-}
-export interface ConsumableFailurePayload {
-  error: string;
 }
 export interface ConsumableRequestPayload {
   id: string;
@@ -35,7 +30,6 @@ export type FetchConsumablesSuccess = {
 };
 export type FetchConsumablesFailure = {
   type: typeof consumableConst.FETCH_CONSUMABLES_FAILURE;
-  payload: ConsumableFailurePayload;
 };
 //GET:/ID
 export interface FetchConsumableRequest {
@@ -48,7 +42,6 @@ export type FetchConsumableSuccess = {
 };
 export type FetchConsumableFailure = {
   type: typeof consumableConst.FETCH_CONSUMABLE_FAILURE;
-  payload: ConsumableFailurePayload;
 };
 //POST
 export interface CreateConsumableRequest {
@@ -60,7 +53,6 @@ export type CreateConsumableSuccess = {
 };
 export type CreateConsumableFailure = {
   type: typeof consumableConst.CREATE_CONSUMABLE_FAILURE;
-  payload: ConsumableFailurePayload;
 };
 //PUT
 export interface UpdateConsumableRequest {
@@ -72,7 +64,6 @@ export type UpdateConsumableSuccess = {
 };
 export type UpdateConsumableFailure = {
   type: typeof consumableConst.UPDATE_CONSUMABLE_FAILURE;
-  payload: ConsumableFailurePayload;
 };
 //REMOVE
 export interface RemoveConsumableRequest {
@@ -84,7 +75,6 @@ export type RemoveConsumableSuccess = {
 };
 export type RemoveConsumableFailure = {
   type: typeof consumableConst.REMOVE_CONSUMABLE_FAILURE;
-  payload: ConsumableFailurePayload;
 };
 
 //CLIENT ACTION TYPES

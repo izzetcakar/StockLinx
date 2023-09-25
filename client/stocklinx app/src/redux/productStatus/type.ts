@@ -5,8 +5,6 @@ export interface ProductStatusState {
   productStatus: IProductStatus | null;
   productStatuses: IProductStatus[];
   selectData: SelectData[];
-  pending: boolean;
-  error: string | null;
 }
 
 export interface ProductStatusSucccessPayload {
@@ -14,9 +12,6 @@ export interface ProductStatusSucccessPayload {
 }
 export interface ProductStatusesSucccessPayload {
   productStatuses: IProductStatus[];
-}
-export interface ProductStatusFailurePayload {
-  error: string;
 }
 export interface ProductStatusRequestPayload {
   id: string;
@@ -35,7 +30,6 @@ export type FetchProductStatusesSuccess = {
 };
 export type FetchProductStatusesFailure = {
   type: typeof productStatusConst.FETCH_PRODUCTSTATUSES_FAILURE;
-  payload: ProductStatusFailurePayload;
 };
 //GET:/ID
 export interface FetchProductStatusRequest {
@@ -48,7 +42,6 @@ export type FetchProductStatusSuccess = {
 };
 export type FetchProductStatusFailure = {
   type: typeof productStatusConst.FETCH_PRODUCTSTATUS_FAILURE;
-  payload: ProductStatusFailurePayload;
 };
 //POST
 export interface CreateProductStatusRequest {
@@ -60,7 +53,6 @@ export type CreateProductStatusSuccess = {
 };
 export type CreateProductStatusFailure = {
   type: typeof productStatusConst.CREATE_PRODUCTSTATUS_FAILURE;
-  payload: ProductStatusFailurePayload;
 };
 //PUT
 export interface UpdateProductStatusRequest {
@@ -72,7 +64,6 @@ export type UpdateProductStatusSuccess = {
 };
 export type UpdateProductStatusFailure = {
   type: typeof productStatusConst.UPDATE_PRODUCTSTATUS_FAILURE;
-  payload: ProductStatusFailurePayload;
 };
 //REMOVE
 export interface RemoveProductStatusRequest {
@@ -84,7 +75,6 @@ export type RemoveProductStatusSuccess = {
 };
 export type RemoveProductStatusFailure = {
   type: typeof productStatusConst.REMOVE_PRODUCTSTATUS_FAILURE;
-  payload: ProductStatusFailurePayload;
 };
 
 //CLIENT ACTION TYPES

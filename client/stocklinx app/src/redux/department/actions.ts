@@ -12,7 +12,6 @@ import {
   DepartmentsSucccessPayload,
   FetchDepartmentsSuccess,
   FetchDepartmentFailure,
-  DepartmentFailurePayload,
   FetchDepartmentRequest,
   FetchDepartmentSuccess,
   UpdateDepartmentFailure,
@@ -37,11 +36,8 @@ const getAllSuccess = (
   type: departmentConst.FETCH_DEPARTMENTS_SUCCESS,
   payload,
 });
-const getAllFailure = (
-  payload: DepartmentFailurePayload
-): FetchDepartmentsFailure => ({
+const getAllFailure = (): FetchDepartmentsFailure => ({
   type: departmentConst.FETCH_DEPARTMENTS_FAILURE,
-  payload,
 });
 
 //GET:/ID
@@ -55,11 +51,8 @@ const getSuccess = (
   type: departmentConst.FETCH_DEPARTMENT_SUCCESS,
   payload,
 });
-const getFailure = (
-  payload: DepartmentFailurePayload
-): FetchDepartmentFailure => ({
+const getFailure = (): FetchDepartmentFailure => ({
   type: departmentConst.FETCH_DEPARTMENT_FAILURE,
-  payload,
 });
 
 //POST
@@ -72,11 +65,8 @@ const create = (
 const createSuccess = (): CreateDepartmentSuccess => ({
   type: departmentConst.CREATE_DEPARTMENT_SUCCESS,
 });
-const createFailure = (
-  payload: DepartmentFailurePayload
-): CreateDepartmentFailure => ({
+const createFailure = (): CreateDepartmentFailure => ({
   type: departmentConst.CREATE_DEPARTMENT_FAILURE,
-  payload,
 });
 
 //PUT
@@ -89,11 +79,8 @@ const update = (
 const updateSuccess = (): UpdateDepartmentSuccess => ({
   type: departmentConst.UPDATE_DEPARTMENT_SUCCESS,
 });
-const updateFailure = (
-  payload: DepartmentFailurePayload
-): UpdateDepartmentFailure => ({
+const updateFailure = (): UpdateDepartmentFailure => ({
   type: departmentConst.UPDATE_DEPARTMENT_FAILURE,
-  payload,
 });
 
 //REMOVE
@@ -106,11 +93,8 @@ const remove = (
 const removeSuccess = (): RemoveDepartmentSuccess => ({
   type: departmentConst.REMOVE_DEPARTMENT_SUCCESS,
 });
-const removeFailure = (
-  payload: DepartmentFailurePayload
-): RemoveDepartmentFailure => ({
+const removeFailure = (): RemoveDepartmentFailure => ({
   type: departmentConst.REMOVE_DEPARTMENT_FAILURE,
-  payload,
 });
 
 //CLIENT ACTIONS

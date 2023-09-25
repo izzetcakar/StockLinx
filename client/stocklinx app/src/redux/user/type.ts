@@ -5,8 +5,6 @@ export interface UserState {
   user: IUser | null;
   users: IUser[];
   selectData: SelectData[];
-  pending: boolean;
-  error: string | null;
 }
 
 export interface FetchUserSucccessPayload {
@@ -14,9 +12,6 @@ export interface FetchUserSucccessPayload {
 }
 export interface FetchUsersSucccessPayload {
   users: IUser[];
-}
-export interface FetchUserFailurePayload {
-  error: string;
 }
 export interface SignInSuccessPayload {
   token: string;
@@ -35,7 +30,6 @@ export type FetchUsersSuccess = {
 };
 export type FetchUsersFailure = {
   type: typeof userConst.FETCH_USERS_FAILURE;
-  payload: FetchUserFailurePayload;
 };
 
 export interface GetWithTokenRequest {
@@ -47,7 +41,6 @@ export type GetWithTokenSuccess = {
 };
 export type GetWithTokenFailure = {
   type: typeof userConst.GET_WITH_TOKEN_FAILURE;
-  payload: FetchUserFailurePayload;
 };
 
 //GET:/ID
@@ -60,7 +53,6 @@ export type FetchUsersuccess = {
 };
 export type FetchUserFailure = {
   type: typeof userConst.FETCH_USER_FAILURE;
-  payload: FetchUserFailurePayload;
 };
 
 //POST
@@ -72,7 +64,6 @@ export type CreateUsersuccess = {
 };
 export type CreateUserFailure = {
   type: typeof userConst.CREATE_USER_FAILURE;
-  payload: FetchUserFailurePayload;
 };
 
 export interface SignInRequest {
@@ -84,7 +75,6 @@ export type SignInSuccess = {
 };
 export type SignInFailure = {
   type: typeof userConst.SIGN_IN_FAILURE;
-  payload: FetchUserFailurePayload;
 };
 
 //PUT
@@ -96,7 +86,6 @@ export type UpdateUsersuccess = {
 };
 export type UpdateUserFailure = {
   type: typeof userConst.UPDATE_USER_FAILURE;
-  payload: FetchUserFailurePayload;
 };
 
 //REMOVE
@@ -108,7 +97,6 @@ export type RemoveUsersuccess = {
 };
 export type RemoveUserFailure = {
   type: typeof userConst.REMOVE_USER_FAILURE;
-  payload: FetchUserFailurePayload;
 };
 
 export type UserActions =

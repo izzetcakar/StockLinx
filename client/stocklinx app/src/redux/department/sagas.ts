@@ -27,11 +27,7 @@ function* fetchDepartmentsSaga() {
       );
     }
   } catch (e) {
-    yield put(
-      departmentActions.getAllFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* fetchDepartmentSaga(action: FetchDepartmentRequest) {
@@ -50,11 +46,7 @@ function* fetchDepartmentSaga(action: FetchDepartmentRequest) {
       );
     }
   } catch (e) {
-    yield put(
-      departmentActions.getFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* createDepartmentSaga(action: UpdateDepartmentRequest) {
@@ -69,11 +61,7 @@ function* createDepartmentSaga(action: UpdateDepartmentRequest) {
       yield put(departmentActions.createSuccess());
     }
   } catch (e) {
-    yield put(
-      departmentActions.createFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* updateDepartmentSaga(action: UpdateDepartmentRequest) {
@@ -88,11 +76,7 @@ function* updateDepartmentSaga(action: UpdateDepartmentRequest) {
       yield put(departmentActions.updateSuccess());
     }
   } catch (e) {
-    yield put(
-      departmentActions.updateFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* removeDepartmentSaga(action: FetchDepartmentRequest) {
@@ -107,11 +91,7 @@ function* removeDepartmentSaga(action: FetchDepartmentRequest) {
       yield put(departmentActions.removeSuccess());
     }
   } catch (e) {
-    yield put(
-      departmentActions.removeFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 

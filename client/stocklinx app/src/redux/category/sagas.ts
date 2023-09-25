@@ -27,11 +27,7 @@ function* fetchCategoriesSaga() {
       );
     }
   } catch (e) {
-    yield put(
-      categoryActions.getAllFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* fetchCategorySaga(action: FetchCategoryRequest) {
@@ -50,11 +46,7 @@ function* fetchCategorySaga(action: FetchCategoryRequest) {
       );
     }
   } catch (e) {
-    yield put(
-      categoryActions.getFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* createCategorySaga(action: UpdateCategoryRequest) {
@@ -69,11 +61,7 @@ function* createCategorySaga(action: UpdateCategoryRequest) {
       yield put(categoryActions.createSuccess());
     }
   } catch (e) {
-    yield put(
-      categoryActions.createFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* updateCategorySaga(action: UpdateCategoryRequest) {
@@ -88,11 +76,7 @@ function* updateCategorySaga(action: UpdateCategoryRequest) {
       yield put(categoryActions.updateSuccess());
     }
   } catch (e) {
-    yield put(
-      categoryActions.updateFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* removeCategorySaga(action: FetchCategoryRequest) {
@@ -107,11 +91,7 @@ function* removeCategorySaga(action: FetchCategoryRequest) {
       yield put(categoryActions.removeSuccess());
     }
   } catch (e) {
-    yield put(
-      categoryActions.removeFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 

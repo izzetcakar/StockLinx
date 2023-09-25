@@ -5,8 +5,6 @@ export interface CategoryState {
   category: ICategory | null;
   categories: ICategory[];
   selectData: SelectData[];
-  pending: boolean;
-  error: string | null;
 }
 
 export interface CategorySucccessPayload {
@@ -14,9 +12,6 @@ export interface CategorySucccessPayload {
 }
 export interface CategoriesSucccessPayload {
   categories: ICategory[];
-}
-export interface CategoryFailurePayload {
-  error: string;
 }
 export interface CategoryRequestPayload {
   id: string;
@@ -35,7 +30,6 @@ export type FetchCategoriesSuccess = {
 };
 export type FetchCategoriesFailure = {
   type: typeof categoryConst.FETCH_CATEGORIES_FAILURE;
-  payload: CategoryFailurePayload;
 };
 //GET:/ID
 export interface FetchCategoryRequest {
@@ -48,7 +42,6 @@ export type FetchCategorySuccess = {
 };
 export type FetchCategoryFailure = {
   type: typeof categoryConst.FETCH_CATEGORY_FAILURE;
-  payload: CategoryFailurePayload;
 };
 //POST
 export interface CreateCategoryRequest {
@@ -60,7 +53,6 @@ export type CreateCategorySuccess = {
 };
 export type CreateCategoryFailure = {
   type: typeof categoryConst.CREATE_CATEGORY_FAILURE;
-  payload: CategoryFailurePayload;
 };
 //PUT
 export interface UpdateCategoryRequest {
@@ -72,7 +64,6 @@ export type UpdateCategorySuccess = {
 };
 export type UpdateCategoryFailure = {
   type: typeof categoryConst.UPDATE_CATEGORY_FAILURE;
-  payload: CategoryFailurePayload;
 };
 //REMOVE
 export interface RemoveCategoryRequest {
@@ -84,7 +75,6 @@ export type RemoveCategorySuccess = {
 };
 export type RemoveCategoryFailure = {
   type: typeof categoryConst.REMOVE_CATEGORY_FAILURE;
-  payload: CategoryFailurePayload;
 };
 
 //CLIENT ACTION TYPES

@@ -12,7 +12,6 @@ import {
   ComponentsSucccessPayload,
   FetchComponentsSuccess,
   FetchComponentFailure,
-  ComponentFailurePayload,
   FetchComponentRequest,
   FetchComponentSuccess,
   UpdateComponentFailure,
@@ -37,11 +36,8 @@ const getAllSuccess = (
   type: componentConst.FETCH_COMPONENTS_SUCCESS,
   payload,
 });
-const getAllFailure = (
-  payload: ComponentFailurePayload
-): FetchComponentsFailure => ({
+const getAllFailure = (): FetchComponentsFailure => ({
   type: componentConst.FETCH_COMPONENTS_FAILURE,
-  payload,
 });
 
 //GET:/ID
@@ -55,11 +51,8 @@ const getSuccess = (
   type: componentConst.FETCH_COMPONENT_SUCCESS,
   payload,
 });
-const getFailure = (
-  payload: ComponentFailurePayload
-): FetchComponentFailure => ({
+const getFailure = (): FetchComponentFailure => ({
   type: componentConst.FETCH_COMPONENT_FAILURE,
-  payload,
 });
 
 //POST
@@ -72,11 +65,8 @@ const create = (
 const createSuccess = (): CreateComponentSuccess => ({
   type: componentConst.CREATE_COMPONENT_SUCCESS,
 });
-const createFailure = (
-  payload: ComponentFailurePayload
-): CreateComponentFailure => ({
+const createFailure = (): CreateComponentFailure => ({
   type: componentConst.CREATE_COMPONENT_FAILURE,
-  payload,
 });
 
 //PUT
@@ -89,11 +79,8 @@ const update = (
 const updateSuccess = (): UpdateComponentSuccess => ({
   type: componentConst.UPDATE_COMPONENT_SUCCESS,
 });
-const updateFailure = (
-  payload: ComponentFailurePayload
-): UpdateComponentFailure => ({
+const updateFailure = (): UpdateComponentFailure => ({
   type: componentConst.UPDATE_COMPONENT_FAILURE,
-  payload,
 });
 
 //REMOVE
@@ -104,11 +91,8 @@ const remove = (payload: ComponentRequestPayload): RemoveComponentRequest => ({
 const removeSuccess = (): RemoveComponentSuccess => ({
   type: componentConst.REMOVE_COMPONENT_SUCCESS,
 });
-const removeFailure = (
-  payload: ComponentFailurePayload
-): RemoveComponentFailure => ({
+const removeFailure = (): RemoveComponentFailure => ({
   type: componentConst.REMOVE_COMPONENT_FAILURE,
-  payload,
 });
 
 //CLIENT ACTIONS

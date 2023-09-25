@@ -5,8 +5,6 @@ export interface LicenseState {
   license: ILicense | null;
   licenses: ILicense[];
   selectData: SelectData[];
-  pending: boolean;
-  error: string | null;
 }
 
 export interface LicenseSucccessPayload {
@@ -14,9 +12,6 @@ export interface LicenseSucccessPayload {
 }
 export interface LicensesSucccessPayload {
   licenses: ILicense[];
-}
-export interface LicenseFailurePayload {
-  error: string;
 }
 export interface LicenseRequestPayload {
   id: string;
@@ -35,7 +30,6 @@ export type FetchLicensesSuccess = {
 };
 export type FetchLicensesFailure = {
   type: typeof licenseConst.FETCH_LICENSES_FAILURE;
-  payload: LicenseFailurePayload;
 };
 //GET:/ID
 export interface FetchLicenseRequest {
@@ -48,7 +42,6 @@ export type FetchLicenseSuccess = {
 };
 export type FetchLicenseFailure = {
   type: typeof licenseConst.FETCH_LICENSE_FAILURE;
-  payload: LicenseFailurePayload;
 };
 //POST
 export interface CreateLicenseRequest {
@@ -60,7 +53,6 @@ export type CreateLicenseSuccess = {
 };
 export type CreateLicenseFailure = {
   type: typeof licenseConst.CREATE_LICENSE_FAILURE;
-  payload: LicenseFailurePayload;
 };
 //PUT
 export interface UpdateLicenseRequest {
@@ -72,7 +64,6 @@ export type UpdateLicenseSuccess = {
 };
 export type UpdateLicenseFailure = {
   type: typeof licenseConst.UPDATE_LICENSE_FAILURE;
-  payload: LicenseFailurePayload;
 };
 //REMOVE
 export interface RemoveLicenseRequest {
@@ -84,7 +75,6 @@ export type RemoveLicenseSuccess = {
 };
 export type RemoveLicenseFailure = {
   type: typeof licenseConst.REMOVE_LICENSE_FAILURE;
-  payload: LicenseFailurePayload;
 };
 
 //CLIENT ACTION TYPES

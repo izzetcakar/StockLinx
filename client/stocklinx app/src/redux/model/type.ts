@@ -5,8 +5,6 @@ export interface ModelState {
   model: IModel | null;
   models: IModel[];
   selectData: SelectData[];
-  pending: boolean;
-  error: string | null;
 }
 
 export interface ModelSucccessPayload {
@@ -14,9 +12,6 @@ export interface ModelSucccessPayload {
 }
 export interface ModelsSucccessPayload {
   models: IModel[];
-}
-export interface ModelFailurePayload {
-  error: string;
 }
 export interface ModelRequestPayload {
   id: string;
@@ -35,7 +30,6 @@ export type FetchModelsSuccess = {
 };
 export type FetchModelsFailure = {
   type: typeof modelConst.FETCH_MODELS_FAILURE;
-  payload: ModelFailurePayload;
 };
 //GET:/ID
 export interface FetchModelRequest {
@@ -48,7 +42,6 @@ export type FetchModelSuccess = {
 };
 export type FetchModelFailure = {
   type: typeof modelConst.FETCH_MODEL_FAILURE;
-  payload: ModelFailurePayload;
 };
 //POST
 export interface CreateModelRequest {
@@ -60,7 +53,6 @@ export type CreateModelSuccess = {
 };
 export type CreateModelFailure = {
   type: typeof modelConst.CREATE_MODEL_FAILURE;
-  payload: ModelFailurePayload;
 };
 //PUT
 export interface UpdateModelRequest {
@@ -72,7 +64,6 @@ export type UpdateModelSuccess = {
 };
 export type UpdateModelFailure = {
   type: typeof modelConst.UPDATE_MODEL_FAILURE;
-  payload: ModelFailurePayload;
 };
 //REMOVE
 export interface RemoveModelRequest {
@@ -84,7 +75,6 @@ export type RemoveModelSuccess = {
 };
 export type RemoveModelFailure = {
   type: typeof modelConst.REMOVE_MODEL_FAILURE;
-  payload: ModelFailurePayload;
 };
 
 //CLIENT ACTION TYPES

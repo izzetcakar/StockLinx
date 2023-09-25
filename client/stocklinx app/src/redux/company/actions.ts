@@ -12,7 +12,6 @@ import {
   CompaniesSucccessPayload,
   FetchCompaniesSuccess,
   FetchCompanyFailure,
-  CompanyFailurePayload,
   FetchCompanyRequest,
   FetchCompanySuccess,
   UpdateCompanyFailure,
@@ -37,11 +36,8 @@ const getAllSuccess = (
   type: companyConst.FETCH_COMPANIES_SUCCESS,
   payload,
 });
-const getAllFailure = (
-  payload: CompanyFailurePayload
-): FetchCompaniesFailure => ({
+const getAllFailure = (): FetchCompaniesFailure => ({
   type: companyConst.FETCH_COMPANIES_FAILURE,
-  payload,
 });
 
 //GET:/ID
@@ -53,9 +49,8 @@ const getSuccess = (payload: CompanySucccessPayload): FetchCompanySuccess => ({
   type: companyConst.FETCH_COMPANY_SUCCESS,
   payload,
 });
-const getFailure = (payload: CompanyFailurePayload): FetchCompanyFailure => ({
+const getFailure = (): FetchCompanyFailure => ({
   type: companyConst.FETCH_COMPANY_FAILURE,
-  payload,
 });
 
 //POST
@@ -68,11 +63,8 @@ const create = (
 const createSuccess = (): CreateCompanySuccess => ({
   type: companyConst.CREATE_COMPANY_SUCCESS,
 });
-const createFailure = (
-  payload: CompanyFailurePayload
-): CreateCompanyFailure => ({
+const createFailure = (): CreateCompanyFailure => ({
   type: companyConst.CREATE_COMPANY_FAILURE,
-  payload,
 });
 
 //PUT
@@ -85,11 +77,8 @@ const update = (
 const updateSuccess = (): UpdateCompanySuccess => ({
   type: companyConst.UPDATE_COMPANY_SUCCESS,
 });
-const updateFailure = (
-  payload: CompanyFailurePayload
-): UpdateCompanyFailure => ({
+const updateFailure = (): UpdateCompanyFailure => ({
   type: companyConst.UPDATE_COMPANY_FAILURE,
-  payload,
 });
 
 //REMOVE
@@ -100,11 +89,8 @@ const remove = (payload: CompanyRequestPayload): RemoveCompanyRequest => ({
 const removeSuccess = (): RemoveCompanySuccess => ({
   type: companyConst.REMOVE_COMPANY_SUCCESS,
 });
-const removeFailure = (
-  payload: CompanyFailurePayload
-): RemoveCompanyFailure => ({
+const removeFailure = (): RemoveCompanyFailure => ({
   type: companyConst.REMOVE_COMPANY_FAILURE,
-  payload,
 });
 
 //CLIENT ACTIONS

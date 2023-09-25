@@ -12,7 +12,6 @@ import {
   CategoriesSucccessPayload,
   FetchCategoriesSuccess,
   FetchCategoryFailure,
-  CategoryFailurePayload,
   FetchCategoryRequest,
   FetchCategorySuccess,
   UpdateCategoryFailure,
@@ -37,11 +36,8 @@ const getAllSuccess = (
   type: categoryConst.FETCH_CATEGORIES_SUCCESS,
   payload,
 });
-const getAllFailure = (
-  payload: CategoryFailurePayload
-): FetchCategoriesFailure => ({
+const getAllFailure = (): FetchCategoriesFailure => ({
   type: categoryConst.FETCH_CATEGORIES_FAILURE,
-  payload,
 });
 
 //GET:/ID
@@ -55,9 +51,8 @@ const getSuccess = (
   type: categoryConst.FETCH_CATEGORY_SUCCESS,
   payload,
 });
-const getFailure = (payload: CategoryFailurePayload): FetchCategoryFailure => ({
+const getFailure = (): FetchCategoryFailure => ({
   type: categoryConst.FETCH_CATEGORY_FAILURE,
-  payload,
 });
 
 //POST
@@ -70,11 +65,8 @@ const create = (
 const createSuccess = (): CreateCategorySuccess => ({
   type: categoryConst.CREATE_CATEGORY_SUCCESS,
 });
-const createFailure = (
-  payload: CategoryFailurePayload
-): CreateCategoryFailure => ({
+const createFailure = (): CreateCategoryFailure => ({
   type: categoryConst.CREATE_CATEGORY_FAILURE,
-  payload,
 });
 
 //PUT
@@ -87,11 +79,8 @@ const update = (
 const updateSuccess = (): UpdateCategorySuccess => ({
   type: categoryConst.UPDATE_CATEGORY_SUCCESS,
 });
-const updateFailure = (
-  payload: CategoryFailurePayload
-): UpdateCategoryFailure => ({
+const updateFailure = (): UpdateCategoryFailure => ({
   type: categoryConst.UPDATE_CATEGORY_FAILURE,
-  payload,
 });
 
 //REMOVE
@@ -102,11 +91,8 @@ const remove = (payload: CategoryRequestPayload): RemoveCategoryRequest => ({
 const removeSuccess = (): RemoveCategorySuccess => ({
   type: categoryConst.REMOVE_CATEGORY_SUCCESS,
 });
-const removeFailure = (
-  payload: CategoryFailurePayload
-): RemoveCategoryFailure => ({
+const removeFailure = (): RemoveCategoryFailure => ({
   type: categoryConst.REMOVE_CATEGORY_FAILURE,
-  payload,
 });
 
 //CLIENT ACTIONS

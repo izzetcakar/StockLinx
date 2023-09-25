@@ -5,8 +5,6 @@ export interface ManufacturerState {
   manufacturer: IManufacturer | null;
   manufacturers: IManufacturer[];
   selectData: SelectData[];
-  pending: boolean;
-  error: string | null;
 }
 
 export interface ManufacturerSucccessPayload {
@@ -14,9 +12,6 @@ export interface ManufacturerSucccessPayload {
 }
 export interface ManufacturersSucccessPayload {
   manufacturers: IManufacturer[];
-}
-export interface ManufacturerFailurePayload {
-  error: string;
 }
 export interface ManufacturerRequestPayload {
   id: string;
@@ -35,7 +30,6 @@ export type FetchManufacturersSuccess = {
 };
 export type FetchManufacturersFailure = {
   type: typeof manufacturerConst.FETCH_MANUFACTURERS_FAILURE;
-  payload: ManufacturerFailurePayload;
 };
 //GET:/ID
 export interface FetchManufacturerRequest {
@@ -48,7 +42,6 @@ export type FetchManufacturerSuccess = {
 };
 export type FetchManufacturerFailure = {
   type: typeof manufacturerConst.FETCH_MANUFACTURER_FAILURE;
-  payload: ManufacturerFailurePayload;
 };
 //POST
 export interface CreateManufacturerRequest {
@@ -60,7 +53,6 @@ export type CreateManufacturerSuccess = {
 };
 export type CreateManufacturerFailure = {
   type: typeof manufacturerConst.CREATE_MANUFACTURER_FAILURE;
-  payload: ManufacturerFailurePayload;
 };
 //PUT
 export interface UpdateManufacturerRequest {
@@ -72,7 +64,6 @@ export type UpdateManufacturerSuccess = {
 };
 export type UpdateManufacturerFailure = {
   type: typeof manufacturerConst.UPDATE_MANUFACTURER_FAILURE;
-  payload: ManufacturerFailurePayload;
 };
 //REMOVE
 export interface RemoveManufacturerRequest {
@@ -84,7 +75,6 @@ export type RemoveManufacturerSuccess = {
 };
 export type RemoveManufacturerFailure = {
   type: typeof manufacturerConst.REMOVE_MANUFACTURER_FAILURE;
-  payload: ManufacturerFailurePayload;
 };
 
 //CLIENT ACTION TYPES

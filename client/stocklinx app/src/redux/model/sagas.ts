@@ -27,11 +27,7 @@ function* fetchModelsSaga() {
       );
     }
   } catch (e) {
-    yield put(
-      modelActions.getAllFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* fetchModelSaga(action: FetchModelRequest) {
@@ -50,17 +46,13 @@ function* fetchModelSaga(action: FetchModelRequest) {
       );
     }
   } catch (e) {
-    yield put(
-      modelActions.getFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* createModelSaga(action: UpdateModelRequest) {
   try {
     const { message, success }: IResponse = yield call(
-      createModel,
+      modelRequests.create,
       action.payload.model
     );
     if (success !== undefined && !success) {
@@ -69,11 +61,7 @@ function* createModelSaga(action: UpdateModelRequest) {
       yield put(modelActions.createSuccess());
     }
   } catch (e) {
-    yield put(
-      modelActions.createFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* updateModelSaga(action: UpdateModelRequest) {
@@ -88,11 +76,7 @@ function* updateModelSaga(action: UpdateModelRequest) {
       yield put(modelActions.updateSuccess());
     }
   } catch (e) {
-    yield put(
-      modelActions.updateFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 function* removeModelSaga(action: FetchModelRequest) {
@@ -107,11 +91,7 @@ function* removeModelSaga(action: FetchModelRequest) {
       yield put(modelActions.removeSuccess());
     }
   } catch (e) {
-    yield put(
-      modelActions.removeFailure({
-        error: e.message as string,
-      })
-    );
+    console.log(e);
   }
 }
 

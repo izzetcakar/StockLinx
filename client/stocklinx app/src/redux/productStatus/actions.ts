@@ -12,7 +12,6 @@ import {
   ProductStatusesSucccessPayload,
   FetchProductStatusesSuccess,
   FetchProductStatusFailure,
-  ProductStatusFailurePayload,
   FetchProductStatusRequest,
   FetchProductStatusSuccess,
   UpdateProductStatusFailure,
@@ -37,11 +36,8 @@ const getAllSuccess = (
   type: productStatusConst.FETCH_PRODUCTSTATUSES_SUCCESS,
   payload,
 });
-const getAllFailure = (
-  payload: ProductStatusFailurePayload
-): FetchProductStatusesFailure => ({
+const getAllFailure = (): FetchProductStatusesFailure => ({
   type: productStatusConst.FETCH_PRODUCTSTATUSES_FAILURE,
-  payload,
 });
 
 //GET:/ID
@@ -57,11 +53,8 @@ const getSuccess = (
   type: productStatusConst.FETCH_PRODUCTSTATUS_SUCCESS,
   payload,
 });
-const getFailure = (
-  payload: ProductStatusFailurePayload
-): FetchProductStatusFailure => ({
+const getFailure = (): FetchProductStatusFailure => ({
   type: productStatusConst.FETCH_PRODUCTSTATUS_FAILURE,
-  payload,
 });
 
 //POST
@@ -74,11 +67,8 @@ const create = (
 const createSuccess = (): CreateProductStatusSuccess => ({
   type: productStatusConst.CREATE_PRODUCTSTATUS_SUCCESS,
 });
-const createFailure = (
-  payload: ProductStatusFailurePayload
-): CreateProductStatusFailure => ({
+const createFailure = (): CreateProductStatusFailure => ({
   type: productStatusConst.CREATE_PRODUCTSTATUS_FAILURE,
-  payload,
 });
 
 //PUT
@@ -91,11 +81,8 @@ const update = (
 const updateSuccess = (): UpdateProductStatusSuccess => ({
   type: productStatusConst.UPDATE_PRODUCTSTATUS_SUCCESS,
 });
-const updateFailure = (
-  payload: ProductStatusFailurePayload
-): UpdateProductStatusFailure => ({
+const updateFailure = (): UpdateProductStatusFailure => ({
   type: productStatusConst.UPDATE_PRODUCTSTATUS_FAILURE,
-  payload,
 });
 
 //REMOVE
@@ -108,11 +95,8 @@ const remove = (
 const removeSuccess = (): RemoveProductStatusSuccess => ({
   type: productStatusConst.REMOVE_PRODUCTSTATUS_SUCCESS,
 });
-const removeFailure = (
-  payload: ProductStatusFailurePayload
-): RemoveProductStatusFailure => ({
+const removeFailure = (): RemoveProductStatusFailure => ({
   type: productStatusConst.REMOVE_PRODUCTSTATUS_FAILURE,
-  payload,
 });
 
 //CLIENT ACTIONS

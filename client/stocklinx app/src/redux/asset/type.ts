@@ -5,8 +5,6 @@ export interface AssetState {
   asset: IAsset | null;
   assets: IAsset[];
   selectData: SelectData[];
-  pending: boolean;
-  error: string | null;
 }
 
 export interface AssetSucccessPayload {
@@ -14,9 +12,6 @@ export interface AssetSucccessPayload {
 }
 export interface AssetsSucccessPayload {
   assets: IAsset[];
-}
-export interface AssetFailurePayload {
-  error: string;
 }
 export interface AssetRequestPayload {
   id: string;
@@ -35,7 +30,6 @@ export type FetchAssetsSuccess = {
 };
 export type FetchAssetsFailure = {
   type: typeof assetConst.FETCH_ASSETS_FAILURE;
-  payload: AssetFailurePayload;
 };
 //GET:/ID
 export interface FetchAssetRequest {
@@ -48,7 +42,6 @@ export type FetchAssetSuccess = {
 };
 export type FetchAssetFailure = {
   type: typeof assetConst.FETCH_ASSET_FAILURE;
-  payload: AssetFailurePayload;
 };
 //POST
 export interface CreateAssetRequest {
@@ -60,7 +53,6 @@ export type CreateAssetSuccess = {
 };
 export type CreateAssetFailure = {
   type: typeof assetConst.CREATE_ASSET_FAILURE;
-  payload: AssetFailurePayload;
 };
 //PUT
 export interface UpdateAssetRequest {
@@ -72,7 +64,6 @@ export type UpdateAssetSuccess = {
 };
 export type UpdateAssetFailure = {
   type: typeof assetConst.UPDATE_ASSET_FAILURE;
-  payload: AssetFailurePayload;
 };
 //REMOVE
 export interface RemoveAssetRequest {
@@ -84,7 +75,6 @@ export type RemoveAssetSuccess = {
 };
 export type RemoveAssetFailure = {
   type: typeof assetConst.REMOVE_ASSET_FAILURE;
-  payload: AssetFailurePayload;
 };
 
 //CLIENT ACTION TYPES

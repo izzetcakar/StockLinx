@@ -5,8 +5,6 @@ export interface AccessoryState {
   accessory: IAccessory | null;
   accessories: IAccessory[];
   selectData: SelectData[];
-  pending: boolean;
-  error: string | null;
 }
 
 export interface AccessorySucccessPayload {
@@ -14,9 +12,6 @@ export interface AccessorySucccessPayload {
 }
 export interface AccessoriesSucccessPayload {
   accessories: IAccessory[];
-}
-export interface AccessoryFailurePayload {
-  error: string;
 }
 export interface AccessoryRequestPayload {
   id: string;
@@ -35,7 +30,6 @@ export type FetchAccessoriesSuccess = {
 };
 export type FetchAccessoriesFailure = {
   type: typeof accessoryConst.FETCH_ACCESSORIES_FAILURE;
-  payload: AccessoryFailurePayload;
 };
 //GET:/ID
 export interface FetchAccessoryRequest {
@@ -48,7 +42,6 @@ export type FetchAccessorySuccess = {
 };
 export type FetchAccessoryFailure = {
   type: typeof accessoryConst.FETCH_ACCESSORY_FAILURE;
-  payload: AccessoryFailurePayload;
 };
 //POST
 export interface CreateAccessoryRequest {
@@ -60,7 +53,6 @@ export type CreateAccessorySuccess = {
 };
 export type CreateAccessoryFailure = {
   type: typeof accessoryConst.CREATE_ACCESSORY_FAILURE;
-  payload: AccessoryFailurePayload;
 };
 //PUT
 export interface UpdateAccessoryRequest {
@@ -72,7 +64,6 @@ export type UpdateAccessorySuccess = {
 };
 export type UpdateAccessoryFailure = {
   type: typeof accessoryConst.UPDATE_ACCESSORY_FAILURE;
-  payload: AccessoryFailurePayload;
 };
 //REMOVE
 export interface RemoveAccessoryRequest {
@@ -84,7 +75,6 @@ export type RemoveAccessorySuccess = {
 };
 export type RemoveAccessoryFailure = {
   type: typeof accessoryConst.REMOVE_ACCESSORY_FAILURE;
-  payload: AccessoryFailurePayload;
 };
 
 //CLIENT ACTION TYPES

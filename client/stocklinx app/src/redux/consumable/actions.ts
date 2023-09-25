@@ -12,7 +12,6 @@ import {
   ConsumablesSucccessPayload,
   FetchConsumablesSuccess,
   FetchConsumableFailure,
-  ConsumableFailurePayload,
   FetchConsumableRequest,
   FetchConsumableSuccess,
   UpdateConsumableFailure,
@@ -37,11 +36,8 @@ const getAllSuccess = (
   type: consumableConst.FETCH_CONSUMABLES_SUCCESS,
   payload,
 });
-const getAllFailure = (
-  payload: ConsumableFailurePayload
-): FetchConsumablesFailure => ({
+const getAllFailure = (): FetchConsumablesFailure => ({
   type: consumableConst.FETCH_CONSUMABLES_FAILURE,
-  payload,
 });
 
 //GET:/ID
@@ -55,11 +51,8 @@ const getSuccess = (
   type: consumableConst.FETCH_CONSUMABLE_SUCCESS,
   payload,
 });
-const getFailure = (
-  payload: ConsumableFailurePayload
-): FetchConsumableFailure => ({
+const getFailure = (): FetchConsumableFailure => ({
   type: consumableConst.FETCH_CONSUMABLE_FAILURE,
-  payload,
 });
 
 //POST
@@ -72,11 +65,8 @@ const create = (
 const createSuccess = (): CreateConsumableSuccess => ({
   type: consumableConst.CREATE_CONSUMABLE_SUCCESS,
 });
-const createFailure = (
-  payload: ConsumableFailurePayload
-): CreateConsumableFailure => ({
+const createFailure = (): CreateConsumableFailure => ({
   type: consumableConst.CREATE_CONSUMABLE_FAILURE,
-  payload,
 });
 
 //PUT
@@ -89,11 +79,8 @@ const update = (
 const updateSuccess = (): UpdateConsumableSuccess => ({
   type: consumableConst.UPDATE_CONSUMABLE_SUCCESS,
 });
-const updateFailure = (
-  payload: ConsumableFailurePayload
-): UpdateConsumableFailure => ({
+const updateFailure = (): UpdateConsumableFailure => ({
   type: consumableConst.UPDATE_CONSUMABLE_FAILURE,
-  payload,
 });
 
 //REMOVE
@@ -106,11 +93,8 @@ const remove = (
 const removeSuccess = (): RemoveConsumableSuccess => ({
   type: consumableConst.REMOVE_CONSUMABLE_SUCCESS,
 });
-const removeFailure = (
-  payload: ConsumableFailurePayload
-): RemoveConsumableFailure => ({
+const removeFailure = (): RemoveConsumableFailure => ({
   type: consumableConst.REMOVE_CONSUMABLE_FAILURE,
-  payload,
 });
 
 //CLIENT ACTIONS

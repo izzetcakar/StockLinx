@@ -12,7 +12,6 @@ import {
   LicensesSucccessPayload,
   FetchLicensesSuccess,
   FetchLicenseFailure,
-  LicenseFailurePayload,
   FetchLicenseRequest,
   FetchLicenseSuccess,
   UpdateLicenseFailure,
@@ -37,11 +36,8 @@ const getAllSuccess = (
   type: licenseConst.FETCH_LICENSES_SUCCESS,
   payload,
 });
-const getAllFailure = (
-  payload: LicenseFailurePayload
-): FetchLicensesFailure => ({
+const getAllFailure = (): FetchLicensesFailure => ({
   type: licenseConst.FETCH_LICENSES_FAILURE,
-  payload,
 });
 
 //GET:/ID
@@ -53,9 +49,8 @@ const getSuccess = (payload: LicenseSucccessPayload): FetchLicenseSuccess => ({
   type: licenseConst.FETCH_LICENSE_SUCCESS,
   payload,
 });
-const getFailure = (payload: LicenseFailurePayload): FetchLicenseFailure => ({
+const getFailure = (): FetchLicenseFailure => ({
   type: licenseConst.FETCH_LICENSE_FAILURE,
-  payload,
 });
 
 //POST
@@ -68,11 +63,8 @@ const create = (
 const createSuccess = (): CreateLicenseSuccess => ({
   type: licenseConst.CREATE_LICENSE_SUCCESS,
 });
-const createFailure = (
-  payload: LicenseFailurePayload
-): CreateLicenseFailure => ({
+const createFailure = (): CreateLicenseFailure => ({
   type: licenseConst.CREATE_LICENSE_FAILURE,
-  payload,
 });
 
 //PUT
@@ -85,11 +77,8 @@ const update = (
 const updateSuccess = (): UpdateLicenseSuccess => ({
   type: licenseConst.UPDATE_LICENSE_SUCCESS,
 });
-const updateFailure = (
-  payload: LicenseFailurePayload
-): UpdateLicenseFailure => ({
+const updateFailure = (): UpdateLicenseFailure => ({
   type: licenseConst.UPDATE_LICENSE_FAILURE,
-  payload,
 });
 
 //REMOVE
@@ -100,11 +89,8 @@ const remove = (payload: LicenseRequestPayload): RemoveLicenseRequest => ({
 const removeSuccess = (): RemoveLicenseSuccess => ({
   type: licenseConst.REMOVE_LICENSE_SUCCESS,
 });
-const removeFailure = (
-  payload: LicenseFailurePayload
-): RemoveLicenseFailure => ({
+const removeFailure = (): RemoveLicenseFailure => ({
   type: licenseConst.REMOVE_LICENSE_FAILURE,
-  payload,
 });
 
 //CLIENT ACTIONS

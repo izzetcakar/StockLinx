@@ -12,7 +12,6 @@ import {
   AccessoriesSucccessPayload,
   FetchAccessoriesSuccess,
   FetchAccessoryFailure,
-  AccessoryFailurePayload,
   FetchAccessoryRequest,
   FetchAccessorySuccess,
   UpdateAccessoryFailure,
@@ -38,10 +37,8 @@ const getAllSuccess = (
   payload,
 });
 const getAllFailure = (
-  payload: AccessoryFailurePayload
 ): FetchAccessoriesFailure => ({
   type: accessoryConst.FETCH_ACCESSORIES_FAILURE,
-  payload,
 });
 
 //GET:/ID
@@ -56,10 +53,8 @@ const getSuccess = (
   payload,
 });
 const getFailure = (
-  payload: AccessoryFailurePayload
 ): FetchAccessoryFailure => ({
   type: accessoryConst.FETCH_ACCESSORY_FAILURE,
-  payload,
 });
 
 //POST
@@ -73,10 +68,8 @@ const createSuccess = (): CreateAccessorySuccess => ({
   type: accessoryConst.CREATE_ACCESSORY_SUCCESS,
 });
 const createFailure = (
-  payload: AccessoryFailurePayload
 ): CreateAccessoryFailure => ({
   type: accessoryConst.CREATE_ACCESSORY_FAILURE,
-  payload,
 });
 
 //PUT
@@ -90,10 +83,8 @@ const updateSuccess = (): UpdateAccessorySuccess => ({
   type: accessoryConst.UPDATE_ACCESSORY_SUCCESS,
 });
 const updateFailure = (
-  payload: AccessoryFailurePayload
 ): UpdateAccessoryFailure => ({
   type: accessoryConst.UPDATE_ACCESSORY_FAILURE,
-  payload,
 });
 
 //REMOVE
@@ -105,10 +96,8 @@ const removeSuccess = (): RemoveAccessorySuccess => ({
   type: accessoryConst.REMOVE_ACCESSORY_SUCCESS,
 });
 const removeFailure = (
-  payload: AccessoryFailurePayload
 ): RemoveAccessoryFailure => ({
   type: accessoryConst.REMOVE_ACCESSORY_FAILURE,
-  payload,
 });
 
 //CLIENT ACTIONS
