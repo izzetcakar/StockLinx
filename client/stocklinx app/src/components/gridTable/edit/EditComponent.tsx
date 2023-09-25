@@ -5,28 +5,28 @@ import icon_delete from "../../.././assets/icon_trash.png";
 
 
 interface EditComponentProps {
-  datagrid: object[];
-  rowIndex: number;
+  data: object[];
+  index: number;
   onRowUpdate: (row: object) => void;
   onRowRemove: (row: object) => void;
 }
 
 const EditComponent: React.FC<EditComponentProps> = ({
-  datagrid,
-  rowIndex,
+  data,
+  index,
   onRowRemove,
   onRowUpdate,
 }) => {
 
   const onEditHandler = () => {
-    const row = datagrid[rowIndex];
+    const row = data[index];
     if (onRowUpdate) {
       onRowUpdate(row);
     }
   };
 
   const onRemoveHandler = () => {
-    const row = datagrid[rowIndex];
+    const row = data[index];
     if (onRowRemove) {
       onRowRemove(row);
     }
