@@ -2,10 +2,12 @@ import { genericConst } from "./constant";
 
 export interface GenericState {
   loading: number;
+  error: string | null;
 }
 
 export interface GenericPayload {
   loading: number;
+  error: string | null;
 }
 //CLIENT ACTION TYPES
 export interface SetLoading {
@@ -21,9 +23,18 @@ export interface IncreaseLoading {
 export interface DecreaseLoading {
   type: typeof genericConst.DECREASE_LOADING;
 }
+export interface SetError {
+  type: typeof genericConst.SET_ERROR;
+  payload: string | null;
+}
+export interface ClearError {
+  type: typeof genericConst.CLEAR_ERROR;
+}
 
 export type GenericActions =
   | SetLoading
   | ResetLoading
   | IncreaseLoading
-  | DecreaseLoading;
+  | DecreaseLoading
+  | SetError
+  | ClearError;

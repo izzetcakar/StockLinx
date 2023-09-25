@@ -20,10 +20,19 @@ const increaseLoading = (): IncreaseLoading => ({
 const decreaseLoading = (): DecreaseLoading => ({
   type: genericConst.DECREASE_LOADING,
 });
+const setError = (payload: string | null) => ({
+  type: genericConst.SET_ERROR,
+  payload,
+});
+const clearError = () => ({
+  type: genericConst.CLEAR_ERROR,
+});
 
 export const genericActions = {
   setLoading,
   resetLoading,
   increaseLoading,
   decreaseLoading,
+  setError,
+  clearError,
 };
