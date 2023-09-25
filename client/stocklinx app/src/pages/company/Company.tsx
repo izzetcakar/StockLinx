@@ -33,8 +33,9 @@ const Company = () => {
         data={companies}
         columns={useColumns()}
         hasColumnLines={false}
-        enableEdit={true}
         showPageSize={true}
+        enableEdit={true}
+        enableSelection={true}
         refreshData={refreshData}
         onRowInsert={onRowInsert}
         onRowUpdate={onRowUpdate}
