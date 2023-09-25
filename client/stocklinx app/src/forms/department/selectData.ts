@@ -11,12 +11,13 @@ export const useSelectData = (form: UseFormReturnType<IDepartment>) => {
   const locationSelectData = useSelector(
     (state: RootState) => state.location.selectData
   );
-  const selectComponentData: IMantinSelectProps[] = [
+  const selectComponentData: IMantinSelectProps<IDepartment>[] = [
     {
       data: companySelectData,
       value: form.values.companyId || "",
       label: "Company",
       propTag: "companyId",
+      clearable: false,
     },
     {
       data: locationSelectData,

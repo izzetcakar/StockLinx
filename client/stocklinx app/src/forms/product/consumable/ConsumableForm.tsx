@@ -10,6 +10,7 @@ import {
   ScrollArea,
   Flex,
   Textarea,
+  LoadingOverlay,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { DateInput } from "@mantine/dates";
@@ -19,9 +20,10 @@ import { modals } from "@mantine/modals";
 import { IConsumable } from "../../../interfaces/interfaces";
 import { handleImageChange } from "../../functions/formFunctions";
 import MantineSelect from "../../components/MantineSelect";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { consumableActions } from "../../../redux/consumable/actions";
 import { useSelectData } from "./selectData";
+import { RootState } from "../../../redux/rootReducer";
 
 interface ConsumableFormProps {
   consumable?: IConsumable;
@@ -29,6 +31,7 @@ interface ConsumableFormProps {
 
 const ConsumableForm: React.FC<ConsumableFormProps> = ({ consumable }) => {
   const dispatch = useDispatch();
+  const loading = useSelector((state: RootState) => state.generic.loading);
 
   const form = useForm<IConsumable>({
     initialValues: consumable
@@ -85,6 +88,7 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({ consumable }) => {
 
   return (
     <ScrollArea.Autosize type="always" offsetScrollbars mah={600}>
+      <LoadingOverlay visible={loading > 0} />
       <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
         <Flex direction="column" gap={10} mx="auto" maw="auto" px={40}>
           {useSelectData(form).map((selectData) => (
@@ -94,8 +98,12 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({ consumable }) => {
               value={selectData.value}
               label={selectData.label}
               propTag={selectData.propTag}
+              form={form}
             />
-          ))}{" "}
+          ))}
+          <Button onClick={() => console.log(form.values.companyId)}>
+            get
+          </Button>
           <TextInput
             label="Name"
             placeholder="New Name"

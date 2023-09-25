@@ -73,6 +73,7 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({ department }) => {
               value={selectData.value}
               label={selectData.label}
               propTag={selectData.propTag}
+              form={form}
             />
           ))}
           <TextInput

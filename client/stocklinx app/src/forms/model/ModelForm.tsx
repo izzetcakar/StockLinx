@@ -73,6 +73,7 @@ const ModelForm: React.FC<ModelFormProps> = ({ model }) => {
               label={selectData.label}
               propTag={selectData.propTag}
               key={selectData.propTag}
+              form={form}
             />
           ))}
           <TextInput

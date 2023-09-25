@@ -18,7 +18,7 @@ export const useSelectData = (form: UseFormReturnType<IComponent>) => {
     (state: RootState) => state.productStatus.selectData
   );
 
-  const selectComponentData: IMantinSelectProps[] = [
+  const selectComponentData: IMantinSelectProps<IComponent>[] = [
     {
       data: categorySelectData,
       value: form.values.categoryId || "",
@@ -36,6 +36,7 @@ export const useSelectData = (form: UseFormReturnType<IComponent>) => {
       value: form.values.companyId || "",
       label: "Company",
       propTag: "companyId",
+      clearable: false,
     },
     {
       data: productStatusSelectData,

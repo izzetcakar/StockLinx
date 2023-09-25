@@ -24,7 +24,7 @@ export const useSelectData = (form: UseFormReturnType<IAsset>) => {
     (state: RootState) => state.productStatus.selectData
   );
 
-  const selectComponentData: IMantinSelectProps[] = [
+  const selectComponentData: IMantinSelectProps<IAsset>[] = [
     {
       data: manufacturerSelectData,
       value: form.values.manufacturerId || "",
@@ -54,6 +54,7 @@ export const useSelectData = (form: UseFormReturnType<IAsset>) => {
       value: form.values.companyId || "",
       label: "Company",
       propTag: "companyId",
+      clearable: false,
     },
     {
       data: productStatusSelectData,

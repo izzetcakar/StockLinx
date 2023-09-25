@@ -78,6 +78,7 @@ const SupplierForm: React.FC<SupplierFormProps> = ({ supplier }) => {
             value={form.values.locationId || ""}
             label="Location"
             propTag="locationId"
+            form={form}
           />
           <TextInput
             label="Name"

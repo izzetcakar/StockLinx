@@ -5,8 +5,8 @@ import {
 } from "../interfaces/interfaces";
 import { Box, Group, Select, Text, FocusTrap } from "@mantine/core";
 
-const MantineSelect: React.FC<IMantinSelectProps> = (props) => {
-  const { data, value, label, propTag } = props;
+const MantineSelect: React.FC<IMantinSelectProps<T>> = (props) => {
+  const { data, value, label, propTag, form, clearable = false } = props;
 
   const SelectItem = React.forwardRef<HTMLDivElement, IMantineSelectData>(
     ({ label, ...others }: IMantineSelectData, ref) => (
@@ -28,15 +28,16 @@ const MantineSelect: React.FC<IMantinSelectProps> = (props) => {
           label={label}
           placeholder="Pick one"
           data={data}
+          {...form.getInputProps(propTag)}
           value={value}
           transitionProps={{
             transition: "pop-top-left",
             duration: 80,
             timingFunction: "ease",
           }}
-          clearable
+          clearable={clearable}
           itemComponent={SelectItem}
-          allowDeselect
+          allowDeselect={clearable}
           dropdownPosition="flip"
           nothingFound="No options"
           // rightSection={<IconChevronDown size="1rem" />}

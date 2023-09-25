@@ -11,7 +11,7 @@ export const useSelectData = (form: UseFormReturnType<IModel>) => {
   const manufacturerSelectData = useSelector(
     (state: RootState) => state.manufacturer.selectData
   );
-  const selectComponentData: IMantinSelectProps[] = [
+  const selectComponentData: IMantinSelectProps<IModel>[] = [
     {
       data: categorySelectData,
       value: form.values.categoryId || "",

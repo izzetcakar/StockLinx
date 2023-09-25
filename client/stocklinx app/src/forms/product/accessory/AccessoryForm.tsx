@@ -93,6 +93,7 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory }) => {
               value={selectData.value}
               label={selectData.label}
               propTag={selectData.propTag}
+              form={form}
             />
           ))}
           <TextInput
