@@ -1,11 +1,11 @@
-.edit-container {
+.toolbar-edit {
   display: flex;
   height: fit-content;
   width: fit-content;
   align-items: center;
   gap: 5px;
   justify-content: space-between;
-  .element {
+  .toolbar-edit-element {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -13,12 +13,12 @@
     height: fit-content;
     padding: 0.3rem;
     cursor: pointer;
-    .edit-icon {
+    .edit-element-icon {
       width: 1.2rem;
       height: 1.2rem;
     }
   }
-  .element:hover {
+  .edit-element:hover {
     border-radius: 100%;
     background-color: #b3b3b3;
   }

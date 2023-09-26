@@ -3,7 +3,6 @@ import "./editComponent.scss";
 import icon_edit from "../../../assets/icon_pen.png";
 import icon_delete from "../../.././assets/icon_trash.png";
 
-
 interface EditComponentProps {
   data: object[];
   index: number;
@@ -17,7 +16,6 @@ const EditComponent: React.FC<EditComponentProps> = ({
   onRowRemove,
   onRowUpdate,
 }) => {
-
   const onEditHandler = () => {
     const row = data[index];
     if (onRowUpdate) {
@@ -33,12 +31,12 @@ const EditComponent: React.FC<EditComponentProps> = ({
   };
 
   return (
-    <div className="edit-container">
-      <div className="element" onClick={onEditHandler}>
-        <img className="edit-icon" src={icon_edit} />
+    <div className="toolbar-edit">
+      <div className="toolbar-edit-element" onClick={onEditHandler}>
+        <img className="edit-element-icon" src={icon_edit} />
       </div>
-      <div className="element" onClick={onRemoveHandler}>
-        <img className="edit-icon" src={icon_delete} />
+      <div className="toolbar-edit-element" onClick={onRemoveHandler}>
+        <img className="edit-element-icon" src={icon_delete} />
       </div>
     </div>
   );
