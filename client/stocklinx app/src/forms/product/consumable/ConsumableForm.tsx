@@ -101,9 +101,6 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({ consumable }) => {
               form={form}
             />
           ))}
-          <Button onClick={() => console.log(form.values.companyId)}>
-            get
-          </Button>
           <TextInput
             label="Name"
             placeholder="New Name"

@@ -14,13 +14,16 @@ import { useColumns } from "./columns";
 
 const Consumable = () => {
   const dispatch = useDispatch();
-  const consumables = useSelector((state: RootState) => state.consumable.consumables);
-
+  const consumables = useSelector(
+    (state: RootState) => state.consumable.consumables
+  );
 
   const onRowInsert = () => {
+    refreshData();
     openConsumableModal();
   };
   const onRowUpdate = (row: object) => {
+    refreshData();
     const data = row as IConsumable;
     openConsumableModal(data);
   };
