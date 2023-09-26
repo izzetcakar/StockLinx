@@ -119,7 +119,7 @@ const GridTable: React.FC<GridTableProps> = ({
 
   return (
     <div className="all-wrapper">
-      <div className="table">
+      {/* <div className="table">
         <TableToolbar
           columns={dataColumns}
           visibleColumns={visibleColumns}
@@ -182,11 +182,12 @@ const GridTable: React.FC<GridTableProps> = ({
             selectedSize={selectedPageSize}
           />
         </div>
-      </div>
+      </div> */}
+      <div className="tableFixHead">
       <table className="table2">
         <thead>
           <tr className="table2-toolbar">
-            <td className="table2-toolbar" colSpan={data.length - 1}>
+            <td className="table2-toolbar" colSpan={visibleColumns.length}>
               <TableToolbar
                 columns={dataColumns}
                 visibleColumns={visibleColumns}
@@ -211,12 +212,12 @@ const GridTable: React.FC<GridTableProps> = ({
             ))}
           </tr>
         </thead>
-        <tbody>
+        <tbody className="tbody">
           {data.map((_, rowIndex) => (
-            <tr key={rowIndex}>
+            <tr key={rowIndex} className="tbody-c">
               {columns.map((column) =>
                 visibleColumns.includes(column.caption) ? (
-                  <td key={`${rowIndex}-${column.caption}`}>
+                  <td key={`${rowIndex}-${column.caption}`} className="tbody-c">
                     {renderColumnValue(rowIndex, column)}
                   </td>
                 ) : null
@@ -226,7 +227,7 @@ const GridTable: React.FC<GridTableProps> = ({
         </tbody>
         <tfoot>
           <tr className="table2-selection">
-            <td className="table2-selection" colSpan={data.length - 1}>
+            <td className="table2-selection" colSpan={visibleColumns.length }>
               <PageSizeComponent
                 showPageSize={true}
                 showPageSizeInfo={true}
@@ -241,6 +242,8 @@ const GridTable: React.FC<GridTableProps> = ({
           </tr>
         </tfoot>
       </table>
+      </div>
+        
     </div>
   );
 };
