@@ -4,6 +4,7 @@ import { userConst } from "./constant";
 import { SignInRequest } from "./type";
 import { userRequests } from "./requests";
 import { IUser } from "../../interfaces/interfaces";
+import { openNotificationError } from "../../components/notification/Notification";
 
 interface IResponse {
   data: IUser[] | IUser | null;
@@ -33,7 +34,7 @@ function* fetchUsersSaga() {
       );
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("User", (e as Error).message);
   }
 }
 function* fetchUsersaga() {
@@ -49,7 +50,7 @@ function* fetchUsersaga() {
       );
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("User", (e as Error).message);
   }
 }
 function* signInSaga(action: SignInRequest) {
@@ -65,7 +66,7 @@ function* signInSaga(action: SignInRequest) {
       yield put(userActions.signInSuccess());
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("User", (e as Error).message);
   }
 }
 function* getUserWithTokenSaga() {
@@ -83,7 +84,7 @@ function* getUserWithTokenSaga() {
       );
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("User", (e as Error).message);
   }
 }
 

@@ -5,6 +5,7 @@ import { productStatusConst } from "./constant";
 import { FetchProductStatusRequest, UpdateProductStatusRequest } from "./type";
 import { productStatusRequests } from "./requests";
 import { genericActions } from "../generic/actions";
+import { openNotificationError } from "../../components/notification/Notification";
 
 interface IResponse {
   data: IProductStatus[] | IProductStatus | null;
@@ -29,7 +30,7 @@ function* fetchProductStatusesSaga() {
       );
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Product Status", (e as Error).message);
   }
   yield put(genericActions.decreaseLoading());
 }
@@ -49,7 +50,7 @@ function* fetchProductStatusSaga(action: FetchProductStatusRequest) {
       );
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Product Status", (e as Error).message);
   }
 }
 function* createProductStatusSaga(action: UpdateProductStatusRequest) {
@@ -64,7 +65,7 @@ function* createProductStatusSaga(action: UpdateProductStatusRequest) {
       yield put(productStatusActions.createSuccess());
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Product Status", (e as Error).message);
   }
 }
 function* updateProductStatusSaga(action: UpdateProductStatusRequest) {
@@ -79,7 +80,7 @@ function* updateProductStatusSaga(action: UpdateProductStatusRequest) {
       yield put(productStatusActions.updateSuccess());
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Product Status", (e as Error).message);
   }
 }
 function* removeProductStatusSaga(action: FetchProductStatusRequest) {
@@ -94,7 +95,7 @@ function* removeProductStatusSaga(action: FetchProductStatusRequest) {
       yield put(productStatusActions.removeSuccess());
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Product Status", (e as Error).message);
   }
 }
 

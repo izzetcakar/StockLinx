@@ -5,6 +5,7 @@ import { modelConst } from "./constant";
 import { FetchModelRequest, UpdateModelRequest } from "./type";
 import { modelRequests } from "./requests";
 import { genericActions } from "../generic/actions";
+import { openNotificationError } from "../../components/notification/Notification";
 
 interface IResponse {
   data: IModel[] | IModel | null;
@@ -29,7 +30,7 @@ function* fetchModelsSaga() {
       );
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Model", (e as Error).message);
   }
   yield put(genericActions.decreaseLoading());
 }
@@ -49,7 +50,7 @@ function* fetchModelSaga(action: FetchModelRequest) {
       );
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Model", (e as Error).message);
   }
 }
 function* createModelSaga(action: UpdateModelRequest) {
@@ -64,7 +65,7 @@ function* createModelSaga(action: UpdateModelRequest) {
       yield put(modelActions.createSuccess());
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Model", (e as Error).message);
   }
 }
 function* updateModelSaga(action: UpdateModelRequest) {
@@ -79,7 +80,7 @@ function* updateModelSaga(action: UpdateModelRequest) {
       yield put(modelActions.updateSuccess());
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Model", (e as Error).message);
   }
 }
 function* removeModelSaga(action: FetchModelRequest) {
@@ -94,7 +95,7 @@ function* removeModelSaga(action: FetchModelRequest) {
       yield put(modelActions.removeSuccess());
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Model", (e as Error).message);
   }
 }
 

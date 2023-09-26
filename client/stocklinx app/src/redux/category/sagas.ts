@@ -5,6 +5,7 @@ import { categoryConst } from "./constant";
 import { FetchCategoryRequest, UpdateCategoryRequest } from "./type";
 import { categoryRequests } from "./requests";
 import { genericActions } from "../generic/actions";
+import { openNotificationError } from "../../components/notification/Notification";
 
 interface IResponse {
   data: ICategory[] | ICategory | null;
@@ -29,7 +30,7 @@ function* fetchCategoriesSaga() {
       );
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Category", (e as Error).message);
   }
   yield put(genericActions.decreaseLoading());
 }
@@ -49,7 +50,7 @@ function* fetchCategorySaga(action: FetchCategoryRequest) {
       );
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Category", (e as Error).message);
   }
 }
 function* createCategorySaga(action: UpdateCategoryRequest) {
@@ -64,7 +65,7 @@ function* createCategorySaga(action: UpdateCategoryRequest) {
       yield put(categoryActions.createSuccess());
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Category", (e as Error).message);
   }
 }
 function* updateCategorySaga(action: UpdateCategoryRequest) {
@@ -79,7 +80,7 @@ function* updateCategorySaga(action: UpdateCategoryRequest) {
       yield put(categoryActions.updateSuccess());
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Category", (e as Error).message);
   }
 }
 function* removeCategorySaga(action: FetchCategoryRequest) {
@@ -94,7 +95,7 @@ function* removeCategorySaga(action: FetchCategoryRequest) {
       yield put(categoryActions.removeSuccess());
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Category", (e as Error).message);
   }
 }
 

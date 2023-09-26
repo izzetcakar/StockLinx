@@ -5,6 +5,7 @@ import { licenseConst } from "./constant";
 import { FetchLicenseRequest, UpdateLicenseRequest } from "./type";
 import { licenseRequests } from "./requests";
 import { genericActions } from "../generic/actions";
+import { openNotificationError } from "../../components/notification/Notification";
 
 interface IResponse {
   data: ILicense[] | ILicense | null;
@@ -29,7 +30,7 @@ function* fetchLicensesSaga() {
       );
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("License", (e as Error).message);
   }
   yield put(genericActions.decreaseLoading());
 }
@@ -49,7 +50,7 @@ function* fetchLicenseSaga(action: FetchLicenseRequest) {
       );
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("License", (e as Error).message);
   }
 }
 function* createLicenseSaga(action: UpdateLicenseRequest) {
@@ -64,7 +65,7 @@ function* createLicenseSaga(action: UpdateLicenseRequest) {
       yield put(licenseActions.createSuccess());
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("License", (e as Error).message);
   }
 }
 function* updateLicenseSaga(action: UpdateLicenseRequest) {
@@ -79,7 +80,7 @@ function* updateLicenseSaga(action: UpdateLicenseRequest) {
       yield put(licenseActions.updateSuccess());
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("License", (e as Error).message);
   }
 }
 function* removeLicenseSaga(action: FetchLicenseRequest) {
@@ -94,7 +95,7 @@ function* removeLicenseSaga(action: FetchLicenseRequest) {
       yield put(licenseActions.removeSuccess());
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("License", (e as Error).message);
   }
 }
 

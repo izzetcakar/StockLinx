@@ -5,6 +5,7 @@ import { locationConst } from "./constant";
 import { FetchLocationRequest, UpdateLocationRequest } from "./type";
 import { locationRequests } from "./requests";
 import { genericActions } from "../generic/actions";
+import { openNotificationError } from "../../components/notification/Notification";
 
 interface IResponse {
   data: ILocation[] | ILocation | null;
@@ -29,7 +30,7 @@ function* fetchLocationsSaga() {
       );
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Location", (e as Error).message);
   }
   yield put(genericActions.decreaseLoading());
 }
@@ -49,7 +50,7 @@ function* fetchLocationSaga(action: FetchLocationRequest) {
       );
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Location", (e as Error).message);
   }
 }
 function* createLocationSaga(action: UpdateLocationRequest) {
@@ -64,7 +65,7 @@ function* createLocationSaga(action: UpdateLocationRequest) {
       yield put(locationActions.createSuccess());
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Location", (e as Error).message);
   }
 }
 function* updateLocationSaga(action: UpdateLocationRequest) {
@@ -79,7 +80,7 @@ function* updateLocationSaga(action: UpdateLocationRequest) {
       yield put(locationActions.updateSuccess());
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Location", (e as Error).message);
   }
 }
 function* removeLocationSaga(action: FetchLocationRequest) {
@@ -94,7 +95,7 @@ function* removeLocationSaga(action: FetchLocationRequest) {
       yield put(locationActions.removeSuccess());
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Location", (e as Error).message);
   }
 }
 

@@ -5,6 +5,7 @@ import { accessoryConst } from "./constant";
 import { FetchAccessoryRequest, UpdateAccessoryRequest } from "./type";
 import { accessoryRequests } from "./requests";
 import { genericActions } from "../generic/actions";
+import { openNotificationError } from "../../components/notification/Notification";
 interface IResponse {
   data: IAccessory[] | IAccessory | null;
   message: string;
@@ -28,7 +29,7 @@ function* fetchAccessoriesSaga() {
       );
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Accessory", (e as Error).message);
   }
   yield put(genericActions.decreaseLoading());
 }
@@ -48,7 +49,7 @@ function* fetchAccessorySaga(action: FetchAccessoryRequest) {
       );
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Accessory", (e as Error).message);
   }
 }
 function* createAccessorySaga(action: UpdateAccessoryRequest) {
@@ -63,7 +64,7 @@ function* createAccessorySaga(action: UpdateAccessoryRequest) {
       yield put(accessoryActions.createSuccess());
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Accessory", (e as Error).message);
   }
 }
 function* updateAccessorySaga(action: UpdateAccessoryRequest) {
@@ -78,7 +79,7 @@ function* updateAccessorySaga(action: UpdateAccessoryRequest) {
       yield put(accessoryActions.updateSuccess());
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Accessory", (e as Error).message);
   }
 }
 function* removeAccessorySaga(action: FetchAccessoryRequest) {
@@ -93,7 +94,7 @@ function* removeAccessorySaga(action: FetchAccessoryRequest) {
       yield put(accessoryActions.removeSuccess());
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Accessory", (e as Error).message);
   }
 }
 

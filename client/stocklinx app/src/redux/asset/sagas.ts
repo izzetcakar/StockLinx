@@ -5,6 +5,7 @@ import { assetConst } from "./constant";
 import { FetchAssetRequest, UpdateAssetRequest } from "./type";
 import { assetRequests } from "./requests";
 import { genericActions } from "../generic/actions";
+import { openNotificationError } from "../../components/notification/Notification";
 
 interface IResponse {
   data: IAsset[] | IAsset | null;
@@ -29,7 +30,7 @@ function* fetchAssetsSaga() {
       );
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Asset", (e as Error).message);
   }
   yield put(genericActions.decreaseLoading());
 }
@@ -49,7 +50,7 @@ function* fetchAssetSaga(action: FetchAssetRequest) {
       );
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Asset", (e as Error).message);
   }
 }
 function* createAssetSaga(action: UpdateAssetRequest) {
@@ -64,7 +65,7 @@ function* createAssetSaga(action: UpdateAssetRequest) {
       yield put(assetActions.createSuccess());
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Asset", (e as Error).message);
   }
 }
 function* updateAssetSaga(action: UpdateAssetRequest) {
@@ -79,7 +80,7 @@ function* updateAssetSaga(action: UpdateAssetRequest) {
       yield put(assetActions.updateSuccess());
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Asset", (e as Error).message);
   }
 }
 function* removeAssetSaga(action: FetchAssetRequest) {
@@ -94,7 +95,7 @@ function* removeAssetSaga(action: FetchAssetRequest) {
       yield put(assetActions.removeSuccess());
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Asset", (e as Error).message);
   }
 }
 

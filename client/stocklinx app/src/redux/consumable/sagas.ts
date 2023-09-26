@@ -5,6 +5,7 @@ import { consumableConst } from "./constant";
 import { FetchConsumableRequest, UpdateConsumableRequest } from "./type";
 import { consumableRequests } from "./requests";
 import { genericActions } from "../generic/actions";
+import { openNotificationError } from "../../components/notification/Notification";
 
 interface IResponse {
   data: IConsumable[] | IConsumable | null;
@@ -29,7 +30,7 @@ function* fetchConsumablesSaga() {
       );
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Consumable", (e as Error).message);
   }
   yield put(genericActions.decreaseLoading());
 }
@@ -49,7 +50,7 @@ function* fetchConsumableSaga(action: FetchConsumableRequest) {
       );
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Consumable", (e as Error).message);
   }
 }
 function* createConsumableSaga(action: UpdateConsumableRequest) {
@@ -64,7 +65,7 @@ function* createConsumableSaga(action: UpdateConsumableRequest) {
       yield put(consumableActions.createSuccess());
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Consumable", (e as Error).message);
   }
 }
 function* updateConsumableSaga(action: UpdateConsumableRequest) {
@@ -79,7 +80,7 @@ function* updateConsumableSaga(action: UpdateConsumableRequest) {
       yield put(consumableActions.updateSuccess());
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Consumable", (e as Error).message);
   }
 }
 function* removeConsumableSaga(action: FetchConsumableRequest) {
@@ -94,7 +95,7 @@ function* removeConsumableSaga(action: FetchConsumableRequest) {
       yield put(consumableActions.removeSuccess());
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Consumable", (e as Error).message);
   }
 }
 

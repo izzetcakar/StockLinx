@@ -5,6 +5,7 @@ import { companyConst } from "./constant";
 import { FetchCompanyRequest, UpdateCompanyRequest } from "./type";
 import { companyRequests } from "./requests";
 import { genericActions } from "../generic/actions";
+import { openNotificationError } from "../../components/notification/Notification";
 
 interface IResponse {
   data: ICompany[] | ICompany | null;
@@ -29,7 +30,7 @@ function* fetchCompaniesSaga() {
       );
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Company", (e as Error).message);
   }
   yield put(genericActions.decreaseLoading());
 }
@@ -49,7 +50,7 @@ function* fetchCompanySaga(action: FetchCompanyRequest) {
       );
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Company", (e as Error).message);
   }
 }
 function* createCompanySaga(action: UpdateCompanyRequest) {
@@ -64,7 +65,7 @@ function* createCompanySaga(action: UpdateCompanyRequest) {
       yield put(companyActions.createSuccess());
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Company", (e as Error).message);
   }
 }
 function* updateCompanySaga(action: UpdateCompanyRequest) {
@@ -79,7 +80,7 @@ function* updateCompanySaga(action: UpdateCompanyRequest) {
       yield put(companyActions.updateSuccess());
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Company", (e as Error).message);
   }
 }
 function* removeCompanySaga(action: FetchCompanyRequest) {
@@ -94,7 +95,7 @@ function* removeCompanySaga(action: FetchCompanyRequest) {
       yield put(companyActions.removeSuccess());
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Company", (e as Error).message);
   }
 }
 

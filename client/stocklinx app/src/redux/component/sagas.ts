@@ -5,6 +5,7 @@ import { componentConst } from "./constant";
 import { FetchComponentRequest, UpdateComponentRequest } from "./type";
 import { componentRequests } from "./requests";
 import { genericActions } from "../generic/actions";
+import { openNotificationError } from "../../components/notification/Notification";
 
 interface IResponse {
   data: IComponent[] | IComponent | null;
@@ -29,7 +30,7 @@ function* fetchComponentsSaga() {
       );
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Component", (e as Error).message);
   }
   yield put(genericActions.decreaseLoading());
 }
@@ -49,7 +50,7 @@ function* fetchComponentSaga(action: FetchComponentRequest) {
       );
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Component", (e as Error).message);
   }
 }
 function* createComponentSaga(action: UpdateComponentRequest) {
@@ -64,7 +65,7 @@ function* createComponentSaga(action: UpdateComponentRequest) {
       yield put(componentActions.createSuccess());
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Component", (e as Error).message);
   }
 }
 function* updateComponentSaga(action: UpdateComponentRequest) {
@@ -79,7 +80,7 @@ function* updateComponentSaga(action: UpdateComponentRequest) {
       yield put(componentActions.updateSuccess());
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Component", (e as Error).message);
   }
 }
 function* removeComponentSaga(action: FetchComponentRequest) {
@@ -94,7 +95,7 @@ function* removeComponentSaga(action: FetchComponentRequest) {
       yield put(componentActions.removeSuccess());
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Component", (e as Error).message);
   }
 }
 

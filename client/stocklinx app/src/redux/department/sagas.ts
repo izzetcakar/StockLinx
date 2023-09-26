@@ -5,6 +5,7 @@ import { departmentConst } from "./constant";
 import { FetchDepartmentRequest, UpdateDepartmentRequest } from "./type";
 import { departmentRequests } from "./requests";
 import { genericActions } from "../generic/actions";
+import { openNotificationError } from "../../components/notification/Notification";
 
 interface IResponse {
   data: IDepartment[] | IDepartment | null;
@@ -29,7 +30,7 @@ function* fetchDepartmentsSaga() {
       );
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Department", (e as Error).message);
   }
   yield put(genericActions.decreaseLoading());
 }
@@ -49,7 +50,7 @@ function* fetchDepartmentSaga(action: FetchDepartmentRequest) {
       );
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Department", (e as Error).message);
   }
 }
 function* createDepartmentSaga(action: UpdateDepartmentRequest) {
@@ -64,7 +65,7 @@ function* createDepartmentSaga(action: UpdateDepartmentRequest) {
       yield put(departmentActions.createSuccess());
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Department", (e as Error).message);
   }
 }
 function* updateDepartmentSaga(action: UpdateDepartmentRequest) {
@@ -79,7 +80,7 @@ function* updateDepartmentSaga(action: UpdateDepartmentRequest) {
       yield put(departmentActions.updateSuccess());
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Department", (e as Error).message);
   }
 }
 function* removeDepartmentSaga(action: FetchDepartmentRequest) {
@@ -94,7 +95,7 @@ function* removeDepartmentSaga(action: FetchDepartmentRequest) {
       yield put(departmentActions.removeSuccess());
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Department", (e as Error).message);
   }
 }
 

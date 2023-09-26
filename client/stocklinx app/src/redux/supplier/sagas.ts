@@ -5,6 +5,7 @@ import { supplierConst } from "./constant";
 import { FetchSupplierRequest, UpdateSupplierRequest } from "./type";
 import { supplierRequests } from "./requests";
 import { genericActions } from "../generic/actions";
+import { openNotificationError } from "../../components/notification/Notification";
 
 interface IResponse {
   data: ISupplier[] | ISupplier | null;
@@ -29,7 +30,7 @@ function* fetchSuppliersSaga() {
       );
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Supplier", (e as Error).message);
   }
   yield put(genericActions.decreaseLoading());
 }
@@ -49,7 +50,7 @@ function* fetchSupplierSaga(action: FetchSupplierRequest) {
       );
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Supplier", (e as Error).message);
   }
 }
 function* createSupplierSaga(action: UpdateSupplierRequest) {
@@ -64,7 +65,7 @@ function* createSupplierSaga(action: UpdateSupplierRequest) {
       yield put(supplierActions.createSuccess());
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Supplier", (e as Error).message);
   }
 }
 function* updateSupplierSaga(action: UpdateSupplierRequest) {
@@ -79,7 +80,7 @@ function* updateSupplierSaga(action: UpdateSupplierRequest) {
       yield put(supplierActions.updateSuccess());
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Supplier", (e as Error).message);
   }
 }
 function* removeSupplierSaga(action: FetchSupplierRequest) {
@@ -94,7 +95,7 @@ function* removeSupplierSaga(action: FetchSupplierRequest) {
       yield put(supplierActions.removeSuccess());
     }
   } catch (e) {
-    console.log(e);
+    openNotificationError("Supplier", (e as Error).message);
   }
 }
 
