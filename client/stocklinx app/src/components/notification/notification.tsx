@@ -16,11 +16,11 @@ export const closeNotification = (notification: string) => {
   notifications.hide(notification);
 };
 
-export const openNotificationSuccess = () => {
+export const openNotificationSuccess = (message: string) => {
   notifications.show({
-    title: "All good!",
+    title: message,
     message: null,
-    autoClose: false,
+    autoClose: 2000,
     withCloseButton: true,
     styles: () => ({
       title: { fontSize: rem(13) },
@@ -31,11 +31,11 @@ export const openNotificationSuccess = () => {
   });
 };
 
-export const openNotificationError = () => {
+export const openNotificationError = (title: string, message: string) => {
   notifications.show({
-    title: "Bummer!",
-    message: null,
-    autoClose: false,
+    title: title,
+    message: message,
+    autoClose: 2000,
     withCloseButton: true,
     styles: () => ({
       title: { fontSize: rem(13) },
@@ -50,7 +50,7 @@ export const openNotificationError = () => {
 //   notifications.show({
 //     id: "notificationSuccess",
 //     message: message,
-//     autoClose: false,
+//     autoClose: 500,
 //     withCloseButton: true,
 //     styles: (theme) => ({
 //       root: {
@@ -75,7 +75,7 @@ export const openNotificationError = () => {
 //   notifications.show({
 //     id: "notificationError",
 //     message: message,
-//     autoClose: false,
+//     autoClose: 500,
 //     withCloseButton: true,
 //     styles: (theme) => ({
 //       root: {
