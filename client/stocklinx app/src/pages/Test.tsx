@@ -1,29 +1,75 @@
-import SubmissionForm from "../forms/SubmissionForm";
-import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
+import GridTable from "../components/gridTable/GridTable";
+import { Column } from "../components/gridTable/interfaces/interfaces";
 import "./test.scss";
-import { useState } from "react";
 
 const Test = () => {
-  const [value, setValue] = useState("");
-
-  return (
-    // <SubmissionForm />
-
-    <Box
-      component="form"
-      sx={{
-        '& > :not(style)': { m: 1, width: '25ch' },
-      }}
-      noValidate
-      autoComplete="off"
-    >
-      <TextField id="outlined-basic" label="Outlined" variant="outlined" onChange={(e) => setValue(e.target.value)} defaultValue={null} onClick={() => console.log(value)} />
-      <TextField id="filled-basic" label="Filled" variant="filled" />
-      <TextField id="standard-basic" label="Standard" variant="standard" />
-    </Box>
-  );
+  const columns: Column[] = [
+    {
+      caption: "Company",
+      dataField: "company",
+    },
+    {
+      caption: "Contact",
+      dataField: "contact",
+    },
+    {
+      caption: "Country",
+      dataField: "country",
+    },
+  ];
+  const data = [
+    {
+      company: "Alfreds Futterkiste",
+      contact: "Maria Anders",
+      country: "Germany",
+    },
+    {
+      company: "Berglunds snabbköp",
+      contact: "Christina Berglund",
+      country: "Sweden",
+    },
+    {
+      company: "Centro comercial Moctezuma",
+      contact: "Francisco Chang",
+      country: "Mexico",
+    },
+    {
+      company: "Ernst Handel",
+      contact: "Roland Mendel",
+      country: "Austria",
+    },
+    {
+      company: "Island Trading",
+      contact: "Helen Bennett",
+      country: "UK",
+    },
+    {
+      company: "Königlich Essen",
+      contact: "Philip Cramer",
+      country: "Germany",
+    },
+    {
+      company: "Laughing Bacchus Winecellars",
+      contact: "Yoshi Tannamuri",
+      country: "Canada",
+    },
+    {
+      company: "Magazzini Alimentari Riuniti",
+      contact: "Giovanni Rovelli",
+      country: "Italy",
+    },
+    {
+      company: "North/South",
+      contact: "Simon Crowther",
+      country: "UK",
+    },
+    {
+      company: "Paris spécialités",
+      contact: "Marie Bertrand",
+      country: "France",
+    },
+  ];
+  return <GridTable columns={columns} data={data} />;
 };
 
 export default Test;
