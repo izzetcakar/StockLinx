@@ -183,7 +183,7 @@ const GridTable: React.FC<GridTableProps> = ({
           />
         </div>
       </div>
-      <table className="table2">
+      <table>
         <thead>
           <tr className="table2-toolbar">
             <td className="table2-toolbar" colSpan={visibleColumns.length + 1}>
@@ -205,19 +205,21 @@ const GridTable: React.FC<GridTableProps> = ({
               ) : null}
             </td>
           </tr>
-          <tr>
-            {visibleColumns.map((column) => (
-              <th key={column}>{column}</th>
-            ))}
-            <th></th>
-          </tr>
         </thead>
         <tbody>
+          <tr>
+            {visibleColumns.map((column) => (
+              <td key={column}>{column}</td>
+            ))}
+            <td></td>
+          </tr>
           {filterData().map((_, rowIndex) => (
             <tr key={rowIndex}>
               {columns.map((column) =>
                 visibleColumns.includes(column.caption) ? (
-                  <td key={`${rowIndex}-${column.caption}`}>
+                  <td
+                    key={`${rowIndex}-${column.caption}`}
+                  >
                     {renderColumnValue(rowIndex, column)}
                   </td>
                 ) : null

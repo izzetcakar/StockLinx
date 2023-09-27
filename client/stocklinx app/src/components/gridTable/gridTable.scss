@@ -133,7 +133,7 @@ table tr:hover {
   background-color: #ddd;
 }
 //COLUMN
-table th {
+table tbody tr:first-child td {
   padding: 8px;
   padding-top: 12px;
   padding-bottom: 12px;
@@ -155,12 +155,15 @@ tbody tr td:nth-last-child(1) {
 
 table {
   display: block;
+  table-layout: fixed;
 }
 table tbody {
-  display: table;
-  max-height: 300px;
+  display: block;
   overflow: auto;
   width: 100%;
+}
+table tbody tr td {
+  width : 100vh;
 }
 thead,
 tfoot {
