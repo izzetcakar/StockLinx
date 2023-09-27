@@ -119,7 +119,7 @@ const GridTable: React.FC<GridTableProps> = ({
 
   return (
     <div className="all-wrapper">
-      {/* <div className="table">
+      <div className="table">
         <TableToolbar
           columns={dataColumns}
           visibleColumns={visibleColumns}
@@ -182,12 +182,11 @@ const GridTable: React.FC<GridTableProps> = ({
             selectedSize={selectedPageSize}
           />
         </div>
-      </div> */}
-      <div className="tableFixHead">
+      </div>
       <table className="table2">
         <thead>
           <tr className="table2-toolbar">
-            <td className="table2-toolbar" colSpan={visibleColumns.length}>
+            <td className="table2-toolbar" colSpan={visibleColumns.length + 1}>
               <TableToolbar
                 columns={dataColumns}
                 visibleColumns={visibleColumns}
@@ -206,28 +205,40 @@ const GridTable: React.FC<GridTableProps> = ({
               ) : null}
             </td>
           </tr>
+        </thead>
+        <tbody>
           <tr>
             {visibleColumns.map((column) => (
               <th key={column}>{column}</th>
             ))}
+            <th></th>
           </tr>
-        </thead>
-        <tbody className="tbody">
-          {data.map((_, rowIndex) => (
-            <tr key={rowIndex} className="tbody-c">
+          {filterData().map((_, rowIndex) => (
+            <tr key={rowIndex}>
               {columns.map((column) =>
                 visibleColumns.includes(column.caption) ? (
-                  <td key={`${rowIndex}-${column.caption}`} className="tbody-c">
+                  <td key={`${rowIndex}-${column.caption}`}>
                     {renderColumnValue(rowIndex, column)}
                   </td>
                 ) : null
               )}
+              <td>
+                <EditComponent
+                  data={data}
+                  index={rowIndex}
+                  onRowUpdate={onRowUpdate}
+                  onRowRemove={onRowRemove}
+                />
+              </td>
             </tr>
           ))}
         </tbody>
         <tfoot>
           <tr className="table2-selection">
-            <td className="table2-selection" colSpan={visibleColumns.length }>
+            <td
+              className="table2-selection"
+              colSpan={visibleColumns.length + 1}
+            >
               <PageSizeComponent
                 showPageSize={true}
                 showPageSizeInfo={true}
@@ -242,8 +253,6 @@ const GridTable: React.FC<GridTableProps> = ({
           </tr>
         </tfoot>
       </table>
-      </div>
-        
     </div>
   );
 };
