@@ -101,6 +101,7 @@ table {
   border: 1px solid #ced4da;
   border-radius: 4px;
   border-spacing: 0;
+  overflow: auto;
   // empty-cells: show;
   .table2-toolbar {
     padding: 0;
@@ -132,7 +133,7 @@ table tr:hover {
   background-color: #ddd;
 }
 //COLUMN
-table tbody tr:first-child th {
+table th {
   padding: 8px;
   padding-top: 12px;
   padding-bottom: 12px;
@@ -152,11 +153,11 @@ tbody tr td:nth-last-child(1) {
   background-color: white;
 }
 
-table{
+table {
   display: block;
 }
 table tbody {
-  display: block;
+  display: table;
   max-height: 300px;
   overflow: auto;
   width: 100%;

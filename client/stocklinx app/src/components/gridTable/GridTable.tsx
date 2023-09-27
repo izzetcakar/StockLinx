@@ -205,14 +205,14 @@ const GridTable: React.FC<GridTableProps> = ({
               ) : null}
             </td>
           </tr>
-        </thead>
-        <tbody>
           <tr>
             {visibleColumns.map((column) => (
               <th key={column}>{column}</th>
             ))}
             <th></th>
           </tr>
+        </thead>
+        <tbody>
           {filterData().map((_, rowIndex) => (
             <tr key={rowIndex}>
               {columns.map((column) =>
