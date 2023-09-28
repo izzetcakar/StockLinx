@@ -45,9 +45,6 @@ const Consumable = () => {
       <GridTable
         data={consumables}
         columns={useColumns()}
-        hasColumnLines={false}
-        enableEdit={true}
-        showPageSize={true}
         refreshData={refreshData}
         onRowInsert={onRowInsert}
         onRowUpdate={onRowUpdate}
