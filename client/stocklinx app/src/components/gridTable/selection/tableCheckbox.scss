@@ -1,6 +1,9 @@
-input[type="checkbox"] {
+.checkbox {
   width: 1.3em;
   height: 1.3em;
   accent-color: "blue";
   cursor: pointer;
+}
+.it{
+  display: flex;
 }

@@ -11,7 +11,14 @@ const TableCheckbox: React.FC<TableCheckboxProps> = ({
   selectFunc,
 }) => {
   return (
-    <input type="checkbox" checked={isChecked} onChange={selectFunc} />
+    <div className="it">
+      <input
+        className="checkbox"
+        type="checkbox"
+        checked={isChecked}
+        onChange={selectFunc}
+      />
+    </div>
   );
 };
 
