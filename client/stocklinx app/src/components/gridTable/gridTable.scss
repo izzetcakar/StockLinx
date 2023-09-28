@@ -112,12 +112,12 @@ table {
   .table2-toolbar:hover {
     background-color: transparent;
   }
-  .table2-selection {
-    padding: 0;
+  .table2-footer {
+    padding: 8px 12px 8px 12px;
     border-top: 1px solid #ced4da;
     font-size: 1rem;
   }
-  .table2-selection:hover {
+  .table2-footer:hover {
     background-color: transparent;
   }
 }
@@ -129,7 +129,7 @@ table tbody tr td {
   font-size: 0.7em;
   border: none;
 }
-table tr:hover {
+table tr:not(:first-child):hover {
   background-color: #ddd;
 }
 //COLUMN
@@ -151,6 +151,7 @@ tbody tr td:nth-last-child(1) {
   width: 65px;
   padding-right: 0;
   background-color: white;
+  border-left: 1px solid #ced4da;
 }
 
 table {
@@ -161,9 +162,10 @@ table tbody {
   display: block;
   overflow: auto;
   width: 100%;
+  max-height: 500px;
 }
 table tbody tr td {
-  width : 100vh;
+  width: 100vh;
 }
 thead,
 tfoot {
