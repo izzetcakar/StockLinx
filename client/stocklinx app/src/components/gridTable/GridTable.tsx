@@ -1,12 +1,10 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { checkEmpty } from "../../functions/checkEmpty";
-import { getIndexesFromArray } from "../../functions/getIndexesFromArray";
 import EditComponent from "./edit/EditComponent";
 import TableToolbar from "./tableToolbar/TableToolbar";
 import { Column } from "./interfaces/interfaces";
-import TableCheckbox from "./selection/TableCheckbox";
-import { hasAllElements } from "../../functions/hasAllElements";
 import PageNumber from "./tableFooter/PageNumber";
+import TableCheckbox from "./selection/TableCheckbox";
 import "./gridTable.scss";
 
 interface GridTableProps {
@@ -19,6 +17,7 @@ interface GridTableProps {
   onRowInsert?: () => void;
   onRowUpdate?: (row: object) => void;
   onRowRemove?: (row: object) => void;
+  keyfield: keyof object;
 }
 
 const GridTable: React.FC<GridTableProps> = ({
@@ -26,15 +25,17 @@ const GridTable: React.FC<GridTableProps> = ({
   columns = [],
   itemPerPage = 10,
   refreshData,
-  onRowInsert = () => console.log("insert"),
-  onRowUpdate = () => console.log("update"),
-  onRowRemove = () => console.log("delete"),
+  onRowInsert = () => console.log("Row insert"),
+  onRowUpdate = (e: object) => console.log(e),
+  onRowRemove = (e: object) => console.log(e),
+  keyfield,
 }) => {
   const [pageNumber, setPageNumber] = useState<number>(0);
   const [dataColumns, setDataColumns] = useState<Column[]>(columns);
   const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
-  const [selectedIndexes, setSelectedIndexes] = useState<number[]>([]);
-
+  const [selectedObjects, setSelectedObjects] = useState<(string | number)[]>(
+    []
+  );
   useEffect(() => {
     setDataColumns(handleColumnsEmpty(columns));
   }, [data]);
@@ -52,40 +53,37 @@ const GridTable: React.FC<GridTableProps> = ({
     }
     return data.slice(pageNumber * itemPerPage, (pageNumber + 1) * itemPerPage);
   }, [data, itemPerPage, pageNumber]);
-
-  const cellValues = useMemo(() => {
-    return filterData().map((_, rowIndex) => {
-      return dataColumns.map((column) => {
-        if (visibleColumns.includes(column.caption)) {
-          const value = (
-            data[rowIndex + itemPerPage * pageNumber] as {
-              [key: string]: string | number | boolean | null;
-            }
-          )[column.dataField];
-
-          if (column.renderComponent) {
-            return column.renderComponent(value);
-          }
-          if (value === null || value === undefined) {
-            return "";
-          }
-          if (typeof value === "boolean") {
-            const name = value ? "check" : "x";
-            const color = value ? "#63bd4f" : "#ed6b6b";
-            return (
-              <i
-                className={`bx bx-${name}`}
-                style={{ fontSize: "1.5rem", color: color }}
-              />
-            );
-          }
-          return value;
+  const getObjectByKeyfield = useCallback((key: string | number): object => {
+    return data.find((item) => item[keyfield] === key) as object;
+  }, [data, keyfield]);
+  const renderColumnValue = useMemo(
+    () => (key: string | number, column: Column) => {
+      const value = (
+        getObjectByKeyfield(key) as {
+          [key: string]: string | number | boolean | null;
         }
-        return null;
-      });
-    });
-  }, [data, dataColumns, filterData, itemPerPage, pageNumber, visibleColumns]);
+      )[column.dataField];
 
+      if (column.renderComponent) {
+        return column.renderComponent(value);
+      }
+      if (value === null || value === undefined) {
+        return "";
+      }
+      if (typeof value === "boolean") {
+        const name = value ? "check" : "x";
+        const color = value ? "#63bd4f" : "#ed6b6b";
+        return (
+          <i
+            className={`bx bx-${name}`}
+            style={{ fontSize: "1.5rem", color: color }}
+          />
+        );
+      }
+      return value;
+    },
+    [getObjectByKeyfield]
+  );
   const handleColumnsEmpty = useCallback(
     (cols: Column[]): Column[] => {
       if (!checkEmpty(cols)) {
@@ -101,19 +99,12 @@ const GridTable: React.FC<GridTableProps> = ({
     },
     [data]
   );
-
-  const handleSelectAll = () => {
-    setSelectedIndexes((prevIndexes) =>
-      hasAllElements(getIndexesFromArray(filterData()), prevIndexes)
-        ? []
-        : getIndexesFromArray(data)
-    );
-  };
-  const handleSelectRow = (index: number) => {
-    setSelectedIndexes((prevIndexes) =>
-      prevIndexes.includes(index)
-        ? prevIndexes.filter((i) => i !== index)
-        : [...prevIndexes, index]
+  const handleSelectRow = (key: string) => {
+    const keyOfObject = getObjectByKeyfield(key)[keyfield];
+    setSelectedObjects((prev) =>
+      prev.includes(keyOfObject)
+        ? prev.filter((i) => i !== keyOfObject)
+        : [...prev, keyOfObject]
     );
   };
   const handlePageNumber = (forward: boolean) => {
@@ -128,9 +119,81 @@ const GridTable: React.FC<GridTableProps> = ({
     }
   };
 
+  const getRowIndex = (index: number): number => {
+    return index + pageNumber * itemPerPage;
+  };
+
   return (
-    <div className="all-wrapper">
-      {/* <div className="table">
+    <table>
+      <thead>
+        <tr className="table2-toolbar">
+          <td className="table2-toolbar" colSpan={visibleColumns.length + 1}>
+            <TableToolbar
+              columns={dataColumns}
+              visibleColumns={visibleColumns}
+              addVisibleColumn={addVisibleColumn}
+              onRowInsert={onRowInsert}
+              refreshData={refreshData}
+            />
+          </td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <TableCheckbox
+              isChecked={false}
+              selectFunc={() => console.log("Select all")}
+            />
+          </td>
+          {visibleColumns.map((column) => (
+            <td key={column}>{column}</td>
+          ))}
+          <td></td>
+        </tr>
+        {filterData().map((obj, rowIndex) => (
+          <tr key={obj[keyfield]}>
+            <td>
+              <TableCheckbox
+                isChecked={selectedObjects.includes(obj[keyfield])}
+                selectFunc={() => handleSelectRow(obj[keyfield])}
+              />
+            </td>
+            {dataColumns.map((column) =>
+              visibleColumns.includes(column.caption) ? (
+                <td key={`${rowIndex}-${column.caption}`}>
+                  {renderColumnValue(obj[keyfield], column)}
+                </td>
+              ) : null
+            )}
+            <td>
+              <EditComponent
+                data={data}
+                index={getRowIndex(rowIndex)}
+                onRowUpdate={onRowUpdate}
+                onRowRemove={onRowRemove}
+              />
+            </td>
+          </tr>
+        ))}
+      </tbody>
+      <tfoot>
+        <tr className="table2-footer">
+          <td className="table2-footer" colSpan={visibleColumns.length + 1}>
+            <PageNumber
+              pageNumber={pageNumber}
+              itemPerPage={itemPerPage}
+              dataLength={data.length}
+              handlePageNumber={handlePageNumber}
+            />
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  );
+};
+{
+  /* <div className="table">
         <TableToolbar
           columns={dataColumns}
           visibleColumns={visibleColumns}
@@ -142,9 +205,9 @@ const GridTable: React.FC<GridTableProps> = ({
           {enableSelection ? (
             <TableSelectColumn
               data={data}
-              selectedIndexes={selectedIndexes}
+              selectedObjects={selectedObjects}
               filterData={filterData}
-              setSelectedIndexes={setSelectedIndexes}
+              setSelectedObjects={setSelectedObjects}
               handleClassByIndex={handleClassByIndex}
             />
           ) : null}
@@ -189,78 +252,11 @@ const GridTable: React.FC<GridTableProps> = ({
             allItemsCount={data.length}
             handleSizeSelect={handleSelectedPageSize}
             pageSizes={pageSizes}
-            selectedCount={selectedIndexes.length}
+            selectedCount={selectedObjects.length}
             selectedSize={selectedPageSize}
           />
         </div>
-      </div> */}
-      <table>
-        <thead>
-          <tr className="table2-toolbar">
-            <td className="table2-toolbar" colSpan={visibleColumns.length + 1}>
-              <TableToolbar
-                columns={dataColumns}
-                visibleColumns={visibleColumns}
-                addVisibleColumn={addVisibleColumn}
-                onRowInsert={onRowInsert}
-                refreshData={refreshData}
-              />
-            </td>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              <TableCheckbox
-                isChecked={hasAllElements(
-                  getIndexesFromArray(filterData()),
-                  selectedIndexes
-                )}
-                selectFunc={handleSelectAll}
-              />
-            </td>
-            {visibleColumns.map((column) => (
-              <td key={column}>{column}</td>
-            ))}
-            <td></td>
-          </tr>
-          {cellValues.map((row, rowIndex) => (
-            <tr key={rowIndex}>
-              <td>
-                <TableCheckbox
-                  isChecked={selectedIndexes.includes(rowIndex)}
-                  selectFunc={() => handleSelectRow(rowIndex)}
-                />
-              </td>
-              {row.map((cellValue, cellIndex) => (
-                <td key={`${rowIndex}-${cellIndex}`}>{cellValue}</td>
-              ))}
-              <td>
-                <EditComponent
-                  data={data}
-                  index={rowIndex}
-                  onRowUpdate={onRowUpdate}
-                  onRowRemove={onRowRemove}
-                />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-        <tfoot>
-          <tr className="table2-footer">
-            <td className="table2-footer" colSpan={visibleColumns.length + 1}>
-              <PageNumber
-                pageNumber={pageNumber}
-                itemPerPage={itemPerPage}
-                dataLength={data.length}
-                handlePageNumber={handlePageNumber}
-              />
-            </td>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
-  );
-};
+      </div> */
+}
 
 export default GridTable;
