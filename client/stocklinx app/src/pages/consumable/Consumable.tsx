@@ -43,6 +43,7 @@ const Consumable = () => {
   return (
     <div>
       <GridTable
+        keyfield={"id"}
         data={consumables}
         columns={useColumns()}
         refreshData={refreshData}
