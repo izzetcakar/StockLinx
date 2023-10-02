@@ -3,7 +3,7 @@ import GridTable from "../components/gridTable/GridTable";
 import "./test.scss";
 
 const Test = () => {
-  return <GridTable data={testData} keyfield={"id"} />;
+  return <GridTable data={testData} itemKey={"id"} />;
 };
 
 export default Test;

@@ -1,5 +1,5 @@
 import { checkEmpty } from "./functions/checkEmpty";
-// import { AuthProvider, useAuth } from "./contexts/auth";
+import 'devextreme/dist/css/dx.light.css';
 import {
   createBrowserRouter,
   RouterProvider,

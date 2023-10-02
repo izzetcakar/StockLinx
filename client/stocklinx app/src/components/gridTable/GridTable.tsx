@@ -17,7 +17,7 @@ interface GridTableProps {
   onRowInsert?: () => void;
   onRowUpdate?: (row: object) => void;
   onRowRemove?: (row: object) => void;
-  keyfield: keyof object;
+  itemKey: string;
 }
 
 const GridTable: React.FC<GridTableProps> = ({
@@ -28,7 +28,7 @@ const GridTable: React.FC<GridTableProps> = ({
   onRowInsert = () => console.log("Row insert"),
   onRowUpdate = (e: object) => console.log(e),
   onRowRemove = (e: object) => console.log(e),
-  keyfield,
+  itemKey,
 }) => {
   const [pageNumber, setPageNumber] = useState<number>(0);
   const [dataColumns, setDataColumns] = useState<Column[]>(columns);
@@ -36,6 +36,10 @@ const GridTable: React.FC<GridTableProps> = ({
   const [selectedObjects, setSelectedObjects] = useState<(string | number)[]>(
     []
   );
+  const [keyfield, setKeyfield] = useState<keyof object>(itemKey as keyof object);
+  useEffect(() => {
+    setKeyfield(itemKey as keyof object);
+  }, [itemKey]);
   useEffect(() => {
     setDataColumns(handleColumnsEmpty(columns));
   }, [data]);
@@ -118,7 +122,6 @@ const GridTable: React.FC<GridTableProps> = ({
       }
     }
   };
-
   const getRowIndex = (index: number): number => {
     return index + pageNumber * itemPerPage;
   };
