@@ -127,7 +127,7 @@ const GridTable: React.FC<GridTableProps> = ({
   };
 
   return (
-    <table>
+    <table className="gridTable">
       <thead>
         <tr className="table2-toolbar">
           <td className="table2-toolbar" colSpan={visibleColumns.length + 1}>

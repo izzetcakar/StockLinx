@@ -1,5 +1,5 @@
 import { checkEmpty } from "./functions/checkEmpty";
-import 'devextreme/dist/css/dx.light.css';
+import 'devextreme/dist/css/dx.light.compact.css';
 import {
   createBrowserRouter,
   RouterProvider,
