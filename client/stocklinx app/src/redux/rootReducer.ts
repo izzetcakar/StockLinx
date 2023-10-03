@@ -11,7 +11,6 @@ import locationReducer from "./location/reducer";
 import manufacturerReducer from "./manufacturer/reducer";
 import modelReducer from "./model/reducer";
 import supplierReducer from "./supplier/reducer";
-import productStatus from "./productStatus/reducer";
 import userReducer from "./user/reducer";
 import genericReducer from "./generic/reducer";
 
@@ -28,7 +27,6 @@ const rootReducer = combineReducers({
   manufacturer: manufacturerReducer,
   model: modelReducer,
   supplier: supplierReducer,
-  productStatus: productStatus,
   user: userReducer,
   generic: genericReducer,
 });
