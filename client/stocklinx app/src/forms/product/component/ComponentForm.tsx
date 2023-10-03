@@ -16,7 +16,7 @@ import { DateInput } from "@mantine/dates";
 import { closeModal } from "@mantine/modals";
 import { IconUpload } from "@tabler/icons-react";
 import { modals } from "@mantine/modals";
-import { IComponent } from "../../../interfaces/interfaces";
+import { IComponent, ProductStatus } from "../../../interfaces/interfaces";
 import { handleImageChange } from "../../functions/formFunctions";
 import MantineSelect from "../../components/MantineSelect";
 import { useDispatch } from "react-redux";
@@ -38,7 +38,7 @@ const ComponentForm: React.FC<ComponentFormProps> = ({ component }) => {
           categoryId: "",
           locationId: "",
           companyId: "",
-          statusId: "",
+          productStatus: ProductStatus.AVAILABLE,
           name: "",
           imagePath: "",
           serialNo: "",

@@ -16,7 +16,7 @@ import { DateInput } from "@mantine/dates";
 import { closeModal } from "@mantine/modals";
 import { IconUpload } from "@tabler/icons-react";
 import { modals } from "@mantine/modals";
-import { IAccessory } from "../../../interfaces/interfaces";
+import { IAccessory, ProductStatus } from "../../../interfaces/interfaces";
 import { handleImageChange } from "../../functions/formFunctions";
 import MantineSelect from "../../components/MantineSelect";
 import { useDispatch } from "react-redux";
@@ -39,7 +39,7 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory }) => {
           categoryId: null,
           locationId: null,
           companyId: null,
-          statusId: null,
+          productStatus: ProductStatus.AVAILABLE,
           name: "",
           imagePath: "",
           serialNo: null,

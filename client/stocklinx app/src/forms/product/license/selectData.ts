@@ -17,9 +17,6 @@ export const useSelectData = (form: UseFormReturnType<ILicense>) => {
   const locationSelectData = useSelector(
     (state: RootState) => state.location.selectData
   );
-  const productStatusSelectData = useSelector(
-    (state: RootState) => state.productStatus.selectData
-  );
 
   const selectComponentData: IMantinSelectProps<ILicense>[] = [
     {
@@ -40,12 +37,6 @@ export const useSelectData = (form: UseFormReturnType<ILicense>) => {
       value: form.values.locationId || "",
       label: "Location",
       propTag: "locationId",
-    },
-    {
-      data: productStatusSelectData,
-      value: form.values.statusId || "",
-      label: "Status",
-      propTag: "statusId",
     },
     {
       data: supplierSelectData,

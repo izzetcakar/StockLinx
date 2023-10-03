@@ -4,6 +4,7 @@ import { Column as MyColumn } from "../../components/gridTable/interfaces/interf
 import { NameComponent } from "../../components/customComponents/TableComponents";
 import { Column } from "devextreme/ui/data_grid";
 import { IDepartment } from "../../interfaces/interfaces";
+import { IFormItem } from "../../components/generic/BaseDataGrid";
 
 export const useColumns = () => {
   const companies = useSelector((state: RootState) => state.company.companies);
@@ -67,6 +68,23 @@ export const useColumns = () => {
       caption: "Notes",
     },
   ];
+  const formItems: IFormItem[] = [
+    {
+      dataField: "companyId",
+    },
+    {
+      dataField: "locationId",
+    },
+    {
+      dataField: "managerId",
+    },
+    {
+      dataField: "name",
+    },
+    {
+      dataField: "notes",
+    },
+  ];
 
-  return { columns, devColumns };
+  return { columns, devColumns, formItems };
 };

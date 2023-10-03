@@ -14,9 +14,7 @@ export const useSelectData = (form: UseFormReturnType<IConsumable>) => {
   const companySelectData = useSelector(
     (state: RootState) => state.company.selectData
   );
-  const productStatusSelectData = useSelector(
-    (state: RootState) => state.productStatus.selectData
-  );
+
   const selectComponentData: IMantinSelectProps<IConsumable>[] = [
     {
       data: categorySelectData,
@@ -36,12 +34,6 @@ export const useSelectData = (form: UseFormReturnType<IConsumable>) => {
       value: form.values.locationId || "",
       label: "Location",
       propTag: "locationId",
-    },
-    {
-      data: productStatusSelectData,
-      value: form.values.statusId || "",
-      label: "Status",
-      propTag: "statusId",
     },
   ];
   return selectComponentData;
