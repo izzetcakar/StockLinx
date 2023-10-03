@@ -1,6 +1,7 @@
 import { Column } from "devextreme/ui/data_grid";
 import { Column as MyColumn } from "../../components/gridTable/interfaces/interfaces";
 import { ILocation } from "../../interfaces/interfaces";
+import { IFormItem } from "../../components/generic/BaseDataGrid";
 
 export const useColumns = () => {
   const columns: MyColumn[] = [
@@ -79,6 +80,35 @@ export const useColumns = () => {
       caption: "Notes",
     },
   ];
+  const formItems: IFormItem[] = [
+    {
+      dataField: "name",
+    },
+    {
+      dataField: "country",
+    },
+    {
+      dataField: "state",
+    },
+    {
+      dataField: "city",
+    },
+    {
+      dataField: "address",
+    },
+    {
+      dataField: "address2",
+    },
+    {
+      dataField: "zipCode",
+    },
+    {
+      dataField: "currency",
+    },
+    {
+      dataField: "notes",
+    },
+  ];
 
-  return { columns, devColumns };
+  return { columns, devColumns, formItems };
 };

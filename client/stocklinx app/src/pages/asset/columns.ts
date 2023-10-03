@@ -3,7 +3,9 @@ import { Column as MyColumn } from "../../components/gridTable/interfaces/interf
 import { NameComponent } from "../../components/customComponents/TableComponents";
 import { RootState } from "../../redux/rootReducer";
 import { Column } from "devextreme/ui/data_grid";
-import { IAsset } from "../../interfaces/interfaces";
+import { IAsset, ProductStatus } from "../../interfaces/interfaces";
+import { createDataFromEnum } from "../../functions/createDataFromEnum";
+import { IFormItem } from "../../components/generic/BaseDataGrid";
 
 export const useColumns = () => {
   const categories = useSelector(
@@ -15,9 +17,6 @@ export const useColumns = () => {
     (state: RootState) => state.manufacturer.manufacturers
   );
   const models = useSelector((state: RootState) => state.model.models);
-  const productStatuses = useSelector(
-    (state: RootState) => state.productStatus.productStatuses
-  );
 
   const columns: MyColumn[] = [
     {
@@ -51,10 +50,8 @@ export const useColumns = () => {
         NameComponent(value, models),
     },
     {
-      dataField: "statusId",
+      dataField: "productStatus",
       caption: "Status",
-      renderComponent: (value: string | number | boolean | null | undefined) =>
-        NameComponent(value, productStatuses),
     },
     {
       dataField: "name",
@@ -125,12 +122,12 @@ export const useColumns = () => {
       },
     },
     {
-      dataField: "statusId",
+      dataField: "productStatus",
       caption: "Status",
       lookup: {
-        dataSource: productStatuses,
+        dataSource: createDataFromEnum(ProductStatus),
         valueExpr: "id",
-        displayExpr: "name",
+        displayExpr: "value",
       },
     },
     {
@@ -170,5 +167,22 @@ export const useColumns = () => {
     //   caption:"Check Out Counter"
     // }
   ];
-  return { columns, devColumns };
+  const formItems: IFormItem[] = [
+    { dataField: "name" },
+    { dataField: "manufacturerId" },
+    { dataField: "modelId" },
+    { dataField: "tagNo" },
+    { dataField: "warrantyDate" },
+    { dataField: "categoryId" },
+    { dataField: "locationId" },
+    { dataField: "companyId" },
+    { dataField: "productStatus" },
+    { dataField: "serialNo" },
+    { dataField: "orderNo" },
+    { dataField: "purchaseCost" },
+    { dataField: "purchaseDate" },
+    { dataField: "notes" },
+  ];
+
+  return { columns, devColumns, formItems };
 };

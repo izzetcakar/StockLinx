@@ -19,7 +19,7 @@ import { DateInput } from "@mantine/dates";
 import { closeModal } from "@mantine/modals";
 import { IconPlus, IconTrash, IconUpload } from "@tabler/icons-react";
 import { modals } from "@mantine/modals";
-import { IAsset } from "../../../interfaces/interfaces";
+import { IAsset, ProductStatus } from "../../../interfaces/interfaces";
 import { handleImageChange } from "../../functions/formFunctions";
 import MantineSelect from "../../components/MantineSelect";
 import { useDispatch } from "react-redux";
@@ -42,7 +42,7 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
           categoryId: null,
           locationId: null,
           companyId: "",
-          statusId: null,
+          productStatus: ProductStatus.AVAILABLE,
           modelId: null,
           notes: "",
           imagePath: "",

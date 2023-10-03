@@ -11,7 +11,6 @@ import locationSaga from "./location/sagas";
 import manufacturerSaga from "./manufacturer/sagas";
 import modelSaga from "./model/sagas";
 import supplierSaga from "./supplier/sagas";
-import productStatusSaga from "./productStatus/sagas";
 import userSaga from "./user/sagas";
 
 export function* rootSaga() {
@@ -28,7 +27,6 @@ export function* rootSaga() {
     fork(manufacturerSaga),
     fork(modelSaga),
     fork(supplierSaga),
-    fork(productStatusSaga),
     fork(userSaga),
   ]);
 }

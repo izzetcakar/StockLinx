@@ -17,7 +17,7 @@ import { DateInput } from "@mantine/dates";
 import { closeModal } from "@mantine/modals";
 import { IconUpload } from "@tabler/icons-react";
 import { modals } from "@mantine/modals";
-import { ILicense } from "../../../interfaces/interfaces";
+import { ILicense, ProductStatus } from "../../../interfaces/interfaces";
 import { handleImageChange } from "../../functions/formFunctions";
 import MantineSelect from "../../components/MantineSelect";
 import { useDispatch } from "react-redux";
@@ -39,7 +39,7 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license }) => {
           categoryId: null,
           companyId: null,
           locationId: null,
-          statusId: null,
+          productStatus: ProductStatus.AVAILABLE,
           supplierId: null,
           name: "",
           imagePath: null,

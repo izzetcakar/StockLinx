@@ -4,6 +4,7 @@ import { NameComponent } from "../../components/customComponents/TableComponents
 import { RootState } from "../../redux/rootReducer";
 import { ISupplier } from "../../interfaces/interfaces";
 import { Column } from "devextreme/ui/data_grid";
+import { IFormItem } from "../../components/generic/BaseDataGrid";
 
 export const useColumns = () => {
   const locations = useSelector((state: RootState) => state.location.locations);
@@ -83,6 +84,32 @@ export const useColumns = () => {
       caption: "Notes",
     },
   ];
+  const formItems: IFormItem[] = [
+    {
+      dataField: "locationId",
+    },
+    {
+      dataField: "name",
+    },
+    {
+      dataField: "contactName",
+    },
+    {
+      dataField: "contactPhone",
+    },
+    {
+      dataField: "contactEmail",
+    },
+    {
+      dataField: "website",
+    },
+    {
+      dataField: "fax",
+    },
+    {
+      dataField: "notes",
+    },
+  ];
 
-  return { columns, devColumns };
+  return { columns, devColumns, formItems };
 };

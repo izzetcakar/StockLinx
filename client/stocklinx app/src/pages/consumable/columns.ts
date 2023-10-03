@@ -3,7 +3,9 @@ import { RootState } from "../../redux/rootReducer";
 import { Column as MyColumn } from "../../components/gridTable/interfaces/interfaces";
 import { NameComponent } from "../../components/customComponents/TableComponents";
 import { Column } from "devextreme/ui/data_grid";
-import { IConsumable } from "../../interfaces/interfaces";
+import { IConsumable, ProductStatus } from "../../interfaces/interfaces";
+import { createDataFromEnum } from "../../functions/createDataFromEnum";
+import { IFormItem } from "../../components/generic/BaseDataGrid";
 
 export const useColumns = () => {
   const categories = useSelector(
@@ -11,9 +13,6 @@ export const useColumns = () => {
   );
   const locations = useSelector((state: RootState) => state.location.locations);
   const companies = useSelector((state: RootState) => state.company.companies);
-  const productStatuses = useSelector(
-    (state: RootState) => state.productStatus.productStatuses
-  );
 
   const columns: MyColumn[] = [
     {
@@ -35,10 +34,8 @@ export const useColumns = () => {
         NameComponent(value, companies),
     },
     {
-      dataField: "statusId",
+      dataField: "productStatus",
       caption: "Status",
-      renderComponent: (value: string | number | boolean | null | undefined) =>
-        NameComponent(value, productStatuses),
     },
     {
       dataField: "name",
@@ -79,25 +76,52 @@ export const useColumns = () => {
     {
       dataField: "locationId",
       caption: "Location",
-      calculateDisplayValue: (rowData: IConsumable) => {
-        const location = locations.find((l) => l.id === rowData.locationId);
-        return location ? location.name : "";
+      lookup: {
+        dataSource: locations,
+        valueExpr: "id",
+        displayExpr: "name",
       },
     },
     {
       dataField: "companyId",
       caption: "Company",
-      calculateDisplayValue: (rowData: IConsumable) => {
-        const company = companies.find((c) => c.id === rowData.companyId);
-        return company ? company.name : "";
+      lookup: {
+        dataSource: companies,
+        valueExpr: "id",
+        displayExpr: "name",
       },
     },
     { dataField: "name", caption: "Name" },
+    {
+      dataField: "productStatus",
+      caption: "Status",
+      lookup: {
+        dataSource: createDataFromEnum(ProductStatus),
+        valueExpr: "id",
+        displayExpr: "value",
+      },
+    },
     { dataField: "serialNo", caption: "Serial No" },
     { dataField: "orderNo", caption: "Order No" },
     { dataField: "purchaseCost", caption: "Purchase Cost" },
     { dataField: "purchaseDate", caption: "Purchase Date" },
     { dataField: "note", caption: "Note" },
   ];
-  return { columns, devColumns };
+  const formItems: IFormItem[] = [
+    { dataField: "quantity" },
+    { dataField: "itemNo" },
+    { dataField: "modelNo" },
+    { dataField: "categoryId" },
+    { dataField: "locationId" },
+    { dataField: "companyId" },
+    { dataField: "name" },
+    { dataField: "productStatus" },
+    { dataField: "serialNo" },
+    { dataField: "orderNo" },
+    { dataField: "purchaseCost" },
+    { dataField: "purchaseDate" },
+    { dataField: "notes" },
+  ];
+
+  return { columns, devColumns, formItems };
 };

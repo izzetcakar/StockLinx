@@ -17,7 +17,7 @@ import { DateInput } from "@mantine/dates";
 import { closeModal } from "@mantine/modals";
 import { IconUpload } from "@tabler/icons-react";
 import { modals } from "@mantine/modals";
-import { IConsumable } from "../../../interfaces/interfaces";
+import { IConsumable, ProductStatus } from "../../../interfaces/interfaces";
 import { handleImageChange } from "../../functions/formFunctions";
 import MantineSelect from "../../components/MantineSelect";
 import { useDispatch, useSelector } from "react-redux";
@@ -41,7 +41,7 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({ consumable }) => {
           categoryId: null,
           companyId: null,
           locationId: null,
-          statusId: null,
+          productStatus: ProductStatus.AVAILABLE,
           name: "",
           imagePath: null,
           modelNo: null,
