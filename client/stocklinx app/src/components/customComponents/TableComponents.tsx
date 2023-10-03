@@ -6,9 +6,9 @@ export interface IValue {
 }
 
 export const NameComponent: (
-  value: string,
+  value: string | number | boolean | null | undefined,
   data: BaseEntity[]
 ) => JSX.Element = (value, data) => {
-  const name = getNameFromArray(data, value?.toString());
+  const name = getNameFromArray(data, value as string);
   return <div>{name}</div>;
 };

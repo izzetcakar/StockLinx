@@ -16,7 +16,7 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.user.user);
-  const userApiStatus = useSelector((state: RootState) => state.user.pending);
+  const userApiStatus = useSelector((state: RootState) => state.generic.loading);
   const signForm = useForm<IUserLoginDto>({
     initialValues: {
       email: "",
@@ -42,7 +42,7 @@ const Login = () => {
   return (
     <Flex w="100%" h="100vh" justify={"center"} align={"center"} bg={"#f4f0f0"}>
       <Paper shadow="xs" py="md" px={40} mah="90%" maw="90%">
-        <LoadingOverlay visible={userApiStatus} />
+        <LoadingOverlay visible={userApiStatus > 0} />
         <Flex direction="column" gap={10} maw="100%" bg={"white"} >
           <Image alt="..." src={logo} />
           <form className="sign-form" onSubmit={signForm.onSubmit(

@@ -1,11 +1,19 @@
-import { Column } from "../../components/gridTable/interfaces/interfaces";
+import { Column } from "devextreme/ui/data_grid";
+import { Column as MyColumn } from "../../components/gridTable/interfaces/interfaces";
+import { ICompany } from "../../interfaces/interfaces";
 
 export const useColumns = () => {
-  const columns: Column[] = [
+  const columns: MyColumn[] = [
     {
       dataField: "name",
       caption: "Name",
     },
   ];
-  return columns;
+  const devColumns: Column<ICompany>[] = [
+    {
+      dataField: "name",
+      caption: "Name",
+    },
+  ];
+  return { columns, devColumns };
 };

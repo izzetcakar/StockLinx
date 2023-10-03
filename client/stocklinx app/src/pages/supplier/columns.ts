@@ -1,16 +1,19 @@
 import { useSelector } from "react-redux";
-import { Column } from "../../components/gridTable/interfaces/interfaces";
+import { Column as MyColumn } from "../../components/gridTable/interfaces/interfaces";
 import { NameComponent } from "../../components/customComponents/TableComponents";
 import { RootState } from "../../redux/rootReducer";
+import { ISupplier } from "../../interfaces/interfaces";
+import { Column } from "devextreme/ui/data_grid";
 
 export const useColumns = () => {
   const locations = useSelector((state: RootState) => state.location.locations);
 
-  const columns: Column[] = [
+  const columns: MyColumn[] = [
     {
       dataField: "locationId",
       caption: "Location",
-      renderComponent: (value: string) => NameComponent(value, locations),
+      renderComponent: (value: string | number | boolean | null | undefined) =>
+        NameComponent(value, locations),
     },
     {
       dataField: "name",
@@ -41,5 +44,45 @@ export const useColumns = () => {
       caption: "Notes",
     },
   ];
-  return columns;
+  const devColumns: Column<ISupplier>[] = [
+    {
+      dataField: "locationId",
+      caption: "Location",
+      lookup: {
+        dataSource: locations,
+        valueExpr: "id",
+        displayExpr: "name",
+      },
+    },
+    {
+      dataField: "name",
+      caption: "Name",
+    },
+    {
+      dataField: "contactName",
+      caption: "Contact Name",
+    },
+    {
+      dataField: "contactPhone",
+      caption: "Contact Phone",
+    },
+    {
+      dataField: "contactEmail",
+      caption: "Contact Email",
+    },
+    {
+      dataField: "website",
+      caption: "Website",
+    },
+    {
+      dataField: "fax",
+      caption: "Fax",
+    },
+    {
+      dataField: "notes",
+      caption: "Notes",
+    },
+  ];
+
+  return { columns, devColumns };
 };
