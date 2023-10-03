@@ -1,7 +1,20 @@
 //Client side interfaces
 export enum LngType {
-  Turkish,
-  English,
+  TURKISH,
+  ENGLISH,
+}
+export enum ApiStatus {
+  IDLE,
+  SUCCESS,
+  LOADING,
+  FAILED,
+}
+export enum ProductStatus {
+  AVAILABLE,
+  DEPLOYED,
+  ORDERED,
+  OUT_OF_STOCK,
+  DAMAGED,
 }
 export interface IDropdownData {
   id: number;
@@ -16,12 +29,6 @@ export interface ApiResponse<T> {
   message: string;
   success: boolean;
   status?: number;
-}
-export enum ApiStatus {
-  Idle,
-  Success,
-  Loading,
-  Failed,
 }
 export interface SelectData {
   value: string;
@@ -39,14 +46,11 @@ export interface BaseEntity {
   updatedDate?: Date | null;
   deletedDate?: Date | null;
 }
-export interface IProductStatus extends BaseEntity {
-  name: string;
-}
 export interface IBaseProduct extends BaseEntity {
   categoryId: string | null;
   locationId: string | null;
   companyId: string | null;
-  statusId: string | null;
+  productStatus: ProductStatus;
   imagePath: string | null;
   name: string;
   serialNo: string | null;
