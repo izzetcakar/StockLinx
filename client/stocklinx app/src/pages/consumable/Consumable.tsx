@@ -28,9 +28,10 @@ import DataGrid, {
   Item as GridItem,
 } from "devextreme-react/data-grid";
 import { Item as FormItem } from "devextreme-react/form";
-import { RowUpdatingEvent } from "devextreme/ui/data_grid";
+import { RowRemovingEvent, RowUpdatingEvent } from "devextreme/ui/data_grid";
 
 const Consumable = () => {
+  const companies = useSelector((state: RootState) => state.company.companies);
   const dispatch = useDispatch();
   const consumables = useSelector(
     (state: RootState) => state.consumable.consumables
@@ -60,6 +61,16 @@ const Consumable = () => {
 
   const onRowUpdating = (e: RowUpdatingEvent<IConsumable>) => {
     console.log(e);
+    e.cancel = true;
+  };
+  const onRowRemoving = (e: RowRemovingEvent<IConsumable>) => {
+    console.log(e);
+    e.cancel = true;
+  };
+  const companyOptions = {
+    items: companies,
+    valueExpr: "id",
+    displayExpr: "name",
   };
 
   return (
@@ -67,7 +78,7 @@ const Consumable = () => {
       <GridTable
         itemKey={"id"}
         data={consumables}
-        columns={useColumns()}
+        columns={useColumns().columns}
         refreshData={refreshData}
         onRowInsert={onRowInsert}
         onRowUpdate={onRowUpdate}
@@ -76,12 +87,14 @@ const Consumable = () => {
       <DataGrid
         keyExpr="id"
         dataSource={consumables}
+        columns={useColumns().devColumns}
         showBorders={true}
         showColumnLines={false}
         allowColumnReordering={true}
         allowColumnResizing={true}
         columnAutoWidth={true}
         onRowUpdating={onRowUpdating}
+        onRowRemoving={onRowRemoving}
       >
         <Editing
           mode="popup"
@@ -90,27 +103,25 @@ const Consumable = () => {
           allowAdding={true}
           allowDeleting={true}
         >
-          <Popup
-            title="List Item Info"
-            showTitle={true}
-            width={700}
-            height={525}
-          />
+          <Popup title="Consumable" showTitle={true} width={700} height={525} />
           <Form>
             <FormItem itemType="group" colCount={2} colSpan={2}>
-              <FormItem dataField="id" />
               <FormItem dataField="quantity" />
               <FormItem dataField="itemNo" />
               <FormItem dataField="modelNo" />
               <FormItem dataField="categoryId" />
               <FormItem dataField="locationId" />
-              <FormItem dataField="companyId" />
+              <FormItem
+                dataField="companyId"
+                editorType="dxSelectBox"
+                editorOptions={companyOptions}
+              />
               <FormItem dataField="name" />
               <FormItem dataField="serialNo" />
               <FormItem dataField="orderNo" />
               <FormItem dataField="purchaseCost" />
               <FormItem dataField="purchaseDate" />
-              <FormItem dataField="note" colSpan={2} />
+              <FormItem dataField="note" />
             </FormItem>
           </Form>
         </Editing>

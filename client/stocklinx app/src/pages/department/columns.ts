@@ -1,22 +1,26 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
-import { Column } from "../../components/gridTable/interfaces/interfaces";
+import { Column as MyColumn } from "../../components/gridTable/interfaces/interfaces";
 import { NameComponent } from "../../components/customComponents/TableComponents";
+import { Column } from "devextreme/ui/data_grid";
+import { IDepartment } from "../../interfaces/interfaces";
 
 export const useColumns = () => {
   const companies = useSelector((state: RootState) => state.company.companies);
   const locations = useSelector((state: RootState) => state.location.locations);
 
-  const columns: Column[] = [
+  const columns: MyColumn[] = [
     {
       dataField: "companyId",
       caption: "Company",
-      renderComponent: (value: string) => NameComponent(value, companies),
+      renderComponent: (value: string | number | boolean | null | undefined) =>
+        NameComponent(value, companies),
     },
     {
       dataField: "locationId",
       caption: "Location",
-      renderComponent: (value: string) => NameComponent(value, locations),
+      renderComponent: (value: string | number | boolean | null | undefined) =>
+        NameComponent(value, locations),
     },
     {
       dataField: "managerId",
@@ -31,5 +35,38 @@ export const useColumns = () => {
       caption: "Notes",
     },
   ];
-  return columns;
+  const devColumns: Column<IDepartment>[] = [
+    {
+      dataField: "companyId",
+      caption: "Company",
+      lookup: {
+        dataSource: companies,
+        valueExpr: "id",
+        displayExpr: "name",
+      },
+    },
+    {
+      dataField: "locationId",
+      caption: "Location",
+      lookup: {
+        dataSource: locations,
+        valueExpr: "id",
+        displayExpr: "name",
+      },
+    },
+    {
+      dataField: "managerId",
+      caption: "Manager",
+    },
+    {
+      dataField: "name",
+      caption: "Name",
+    },
+    {
+      dataField: "notes",
+      caption: "Notes",
+    },
+  ];
+
+  return { columns, devColumns };
 };
