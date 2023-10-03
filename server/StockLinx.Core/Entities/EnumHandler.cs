@@ -1,9 +1,12 @@
 ﻿namespace StockLinx.Core.Entities
 {
-    public enum Status
+    public enum ProductStatus
     {
-        Deployable,
-        Deployed
+        AVAILABLE,
+        DEPLOYED,
+        ORDERED,
+        OUT_OF_STOCK,
+        DAMAGED,
     }
     public enum CategoryType
     {
@@ -12,8 +15,5 @@
         Component,
         Consumable
     }
-    public class EnumHandler
-    {
-
-    }
+    
 }

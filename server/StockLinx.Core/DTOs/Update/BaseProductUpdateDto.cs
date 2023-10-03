@@ -1,4 +1,6 @@
-﻿namespace StockLinx.Core.DTOs.Update
+﻿using StockLinx.Core.Entities;
+
+namespace StockLinx.Core.DTOs.Update
 {
     public abstract class BaseProductUpdateDto : BaseUpdateDto
     {
@@ -13,5 +15,6 @@
         public string? Notes { get; set; }
         public double? PurchaseCost { get; set; }
         public DateTime? PurchaseDate { get; set; }
+        public ProductStatus ProductStatus { get; set; }
     }
 }

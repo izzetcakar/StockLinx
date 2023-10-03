@@ -53,9 +53,6 @@ namespace StockLinx.Service.Mapping
             CreateMap<Supplier, SupplierDto>().ReverseMap();
             CreateMap<Supplier, SupplierCreateDto>().ReverseMap();
             CreateMap<Supplier, SupplierUpdateDto>().ReverseMap();
-            CreateMap<ProductStatus,ProductStatusDto>().ReverseMap();
-            CreateMap<ProductStatus,ProductStatusCreateDto>().ReverseMap();
-            CreateMap<ProductStatus,ProductStatusUpdateDto>().ReverseMap();
             CreateMap<User, UserDto>().ReverseMap();
             CreateMap<User, UserCreateDto>().ReverseMap();
             CreateMap<User, UserLoginDto>().ReverseMap();
