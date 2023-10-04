@@ -1,5 +1,5 @@
 import { checkEmpty } from "./functions/checkEmpty";
-import 'devextreme/dist/css/dx.light.compact.css';
+import "devextreme/dist/css/dx.light.compact.css";
 import {
   createBrowserRouter,
   RouterProvider,
@@ -22,10 +22,12 @@ import Department from "./pages/department/Department";
 import Company from "./pages/company/Company";
 import { useSelector } from "react-redux";
 import { RootState } from "./redux/rootReducer";
+import { LoadPanel } from "devextreme-react/load-panel";
 
 const Layout = () => {
   const navigate = useNavigate();
   const userRedux = useSelector((state: RootState) => state.user.user);
+  const loading = useSelector((state: RootState) => state.generic.loading);
 
   if (checkEmpty(userRedux)) {
     return (
@@ -36,10 +38,16 @@ const Layout = () => {
         <div className="page">
           <Outlet />
         </div>
+        <LoadPanel
+          shadingColor={"rgba(0, 0, 0, 0.206)"}
+          visible={loading > 0}
+          showIndicator={true}
+          shading={true}
+          showPane={true}
+        />
       </div>
     );
-  }
-  else {
+  } else {
     navigate("/login");
     return <Login />;
   }
@@ -105,4 +113,4 @@ const router = createBrowserRouter([
 const App = () => {
   return <RouterProvider router={router} />;
 };
-export default App
+export default App;

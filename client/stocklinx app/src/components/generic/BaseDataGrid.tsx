@@ -15,7 +15,12 @@ import DataGrid, {
 } from "devextreme-react/data-grid";
 import { Item as FormItem } from "devextreme-react/form";
 import { checkEmpty } from "../../functions/checkEmpty";
-import { Column } from "devextreme/ui/data_grid";
+import {
+  Column,
+  RowInsertingEvent,
+  RowRemovingEvent,
+  RowUpdatingEvent,
+} from "devextreme/ui/data_grid";
 import React from "react";
 
 export type IFormItem = {
@@ -30,11 +35,12 @@ interface BaseDataGridProps {
   title: string;
   data: object[];
   columns: Column[];
-  onRowInsert?: (obj: object) => void;
-  onRowUpdate?: (obj: object) => void;
-  onRowRemove?: (id: string) => void;
-  refreshData?: () => void;
   formItems: IFormItem[];
+  loading?: boolean;
+  onRowInserting?: (obj: RowInsertingEvent) => void;
+  onRowUpdating?: (obj: RowUpdatingEvent) => void;
+  onRowRemoving?: (id: RowRemovingEvent) => void;
+  refreshData?: () => void;
 }
 
 const BaseDataGrid: React.FC<BaseDataGridProps> = ({
@@ -42,6 +48,17 @@ const BaseDataGrid: React.FC<BaseDataGridProps> = ({
   data = [],
   columns = [],
   formItems = [],
+  onRowInserting = (e) => {
+    console.log(e.data);
+  },
+  onRowUpdating = (e) => {
+    const newObject = { ...e.oldData, ...e.newData };
+    console.log(newObject);
+  },
+  onRowRemoving = (e) => {
+    console.log(e.data.id);
+  },
+  refreshData = () => console.log("refresh"),
 }) => {
   return (
     <DataGrid
@@ -53,6 +70,9 @@ const BaseDataGrid: React.FC<BaseDataGridProps> = ({
       allowColumnReordering={true}
       allowColumnResizing={true}
       columnAutoWidth={true}
+      onRowInserting={onRowInserting}
+      onRowUpdating={onRowUpdating}
+      onRowRemoving={onRowRemoving}
     >
       <Editing
         mode="popup"
@@ -83,7 +103,7 @@ const BaseDataGrid: React.FC<BaseDataGridProps> = ({
         <GridItem name="addRowButton" showText="always" />
         <GridItem name="columnChooserButton" />
         <GridItem location="after">
-          <Button icon="refresh" onClick={() => console.log("refresh")} />
+          <Button icon="refresh" onClick={refreshData} />
         </GridItem>
         <GridItem name="exportButton" />
       </Toolbar>
