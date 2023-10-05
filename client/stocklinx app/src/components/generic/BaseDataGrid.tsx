@@ -37,6 +37,7 @@ export type IFormItem = {
 
 interface BaseDataGridProps {
   title: string;
+  gridRef: React.LegacyRef<DataGrid<object>>;
   data: object[];
   columns: Column[];
   formItems: IFormItem[];
@@ -49,6 +50,7 @@ interface BaseDataGridProps {
 
 const BaseDataGrid: React.FC<BaseDataGridProps> = ({
   title = "",
+  gridRef = null,
   data = [],
   columns = [],
   formItems = [],
@@ -85,6 +87,7 @@ const BaseDataGrid: React.FC<BaseDataGridProps> = ({
   return (
     <DataGrid
       keyExpr="id"
+      ref={gridRef}
       dataSource={data}
       columns={columns}
       showBorders={true}
@@ -104,7 +107,7 @@ const BaseDataGrid: React.FC<BaseDataGridProps> = ({
         allowAdding={true}
         allowDeleting={checkEmpty(data) ? true : false}
       >
-        <Popup title={title} showTitle={true} width={700} height={525} />
+        <Popup title={title} showTitle={true} />
         <Form>
           <FormItem itemType="group" colCount={2} colSpan={2}>
             {formItems.map((item) => (
@@ -123,7 +126,7 @@ const BaseDataGrid: React.FC<BaseDataGridProps> = ({
         <GridItem location="before">
           <Button onClick={() => console.log("delete")} icon="trash" />
         </GridItem>
-        <GridItem name="addRowButton" showText="always" />
+        {/* <GridItem name="addRowButton" showText="always" /> */}
         <GridItem name="columnChooserButton" />
         <GridItem location="after">
           <Button icon="refresh" onClick={refreshData} />
