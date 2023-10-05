@@ -40,18 +40,16 @@ const Consumable = () => {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-      <BaseDataGrid
-        title="Consumable"
-        data={consumables}
-        columns={useColumns().devColumns}
-        formItems={useColumns().formItems}
-        onRowInserting={onRowInserting}
-        onRowUpdating={onRowUpdating}
-        onRowRemoving={onRowRemoving}
-        refreshData={refreshData}
-      />
-    </div>
+    <BaseDataGrid
+      title="Consumable"
+      data={consumables}
+      columns={useColumns().devColumns}
+      formItems={useColumns().formItems}
+      onRowInserting={onRowInserting}
+      onRowUpdating={onRowUpdating}
+      onRowRemoving={onRowRemoving}
+      refreshData={refreshData}
+    />
   );
 };
 

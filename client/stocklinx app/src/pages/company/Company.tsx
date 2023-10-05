@@ -1,51 +1,47 @@
-import GridTable from "../../components/gridTable/GridTable";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
-import { openCompanyModal } from "../../modals/company/modals";
-import { genericConfirmModal } from "../../modals/generic/GenericModals";
 import { companyActions } from "../../redux/company/actions";
 import { ICompany } from "../../interfaces/interfaces";
 import { useColumns } from "./columns";
 import BaseDataGrid from "../../components/generic/BaseDataGrid";
+import {
+  RowInsertingEvent,
+  RowRemovingEvent,
+  RowUpdatingEvent,
+} from "devextreme/ui/data_grid";
+import { datagridRequest } from "../../functions/datagridRequest";
 
 const Company = () => {
   const dispatch = useDispatch();
   const companies = useSelector((state: RootState) => state.company.companies);
 
-  const onRowInsert = () => {
-    openCompanyModal();
-  };
-  const onRowUpdate = (row: object) => {
-    const data = row as ICompany;
-    openCompanyModal(data);
-  };
-  const onRowRemove = (row: object) => {
-    const id: string = (row as ICompany).id as string;
-    genericConfirmModal(() => dispatch(companyActions.remove({ id: id })));
-  };
   const refreshData = () => {
     dispatch(companyActions.getAll());
   };
+  const onRowInserting = async (e: RowInsertingEvent<ICompany>) => {
+    const newObject = { ...e.data };
+    await datagridRequest(e, "Consumable", "post", newObject);
+  };
+  const onRowUpdating = async (e: RowUpdatingEvent<ICompany>) => {
+    const newObject = { ...e.oldData, ...e.newData };
+    await datagridRequest(e, "Consumable", "put", newObject);
+  };
+  const onRowRemoving = (e: RowRemovingEvent<ICompany>) => {
+    datagridRequest(e, `Consumable/${e.data.id}`, "delete");
+  };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-      <GridTable
-        itemKey="id"
-        data={companies}
-        columns={useColumns().columns}
-        onRowInsert={onRowInsert}
-        onRowUpdate={onRowUpdate}
-        onRowRemove={onRowRemove}
-        refreshData={refreshData}
-      />
-      <BaseDataGrid
-        title="Company"
-        data={companies}
-        columns={useColumns().devColumns}
-        formItems={useColumns().formItems}
-      />
-    </div>
+    <BaseDataGrid
+      title="Company"
+      data={companies}
+      columns={useColumns().devColumns}
+      formItems={useColumns().formItems}
+      onRowInserting={onRowInserting}
+      onRowUpdating={onRowUpdating}
+      onRowRemoving={onRowRemoving}
+      refreshData={refreshData}
+    />
   );
 };
 
