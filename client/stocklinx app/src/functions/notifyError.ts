@@ -1,9 +1,9 @@
 import notify from "devextreme/ui/notify";
 
-export const notifyError = (res: any): void => {
-  if (res?.payload) {
+export const notifyError = (message: string): void => {
+  if (message) {
     notify({
-      message: res.payload,
+      message: message,
       type: "error",
       displayTime: 2000,
       position: { at: "top center", my: "top center" },
