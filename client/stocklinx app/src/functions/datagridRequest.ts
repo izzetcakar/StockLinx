@@ -6,6 +6,18 @@ import {
   RowRemovingEvent,
   RowUpdatingEvent,
 } from "devextreme/ui/data_grid";
+import { notifyError } from "./notifyError";
+
+const BASE_URL: string = import.meta.env.VITE_REACT_APP_BASE_URL as string;
+const header = {
+  "Access-Control-Allow-Private-Network": "true",
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Credentials": "true",
+  "Access-Control-Allow-Headers": "origin, content-type, accept, authorization",
+  "Access-Control-Allow-Methods": "GET,POST,DELETE,PUT",
+  "Content-Type": "application/json; charset=utf-8",
+  Authorization: `Bearer ${getToken()}`,
+};
 
 export const datagridRequest = async (
   e: RowInsertingEvent | RowUpdatingEvent | RowRemovingEvent,
@@ -13,21 +25,11 @@ export const datagridRequest = async (
   apiType: string,
   queryData?: object | object[]
 ) => {
-  const BASE_URL: string = import.meta.env.VITE_REACT_APP_BASE_URL as string;
-
   const axiosConfig: AxiosRequestConfig = {
-    headers: {
-      "Access-Control-Allow-Private-Network": "true",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Credentials": "true",
-      "Access-Control-Allow-Headers":
-        "origin, content-type, accept, authorization",
-      "Access-Control-Allow-Methods": "GET,POST,DELETE,PUT",
-      "Content-Type": "application/json; charset=utf-8",
-      Authorization: `Bearer ${getToken()}`,
-    },
+    headers: header,
     data: queryData,
   };
+
   const isCanceled = new Promise((resolve, reject) => {
     const promptPromise = confirm("Are you sure?", "Confirm changes");
     promptPromise.then(async (dialogResult) => {
@@ -63,7 +65,8 @@ export const datagridRequest = async (
           }
           return resolve(false);
         } catch (err) {
-          reject((err as Error).message);
+          notifyError((err as Error).message);
+          return resolve(true);
         }
       } else {
         return resolve(true);
