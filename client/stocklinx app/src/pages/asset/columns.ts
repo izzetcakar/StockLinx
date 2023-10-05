@@ -143,10 +143,6 @@ export const useColumns = () => {
       caption: "Order No",
     },
     {
-      dataField: "tagNo",
-      caption: "Tag No",
-    },
-    {
       dataField: "purchaseCost",
       caption: "Purchase Cost",
     },
