@@ -69,7 +69,7 @@ export const useColumns = () => {
       dataField: "quantity",
       dataType: "number",
       caption: "Quantity",
-      alignment: "left",
+      alignment: "center",
     },
     { dataField: "itemNo", caption: "Item No" },
     { dataField: "modelNo", caption: "Model No" },
