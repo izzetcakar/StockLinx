@@ -23,6 +23,7 @@ import Company from "./pages/company/Company";
 import { useSelector } from "react-redux";
 import { RootState } from "./redux/rootReducer";
 import { LoadPanel } from "devextreme-react/load-panel";
+import Header from "./components/Header/Header";
 
 const Layout = () => {
   const navigate = useNavigate();
@@ -36,7 +37,10 @@ const Layout = () => {
           <Sidebar />
         </div>
         <div className="page">
-          <Outlet />
+          <Header />
+          <div className="page-content">
+            <Outlet />
+          </div>
         </div>
         <LoadPanel
           shadingColor={"rgba(0, 0, 0, 0.206)"}

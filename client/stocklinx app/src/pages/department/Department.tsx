@@ -1,16 +1,19 @@
-import GridTable from "../../components/gridTable/GridTable";
 import { IDepartment } from "../../interfaces/interfaces";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { departmentActions } from "../../redux/department/actions";
 import { companyActions } from "../../redux/company/actions";
-import { openDepartmentModal } from "../../modals/department/modals";
-import { genericConfirmModal } from "../../modals/generic/GenericModals";
 import { locationActions } from "../../redux/location/actions";
 import { userActions } from "../../redux/user/actions";
 import { useColumns } from "./columns";
 import BaseDataGrid from "../../components/generic/BaseDataGrid";
+import {
+  RowInsertingEvent,
+  RowRemovingEvent,
+  RowUpdatingEvent,
+} from "devextreme/ui/data_grid";
+import { datagridRequest } from "../../functions/datagridRequest";
 
 const Department = () => {
   const dispatch = useDispatch();
@@ -18,43 +21,35 @@ const Department = () => {
     (state: RootState) => state.department.departments
   );
 
-  const onRowInsert = () => {
-    openDepartmentModal();
-  };
-  const onRowUpdate = (row: object) => {
-    const data = row as IDepartment;
-    openDepartmentModal(data);
-  };
-  const onRowRemove = (row: object) => {
-    const id: string = (row as IDepartment).id;
-    genericConfirmModal(() => dispatch(departmentActions.remove({ id: id })));
-  };
-
   const refreshData = () => {
     dispatch(departmentActions.getAll());
     dispatch(companyActions.getAll());
     dispatch(locationActions.getAll());
     dispatch(userActions.getAll());
   };
+  const onRowInserting = async (e: RowInsertingEvent<IDepartment>) => {
+    const newObject = { ...e.data };
+    await datagridRequest(e, "Consumable", "post", newObject);
+  };
+  const onRowUpdating = async (e: RowUpdatingEvent<IDepartment>) => {
+    const newObject = { ...e.oldData, ...e.newData };
+    await datagridRequest(e, "Consumable", "put", newObject);
+  };
+  const onRowRemoving = (e: RowRemovingEvent<IDepartment>) => {
+    datagridRequest(e, `Consumable/${e.data.id}`, "delete");
+  };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-      <GridTable
-        itemKey="id"
-        data={departments}
-        columns={useColumns().columns}
-        refreshData={refreshData}
-        onRowInsert={onRowInsert}
-        onRowUpdate={onRowUpdate}
-        onRowRemove={onRowRemove}
-      />
-      <BaseDataGrid
-        title="Department"
-        data={departments}
-        columns={useColumns().devColumns}
-        formItems={useColumns().formItems}
-      />
-    </div>
+    <BaseDataGrid
+      title="Department"
+      data={departments}
+      columns={useColumns().devColumns}
+      formItems={useColumns().formItems}
+      onRowInserting={onRowInserting}
+      onRowUpdating={onRowUpdating}
+      onRowRemoving={onRowRemoving}
+      refreshData={refreshData}
+    />
   );
 };
 

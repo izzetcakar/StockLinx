@@ -17,10 +17,14 @@ import { Item as FormItem } from "devextreme-react/form";
 import { checkEmpty } from "../../functions/checkEmpty";
 import {
   Column,
+  ExportingEvent,
   RowInsertingEvent,
   RowRemovingEvent,
   RowUpdatingEvent,
 } from "devextreme/ui/data_grid";
+import { exportDataGrid } from "devextreme/excel_exporter";
+import { Workbook } from "exceljs";
+import { saveAs } from "file-saver-es";
 import React from "react";
 
 export type IFormItem = {
@@ -60,6 +64,24 @@ const BaseDataGrid: React.FC<BaseDataGridProps> = ({
   },
   refreshData = () => console.log("refresh"),
 }) => {
+  const onExporting = (e: ExportingEvent) => {
+    const workbook = new Workbook();
+    const worksheet = workbook.addWorksheet("Main sheet");
+
+    exportDataGrid({
+      component: e.component,
+      worksheet,
+      autoFilterEnabled: true,
+    }).then(() => {
+      workbook.xlsx.writeBuffer().then((buffer) => {
+        saveAs(
+          new Blob([buffer], { type: "application/octet-stream" }),
+          `${title}.xlsx`
+        );
+      });
+    });
+  };
+
   return (
     <DataGrid
       keyExpr="id"
@@ -73,6 +95,7 @@ const BaseDataGrid: React.FC<BaseDataGridProps> = ({
       onRowInserting={onRowInserting}
       onRowUpdating={onRowUpdating}
       onRowRemoving={onRowRemoving}
+      onExporting={onExporting}
     >
       <Editing
         mode="popup"
