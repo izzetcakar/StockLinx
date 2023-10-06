@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
+using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
@@ -96,6 +97,29 @@ namespace StockLinx.Service.Services
             var accessories = await GetAllAsync();
             var accessoryDtos = _mapper.Map<IEnumerable<AccessoryDto>>(accessories);
             return accessoryDtos.ToList();
+        }
+
+        public async Task<ProductCounter> GetAllCountAsync()
+        {
+            var accessories = await GetAllAsync();
+            var accessoryCount = accessories.Count();
+            return new ProductCounter { EntityName = "Accessories", Count = accessoryCount };
+        }
+
+        public async Task<List<ProductStatusCounter>> GetStatusCount()
+        {
+            var accessories = await GetAllAsync();
+            var productStatusGroups = accessories.GroupBy(a => a.ProductStatus);
+            var productStatusCounts = new List<ProductStatusCounter>();
+            foreach (var group in productStatusGroups)
+            {
+                productStatusCounts.Add(new ProductStatusCounter
+                {
+                    Status = group.Key.ToString(),
+                    Count = group.Count()
+                });
+            }
+            return productStatusCounts.ToList();
         }
     }
 }

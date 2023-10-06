@@ -34,16 +34,22 @@ const Manufacturer = () => {
   };
 
   return (
-    <BaseDataGrid
-      title="Manufacturer"
-      data={manufacturers}
-      columns={useColumns().devColumns}
-      formItems={useColumns().formItems}
-      onRowInserting={onRowInserting}
-      onRowUpdating={onRowUpdating}
-      onRowRemoving={onRowRemoving}
-      refreshData={refreshData}
-    />
+    <>
+      <div className="page-content-header">
+        <div className="page-content-header-title">Manufacturers</div>
+      </div>
+      <BaseDataGrid
+        title="Manufacturer"
+        data={manufacturers}
+        columns={useColumns().devColumns}
+        formItems={useColumns().formItems}
+        onRowInserting={onRowInserting}
+        onRowUpdating={onRowUpdating}
+        onRowRemoving={onRowRemoving}
+        refreshData={refreshData}
+        toolbarAddButton={true}
+      />
+    </>
   );
 };
 

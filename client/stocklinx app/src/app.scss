@@ -36,6 +36,18 @@
     border-radius: 1rem;
     padding: 1rem;
     margin: 0.5rem;
+    .page-content-header {
+      display: flex;
+      max-width: 100%;
+      height: fit-content;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      .page-content-header-title {
+        font-size: 1.5rem;
+        font-weight: 500;
+      }
+    }
   }
   .page-content::-webkit-scrollbar {
     display: none;
@@ -44,7 +56,6 @@
     display: none;
   }
 }
-
 
 //Table header
 .dx-datagrid-borders > .dx-datagrid-filter-panel,

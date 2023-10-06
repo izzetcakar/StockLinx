@@ -14,12 +14,16 @@ import {
   RowUpdatingEvent,
 } from "devextreme/ui/data_grid";
 import { datagridRequest } from "../../functions/datagridRequest";
+import React from "react";
+import DataGrid from "devextreme-react/data-grid";
+import Button from "devextreme-react/button";
 
 const Component = () => {
   const dispatch = useDispatch();
   const components = useSelector(
     (state: RootState) => state.component.components
   );
+  const gridRef: React.LegacyRef<DataGrid<object>> = React.useRef(null);
 
   const refreshData = () => {
     dispatch(componentActions.getAll());
@@ -40,16 +44,31 @@ const Component = () => {
   };
 
   return (
-    <BaseDataGrid
-      title="Component"
-      data={components}
-      columns={useColumns().devColumns}
-      formItems={useColumns().formItems}
-      onRowInserting={onRowInserting}
-      onRowUpdating={onRowUpdating}
-      onRowRemoving={onRowRemoving}
-      refreshData={refreshData}
-    />
+    <>
+      <div className="page-content-header">
+        <div className="page-content-header-title">Components</div>
+        <Button
+          onClick={() => {
+            gridRef.current?.instance.addRow();
+            gridRef.current?.instance.deselectAll();
+          }}
+          icon="plus"
+          width={"fit-content"}
+          text="Create New"
+          type="default"
+        />
+      </div>
+      <BaseDataGrid
+        title="Component"
+        data={components}
+        columns={useColumns().devColumns}
+        formItems={useColumns().formItems}
+        onRowInserting={onRowInserting}
+        onRowUpdating={onRowUpdating}
+        onRowRemoving={onRowRemoving}
+        refreshData={refreshData}
+      />
+    </>
   );
 };
 

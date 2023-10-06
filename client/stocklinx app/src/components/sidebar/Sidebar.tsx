@@ -152,7 +152,7 @@ const Sidebar: React.FC = () => {
             onClick={() => navigateUser(item, index)}
           >
             <div className="icon">
-              <i className={`bx bx-${item.icon}`} style={{ fontSize: "1.4rem", color: item.target === location.pathname ? "white" : item.color }} />
+              <i className={`bx bx-${item.icon}`} style={{ fontSize: "1.2rem", color: item.target === location.pathname ? "white" : item.color }} />
             </div>
             <div className="title">{item.title}</div>
             {checkEmpty(item?.subItems) ? (

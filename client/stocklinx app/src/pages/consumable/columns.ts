@@ -51,7 +51,6 @@ export const useColumns = () => {
       dataField: "itemNo",
       caption: "Item No",
     },
-    { dataField: "tagNo", caption: "Tag No" },
     {
       dataField: "purchaseCost",
       caption: "Purchase Cost",

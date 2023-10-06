@@ -32,16 +32,22 @@ const Location = () => {
   };
 
   return (
-    <BaseDataGrid
-      title="Location"
-      data={locations}
-      columns={useColumns().devColumns}
-      formItems={useColumns().formItems}
-      onRowInserting={onRowInserting}
-      onRowUpdating={onRowUpdating}
-      onRowRemoving={onRowRemoving}
-      refreshData={refreshData}
-    />
+    <>
+      <div className="page-content-header">
+        <div className="page-content-header-title">Locations</div>
+      </div>
+      <BaseDataGrid
+        title="Location"
+        data={locations}
+        columns={useColumns().devColumns}
+        formItems={useColumns().formItems}
+        onRowInserting={onRowInserting}
+        onRowUpdating={onRowUpdating}
+        onRowRemoving={onRowRemoving}
+        refreshData={refreshData}
+        toolbarAddButton={true}
+      />
+    </>
   );
 };
 

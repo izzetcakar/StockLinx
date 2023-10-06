@@ -1,4 +1,5 @@
 ﻿using StockLinx.Core.DTOs.Create;
+using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 
@@ -9,5 +10,6 @@ namespace StockLinx.Core.Services
         Task CreateLocationAsync(LocationCreateDto createDto);
         Task UpdateLocationAsync(LocationUpdateDto updateDto);
         Task DeleteLocationAsync(Guid locationId);
+        Task<List<ProductLocationCounter>> GetAllWithCounts();
     }
 }
