@@ -11,13 +11,13 @@
         public string? SerialNo { get; set; }
         public string? OrderNo { get; set; }
         public string? Notes { get; set; }
-        public double? PurchaseCost { get; set; }
         public int? CheckinCounter { get; set; }
         public int? CheckoutCounter { get; set; }
+        public double? PurchaseCost { get; set; }
         public DateTime? PurchaseDate { get; set; }
+        public ProductStatus? ProductStatus { get; set; }
         public Category? Category { get; set; }
         public Location? Location { get; set; }
         public Company? Company { get; set; }
-        public ProductStatus? ProductStatus { get; set; }
     }
 }
