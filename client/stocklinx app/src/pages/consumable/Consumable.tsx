@@ -45,15 +45,19 @@ const Consumable = () => {
 
   return (
     <>
-      <Button
-        onClick={() => {
-          gridRef.current?.instance.addRow();
-          gridRef.current?.instance.deselectAll();
-        }}
-        icon="plus"
-        width={"fit-content"}
-        text="Add"
-      />
+      <div className="page-content-header">
+        <div className="page-content-header-title">Consumables</div>
+        <Button
+          onClick={() => {
+            gridRef.current?.instance.addRow();
+            gridRef.current?.instance.deselectAll();
+          }}
+          icon="plus"
+          width={"fit-content"}
+          text="Create New"
+          type="default"
+        />
+      </div>
       <BaseDataGrid
         gridRef={gridRef}
         title="Consumable"

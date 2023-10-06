@@ -19,6 +19,7 @@ export const useColumns = () => {
   const formItems: IFormItem[] = [
     {
       dataField: "name",
+      colSpan: 2,
     },
   ];
 
