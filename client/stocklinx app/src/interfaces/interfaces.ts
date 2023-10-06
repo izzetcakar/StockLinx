@@ -95,7 +95,6 @@ export interface ILicense extends IBaseProduct {
 export interface IConsumable extends IBaseProduct {
   modelNo: string | null;
   itemNo: string | null;
-  tagNo: string | null;
   quantity: number;
 }
 export interface IModel extends BaseEntity {
