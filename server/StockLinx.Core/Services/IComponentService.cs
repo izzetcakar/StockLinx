@@ -1,4 +1,5 @@
 ﻿using StockLinx.Core.DTOs.Create;
+using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 
@@ -9,5 +10,7 @@ namespace StockLinx.Core.Services
         Task CreateComponentAsync(ComponentCreateDto createDto);
         Task UpdateComponentAsync(ComponentUpdateDto updateDto);
         Task DeleteComponentAsync(Guid componentId);
+        Task<ProductCounter> GetAllCountAsync();
+        Task<List<ProductStatusCounter>> GetStatusCount();
     }
 }

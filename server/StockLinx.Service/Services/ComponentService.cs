@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using StockLinx.Core.DTOs.Create;
+using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
@@ -14,7 +15,7 @@ namespace StockLinx.Service.Services
         private readonly IComponentRepository _componentRepository;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        public ComponentService(IRepository<Component> repository,IComponentRepository componentRepository, IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork)
+        public ComponentService(IRepository<Component> repository, IComponentRepository componentRepository, IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork)
         {
             _componentRepository = componentRepository;
             _mapper = mapper;
@@ -60,6 +61,28 @@ namespace StockLinx.Service.Services
                 throw new ArgumentNullException(nameof(Component), "The Component to delete is null.");
             }
             await RemoveAsync(Component);
+        }
+        public async Task<ProductCounter> GetAllCountAsync()
+        {
+            var components = await GetAllAsync();
+            var componentCount = components.Count();
+            return new ProductCounter { EntityName = "Components", Count = componentCount };
+        }
+
+        public async Task<List<ProductStatusCounter>> GetStatusCount()
+        {
+            var components = await GetAllAsync();
+            var productStatusGroups = components.GroupBy(a => a.ProductStatus);
+            var productStatusCounts = new List<ProductStatusCounter>();
+            foreach (var group in productStatusGroups)
+            {
+                productStatusCounts.Add(new ProductStatusCounter
+                {
+                    Status = group.Key.ToString(),
+                    Count = group.Count()
+                });
+            }
+            return productStatusCounts.ToList();
         }
     }
 }

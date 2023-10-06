@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using StockLinx.Core.DTOs.Create;
+using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
@@ -61,6 +62,28 @@ namespace StockLinx.Service.Services
                 throw new ArgumentNullException(nameof(Asset), "The Asset to delete is null.");
             }
             await RemoveAsync(Asset);
+        }
+        public async Task<ProductCounter> GetAllCountAsync()
+        {
+            var assets = await GetAllAsync();
+            var assetCount = assets.Count();
+            return new ProductCounter { EntityName = "Assets", Count = assetCount };
+        }
+
+        public async Task<List<ProductStatusCounter>> GetStatusCount()
+        {
+            var assets = await GetAllAsync();
+            var productStatusGroups = assets.GroupBy(a => a.ProductStatus);
+            var productStatusCounts = new List<ProductStatusCounter>();
+            foreach (var group in productStatusGroups)
+            {
+                productStatusCounts.Add(new ProductStatusCounter
+                {
+                    Status = group.Key.ToString(),
+                    Count = group.Count()
+                });
+            }
+            return productStatusCounts.ToList();
         }
     }
 }

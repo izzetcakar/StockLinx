@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using StockLinx.Core.DTOs.Create;
+using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
@@ -62,6 +63,28 @@ namespace StockLinx.Service.Services
             }
             await RemoveAsync(Consumable);
         }
+        public async Task<ProductCounter> GetAllCountAsync()
+        {
+            var consumables = await GetAllAsync();
+            var consumableCount = consumables.Count();
+            return new ProductCounter { EntityName = "Consumables", Count = consumableCount };
+        }
 
+        public async Task<List<ProductStatusCounter>> GetStatusCount()
+        {
+            var consumables = await GetAllAsync();
+            var productStatusGroups = consumables.GroupBy(a => a.ProductStatus);
+            var productStatusCounts = new List<ProductStatusCounter>();
+            foreach (var group in productStatusGroups)
+            {
+                var productStatus = group.Key.ToString();
+                productStatusCounts.Add(new ProductStatusCounter
+                {
+                    Status = group.Key.ToString(),
+                    Count = group.Count()
+                });
+            }
+            return productStatusCounts.ToList();
+        }
     }
 }
