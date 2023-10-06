@@ -37,7 +37,7 @@ export type IFormItem = {
 
 interface BaseDataGridProps {
   title: string;
-  gridRef: React.LegacyRef<DataGrid<object>>;
+  gridRef?: React.LegacyRef<DataGrid<object>>;
   data: object[];
   columns: Column[];
   formItems: IFormItem[];
@@ -46,6 +46,7 @@ interface BaseDataGridProps {
   onRowUpdating?: (obj: RowUpdatingEvent) => void;
   onRowRemoving?: (id: RowRemovingEvent) => void;
   refreshData?: () => void;
+  toolbarAddButton?: boolean;
 }
 
 const BaseDataGrid: React.FC<BaseDataGridProps> = ({
@@ -54,6 +55,7 @@ const BaseDataGrid: React.FC<BaseDataGridProps> = ({
   data = [],
   columns = [],
   formItems = [],
+  toolbarAddButton = false,
   onRowInserting = (e) => {
     console.log(e.data);
   },
@@ -126,7 +128,11 @@ const BaseDataGrid: React.FC<BaseDataGridProps> = ({
         <GridItem location="before">
           <Button onClick={() => console.log("delete")} icon="trash" />
         </GridItem>
-        {/* <GridItem name="addRowButton" showText="always" /> */}
+        <GridItem
+          name="addRowButton"
+          showText="always"
+          visible={toolbarAddButton}
+        />
         <GridItem name="columnChooserButton" />
         <GridItem location="after">
           <Button icon="refresh" onClick={refreshData} />
