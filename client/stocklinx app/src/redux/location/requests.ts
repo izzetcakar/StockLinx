@@ -1,4 +1,4 @@
-import { ILocation } from "../../interfaces/interfaces";
+import { ILocation, ILocationCounts } from "../../interfaces/interfaces";
 import { request } from "../../server/api";
 
 const requestUrl = "Location/";
@@ -32,6 +32,12 @@ const remove = (id: string) => {
     apiType: "delete",
   });
 };
+const getCounts = () => {
+  return request<ILocationCounts>({
+    requestUrl: requestUrl + "GetCounts",
+    apiType: "get",
+  });
+};
 
 export const locationRequests = {
   get,
@@ -39,4 +45,5 @@ export const locationRequests = {
   create,
   update,
   remove,
+  getCounts,
 };

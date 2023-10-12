@@ -5,6 +5,7 @@ const initialState: LocationState = {
   location: null,
   locations: [],
   selectData: [],
+  counts: [],
 };
 
 export default (state = initialState, action: LocationActions) => {
@@ -40,6 +41,20 @@ export default (state = initialState, action: LocationActions) => {
       return {
         ...state,
         location: null,
+      };
+    case locationConst.FETCH_COUNTS_REQUEST:
+      return {
+        ...state,
+      };
+    case locationConst.FETCH_COUNTS_SUCCESS:
+      return {
+        ...state,
+        counts: action.payload.counts,
+      };
+    case locationConst.FETCH_COUNTS_FAILURE:
+      return {
+        ...state,
+        locations: [],
       };
     case locationConst.CREATE_LOCATION_REQUEST:
       return {
