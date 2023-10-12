@@ -35,14 +35,14 @@ const Asset = () => {
   };
   const onRowInserting = async (e: RowInsertingEvent<IAsset>) => {
     const newObject = { ...e.data };
-    await datagridRequest(e, "Consumable", "post", newObject);
+    await datagridRequest(e, "Asset", "post", newObject);
   };
   const onRowUpdating = async (e: RowUpdatingEvent<IAsset>) => {
     const newObject = { ...e.oldData, ...e.newData };
-    await datagridRequest(e, "Consumable", "put", newObject);
+    await datagridRequest(e, "Asset", "put", newObject);
   };
   const onRowRemoving = (e: RowRemovingEvent<IAsset>) => {
-    datagridRequest(e, `Consumable/${e.data.id}`, "delete");
+    datagridRequest(e, `Asset/${e.data.id}`, "delete");
   };
 
   return (
@@ -63,6 +63,7 @@ const Asset = () => {
       <BaseDataGrid
         title="Asset"
         data={assets}
+        gridRef={gridRef}
         columns={useColumns().devColumns}
         formItems={useColumns().formItems}
         onRowInserting={onRowInserting}

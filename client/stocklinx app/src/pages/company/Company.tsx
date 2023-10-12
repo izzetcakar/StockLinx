@@ -21,14 +21,14 @@ const Company = () => {
   };
   const onRowInserting = async (e: RowInsertingEvent<ICompany>) => {
     const newObject = { ...e.data };
-    await datagridRequest(e, "Consumable", "post", newObject);
+    await datagridRequest(e, "Company", "post", newObject);
   };
   const onRowUpdating = async (e: RowUpdatingEvent<ICompany>) => {
     const newObject = { ...e.oldData, ...e.newData };
-    await datagridRequest(e, "Consumable", "put", newObject);
+    await datagridRequest(e, "Company", "put", newObject);
   };
   const onRowRemoving = (e: RowRemovingEvent<ICompany>) => {
-    datagridRequest(e, `Consumable/${e.data.id}`, "delete");
+    datagridRequest(e, `Company/${e.data.id}`, "delete");
   };
 
   return (

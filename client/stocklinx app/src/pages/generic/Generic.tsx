@@ -1,7 +1,15 @@
-import React from "react";
+import Location from "../location/Location";
+import Company from "../company/Company";
+import Category from "../category/Category";
 
 const Generic = () => {
-  return <div>Generic</div>;
+  return (
+    <>
+      <Location />
+      <Company />
+      <Category />
+    </>
+  );
 };
 
 export default Generic;

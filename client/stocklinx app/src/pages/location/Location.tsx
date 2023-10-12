@@ -21,14 +21,14 @@ const Location = () => {
   };
   const onRowInserting = async (e: RowInsertingEvent<ILocation>) => {
     const newObject = { ...e.data };
-    await datagridRequest(e, "Consumable", "post", newObject);
+    await datagridRequest(e, "Location", "post", newObject);
   };
   const onRowUpdating = async (e: RowUpdatingEvent<ILocation>) => {
     const newObject = { ...e.oldData, ...e.newData };
-    await datagridRequest(e, "Consumable", "put", newObject);
+    await datagridRequest(e, "Location", "put", newObject);
   };
   const onRowRemoving = (e: RowRemovingEvent<ILocation>) => {
-    datagridRequest(e, `Consumable/${e.data.id}`, "delete");
+    datagridRequest(e, `Location/${e.data.id}`, "delete");
   };
 
   return (

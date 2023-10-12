@@ -61,6 +61,7 @@ const Department = () => {
       <BaseDataGrid
         title="Department"
         data={departments}
+        gridRef={gridRef}
         columns={useColumns().devColumns}
         formItems={useColumns().formItems}
         onRowInserting={onRowInserting}

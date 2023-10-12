@@ -66,6 +66,7 @@ const Accessory = () => {
       <BaseDataGrid
         title="Accessory"
         data={accessories}
+        gridRef={gridRef}
         columns={useColumns().devColumns}
         formItems={useColumns().formItems}
         onRowInserting={onRowInserting}

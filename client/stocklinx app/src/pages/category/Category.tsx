@@ -23,14 +23,14 @@ const Category = () => {
   };
   const onRowInserting = async (e: RowInsertingEvent<ICategory>) => {
     const newObject = { ...e.data };
-    await datagridRequest(e, "Consumable", "post", newObject);
+    await datagridRequest(e, "Category", "post", newObject);
   };
   const onRowUpdating = async (e: RowUpdatingEvent<ICategory>) => {
     const newObject = { ...e.oldData, ...e.newData };
-    await datagridRequest(e, "Consumable", "put", newObject);
+    await datagridRequest(e, "Category", "put", newObject);
   };
   const onRowRemoving = (e: RowRemovingEvent<ICategory>) => {
-    datagridRequest(e, `Consumable/${e.data.id}`, "delete");
+    datagridRequest(e, `Category/${e.data.id}`, "delete");
   };
 
   return (

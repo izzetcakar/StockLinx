@@ -26,6 +26,8 @@ import { exportDataGrid } from "devextreme/excel_exporter";
 import { Workbook } from "exceljs";
 import { saveAs } from "file-saver-es";
 import React from "react";
+import DataSource from "devextreme/data/data_source";
+import "devextreme/data/odata/store";
 
 export type IFormItem = {
   dataField: string;
@@ -38,9 +40,10 @@ export type IFormItem = {
 interface BaseDataGridProps {
   title: string;
   gridRef?: React.LegacyRef<DataGrid<object>>;
-  data: object[];
+  data: object[] | DataSource;
+  keyExpr?: string;
   columns: Column[];
-  formItems: IFormItem[];
+  formItems?: IFormItem[];
   loading?: boolean;
   onRowInserting?: (obj: RowInsertingEvent) => void;
   onRowUpdating?: (obj: RowUpdatingEvent) => void;
@@ -53,6 +56,7 @@ const BaseDataGrid: React.FC<BaseDataGridProps> = ({
   title = "",
   gridRef = null,
   data = [],
+  keyExpr = "id",
   columns = [],
   formItems = [],
   toolbarAddButton = false,
@@ -88,7 +92,7 @@ const BaseDataGrid: React.FC<BaseDataGridProps> = ({
 
   return (
     <DataGrid
-      keyExpr="id"
+      keyExpr={keyExpr}
       ref={gridRef}
       dataSource={data}
       columns={columns}

@@ -87,6 +87,12 @@ const Sidebar: React.FC = () => {
       target: "/test",
     },
     {
+      title: "Generic",
+      icon: "pie-chart-alt",
+      color: "#737373",
+      target: "/generic",
+    },
+    {
       title: "Logout",
       icon: "log-out",
       color: "#737373",
