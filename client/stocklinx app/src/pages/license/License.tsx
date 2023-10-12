@@ -61,6 +61,7 @@ const License = () => {
       <BaseDataGrid
         title="License"
         data={licenses}
+        gridRef={gridRef}
         columns={useColumns().devColumns}
         formItems={useColumns().formItems}
         onRowInserting={onRowInserting}

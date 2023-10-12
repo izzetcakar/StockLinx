@@ -1,10 +1,15 @@
-import { ILocation, SelectData } from "../../interfaces/interfaces";
+import {
+  ILocation,
+  ILocationCounts,
+  SelectData,
+} from "../../interfaces/interfaces";
 import { locationConst } from "./constant";
 
 export interface LocationState {
   location: ILocation | null;
   locations: ILocation[];
   selectData: SelectData[];
+  counts: ILocationCounts[];
 }
 
 export interface LocationSucccessPayload {
@@ -19,6 +24,9 @@ export interface LocationRequestPayload {
 export interface UpdateLocationRequestPayload {
   location: ILocation;
 }
+export interface LocationCountsSuccessPayload {
+  counts: ILocationCounts[];
+}
 
 //GET
 export interface FetchLocationsRequest {
@@ -30,6 +38,17 @@ export type FetchLocationsSuccess = {
 };
 export type FetchLocationsFailure = {
   type: typeof locationConst.FETCH_LOCATIONS_FAILURE;
+};
+//GET COUNTS
+export interface FetchLocationCountsRequest {
+  type: typeof locationConst.FETCH_COUNTS_REQUEST;
+}
+export type FetchLocationCountsSuccess = {
+  type: typeof locationConst.FETCH_COUNTS_SUCCESS;
+  payload: LocationCountsSuccessPayload;
+};
+export type FetchLocationCountsFailure = {
+  type: typeof locationConst.FETCH_COUNTS_FAILURE;
 };
 //GET:/ID
 export interface FetchLocationRequest {
@@ -100,6 +119,9 @@ export type LocationActions =
   | FetchLocationRequest
   | FetchLocationSuccess
   | FetchLocationFailure
+  | FetchLocationCountsRequest
+  | FetchLocationCountsSuccess
+  | FetchLocationCountsFailure
   | CreateLocationRequest
   | CreateLocationSuccess
   | CreateLocationFailure

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
+using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Services;
 
@@ -30,6 +31,13 @@ namespace StockLinx.API.Controllers
             return CreateActionResult(CustomResponseDto<List<LocationDto>>.Success(200, locationDtos));
         }
 
+        [HttpGet("GetCounts")]
+        public async Task<IActionResult> GetCounts()
+        {
+            var locations = await _locationService.GetAllCounts();
+            return CreateActionResult(CustomResponseDto<List<ProductLocationCounterDto>>.Success(200, locations));
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
@@ -45,9 +53,9 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(LocationDto locationDto)
+        public async Task<IActionResult> Update(LocationUpdateDto updateDto)
         {
-            // Update
+            await _locationService.UpdateLocationAsync(updateDto);
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
         }
 

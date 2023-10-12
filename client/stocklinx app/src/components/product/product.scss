@@ -9,17 +9,21 @@
   background-size: cover;
   position: relative;
   opacity: 0.9;
+
   cursor: pointer;
   .product-card-content {
     display: flex;
     flex-direction: column;
-    width: 100%;
-    padding: 1rem;
+    max-width: 100%;
+    padding: 10px;
     padding-bottom: 0.5rem;
     .product-card-content-count {
-      font-size: 2.5rem;
-      font-weight: 600;
-      letter-spacing: 1px;
+      font-size: 2rem;
+      font-weight: 700;
+      // letter-spacing: 1px;
+    }
+    .product-card-content-title {
+      font-size: 0.8em;
     }
   }
   .product-card-action {
@@ -29,9 +33,10 @@
     height: fit-content;
     align-items: center;
     justify-content: center;
+    font-size: 0.8em;
     gap: 5px;
-    background-color: rgba(0, 0, 0, 0.1);
-    padding: 5px 0;
+    background-color: rgba(0, 0, 0, 0.28);
+    padding: 2px 0;
     opacity: 0.8;
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;
@@ -51,14 +56,18 @@
     position: absolute;
     max-width: 100%;
     max-height: 100%;
-    top: 10px;
+    color: rgba(0, 0, 0, 0.15);
+    font-size: 90px;
+    position: absolute;
     right: 10px;
-    z-index: -1;
+    top: -15px;
+    transition: all 0.3s linear;
+    z-index: 0;
     opacity: 0.2;
   }
   .product-card-image img {
-    max-width: 180px;
-    max-height: 90px;
+    max-width: 150px;
+    max-height: 70px;
     transform-origin: top right;
     transition: transform 0.3s ease-in-out;
   }
@@ -67,5 +76,35 @@
   .product-card-image img {
     transform: scale(1.1);
     transition: transform 0.3s ease-in-out;
+  }
+}
+@media screen and (max-width: 1200px) {
+  .product-card {
+    width: calc(32% - 0.2rem);
+  }
+}
+@media screen and (max-width: 800px) {
+  .product-card {
+    width: calc(50% - 0.5rem);
+  }
+}
+@media screen and (max-width: 550px) {
+  .product-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .product-card-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .product-card-content-count {
+        font-size: 2.5rem;
+        font-weight: 600;
+        letter-spacing: 1px;
+      }
+    }
+    .product-card-image img {
+      display: none;
+    }
   }
 }

@@ -61,6 +61,7 @@ const Component = () => {
       <BaseDataGrid
         title="Component"
         data={components}
+        gridRef={gridRef}
         columns={useColumns().devColumns}
         formItems={useColumns().formItems}
         onRowInserting={onRowInserting}

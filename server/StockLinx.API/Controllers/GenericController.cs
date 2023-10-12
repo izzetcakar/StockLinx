@@ -54,6 +54,11 @@ namespace StockLinx.API.Controllers
             var components = await _componentService.GetStatusCount();
 
             productStatusCounts = accessories.Concat(licenses).Concat(consumables).Concat(assets).Concat(components).ToList();
+            productStatusCounts = productStatusCounts.GroupBy(p => p.Status).Select(g => new ProductStatusCounter
+            {
+                Status = g.Key,
+                Count = g.Sum(p => p.Count)
+            }).ToList();
 
             //foreach (var item in Enum.GetValues(typeof(ProductStatus)))
             //{

@@ -24,6 +24,10 @@ import {
   SetLocations,
   ClearLocation,
   ClearLocations,
+  LocationCountsSuccessPayload,
+  FetchLocationCountsSuccess,
+  FetchLocationCountsRequest,
+  FetchLocationCountsFailure,
 } from "./type";
 
 //GET
@@ -53,6 +57,20 @@ const getSuccess = (
 });
 const getFailure = (): FetchLocationFailure => ({
   type: locationConst.FETCH_LOCATION_FAILURE,
+});
+
+//GET PRODUCT LOCATIONS
+const getCounts = (): FetchLocationCountsRequest => ({
+  type: locationConst.FETCH_COUNTS_REQUEST,
+});
+const getCountsSuccess = (
+  payload: LocationCountsSuccessPayload
+): FetchLocationCountsSuccess => ({
+  type: locationConst.FETCH_COUNTS_SUCCESS,
+  payload,
+});
+const getCountsFailure = (): FetchLocationCountsFailure => ({
+  type: locationConst.FETCH_COUNTS_FAILURE,
 });
 
 //POST
@@ -131,4 +149,7 @@ export const locationActions = {
   clearLocation,
   setLocations,
   clearLocations,
+  getCounts,
+  getCountsSuccess,
+  getCountsFailure,
 };

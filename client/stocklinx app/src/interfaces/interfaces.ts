@@ -186,3 +186,12 @@ export interface IUserLoginDto {
 export interface IToken {
   token: string;
 }
+
+export interface ILocationCounts {
+  locationId: string;
+  locationName: string;
+  productId: string;
+  productCount: number;
+  assignedCount: number;
+  userCount: number;
+}

@@ -64,10 +64,10 @@ namespace StockLinx.Service.Services
             await RemoveAsync(Location);
         }
 
-        public async Task<List<ProductLocationCounter>> GetAllWithCounts()
+        public async Task<List<ProductLocationCounterDto>> GetAllCounts()
         {
             var locations = await _locationRepository.GetAll()
-                .Select(x => new ProductLocationCounter
+                .Select(x => new ProductLocationCounterDto
                 {
                     LocationId = x.Id,
                     LocationName = x.Name,

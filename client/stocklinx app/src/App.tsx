@@ -24,6 +24,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "./redux/rootReducer";
 import { LoadPanel } from "devextreme-react/load-panel";
 import Header from "./components/Header/Header";
+import Generic from "./pages/generic/Generic";
 
 const Layout = () => {
   const navigate = useNavigate();
@@ -101,6 +102,10 @@ const router = createBrowserRouter([
       {
         path: "/test",
         element: <Test />,
+      },
+      {
+        path: "/generic",
+        element: <Generic />,
       },
     ],
   },

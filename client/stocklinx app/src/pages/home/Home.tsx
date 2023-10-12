@@ -6,6 +6,18 @@ import icon_keyboard from "../../assets/icon_keyboard.png";
 import icon_drop from "../../assets/icon_drop.png";
 import icon_harddisk from "../../assets/icon_harddisk.png";
 import icon_group from "../../assets/icon_group.png";
+import PieChart, {
+  Series,
+  Label,
+  Connector,
+  Size,
+  Legend,
+} from "devextreme-react/pie-chart";
+import DataSource from "devextreme/data/data_source";
+import "devextreme/data/odata/store";
+import { useState } from "react";
+import icon_minus from "../../assets/icon_minus.png";
+import ProductLocation from "../../components/dataGrid/ProductLocation";
 
 const Home = () => {
   const data = [
@@ -46,12 +58,14 @@ const Home = () => {
       image: icon_group,
     },
   ];
+  const [show, setShow] = useState<boolean>(true);
+
   return (
     <>
       <div className="page-content-header">
         <div className="page-content-header-title">Home</div>
       </div>
-      <div className="product-card-container">
+      <div className="product-card-container" style={{ marginBottom: "1rem" }}>
         {data.map((item, index) => {
           return (
             <ProductCard
@@ -63,6 +77,64 @@ const Home = () => {
             />
           );
         })}
+      </div>
+      <div className="home">
+        {/* <div className="home-item">
+          <div className="home-item-header">
+            <div className="home-item-header-title">Assets by Status</div>
+            <img
+              className="home-item-header-icon"
+              src={icon_minus}
+              onClick={() => setShow((prev) => !prev)}
+            />
+          </div>
+          <hr className="home-item-wrapper" />
+          <div
+            className={
+              show ? "home-item-content" : "home-item-content-collapsed"
+            }
+          >
+            <PieChart
+              id="pie"
+              height={300}
+              dataSource={
+                new DataSource({
+                  store: {
+                    type: "odata",
+                    url: "https://localhost:7000/api/Generic/prouctStatus",
+                  },
+                })
+              }
+              palette="Office"
+            >
+              <Series argumentField="status" valueField="count">
+                <Label visible={true}>
+                  <Connector visible={true} width={1} />
+                </Label>
+              </Series>
+              <Size width={400} />
+              <Legend horizontalAlignment="right" itemTextPosition="right" />
+            </PieChart>
+          </div>
+        </div> */}
+        <div className="home-item">
+          <div className="home-item-header">
+            <div className="home-item-header-title">Asset Locations</div>
+            <img
+              className="home-item-header-icon"
+              src={icon_minus}
+              onClick={() => setShow((prev) => !prev)}
+            />
+          </div>
+          <hr className="home-item-wrapper" />
+          <div
+            className={
+              show ? "home-item-content" : "home-item-content-collapsed"
+            }
+          >
+            <ProductLocation />
+          </div>
+        </div>
       </div>
     </>
   );

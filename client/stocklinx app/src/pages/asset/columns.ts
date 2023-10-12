@@ -69,6 +69,10 @@ export const useColumns = () => {
   ];
   const devColumns: Column<IAsset>[] = [
     {
+      dataField: "name",
+      caption: "Name",
+    },
+    {
       dataField: "manufacturerId",
       caption: "Manufacturer",
       lookup: {
@@ -129,10 +133,6 @@ export const useColumns = () => {
         valueExpr: "id",
         displayExpr: "value",
       },
-    },
-    {
-      dataField: "name",
-      caption: "Name",
     },
     {
       dataField: "serialNo",
