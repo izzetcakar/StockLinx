@@ -124,11 +124,10 @@ export interface ICompany extends BaseEntity {
   imagePath: string | null;
 }
 export interface IDepartment extends BaseEntity {
+  name: string;
   companyId: string;
-  locationId: string | null;
   managerId: string | null;
   imagePath: string | null;
-  name: string;
   notes: string | null;
 }
 export interface IDeployedProduct extends BaseEntity {
@@ -157,9 +156,10 @@ export interface ILocation extends BaseEntity {
 export interface IManufacturer extends BaseEntity {
   name: string;
   imagePath: string | null;
+  url: string | null;
+  supportUrl: string | null;
   supportPhone: string | null;
   supportEmail: string | null;
-  website: string | null;
 }
 export interface ISupplier extends BaseEntity {
   locationId: string | null;
