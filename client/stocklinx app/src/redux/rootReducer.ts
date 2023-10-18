@@ -13,6 +13,7 @@ import modelReducer from "./model/reducer";
 import supplierReducer from "./supplier/reducer";
 import userReducer from "./user/reducer";
 import genericReducer from "./generic/reducer";
+import productReducer from "./product/reducer";
 
 const rootReducer = combineReducers({
   accessory: accessoryReducer,
@@ -27,6 +28,7 @@ const rootReducer = combineReducers({
   manufacturer: manufacturerReducer,
   model: modelReducer,
   supplier: supplierReducer,
+  product: productReducer,
   user: userReducer,
   generic: genericReducer,
 });

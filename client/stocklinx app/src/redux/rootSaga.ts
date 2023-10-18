@@ -12,6 +12,7 @@ import manufacturerSaga from "./manufacturer/sagas";
 import modelSaga from "./model/sagas";
 import supplierSaga from "./supplier/sagas";
 import userSaga from "./user/sagas";
+import productsaga from "./product/sagas";
 
 export function* rootSaga() {
   yield all([
@@ -28,5 +29,6 @@ export function* rootSaga() {
     fork(modelSaga),
     fork(supplierSaga),
     fork(userSaga),
+    fork(productsaga),
   ]);
 }
