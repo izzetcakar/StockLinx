@@ -16,6 +16,13 @@ export enum ProductStatus {
   OUT_OF_STOCK,
   DAMAGED,
 }
+export enum CategoryType {
+  ASSET,
+  LICENSE,
+  ACCESSORY,
+  CONSUMABLE,
+  COMPONENT,
+}
 export interface IDropdownData {
   id: number;
   text: string;
@@ -66,6 +73,7 @@ export interface IAccessory extends IBaseProduct {
   supplierId: string | null;
   quantity: number;
   warrantyDate: Date | null;
+  modelNo: string | null;
 }
 export interface IAsset extends IBaseProduct {
   manufacturerId: string | null;
@@ -106,11 +114,13 @@ export interface IModel extends BaseEntity {
   notes: string | null;
 }
 export interface ICategory extends BaseEntity {
-  imagePath: string | null;
   name: string;
+  type: CategoryType;
+  imagePath: string | null;
 }
 export interface ICompany extends BaseEntity {
   name: string;
+  email: string | null;
   imagePath: string | null;
 }
 export interface IDepartment extends BaseEntity {
