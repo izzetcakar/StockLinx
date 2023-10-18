@@ -25,6 +25,10 @@ import { RootState } from "./redux/rootReducer";
 import { LoadPanel } from "devextreme-react/load-panel";
 import Header from "./components/Header/Header";
 import Generic from "./pages/generic/Generic";
+import Category from "./pages/category/Category";
+import Manufacturer from "./pages/manufacturer/Manufacturer";
+import Supplier from "./pages/supplier/Supplier";
+import Location from "./pages/location/Location";
 
 const Layout = () => {
   const navigate = useNavigate();
@@ -92,12 +96,28 @@ const router = createBrowserRouter([
         element: <Model />,
       },
       {
+        path: "/category",
+        element: <Category />,
+      },
+      {
+        path: "/manufacturer",
+        element: <Manufacturer />,
+      },
+      {
+        path: "/supplier",
+        element: <Supplier />,
+      },
+      {
         path: "/company",
         element: <Company />,
       },
       {
         path: "/department",
         element: <Department />,
+      },
+      {
+        path: "/location",
+        element: <Location />,
       },
       {
         path: "/test",
