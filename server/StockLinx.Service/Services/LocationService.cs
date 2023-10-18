@@ -27,14 +27,6 @@ namespace StockLinx.Service.Services
             var newLocation = _mapper.Map<Location>(createDto);
             newLocation.Id = Guid.NewGuid();
             newLocation.CreatedDate = DateTime.UtcNow;
-
-            //Check if newLocation.ImagePath is base64 or not and not null
-            if (newLocation.ImagePath != null && newLocation.ImagePath.Contains("data:image/png;base64,"))
-            {
-                string base64 = newLocation.ImagePath.Substring(newLocation.ImagePath.IndexOf(',') + 1);
-                string path = newLocation.Name + DateTime.Now.ToString("yyyyMMddHHmmss");
-                ImageHandler.UploadBase64AsFile(base64, path);
-            }
             await AddAsync(newLocation);
         }
         public async Task UpdateLocationAsync(LocationUpdateDto updateDto)
