@@ -29,6 +29,13 @@ namespace StockLinx.API.Controllers
             return CreateActionResult(CustomResponseDto<List<CategoryDto>>.Success(200, categoryDtos));
         }
 
+        [HttpGet("counts")]
+        public async Task<IActionResult> CategoryCount()
+        {
+            var categoryCounts = await _categoryService.GetCounts();
+            return CreateActionResult(CustomResponseDto<List<ProductCategoryCounterDto>>.Success(200, categoryCounts));
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
