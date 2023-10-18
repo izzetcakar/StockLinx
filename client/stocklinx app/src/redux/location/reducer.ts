@@ -42,19 +42,18 @@ export default (state = initialState, action: LocationActions) => {
         ...state,
         location: null,
       };
-    case locationConst.FETCH_COUNTS_REQUEST:
+    case locationConst.FETCH_LOCATION_COUNTS_REQUEST:
       return {
         ...state,
       };
-    case locationConst.FETCH_COUNTS_SUCCESS:
+    case locationConst.FETCH_LOCATION_COUNTS_SUCCESS:
       return {
         ...state,
         counts: action.payload.counts,
       };
-    case locationConst.FETCH_COUNTS_FAILURE:
+    case locationConst.FETCH_LOCATION_COUNTS_FAILURE:
       return {
         ...state,
-        locations: [],
       };
     case locationConst.CREATE_LOCATION_REQUEST:
       return {
