@@ -43,7 +43,7 @@ namespace StockLinx.API.Controllers
             entityCounts.Add(components);
             return CreateActionResult(CustomResponseDto<List<ProductCounter>>.Success(200, entityCounts));
         }
-        [HttpGet("prouctStatus")]
+        [HttpGet("productStatus")]
         public async Task<IActionResult> ProductStatusCount()
         {
             var productStatusCounts = new List<ProductStatusCounter>();
