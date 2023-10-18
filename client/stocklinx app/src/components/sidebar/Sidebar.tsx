@@ -10,6 +10,7 @@ import icon_keybord from "../../assets/icon_keyboard.png";
 import icon_drop from "../../assets/icon_drop.png";
 import icon_disk from "../../assets/icon_disk.png";
 import icon_harddisk from "../../assets/icon_harddisk.png";
+import icon_settings from "../../assets/icon_setting.png";
 
 interface NavigationItem {
   title: string;
@@ -27,15 +28,6 @@ const Sidebar: React.FC = () => {
       title: "Home",
       icon: icon_home,
       color: "#737373",
-      subItems: [
-        {
-          title: "Test",
-          icon: icon_home,
-          target: "",
-          color: "#737373",
-        },
-      ],
-      isExpanded: false,
       target: "/",
     },
     {
@@ -69,24 +61,6 @@ const Sidebar: React.FC = () => {
       target: "/component",
     },
     {
-      title: "Model",
-      icon: icon_harddisk,
-      color: "#737373",
-      target: "/model",
-    },
-    {
-      title: "Company",
-      icon: icon_harddisk,
-      color: "#737373",
-      target: "/company",
-    },
-    {
-      title: "Department",
-      icon: icon_harddisk,
-      color: "#737373",
-      target: "/department",
-    },
-    {
       title: "Test",
       icon: icon_harddisk,
       color: "#737373",
@@ -97,6 +71,57 @@ const Sidebar: React.FC = () => {
       icon: icon_harddisk,
       color: "#737373",
       target: "/generic",
+    },
+    {
+      title: "Settings",
+      icon: icon_settings,
+      color: "#737373",
+      subItems: [
+        {
+          title: "Asset Models",
+          icon: icon_harddisk,
+          color: "#737373",
+          target: "/model",
+        },
+        {
+          title: "Categories",
+          icon: icon_harddisk,
+          color: "#737373",
+          target: "/category",
+        },
+        {
+          title: "Manufacturers",
+          icon: icon_harddisk,
+          color: "#737373",
+          target: "/manufacturer",
+        },
+        {
+          title: "Suppliers",
+          icon: icon_harddisk,
+          color: "#737373",
+          target: "/supplier",
+        },
+        {
+          title: "Companies",
+          icon: icon_harddisk,
+          color: "#737373",
+          target: "/company",
+        },
+        {
+          title: "Departments",
+          icon: icon_harddisk,
+          color: "#737373",
+          target: "/department",
+        },
+        {
+          title: "Locations",
+          icon: icon_harddisk,
+          color: "#737373",
+          target: "/location",
+        },
+      ],
+      isExpanded: false,
+      target: "/",
     },
     {
       title: "Logout",
