@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import icon_next from "../../assets/icon_next.png";
 import "./product.scss";
 
@@ -6,15 +7,23 @@ interface ProductCardProps {
   count: number;
   title: string;
   image: string;
+  nav: string;
 }
 const ProductCard: React.FC<ProductCardProps> = ({
   color = "#39cccc",
   count = 20,
   title = "title",
   image = "",
+  nav = "/",
 }) => {
+  const navigate = useNavigate();
+
   return (
-    <div className="product-card" style={{ backgroundColor: color }}>
+    <div
+      className="product-card"
+      style={{ backgroundColor: color }}
+      onClick={() => navigate(nav)}
+    >
       <div className="product-card-content">
         <div className="product-card-content-count">{count}</div>
         <div className="product-card-content-title">{title}</div>
