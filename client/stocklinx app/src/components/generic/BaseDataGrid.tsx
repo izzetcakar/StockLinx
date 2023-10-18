@@ -14,7 +14,6 @@ import DataGrid, {
   Item as GridItem,
 } from "devextreme-react/data-grid";
 import { Item as FormItem } from "devextreme-react/form";
-import { checkEmpty } from "../../functions/checkEmpty";
 import {
   Column,
   ExportingEvent,
@@ -28,6 +27,7 @@ import { saveAs } from "file-saver-es";
 import React from "react";
 import DataSource from "devextreme/data/data_source";
 import "devextreme/data/odata/store";
+import { checkEmpty } from "../../functions/checkEmpty";
 
 export type IFormItem = {
   dataField: string;
@@ -50,6 +50,8 @@ interface BaseDataGridProps {
   onRowRemoving?: (id: RowRemovingEvent) => void;
   refreshData?: () => void;
   toolbarAddButton?: boolean;
+  className?: string;
+  editing?: boolean;
 }
 
 const BaseDataGrid: React.FC<BaseDataGridProps> = ({
@@ -60,6 +62,8 @@ const BaseDataGrid: React.FC<BaseDataGridProps> = ({
   columns = [],
   formItems = [],
   toolbarAddButton = false,
+  className = "",
+  editing = true,
   onRowInserting = (e) => {
     console.log(e.data);
   },
@@ -92,6 +96,7 @@ const BaseDataGrid: React.FC<BaseDataGridProps> = ({
 
   return (
     <DataGrid
+      className={className}
       keyExpr={keyExpr}
       ref={gridRef}
       dataSource={data}
@@ -105,13 +110,16 @@ const BaseDataGrid: React.FC<BaseDataGridProps> = ({
       onRowUpdating={onRowUpdating}
       onRowRemoving={onRowRemoving}
       onExporting={onExporting}
+      columnHidingEnabled={false}
+      height={"100%"}
     >
+      {/* <Grouping contextMenuEnabled={true} expandMode="rowClick" /> */}
       <Editing
         mode="popup"
         useIcons={true}
-        allowUpdating={checkEmpty(data) ? true : false}
+        allowUpdating={checkEmpty(data) ? editing : false}
         allowAdding={true}
-        allowDeleting={checkEmpty(data) ? true : false}
+        allowDeleting={checkEmpty(data) ? editing : false}
       >
         <Popup title={title} showTitle={true} />
         <Form>
@@ -156,11 +164,13 @@ const BaseDataGrid: React.FC<BaseDataGridProps> = ({
         showInfo={true}
         showNavigationButtons={true}
       />
-      <Selection
-        mode="multiple"
-        selectAllMode={"allPages"}
-        showCheckBoxesMode={"always"}
-      />
+      {editing ? (
+        <Selection
+          mode="multiple"
+          selectAllMode={"allPages"}
+          showCheckBoxesMode={"always"}
+        />
+      ) : null}
       {/* <FilterRow visible={true} /> */}
     </DataGrid>
   );
