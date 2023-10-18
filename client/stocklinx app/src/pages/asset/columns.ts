@@ -6,6 +6,7 @@ import { Column } from "devextreme/ui/data_grid";
 import { IAsset, ProductStatus } from "../../interfaces/interfaces";
 import { createDataFromEnum } from "../../functions/createDataFromEnum";
 import { IFormItem } from "../../components/generic/BaseDataGrid";
+import { checkInOutHeaderTemplate } from "../../components/dataGrid/location/customColumns";
 
 export const useColumns = () => {
   const categories = useSelector(
@@ -67,19 +68,20 @@ export const useColumns = () => {
     { dataField: "purchaseDate", caption: "Purchase Date" },
     { dataField: "notes", caption: "Notes" },
   ];
+  //
   const devColumns: Column<IAsset>[] = [
     {
       dataField: "name",
       caption: "Name",
     },
+    //ADD IMAGE
     {
-      dataField: "manufacturerId",
-      caption: "Manufacturer",
-      lookup: {
-        dataSource: manufacturers,
-        valueExpr: "id",
-        displayExpr: "name",
-      },
+      dataField: "tagNo",
+      caption: "Tag No",
+    },
+    {
+      dataField: "serialNo",
+      caption: "Serial No",
     },
     {
       dataField: "modelId",
@@ -91,36 +93,10 @@ export const useColumns = () => {
       },
     },
     {
-      dataField: "tagNo",
-      caption: "Tag No",
-    },
-    {
-      dataField: "warrantyDate",
-      caption: "Warranty Date",
-    },
-    {
       dataField: "categoryId",
       caption: "Category",
       lookup: {
         dataSource: categories,
-        valueExpr: "id",
-        displayExpr: "name",
-      },
-    },
-    {
-      dataField: "locationId",
-      caption: "Location",
-      lookup: {
-        dataSource: locations,
-        valueExpr: "id",
-        displayExpr: "name",
-      },
-    },
-    {
-      dataField: "companyId",
-      caption: "Company",
-      lookup: {
-        dataSource: companies,
         valueExpr: "id",
         displayExpr: "name",
       },
@@ -134,26 +110,60 @@ export const useColumns = () => {
         displayExpr: "value",
       },
     },
+    // ADD ASSIGNED USER
     {
-      dataField: "serialNo",
-      caption: "Serial No",
-    },
-    {
-      dataField: "orderNo",
-      caption: "Order No",
+      dataField: "locationId",
+      caption: "Location",
+      lookup: {
+        dataSource: locations,
+        valueExpr: "id",
+        displayExpr: "name",
+      },
     },
     {
       dataField: "purchaseCost",
       caption: "Purchase Cost",
     },
     {
-      dataField: "purchaseDate",
-      caption: "Purchase Date",
+      caption: "Checkin/Checkout",
+      alignment: "center",
+      cellTemplate: checkInOutHeaderTemplate,
     },
-    {
-      dataField: "notes",
-      caption: "Notes",
-    },
+    // {
+    //   dataField: "manufacturerId",
+    //   caption: "Manufacturer",
+    //   lookup: {
+    //     dataSource: manufacturers,
+    //     valueExpr: "id",
+    //     displayExpr: "name",
+    //   },
+    // },
+    // {
+    //   dataField: "warrantyDate",
+    //   caption: "Warranty Date",
+    // },
+    // {
+    //   dataField: "companyId",
+    //   caption: "Company",
+    //   lookup: {
+    //     dataSource: companies,
+    //     valueExpr: "id",
+    //     displayExpr: "name",
+    //   },
+    // },
+
+    // {
+    //   dataField: "orderNo",
+    //   caption: "Order No",
+    // },
+    // {
+    //   dataField: "purchaseDate",
+    //   caption: "Purchase Date",
+    // },
+    // {
+    //   dataField: "notes",
+    //   caption: "Notes",
+    // },
     // {
     //   dataField:"checkInCounter",
     //   caption:"Check In Counter"

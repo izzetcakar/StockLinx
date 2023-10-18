@@ -3,9 +3,9 @@ import { NameComponent } from "../../components/customComponents/TableComponents
 import { RootState } from "../../redux/rootReducer";
 import { Column as MyColumn } from "../../components/gridTable/interfaces/interfaces";
 import { Column } from "devextreme/ui/data_grid";
-import { IAccessory, ProductStatus } from "../../interfaces/interfaces";
-import { createDataFromEnum } from "../../functions/createDataFromEnum";
+import { IAccessory } from "../../interfaces/interfaces";
 import { IFormItem } from "../../components/generic/BaseDataGrid";
+import { checkInOutHeaderTemplate } from "../../components/dataGrid/location/customColumns";
 
 export const useColumns = () => {
   const categories = useSelector(
@@ -69,6 +69,11 @@ export const useColumns = () => {
     { dataField: "notes", caption: "Notes" },
   ];
   const devColumns: Column<IAccessory>[] = [
+    // ADD IMAGE
+    {
+      dataField: "name",
+      caption: "Name",
+    },
     {
       dataField: "categoryId",
       caption: "Category",
@@ -79,6 +84,10 @@ export const useColumns = () => {
       },
     },
     {
+      dataField: "modelNo",
+      caption: "Model",
+    },
+    {
       dataField: "locationId",
       caption: "Location",
       lookup: {
@@ -87,56 +96,59 @@ export const useColumns = () => {
         displayExpr: "name",
       },
     },
-    {
-      dataField: "companyId",
-      caption: "Company",
-      lookup: {
-        dataSource: companies,
-        valueExpr: "id",
-        displayExpr: "name",
-      },
-    },
-    {
-      dataField: "manufacturerId",
-      caption: "Manufacturer",
-      lookup: {
-        dataSource: manufacturers,
-        valueExpr: "id",
-        displayExpr: "name",
-      },
-    },
-    {
-      dataField: "supplierId",
-      caption: "Supplier",
-      lookup: {
-        dataSource: suppliers,
-        valueExpr: "id",
-        displayExpr: "name",
-      },
-    },
-    {
-      dataField: "productStatus",
-      caption: "Status",
-      lookup: {
-        dataSource: createDataFromEnum(ProductStatus),
-        valueExpr: "id",
-        displayExpr: "value",
-      },
-    },
-    {
-      dataField: "name",
-      caption: "Name",
-    },
-    { dataField: "serialNo", caption: "Serial No" },
-    { dataField: "orderNo", caption: "Order No" },
     { dataField: "quantity", caption: "Quantity" },
+    // ADD AVAILABLE QUANTITY
     {
       dataField: "purchaseCost",
       caption: "Purchase Cost",
     },
-    { dataField: "purchaseDate", caption: "Purchase Date" },
-    { dataField: "warrantyDate", caption: "Warranty Date" },
-    { dataField: "notes", caption: "Notes" },
+    {
+      caption: "Checkin/Checkout",
+      alignment: "center",
+      cellTemplate: checkInOutHeaderTemplate,
+    },
+    // {
+    //   dataField: "companyId",
+    //   caption: "Company",
+    //   lookup: {
+    //     dataSource: companies,
+    //     valueExpr: "id",
+    //     displayExpr: "name",
+    //   },
+    // },
+    // {
+    //   dataField: "manufacturerId",
+    //   caption: "Manufacturer",
+    //   lookup: {
+    //     dataSource: manufacturers,
+    //     valueExpr: "id",
+    //     displayExpr: "name",
+    //   },
+    // },
+    // {
+    //   dataField: "supplierId",
+    //   caption: "Supplier",
+    //   lookup: {
+    //     dataSource: suppliers,
+    //     valueExpr: "id",
+    //     displayExpr: "name",
+    //   },
+    // },
+    // {
+    //   dataField: "productStatus",
+    //   caption: "Status",
+    //   lookup: {
+    //     dataSource: createDataFromEnum(ProductStatus),
+    //     valueExpr: "id",
+    //     displayExpr: "value",
+    //   },
+    // },
+
+    // { dataField: "serialNo", caption: "Serial No" },
+    // { dataField: "orderNo", caption: "Order No" },
+    // { dataField: "purchaseDate", caption: "Purchase Date" },
+    // { dataField: "warrantyDate", caption: "Warranty Date" },
+    // { dataField: "notes", caption: "Notes" },
     // { dataField: "checkInCounter", caption: "Check In" },
     // { dataField: "checkOutCounter", caption: "Check Out" },
   ];
