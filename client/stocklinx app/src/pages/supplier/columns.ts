@@ -47,6 +47,10 @@ export const useColumns = () => {
   ];
   const devColumns: Column<ISupplier>[] = [
     {
+      dataField: "name",
+      caption: "Name",
+    },
+    {
       dataField: "locationId",
       caption: "Location",
       lookup: {
@@ -56,40 +60,24 @@ export const useColumns = () => {
       },
     },
     {
-      dataField: "name",
-      caption: "Name",
-    },
-    {
       dataField: "contactName",
       caption: "Contact Name",
     },
     {
-      dataField: "contactPhone",
-      caption: "Contact Phone",
-    },
-    {
       dataField: "contactEmail",
-      caption: "Contact Email",
+      caption: "Email",
     },
     {
-      dataField: "website",
-      caption: "Website",
-    },
-    {
-      dataField: "fax",
-      caption: "Fax",
-    },
-    {
-      dataField: "notes",
-      caption: "Notes",
+      dataField: "contactPhone",
+      caption: "Phone",
     },
   ];
   const formItems: IFormItem[] = [
     {
-      dataField: "locationId",
+      dataField: "name",
     },
     {
-      dataField: "name",
+      dataField: "locationId",
     },
     {
       dataField: "contactName",

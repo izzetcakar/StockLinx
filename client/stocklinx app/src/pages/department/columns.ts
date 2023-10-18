@@ -47,25 +47,12 @@ export const useColumns = () => {
       },
     },
     {
-      dataField: "locationId",
-      caption: "Location",
-      lookup: {
-        dataSource: locations,
-        valueExpr: "id",
-        displayExpr: "name",
-      },
-    },
-    {
-      dataField: "managerId",
-      caption: "Manager",
-    },
-    {
       dataField: "name",
       caption: "Name",
     },
     {
-      dataField: "notes",
-      caption: "Notes",
+      dataField: "managerId",
+      caption: "Manager",
     },
   ];
   const formItems: IFormItem[] = [
@@ -73,13 +60,10 @@ export const useColumns = () => {
       dataField: "companyId",
     },
     {
-      dataField: "locationId",
+      dataField: "name",
     },
     {
       dataField: "managerId",
-    },
-    {
-      dataField: "name",
     },
     {
       dataField: "notes",

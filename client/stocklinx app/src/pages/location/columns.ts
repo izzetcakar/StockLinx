@@ -52,10 +52,6 @@ export const useColumns = () => {
       caption: "Country",
     },
     {
-      dataField: "state",
-      caption: "State",
-    },
-    {
       dataField: "city",
       caption: "City",
     },
@@ -64,20 +60,12 @@ export const useColumns = () => {
       caption: "Address",
     },
     {
-      dataField: "address2",
-      caption: "Address2",
-    },
-    {
-      dataField: "zipCode",
-      caption: "Zip Code",
-    },
-    {
       dataField: "currency",
       caption: "Currency",
     },
     {
-      dataField: "notes",
-      caption: "Notes",
+      dataField: "state",
+      caption: "State",
     },
   ];
   const formItems: IFormItem[] = [
