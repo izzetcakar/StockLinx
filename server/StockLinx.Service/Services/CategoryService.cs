@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using StockLinx.Core.DTOs.Create;
+using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
@@ -47,7 +48,6 @@ namespace StockLinx.Service.Services
             await UpdateAsync(categoryInDb, updatedCategory);
             await _unitOfWork.CommitAsync();
         }
-
         public async Task DeleteCategoryAsync(Guid categoryId)
         {
             if (categoryId == Guid.Empty)
@@ -60,6 +60,11 @@ namespace StockLinx.Service.Services
                 throw new ArgumentNullException(nameof(category), "The category to delete is null.");
             }
             await RemoveAsync(category);
+        }
+        public async Task<List<ProductCategoryCounterDto>> GetCounts()
+        {
+            var counts = await _categoryRepository.GetCounts();
+            return counts;
         }
     }
 }
