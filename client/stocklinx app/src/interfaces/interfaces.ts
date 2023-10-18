@@ -84,7 +84,7 @@ export interface IComponent extends IBaseProduct {
   quantity: number;
 }
 export interface ILicense extends IBaseProduct {
-  supplierId: string | null;
+  manufacturerId: string | null;
   licenseKey: string;
   licenseEmail: string | null;
   maintained: boolean;
@@ -194,4 +194,21 @@ export interface ILocationCounts {
   productCount: number;
   assignedCount: number;
   userCount: number;
+}
+export interface ICategoryCounts {
+  categoryId: string;
+  categoryName: string;
+  assetCount: number;
+  licenseCount: number;
+  accessoryCount: number;
+  consumableCount: number;
+  componentCount: number;
+}
+export interface IProductCount {
+  entityName: string;
+  count: number;
+}
+export interface IProductStausCount {
+  status: string;
+  count: number;
 }
