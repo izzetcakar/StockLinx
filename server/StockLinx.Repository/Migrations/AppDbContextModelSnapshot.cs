@@ -55,6 +55,10 @@ namespace StockLinx.Repository.Migrations
                     b.Property<Guid?>("ManufacturerId")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("ModelNo")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -208,6 +212,9 @@ namespace StockLinx.Repository.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
 
@@ -227,6 +234,10 @@ namespace StockLinx.Repository.Migrations
 
                     b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("ImagePath")
                         .HasColumnType("text");
@@ -397,7 +408,7 @@ namespace StockLinx.Repository.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("CompanyId")
+                    b.Property<Guid>("CompanyId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
@@ -535,6 +546,9 @@ namespace StockLinx.Repository.Migrations
                     b.Property<bool>("Maintained")
                         .HasColumnType("boolean");
 
+                    b.Property<Guid?>("ManufacturerId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -565,9 +579,6 @@ namespace StockLinx.Repository.Migrations
                     b.Property<string>("SerialNo")
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("SupplierId")
-                        .HasColumnType("uuid");
-
                     b.Property<DateTime?>("TerminationDate")
                         .HasColumnType("timestamp with time zone");
 
@@ -582,7 +593,7 @@ namespace StockLinx.Repository.Migrations
 
                     b.HasIndex("LocationId");
 
-                    b.HasIndex("SupplierId");
+                    b.HasIndex("ManufacturerId");
 
                     b.ToTable("Licenses");
                 });
@@ -615,9 +626,6 @@ namespace StockLinx.Repository.Migrations
 
                     b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("ImagePath")
-                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -665,11 +673,14 @@ namespace StockLinx.Repository.Migrations
                     b.Property<string>("SupportPhone")
                         .HasColumnType("text");
 
+                    b.Property<string>("SupportURL")
+                        .HasColumnType("text");
+
+                    b.Property<string>("URL")
+                        .HasColumnType("text");
+
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Website")
-                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -982,12 +993,12 @@ namespace StockLinx.Repository.Migrations
                     b.HasOne("StockLinx.Core.Entities.Company", "Company")
                         .WithMany("Departments")
                         .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("StockLinx.Core.Entities.Location", "Location")
+                    b.HasOne("StockLinx.Core.Entities.Location", null)
                         .WithMany("Departments")
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .HasForeignKey("LocationId");
 
                     b.HasOne("StockLinx.Core.Entities.User", "Manager")
                         .WithMany("Departments")
@@ -995,8 +1006,6 @@ namespace StockLinx.Repository.Migrations
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Company");
-
-                    b.Navigation("Location");
 
                     b.Navigation("Manager");
                 });
@@ -1065,9 +1074,9 @@ namespace StockLinx.Repository.Migrations
                         .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("StockLinx.Core.Entities.Supplier", "Supplier")
+                    b.HasOne("StockLinx.Core.Entities.Manufacturer", "Manufacturer")
                         .WithMany()
-                        .HasForeignKey("SupplierId");
+                        .HasForeignKey("ManufacturerId");
 
                     b.Navigation("Category");
 
@@ -1075,7 +1084,7 @@ namespace StockLinx.Repository.Migrations
 
                     b.Navigation("Location");
 
-                    b.Navigation("Supplier");
+                    b.Navigation("Manufacturer");
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.Model", b =>

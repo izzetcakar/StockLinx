@@ -41,14 +41,14 @@ export type FetchLocationsFailure = {
 };
 //GET COUNTS
 export interface FetchLocationCountsRequest {
-  type: typeof locationConst.FETCH_COUNTS_REQUEST;
+  type: typeof locationConst.FETCH_LOCATION_COUNTS_REQUEST;
 }
 export type FetchLocationCountsSuccess = {
-  type: typeof locationConst.FETCH_COUNTS_SUCCESS;
+  type: typeof locationConst.FETCH_LOCATION_COUNTS_SUCCESS;
   payload: LocationCountsSuccessPayload;
 };
 export type FetchLocationCountsFailure = {
-  type: typeof locationConst.FETCH_COUNTS_FAILURE;
+  type: typeof locationConst.FETCH_LOCATION_COUNTS_FAILURE;
 };
 //GET:/ID
 export interface FetchLocationRequest {

@@ -16,6 +16,13 @@ export enum ProductStatus {
   OUT_OF_STOCK,
   DAMAGED,
 }
+export enum CategoryType {
+  ASSET,
+  LICENSE,
+  ACCESSORY,
+  CONSUMABLE,
+  COMPONENT,
+}
 export interface IDropdownData {
   id: number;
   text: string;
@@ -66,6 +73,7 @@ export interface IAccessory extends IBaseProduct {
   supplierId: string | null;
   quantity: number;
   warrantyDate: Date | null;
+  modelNo: string | null;
 }
 export interface IAsset extends IBaseProduct {
   manufacturerId: string | null;
@@ -84,7 +92,7 @@ export interface IComponent extends IBaseProduct {
   quantity: number;
 }
 export interface ILicense extends IBaseProduct {
-  supplierId: string | null;
+  manufacturerId: string | null;
   licenseKey: string;
   licenseEmail: string | null;
   maintained: boolean;
@@ -106,19 +114,20 @@ export interface IModel extends BaseEntity {
   notes: string | null;
 }
 export interface ICategory extends BaseEntity {
-  imagePath: string | null;
   name: string;
+  type: CategoryType;
+  imagePath: string | null;
 }
 export interface ICompany extends BaseEntity {
   name: string;
+  email: string | null;
   imagePath: string | null;
 }
 export interface IDepartment extends BaseEntity {
+  name: string;
   companyId: string;
-  locationId: string | null;
   managerId: string | null;
   imagePath: string | null;
-  name: string;
   notes: string | null;
 }
 export interface IDeployedProduct extends BaseEntity {
@@ -147,9 +156,10 @@ export interface ILocation extends BaseEntity {
 export interface IManufacturer extends BaseEntity {
   name: string;
   imagePath: string | null;
+  url: string | null;
+  supportUrl: string | null;
   supportPhone: string | null;
   supportEmail: string | null;
-  website: string | null;
 }
 export interface ISupplier extends BaseEntity {
   locationId: string | null;
@@ -194,4 +204,21 @@ export interface ILocationCounts {
   productCount: number;
   assignedCount: number;
   userCount: number;
+}
+export interface ICategoryCounts {
+  categoryId: string;
+  categoryName: string;
+  assetCount: number;
+  licenseCount: number;
+  accessoryCount: number;
+  consumableCount: number;
+  componentCount: number;
+}
+export interface IProductCount {
+  entityName: string;
+  count: number;
+}
+export interface IProductStausCount {
+  status: string;
+  count: number;
 }

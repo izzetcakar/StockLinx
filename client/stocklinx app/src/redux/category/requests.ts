@@ -1,4 +1,4 @@
-import { ICategory } from "../../interfaces/interfaces";
+import { ICategory, ICategoryCounts } from "../../interfaces/interfaces";
 import { request } from "../../server/api";
 const requestUrl = "Category/";
 
@@ -31,6 +31,12 @@ const remove = (id: string) => {
     apiType: "delete",
   });
 };
+const getCounts = () => {
+  return request<ICategoryCounts>({
+    requestUrl: requestUrl + "counts",
+    apiType: "get",
+  });
+};
 
 export const categoryRequests = {
   getAll,
@@ -38,4 +44,5 @@ export const categoryRequests = {
   create,
   update,
   remove,
+  getCounts,
 };

@@ -1,6 +1,6 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { categoryActions } from "./actions";
-import { ICategory } from "../../interfaces/interfaces";
+import { ICategory, ICategoryCounts } from "../../interfaces/interfaces";
 import { categoryConst } from "./constant";
 import { FetchCategoryRequest, UpdateCategoryRequest } from "./type";
 import { categoryRequests } from "./requests";
@@ -8,7 +8,7 @@ import { genericActions } from "../generic/actions";
 import { openNotificationError } from "../../components/notification/Notification";
 
 interface IResponse {
-  data: ICategory[] | ICategory | null;
+  data: ICategory[] | ICategory | ICategoryCounts[] | null;
   message: string;
   success: boolean;
   status: number;
@@ -52,6 +52,26 @@ function* fetchCategorySaga(action: FetchCategoryRequest) {
   } catch (e) {
     openNotificationError("Category", (e as Error).message);
   }
+}
+function* fetchCategoryCountsSaga() {
+  yield put(genericActions.increaseLoading());
+  try {
+    const { data, message, success }: IResponse = yield call(
+      categoryRequests.getCounts
+    );
+    if (success !== undefined && !success) {
+      throw new Error(message);
+    } else {
+      yield put(
+        categoryActions.getCountsSuccess({
+          counts: data as ICategoryCounts[],
+        })
+      );
+    }
+  } catch (e) {
+    openNotificationError("Category", (e as Error).message);
+  }
+  yield put(genericActions.decreaseLoading());
 }
 function* createCategorySaga(action: UpdateCategoryRequest) {
   try {
@@ -108,6 +128,10 @@ function* categoriesaga() {
   yield takeEvery(categoryConst.CREATE_CATEGORY_REQUEST, createCategorySaga);
   yield takeEvery(categoryConst.UPDATE_CATEGORY_REQUEST, updateCategorySaga);
   yield takeEvery(categoryConst.REMOVE_CATEGORY_REQUEST, removeCategorySaga);
+  yield takeEvery(
+    categoryConst.FETCH_CATEGORY_COUNTS_REQUEST,
+    fetchCategoryCountsSaga
+  );
 }
 // function* budgetItemSaga() {
 //   yield takeEvery(budgetItemConst.fetchList, listBudgetITem);

@@ -125,7 +125,10 @@ function* locationsaga() {
   // ]);
   yield takeEvery(locationConst.FETCH_LOCATIONS_REQUEST, fetchLocationsSaga);
   yield takeEvery(locationConst.FETCH_LOCATION_REQUEST, fetchLocationSaga);
-  yield takeEvery(locationConst.FETCH_COUNTS_REQUEST, fetchLocationCountsSaga);
+  yield takeEvery(
+    locationConst.FETCH_LOCATION_COUNTS_REQUEST,
+    fetchLocationCountsSaga
+  );
   yield takeEvery(locationConst.CREATE_LOCATION_REQUEST, createLocationSaga);
   yield takeEvery(locationConst.UPDATE_LOCATION_REQUEST, updateLocationSaga);
   yield takeEvery(locationConst.REMOVE_LOCATION_REQUEST, removeLocationSaga);

@@ -2,7 +2,7 @@
 {
     public class LicenseUpdateDto : BaseProductUpdateDto
     {
-        public Guid? SupplierId { get; set; }
+        public Guid? ManufacturerId { get; set; }
         public string Name { get; set; }
         public string LicenseKey { get; set; }
         public string? LicenseEmail { get; set; }

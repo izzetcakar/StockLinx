@@ -3,9 +3,9 @@ import { RootState } from "../../redux/rootReducer";
 import { Column as MyColumn } from "../../components/gridTable/interfaces/interfaces";
 import { NameComponent } from "../../components/customComponents/TableComponents";
 import { Column } from "devextreme/ui/data_grid";
-import { IComponent, ProductStatus } from "../../interfaces/interfaces";
-import { createDataFromEnum } from "../../functions/createDataFromEnum";
+import { IComponent } from "../../interfaces/interfaces";
 import { IFormItem } from "../../components/generic/BaseDataGrid";
+import { checkInOutHeaderTemplate } from "../../components/dataGrid/location/customColumns";
 
 export const useColumns = () => {
   const categories = useSelector(
@@ -56,6 +56,11 @@ export const useColumns = () => {
   ];
   const devColumns: Column<IComponent>[] = [
     {
+      dataField: "name",
+      caption: "Name",
+    },
+    { dataField: "serialNo", caption: "Serial No" },
+    {
       dataField: "categoryId",
       caption: "Category",
       lookup: {
@@ -65,6 +70,11 @@ export const useColumns = () => {
       },
     },
     {
+      dataField: "quantity",
+      caption: "Quantity",
+    },
+    // ADD AVAILABLE QUANTITY
+    {
       dataField: "locationId",
       caption: "Location",
       lookup: {
@@ -73,40 +83,36 @@ export const useColumns = () => {
         displayExpr: "name",
       },
     },
-    {
-      dataField: "companyId",
-      caption: "Company",
-      lookup: {
-        dataSource: companies,
-        valueExpr: "id",
-        displayExpr: "name",
-      },
-    },
-    {
-      dataField: "productStatus",
-      caption: "Status",
-      lookup: {
-        dataSource: createDataFromEnum(ProductStatus),
-        valueExpr: "id",
-        displayExpr: "value",
-      },
-    },
-    {
-      dataField: "name",
-      caption: "Name",
-    },
-    { dataField: "serialNo", caption: "Serial No" },
     { dataField: "orderNo", caption: "Order No" },
+    { dataField: "purchaseDate", caption: "Purchase Date" },
     {
       dataField: "purchaseCost",
       caption: "Purchase Cost",
     },
     {
-      dataField: "quantity",
-      caption: "Quantity",
+      caption: "Checkin/Checkout",
+      alignment: "center",
+      cellTemplate: checkInOutHeaderTemplate,
     },
-    { dataField: "purchaseDate", caption: "Purchase Date" },
-    { dataField: "notes", caption: "Notes" },
+    // {
+    //   dataField: "companyId",
+    //   caption: "Company",
+    //   lookup: {
+    //     dataSource: companies,
+    //     valueExpr: "id",
+    //     displayExpr: "name",
+    //   },
+    // },
+    // {
+    //   dataField: "productStatus",
+    //   caption: "Status",
+    //   lookup: {
+    //     dataSource: createDataFromEnum(ProductStatus),
+    //     valueExpr: "id",
+    //     displayExpr: "value",
+    //   },
+    // },
+    // { dataField: "notes", caption: "Notes" },
   ];
   const formItems: IFormItem[] = [
     { dataField: "categoryId" },

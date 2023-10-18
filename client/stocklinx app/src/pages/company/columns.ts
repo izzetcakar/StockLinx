@@ -11,15 +11,22 @@ export const useColumns = () => {
     },
   ];
   const devColumns: Column<ICompany>[] = [
+    // ADD IMAGE
     {
       dataField: "name",
       caption: "Name",
+    },
+    {
+      dataField: "email",
+      caption: "Email",
     },
   ];
   const formItems: IFormItem[] = [
     {
       dataField: "name",
-      colSpan: 2,
+    },
+    {
+      dataField: "email",
     },
   ];
 

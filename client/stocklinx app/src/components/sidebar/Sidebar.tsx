@@ -4,6 +4,13 @@ import "boxicons";
 import logo from "/logo.png";
 import { useLocation, useNavigate } from "react-router-dom";
 import { checkEmpty } from "../../functions/checkEmpty";
+import icon_barcode from "../../assets/icon_barcode.png";
+import icon_home from "../../assets/icon_home.png";
+import icon_keybord from "../../assets/icon_keyboard.png";
+import icon_drop from "../../assets/icon_drop.png";
+import icon_disk from "../../assets/icon_disk.png";
+import icon_harddisk from "../../assets/icon_harddisk.png";
+import icon_settings from "../../assets/icon_setting.png";
 
 interface NavigationItem {
   title: string;
@@ -19,78 +26,102 @@ const Sidebar: React.FC = () => {
   const [navigationList, setNavigationList] = useState<NavigationItem[]>([
     {
       title: "Home",
-      icon: "home-alt",
+      icon: icon_home,
       color: "#737373",
-      subItems: [
-        {
-          title: "Test",
-          icon: "bar-chart-alt-2",
-          target: "",
-          color: "#737373",
-        },
-      ],
-      isExpanded: false,
-      target: "/"
-    },
-    {
-      title: "Accessory",
-      icon: "bell",
-      color: "#737373",
-      target: "/accessory",
+      target: "/",
     },
     {
       title: "Asset",
-      icon: "pie-chart-alt",
+      icon: icon_barcode,
       color: "#737373",
       target: "/asset",
     },
     {
-      title: "Component",
-      icon: "pie-chart-alt",
-      color: "#737373",
-      target: "/component",
-    },
-    {
-      title: "Consumable",
-      icon: "pie-chart-alt",
-      color: "#737373",
-      target: "/consumable",
-    },
-    {
       title: "License",
-      icon: "pie-chart-alt",
+      icon: icon_disk,
       color: "#737373",
       target: "/license",
     },
     {
-      title: "Model",
-      icon: "pie-chart-alt",
+      title: "Accessory",
+      icon: icon_keybord,
       color: "#737373",
-      target: "/model",
+      target: "/accessory",
     },
     {
-      title: "Company",
-      icon: "pie-chart-alt",
+      title: "Consumable",
+      icon: icon_drop,
       color: "#737373",
-      target: "/company",
+      target: "/consumable",
     },
     {
-      title: "Department",
-      icon: "pie-chart-alt",
+      title: "Component",
+      icon: icon_harddisk,
       color: "#737373",
-      target: "/department",
+      target: "/component",
     },
     {
       title: "Test",
-      icon: "pie-chart-alt",
+      icon: icon_harddisk,
       color: "#737373",
       target: "/test",
     },
     {
       title: "Generic",
-      icon: "pie-chart-alt",
+      icon: icon_harddisk,
       color: "#737373",
       target: "/generic",
+    },
+    {
+      title: "Settings",
+      icon: icon_settings,
+      color: "#737373",
+      subItems: [
+        {
+          title: "Asset Models",
+          icon: icon_harddisk,
+          color: "#737373",
+          target: "/model",
+        },
+        {
+          title: "Categories",
+          icon: icon_harddisk,
+          color: "#737373",
+          target: "/category",
+        },
+        {
+          title: "Manufacturers",
+          icon: icon_harddisk,
+          color: "#737373",
+          target: "/manufacturer",
+        },
+        {
+          title: "Suppliers",
+          icon: icon_harddisk,
+          color: "#737373",
+          target: "/supplier",
+        },
+        {
+          title: "Companies",
+          icon: icon_harddisk,
+          color: "#737373",
+          target: "/company",
+        },
+        {
+          title: "Departments",
+          icon: icon_harddisk,
+          color: "#737373",
+          target: "/department",
+        },
+        {
+          title: "Locations",
+          icon: icon_harddisk,
+          color: "#737373",
+          target: "/location",
+        },
+      ],
+      isExpanded: false,
+      target: "/",
     },
     {
       title: "Logout",
@@ -126,7 +157,6 @@ const Sidebar: React.FC = () => {
     }
   };
 
-
   const hideAllDisplayElements = () => {
     setNavigationList((prev) =>
       prev.map((item) => {
@@ -137,10 +167,10 @@ const Sidebar: React.FC = () => {
         }
       })
     );
-  }
+  };
   const checkIfSelected = (item: NavigationItem) => {
-    return (item.target === location.pathname);
-  }
+    return item.target === location.pathname;
+  };
   return (
     <div
       className={`sidebar-container ${isSidebarCollapsed ? "collapsed" : ""}`}
@@ -154,38 +184,61 @@ const Sidebar: React.FC = () => {
       {navigationList.map((item, index) => (
         <React.Fragment key={index}>
           <div
-            className={checkIfSelected(item) ? "navigation-item selected" : "navigation-item"}
+            className={
+              checkIfSelected(item)
+                ? "navigation-item selected"
+                : "navigation-item"
+            }
             onClick={() => navigateUser(item, index)}
           >
             <div className="icon">
-              <i className={`bx bx-${item.icon}`} style={{ fontSize: "1.2rem", color: item.target === location.pathname ? "white" : item.color }} />
+              <img
+                src={item.icon}
+                style={{
+                  width: "1.2rem",
+                  height: "1.2rem",
+                }}
+              />
             </div>
             <div className="title">{item.title}</div>
             {checkEmpty(item?.subItems) ? (
               <div
                 className={
-                  item?.isExpanded
-                    ? "arrow-down arrow-down-open"
-                    : "arrow-down"
+                  item?.isExpanded ? "arrow-down arrow-down-open" : "arrow-down"
                 }
               >
-                <i className='bx bx-chevron-down' style={{ fontSize: "1.4rem", color: "#737373" }} />
+                <i
+                  className="bx bx-chevron-down"
+                  style={{ fontSize: "1.4rem", color: "#737373" }}
+                />
               </div>
             ) : null}
           </div>
           {item?.isExpanded && item.subItems
             ? item.subItems.map((subItem, nestedIndex) => (
-              <div
-                className={checkIfSelected(subItem) ? "navigation-element selected" : "navigation-element"}
-                key={`${index}-${nestedIndex}`}
-                onClick={() => navigateUser(subItem, nestedIndex)}
-              >
-                <div className="icon">
-                  <i className={`bx bx-${subItem.icon}`} style={{ fontSize: "1.4rem", color: checkIfSelected(subItem) ? "white" : subItem.color }} />
+                <div
+                  className={
+                    checkIfSelected(subItem)
+                      ? "navigation-element selected"
+                      : "navigation-element"
+                  }
+                  key={`${index}-${nestedIndex}`}
+                  onClick={() => navigateUser(subItem, nestedIndex)}
+                >
+                  <div className="icon">
+                    <i
+                      className={`bx bx-${subItem.icon}`}
+                      style={{
+                        fontSize: "1.4rem",
+                        color: checkIfSelected(subItem)
+                          ? "white"
+                          : subItem.color,
+                      }}
+                    />
+                  </div>
+                  <div className="title">{subItem.title}</div>
                 </div>
-                <div className="title">{subItem.title}</div>
-              </div>
-            ))
+              ))
             : null}
         </React.Fragment>
       ))}

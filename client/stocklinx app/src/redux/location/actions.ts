@@ -61,16 +61,16 @@ const getFailure = (): FetchLocationFailure => ({
 
 //GET PRODUCT LOCATIONS
 const getCounts = (): FetchLocationCountsRequest => ({
-  type: locationConst.FETCH_COUNTS_REQUEST,
+  type: locationConst.FETCH_LOCATION_COUNTS_REQUEST,
 });
 const getCountsSuccess = (
   payload: LocationCountsSuccessPayload
 ): FetchLocationCountsSuccess => ({
-  type: locationConst.FETCH_COUNTS_SUCCESS,
+  type: locationConst.FETCH_LOCATION_COUNTS_SUCCESS,
   payload,
 });
 const getCountsFailure = (): FetchLocationCountsFailure => ({
-  type: locationConst.FETCH_COUNTS_FAILURE,
+  type: locationConst.FETCH_LOCATION_COUNTS_FAILURE,
 });
 
 //POST

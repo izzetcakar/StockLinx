@@ -11,9 +11,10 @@
     public enum CategoryType
     {
         Asset,
+        License,
         Accessory,
+        Consumable,
         Component,
-        Consumable
     }
-    
+
 }

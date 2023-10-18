@@ -4,7 +4,7 @@ namespace StockLinx.Core.DTOs.Create
 {
     public class LicenseCreateDto : BaseProductCreateDto
     {
-        public Guid? SupplierId { get; set; }
+        public Guid? ManufacturerId { get; set; }
         public string Name { get; set; }
         public string LicenseKey { get; set; }
         public string? LicenseEmail { get; set; }

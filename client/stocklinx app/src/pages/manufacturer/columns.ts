@@ -23,9 +23,18 @@ export const useColumns = () => {
     },
   ];
   const devColumns: Column<IManufacturer>[] = [
+    // ADD IMAGE
     {
       dataField: "name",
       caption: "Name",
+    },
+    {
+      dataField: "url",
+      caption: "URL",
+    },
+    {
+      dataField: "supportUrl",
+      caption: "Support URL",
     },
     {
       dataField: "supportPhone",
@@ -35,23 +44,22 @@ export const useColumns = () => {
       dataField: "supportEmail",
       caption: "Support Email",
     },
-    {
-      dataField: "website",
-      caption: "Website",
-    },
   ];
   const formItems: IFormItem[] = [
     {
       dataField: "name",
     },
     {
+      dataField: "url",
+    },
+    {
+      dataField: "supportUrl",
+    },
+    {
       dataField: "supportPhone",
     },
     {
       dataField: "supportEmail",
-    },
-    {
-      dataField: "website",
     },
   ];
   return { columns, devColumns, formItems };

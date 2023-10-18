@@ -2,10 +2,10 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { Column as MyColumn } from "../../components/gridTable/interfaces/interfaces";
 import { NameComponent } from "../../components/customComponents/TableComponents";
-import { ILicense, ProductStatus } from "../../interfaces/interfaces";
+import { ILicense } from "../../interfaces/interfaces";
 import { Column } from "devextreme/ui/data_grid";
-import { createDataFromEnum } from "../../functions/createDataFromEnum";
 import { IFormItem } from "../../components/generic/BaseDataGrid";
+import { checkInOutHeaderTemplate } from "../../components/dataGrid/location/customColumns";
 
 export const useColumns = () => {
   const categories = useSelector(
@@ -13,7 +13,9 @@ export const useColumns = () => {
   );
   const locations = useSelector((state: RootState) => state.location.locations);
   const companies = useSelector((state: RootState) => state.company.companies);
-  const suppliers = useSelector((state: RootState) => state.supplier.suppliers);
+  const manufacturers = useSelector(
+    (state: RootState) => state.manufacturer.manufacturers
+  );
 
   const columns: MyColumn[] = [
     {
@@ -35,10 +37,10 @@ export const useColumns = () => {
         NameComponent(value, companies),
     },
     {
-      dataField: "supplierId",
-      caption: "Supplier",
+      dataField: "manufacturerId",
+      caption: "Manufacturer",
       renderComponent: (value: string | number | boolean | null | undefined) =>
-        NameComponent(value, suppliers),
+        NameComponent(value, manufacturers),
     },
     {
       dataField: "productStatus",
@@ -69,102 +71,111 @@ export const useColumns = () => {
   ];
   const devColumns: Column<ILicense>[] = [
     {
-      dataField: "supplierId",
-      caption: "Supplier",
-      lookup: {
-        dataSource: suppliers,
-        valueExpr: "id",
-        displayExpr: "name",
-      },
+      dataField: "name",
+      caption: "Name",
     },
     {
       dataField: "licenseKey",
       caption: "License Key",
     },
     {
-      dataField: "licenseEmail",
-      caption: "License Email",
-    },
-    {
-      dataField: "maintained",
-      caption: "Maintained",
-    },
-    {
-      dataField: "reassignable",
-      caption: "Reassignable",
-    },
-    {
       dataField: "expirationDate",
       caption: "Expiration Date",
     },
-    { dataField: "terminationDate", caption: "Termination Date" },
     {
-      dataField: "categoryId",
-      caption: "Category",
+      dataField: "licenseEmail",
+      caption: "License Email",
+    },
+    // ADD LICENSED NAME
+    {
+      dataField: "manufacturerId",
+      caption: "Manufacturer",
       lookup: {
-        dataSource: categories,
+        dataSource: manufacturers,
         valueExpr: "id",
         displayExpr: "name",
       },
-    },
-    {
-      dataField: "locationId",
-      caption: "Location",
-      lookup: {
-        dataSource: locations,
-        valueExpr: "id",
-        displayExpr: "name",
-      },
-    },
-    {
-      dataField: "companyId",
-      caption: "Company",
-      lookup: {
-        dataSource: companies,
-        valueExpr: "id",
-        displayExpr: "name",
-      },
-    },
-    {
-      dataField: "productStatus",
-      caption: "Status",
-      lookup: {
-        dataSource: createDataFromEnum(ProductStatus),
-        valueExpr: "id",
-        displayExpr: "value",
-      },
-    },
-    {
-      dataField: "name",
-      caption: "Name",
-    },
-    {
-      dataField: "serialNo",
-      caption: "Serial No",
-    },
-    {
-      dataField: "orderNo",
-      caption: "Order No",
-    },
-    {
-      dataField: "purchaseCost",
-      caption: "Purchase Cost",
     },
     {
       dataField: "quantity",
       caption: "Quantity",
     },
+    // ADD AVAILABLE QUANTITY
+    // {
+    //   dataField: "maintained",
+    //   caption: "Maintained",
+    // },
+    // {
+    //   dataField: "reassignable",
+    //   caption: "Reassignable",
+    // },
+    // { dataField: "terminationDate", caption: "Termination Date" },
+    // {
+    //   dataField: "categoryId",
+    //   caption: "Category",
+    //   lookup: {
+    //     dataSource: categories,
+    //     valueExpr: "id",
+    //     displayExpr: "name",
+    //   },
+    // },
+    // {
+    //   dataField: "locationId",
+    //   caption: "Location",
+    //   lookup: {
+    //     dataSource: locations,
+    //     valueExpr: "id",
+    //     displayExpr: "name",
+    //   },
+    // },
+    // {
+    //   dataField: "companyId",
+    //   caption: "Company",
+    //   lookup: {
+    //     dataSource: companies,
+    //     valueExpr: "id",
+    //     displayExpr: "name",
+    //   },
+    // },
+    // {
+    //   dataField: "productStatus",
+    //   caption: "Status",
+    //   lookup: {
+    //     dataSource: createDataFromEnum(ProductStatus),
+    //     valueExpr: "id",
+    //     displayExpr: "value",
+    //   },
+    // },
+
+    // {
+    //   dataField: "serialNo",
+    //   caption: "Serial No",
+    // },
+    // {
+    //   dataField: "orderNo",
+    //   caption: "Order No",
+    // },
+    // {
+    //   dataField: "purchaseCost",
+    //   caption: "Purchase Cost",
+    // },
+
+    // {
+    //   dataField: "purchaseDate",
+    //   caption: "Purchase Date",
+    // },
+    // {
+    //   dataField: "notes",
+    //   caption: "Notes",
+    // },
     {
-      dataField: "purchaseDate",
-      caption: "Purchase Date",
-    },
-    {
-      dataField: "notes",
-      caption: "Notes",
+      caption: "Checkin/Checkout",
+      alignment: "center",
+      cellTemplate: checkInOutHeaderTemplate,
     },
   ];
   const formItems: IFormItem[] = [
-    { dataField: "supplierId" },
+    { dataField: "manufacturerId" },
     { dataField: "licenseKey" },
     { dataField: "licenseEmail" },
     { dataField: "maintained" },
