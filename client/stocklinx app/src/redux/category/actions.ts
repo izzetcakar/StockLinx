@@ -24,6 +24,10 @@ import {
   SetCategories,
   ClearCategory,
   ClearCategories,
+  FetchCategoryCountsRequest,
+  CategoryCountsSuccessPayload,
+  FetchCategoryCountsSuccess,
+  FetchCategoryCountsFailure,
 } from "./type";
 
 //GET
@@ -53,6 +57,19 @@ const getSuccess = (
 });
 const getFailure = (): FetchCategoryFailure => ({
   type: categoryConst.FETCH_CATEGORY_FAILURE,
+});
+//GET COUNTS
+const getCounts = (): FetchCategoryCountsRequest => ({
+  type: categoryConst.FETCH_CATEGORY_COUNTS_REQUEST,
+});
+const getCountsSuccess = (
+  payload: CategoryCountsSuccessPayload
+): FetchCategoryCountsSuccess => ({
+  type: categoryConst.FETCH_CATEGORY_COUNTS_SUCCESS,
+  payload,
+});
+const getCountsFailure = (): FetchCategoryCountsFailure => ({
+  type: categoryConst.FETCH_CATEGORY_COUNTS_FAILURE,
 });
 
 //POST
@@ -118,6 +135,9 @@ export const categoryActions = {
   get,
   getSuccess,
   getFailure,
+  getCounts,
+  getCountsSuccess,
+  getCountsFailure,
   create,
   createSuccess,
   createFailure,
