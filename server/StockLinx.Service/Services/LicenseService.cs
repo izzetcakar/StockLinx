@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Create;
+using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 using StockLinx.Core.Services;
 using StockLinx.Core.UnitOfWork;
-using StockLinx.Repository.UnitOfWork;
 
 namespace StockLinx.Service.Services
 {
@@ -15,13 +16,45 @@ namespace StockLinx.Service.Services
         private readonly ILicenseRepository _licenseRepository;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        public LicenseService(IRepository<License> repository, ILicenseRepository licenseRepository,IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork)
+        public LicenseService(IRepository<License> repository, ILicenseRepository licenseRepository, IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork)
         {
             _licenseRepository = licenseRepository;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
 
+        public async Task<List<LicenseDto>> GetLicenseDtos()
+        {
+            var licenses = await _licenseRepository.GetAll().Include(x => x.Branch)
+            .Select(x => new LicenseDto
+            {
+                Id = x.Id,
+                CompanyId = x.Branch.CompanyId,
+                BranchId = x.BranchId,
+                CategoryId = x.CategoryId,
+                ProductStatusId = x.ProductStatusId,
+                Name = x.Name,
+                ImagePath = x.ImagePath,
+                SerialNo = x.SerialNo,
+                OrderNo = x.OrderNo,
+                Notes = x.Notes,
+                PurchaseDate = x.PurchaseDate,
+                PurchaseCost = x.PurchaseCost,
+                CheckinCounter = x.CheckinCounter,
+                CheckoutCounter = x.CheckoutCounter,
+                ManufacturerId = x.ManufacturerId,
+                LicenseKey = x.LicenseKey,
+                LicenseEmail = x.LicenseEmail,
+                Maintained = x.Maintained,
+                Reassignable = x.Reassignable,
+                ExpirationDate = x.ExpirationDate,
+                TerminationDate = x.TerminationDate,
+                Quantity = x.Quantity,
+                CreatedDate = x.CreatedDate,
+                UpdatedDate = x.UpdatedDate,
+            }).ToListAsync();
+            return licenses;
+        }
         public async Task CreateLicenseAsync(LicenseCreateDto createDto)
         {
             var newLicense = _mapper.Map<License>(createDto);
@@ -72,18 +105,18 @@ namespace StockLinx.Service.Services
 
         public async Task<List<ProductStatusCounter>> GetStatusCount()
         {
-            var licenses = await GetAllAsync();
-            var productStatusGroups = licenses.GroupBy(a => a.ProductStatus);
-            var productStatusCounts = new List<ProductStatusCounter>();
-            foreach (var group in productStatusGroups)
-            {
-                productStatusCounts.Add(new ProductStatusCounter
+            var licenses = await _licenseRepository.GetAll().Include(x => x.ProductStatus).ToListAsync();
+            var productStatusCounts = licenses
+                .Where(license => license.ProductStatus != null)
+                .GroupBy(license => license.ProductStatus.Type)
+                .Select(group => new ProductStatusCounter
                 {
                     Status = group.Key.ToString(),
                     Count = group.Count()
-                });
-            }
-            return productStatusCounts.ToList();
+                })
+                .ToList();
+
+            return productStatusCounts;
         }
     }
 }

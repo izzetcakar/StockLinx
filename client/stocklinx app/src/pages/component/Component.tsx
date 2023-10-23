@@ -17,6 +17,7 @@ import { datagridRequest } from "../../functions/datagridRequest";
 import React from "react";
 import DataGrid from "devextreme-react/data-grid";
 import Button from "devextreme-react/button";
+import { branchActions } from "../../redux/branch/actions";
 
 const Component = () => {
   const dispatch = useDispatch();
@@ -30,17 +31,18 @@ const Component = () => {
     dispatch(categoryActions.getAll());
     dispatch(locationActions.getAll());
     dispatch(companyActions.getAll());
+    dispatch(branchActions.getAll());
   };
   const onRowInserting = async (e: RowInsertingEvent<IComponent>) => {
     const newObject = { ...e.data };
-    await datagridRequest(e, "Consumable", "post", newObject);
+    await datagridRequest(e, "Component", "post", newObject);
   };
   const onRowUpdating = async (e: RowUpdatingEvent<IComponent>) => {
     const newObject = { ...e.oldData, ...e.newData };
-    await datagridRequest(e, "Consumable", "put", newObject);
+    await datagridRequest(e, "Component", "put", newObject);
   };
   const onRowRemoving = (e: RowRemovingEvent<IComponent>) => {
-    datagridRequest(e, `Consumable/${e.data.id}`, "delete");
+    datagridRequest(e, `Component/${e.data.id}`, "delete");
   };
 
   return (

@@ -99,6 +99,11 @@ export type RemoveUserFailure = {
   type: typeof userConst.REMOVE_USER_FAILURE;
 };
 
+//CLIENT ACTION TYPES
+export interface LogoutUser {
+  type: typeof userConst.LOGOUT_USER;
+}
+
 export type UserActions =
   | FetchUsersRequest
   | FetchUsersSuccess
@@ -120,4 +125,5 @@ export type UserActions =
   | SignInFailure
   | GetWithTokenRequest
   | GetWithTokenSuccess
-  | GetWithTokenFailure;
+  | GetWithTokenFailure
+  | LogoutUser;

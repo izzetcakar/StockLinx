@@ -2,17 +2,13 @@
 {
     public class Company : BaseEntity
     {
+        public Guid? LocationId { get; set; }
         public string Name { get; set; }
-        public string Email { get; set; }
+        public string? Email { get; set; }
         public string? ImagePath { get; set; }
 
         //Relates
-        public ICollection<Asset> Assets { get; set; }
-        public ICollection<Accessory> Accessories { get; set; }
-        public ICollection<Component> Components { get; set; }
-        public ICollection<Consumable> Consumables { get; set; }
-        public ICollection<License> Licenses { get; set; }
-        public ICollection<Department> Departments { get; set; }
-        public ICollection<User> Users { get; set; }
+        public Location? Location { get; set; }
+        public ICollection<Branch>? Branches { get; set; }
     }
 }

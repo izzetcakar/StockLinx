@@ -54,7 +54,7 @@ function* fetchProductStatusCountsSaga() {
   yield put(genericActions.decreaseLoading());
 }
 
-function* productsaga() {
+function* productSaga() {
   yield takeEvery(
     productConst.FETCH_PRODUCT_COUNTS_REQUEST,
     fetchProductCountsSaga
@@ -65,4 +65,4 @@ function* productsaga() {
   );
 }
 
-export default productsaga;
+export default productSaga;

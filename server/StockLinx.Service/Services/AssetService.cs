@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Create;
+using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 using StockLinx.Core.Services;
 using StockLinx.Core.UnitOfWork;
+using StockLinx.Repository.Repositories.EF_Core;
 using StockLinx.Repository.UnitOfWork;
 
 namespace StockLinx.Service.Services
@@ -15,13 +18,39 @@ namespace StockLinx.Service.Services
         private readonly IAssetRepository _assetRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public AssetService(IRepository<Asset> repository, IAssetRepository assetRepository,IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork)
+        public AssetService(IRepository<Asset> repository, IAssetRepository assetRepository, IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork)
         {
             _assetRepository = assetRepository;
-            _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
-
+        public async Task<List<AssetDto>> GetAssetDtos()
+        {
+            var assets = await _assetRepository.GetAll().Include(x => x.Branch)
+            .Select(x => new AssetDto
+            {
+                Id = x.Id,
+                CompanyId = x.Branch.CompanyId,
+                BranchId = x.BranchId,
+                CategoryId = x.CategoryId,
+                ProductStatusId = x.ProductStatusId,
+                Name = x.Name,
+                ImagePath = x.ImagePath,
+                SerialNo = x.SerialNo,
+                OrderNo = x.OrderNo,
+                Notes = x.Notes,
+                PurchaseDate = x.PurchaseDate,
+                PurchaseCost = x.PurchaseCost,
+                CheckinCounter = x.CheckinCounter,
+                CheckoutCounter = x.CheckoutCounter,
+                ManufacturerId = x.ManufacturerId,
+                ModelId = x.ModelId,
+                TagNo = x.TagNo,
+                CreatedDate = x.CreatedDate,
+                UpdatedDate = x.UpdatedDate,
+            }).ToListAsync();
+            return assets;
+        }
         public async Task CreateAssetAsync(AssetCreateDto createDto)
         {
             var newAsset = _mapper.Map<Asset>(createDto);
@@ -72,18 +101,18 @@ namespace StockLinx.Service.Services
 
         public async Task<List<ProductStatusCounter>> GetStatusCount()
         {
-            var assets = await GetAllAsync();
-            var productStatusGroups = assets.GroupBy(a => a.ProductStatus);
-            var productStatusCounts = new List<ProductStatusCounter>();
-            foreach (var group in productStatusGroups)
-            {
-                productStatusCounts.Add(new ProductStatusCounter
+            var assets = await _assetRepository.GetAll().Include(x => x.ProductStatus).ToListAsync();
+            var productStatusCounts = assets
+                .Where(asset => asset.ProductStatus != null)
+                .GroupBy(asset => asset.ProductStatus.Type)
+                .Select(group => new ProductStatusCounter
                 {
                     Status = group.Key.ToString(),
                     Count = group.Count()
-                });
-            }
-            return productStatusCounts.ToList();
+                })
+                .ToList();
+
+            return productStatusCounts;
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Create;
+using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
@@ -13,13 +15,34 @@ namespace StockLinx.Service.Services
         private readonly ISupplierRepository _supplierRepository;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        public SupplierService(IRepository<Supplier> repository, ISupplierRepository supplierRepository,IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork)
+        public SupplierService(IRepository<Supplier> repository, ISupplierRepository supplierRepository, IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork)
         {
             _supplierRepository = supplierRepository;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
-
+        public async Task<List<SupplierDto>> GetSupplierDtos()
+        {
+            var suppliers = await _supplierRepository.GetAll().Include(x => x.Branch)
+                .Select(x => new SupplierDto
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    BranchId = x.BranchId,
+                    CompanyId = x.Branch.CompanyId,
+                    LocationId = x.LocationId,
+                    ContactEmail = x.ContactEmail,
+                    ContactName = x.ContactName,
+                    ContactPhone = x.ContactPhone,
+                    Fax = x.Fax,
+                    ImagePath = x.ImagePath,
+                    Website = x.Website,
+                    Notes = x.Notes,
+                    CreatedDate = x.CreatedDate,
+                    UpdatedDate = x.UpdatedDate,
+                }).ToListAsync();
+            return suppliers;
+        }
         public async Task CreateSupplierAsync(SupplierCreateDto createDto)
         {
             var newSupplier = _mapper.Map<Supplier>(createDto);

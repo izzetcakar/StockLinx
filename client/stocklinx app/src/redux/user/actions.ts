@@ -24,6 +24,7 @@ import {
   SignInRequestPayload,
   SignInSuccess,
   SignInFailure,
+  LogoutUser,
 } from "./type";
 
 //GET
@@ -108,6 +109,11 @@ const removeFailure = (): RemoveUserFailure => ({
   type: userConst.REMOVE_USER_FAILURE,
 });
 
+//CLIENT ACTIONS
+const logoutUser = (): LogoutUser => ({
+  type: userConst.LOGOUT_USER,
+});
+
 export const userActions = {
   getAll,
   getAllSuccess,
@@ -130,4 +136,5 @@ export const userActions = {
   signIn,
   signInSuccess,
   signInFailure,
+  logoutUser,
 };

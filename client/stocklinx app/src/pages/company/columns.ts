@@ -15,6 +15,7 @@ export const useColumns = () => {
     {
       dataField: "name",
       caption: "Name",
+      validationRules: [{ type: "required" }],
     },
     {
       dataField: "email",

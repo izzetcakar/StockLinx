@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Create;
+using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
@@ -20,6 +22,20 @@ namespace StockLinx.Service.Services
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _categoryRepository = categoryRepository;
+        }
+        public async Task<List<CategoryDto>> GetCategoryDtos()
+        {
+            var categories = await _categoryRepository.GetAll().Include(x => x.Branch)
+                .Select(x => new CategoryDto
+                {
+                    Id = x.Id,
+                    CompanyId = x.Branch.CompanyId,
+                    BranchId = x.BranchId,
+                    Name = x.Name,
+                    ImagePath = x.ImagePath,
+                    Type = x.Type,
+                }).ToListAsync();
+            return categories;
         }
         public async Task CreateCategoryAsync(CategoryCreateDto createDto)
         {

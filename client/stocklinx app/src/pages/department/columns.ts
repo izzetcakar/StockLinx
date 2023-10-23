@@ -1,41 +1,39 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
-import { Column as MyColumn } from "../../components/gridTable/interfaces/interfaces";
-import { NameComponent } from "../../components/customComponents/TableComponents";
 import { Column } from "devextreme/ui/data_grid";
 import { IDepartment } from "../../interfaces/interfaces";
 import { IFormItem } from "../../components/generic/BaseDataGrid";
 
 export const useColumns = () => {
+  const branches = useSelector((state: RootState) => state.branch.branches);
   const companies = useSelector((state: RootState) => state.company.companies);
-  const locations = useSelector((state: RootState) => state.location.locations);
 
-  const columns: MyColumn[] = [
-    {
-      dataField: "companyId",
-      caption: "Company",
-      renderComponent: (value: string | number | boolean | null | undefined) =>
-        NameComponent(value, companies),
-    },
-    {
-      dataField: "locationId",
-      caption: "Location",
-      renderComponent: (value: string | number | boolean | null | undefined) =>
-        NameComponent(value, locations),
-    },
-    {
-      dataField: "managerId",
-      caption: "Manager",
-    },
-    {
-      dataField: "name",
-      caption: "Name",
-    },
-    {
-      dataField: "notes",
-      caption: "Notes",
-    },
-  ];
+  // const columns: MyColumn[] = [
+  //   {
+  //     dataField: "locationId",
+  //     caption: "Location",
+  //     renderComponent: (value: string | number | boolean | null | undefined) =>
+  //       NameComponent(value, locations),
+  //   },
+  //   {
+  //     dataField: "managerId",
+  //     caption: "Manager",
+  //   },
+  //   {
+  //     dataField: "name",
+  //     caption: "Name",
+  //   },
+  // ];
+
+  const getFilteredBranches = (options: {
+    data?: IDepartment;
+    key?: string;
+  }) => {
+    return {
+      store: branches,
+      filter: options.data ? ["companyId", "=", options.data.companyId] : null,
+    };
+  };
   const devColumns: Column<IDepartment>[] = [
     {
       dataField: "companyId",
@@ -45,10 +43,26 @@ export const useColumns = () => {
         valueExpr: "id",
         displayExpr: "name",
       },
+      setCellValue(newData, value) {
+        newData.companyId = value;
+        newData.branchId = "";
+      },
+      visible: false,
+    },
+    {
+      dataField: "branchId",
+      caption: "Branch",
+      lookup: {
+        dataSource: getFilteredBranches,
+        valueExpr: "id",
+        displayExpr: "name",
+      },
+      validationRules: [{ type: "required" }],
     },
     {
       dataField: "name",
       caption: "Name",
+      validationRules: [{ type: "required" }],
     },
     {
       dataField: "managerId",
@@ -56,19 +70,12 @@ export const useColumns = () => {
     },
   ];
   const formItems: IFormItem[] = [
-    {
-      dataField: "companyId",
-    },
-    {
-      dataField: "name",
-    },
-    {
-      dataField: "managerId",
-    },
-    {
-      dataField: "notes",
-    },
+    { dataField: "companyId" },
+    { dataField: "branchId" },
+    { dataField: "name" },
+    { dataField: "managerId" },
+    { dataField: "notes" },
   ];
 
-  return { columns, devColumns, formItems };
+  return { devColumns, formItems };
 };

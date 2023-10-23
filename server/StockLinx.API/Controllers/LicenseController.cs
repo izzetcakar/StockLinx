@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
+using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Services;
 
@@ -25,9 +26,8 @@ namespace StockLinx.API.Controllers
         [HttpGet]
         public async Task<IActionResult> All()
         {
-            var licenses = await _licenseService.GetAllAsync();
-            var licenseDtos = _mapper.Map<List<LicenseDto>>(licenses).ToList();
-            return CreateActionResult(CustomResponseDto<List<LicenseDto>>.Success(200, licenseDtos));
+            var licenses = await _licenseService.GetLicenseDtos();
+            return CreateActionResult(CustomResponseDto<List<LicenseDto>>.Success(200, licenses));
         }
 
         [HttpGet("{id}")]
@@ -45,9 +45,9 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(LicenseDto licenseDto)
+        public async Task<IActionResult> Update(LicenseUpdateDto updateDto)
         {
-            // Update
+            await _licenseService.UpdateLicenseAsync(updateDto);
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
         }
 

@@ -28,6 +28,9 @@ namespace StockLinx.Repository.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid>("BranchId")
+                        .HasColumnType("uuid");
+
                     b.Property<Guid?>("CategoryId")
                         .HasColumnType("uuid");
 
@@ -37,9 +40,6 @@ namespace StockLinx.Repository.Migrations
                     b.Property<int?>("CheckoutCounter")
                         .HasColumnType("integer");
 
-                    b.Property<Guid>("CompanyId")
-                        .HasColumnType("uuid");
-
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
@@ -48,9 +48,6 @@ namespace StockLinx.Repository.Migrations
 
                     b.Property<string>("ImagePath")
                         .HasColumnType("text");
-
-                    b.Property<Guid?>("LocationId")
-                        .HasColumnType("uuid");
 
                     b.Property<Guid?>("ManufacturerId")
                         .HasColumnType("uuid");
@@ -69,8 +66,8 @@ namespace StockLinx.Repository.Migrations
                     b.Property<string>("OrderNo")
                         .HasColumnType("text");
 
-                    b.Property<int?>("ProductStatus")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("ProductStatusId")
+                        .HasColumnType("uuid");
 
                     b.Property<double?>("PurchaseCost")
                         .HasColumnType("double precision");
@@ -97,23 +94,26 @@ namespace StockLinx.Repository.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BranchId");
+
                     b.HasIndex("CategoryId");
-
-                    b.HasIndex("CompanyId");
-
-                    b.HasIndex("LocationId");
 
                     b.HasIndex("ManufacturerId");
 
+                    b.HasIndex("ProductStatusId");
+
                     b.HasIndex("SupplierId");
 
-                    b.ToTable("Accessories");
+                    b.ToTable("Accessories", (string)null);
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.Asset", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("BranchId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("CategoryId")
@@ -129,9 +129,6 @@ namespace StockLinx.Repository.Migrations
                         .HasColumnType("integer")
                         .HasDefaultValue(0);
 
-                    b.Property<Guid>("CompanyId")
-                        .HasColumnType("uuid");
-
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
@@ -140,9 +137,6 @@ namespace StockLinx.Repository.Migrations
 
                     b.Property<string>("ImagePath")
                         .HasColumnType("text");
-
-                    b.Property<Guid?>("LocationId")
-                        .HasColumnType("uuid");
 
                     b.Property<Guid?>("ManufacturerId")
                         .HasColumnType("uuid");
@@ -160,8 +154,8 @@ namespace StockLinx.Repository.Migrations
                     b.Property<string>("OrderNo")
                         .HasColumnType("text");
 
-                    b.Property<int?>("ProductStatus")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("ProductStatusId")
+                        .HasColumnType("uuid");
 
                     b.Property<double?>("PurchaseCost")
                         .HasColumnType("double precision");
@@ -180,23 +174,61 @@ namespace StockLinx.Repository.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BranchId");
+
                     b.HasIndex("CategoryId");
-
-                    b.HasIndex("CompanyId");
-
-                    b.HasIndex("LocationId");
 
                     b.HasIndex("ManufacturerId");
 
                     b.HasIndex("ModelId");
 
-                    b.ToTable("Assets");
+                    b.HasIndex("ProductStatusId");
+
+                    b.ToTable("Assets", (string)null);
+                });
+
+            modelBuilder.Entity("StockLinx.Core.Entities.Branch", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("LocationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyId");
+
+                    b.HasIndex("LocationId");
+
+                    b.ToTable("Branches", (string)null);
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.Category", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("BranchId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
@@ -220,7 +252,9 @@ namespace StockLinx.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.HasIndex("BranchId");
+
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.Company", b =>
@@ -236,47 +270,7 @@ namespace StockLinx.Repository.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<string>("ImagePath")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Companies");
-                });
-
-            modelBuilder.Entity("StockLinx.Core.Entities.Component", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("CategoryId")
-                        .HasColumnType("uuid");
-
-                    b.Property<int?>("CheckinCounter")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("CheckoutCounter")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("CompanyId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("DeletedDate")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("ImagePath")
                         .HasColumnType("text");
@@ -288,14 +282,55 @@ namespace StockLinx.Repository.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LocationId");
+
+                    b.ToTable("Companies", (string)null);
+                });
+
+            modelBuilder.Entity("StockLinx.Core.Entities.Component", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("BranchId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("CategoryId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int?>("CheckinCounter")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("CheckoutCounter")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ImagePath")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Notes")
                         .HasColumnType("text");
 
                     b.Property<string>("OrderNo")
                         .HasColumnType("text");
 
-                    b.Property<int?>("ProductStatus")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("ProductStatusId")
+                        .HasColumnType("uuid");
 
                     b.Property<double?>("PurchaseCost")
                         .HasColumnType("double precision");
@@ -316,19 +351,22 @@ namespace StockLinx.Repository.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BranchId");
+
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("CompanyId");
+                    b.HasIndex("ProductStatusId");
 
-                    b.HasIndex("LocationId");
-
-                    b.ToTable("Components");
+                    b.ToTable("Components", (string)null);
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.Consumable", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("BranchId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("CategoryId")
@@ -339,9 +377,6 @@ namespace StockLinx.Repository.Migrations
 
                     b.Property<int?>("CheckoutCounter")
                         .HasColumnType("integer");
-
-                    b.Property<Guid>("CompanyId")
-                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
@@ -354,9 +389,6 @@ namespace StockLinx.Repository.Migrations
 
                     b.Property<string>("ItemNo")
                         .HasColumnType("text");
-
-                    b.Property<Guid?>("LocationId")
-                        .HasColumnType("uuid");
 
                     b.Property<string>("ModelNo")
                         .HasColumnType("text");
@@ -371,8 +403,8 @@ namespace StockLinx.Repository.Migrations
                     b.Property<string>("OrderNo")
                         .HasColumnType("text");
 
-                    b.Property<int?>("ProductStatus")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("ProductStatusId")
+                        .HasColumnType("uuid");
 
                     b.Property<double?>("PurchaseCost")
                         .HasColumnType("double precision");
@@ -393,13 +425,13 @@ namespace StockLinx.Repository.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BranchId");
+
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("CompanyId");
+                    b.HasIndex("ProductStatusId");
 
-                    b.HasIndex("LocationId");
-
-                    b.ToTable("Consumables");
+                    b.ToTable("Consumables", (string)null);
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.Department", b =>
@@ -408,7 +440,7 @@ namespace StockLinx.Repository.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("CompanyId")
+                    b.Property<Guid>("BranchId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
@@ -438,13 +470,11 @@ namespace StockLinx.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
+                    b.HasIndex("BranchId");
 
                     b.HasIndex("LocationId");
 
-                    b.HasIndex("ManagerId");
-
-                    b.ToTable("Departments");
+                    b.ToTable("Departments", (string)null);
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.DeployedProduct", b =>
@@ -500,13 +530,16 @@ namespace StockLinx.Repository.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("DeployedProducts");
+                    b.ToTable("DeployedProducts", (string)null);
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.License", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("BranchId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("CategoryId")
@@ -517,9 +550,6 @@ namespace StockLinx.Repository.Migrations
 
                     b.Property<int?>("CheckoutCounter")
                         .HasColumnType("integer");
-
-                    b.Property<Guid>("CompanyId")
-                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
@@ -540,9 +570,6 @@ namespace StockLinx.Repository.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("LocationId")
-                        .HasColumnType("uuid");
-
                     b.Property<bool>("Maintained")
                         .HasColumnType("boolean");
 
@@ -559,8 +586,8 @@ namespace StockLinx.Repository.Migrations
                     b.Property<string>("OrderNo")
                         .HasColumnType("text");
 
-                    b.Property<int?>("ProductStatus")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("ProductStatusId")
+                        .HasColumnType("uuid");
 
                     b.Property<double?>("PurchaseCost")
                         .HasColumnType("double precision");
@@ -587,15 +614,15 @@ namespace StockLinx.Repository.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BranchId");
+
                     b.HasIndex("CategoryId");
-
-                    b.HasIndex("CompanyId");
-
-                    b.HasIndex("LocationId");
 
                     b.HasIndex("ManufacturerId");
 
-                    b.ToTable("Licenses");
+                    b.HasIndex("ProductStatusId");
+
+                    b.ToTable("Licenses", (string)null);
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.Location", b =>
@@ -611,11 +638,9 @@ namespace StockLinx.Repository.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("City")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Country")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedDate")
@@ -645,13 +670,16 @@ namespace StockLinx.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Locations");
+                    b.ToTable("Locations", (string)null);
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.Manufacturer", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("BranchId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
@@ -684,7 +712,9 @@ namespace StockLinx.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Manufacturers");
+                    b.HasIndex("BranchId");
+
+                    b.ToTable("Manufacturers", (string)null);
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.Model", b =>
@@ -693,7 +723,7 @@ namespace StockLinx.Repository.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("CategoryId")
+                    b.Property<Guid>("BranchId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
@@ -723,17 +753,52 @@ namespace StockLinx.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
+                    b.HasIndex("BranchId");
 
                     b.HasIndex("ManufacturerId");
 
-                    b.ToTable("Models");
+                    b.ToTable("Models", (string)null);
+                });
+
+            modelBuilder.Entity("StockLinx.Core.Entities.ProductStatus", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("BranchId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BranchId");
+
+                    b.ToTable("ProductStatuses", (string)null);
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.Supplier", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("BranchId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("ContactEmail")
@@ -775,9 +840,11 @@ namespace StockLinx.Repository.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BranchId");
+
                     b.HasIndex("LocationId");
 
-                    b.ToTable("Suppliers");
+                    b.ToTable("Suppliers", (string)null);
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.User", b =>
@@ -786,7 +853,7 @@ namespace StockLinx.Repository.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("CompanyId")
+                    b.Property<Guid?>("BranchId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
@@ -800,10 +867,12 @@ namespace StockLinx.Repository.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
+                        .IsUnicode(true)
                         .HasColumnType("text");
 
                     b.Property<string>("EmployeeNo")
                         .IsRequired()
+                        .IsUnicode(true)
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("EndDate")
@@ -853,29 +922,26 @@ namespace StockLinx.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
+                    b.HasIndex("BranchId");
+
+                    b.HasIndex("DepartmentId");
 
                     b.HasIndex("LocationId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.Accessory", b =>
                 {
+                    b.HasOne("StockLinx.Core.Entities.Branch", "Branch")
+                        .WithMany("Accessories")
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("StockLinx.Core.Entities.Category", "Category")
                         .WithMany("Accessories")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("StockLinx.Core.Entities.Company", "Company")
-                        .WithMany("Accessories")
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .IsRequired();
-
-                    b.HasOne("StockLinx.Core.Entities.Location", "Location")
-                        .WithMany("Accessories")
-                        .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("StockLinx.Core.Entities.Manufacturer", "Manufacturer")
@@ -883,38 +949,39 @@ namespace StockLinx.Repository.Migrations
                         .HasForeignKey("ManufacturerId")
                         .OnDelete(DeleteBehavior.SetNull);
 
+                    b.HasOne("StockLinx.Core.Entities.ProductStatus", "ProductStatus")
+                        .WithMany("Accessories")
+                        .HasForeignKey("ProductStatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("StockLinx.Core.Entities.Supplier", "Supplier")
                         .WithMany("Accessories")
                         .HasForeignKey("SupplierId")
                         .OnDelete(DeleteBehavior.SetNull);
 
+                    b.Navigation("Branch");
+
                     b.Navigation("Category");
 
-                    b.Navigation("Company");
-
-                    b.Navigation("Location");
-
                     b.Navigation("Manufacturer");
+
+                    b.Navigation("ProductStatus");
 
                     b.Navigation("Supplier");
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.Asset", b =>
                 {
+                    b.HasOne("StockLinx.Core.Entities.Branch", "Branch")
+                        .WithMany("Assets")
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("StockLinx.Core.Entities.Category", "Category")
                         .WithMany("Assets")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("StockLinx.Core.Entities.Company", "Company")
-                        .WithMany("Assets")
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .IsRequired();
-
-                    b.HasOne("StockLinx.Core.Entities.Location", "Location")
-                        .WithMany("Assets")
-                        .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("StockLinx.Core.Entities.Manufacturer", "Manufacturer")
@@ -927,87 +994,129 @@ namespace StockLinx.Repository.Migrations
                         .HasForeignKey("ModelId")
                         .OnDelete(DeleteBehavior.SetNull);
 
+                    b.HasOne("StockLinx.Core.Entities.ProductStatus", "ProductStatus")
+                        .WithMany("Assets")
+                        .HasForeignKey("ProductStatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Branch");
+
                     b.Navigation("Category");
-
-                    b.Navigation("Company");
-
-                    b.Navigation("Location");
 
                     b.Navigation("Manufacturer");
 
                     b.Navigation("Model");
+
+                    b.Navigation("ProductStatus");
                 });
 
-            modelBuilder.Entity("StockLinx.Core.Entities.Component", b =>
-                {
-                    b.HasOne("StockLinx.Core.Entities.Category", "Category")
-                        .WithMany("Components")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("StockLinx.Core.Entities.Company", "Company")
-                        .WithMany("Components")
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .IsRequired();
-
-                    b.HasOne("StockLinx.Core.Entities.Location", "Location")
-                        .WithMany("Components")
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("Category");
-
-                    b.Navigation("Company");
-
-                    b.Navigation("Location");
-                });
-
-            modelBuilder.Entity("StockLinx.Core.Entities.Consumable", b =>
-                {
-                    b.HasOne("StockLinx.Core.Entities.Category", "Category")
-                        .WithMany("Consumables")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("StockLinx.Core.Entities.Company", "Company")
-                        .WithMany("Consumables")
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .IsRequired();
-
-                    b.HasOne("StockLinx.Core.Entities.Location", "Location")
-                        .WithMany("Consumables")
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("Category");
-
-                    b.Navigation("Company");
-
-                    b.Navigation("Location");
-                });
-
-            modelBuilder.Entity("StockLinx.Core.Entities.Department", b =>
+            modelBuilder.Entity("StockLinx.Core.Entities.Branch", b =>
                 {
                     b.HasOne("StockLinx.Core.Entities.Company", "Company")
-                        .WithMany("Departments")
+                        .WithMany("Branches")
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("StockLinx.Core.Entities.Location", null)
-                        .WithMany("Departments")
+                    b.HasOne("StockLinx.Core.Entities.Location", "Location")
+                        .WithMany("Branches")
                         .HasForeignKey("LocationId");
-
-                    b.HasOne("StockLinx.Core.Entities.User", "Manager")
-                        .WithMany("Departments")
-                        .HasForeignKey("ManagerId")
-                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Company");
 
-                    b.Navigation("Manager");
+                    b.Navigation("Location");
+                });
+
+            modelBuilder.Entity("StockLinx.Core.Entities.Category", b =>
+                {
+                    b.HasOne("StockLinx.Core.Entities.Branch", "Branch")
+                        .WithMany("Categories")
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Branch");
+                });
+
+            modelBuilder.Entity("StockLinx.Core.Entities.Company", b =>
+                {
+                    b.HasOne("StockLinx.Core.Entities.Location", "Location")
+                        .WithMany("Companies")
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Location");
+                });
+
+            modelBuilder.Entity("StockLinx.Core.Entities.Component", b =>
+                {
+                    b.HasOne("StockLinx.Core.Entities.Branch", "Branch")
+                        .WithMany("Components")
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StockLinx.Core.Entities.Category", "Category")
+                        .WithMany("Components")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("StockLinx.Core.Entities.ProductStatus", "ProductStatus")
+                        .WithMany("Components")
+                        .HasForeignKey("ProductStatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Branch");
+
+                    b.Navigation("Category");
+
+                    b.Navigation("ProductStatus");
+                });
+
+            modelBuilder.Entity("StockLinx.Core.Entities.Consumable", b =>
+                {
+                    b.HasOne("StockLinx.Core.Entities.Branch", "Branch")
+                        .WithMany("Consumables")
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StockLinx.Core.Entities.Category", "Category")
+                        .WithMany("Consumables")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("StockLinx.Core.Entities.ProductStatus", "ProductStatus")
+                        .WithMany("Consumables")
+                        .HasForeignKey("ProductStatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Branch");
+
+                    b.Navigation("Category");
+
+                    b.Navigation("ProductStatus");
+                });
+
+            modelBuilder.Entity("StockLinx.Core.Entities.Department", b =>
+                {
+                    b.HasOne("StockLinx.Core.Entities.Branch", "Branch")
+                        .WithMany("Departments")
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StockLinx.Core.Entities.Location", "Location")
+                        .WithMany("Departments")
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Branch");
+
+                    b.Navigation("Location");
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.DeployedProduct", b =>
@@ -1037,7 +1146,7 @@ namespace StockLinx.Repository.Migrations
                         .HasForeignKey("LicenseId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("StockLinx.Core.Entities.User", "AssignedUser")
+                    b.HasOne("StockLinx.Core.Entities.User", "User")
                         .WithMany("DeployedProducts")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.SetNull)
@@ -1047,96 +1156,122 @@ namespace StockLinx.Repository.Migrations
 
                     b.Navigation("Asset");
 
-                    b.Navigation("AssignedUser");
-
                     b.Navigation("Component");
 
                     b.Navigation("Consumable");
 
                     b.Navigation("License");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.License", b =>
                 {
+                    b.HasOne("StockLinx.Core.Entities.Branch", "Branch")
+                        .WithMany("Licenses")
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("StockLinx.Core.Entities.Category", "Category")
                         .WithMany("Licenses")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("StockLinx.Core.Entities.Company", "Company")
-                        .WithMany("Licenses")
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .IsRequired();
-
-                    b.HasOne("StockLinx.Core.Entities.Location", "Location")
-                        .WithMany("Licenses")
-                        .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("StockLinx.Core.Entities.Manufacturer", "Manufacturer")
                         .WithMany()
                         .HasForeignKey("ManufacturerId");
 
+                    b.HasOne("StockLinx.Core.Entities.ProductStatus", "ProductStatus")
+                        .WithMany("Licenses")
+                        .HasForeignKey("ProductStatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Branch");
+
                     b.Navigation("Category");
 
-                    b.Navigation("Company");
-
-                    b.Navigation("Location");
-
                     b.Navigation("Manufacturer");
+
+                    b.Navigation("ProductStatus");
+                });
+
+            modelBuilder.Entity("StockLinx.Core.Entities.Manufacturer", b =>
+                {
+                    b.HasOne("StockLinx.Core.Entities.Branch", "Branch")
+                        .WithMany("Manufacturers")
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Branch");
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.Model", b =>
                 {
-                    b.HasOne("StockLinx.Core.Entities.Category", "Category")
+                    b.HasOne("StockLinx.Core.Entities.Branch", "Branch")
                         .WithMany("Models")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
 
                     b.HasOne("StockLinx.Core.Entities.Manufacturer", "Manufacturer")
                         .WithMany("Models")
                         .HasForeignKey("ManufacturerId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.Navigation("Category");
+                    b.Navigation("Branch");
 
                     b.Navigation("Manufacturer");
                 });
 
+            modelBuilder.Entity("StockLinx.Core.Entities.ProductStatus", b =>
+                {
+                    b.HasOne("StockLinx.Core.Entities.Branch", "Branch")
+                        .WithMany("ProductStatuses")
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Branch");
+                });
+
             modelBuilder.Entity("StockLinx.Core.Entities.Supplier", b =>
                 {
+                    b.HasOne("StockLinx.Core.Entities.Branch", "Branch")
+                        .WithMany("Suppliers")
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("StockLinx.Core.Entities.Location", "Location")
                         .WithMany("Suppliers")
                         .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Branch");
 
                     b.Navigation("Location");
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.User", b =>
                 {
-                    b.HasOne("StockLinx.Core.Entities.Company", "Company")
+                    b.HasOne("StockLinx.Core.Entities.Branch", null)
                         .WithMany("Users")
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .IsRequired();
+                        .HasForeignKey("BranchId");
 
                     b.HasOne("StockLinx.Core.Entities.Department", "Department")
                         .WithMany("Users")
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
 
-                    b.HasOne("StockLinx.Core.Entities.Location", "Location")
+                    b.HasOne("StockLinx.Core.Entities.Location", null)
                         .WithMany("Users")
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("Company");
+                        .HasForeignKey("LocationId");
 
                     b.Navigation("Department");
-
-                    b.Navigation("Location");
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.Accessory", b =>
@@ -1147,6 +1282,33 @@ namespace StockLinx.Repository.Migrations
             modelBuilder.Entity("StockLinx.Core.Entities.Asset", b =>
                 {
                     b.Navigation("DeployedProducts");
+                });
+
+            modelBuilder.Entity("StockLinx.Core.Entities.Branch", b =>
+                {
+                    b.Navigation("Accessories");
+
+                    b.Navigation("Assets");
+
+                    b.Navigation("Categories");
+
+                    b.Navigation("Components");
+
+                    b.Navigation("Consumables");
+
+                    b.Navigation("Departments");
+
+                    b.Navigation("Licenses");
+
+                    b.Navigation("Manufacturers");
+
+                    b.Navigation("Models");
+
+                    b.Navigation("ProductStatuses");
+
+                    b.Navigation("Suppliers");
+
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.Category", b =>
@@ -1160,25 +1322,11 @@ namespace StockLinx.Repository.Migrations
                     b.Navigation("Consumables");
 
                     b.Navigation("Licenses");
-
-                    b.Navigation("Models");
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.Company", b =>
                 {
-                    b.Navigation("Accessories");
-
-                    b.Navigation("Assets");
-
-                    b.Navigation("Components");
-
-                    b.Navigation("Consumables");
-
-                    b.Navigation("Departments");
-
-                    b.Navigation("Licenses");
-
-                    b.Navigation("Users");
+                    b.Navigation("Branches");
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.Component", b =>
@@ -1203,17 +1351,11 @@ namespace StockLinx.Repository.Migrations
 
             modelBuilder.Entity("StockLinx.Core.Entities.Location", b =>
                 {
-                    b.Navigation("Accessories");
+                    b.Navigation("Branches");
 
-                    b.Navigation("Assets");
-
-                    b.Navigation("Components");
-
-                    b.Navigation("Consumables");
+                    b.Navigation("Companies");
 
                     b.Navigation("Departments");
-
-                    b.Navigation("Licenses");
 
                     b.Navigation("Suppliers");
 
@@ -1234,6 +1376,19 @@ namespace StockLinx.Repository.Migrations
                     b.Navigation("Assets");
                 });
 
+            modelBuilder.Entity("StockLinx.Core.Entities.ProductStatus", b =>
+                {
+                    b.Navigation("Accessories");
+
+                    b.Navigation("Assets");
+
+                    b.Navigation("Components");
+
+                    b.Navigation("Consumables");
+
+                    b.Navigation("Licenses");
+                });
+
             modelBuilder.Entity("StockLinx.Core.Entities.Supplier", b =>
                 {
                     b.Navigation("Accessories");
@@ -1241,8 +1396,6 @@ namespace StockLinx.Repository.Migrations
 
             modelBuilder.Entity("StockLinx.Core.Entities.User", b =>
                 {
-                    b.Navigation("Departments");
-
                     b.Navigation("DeployedProducts");
                 });
 #pragma warning restore 612, 618

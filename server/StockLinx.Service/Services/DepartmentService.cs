@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Create;
+using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
@@ -13,13 +15,28 @@ namespace StockLinx.Service.Services
         private readonly IDepartmentRepository _departmentRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public DepartmentService(IRepository<Department> repository,IDepartmentRepository departmentRepository, IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork)
+        public DepartmentService(IRepository<Department> repository, IDepartmentRepository departmentRepository, IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork)
         {
             _departmentRepository = departmentRepository;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
 
+        public async Task<List<DepartmentDto>> GetDepartmentDtos()
+        {
+            var departments = await _departmentRepository.GetAll().Include(x => x.Branch)
+                .Select(x => new DepartmentDto
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    BranchId = x.BranchId,
+                    CompanyId = x.Branch.CompanyId,
+                    ImagePath = x.ImagePath,
+                    CreatedDate = x.CreatedDate,
+                    UpdatedDate = x.UpdatedDate
+                }).ToListAsync();
+            return departments;
+        }
         public async Task CreateDepartmentAsync(DepartmentCreateDto createDto)
         {
             var newDepartment = _mapper.Map<Department>(createDto);

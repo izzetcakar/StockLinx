@@ -11,6 +11,8 @@ import {
   RowUpdatingEvent,
 } from "devextreme/ui/data_grid";
 import { datagridRequest } from "../../functions/datagridRequest";
+import { companyActions } from "../../redux/company/actions";
+import { branchActions } from "../../redux/branch/actions";
 
 const Category = () => {
   const dispatch = useDispatch();
@@ -20,6 +22,8 @@ const Category = () => {
 
   const refreshData = () => {
     dispatch(categoryActions.getAll());
+    dispatch(companyActions.getAll());
+    dispatch(branchActions.getAll());
   };
   const onRowInserting = async (e: RowInsertingEvent<ICategory>) => {
     const newObject = { ...e.data };

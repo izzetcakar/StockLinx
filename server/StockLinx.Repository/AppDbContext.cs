@@ -23,6 +23,8 @@ namespace StockLinx.Repository
         public DbSet<Manufacturer> Manufacturers { get; set; }
         public DbSet<Model> Models { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }
+        public DbSet<ProductStatus> ProductStatuses { get; set; }
+        public DbSet<Branch> Branches { get; set; }
         public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
