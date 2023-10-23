@@ -64,6 +64,7 @@ function* signInSaga(action: SignInRequest) {
     } else {
       localStorage.setItem("token", JSON.stringify(response.data?.token));
       yield put(userActions.signInSuccess());
+      yield put(userActions.getWithToken());
     }
   } catch (e) {
     openNotificationError("User", (e as Error).message);

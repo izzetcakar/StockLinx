@@ -11,6 +11,8 @@ import icon_drop from "../../assets/icon_drop.png";
 import icon_disk from "../../assets/icon_disk.png";
 import icon_harddisk from "../../assets/icon_harddisk.png";
 import icon_settings from "../../assets/icon_setting.png";
+import { useDispatch } from "react-redux";
+import { userActions } from "../../redux/user/actions";
 
 interface NavigationItem {
   title: string;
@@ -19,10 +21,19 @@ interface NavigationItem {
   subItems?: NavigationItem[];
   isExpanded?: boolean;
   target: string;
+  onClick?: () => void;
 }
 
 const Sidebar: React.FC = () => {
   const location = useLocation();
+  const dispatch = useDispatch();
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    dispatch(userActions.logoutUser());
+    navigate("/login");
+  };
+
   const [navigationList, setNavigationList] = useState<NavigationItem[]>([
     {
       title: "Home",
@@ -139,7 +150,8 @@ const Sidebar: React.FC = () => {
       title: "Logout",
       icon: "log-out",
       color: "#737373",
-      target: "",
+      target: "/logout",
+      onClick: () => logout(),
     },
   ]);
 
@@ -183,6 +195,7 @@ const Sidebar: React.FC = () => {
   const checkIfSelected = (item: NavigationItem) => {
     return item.target === location.pathname;
   };
+
   return (
     <div
       className={`sidebar-container ${isSidebarCollapsed ? "collapsed" : ""}`}
@@ -201,7 +214,9 @@ const Sidebar: React.FC = () => {
                 ? "navigation-item selected"
                 : "navigation-item"
             }
-            onClick={() => navigateUser(item, index)}
+            onClick={
+              item.onClick ? item.onClick : () => navigateUser(item, index)
+            }
           >
             <div className="icon">
               <img
@@ -235,7 +250,7 @@ const Sidebar: React.FC = () => {
                       : "navigation-element"
                   }
                   key={`${index}-${nestedIndex}`}
-                  onClick={() => navigateUser(subItem, nestedIndex)}
+                  onClick={() => navigate(subItem.target)}
                 >
                   <div className="icon">
                     <i

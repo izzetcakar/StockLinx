@@ -98,6 +98,11 @@ export default (state = initialState, action: UserActions) => {
       return {
         ...state,
       };
+    case userConst.LOGOUT_USER:
+      return {
+        ...state,
+        user: null,
+      };
     default:
       return { ...state };
   }
