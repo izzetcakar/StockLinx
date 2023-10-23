@@ -19,6 +19,7 @@ import { datagridRequest } from "../../functions/datagridRequest";
 import React from "react";
 import DataGrid from "devextreme-react/data-grid";
 import Button from "devextreme-react/button";
+import { branchActions } from "../../redux/branch/actions";
 
 const Asset = () => {
   const dispatch = useDispatch();
@@ -32,6 +33,7 @@ const Asset = () => {
     dispatch(locationActions.getAll());
     dispatch(modelActions.getAll());
     dispatch(companyActions.getAll());
+    dispatch(branchActions.getAll());
   };
   const onRowInserting = async (e: RowInsertingEvent<IAsset>) => {
     const newObject = { ...e.data };

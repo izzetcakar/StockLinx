@@ -16,6 +16,8 @@ import { datagridRequest } from "../../functions/datagridRequest";
 import Button from "devextreme-react/button";
 import DataGrid from "devextreme-react/data-grid";
 import React from "react";
+import { productStatusActions } from "../../redux/productStatus/actions";
+import { branchActions } from "../../redux/branch/actions";
 
 const Consumable = () => {
   const dispatch = useDispatch();
@@ -28,7 +30,9 @@ const Consumable = () => {
     dispatch(consumableActions.getAll());
     dispatch(categoryActions.getAll());
     dispatch(locationActions.getAll());
+    dispatch(productStatusActions.getAll());
     dispatch(companyActions.getAll());
+    dispatch(branchActions.getAll());
   };
 
   const onRowInserting = async (e: RowInsertingEvent<IConsumable>) => {

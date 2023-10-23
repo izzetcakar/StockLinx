@@ -12,7 +12,9 @@ import manufacturerSaga from "./manufacturer/sagas";
 import modelSaga from "./model/sagas";
 import supplierSaga from "./supplier/sagas";
 import userSaga from "./user/sagas";
-import productsaga from "./product/sagas";
+import productSaga from "./product/sagas";
+import productStatusSaga from "./productStatus/sagas";
+import branchSaga from "./branch/sagas";
 
 export function* rootSaga() {
   yield all([
@@ -29,6 +31,8 @@ export function* rootSaga() {
     fork(modelSaga),
     fork(supplierSaga),
     fork(userSaga),
-    fork(productsaga),
+    fork(productSaga),
+    fork(productStatusSaga),
+    fork(branchSaga),
   ]);
 }

@@ -1,54 +1,50 @@
 import { useSelector } from "react-redux";
-import { Column as MyColumn } from "../../components/gridTable/interfaces/interfaces";
-import { NameComponent } from "../../components/customComponents/TableComponents";
 import { RootState } from "../../redux/rootReducer";
 import { ISupplier } from "../../interfaces/interfaces";
 import { Column } from "devextreme/ui/data_grid";
 import { IFormItem } from "../../components/generic/BaseDataGrid";
 
 export const useColumns = () => {
+  const companies = useSelector((state: RootState) => state.company.companies);
+  const branches = useSelector((state: RootState) => state.branch.branches);
   const locations = useSelector((state: RootState) => state.location.locations);
 
-  const columns: MyColumn[] = [
-    {
-      dataField: "locationId",
-      caption: "Location",
-      renderComponent: (value: string | number | boolean | null | undefined) =>
-        NameComponent(value, locations),
-    },
-    {
-      dataField: "name",
-      caption: "Name",
-    },
-    {
-      dataField: "contactName",
-      caption: "Contact Name",
-    },
-    {
-      dataField: "contactPhone",
-      caption: "Contact Phone",
-    },
-    {
-      dataField: "contactEmail",
-      caption: "Contact Email",
-    },
-    {
-      dataField: "website",
-      caption: "Website",
-    },
-    {
-      dataField: "fax",
-      caption: "Fax",
-    },
-    {
-      dataField: "notes",
-      caption: "Notes",
-    },
-  ];
+  const getFilteredBranches = (options: { data?: ISupplier; key?: string }) => {
+    return {
+      store: branches,
+      filter: options.data ? ["companyId", "=", options.data.companyId] : null,
+    };
+  };
+
   const devColumns: Column<ISupplier>[] = [
     {
+      dataField: "companyId",
+      caption: "Company",
+      lookup: {
+        dataSource: companies,
+        valueExpr: "id",
+        displayExpr: "name",
+      },
+      setCellValue(newData, value) {
+        newData.companyId = value;
+        newData.branchId = "";
+      },
+      visible: false,
+    },
+    {
+      dataField: "branchId",
+      caption: "Branch",
+      lookup: {
+        dataSource: getFilteredBranches,
+        valueExpr: "id",
+        displayExpr: "name",
+      },
+      validationRules: [{ type: "required" }],
+    },
+    {
       dataField: "name",
       caption: "Name",
+      validationRules: [{ type: "required" }],
     },
     {
       dataField: "locationId",
@@ -73,31 +69,17 @@ export const useColumns = () => {
     },
   ];
   const formItems: IFormItem[] = [
-    {
-      dataField: "name",
-    },
-    {
-      dataField: "locationId",
-    },
-    {
-      dataField: "contactName",
-    },
-    {
-      dataField: "contactPhone",
-    },
-    {
-      dataField: "contactEmail",
-    },
-    {
-      dataField: "website",
-    },
-    {
-      dataField: "fax",
-    },
-    {
-      dataField: "notes",
-    },
+    { dataField: "companyId" },
+    { dataField: "branchId" },
+    { dataField: "name" },
+    { dataField: "locationId" },
+    { dataField: "contactName" },
+    { dataField: "contactPhone" },
+    { dataField: "contactEmail" },
+    { dataField: "website" },
+    { dataField: "fax" },
+    { dataField: "notes" },
   ];
 
-  return { columns, devColumns, formItems };
+  return { devColumns, formItems };
 };

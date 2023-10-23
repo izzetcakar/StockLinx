@@ -1,70 +1,90 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
-import { Column as MyColumn } from "../../components/gridTable/interfaces/interfaces";
-import { NameComponent } from "../../components/customComponents/TableComponents";
 import { Column } from "devextreme/ui/data_grid";
 import { IComponent } from "../../interfaces/interfaces";
 import { IFormItem } from "../../components/generic/BaseDataGrid";
 import { checkInOutHeaderTemplate } from "../../components/dataGrid/location/customColumns";
 
 export const useColumns = () => {
+  const companies = useSelector((state: RootState) => state.company.companies);
+  const branches = useSelector((state: RootState) => state.branch.branches);
   const categories = useSelector(
     (state: RootState) => state.category.categories
   );
-  const locations = useSelector((state: RootState) => state.location.locations);
-  const companies = useSelector((state: RootState) => state.company.companies);
+  const productStatuses = useSelector(
+    (state: RootState) => state.productStatus.productStatuses
+  );
 
-  const columns: MyColumn[] = [
-    {
-      dataField: "categoryId",
-      caption: "Category",
-      renderComponent: (value: string | number | boolean | null | undefined) =>
-        NameComponent(value, categories),
-    },
-    {
-      dataField: "locationId",
-      caption: "Location",
-      renderComponent: (value: string | number | boolean | null | undefined) =>
-        NameComponent(value, locations),
-    },
+  const getFilteredBranches = (options: {
+    data?: IComponent;
+    key?: string;
+  }) => {
+    return {
+      store: branches,
+      filter: options.data ? ["companyId", "=", options.data.companyId] : null,
+    };
+  };
+  const getFilteredCategories = (options: {
+    data?: IComponent;
+    key?: string;
+  }) => {
+    return {
+      store: categories,
+      filter: options.data ? ["branchId", "=", options.data.branchId] : null,
+    };
+  };
+  const getFilteredProductStatuses = (options: {
+    data?: IComponent;
+    key?: string;
+  }) => {
+    return {
+      store: productStatuses,
+      filter: options.data ? ["branchId", "=", options.data.branchId] : null,
+    };
+  };
+
+  const devColumns: Column<IComponent>[] = [
     {
       dataField: "companyId",
       caption: "Company",
-      renderComponent: (value: string | number | boolean | null | undefined) =>
-        NameComponent(value, companies),
+      lookup: {
+        dataSource: companies,
+        valueExpr: "id",
+        displayExpr: "name",
+      },
+      setCellValue(newData, value) {
+        newData.companyId = value;
+        newData.branchId = "";
+      },
+      visible: false,
     },
     {
-      dataField: "productStatus",
-      caption: "Status",
+      dataField: "branchId",
+      caption: "Branch",
+      lookup: {
+        dataSource: getFilteredBranches,
+        valueExpr: "id",
+        displayExpr: "name",
+      },
+      setCellValue(newData, value) {
+        newData.branchId = value;
+        newData.categoryId = null;
+        newData.productStatusId = "";
+      },
+      validationRules: [{ type: "required" }],
+      visible: false,
     },
     {
       dataField: "name",
       caption: "Name",
-    },
-    { dataField: "serialNo", caption: "Serial No" },
-    { dataField: "orderNo", caption: "Order No" },
-    {
-      dataField: "purchaseCost",
-      caption: "Purchase Cost",
-    },
-    {
-      dataField: "quantity",
-      caption: "Quantity",
-    },
-    { dataField: "purchaseDate", caption: "Purchase Date" },
-    { dataField: "notes", caption: "Notes" },
-  ];
-  const devColumns: Column<IComponent>[] = [
-    {
-      dataField: "name",
-      caption: "Name",
+      validationRules: [{ type: "required" }],
     },
     { dataField: "serialNo", caption: "Serial No" },
     {
       dataField: "categoryId",
       caption: "Category",
       lookup: {
-        dataSource: categories,
+        dataSource: getFilteredCategories,
         valueExpr: "id",
         displayExpr: "name",
       },
@@ -74,15 +94,6 @@ export const useColumns = () => {
       caption: "Quantity",
     },
     // ADD AVAILABLE QUANTITY
-    {
-      dataField: "locationId",
-      caption: "Location",
-      lookup: {
-        dataSource: locations,
-        valueExpr: "id",
-        displayExpr: "name",
-      },
-    },
     { dataField: "orderNo", caption: "Order No" },
     { dataField: "purchaseDate", caption: "Purchase Date" },
     {
@@ -94,32 +105,29 @@ export const useColumns = () => {
       alignment: "center",
       cellTemplate: checkInOutHeaderTemplate,
     },
-    // {
-    //   dataField: "companyId",
-    //   caption: "Company",
-    //   lookup: {
-    //     dataSource: companies,
-    //     valueExpr: "id",
-    //     displayExpr: "name",
-    //   },
-    // },
-    // {
-    //   dataField: "productStatus",
-    //   caption: "Status",
-    //   lookup: {
-    //     dataSource: createDataFromEnum(ProductStatus),
-    //     valueExpr: "id",
-    //     displayExpr: "value",
-    //   },
-    // },
-    // { dataField: "notes", caption: "Notes" },
+    // VISIBLE : FALSE
+    {
+      dataField: "productStatusId",
+      caption: "Status",
+      lookup: {
+        dataSource: getFilteredProductStatuses,
+        valueExpr: "id",
+        displayExpr: "name",
+      },
+      visible: false,
+    },
+    {
+      dataField: "notes",
+      caption: "Notes",
+      visible: false,
+    },
   ];
   const formItems: IFormItem[] = [
-    { dataField: "categoryId" },
-    { dataField: "locationId" },
     { dataField: "companyId" },
-    { dataField: "productStatus" },
+    { dataField: "branchId" },
     { dataField: "name" },
+    { dataField: "categoryId" },
+    { dataField: "productStatusId" },
     { dataField: "serialNo" },
     { dataField: "orderNo" },
     { dataField: "purchaseCost" },
@@ -128,5 +136,5 @@ export const useColumns = () => {
     { dataField: "notes" },
   ];
 
-  return { columns, devColumns, formItems };
+  return { devColumns, formItems };
 };

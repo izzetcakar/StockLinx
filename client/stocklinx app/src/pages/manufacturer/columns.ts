@@ -1,39 +1,60 @@
 import { Column } from "devextreme/ui/data_grid";
-import { Column as MyColumn } from "../../components/gridTable/interfaces/interfaces";
 import { IManufacturer } from "../../interfaces/interfaces";
 import { IFormItem } from "../../components/generic/BaseDataGrid";
+import { RootState } from "../../redux/rootReducer";
+import { useSelector } from "react-redux";
 
 export const useColumns = () => {
-  const columns: MyColumn[] = [
-    {
-      dataField: "name",
-      caption: "Name",
-    },
-    {
-      dataField: "supportPhone",
-      caption: "Support Phone",
-    },
-    {
-      dataField: "supportEmail",
-      caption: "Support Email",
-    },
-    {
-      dataField: "website",
-      caption: "Website",
-    },
-  ];
+  const companies = useSelector((state: RootState) => state.company.companies);
+  const branches = useSelector((state: RootState) => state.branch.branches);
+
+  const getFilteredBranches = (options: {
+    data?: IManufacturer;
+    key?: string;
+  }) => {
+    return {
+      store: branches,
+      filter: options.data ? ["companyId", "=", options.data.companyId] : null,
+    };
+  };
+
   const devColumns: Column<IManufacturer>[] = [
-    // ADD IMAGE
+    {
+      dataField: "companyId",
+      caption: "Company",
+      lookup: {
+        dataSource: companies,
+        valueExpr: "id",
+        displayExpr: "name",
+      },
+      setCellValue(newData, value) {
+        newData.companyId = value;
+        newData.branchId = "";
+      },
+      visible: false,
+    },
+    {
+      dataField: "branchId",
+      caption: "Branch",
+      lookup: {
+        dataSource: getFilteredBranches,
+        valueExpr: "id",
+        displayExpr: "name",
+      },
+      validationRules: [{ type: "required" }],
+      visible: false,
+    },
     {
       dataField: "name",
       caption: "Name",
+      validationRules: [{ type: "required" }],
     },
     {
       dataField: "url",
       caption: "URL",
     },
     {
-      dataField: "supportUrl",
+      dataField: "supportURL",
       caption: "Support URL",
     },
     {
@@ -46,21 +67,13 @@ export const useColumns = () => {
     },
   ];
   const formItems: IFormItem[] = [
-    {
-      dataField: "name",
-    },
-    {
-      dataField: "url",
-    },
-    {
-      dataField: "supportUrl",
-    },
-    {
-      dataField: "supportPhone",
-    },
-    {
-      dataField: "supportEmail",
-    },
+    { dataField: "companyId" },
+    { dataField: "branchId" },
+    { dataField: "name" },
+    { dataField: "url" },
+    { dataField: "supportURL" },
+    { dataField: "supportPhone" },
+    { dataField: "supportEmail" },
   ];
-  return { columns, devColumns, formItems };
+  return { devColumns, formItems };
 };

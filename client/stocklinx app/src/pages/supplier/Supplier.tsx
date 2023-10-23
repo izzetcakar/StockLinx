@@ -12,6 +12,8 @@ import {
   RowUpdatingEvent,
 } from "devextreme/ui/data_grid";
 import { datagridRequest } from "../../functions/datagridRequest";
+import { companyActions } from "../../redux/company/actions";
+import { branchActions } from "../../redux/branch/actions";
 
 const Supplier = () => {
   const dispatch = useDispatch();
@@ -20,17 +22,19 @@ const Supplier = () => {
   const refreshData = () => {
     dispatch(supplierActions.getAll());
     dispatch(locationActions.getAll());
+    dispatch(companyActions.getAll());
+    dispatch(branchActions.getAll());
   };
   const onRowInserting = async (e: RowInsertingEvent<ISupplier>) => {
     const newObject = { ...e.data };
-    await datagridRequest(e, "Consumable", "post", newObject);
+    await datagridRequest(e, "Supplier", "post", newObject);
   };
   const onRowUpdating = async (e: RowUpdatingEvent<ISupplier>) => {
     const newObject = { ...e.oldData, ...e.newData };
-    await datagridRequest(e, "Consumable", "put", newObject);
+    await datagridRequest(e, "Supplier", "put", newObject);
   };
   const onRowRemoving = (e: RowRemovingEvent<ISupplier>) => {
-    datagridRequest(e, `Consumable/${e.data.id}`, "delete");
+    datagridRequest(e, `Supplier/${e.data.id}`, "delete");
   };
 
   return (
