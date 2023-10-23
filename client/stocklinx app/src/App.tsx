@@ -29,6 +29,8 @@ import Category from "./pages/category/Category";
 import Manufacturer from "./pages/manufacturer/Manufacturer";
 import Supplier from "./pages/supplier/Supplier";
 import Location from "./pages/location/Location";
+import ProductStatus from "./pages/productStatus/ProductStatus";
+import Branch from "./pages/branch/Branch";
 
 const Layout = () => {
   const navigate = useNavigate();
@@ -112,12 +114,20 @@ const router = createBrowserRouter([
         element: <Company />,
       },
       {
+        path: "/branch",
+        element: <Branch />,
+      },
+      {
         path: "/department",
         element: <Department />,
       },
       {
         path: "/location",
         element: <Location />,
+      },
+      {
+        path: "/productStatus",
+        element: <ProductStatus />,
       },
       {
         path: "/test",

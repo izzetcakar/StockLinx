@@ -78,6 +78,12 @@ const Sidebar: React.FC = () => {
       color: "#737373",
       subItems: [
         {
+          title: "Status Labels",
+          icon: icon_harddisk,
+          color: "#737373",
+          target: "/productStatus",
+        },
+        {
           title: "Asset Models",
           icon: icon_harddisk,
           color: "#737373",
@@ -108,6 +114,12 @@ const Sidebar: React.FC = () => {
           target: "/company",
         },
         {
+          title: "Branches",
+          icon: icon_harddisk,
+          color: "#737373",
+          target: "/branch",
+        },
+        {
           title: "Departments",
           icon: icon_harddisk,
           color: "#737373",
@@ -121,7 +133,7 @@ const Sidebar: React.FC = () => {
         },
       ],
       isExpanded: false,
-      target: "/",
+      target: "/*",
     },
     {
       title: "Logout",
