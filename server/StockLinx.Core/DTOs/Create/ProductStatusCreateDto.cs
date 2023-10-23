@@ -2,11 +2,10 @@
 
 namespace StockLinx.Core.DTOs.Create
 {
-    public class CategoryCreateDto
+    public class ProductStatusCreateDto
     {
         public Guid BranchId { get; set; }
         public string Name { get; set; }
-        public string? ImagePath { get; set; }
-        public CategoryType Type { get; set; }
+        public ProductStatusType Type { get; set; }
     }
 }

@@ -2,8 +2,9 @@
 {
     public class ModelDto : BaseDto
     {
+        public Guid CompanyId { get; set; }
+        public Guid BranchId { get; set; }
         public Guid? ManufacturerId { get; set; }
-        public Guid? CategoryId { get; set; }
         public string Name { get; set; }
         public string? ImagePath { get; set; }
         public string? ModelNo { get; set; }
