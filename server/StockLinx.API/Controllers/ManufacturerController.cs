@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
+using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Services;
 
@@ -25,9 +26,8 @@ namespace StockLinx.API.Controllers
         [HttpGet]
         public async Task<IActionResult> All()
         {
-            var manufacturers = await _manufacturerService.GetAllAsync();
-            var manufacturerDtos = _mapper.Map<List<ManufacturerDto>>(manufacturers).ToList();
-            return CreateActionResult(CustomResponseDto<List<ManufacturerDto>>.Success(200, manufacturerDtos));
+            var manufacturers = await _manufacturerService.GetManufacturerDtos();
+            return CreateActionResult(CustomResponseDto<List<ManufacturerDto>>.Success(200, manufacturers));
         }
 
         [HttpGet("{id}")]
@@ -38,18 +38,18 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(ManufacturerCreateDto manufacturerCreateDto)
+        public async Task<IActionResult> Add(ManufacturerCreateDto createDto)
         {
-            var newManufacturer = _mapper.Map<Manufacturer>(manufacturerCreateDto);
+            var newManufacturer = _mapper.Map<Manufacturer>(createDto);
             newManufacturer.Id = Guid.NewGuid();
             await _manufacturerService.AddAsync(newManufacturer);
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(ManufacturerDto manufacturerDto)
+        public async Task<IActionResult> Update(ManufacturerUpdateDto updateDto)
         {
-            // Update
+            await _manufacturerService.UpdateManufacturerAsync(updateDto);
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
         }
 

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
+using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Services;
 
@@ -24,9 +25,8 @@ namespace StockLinx.API.Controllers
         [HttpGet]
         public async Task<IActionResult> All()
         {
-            var assets = await _assetService.GetAllAsync();
-            var assetDtos = _mapper.Map<List<AssetDto>>(assets).ToList();
-            return CreateActionResult(CustomResponseDto<List<AssetDto>>.Success(200, assetDtos));
+            var assets = await _assetService.GetAssetDtos();
+            return CreateActionResult(CustomResponseDto<List<AssetDto>>.Success(200, assets));
         }
 
         [HttpGet("{id}")]
@@ -44,9 +44,9 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(AssetDto assetDto)
+        public async Task<IActionResult> Update(AssetUpdateDto updateDto)
         {
-            //Update
+            await _assetService.UpdateAssetAsync(updateDto);
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
         }
 

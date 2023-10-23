@@ -47,10 +47,10 @@ namespace StockLinx.API.Controllers
         public async Task<IActionResult> ProductStatusCount()
         {
             var productStatusCounts = new List<ProductStatusCounter>();
+            var assets = await _assetService.GetStatusCount();
             var accessories = await _accessoryService.GetStatusCount();
             var licenses = await _licenseService.GetStatusCount();
             var consumables = await _consumableService.GetStatusCount();
-            var assets = await _assetService.GetStatusCount();
             var components = await _componentService.GetStatusCount();
 
             productStatusCounts = accessories.Concat(licenses).Concat(consumables).Concat(assets).Concat(components).ToList();

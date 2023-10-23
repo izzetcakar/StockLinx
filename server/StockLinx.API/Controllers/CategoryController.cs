@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
+using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Services;
 
@@ -24,9 +25,8 @@ namespace StockLinx.API.Controllers
         [HttpGet]
         public async Task<IActionResult> All()
         {
-            var categories = await _categoryService.GetAllAsync();
-            var categoryDtos = _mapper.Map<List<CategoryDto>>(categories).ToList();
-            return CreateActionResult(CustomResponseDto<List<CategoryDto>>.Success(200, categoryDtos));
+            var categories = await _categoryService.GetCategoryDtos();
+            return CreateActionResult(CustomResponseDto<List<CategoryDto>>.Success(200, categories));
         }
 
         [HttpGet("counts")]
@@ -51,9 +51,9 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(CategoryDto categoryDto)
+        public async Task<IActionResult> Update(CategoryUpdateDto updateDto)
         {
-            //Update
+            await _categoryService.UpdateCategoryAsync(updateDto);
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
         }
 
