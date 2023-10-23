@@ -1,6 +1,6 @@
 ﻿namespace StockLinx.Core.Entities
 {
-    public enum ProductStatus
+    public enum ProductStatusType
     {
         AVAILABLE,
         DEPLOYED,

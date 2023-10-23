@@ -11,9 +11,9 @@
         public DateTime? ExpirationDate { get; set; }
         public DateTime? TerminationDate { get; set; }
         public int Quantity { get; set; }
-        public Manufacturer? Manufacturer { get; set; }
 
         //Relates
+        public Manufacturer? Manufacturer { get; set; }
         public ICollection<DeployedProduct> DeployedProducts { get; set; }
     }
 }
