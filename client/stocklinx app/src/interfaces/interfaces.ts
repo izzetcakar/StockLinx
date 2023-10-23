@@ -9,7 +9,7 @@ export enum ApiStatus {
   LOADING,
   FAILED,
 }
-export enum ProductStatus {
+export enum ProductStatusType {
   AVAILABLE,
   DEPLOYED,
   ORDERED,
@@ -53,13 +53,51 @@ export interface BaseEntity {
   updatedDate?: Date | null;
   deletedDate?: Date | null;
 }
-export interface IBaseProduct extends BaseEntity {
-  categoryId: string | null;
+export interface ICompany extends BaseEntity {
   locationId: string | null;
-  companyId: string | null;
-  productStatus: ProductStatus;
-  imagePath: string | null;
   name: string;
+  email: string | null;
+  imagePath: string | null;
+}
+export interface IBranch extends BaseEntity {
+  companyId: string;
+  locationId: string | null;
+  name: string;
+}
+export interface IDepartment extends BaseEntity {
+  companyId?: string;
+  branchId: string;
+  managerId: string | null;
+  name: string;
+  imagePath: string | null;
+  notes: string | null;
+}
+export interface ILocation extends BaseEntity {
+  name: string;
+  imagePath: string | null;
+  country: string | null;
+  state: string | null;
+  city: string | null;
+  address: string | null;
+  address2: string | null;
+  zipCode: string | null;
+  currency: string | null;
+  notes: string | null;
+}
+export interface ICategory extends BaseEntity {
+  companyId?: string;
+  branchId: string;
+  name: string;
+  type: CategoryType;
+  imagePath: string | null;
+}
+export interface IBaseProduct extends BaseEntity {
+  companyId?: string;
+  branchId: string;
+  categoryId: string | null;
+  productStatusId: string;
+  name: string;
+  imagePath: string | null;
   serialNo: string | null;
   orderNo: string | null;
   notes: string | null;
@@ -106,28 +144,12 @@ export interface IConsumable extends IBaseProduct {
   quantity: number;
 }
 export interface IModel extends BaseEntity {
-  categoryId: string | null;
+  companyId?: string;
+  branchId: string;
   manufacturerId: string | null;
   name: string;
   imagePath: string | null;
   modelNo: string | null;
-  notes: string | null;
-}
-export interface ICategory extends BaseEntity {
-  name: string;
-  type: CategoryType;
-  imagePath: string | null;
-}
-export interface ICompany extends BaseEntity {
-  name: string;
-  email: string | null;
-  imagePath: string | null;
-}
-export interface IDepartment extends BaseEntity {
-  name: string;
-  companyId: string;
-  managerId: string | null;
-  imagePath: string | null;
   notes: string | null;
 }
 export interface IDeployedProduct extends BaseEntity {
@@ -138,30 +160,21 @@ export interface IDeployedProduct extends BaseEntity {
   licenseId: string | null;
   consumableId: string | null;
   deployedDate: Date | null;
-  returnedDate: Date | null;
-  notes: string | null;
-}
-export interface ILocation extends BaseEntity {
-  name: string;
-  imagePath: string | null;
-  country: string;
-  state: string | null;
-  city: string;
-  address: string | null;
-  address2: string | null;
-  zipCode: string | null;
-  currency: string | null;
   notes: string | null;
 }
 export interface IManufacturer extends BaseEntity {
+  companyId?: string;
+  branchId: string;
   name: string;
   imagePath: string | null;
   url: string | null;
-  supportUrl: string | null;
+  supportURL: string | null;
   supportPhone: string | null;
   supportEmail: string | null;
 }
 export interface ISupplier extends BaseEntity {
+  companyId?: string;
+  branchId: string;
   locationId: string | null;
   name: string;
   imagePath: string | null;
@@ -174,9 +187,7 @@ export interface ISupplier extends BaseEntity {
 }
 export interface IUser extends BaseEntity {
   imagePath: string | null;
-  companyId: string;
   departmentId: string;
-  locationId: string | null;
   firstName: string;
   lastName: string;
   email: string;
@@ -196,7 +207,6 @@ export interface IUserLoginDto {
 export interface IToken {
   token: string;
 }
-
 export interface ILocationCounts {
   locationId: string;
   locationName: string;
@@ -221,4 +231,10 @@ export interface IProductCount {
 export interface IProductStausCount {
   status: string;
   count: number;
+}
+export interface IProductStatus extends BaseEntity {
+  companyId?: string;
+  branchId: string;
+  name: string;
+  type: ProductStatusType;
 }
