@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Create;
+using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
@@ -20,6 +22,25 @@ namespace StockLinx.Service.Services
             _unitOfWork = unitOfWork;
         }
 
+        public async Task<List<ManufacturerDto>> GetManufacturerDtos()
+        {
+            var manufacturers = await _manufacturerRepository.GetAll().Include(x => x.Branch)
+                .Select(x => new ManufacturerDto
+                {
+                    Id = x.Id,
+                    CompanyId = x.Branch.CompanyId,
+                    BranchId = x.BranchId,
+                    Name = x.Name,
+                    ImagePath = x.ImagePath,
+                    URL = x.URL,
+                    SupportURL = x.SupportURL,
+                    SupportPhone = x.SupportPhone,
+                    SupportEmail = x.SupportEmail,
+                    CreatedDate = x.CreatedDate,
+                    UpdatedDate = x.UpdatedDate,
+                }).ToListAsync();
+            return manufacturers;
+        }
         public async Task CreateManufacturerAsync(ManufacturerCreateDto createDto)
         {
             var newManufacturer = _mapper.Map<Manufacturer>(createDto);

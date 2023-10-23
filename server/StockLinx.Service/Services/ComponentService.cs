@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Create;
+using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 using StockLinx.Core.Services;
 using StockLinx.Core.UnitOfWork;
+using StockLinx.Repository.Repositories.EF_Core;
 using StockLinx.Repository.UnitOfWork;
 
 namespace StockLinx.Service.Services
@@ -20,6 +23,29 @@ namespace StockLinx.Service.Services
             _componentRepository = componentRepository;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+        }
+        public async Task<List<ComponentDto>> GetComponentDtos()
+        {
+            var components = await _componentRepository.GetAll().Include(x => x.ProductStatus)
+                .Select(x => new ComponentDto
+                {
+                    Id = x.Id,
+                    CompanyId = x.Branch.CompanyId,
+                    BranchId = x.BranchId,
+                    CategoryId = x.CategoryId,
+                    ProductStatusId = x.ProductStatusId,
+                    Name = x.Name,
+                    ImagePath = x.ImagePath,
+                    SerialNo = x.SerialNo,
+                    OrderNo = x.OrderNo,
+                    Notes = x.Notes,
+                    PurchaseDate = x.PurchaseDate,
+                    PurchaseCost = x.PurchaseCost,
+                    CheckinCounter = x.CheckinCounter,
+                    CheckoutCounter = x.CheckoutCounter,
+                    Quantity = x.Quantity,
+                }).ToListAsync();
+            return components;
         }
         public async Task CreateComponentAsync(ComponentCreateDto createDto)
         {
@@ -71,18 +97,18 @@ namespace StockLinx.Service.Services
 
         public async Task<List<ProductStatusCounter>> GetStatusCount()
         {
-            var components = await GetAllAsync();
-            var productStatusGroups = components.GroupBy(a => a.ProductStatus);
-            var productStatusCounts = new List<ProductStatusCounter>();
-            foreach (var group in productStatusGroups)
-            {
-                productStatusCounts.Add(new ProductStatusCounter
+            var components = await _componentRepository.GetAll().Include(x => x.ProductStatus).ToListAsync();
+            var productStatusCounts = components
+                .Where(component => component.ProductStatus != null)
+                .GroupBy(component => component.ProductStatus.Type)
+                .Select(group => new ProductStatusCounter
                 {
                     Status = group.Key.ToString(),
                     Count = group.Count()
-                });
-            }
-            return productStatusCounts.ToList();
+                })
+                .ToList();
+
+            return productStatusCounts;
         }
     }
 }

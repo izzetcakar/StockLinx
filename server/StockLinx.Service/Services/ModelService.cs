@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Create;
+using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
@@ -13,13 +15,31 @@ namespace StockLinx.Service.Services
         private readonly IModelRepository _modelRepository;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        public ModelService(IRepository<Model> repository, IModelRepository modelRepository,IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork)
+        public ModelService(IRepository<Model> repository, IModelRepository modelRepository, IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork)
         {
             _modelRepository = modelRepository;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
 
+        public async Task<List<ModelDto>> GetModelDtos()
+        {
+            var models = await _modelRepository.GetAll().Include(x => x.Branch)
+                .Select(x => new ModelDto
+                {
+                    Id = x.Id,
+                    CompanyId = x.Branch.CompanyId,
+                    BranchId = x.BranchId,
+                    Name = x.Name,
+                    ImagePath = x.ImagePath,
+                    ManufacturerId = x.ManufacturerId,
+                    ModelNo = x.ModelNo,
+                    Notes = x.Notes,
+                    CreatedDate = x.CreatedDate,
+                    UpdatedDate = x.UpdatedDate,
+                }).ToListAsync();
+            return models;
+        }
         public async Task CreateModelAsync(ModelCreateDto createDto)
         {
             var newModel = _mapper.Map<Model>(createDto);

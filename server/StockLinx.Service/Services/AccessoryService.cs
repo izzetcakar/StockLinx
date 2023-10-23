@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
@@ -8,6 +9,7 @@ using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 using StockLinx.Core.Services;
 using StockLinx.Core.UnitOfWork;
+using StockLinx.Repository.Repositories.EF_Core;
 
 namespace StockLinx.Service.Services
 {
@@ -24,6 +26,33 @@ namespace StockLinx.Service.Services
             _accessoryRepository = accessoryRepository;
             _unitOfWork = unitOfWork;
             _logger = logger;
+        }
+        public async Task<List<AccessoryDto>> GetAccessoryDtos()
+        {
+            var accessories = await _accessoryRepository.GetAll().Include(x => x.Branch)
+             .Select(x => new AccessoryDto
+             {
+                 Id = x.Id,
+                 CompanyId = x.Branch.CompanyId,
+                 BranchId = x.BranchId,
+                 CategoryId = x.CategoryId,
+                 ProductStatusId = x.ProductStatusId,
+                 Name = x.Name,
+                 ImagePath = x.ImagePath,
+                 SerialNo = x.SerialNo,
+                 OrderNo = x.OrderNo,
+                 Notes = x.Notes,
+                 PurchaseDate = x.PurchaseDate,
+                 PurchaseCost = x.PurchaseCost,
+                 CheckinCounter = x.CheckinCounter,
+                 CheckoutCounter = x.CheckoutCounter,
+                 ManufacturerId = x.ManufacturerId,
+                 SupplierId = x.SupplierId,
+                 ModelNo = x.ModelNo,
+                 Quantity = x.Quantity,
+                 WarrantyDate = x.WarrantyDate,
+             }).ToListAsync();
+            return accessories;
         }
         public async Task CreateAccessoryAsync(AccessoryCreateDto createDto)
         {
@@ -92,13 +121,6 @@ namespace StockLinx.Service.Services
             await RemoveAsync(accessoryInDb);
             await _unitOfWork.CommitAsync();
         }
-        public async Task<List<AccessoryDto>> GetAccessoriesAsync()
-        {
-            var accessories = await GetAllAsync();
-            var accessoryDtos = _mapper.Map<IEnumerable<AccessoryDto>>(accessories);
-            return accessoryDtos.ToList();
-        }
-
         public async Task<ProductCounter> GetAllCountAsync()
         {
             var accessories = await GetAllAsync();
@@ -108,18 +130,18 @@ namespace StockLinx.Service.Services
 
         public async Task<List<ProductStatusCounter>> GetStatusCount()
         {
-            var accessories = await GetAllAsync();
-            var productStatusGroups = accessories.GroupBy(a => a.ProductStatus);
-            var productStatusCounts = new List<ProductStatusCounter>();
-            foreach (var group in productStatusGroups)
-            {
-                productStatusCounts.Add(new ProductStatusCounter
+            var accessories = await _accessoryRepository.GetAll().Include(x => x.ProductStatus).ToListAsync();
+            var productStatusCounts = accessories
+                .Where(accessory => accessory.ProductStatus != null)
+                .GroupBy(accessory => accessory.ProductStatus.Type)
+                .Select(group => new ProductStatusCounter
                 {
                     Status = group.Key.ToString(),
                     Count = group.Count()
-                });
-            }
-            return productStatusCounts.ToList();
+                })
+                .ToList();
+
+            return productStatusCounts;
         }
     }
 }
