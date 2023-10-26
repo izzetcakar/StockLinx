@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { checkEmpty } from "../../functions/checkEmpty";
 import EditComponent from "./edit/EditComponent";
 import TableToolbar from "./tableToolbar/TableToolbar";
@@ -36,7 +36,9 @@ const GridTable: React.FC<GridTableProps> = ({
   const [selectedObjects, setSelectedObjects] = useState<(string | number)[]>(
     []
   );
-  const [keyfield, setKeyfield] = useState<keyof object>(itemKey as keyof object);
+  const [keyfield, setKeyfield] = useState<keyof object>(
+    itemKey as keyof object
+  );
   useEffect(() => {
     setKeyfield(itemKey as keyof object);
   }, [itemKey]);
@@ -57,37 +59,39 @@ const GridTable: React.FC<GridTableProps> = ({
     }
     return data.slice(pageNumber * itemPerPage, (pageNumber + 1) * itemPerPage);
   }, [data, itemPerPage, pageNumber]);
-  const getObjectByKeyfield = useCallback((key: string | number): object => {
-    return data.find((item) => item[keyfield] === key) as object;
-  }, [data, keyfield]);
-  const renderColumnValue = useMemo(
-    () => (key: string | number, column: Column) => {
-      const value = (
-        getObjectByKeyfield(key) as {
-          [key: string]: string | number | boolean | null;
-        }
-      )[column.dataField];
-
-      if (column.renderComponent) {
-        return column.renderComponent(value);
-      }
-      if (value === null || value === undefined) {
-        return "";
-      }
-      if (typeof value === "boolean") {
-        const name = value ? "check" : "x";
-        const color = value ? "#63bd4f" : "#ed6b6b";
-        return (
-          <i
-            className={`bx bx-${name}`}
-            style={{ fontSize: "1.5rem", color: color }}
-          />
-        );
-      }
-      return value;
+  const getObjectByKeyfield = useCallback(
+    (key: string | number): object => {
+      return data.find((item) => item[keyfield] === key) as object;
     },
-    [getObjectByKeyfield]
+    [data, keyfield]
   );
+  
+  const renderColumnValue = (key: string | number, column: Column) => {
+    const value = (
+      getObjectByKeyfield(key) as {
+        [key: string]: string | number | boolean | null;
+      }
+    )[column.dataField];
+
+    if (column.renderComponent) {
+      return column.renderComponent(value);
+    }
+    if (value === null || value === undefined) {
+      return "";
+    }
+    if (typeof value === "boolean") {
+      const name = value ? "check" : "x";
+      const color = value ? "#63bd4f" : "#ed6b6b";
+      return (
+        <i
+          className={`bx bx-${name}`}
+          style={{ fontSize: "1.5rem", color: color }}
+        />
+      );
+    }
+    return value;
+  };
+
   const handleColumnsEmpty = useCallback(
     (cols: Column[]): Column[] => {
       if (!checkEmpty(cols)) {
@@ -129,8 +133,8 @@ const GridTable: React.FC<GridTableProps> = ({
   return (
     <table className="gridTable">
       <thead>
-        <tr className="table2-toolbar">
-          <td className="table2-toolbar" colSpan={visibleColumns.length + 1}>
+        <tr>
+          <td colSpan={visibleColumns.length + 1}>
             <TableToolbar
               columns={dataColumns}
               visibleColumns={visibleColumns}
@@ -150,21 +154,21 @@ const GridTable: React.FC<GridTableProps> = ({
             />
           </td>
           {visibleColumns.map((column) => (
-            <td key={column}>{column}</td>
+            <td key={"column - " + column}>{column}</td>
           ))}
           <td></td>
         </tr>
         {filterData().map((obj, rowIndex) => (
-          <tr key={obj[keyfield]}>
+          <tr key={"main - " + rowIndex}>
             <td>
               <TableCheckbox
                 isChecked={selectedObjects.includes(obj[keyfield])}
                 selectFunc={() => handleSelectRow(obj[keyfield])}
               />
             </td>
-            {dataColumns.map((column) =>
+            {dataColumns.map((column, index) =>
               visibleColumns.includes(column.caption) ? (
-                <td key={`${rowIndex}-${column.caption}`}>
+                <td key={`${index}-${column.dataField}`}>
                   {renderColumnValue(obj[keyfield], column)}
                 </td>
               ) : null
@@ -181,8 +185,8 @@ const GridTable: React.FC<GridTableProps> = ({
         ))}
       </tbody>
       <tfoot>
-        <tr className="table2-footer">
-          <td className="table2-footer" colSpan={visibleColumns.length + 1}>
+        <tr>
+          <td className="table-footer" colSpan={visibleColumns.length + 1}>
             <PageNumber
               pageNumber={pageNumber}
               itemPerPage={itemPerPage}
@@ -195,71 +199,5 @@ const GridTable: React.FC<GridTableProps> = ({
     </table>
   );
 };
-{
-  /* <div className="table">
-        <TableToolbar
-          columns={dataColumns}
-          visibleColumns={visibleColumns}
-          addVisibleColumn={addVisibleColumn}
-          onRowInsert={onRowInsert}
-          refreshData={handleRefreshData}
-        />
-        <div className="table-wrapper">
-          {enableSelection ? (
-            <TableSelectColumn
-              data={data}
-              selectedObjects={selectedObjects}
-              filterData={filterData}
-              setSelectedObjects={setSelectedObjects}
-              handleClassByIndex={handleClassByIndex}
-            />
-          ) : null}
-          <div className="table-content">
-            {dataColumns.map((column, columnIndex) =>
-              visibleColumns.includes(column.caption) ? (
-                <div className="table-column" key={columnIndex}>
-                  <div className="table-column-title">{column.caption}</div>
-                  {filterData().map((_, rowIndex) => (
-                    <div
-                      className={handleClassByIndex(rowIndex)}
-                      key={rowIndex}
-                    >
-                      {renderColumnValue(rowIndex, column)}
-                    </div>
-                  ))}
-                </div>
-              ) : null
-            )}
-          </div>
-          {enableEdit ? (
-            <div className="table-column">
-              <div className="table-column-title"></div>
-              {getIndexesFromArray(filterData()).map((_, index) => (
-                <div className={handleClassByIndex(index)} key={index}>
-                  <EditComponent
-                    data={data}
-                    index={index}
-                    onRowUpdate={onRowUpdate}
-                    onRowRemove={onRowRemove}
-                  />
-                </div>
-              ))}
-            </div>
-          ) : null}
-        </div>
-        <div>
-          <PageSizeComponent
-            showPageSize={showPageSize}
-            showPageSizeInfo={showPageSizeInfo}
-            showPageSizeSelector={showPageSizeSelector}
-            allItemsCount={data.length}
-            handleSizeSelect={handleSelectedPageSize}
-            pageSizes={pageSizes}
-            selectedCount={selectedObjects.length}
-            selectedSize={selectedPageSize}
-          />
-        </div>
-      </div> */
-}
 
 export default GridTable;

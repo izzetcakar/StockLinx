@@ -3,7 +3,7 @@ import "./tableToolbar.scss";
 import { Column } from "../interfaces/interfaces";
 import Dropdown from "./Dropdown";
 import icon_plus from "../../.././assets/icon_plus.png";
-import icon_refresh_outlined from "../../.././assets/icon_refresh_outlined.png";
+import icon_refresh from "../../.././assets/icon_refresh.png";
 import ActionIconBtn from "../../generic/ActionIconBtn";
 
 interface TableToolbarProps {
@@ -30,10 +30,18 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
         visibleColumns={visibleColumns}
       />
       {onRowInsert ? (
-        <ActionIconBtn submitFunc={onRowInsert} icon={icon_plus} />
+        <ActionIconBtn
+          submitFunc={onRowInsert}
+          icon={icon_plus}
+          iconSize={24}
+        />
       ) : null}
       {refreshData ? (
-        <ActionIconBtn submitFunc={refreshData} icon={icon_refresh_outlined} />
+        <ActionIconBtn
+          submitFunc={refreshData}
+          icon={icon_refresh}
+          iconSize={24}
+        />
       ) : null}
     </div>
   );

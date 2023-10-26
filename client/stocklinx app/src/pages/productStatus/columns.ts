@@ -42,6 +42,7 @@ export const useColumns = () => {
         valueExpr: "id",
         displayExpr: "name",
       },
+      allowSearch: true,
       validationRules: [{ type: "required" }],
     },
     {

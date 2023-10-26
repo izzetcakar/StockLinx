@@ -9,6 +9,7 @@
         //Relates
         public Company Company { get; set; }
         public Location? Location { get; set; }
+        public ICollection<Permission>? Permissions { get; set; }
         public ICollection<Asset>? Assets { get; set; }
         public ICollection<Accessory>? Accessories { get; set; }
         public ICollection<Component>? Components { get; set; }
