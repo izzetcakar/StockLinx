@@ -12,11 +12,13 @@ import DataGrid, {
   Popup,
   Form,
   Item as GridItem,
+  FilterRow,
 } from "devextreme-react/data-grid";
 import { Item as FormItem } from "devextreme-react/form";
 import {
   Column,
   ExportingEvent,
+  InitNewRowEvent,
   RowInsertingEvent,
   RowRemovingEvent,
   RowUpdatingEvent,
@@ -48,6 +50,7 @@ interface BaseDataGridProps {
   onRowInserting?: (obj: RowInsertingEvent) => void;
   onRowUpdating?: (obj: RowUpdatingEvent) => void;
   onRowRemoving?: (id: RowRemovingEvent) => void;
+  oninitNewRow?: (e: InitNewRowEvent) => void;
   refreshData?: () => void;
   toolbarAddButton?: boolean;
   className?: string;
@@ -64,6 +67,7 @@ const BaseDataGrid: React.FC<BaseDataGridProps> = ({
   toolbarAddButton = false,
   className = "",
   editing = true,
+  oninitNewRow = (e) => console.log(e.data),
   onRowInserting = (e) => {
     console.log(e.data);
   },
@@ -106,12 +110,13 @@ const BaseDataGrid: React.FC<BaseDataGridProps> = ({
       allowColumnReordering={true}
       allowColumnResizing={true}
       columnAutoWidth={true}
+      onInitNewRow={oninitNewRow}
       onRowInserting={onRowInserting}
       onRowUpdating={onRowUpdating}
       onRowRemoving={onRowRemoving}
       onExporting={onExporting}
       columnHidingEnabled={false}
-      height={"100%"}
+      // height={"100%"}
     >
       {/* <Grouping contextMenuEnabled={true} expandMode="rowClick" /> */}
       <Editing
@@ -154,11 +159,11 @@ const BaseDataGrid: React.FC<BaseDataGridProps> = ({
       <Export enabled={true} allowExportSelectedData={true} />
       <ColumnChooser enabled={true} />
       <ColumnFixing enabled={true} />
-      <Scrolling rowRenderingMode="standard"></Scrolling>
-      <Paging defaultPageSize={10} />
+      <Scrolling rowRenderingMode="standard" />
+      <Paging defaultPageSize={5} />
       <Pager
         visible={true}
-        allowedPageSizes={[5, 10]}
+        allowedPageSizes={[5, 10, 50]}
         displayMode={"full"}
         showPageSizeSelector={true}
         showInfo={true}
@@ -171,7 +176,7 @@ const BaseDataGrid: React.FC<BaseDataGridProps> = ({
           showCheckBoxesMode={"always"}
         />
       ) : null}
-      {/* <FilterRow visible={true} /> */}
+      <FilterRow visible={true} />
     </DataGrid>
   );
 };
