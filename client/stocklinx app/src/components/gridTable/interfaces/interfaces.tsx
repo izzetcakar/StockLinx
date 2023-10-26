@@ -2,8 +2,8 @@ export interface Column {
   dataField: string;
   caption: string;
   renderComponent?: (
-    value: string | number | boolean | null | undefined
-  ) => JSX.Element;
+    value: any
+  ) => JSX.Element | string | number | null | undefined;
 }
 export interface IDropdownData {
   id: number;
