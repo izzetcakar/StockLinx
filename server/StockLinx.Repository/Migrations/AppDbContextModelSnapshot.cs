@@ -104,7 +104,7 @@ namespace StockLinx.Repository.Migrations
 
                     b.HasIndex("SupplierId");
 
-                    b.ToTable("Accessories", (string)null);
+                    b.ToTable("Accessories");
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.Asset", b =>
@@ -184,7 +184,7 @@ namespace StockLinx.Repository.Migrations
 
                     b.HasIndex("ProductStatusId");
 
-                    b.ToTable("Assets", (string)null);
+                    b.ToTable("Assets");
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.Branch", b =>
@@ -219,7 +219,7 @@ namespace StockLinx.Repository.Migrations
 
                     b.HasIndex("LocationId");
 
-                    b.ToTable("Branches", (string)null);
+                    b.ToTable("Branches");
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.Category", b =>
@@ -254,7 +254,7 @@ namespace StockLinx.Repository.Migrations
 
                     b.HasIndex("BranchId");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.Company", b =>
@@ -289,7 +289,7 @@ namespace StockLinx.Repository.Migrations
 
                     b.HasIndex("LocationId");
 
-                    b.ToTable("Companies", (string)null);
+                    b.ToTable("Companies");
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.Component", b =>
@@ -357,7 +357,7 @@ namespace StockLinx.Repository.Migrations
 
                     b.HasIndex("ProductStatusId");
 
-                    b.ToTable("Components", (string)null);
+                    b.ToTable("Components");
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.Consumable", b =>
@@ -431,7 +431,7 @@ namespace StockLinx.Repository.Migrations
 
                     b.HasIndex("ProductStatusId");
 
-                    b.ToTable("Consumables", (string)null);
+                    b.ToTable("Consumables");
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.Department", b =>
@@ -474,7 +474,7 @@ namespace StockLinx.Repository.Migrations
 
                     b.HasIndex("LocationId");
 
-                    b.ToTable("Departments", (string)null);
+                    b.ToTable("Departments");
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.DeployedProduct", b =>
@@ -530,7 +530,7 @@ namespace StockLinx.Repository.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("DeployedProducts", (string)null);
+                    b.ToTable("DeployedProducts");
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.License", b =>
@@ -622,7 +622,7 @@ namespace StockLinx.Repository.Migrations
 
                     b.HasIndex("ProductStatusId");
 
-                    b.ToTable("Licenses", (string)null);
+                    b.ToTable("Licenses");
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.Location", b =>
@@ -670,7 +670,7 @@ namespace StockLinx.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Locations", (string)null);
+                    b.ToTable("Locations");
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.Manufacturer", b =>
@@ -714,7 +714,7 @@ namespace StockLinx.Repository.Migrations
 
                     b.HasIndex("BranchId");
 
-                    b.ToTable("Manufacturers", (string)null);
+                    b.ToTable("Manufacturers");
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.Model", b =>
@@ -757,7 +757,37 @@ namespace StockLinx.Repository.Migrations
 
                     b.HasIndex("ManufacturerId");
 
-                    b.ToTable("Models", (string)null);
+                    b.ToTable("Models");
+                });
+
+            modelBuilder.Entity("StockLinx.Core.Entities.Permission", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("BranchId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BranchId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Permission");
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.ProductStatus", b =>
@@ -789,7 +819,7 @@ namespace StockLinx.Repository.Migrations
 
                     b.HasIndex("BranchId");
 
-                    b.ToTable("ProductStatuses", (string)null);
+                    b.ToTable("ProductStatuses");
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.Supplier", b =>
@@ -844,7 +874,7 @@ namespace StockLinx.Repository.Migrations
 
                     b.HasIndex("LocationId");
 
-                    b.ToTable("Suppliers", (string)null);
+                    b.ToTable("Suppliers");
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.User", b =>
@@ -928,7 +958,7 @@ namespace StockLinx.Repository.Migrations
 
                     b.HasIndex("LocationId");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.Accessory", b =>
@@ -1226,6 +1256,25 @@ namespace StockLinx.Repository.Migrations
                     b.Navigation("Manufacturer");
                 });
 
+            modelBuilder.Entity("StockLinx.Core.Entities.Permission", b =>
+                {
+                    b.HasOne("StockLinx.Core.Entities.Branch", "Branch")
+                        .WithMany("Permissions")
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StockLinx.Core.Entities.User", "User")
+                        .WithMany("Permissions")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Branch");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("StockLinx.Core.Entities.ProductStatus", b =>
                 {
                     b.HasOne("StockLinx.Core.Entities.Branch", "Branch")
@@ -1303,6 +1352,8 @@ namespace StockLinx.Repository.Migrations
                     b.Navigation("Manufacturers");
 
                     b.Navigation("Models");
+
+                    b.Navigation("Permissions");
 
                     b.Navigation("ProductStatuses");
 
@@ -1397,6 +1448,8 @@ namespace StockLinx.Repository.Migrations
             modelBuilder.Entity("StockLinx.Core.Entities.User", b =>
                 {
                     b.Navigation("DeployedProducts");
+
+                    b.Navigation("Permissions");
                 });
 #pragma warning restore 612, 618
         }

@@ -20,6 +20,7 @@
         public Department Department { get; set; }
 
         //Relates
+        public ICollection<Permission>? Permissions { get; set; }
         public ICollection<DeployedProduct> DeployedProducts { get; set; }
     }
 }
