@@ -14,7 +14,6 @@ import {
 } from "@mantine/core";
 import "./user.scss";
 import { IconKey, IconMail } from "@tabler/icons-react";
-import { checkEmpty } from "../../functions/checkEmpty";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
