@@ -4,7 +4,6 @@ import {
   alignedTemplate,
   alignedTitleTemplate,
   barcodeHeaderTemplate,
-  checkInOutHeaderTemplate,
   diskHeaderTemplate,
   dropHeaderTemplate,
   harddiskHeaderTemplate,
@@ -58,11 +57,6 @@ export const useColumns = () => {
       alignment: "center",
       cellTemplate: alignedTemplate,
       headerCellTemplate: diskHeaderTemplate,
-    },
-    {
-      caption: "Checkin/Checkout",
-      alignment: "center",
-      cellTemplate: checkInOutHeaderTemplate,
     },
   ];
 
