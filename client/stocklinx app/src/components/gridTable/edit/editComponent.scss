@@ -3,7 +3,6 @@
   height: fit-content;
   width: fit-content;
   align-items: center;
-  gap: 5px;
   justify-content: space-between;
   .toolbar-edit-element {
     display: flex;
@@ -11,15 +10,11 @@
     justify-content: center;
     width: fit-content;
     height: fit-content;
-    padding: 0.3rem;
+    padding: 5px 0.2rem;
     cursor: pointer;
     .edit-element-icon {
-      width: 1.2rem;
-      height: 1.2rem;
+      width: 16px;
+      height: 16px;
     }
-  }
-  .toolbar-edit-element:hover {
-    border-radius: 100%;
-    background-color: #b3b3b3;
   }
 }
