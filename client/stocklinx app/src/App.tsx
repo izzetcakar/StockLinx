@@ -31,6 +31,8 @@ import Supplier from "./pages/supplier/Supplier";
 import Location from "./pages/location/Location";
 import ProductStatus from "./pages/productStatus/ProductStatus";
 import Branch from "./pages/branch/Branch";
+// import 'rsuite/dist/rsuite.min.css';
+import 'rsuite/dist/rsuite-no-reset.min.css';
 
 const Layout = () => {
   const navigate = useNavigate();
