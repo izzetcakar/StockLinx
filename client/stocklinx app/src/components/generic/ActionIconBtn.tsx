@@ -10,7 +10,7 @@ interface ActionIconBtnProps {
 const ActionIconBtn: React.FC<ActionIconBtnProps> = ({
   submitFunc,
   icon,
-  iconSize = 18,
+  iconSize = 20,
   disable = false,
 }) => {
   const [clicked, setClicked] = useState(false);
