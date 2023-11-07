@@ -55,11 +55,13 @@ const Gridtable: React.FC<GridtableProps> = ({
     );
   };
   const filterData = useCallback(() => {
+    const filteredData = applyFilterToData(data);
     if (pageNumber === 0) {
-      return applyFilterToData(data.slice(0, itemPerPage));
+      return filteredData.slice(0, itemPerPage);
     }
-    return applyFilterToData(
-      data.slice(pageNumber * itemPerPage, (pageNumber + 1) * itemPerPage)
+    return filteredData.slice(
+      pageNumber * itemPerPage,
+      (pageNumber + 1) * itemPerPage
     );
   }, [data, itemPerPage, pageNumber, filters]);
 
@@ -160,7 +162,7 @@ const Gridtable: React.FC<GridtableProps> = ({
       </thead>
       <tbody>
         <tr>
-          <td>
+          <td className="gridtable__checkbox__cell">
             <Checkbox
               checked={selectedKeys.length === data.length}
               onChange={() => handleselectAll()}
@@ -170,7 +172,9 @@ const Gridtable: React.FC<GridtableProps> = ({
             />
           </td>
           {visibleColumns.map((column) => (
-            <td key={"column - " + column}>{column}</td>
+            <td key={"column - " + column} className="gridtable__column__cell">
+              {column}
+            </td>
           ))}
           <td></td>
         </tr>
@@ -182,39 +186,43 @@ const Gridtable: React.FC<GridtableProps> = ({
             </td>
           ))}
         </tr>
-        {filterData().map((obj, rowIndex) => (
-          <tr
-            key={"main - " + rowIndex}
-            className={getSelectedRowClass(obj[keyfield])}
-          >
-            <td>
-              <Checkbox
-                checked={selectedKeys.includes(obj[keyfield])}
-                onChange={() => handleSelectRow(obj[keyfield])}
-                radius={2}
-                size={18}
-              />
-            </td>
-            {columns.map((column, index) =>
-              visibleColumns.includes(column.caption) ? (
-                <td
-                  key={`${index}-${column.dataField}`}
-                  className="gridtable__row__cell"
-                >
-                  {renderColumnValue(obj[keyfield], column)}
-                </td>
-              ) : null
-            )}
-            <td className="gridtable__edit">
-              <EditComponent
-                data={data}
-                index={getRowIndex(rowIndex)}
-                onRowUpdate={onRowUpdate}
-                onRowRemove={onRowRemove}
-              />
-            </td>
-          </tr>
-        ))}
+        {filterData().length > 0 ? (
+          filterData().map((obj, rowIndex) => (
+            <tr
+              key={"main - " + rowIndex}
+              className={getSelectedRowClass(obj[keyfield])}
+            >
+              <td className="gridtable__checkbox__cell">
+                <Checkbox
+                  checked={selectedKeys.includes(obj[keyfield])}
+                  onChange={() => handleSelectRow(obj[keyfield])}
+                  radius={2}
+                  size={18}
+                />
+              </td>
+              {columns.map((column, index) =>
+                visibleColumns.includes(column.caption) ? (
+                  <td
+                    key={`${index}-${column.dataField}`}
+                    className="gridtable__row__cell"
+                  >
+                    {renderColumnValue(obj[keyfield], column)}
+                  </td>
+                ) : null
+              )}
+              <td className="gridtable__edit">
+                <EditComponent
+                  data={data}
+                  index={getRowIndex(rowIndex)}
+                  onRowUpdate={onRowUpdate}
+                  onRowRemove={onRowRemove}
+                />
+              </td>
+            </tr>
+          ))
+        ) : (
+          <tr className="gridtable__nodata__row">No Data</tr>
+        )}
       </tbody>
       <tfoot>
         <tr>
