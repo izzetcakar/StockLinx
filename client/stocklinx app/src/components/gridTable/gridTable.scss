@@ -101,11 +101,22 @@
   width: 100vw;
   word-wrap: none;
 }
-.gridtable tbody tr td:first-child {
+.gridtable__column__cell {
+  width: 100vw;
+  word-wrap: none;
+}
+.gridtable__checkbox__cell {
   width: fit-content;
 }
 thead,
 tfoot {
   display: table;
   width: 100%;
+}
+.gridtable__nodata__row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100px;
 }
