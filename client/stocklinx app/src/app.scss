@@ -57,31 +57,6 @@
   }
 }
 
-// REACT SUITE
-.rs-table-cell-header .rs-table-cell-content {
-  line-height: 1.66666667;
-  padding: 10px;
-  font-weight: 500;
-  color: black;
-  font-size: 1em;
-}
-.rs-table-row-header .rs-table-cell {
-  background-color: #fff;
-  background-color: var(--rs-bg-card);
-  border-bottom: 1px solid #ced4da;
-}
-.rs-table-cell {
-  background-color: #fff;
-  background-color: var(--rs-bg-card);
-  border-bottom: 1px solid transparent;
-  border-bottom: 1px solid transparent;
-  display: block;
-  height: 36px;
-  overflow: hidden;
-  position: absolute;
-  white-space: normal;
-}
-
 //Table header
 .dx-datagrid-borders > .dx-datagrid-filter-panel,
 .dx-datagrid-borders > .dx-datagrid-headers {
@@ -234,4 +209,7 @@
 .dx-datagrid-content .dx-datagrid-table .dx-row > td,
 .dx-datagrid-content .dx-datagrid-table .dx-row > tr > td {
   vertical-align: middle;
+}
+.mantine__select__dropdown {
+  border: 1px solid #1864ab;
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import "./tableCheckbox.scss";
+import { Checkbox } from "@mantine/core";
 
 interface TableCheckboxProps {
   isChecked: boolean;
@@ -11,14 +11,10 @@ const TableCheckbox: React.FC<TableCheckboxProps> = ({
   selectFunc,
 }) => {
   return (
-    <div className="it">
-      <input
-        className="checkbox"
-        type="checkbox"
-        checked={isChecked}
-        onChange={selectFunc}
-      />
-    </div>
+    <Checkbox
+      checked={isChecked}
+      onChange={selectFunc}
+    />
   );
 };
 

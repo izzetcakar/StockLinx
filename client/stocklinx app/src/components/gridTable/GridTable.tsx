@@ -1,15 +1,16 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { checkEmpty } from "../../functions/checkEmpty";
 import EditComponent from "./edit/EditComponent";
 import TableToolbar from "./tableToolbar/TableToolbar";
-import { Column } from "./interfaces/interfaces";
+import { Column, Filter, Lookup } from "./interfaces/interfaces";
 import PageNumber from "./tableFooter/PageNumber";
-import TableCheckbox from "./selection/TableCheckbox";
-import "./gridTable.scss";
+import { Checkbox } from "@mantine/core";
+import "./gridtable.scss";
+import { useFilter } from "./functions/filter";
 
-interface GridTableProps {
+interface GridtableProps {
+  itemKey: string;
   data: object[];
-  columns?: Column[];
+  columns: Column[];
   noDataText?: string;
   pageSizes?: number[];
   itemPerPage?: number;
@@ -17,13 +18,12 @@ interface GridTableProps {
   onRowInsert?: () => void;
   onRowUpdate?: (row: object) => void;
   onRowRemove?: (row: object) => void;
-  itemKey: string;
 }
 
-const GridTable: React.FC<GridTableProps> = ({
+const Gridtable: React.FC<GridtableProps> = ({
   data = [],
   columns = [],
-  itemPerPage = 10,
+  itemPerPage = 5,
   refreshData,
   onRowInsert = () => console.log("Row insert"),
   onRowUpdate = (e: object) => console.log(e),
@@ -31,19 +31,20 @@ const GridTable: React.FC<GridTableProps> = ({
   itemKey,
 }) => {
   const [pageNumber, setPageNumber] = useState<number>(0);
-  const [dataColumns, setDataColumns] = useState<Column[]>(columns);
   const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
-  const [selectedObjects, setSelectedObjects] = useState<(string | number)[]>(
-    []
-  );
+  const [selectedKeys, setSelectedKeys] = useState<(string | number)[]>([]);
   const [keyfield, setKeyfield] = useState<keyof object>(
     itemKey as keyof object
   );
+  const { filters, getFilterInput, applyFilterToData, handleFilterAll } =
+    useFilter(columns, data);
+
   useEffect(() => {
     setKeyfield(itemKey as keyof object);
   }, [itemKey]);
   useEffect(() => {
-    setDataColumns(handleColumnsEmpty(columns));
+    handleVisibleColumns();
+    handleFilterAll();
   }, [data]);
 
   const addVisibleColumn = (columnCaption: string): void => {
@@ -55,26 +56,42 @@ const GridTable: React.FC<GridTableProps> = ({
   };
   const filterData = useCallback(() => {
     if (pageNumber === 0) {
-      return data.slice(0, itemPerPage);
+      return applyFilterToData(data.slice(0, itemPerPage));
     }
-    return data.slice(pageNumber * itemPerPage, (pageNumber + 1) * itemPerPage);
-  }, [data, itemPerPage, pageNumber]);
+    return applyFilterToData(
+      data.slice(pageNumber * itemPerPage, (pageNumber + 1) * itemPerPage)
+    );
+  }, [data, itemPerPage, pageNumber, filters]);
+
   const getObjectByKeyfield = useCallback(
     (key: string | number): object => {
       return data.find((item) => item[keyfield] === key) as object;
     },
     [data, keyfield]
   );
-  
+  const getLookupValue = (value: any, lookup: Lookup) => {
+    const lookupKey = lookup.valueExpr;
+    const lookupDisplay = lookup.displayExpr;
+    const item = lookup.dataSource.find(
+      (item: { [key: string]: any }) => item[lookupKey] === value
+    );
+
+    return item
+      ? ((item as { [key: string]: any })[lookupDisplay] as string)
+      : " ";
+  };
   const renderColumnValue = (key: string | number, column: Column) => {
     const value = (
       getObjectByKeyfield(key) as {
-        [key: string]: string | number | boolean | null;
+        [key: string | number]: string | number | boolean | null;
       }
     )[column.dataField];
 
     if (column.renderComponent) {
       return column.renderComponent(value);
+    }
+    if (column.lookup) {
+      return getLookupValue(value, column.lookup);
     }
     if (value === null || value === undefined) {
       return "";
@@ -91,28 +108,12 @@ const GridTable: React.FC<GridTableProps> = ({
     }
     return value;
   };
-
-  const handleColumnsEmpty = useCallback(
-    (cols: Column[]): Column[] => {
-      if (!checkEmpty(cols)) {
-        const newColumns = Object.keys(data[0]).map((dataField) => ({
-          dataField,
-          caption: dataField,
-        }));
-        setVisibleColumns(newColumns.map((item) => item.caption));
-        return newColumns;
-      }
-      setVisibleColumns(cols.map((item) => item.caption));
-      return cols;
-    },
-    [data]
-  );
-  const handleSelectRow = (key: string) => {
-    const keyOfObject = getObjectByKeyfield(key)[keyfield];
-    setSelectedObjects((prev) =>
-      prev.includes(keyOfObject)
-        ? prev.filter((i) => i !== keyOfObject)
-        : [...prev, keyOfObject]
+  const handleVisibleColumns = useCallback(() => {
+    setVisibleColumns(columns.map((item) => item.caption));
+  }, [columns]);
+  const handleSelectRow = (key: string | number) => {
+    setSelectedKeys((prev) =>
+      prev.includes(key) ? prev.filter((i) => i !== key) : [...prev, key]
     );
   };
   const handlePageNumber = (forward: boolean) => {
@@ -129,14 +130,26 @@ const GridTable: React.FC<GridTableProps> = ({
   const getRowIndex = (index: number): number => {
     return index + pageNumber * itemPerPage;
   };
+  const getSelectedRowClass = (key: string | number): string => {
+    return selectedKeys.includes(key)
+      ? "gridtable__row__selected"
+      : "gridtable__row__container";
+  };
+  const handleselectAll = () => {
+    if (selectedKeys.length === data.length) {
+      setSelectedKeys([]);
+    } else {
+      setSelectedKeys(data.map((item) => item[keyfield]));
+    }
+  };
 
   return (
-    <table className="gridTable">
+    <table className="gridtable">
       <thead>
         <tr>
           <td colSpan={visibleColumns.length + 1}>
             <TableToolbar
-              columns={dataColumns}
+              columns={columns}
               visibleColumns={visibleColumns}
               addVisibleColumn={addVisibleColumn}
               onRowInsert={onRowInsert}
@@ -148,9 +161,12 @@ const GridTable: React.FC<GridTableProps> = ({
       <tbody>
         <tr>
           <td>
-            <TableCheckbox
-              isChecked={false}
-              selectFunc={() => console.log("Select all")}
+            <Checkbox
+              checked={selectedKeys.length === data.length}
+              onChange={() => handleselectAll()}
+              indeterminate={selectedKeys.length > 0}
+              radius={2}
+              size={18}
             />
           </td>
           {visibleColumns.map((column) => (
@@ -158,22 +174,38 @@ const GridTable: React.FC<GridTableProps> = ({
           ))}
           <td></td>
         </tr>
+        <tr className="gridtable__filter__container">
+          <td></td>
+          {filters.map((filter: Filter) => (
+            <td key={filter.field} className="gridtable__filter">
+              {getFilterInput(filter)}
+            </td>
+          ))}
+        </tr>
         {filterData().map((obj, rowIndex) => (
-          <tr key={"main - " + rowIndex}>
+          <tr
+            key={"main - " + rowIndex}
+            className={getSelectedRowClass(obj[keyfield])}
+          >
             <td>
-              <TableCheckbox
-                isChecked={selectedObjects.includes(obj[keyfield])}
-                selectFunc={() => handleSelectRow(obj[keyfield])}
+              <Checkbox
+                checked={selectedKeys.includes(obj[keyfield])}
+                onChange={() => handleSelectRow(obj[keyfield])}
+                radius={2}
+                size={18}
               />
             </td>
-            {dataColumns.map((column, index) =>
+            {columns.map((column, index) =>
               visibleColumns.includes(column.caption) ? (
-                <td key={`${index}-${column.dataField}`}>
+                <td
+                  key={`${index}-${column.dataField}`}
+                  className="gridtable__row__cell"
+                >
                   {renderColumnValue(obj[keyfield], column)}
                 </td>
               ) : null
             )}
-            <td>
+            <td className="gridtable__edit">
               <EditComponent
                 data={data}
                 index={getRowIndex(rowIndex)}
@@ -200,4 +232,4 @@ const GridTable: React.FC<GridTableProps> = ({
   );
 };
 
-export default GridTable;
+export default Gridtable;

@@ -1,5 +1,5 @@
 import { testData } from "../baseData/MOCK_DATA";
-import GridTable from "../components/gridTable/GridTable";
+import GridTable from "../components/gridTable/Gridtable";
 import Button from "devextreme-react/button";
 import DataGrid, {
   Selection,

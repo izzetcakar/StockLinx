@@ -33,14 +33,14 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
         <ActionIconBtn
           submitFunc={onRowInsert}
           icon={icon_plus}
-          iconSize={24}
+          iconSize={16}
         />
       ) : null}
       {refreshData ? (
         <ActionIconBtn
           submitFunc={refreshData}
           icon={icon_refresh}
-          iconSize={24}
+          iconSize={16}
         />
       ) : null}
     </div>
