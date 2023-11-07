@@ -1,3 +1,4 @@
+import React from "react";
 import { ICategory } from "../../interfaces/interfaces";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
@@ -15,13 +16,14 @@ import { companyActions } from "../../redux/company/actions";
 import { branchActions } from "../../redux/branch/actions";
 import { useEffect } from "react";
 import BaseSuiteDatagrid from "../../components/reactSuiteComponents/datagrid/BaseSuiteDatagrid";
+import { MantineReactTable } from "mantine-react-table";
+import Gridtable from "../../components/gridTable/Gridtable";
 
 const Category = () => {
   const dispatch = useDispatch();
   const categories = useSelector(
     (state: RootState) => state.category.categories
   );
-  const branches = useSelector((state: RootState) => state.branch.branches);
   useEffect(() => {
     refreshData();
   }, []);
@@ -60,36 +62,13 @@ const Category = () => {
         toolbarAddButton={true}
       />
       <div style={{ padding: "1rem 0" }}></div>
-      {/* <GridTable
+      <Gridtable
         data={categories}
         itemKey="id"
         columns={useColumns().columns}
         refreshData={refreshData}
-      /> */}
-      <BaseSuiteDatagrid
-        data={categories}
-        columns={[
-          {
-            dataKey: "branchId",
-            render: (rowData: ICategory) =>
-              branches.find((c) => c.id === rowData.branchId)?.name || "",
-            header: "Branch",
-          },
-          { dataKey: "name", header: "Name" },
-          {
-            dataKey: "type",
-            render: (rowData: ICategory) =>
-              [
-                { id: 0, name: "Asset" },
-                { id: 2, name: "License" },
-                { id: 3, name: "Accessory" },
-                { id: 5, name: "Consumable" },
-                { id: 4, name: "Component" },
-              ].find((c) => c.id === rowData.type)?.name || "",
-            header: "Type",
-          },
-        ]}
       />
+      {/* <MantineReactTable table={useColumns().table} /> */}
     </>
   );
 };

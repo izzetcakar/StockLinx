@@ -21,13 +21,13 @@ const PageNumber: React.FC<PageNumberProps> = ({
       <ActionIconBtn
         submitFunc={() => handlePageNumber(false)}
         icon={icon_left}
-        iconSize={20}
+        iconSize={16}
         disable={pageNumber === 0}
       />
       <ActionIconBtn
         submitFunc={() => handlePageNumber(true)}
         icon={icon_right}
-        iconSize={20}
+        iconSize={16}
         disable={pageNumber + 1 >= dataLength / itemPerPage}
       />
     </div>
