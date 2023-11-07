@@ -1,7 +1,8 @@
 import { useCallback, useState } from "react";
 import { Column, Filter, FilterType } from "../interfaces/interfaces";
 import { Select, TextInput } from "@mantine/core";
-import { IconSearch } from "@tabler/icons-react";
+import { IconCaretDownFilled, IconSearch } from "@tabler/icons-react";
+import classes from "./filter.module.scss";
 
 export const useFilter = (columns: Column[], data: object[]) => {
   const [filters, setFilters] = useState<Filter[]>([]);
@@ -19,7 +20,12 @@ export const useFilter = (columns: Column[], data: object[]) => {
     }
   };
   const getFilterInput = (filter: Filter) => {
-    const icon = <IconSearch size="sm" />;
+    const searchIcon = (
+      <div style={{ display: "flex", alignItems: "center", padding: "0 1rem" }}>
+        <IconSearch size={16} />
+      </div>
+    );
+    // const selectIcon = <IconCaretDownFilled size={12} />;
     switch (filter.type) {
       case FilterType.TEXT:
         return (
@@ -29,7 +35,8 @@ export const useFilter = (columns: Column[], data: object[]) => {
             variant="unstyled"
             style={{ padding: "0 0.5rem" }}
             size="12px"
-            icon={icon}
+            styles={{ label: { paddingLeft: "1rem" } }}
+            icon={searchIcon}
           />
         );
       case FilterType.NUMBER:
@@ -45,6 +52,7 @@ export const useFilter = (columns: Column[], data: object[]) => {
           <Select
             placeholder="All"
             data={filterLookupData(filter.field)}
+            color="gray"
             radius={0}
             searchable
             clearable
@@ -53,7 +61,7 @@ export const useFilter = (columns: Column[], data: object[]) => {
       case FilterType.LOOKUP:
         return (
           <Select
-            classNames={{ dropdown: "mantine__select__dropdown" }}
+            classNames={classes}
             placeholder="All"
             value={filter.value as string}
             data={filterLookupData(filter.field)}
@@ -69,12 +77,21 @@ export const useFilter = (columns: Column[], data: object[]) => {
 
   const filterLookupData = (field: string) => {
     const column = columns.find((column) => column.dataField === field);
-    if (!column) return [];
-    return column.lookup?.dataSource.map((item) => ({
-      value: item[column.lookup.valueExpr],
-      label: item[column.lookup.displayExpr],
-    }));
+    if (!column || !column.lookup) return [];
+
+    return (column.lookup.dataSource as { [key: string]: any }[]).map(
+      (item) => {
+        if (!column.lookup) {
+          return { value: "", label: "" };
+        }
+        return {
+          value: item[column.lookup.valueExpr as string],
+          label: item[column.lookup.displayExpr as string],
+        };
+      }
+    );
   };
+
   const handleFilterChange = (e: any, filter: Filter) => {
     const newValue = filter.type === FilterType.LOOKUP ? e : e.target.value;
     const newIsApplied = newValue === null || newValue === "" ? false : true;
@@ -91,10 +108,15 @@ export const useFilter = (columns: Column[], data: object[]) => {
       let isMatch = true;
       filters.forEach((filter) => {
         if (filter.isApplied) {
-          const value = item[filter.field];
+          const value =
+            typeof item[filter.field] !== "string"
+              ? item[filter.field]
+              : item[filter.field].toLowerCase();
           switch (filter.type) {
             case FilterType.TEXT:
-              isMatch = isMatch && value.includes(filter.value as string);
+              isMatch =
+                isMatch &&
+                value.includes((filter.value as string).toLowerCase());
               break;
             case FilterType.NUMBER:
               isMatch = isMatch && value === filter.value;
