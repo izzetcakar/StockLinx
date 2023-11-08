@@ -2,7 +2,8 @@ import { useCallback, useState } from "react";
 import { Column, Filter, FilterType } from "../interfaces/interfaces";
 import { Select, TextInput } from "@mantine/core";
 import { IconCaretDownFilled, IconSearch } from "@tabler/icons-react";
-import classes from "./filter.module.scss";
+import filterClasses from "./filter.module.scss";
+import textInputClasses from "./textInput.module.scss";
 
 export const useFilter = (columns: Column[], data: object[]) => {
   const [filters, setFilters] = useState<Filter[]>([]);
@@ -20,11 +21,7 @@ export const useFilter = (columns: Column[], data: object[]) => {
     }
   };
   const getFilterInput = (filter: Filter) => {
-    const searchIcon = (
-      <div style={{ display: "flex", alignItems: "center", padding: "0 1rem" }}>
-        <IconSearch size={16} />
-      </div>
-    );
+    const searchIcon = <IconSearch size={16} />;
     // const selectIcon = <IconCaretDownFilled size={12} />;
     switch (filter.type) {
       case FilterType.TEXT:
@@ -32,10 +29,7 @@ export const useFilter = (columns: Column[], data: object[]) => {
           <TextInput
             value={filter.value ? (filter.value as string) : ""}
             onChange={(e) => handleFilterChange(e, filter)}
-            variant="unstyled"
-            style={{ padding: "0 0.5rem" }}
-            size="12px"
-            styles={{ label: { paddingLeft: "1rem" } }}
+            classNames={textInputClasses}
             icon={searchIcon}
           />
         );
@@ -61,7 +55,7 @@ export const useFilter = (columns: Column[], data: object[]) => {
       case FilterType.LOOKUP:
         return (
           <Select
-            classNames={classes}
+            classNames={filterClasses}
             placeholder="All"
             value={filter.value as string}
             data={filterLookupData(filter.field)}
