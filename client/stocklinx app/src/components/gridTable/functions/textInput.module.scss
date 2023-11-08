@@ -1,0 +1,10 @@
+.icon {
+  padding-right: 1rem;
+}
+.input {
+  font-size: 12px;
+  border-radius: 0;
+}
+.input:not(:focus) {
+  border: none;
+}
