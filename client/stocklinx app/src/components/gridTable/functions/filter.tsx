@@ -1,12 +1,13 @@
 import { useCallback, useState } from "react";
 import { Column, Filter, FilterType } from "../interfaces/interfaces";
 import { Select, TextInput } from "@mantine/core";
-import { IconCaretDownFilled, IconSearch } from "@tabler/icons-react";
+import { IconSearch } from "@tabler/icons-react";
 import filterClasses from "./filter.module.scss";
 import textInputClasses from "./textInput.module.scss";
 
 export const useFilter = (columns: Column[], data: object[]) => {
   const [filters, setFilters] = useState<Filter[]>([]);
+  
   const getFilterType = (field: string): FilterType => {
     const column = columns.find((column) => column.dataField === field);
     if (!column) return FilterType.TEXT;
@@ -98,7 +99,7 @@ export const useFilter = (columns: Column[], data: object[]) => {
     );
   };
   const applyFilterToData = (inputData: object[]) => {
-    return inputData.filter((item) => {
+    return inputData.filter((item: { [key: string]: any }) => {
       let isMatch = true;
       filters.forEach((filter) => {
         if (filter.isApplied) {

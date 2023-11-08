@@ -221,7 +221,9 @@ const Gridtable: React.FC<GridtableProps> = ({
             </tr>
           ))
         ) : (
-          <tr className="gridtable__nodata__row">No Data</tr>
+          <tr className="gridtable__nodata__row">
+            <td>No Data</td>
+          </tr>
         )}
       </tbody>
       <tfoot>
