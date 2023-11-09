@@ -8,7 +8,7 @@ export const openLocationModal = (
 ) =>
     modals.open({
         modalId: "location-modal",
-        title: location ? "Edit Location" : "Create Location",
+        title: location ? "Edit Location" : "Update Location",
         children: <LocationForm location={location} />,
         xOffset: "auto",
     });

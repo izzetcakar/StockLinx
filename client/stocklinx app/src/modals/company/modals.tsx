@@ -8,7 +8,7 @@ export const openCompanyModal = (
 ) =>
     modals.open({
         modalId: "company-modal",
-        title: company ? "Edit Company" : "Create Company",
+        title: company ? "Update Company" : "Create Company",
         children: <CompanyForm company={company} />,
         xOffset: "auto",
     });

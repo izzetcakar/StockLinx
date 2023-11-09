@@ -8,7 +8,7 @@ export const openProductStatusModal = (
 ) =>
     modals.open({
         modalId: "productStatus-modal",
-        title: productStatus ? "Edit ProductStatus" : "Create ProductStatus",
+        title: productStatus ? "Update ProductStatus" : "Create ProductStatus",
         children: <ProductStatusForm productStatus={productStatus} />,
         xOffset: "auto",
     });

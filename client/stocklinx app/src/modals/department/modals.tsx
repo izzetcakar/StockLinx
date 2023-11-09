@@ -8,7 +8,7 @@ export const openDepartmentModal = (
 ) =>
     modals.open({
         modalId: "department-modal",
-        title: department ? "Edit Department" : "Create Department",
+        title: department ? "Update Department" : "Create Department",
         children: <DepartmentForm department={department} />,
         xOffset: "auto",
     });
