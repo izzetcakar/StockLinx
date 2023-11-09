@@ -61,8 +61,6 @@
   display: block;
 }
 .gridtable tbody tr td {
-  padding: 12px;
-
   border: none;
 }
 .gridtable tbody {
@@ -74,18 +72,22 @@
   background-color: #ddd;
 }
 //COLUMN
-.gridtable tbody tr:first-child td {
-  padding-top: 12px;
-  padding-bottom: 12px;
-  text-align: left;
-  font-weight: bold;
+.gridtable__column__container {
   border: none;
   border-bottom: 1px solid #ced4da;
+}
+.gridtable__column__cell {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  width: 100vw;
+  word-wrap: none;
+  padding-left: 12px;
+  overflow: hidden;
   white-space: nowrap;
   font-weight: 500;
+  text-align: left;
+  font-weight: bold;
 }
-//EDİT
-
 .gridtable {
   display: block;
   table-layout: fixed;
@@ -99,14 +101,14 @@
 }
 .gridtable__row__cell {
   width: 100vw;
+  padding: 12px;
   word-wrap: none;
-}
-.gridtable__column__cell {
-  width: 100vw;
-  word-wrap: none;
+  white-space: nowrap;
 }
 .gridtable__checkbox__cell {
   width: fit-content;
+  padding: 8px;
+  padding-right: 0;
 }
 thead,
 tfoot {

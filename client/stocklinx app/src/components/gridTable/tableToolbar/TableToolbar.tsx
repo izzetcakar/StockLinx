@@ -1,6 +1,6 @@
 import React from "react";
 import "./tableToolbar.scss";
-import { Column } from "../interfaces/interfaces";
+import { Column, VisibleColumn } from "../interfaces/interfaces";
 import Dropdown from "./Dropdown";
 import icon_plus from "../../.././assets/icon_plus.png";
 import icon_refresh from "../../.././assets/icon_refresh.png";
@@ -11,7 +11,7 @@ interface TableToolbarProps {
   filterData?: () => void;
   handleSearch?: () => void;
   columns: Column[];
-  visibleColumns: string[];
+  visibleColumns: VisibleColumn[];
   addVisibleColumn: (column: string) => void;
   onRowInsert?: () => void;
 }

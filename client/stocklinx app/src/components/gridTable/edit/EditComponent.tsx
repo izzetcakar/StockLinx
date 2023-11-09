@@ -4,29 +4,27 @@ import icon_edit from "../../../assets/icon_pen.png";
 import icon_delete from "../../.././assets/icon_trash.png";
 
 interface EditComponentProps {
-  data: object[];
-  index: number;
+  obj: object;
+  id: string;
   onRowUpdate: (row: object) => void;
-  onRowRemove: (row: object) => void;
+  onRowRemove: (id: string) => void;
 }
 
 const EditComponent: React.FC<EditComponentProps> = ({
-  data,
-  index,
+  obj,
+  id,
   onRowRemove,
   onRowUpdate,
 }) => {
   const onEditHandler = () => {
-    const row = data[index];
     if (onRowUpdate) {
-      onRowUpdate(row);
+      onRowUpdate(obj);
     }
   };
 
   const onRemoveHandler = () => {
-    const row = data[index];
     if (onRowRemove) {
-      onRowRemove(row);
+      onRowRemove(id);
     }
   };
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import EditComponent from "./edit/EditComponent";
 import TableToolbar from "./tableToolbar/TableToolbar";
-import { Column, Filter, Lookup } from "./interfaces/interfaces";
+import { Column, Filter, Lookup, VisibleColumn } from "./interfaces/interfaces";
 import PageNumber from "./tableFooter/PageNumber";
 import { Checkbox } from "@mantine/core";
 import "./gridtable.scss";
@@ -17,7 +17,7 @@ interface GridtableProps {
   refreshData?: () => void;
   onRowInsert?: () => void;
   onRowUpdate?: (row: object) => void;
-  onRowRemove?: (row: object) => void;
+  onRowRemove?: (id: string) => void;
 }
 
 const Gridtable: React.FC<GridtableProps> = ({
@@ -26,12 +26,12 @@ const Gridtable: React.FC<GridtableProps> = ({
   itemPerPage = 5,
   refreshData,
   onRowInsert = () => console.log("Row insert"),
-  onRowUpdate = (e: object) => console.log(e),
-  onRowRemove = (e: object) => console.log(e),
+  onRowUpdate = (row: object) => console.log(row),
+  onRowRemove = (id: string) => console.log(id),
   itemKey,
 }) => {
   const [pageNumber, setPageNumber] = useState<number>(0);
-  const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
+  const [visibleColumns, setVisibleColumns] = useState<VisibleColumn[]>([]);
   const [selectedKeys, setSelectedKeys] = useState<(string | number)[]>([]);
   const [keyfield, setKeyfield] = useState<keyof object>(
     itemKey as keyof object
@@ -66,8 +66,8 @@ const Gridtable: React.FC<GridtableProps> = ({
   }, [data, itemPerPage, pageNumber, filters]);
 
   const getObjectByKeyfield = useCallback(
-    (key: string | number): object => {
-      return data.find((item) => item[keyfield] === key) as object;
+    (id: string | number): object => {
+      return data.find((item) => item[keyfield] === id) as object;
     },
     [data, keyfield]
   );
@@ -82,9 +82,9 @@ const Gridtable: React.FC<GridtableProps> = ({
       ? ((item as { [key: string]: any })[lookupDisplay] as string)
       : " ";
   };
-  const renderColumnValue = (key: string | number, column: Column) => {
+  const renderColumnValue = (id: string | number, column: Column) => {
     const value = (
-      getObjectByKeyfield(key) as {
+      getObjectByKeyfield(id) as {
         [key: string | number]: string | number | boolean | null;
       }
     )[column.dataField];
@@ -111,11 +111,19 @@ const Gridtable: React.FC<GridtableProps> = ({
     return value;
   };
   const handleVisibleColumns = useCallback(() => {
-    setVisibleColumns(columns.map((item) => item.caption));
+    setVisibleColumns(
+      columns.map((item) => {
+        return {
+          caption: item.caption,
+          dataField: item.dataField,
+          renderHeader: item.renderHeader,
+        };
+      })
+    );
   }, [columns]);
-  const handleSelectRow = (key: string | number) => {
+  const handleSelectRow = (id: string | number) => {
     setSelectedKeys((prev) =>
-      prev.includes(key) ? prev.filter((i) => i !== key) : [...prev, key]
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
     );
   };
   const handlePageNumber = (forward: boolean) => {
@@ -129,11 +137,8 @@ const Gridtable: React.FC<GridtableProps> = ({
       }
     }
   };
-  const getRowIndex = (index: number): number => {
-    return index + pageNumber * itemPerPage;
-  };
-  const getSelectedRowClass = (key: string | number): string => {
-    return selectedKeys.includes(key)
+  const getSelectedRowClass = (id: string | number): string => {
+    return selectedKeys.includes(id)
       ? "gridtable__row__selected"
       : "gridtable__row__container";
   };
@@ -161,7 +166,7 @@ const Gridtable: React.FC<GridtableProps> = ({
         </tr>
       </thead>
       <tbody>
-        <tr>
+        <tr className="gridtable__column__container">
           <td className="gridtable__checkbox__cell">
             <Checkbox
               checked={selectedKeys.length === data.length}
@@ -172,8 +177,11 @@ const Gridtable: React.FC<GridtableProps> = ({
             />
           </td>
           {visibleColumns.map((column) => (
-            <td key={"column - " + column} className="gridtable__column__cell">
-              {column}
+            <td
+              key={"column__header__" + column.caption}
+              className="gridtable__column__cell"
+            >
+              {column.renderHeader ? column.renderHeader() : column.caption}
             </td>
           ))}
           <td></td>
@@ -189,7 +197,7 @@ const Gridtable: React.FC<GridtableProps> = ({
         {filterData().length > 0 ? (
           filterData().map((obj, rowIndex) => (
             <tr
-              key={"main - " + rowIndex}
+              key={"gridtable__body__row__" + rowIndex}
               className={getSelectedRowClass(obj[keyfield])}
             >
               <td className="gridtable__checkbox__cell">
@@ -201,9 +209,11 @@ const Gridtable: React.FC<GridtableProps> = ({
                 />
               </td>
               {columns.map((column, index) =>
-                visibleColumns.includes(column.caption) ? (
+                visibleColumns
+                  .map((x) => x.caption)
+                  .includes(column.caption) ? (
                   <td
-                    key={`${index}-${column.dataField}`}
+                    key={`gridtable__row__cell__${index}__${column.dataField}`}
                     className="gridtable__row__cell"
                   >
                     {renderColumnValue(obj[keyfield], column)}
@@ -212,8 +222,8 @@ const Gridtable: React.FC<GridtableProps> = ({
               )}
               <td className="gridtable__edit">
                 <EditComponent
-                  data={data}
-                  index={getRowIndex(rowIndex)}
+                  obj={obj}
+                  id={obj[keyfield]}
                   onRowUpdate={onRowUpdate}
                   onRowRemove={onRowRemove}
                 />

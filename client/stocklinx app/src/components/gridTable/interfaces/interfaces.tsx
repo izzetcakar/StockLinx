@@ -4,8 +4,14 @@ export interface Column {
   renderComponent?: (
     value: any
   ) => JSX.Element | string | number | null | undefined;
+  renderHeader?: () => React.ReactNode | string | number | null;
   lookup?: Lookup;
   dataType: string;
+}
+export interface VisibleColumn {
+  caption: string;
+  dataField: string;
+  renderHeader?: () => React.ReactNode | string | number | null;
 }
 export interface Lookup {
   dataSource: object[];
