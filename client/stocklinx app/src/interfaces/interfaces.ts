@@ -67,6 +67,7 @@ export interface IBranch extends BaseEntity {
 export interface IDepartment extends BaseEntity {
   companyId?: string;
   branchId: string;
+  locationId: string | null;
   managerId: string | null;
   name: string;
   imagePath: string | null;
@@ -85,8 +86,6 @@ export interface ILocation extends BaseEntity {
   notes: string | null;
 }
 export interface ICategory extends BaseEntity {
-  companyId?: string;
-  branchId: string;
   name: string;
   type: CategoryType;
   imagePath: string | null;
@@ -111,7 +110,7 @@ export interface IAccessory extends IBaseProduct {
   supplierId: string | null;
   quantity: number;
   warrantyDate: Date | null;
-  modelNo: string | null;
+  modelNo: string;
 }
 export interface IAsset extends IBaseProduct {
   manufacturerId: string | null;
@@ -137,6 +136,7 @@ export interface ILicense extends IBaseProduct {
   reassignable: boolean;
   expirationDate: Date | null;
   terminationDate: Date | null;
+  quantity: number;
 }
 export interface IConsumable extends IBaseProduct {
   modelNo: string | null;
@@ -144,8 +144,6 @@ export interface IConsumable extends IBaseProduct {
   quantity: number;
 }
 export interface IModel extends BaseEntity {
-  companyId?: string;
-  branchId: string;
   manufacturerId: string | null;
   name: string;
   imagePath: string | null;
@@ -159,12 +157,10 @@ export interface IDeployedProduct extends BaseEntity {
   componentId: string | null;
   licenseId: string | null;
   consumableId: string | null;
-  deployedDate: Date | null;
+  assignDate: Date | null;
   notes: string | null;
 }
 export interface IManufacturer extends BaseEntity {
-  companyId?: string;
-  branchId: string;
   name: string;
   imagePath: string | null;
   url: string | null;
@@ -173,8 +169,6 @@ export interface IManufacturer extends BaseEntity {
   supportEmail: string | null;
 }
 export interface ISupplier extends BaseEntity {
-  companyId?: string;
-  branchId: string;
   locationId: string | null;
   name: string;
   imagePath: string | null;
