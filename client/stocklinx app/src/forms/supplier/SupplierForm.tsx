@@ -3,24 +3,20 @@ import {
   TextInput,
   Button,
   Group,
-  FileInput,
-  rem,
-  Image,
   ScrollArea,
   Flex,
   Textarea,
+  Select,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { closeModal } from "@mantine/modals";
-import { IconUpload } from "@tabler/icons-react";
 import { modals } from "@mantine/modals";
 import { ISupplier } from "../../interfaces/interfaces";
-import { handleImageChange } from "../functions/formFunctions";
-import MantineSelect from "../components/MantineSelect";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { useDispatch } from "react-redux";
 import { supplierActions } from "../../redux/supplier/actions";
+import uuid4 from "uuid4";
 
 interface SupplierFormProps {
   supplier?: ISupplier;
@@ -36,7 +32,7 @@ const SupplierForm: React.FC<SupplierFormProps> = ({ supplier }) => {
     initialValues: supplier
       ? { ...supplier }
       : {
-          id: "",
+          id: uuid4(),
           locationId: null,
           name: "",
           imagePath: null,
@@ -73,17 +69,18 @@ const SupplierForm: React.FC<SupplierFormProps> = ({ supplier }) => {
     <ScrollArea.Autosize type="always" offsetScrollbars mah={600}>
       <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
         <Flex direction="column" gap={10} mx="auto" maw="auto" px={40}>
-          <MantineSelect
-            data={locationSelectData}
-            value={form.values.locationId || ""}
-            label="Location"
-            propTag="locationId"
-            form={form}
-          />
           <TextInput
             label="Name"
             placeholder="New Name"
             {...form.getInputProps("name")}
+            withAsterisk
+          />
+          <Select
+            data={locationSelectData}
+            label="Location"
+            placeholder="Select Location"
+            {...form.getInputProps("locationId")}
+            value={form.values.locationId || ""}
           />
           <TextInput
             label="Contact Name"
@@ -114,23 +111,6 @@ const SupplierForm: React.FC<SupplierFormProps> = ({ supplier }) => {
             placeholder="Fax"
             {...form.getInputProps("fax")}
             value={form.values.fax || ""}
-          />
-          <FileInput
-            label="Upload image"
-            placeholder="Upload image"
-            accept="image/png,image/jpeg"
-            // value={form.getTransformedValues().imagePath}
-            onChange={(value) => void handleImageChange(form, value)}
-            icon={
-              <IconUpload size={rem(14)} {...form.getInputProps("imagePath")} />
-            }
-          />
-          <Image
-            maw={240}
-            mx="auto"
-            radius="md"
-            src={form.values.imagePath}
-            alt="Random image"
           />
           <Textarea
             placeholder="Your notes here"

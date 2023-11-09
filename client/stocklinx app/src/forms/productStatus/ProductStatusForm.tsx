@@ -5,55 +5,51 @@ import {
   Group,
   ScrollArea,
   Flex,
-  Textarea,
   Select,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { closeModal } from "@mantine/modals";
 import { modals } from "@mantine/modals";
-import { IDepartment } from "../../interfaces/interfaces";
+import { ProductStatusType, IProductStatus } from "../../interfaces/interfaces";
 import { useDispatch, useSelector } from "react-redux";
-import { departmentActions } from "../../redux/department/actions";
+import { productStatusActions } from "../../redux/productStatus/actions";
 import uuid4 from "uuid4";
 import { RootState } from "../../redux/rootReducer";
-
-interface DepartmentFormProps {
-  department?: IDepartment;
+interface ProductStatusFormProps {
+  productStatus?: IProductStatus;
 }
 
-const DepartmentForm: React.FC<DepartmentFormProps> = ({ department }) => {
-  const dispatch = useDispatch();
+const ProductStatusForm: React.FC<ProductStatusFormProps> = ({
+  productStatus,
+}) => {
   const companies = useSelector((state: RootState) => state.company.companies);
   const branches = useSelector((state: RootState) => state.branch.branches);
-  const locationSelectData = useSelector(
-    (state: RootState) => state.location.selectData
-  );
-  const [company, setCompany] = useState(department?.companyId || "");
-
-  const form = useForm<IDepartment>({
-    initialValues: department
-      ? { ...department }
+  const [company, setCompany] = useState(productStatus?.companyId || "");
+  const dispatch = useDispatch();
+  const form = useForm<IProductStatus>({
+    initialValues: productStatus
+      ? { ...productStatus }
       : {
           id: uuid4(),
+          type: ProductStatusType.AVAILABLE,
           branchId: "",
-          locationId: null,
-          managerId: null,
           name: "",
-          imagePath: null,
-          notes: null,
         },
     validate: {
       name: (value: string) =>
         /(?!^$)([^\s])/.test(value) ? null : "Name should not be empty",
       branchId: (value: string) =>
-        /(?!^$)([^\s])/.test(value) ? null : "Branch should not be empty",
+        value !== "" ? null : "Branch should not be empty",
     },
   });
   const handleSubmit = (data: object) => {
-    department
-      ? dispatch(departmentActions.update({ department: data as IDepartment }))
-      : dispatch(departmentActions.create({ department: data as IDepartment }));
-    modals.close("department-modal");
+    productStatus
+      ? dispatch(
+          productStatusActions.update({ productStatus: data as IProductStatus })
+        )
+      : dispatch(
+          productStatusActions.create({ productStatus: data as IProductStatus })
+        );
   };
   const openNextModel = () =>
     modals.open({
@@ -65,6 +61,7 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({ department }) => {
         </Button>
       ),
     });
+
   const handleCompanyChange = (value: string) => {
     setCompany(value);
     form.setFieldValue("branchId", "");
@@ -104,17 +101,16 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({ department }) => {
             withAsterisk
           />
           <Select
-            data={locationSelectData}
-            label="Location"
-            placeholder="Select Location"
-            {...form.getInputProps("locationId")}
-            value={form.values.locationId || ""}
-          />
-          <Textarea
-            placeholder="Your notes here"
-            label="Note"
-            {...form.getInputProps("notes")}
-            value={form.values.notes || ""}
+            data={[
+              { value: ProductStatusType.AVAILABLE, label: "Avaliable" },
+              { value: ProductStatusType.DAMAGED, label: "Damaged" },
+              { value: ProductStatusType.DEPLOYED, label: "Deployed" },
+              { value: ProductStatusType.ORDERED, label: "Ordered" },
+              { value: ProductStatusType.OUT_OF_STOCK, label: "Out of Stock" },
+            ]}
+            label="Type"
+            placeholder="Select Type"
+            {...form.getInputProps("type")}
           />
           <Group position="right" mt="md">
             <Button type="submit" color="dark">
@@ -130,4 +126,4 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({ department }) => {
   );
 };
 
-export default DepartmentForm;
+export default ProductStatusForm;
