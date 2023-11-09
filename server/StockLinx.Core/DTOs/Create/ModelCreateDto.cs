@@ -1,8 +1,7 @@
 ﻿namespace StockLinx.Core.DTOs.Create
 {
-    public class ModelCreateDto
+    public class ModelCreateDto : BaseCreateDto
     {
-        public Guid BranchId { get; set; }
         public Guid? ManufacturerId { get; set; }
         public string Name { get; set; }
         public string? ImagePath { get; set; }

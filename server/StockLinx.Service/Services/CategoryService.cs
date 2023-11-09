@@ -25,17 +25,9 @@ namespace StockLinx.Service.Services
         }
         public async Task<List<CategoryDto>> GetCategoryDtos()
         {
-            var categories = await _categoryRepository.GetAll().Include(x => x.Branch)
-                .Select(x => new CategoryDto
-                {
-                    Id = x.Id,
-                    CompanyId = x.Branch.CompanyId,
-                    BranchId = x.BranchId,
-                    Name = x.Name,
-                    ImagePath = x.ImagePath,
-                    Type = x.Type,
-                }).ToListAsync();
-            return categories;
+            var categories = await _categoryRepository.GetAll().ToListAsync();
+            var categoryDtos = _mapper.Map<List<CategoryDto>>(categories);
+            return categoryDtos;
         }
         public async Task CreateCategoryAsync(CategoryCreateDto createDto)
         {

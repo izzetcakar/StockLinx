@@ -23,25 +23,9 @@ namespace StockLinx.Service.Services
         }
         public async Task<List<SupplierDto>> GetSupplierDtos()
         {
-            var suppliers = await _supplierRepository.GetAll().Include(x => x.Branch)
-                .Select(x => new SupplierDto
-                {
-                    Id = x.Id,
-                    Name = x.Name,
-                    BranchId = x.BranchId,
-                    CompanyId = x.Branch.CompanyId,
-                    LocationId = x.LocationId,
-                    ContactEmail = x.ContactEmail,
-                    ContactName = x.ContactName,
-                    ContactPhone = x.ContactPhone,
-                    Fax = x.Fax,
-                    ImagePath = x.ImagePath,
-                    Website = x.Website,
-                    Notes = x.Notes,
-                    CreatedDate = x.CreatedDate,
-                    UpdatedDate = x.UpdatedDate,
-                }).ToListAsync();
-            return suppliers;
+            var suppliers = await _supplierRepository.GetAll().ToListAsync();
+            var supplierDtos = _mapper.Map<List<SupplierDto>>(suppliers);
+            return supplierDtos;
         }
         public async Task CreateSupplierAsync(SupplierCreateDto createDto)
         {

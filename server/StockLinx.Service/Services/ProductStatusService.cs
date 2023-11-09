@@ -25,18 +25,9 @@ namespace StockLinx.Service.Services
 
         public async Task<List<ProductStatusDto>> GetProductStatusDtos()
         {
-            var productStatuses = await _productStatusRepository.GetAll().Include(x => x.Branch)
-                .Select(x => new ProductStatusDto
-                {
-                    Id = x.Id,
-                    CompanyId = x.Branch.CompanyId,
-                    BranchId = x.BranchId,
-                    Name = x.Name,
-                    Type = x.Type,
-                    CreatedDate = x.CreatedDate,
-                    UpdatedDate = x.UpdatedDate,
-                }).ToListAsync();
-            return productStatuses;
+            var productStatuses = await _productStatusRepository.GetAll().ToListAsync();
+            var productStatusDtos = _mapper.Map<List<ProductStatusDto>>(productStatuses);
+            return productStatusDtos;
         }
         public async Task CreateProductStatusAsync(ProductStatusCreateDto createDto)
         {

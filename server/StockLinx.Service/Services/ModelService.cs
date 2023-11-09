@@ -24,21 +24,9 @@ namespace StockLinx.Service.Services
 
         public async Task<List<ModelDto>> GetModelDtos()
         {
-            var models = await _modelRepository.GetAll().Include(x => x.Branch)
-                .Select(x => new ModelDto
-                {
-                    Id = x.Id,
-                    CompanyId = x.Branch.CompanyId,
-                    BranchId = x.BranchId,
-                    Name = x.Name,
-                    ImagePath = x.ImagePath,
-                    ManufacturerId = x.ManufacturerId,
-                    ModelNo = x.ModelNo,
-                    Notes = x.Notes,
-                    CreatedDate = x.CreatedDate,
-                    UpdatedDate = x.UpdatedDate,
-                }).ToListAsync();
-            return models;
+            var models = await _modelRepository.GetAll().ToListAsync();
+            var modelDtos = _mapper.Map<List<ModelDto>>(models);
+            return modelDtos;
         }
         public async Task CreateModelAsync(ModelCreateDto createDto)
         {

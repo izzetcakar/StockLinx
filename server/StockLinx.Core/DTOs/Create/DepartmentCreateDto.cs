@@ -1,6 +1,6 @@
 ﻿namespace StockLinx.Core.DTOs.Create
 {
-    public class DepartmentCreateDto
+    public class DepartmentCreateDto : BaseCreateDto
     {
         public Guid BranchId { get; set; }
         public Guid? LocationId { get; set; }

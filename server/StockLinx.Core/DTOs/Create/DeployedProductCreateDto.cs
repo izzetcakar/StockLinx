@@ -1,6 +1,6 @@
 ﻿namespace StockLinx.Core.DTOs.Create
 {
-    public class DeployedProductCreateDto
+    public class DeployedProductCreateDto : BaseCreateDto
     {
         public Guid UserId { get; set; }
         public Guid? AccessoryId { get; set; }
