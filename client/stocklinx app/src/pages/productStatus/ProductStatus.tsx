@@ -13,6 +13,8 @@ import {
 import { datagridRequest } from "../../functions/datagridRequest";
 import { companyActions } from "../../redux/company/actions";
 import { branchActions } from "../../redux/branch/actions";
+import Gridtable from "../../components/gridTable/Gridtable";
+import { openProductStatusModal } from "../../modals/productStatus/modals";
 
 const ProductStatus = () => {
   const dispatch = useDispatch();
@@ -36,7 +38,7 @@ const ProductStatus = () => {
   const onRowRemoving = (e: RowRemovingEvent<IProductStatus>) => {
     datagridRequest(e, `ProductStatus/${e.data.id}`, "delete");
   };
-  
+
   return (
     <>
       <div className="page-content-header">
@@ -52,6 +54,17 @@ const ProductStatus = () => {
         onRowRemoving={onRowRemoving}
         refreshData={refreshData}
         toolbarAddButton={true}
+      />
+      <div style={{ padding: "1rem 0" }}></div>
+      <Gridtable
+        data={productStatuses}
+        itemKey="id"
+        columns={useColumns().columns}
+        refreshData={refreshData}
+        onRowUpdate={(category) =>
+          openProductStatusModal(category as IProductStatus)
+        }
+        onRowInsert={() => openProductStatusModal()}
       />
     </>
   );

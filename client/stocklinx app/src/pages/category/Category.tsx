@@ -15,9 +15,8 @@ import { datagridRequest } from "../../functions/datagridRequest";
 import { companyActions } from "../../redux/company/actions";
 import { branchActions } from "../../redux/branch/actions";
 import { useEffect } from "react";
-import BaseSuiteDatagrid from "../../components/reactSuiteComponents/datagrid/BaseSuiteDatagrid";
-import { MantineReactTable } from "mantine-react-table";
 import Gridtable from "../../components/gridTable/Gridtable";
+import { openCategoryModal } from "../../modals/category/modals";
 
 const Category = () => {
   const dispatch = useDispatch();
@@ -67,8 +66,9 @@ const Category = () => {
         itemKey="id"
         columns={useColumns().columns}
         refreshData={refreshData}
+        onRowUpdate={(category) => openCategoryModal(category as ICategory)}
+        onRowInsert={() => openCategoryModal()}
       />
-      {/* <MantineReactTable table={useColumns().table} /> */}
     </>
   );
 };

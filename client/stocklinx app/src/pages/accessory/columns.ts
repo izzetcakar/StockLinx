@@ -4,6 +4,7 @@ import { Column } from "devextreme/ui/data_grid";
 import { IAccessory } from "../../interfaces/interfaces";
 import { IFormItem } from "../../components/generic/BaseDataGrid";
 import { checkInOutHeaderTemplate } from "../../components/dataGrid/location/customColumns";
+import { Column as MyColumn } from "../../components/gridTable/interfaces/interfaces";
 
 export const useColumns = () => {
   const companies = useSelector((state: RootState) => state.company.companies);
@@ -36,7 +37,7 @@ export const useColumns = () => {
       store: categories,
       filter: options.data ? ["branchId", "=", options.data.branchId] : null,
     };
-  }
+  };
   const getFilteredManufacturers = (options: {
     data?: IAccessory;
     key?: string;
@@ -45,7 +46,7 @@ export const useColumns = () => {
       store: manufacturers,
       filter: options.data ? ["branchId", "=", options.data.branchId] : null,
     };
-  }
+  };
   const getFilteredSuppliers = (options: {
     data?: IAccessory;
     key?: string;
@@ -54,7 +55,7 @@ export const useColumns = () => {
       store: suppliers,
       filter: options.data ? ["branchId", "=", options.data.branchId] : null,
     };
-  }
+  };
   const getFilteredProductStatuses = (options: {
     data?: IAccessory;
     key?: string;
@@ -63,7 +64,39 @@ export const useColumns = () => {
       store: productStatuses,
       filter: options.data ? ["branchId", "=", options.data.branchId] : null,
     };
-  }
+  };
+  const columns: MyColumn[] = [
+    {
+      caption: "Name",
+      dataField: "name",
+      dataType: "string",
+    },
+    {
+      caption: "Category",
+      dataField: "categoryId",
+      dataType: "string",
+      lookup: {
+        dataSource: categories,
+        valueExpr: "id",
+        displayExpr: "name",
+      },
+    },
+    {
+      caption: "Model",
+      dataField: "modelNo",
+      dataType: "string",
+    },
+    {
+      caption: "Quantity",
+      dataField: "quantity",
+      dataType: "number",
+    },
+    {
+      dataField: "purchaseCost",
+      caption: "Purchase Cost",
+      dataType: "number",
+    },
+  ];
 
   const devColumns: Column<IAccessory>[] = [
     {
@@ -170,6 +203,7 @@ export const useColumns = () => {
     { dataField: "name" },
     { dataField: "manufacturerId" },
     { dataField: "supplierId" },
+    { dataField: "modelNo" },
     { dataField: "quantity" },
     { dataField: "warrantyDate" },
     { dataField: "categoryId" },
@@ -180,5 +214,5 @@ export const useColumns = () => {
     { dataField: "purchaseDate" },
     { dataField: "notes" },
   ];
-  return { devColumns, formItems };
+  return { columns, devColumns, formItems };
 };

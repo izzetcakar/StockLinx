@@ -13,6 +13,8 @@ import {
 import { datagridRequest } from "../../functions/datagridRequest";
 import { companyActions } from "../../redux/company/actions";
 import { branchActions } from "../../redux/branch/actions";
+import Gridtable from "../../components/gridTable/Gridtable";
+import { openManufacturerModal } from "../../modals/manufacturer/modals";
 
 const Manufacturer = () => {
   const dispatch = useDispatch();
@@ -52,6 +54,17 @@ const Manufacturer = () => {
         onRowRemoving={onRowRemoving}
         refreshData={refreshData}
         toolbarAddButton={true}
+      />
+      <div style={{ padding: "1rem 0" }}></div>
+      <Gridtable
+        data={manufacturers}
+        itemKey="id"
+        columns={useColumns().columns}
+        refreshData={refreshData}
+        onRowUpdate={(manufacturer) =>
+          openManufacturerModal(manufacturer as IManufacturer)
+        }
+        onRowInsert={() => openManufacturerModal()}
       />
     </>
   );

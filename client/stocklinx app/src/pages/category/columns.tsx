@@ -1,10 +1,17 @@
 import { Column } from "devextreme/ui/data_grid";
-import { IProductStatus, ProductStatusType } from "../../interfaces/interfaces";
+import { ICategory } from "../../interfaces/interfaces";
 import { IFormItem } from "../../components/generic/BaseDataGrid";
-import { createDataFromEnum } from "../../functions/createDataFromEnum";
 import { Column as MyColumn } from "../../components/gridTable/interfaces/interfaces";
 
 export const useColumns = () => {
+  const productTypes = [
+    { id: 0, name: "Asset" },
+    { id: 2, name: "License" },
+    { id: 3, name: "Accessory" },
+    { id: 5, name: "Consumable" },
+    { id: 4, name: "Component" },
+  ];
+
   const columns: MyColumn[] = [
     {
       dataField: "name",
@@ -15,15 +22,14 @@ export const useColumns = () => {
       dataField: "type",
       caption: "Type",
       lookup: {
-        dataSource: createDataFromEnum(ProductStatusType),
-        valueExpr: "value",
-        displayExpr: "id",
+        dataSource: productTypes,
+        valueExpr: "id",
+        displayExpr: "name",
       },
       dataType: "number",
     },
   ];
-
-  const devColumns: Column<IProductStatus>[] = [
+  const devColumns: Column<ICategory>[] = [
     {
       dataField: "name",
       caption: "Name",
@@ -33,9 +39,9 @@ export const useColumns = () => {
       dataField: "type",
       caption: "Type",
       lookup: {
-        dataSource: createDataFromEnum(ProductStatusType),
-        valueExpr: "value",
-        displayExpr: "id",
+        dataSource: productTypes,
+        valueExpr: "id",
+        displayExpr: "name",
       },
       validationRules: [{ type: "required" }],
     },

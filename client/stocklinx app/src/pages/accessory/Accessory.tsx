@@ -1,3 +1,4 @@
+import React from "react";
 import { IAccessory } from "../../interfaces/interfaces";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
@@ -16,10 +17,10 @@ import {
   RowUpdatingEvent,
 } from "devextreme/ui/data_grid";
 import { datagridRequest } from "../../functions/datagridRequest";
-import Button from "devextreme-react/button";
 import DataGrid from "devextreme-react/data-grid";
-import React from "react";
 import { branchActions } from "../../redux/branch/actions";
+import { openAccessoryModal } from "../../modals/product/accessory/modals";
+import Gridtable from "../../components/gridTable/Gridtable";
 
 const Accessory = () => {
   const dispatch = useDispatch();
@@ -53,16 +54,6 @@ const Accessory = () => {
     <>
       <div className="page-content-header">
         <div className="page-content-header-title">Accessories</div>
-        <Button
-          onClick={() => {
-            gridRef.current?.instance.addRow();
-            gridRef.current?.instance.deselectAll();
-          }}
-          icon="plus"
-          width={"fit-content"}
-          text="Create New"
-          type="default"
-        />
       </div>
       <BaseDataGrid
         title="Accessory"
@@ -74,6 +65,15 @@ const Accessory = () => {
         onRowUpdating={onRowUpdating}
         onRowRemoving={onRowRemoving}
         refreshData={refreshData}
+      />
+      <div style={{ padding: "1rem 0" }} />
+      <Gridtable
+        data={accessories}
+        itemKey="id"
+        columns={useColumns().columns}
+        refreshData={refreshData}
+        onRowUpdate={(accessory) => openAccessoryModal(accessory as IAccessory)}
+        onRowInsert={() => openAccessoryModal()}
       />
     </>
   );

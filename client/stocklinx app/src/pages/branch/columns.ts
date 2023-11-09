@@ -10,8 +10,29 @@ export const useColumns = () => {
   const locations = useSelector((state: RootState) => state.location.locations);
   const columns: MyColumn[] = [
     {
+      dataField: "companyId",
+      caption: "Company",
+      dataType: "string",
+      lookup: {
+        dataSource: companies,
+        valueExpr: "id",
+        displayExpr: "name",
+      },
+    },
+    {
       dataField: "name",
       caption: "Name",
+      dataType: "string",
+    },
+    {
+      dataField: "locationId",
+      caption: "Location",
+      dataType: "string",
+      lookup: {
+        dataSource: locations,
+        valueExpr: "id",
+        displayExpr: "name",
+      },
     },
   ];
   const devColumns: Column<IBranch>[] = [

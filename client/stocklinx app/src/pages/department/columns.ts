@@ -3,27 +3,40 @@ import { RootState } from "../../redux/rootReducer";
 import { Column } from "devextreme/ui/data_grid";
 import { IDepartment } from "../../interfaces/interfaces";
 import { IFormItem } from "../../components/generic/BaseDataGrid";
+import { Column as MyColumn } from "../../components/gridTable/interfaces/interfaces";
 
 export const useColumns = () => {
   const branches = useSelector((state: RootState) => state.branch.branches);
   const companies = useSelector((state: RootState) => state.company.companies);
+  const locations = useSelector((state: RootState) => state.location.locations);
 
-  // const columns: MyColumn[] = [
-  //   {
-  //     dataField: "locationId",
-  //     caption: "Location",
-  //     renderComponent: (value: string | number | boolean | null | undefined) =>
-  //       NameComponent(value, locations),
-  //   },
-  //   {
-  //     dataField: "managerId",
-  //     caption: "Manager",
-  //   },
-  //   {
-  //     dataField: "name",
-  //     caption: "Name",
-  //   },
-  // ];
+  const columns: MyColumn[] = [
+    {
+      dataField: "branchId",
+      caption: "Branch",
+      dataType: "string",
+      lookup: {
+        dataSource: branches,
+        valueExpr: "id",
+        displayExpr: "name",
+      },
+    },
+    {
+      dataField: "name",
+      caption: "Name",
+      dataType: "string",
+    },
+    {
+      dataField: "locationId",
+      caption: "Location",
+      dataType: "string",
+      lookup: {
+        dataSource: locations,
+        valueExpr: "id",
+        displayExpr: "name",
+      },
+    },
+  ];
 
   const getFilteredBranches = (options: {
     data?: IDepartment;
@@ -77,5 +90,5 @@ export const useColumns = () => {
     { dataField: "notes" },
   ];
 
-  return { devColumns, formItems };
+  return { columns, devColumns, formItems };
 };

@@ -11,6 +11,8 @@ import {
   RowUpdatingEvent,
 } from "devextreme/ui/data_grid";
 import { datagridRequest } from "../../functions/datagridRequest";
+import Gridtable from "../../components/gridTable/Gridtable";
+import { openCompanyModal } from "../../modals/company/modals";
 
 const Company = () => {
   const dispatch = useDispatch();
@@ -46,6 +48,15 @@ const Company = () => {
         onRowRemoving={onRowRemoving}
         refreshData={refreshData}
         toolbarAddButton={true}
+      />
+      <div style={{ padding: "1rem 0" }} />
+      <Gridtable
+        data={companies}
+        itemKey="id"
+        columns={useColumns().columns}
+        refreshData={refreshData}
+        onRowUpdate={(company) => openCompanyModal(company as ICompany)}
+        onRowInsert={() => openCompanyModal()}
       />
     </>
   );

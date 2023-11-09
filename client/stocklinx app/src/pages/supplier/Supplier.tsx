@@ -14,6 +14,8 @@ import {
 import { datagridRequest } from "../../functions/datagridRequest";
 import { companyActions } from "../../redux/company/actions";
 import { branchActions } from "../../redux/branch/actions";
+import Gridtable from "../../components/gridTable/Gridtable";
+import { openSupplierModal } from "../../modals/supplier/modals";
 
 const Supplier = () => {
   const dispatch = useDispatch();
@@ -52,6 +54,15 @@ const Supplier = () => {
         onRowRemoving={onRowRemoving}
         refreshData={refreshData}
         toolbarAddButton={true}
+      />
+      <div style={{ padding: "1rem 0" }} />
+      <Gridtable
+        data={suppliers}
+        itemKey="id"
+        columns={useColumns().columns}
+        refreshData={refreshData}
+        onRowInsert={() => openSupplierModal()}
+        onRowUpdate={(supplier) => openSupplierModal(supplier as ISupplier)}
       />
     </>
   );

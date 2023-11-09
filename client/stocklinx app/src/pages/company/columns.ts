@@ -8,6 +8,12 @@ export const useColumns = () => {
     {
       dataField: "name",
       caption: "Name",
+      dataType: "string",
+    },
+    {
+      dataField: "email",
+      caption: "Email",
+      dataType: "string",
     },
   ];
   const devColumns: Column<ICompany>[] = [

@@ -12,6 +12,8 @@ import {
 } from "devextreme/ui/data_grid";
 import { datagridRequest } from "../../functions/datagridRequest";
 import { companyActions } from "../../redux/company/actions";
+import Gridtable from "../../components/gridTable/Gridtable";
+import { openBranchModal } from "../../modals/branch/modals";
 
 const Branch = () => {
   const dispatch = useDispatch();
@@ -48,6 +50,15 @@ const Branch = () => {
         onRowRemoving={onRowRemoving}
         refreshData={refreshData}
         toolbarAddButton={true}
+      />
+      <div style={{ padding: "1rem 0" }} />
+      <Gridtable
+        data={branches}
+        itemKey="id"
+        columns={useColumns().columns}
+        refreshData={refreshData}
+        onRowUpdate={(branch) => openBranchModal(branch as IBranch)}
+        onRowInsert={() => openBranchModal()}
       />
     </>
   );

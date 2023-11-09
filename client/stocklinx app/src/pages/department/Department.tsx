@@ -16,6 +16,9 @@ import DataGrid from "devextreme-react/data-grid";
 import React from "react";
 import { branchActions } from "../../redux/branch/actions";
 import { companyActions } from "../../redux/company/actions";
+import Gridtable from "../../components/gridTable/Gridtable";
+import { openDepartmentModal } from "../../modals/department/modals";
+import { locationActions } from "../../redux/location/actions";
 
 const Department = () => {
   const dispatch = useDispatch();
@@ -28,6 +31,7 @@ const Department = () => {
     dispatch(companyActions.getAll());
     dispatch(branchActions.getAll());
     dispatch(departmentActions.getAll());
+    dispatch(locationActions.getAll());
   };
   const onRowInserting = async (e: RowInsertingEvent<IDepartment>) => {
     const newObject = { ...e.data };
@@ -45,16 +49,6 @@ const Department = () => {
     <>
       <div className="page-content-header">
         <div className="page-content-header-title">Departments</div>
-        <Button
-          onClick={() => {
-            gridRef.current?.instance.addRow();
-            gridRef.current?.instance.deselectAll();
-          }}
-          icon="plus"
-          width={"fit-content"}
-          text="Create New"
-          type="default"
-        />
       </div>
       <BaseDataGrid
         title="Department"
@@ -66,6 +60,17 @@ const Department = () => {
         onRowUpdating={onRowUpdating}
         onRowRemoving={onRowRemoving}
         refreshData={refreshData}
+      />
+      <div style={{ padding: "1rem 0" }} />
+      <Gridtable
+        data={departments}
+        itemKey="id"
+        columns={useColumns().columns}
+        refreshData={refreshData}
+        onRowUpdate={(department) =>
+          openDepartmentModal(department as IDepartment)
+        }
+        onRowInsert={() => openDepartmentModal()}
       />
     </>
   );

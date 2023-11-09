@@ -11,6 +11,8 @@ import {
   RowUpdatingEvent,
 } from "devextreme/ui/data_grid";
 import { datagridRequest } from "../../functions/datagridRequest";
+import Gridtable from "../../components/gridTable/Gridtable";
+import { openLocationModal } from "../../modals/location/modals";
 
 const Location = () => {
   const dispatch = useDispatch();
@@ -46,6 +48,15 @@ const Location = () => {
         onRowRemoving={onRowRemoving}
         refreshData={refreshData}
         toolbarAddButton={true}
+      />
+      <div style={{ padding: "1rem 0" }} />
+      <Gridtable
+        data={locations}
+        columns={useColumns().columns}
+        itemKey="id"
+        refreshData={refreshData}
+        onRowUpdate={(location) => openLocationModal(location as ILocation)}
+        onRowInsert={() => openLocationModal()}
       />
     </>
   );
