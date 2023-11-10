@@ -228,8 +228,6 @@ export interface IProductStausCount {
   count: number;
 }
 export interface IProductStatus extends BaseEntity {
-  companyId?: string;
-  branchId: string;
   name: string;
   type: ProductStatusType;
 }
