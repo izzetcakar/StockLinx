@@ -1,4 +1,4 @@
-.table-toolbar {
+.table__toolbar {
   display: flex;
   max-width: 100%;
   height: fit-content;
@@ -6,58 +6,8 @@
   align-items: center;
   gap: 10px;
   justify-content: flex-start;
-}
-.dropdown-container {
-  display: flex;
-  align-items: center;
-  position: relative;
-  cursor: pointer;
-}
-.dropdown-title {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.5rem;
-  font-size: 0.8em;
-  font-weight: 600;
-  user-select: none;
-}
 
-.dropdown-content {
-  position: absolute;
-  bottom: auto;
-  background-color: #f9f9f9;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-  z-index: 1;
-  visibility: hidden;
-  opacity: 0;
-  transform: translateY(-10px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.dropdown-content.visible {
-  visibility: visible;
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.dropdown-element {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.5rem;
-  border-bottom: 1px solid #ddd;
-  gap: 10px;
-  .title {
-    display: flex;
-    width: 100%;
-    min-width: fit-content;
-    font-size: 0.7em;
-    font-weight: normal;
-    justify-content: flex-start;
+  .table__toolbar__last {
+    margin-left: auto;
   }
-}
-
-.dropdown-element:last-child {
-  border-bottom: none;
 }

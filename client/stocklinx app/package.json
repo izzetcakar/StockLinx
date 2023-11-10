@@ -35,7 +35,7 @@
     "devextreme": "23.1.5",
     "devextreme-react": "23.1.5",
     "eslint-plugin-react": "^7.33.2",
-    "exceljs": "^4.3.0",
+    "exceljs": "^4.4.0",
     "file-saver-es": "^2.0.5",
     "html-react-parser": "^4.2.2",
     "react": "^18.2.0",
