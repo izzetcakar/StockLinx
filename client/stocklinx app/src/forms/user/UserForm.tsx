@@ -3,7 +3,6 @@ import {
   TextInput,
   Button,
   Group,
-  ScrollArea,
   Flex,
   Textarea,
   Select,
@@ -117,113 +116,119 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
   };
 
   return (
-    <ScrollArea.Autosize type="always" offsetScrollbars mah={600}>
-      <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-        <Flex direction="column" gap={10} mx="auto" maw="auto" px={40}>
-          <Select
-            data={companySelectData}
-            label="Company"
-            placeholder="Select Company"
-            value={company}
-            onChange={(value) => handleCompanyChange(value as string)}
-            withAsterisk
-          />
-          <Select
-            data={branches
-              .filter((branch) => branch.companyId === company)
-              .map((branch) => ({ value: branch.id, label: branch.name }))}
-            label="Branch"
-            placeholder="Select Branch"
-            value={branch}
-            onChange={(value) => handleBranchChange(value as string)}
-            withAsterisk
-          />
-          <Select
-            data={departments
-              .filter((department) => department.branchId === branch)
-              .map((department) => ({
-                value: department.id,
-                label: department.name,
-              }))}
-            label="Department"
-            placeholder="Select Department"
-            {...form.getInputProps("departmentId")}
-            withAsterisk
-          />
-          <TextInput
-            label="First Name"
-            placeholder="First Name"
-            {...form.getInputProps("firstName")}
-            withAsterisk
-          />
-          <TextInput
-            label="Last Name"
-            placeholder="Last Name"
-            {...form.getInputProps("lastName")}
-            withAsterisk
-          />
-          <TextInput
-            label="Email"
-            placeholder="Email"
-            {...form.getInputProps("email")}
-          />
-          <PasswordInput
-            label="Password"
-            placeholder="Password"
-            {...form.getInputProps("password")}
-          />
-          <TextInput
-            label="Job Title"
-            placeholder="Job Title"
-            {...form.getInputProps("jobTitle")}
-            value={form.values.jobTitle || ""}
-          />
-          <TextInput
-            label="Phone Number"
-            placeholder="Phone Number"
-            {...form.getInputProps("phoneNo")}
-            value={form.values.phoneNo || ""}
-          />
-          <TextInput
-            label="Website"
-            placeholder="Website"
-            {...form.getInputProps("website")}
-            value={form.values.website || ""}
-          />
-          <DateInput
-            label="Start Date"
-            placeholder="Start Date"
-            {...form.getInputProps("startDate")}
-            withAsterisk
-          />
-          <DateInput
-            label="End Date"
-            placeholder="End Date"
-            {...form.getInputProps("endDate")}
-          />
-          <TextInput
-            label="Language"
-            placeholder="Language"
-            {...form.getInputProps("language")}
-            value={form.values.language || ""}
-          />
-          <Textarea
-            placeholder="Your notes here"
-            label="Note"
-            {...form.getInputProps("notes")}
-            value={form.values.notes || ""}
-          />
-          <Group position="right" mt="md">
-            <Button type="submit" color="dark">
-              Submit
-            </Button>
-            <Button onClick={() => openNextUser()} color="dark">
-              Next Modal
-            </Button>
-          </Group>
-        </Flex>
-      </form>
-    </ScrollArea.Autosize>
+    <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
+      <Flex
+        direction="column"
+        gap={10}
+        mx="auto"
+        h={"70dvh"}
+        w={"80dvw"}
+        px={40}
+        pt={20}
+      >
+        <Select
+          data={companySelectData}
+          label="Company"
+          placeholder="Select Company"
+          value={company}
+          onChange={(value) => handleCompanyChange(value as string)}
+          withAsterisk
+        />
+        <Select
+          data={branches
+            .filter((branch) => branch.companyId === company)
+            .map((branch) => ({ value: branch.id, label: branch.name }))}
+          label="Branch"
+          placeholder="Select Branch"
+          value={branch}
+          onChange={(value) => handleBranchChange(value as string)}
+          withAsterisk
+        />
+        <Select
+          data={departments
+            .filter((department) => department.branchId === branch)
+            .map((department) => ({
+              value: department.id,
+              label: department.name,
+            }))}
+          label="Department"
+          placeholder="Select Department"
+          {...form.getInputProps("departmentId")}
+          withAsterisk
+        />
+        <TextInput
+          label="First Name"
+          placeholder="First Name"
+          {...form.getInputProps("firstName")}
+          withAsterisk
+        />
+        <TextInput
+          label="Last Name"
+          placeholder="Last Name"
+          {...form.getInputProps("lastName")}
+          withAsterisk
+        />
+        <TextInput
+          label="Email"
+          placeholder="Email"
+          {...form.getInputProps("email")}
+        />
+        <PasswordInput
+          label="Password"
+          placeholder="Password"
+          {...form.getInputProps("password")}
+        />
+        <TextInput
+          label="Job Title"
+          placeholder="Job Title"
+          {...form.getInputProps("jobTitle")}
+          value={form.values.jobTitle || ""}
+        />
+        <TextInput
+          label="Phone Number"
+          placeholder="Phone Number"
+          {...form.getInputProps("phoneNo")}
+          value={form.values.phoneNo || ""}
+        />
+        <TextInput
+          label="Website"
+          placeholder="Website"
+          {...form.getInputProps("website")}
+          value={form.values.website || ""}
+        />
+        <DateInput
+          label="Start Date"
+          placeholder="Start Date"
+          {...form.getInputProps("startDate")}
+          withAsterisk
+        />
+        <DateInput
+          label="End Date"
+          placeholder="End Date"
+          {...form.getInputProps("endDate")}
+        />
+        <TextInput
+          label="Language"
+          placeholder="Language"
+          {...form.getInputProps("language")}
+          value={form.values.language || ""}
+        />
+        <Textarea
+          placeholder="Your notes here"
+          label="Note"
+          {...form.getInputProps("notes")}
+          value={form.values.notes || ""}
+        />
+        <Group position="right" mt="md">
+          <Button type="submit" color="dark">
+            Submit
+          </Button>
+          <Button onClick={() => openNextUser()} color="dark">
+            Next Modal
+          </Button>
+        </Group>
+      </Flex>
+    </form>
   );
 };
 

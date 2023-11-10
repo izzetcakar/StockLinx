@@ -7,7 +7,6 @@ import {
   FileInput,
   rem,
   Image,
-  ScrollArea,
   Flex,
   Container,
   ActionIcon,
@@ -19,7 +18,7 @@ import { DateInput } from "@mantine/dates";
 import { closeModal } from "@mantine/modals";
 import { IconPlus, IconTrash, IconUpload } from "@tabler/icons-react";
 import { modals } from "@mantine/modals";
-import { IAsset, ProductStatus } from "../../../interfaces/interfaces";
+import { IAsset } from "../../../interfaces/interfaces";
 import { handleImageChange } from "../../functions/formFunctions";
 import MantineSelect from "../../components/MantineSelect";
 import { useDispatch } from "react-redux";
@@ -40,9 +39,7 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
           id: "",
           manufacturerId: null,
           categoryId: null,
-          locationId: null,
           companyId: "",
-          productStatus: ProductStatus.AVAILABLE,
           modelId: null,
           notes: "",
           imagePath: "",
@@ -116,109 +113,115 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
     });
 
   return (
-    <ScrollArea.Autosize type="always" offsetScrollbars mah={600}>
-      <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-        <Flex direction="column" gap={10} mx="auto" maw="auto" px={40}>
-          {useSelectData(form).map((selectData) => (
-            <MantineSelect
-              key={selectData.propTag}
-              data={selectData.data}
-              value={selectData.value}
-              label={selectData.label}
-              propTag={selectData.propTag}
-              form={form}
+    <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
+      <Flex
+        direction="column"
+        gap={10}
+        mx="auto"
+        h={"70dvh"}
+        w={"80dvw"}
+        px={40}
+        pt={20}
+      >
+        {useSelectData(form).map((selectData) => (
+          <MantineSelect
+            key={selectData.propTag}
+            data={selectData.data}
+            value={selectData.value}
+            label={selectData.label}
+            propTag={selectData.propTag}
+            form={form}
+          />
+        ))}{" "}
+        <TextInput
+          label="Name"
+          placeholder="New Name"
+          {...form.getInputProps("name")}
+        />
+        <Flex gap={10}>
+          <Container w="100%" px={0}>
+            <TextInput
+              label="Tag No"
+              placeholder="Tag No"
+              {...form.getInputProps("tagNo")}
+              value={form.values.tagNo || ""}
             />
-          ))}{" "}
-          <TextInput
-            label="Name"
-            placeholder="New Name"
-            {...form.getInputProps("name")}
-          />
-          <Flex gap={10}>
-            <Container w="100%" px={0}>
-              <TextInput
-                label="Tag No"
-                placeholder="Tag No"
-                {...form.getInputProps("tagNo")}
-                value={form.values.tagNo || ""}
-              />
-            </Container>
-            <Container size="1rem" px={0} mah={"100%"} maw={28}>
-              <ActionIcon
-                variant="default"
-                mt="100%"
-                onClick={() =>
-                  form.insertListItem("overageAssets", {
-                    serialNo: "",
-                    tagNo: "",
-                  })
-                }
-              >
-                <IconPlus size="1rem" />
-              </ActionIcon>
-            </Container>
-          </Flex>
-          <TextInput
-            label="Serial No"
-            placeholder="Serial No"
-            {...form.getInputProps("serialNo")}
-            value={form.values.serialNo || ""}
-          />
-          {overageAssetFields}
-          <TextInput
-            label="Order No"
-            placeholder="New Order No"
-            {...form.getInputProps("orderNo")}
-            value={form.values.orderNo || ""}
-          />
-          <DateInput
-            clearable
-            label="Purchase Date"
-            placeholder="Purchase Date"
-            valueFormat="DD/MM/YYYY"
-            {...form.getInputProps("purchaseDate")}
-          />
-          <NumberInput
-            placeholder="Purchase Cost"
-            label="Purchase Cost"
-            {...form.getInputProps("purchaseCost")}
-            value={form.values.purchaseCost || ""}
-            precision={2}
-          />
-          <FileInput
-            label="Upload image"
-            placeholder="Upload image"
-            accept="image/png,image/jpeg"
-            // value={form.getTransformedValues().imagePath}
-            onChange={(value) => void handleImageChange(form, value)}
-            icon={
-              <IconUpload size={rem(14)} {...form.getInputProps("imagePath")} />
-            }
-          />
-          <Image
-            maw={240}
-            mx="auto"
-            radius="md"
-            src={form.values.imagePath}
-            alt="Random image"
-          />
-          <Textarea
-            placeholder="Your notes here"
-            label="Note"
-            {...form.getInputProps("notes")}
-            value={form.values.notes || ""}
-          />
-          <Group position="right" mt="md">
-            <Button type="submit" color="dark">
-              Submit
-            </Button>
-            <Button onClick={() => openNextModel()} color="dark">
-              Next Modal
-            </Button>
-          </Group>
+          </Container>
+          <Container size="1rem" px={0} mah={"100%"} maw={28}>
+            <ActionIcon
+              variant="default"
+              mt="100%"
+              onClick={() =>
+                form.insertListItem("overageAssets", {
+                  serialNo: "",
+                  tagNo: "",
+                })
+              }
+            >
+              <IconPlus size="1rem" />
+            </ActionIcon>
+          </Container>
         </Flex>
-      </form>
-    </ScrollArea.Autosize>
+        <TextInput
+          label="Serial No"
+          placeholder="Serial No"
+          {...form.getInputProps("serialNo")}
+          value={form.values.serialNo || ""}
+        />
+        {overageAssetFields}
+        <TextInput
+          label="Order No"
+          placeholder="New Order No"
+          {...form.getInputProps("orderNo")}
+          value={form.values.orderNo || ""}
+        />
+        <DateInput
+          clearable
+          label="Purchase Date"
+          placeholder="Purchase Date"
+          valueFormat="DD/MM/YYYY"
+          {...form.getInputProps("purchaseDate")}
+        />
+        <NumberInput
+          placeholder="Purchase Cost"
+          label="Purchase Cost"
+          {...form.getInputProps("purchaseCost")}
+          value={form.values.purchaseCost || ""}
+          precision={2}
+        />
+        <FileInput
+          label="Upload image"
+          placeholder="Upload image"
+          accept="image/png,image/jpeg"
+          // value={form.getTransformedValues().imagePath}
+          onChange={(value) => void handleImageChange(form, value)}
+          icon={
+            <IconUpload size={rem(14)} {...form.getInputProps("imagePath")} />
+          }
+        />
+        <Image
+          maw={240}
+          mx="auto"
+          radius="md"
+          src={form.values.imagePath}
+          alt="Random image"
+        />
+        <Textarea
+          placeholder="Your notes here"
+          label="Note"
+          {...form.getInputProps("notes")}
+          value={form.values.notes || ""}
+        />
+        <Group position="right" mt="md">
+          <Button type="submit" color="dark">
+            Submit
+          </Button>
+          <Button onClick={() => openNextModel()} color="dark">
+            Next Modal
+          </Button>
+        </Group>
+      </Flex>
+    </form>
   );
 };
 

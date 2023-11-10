@@ -4,7 +4,6 @@ import {
   Button,
   Group,
   NumberInput,
-  ScrollArea,
   Flex,
   Textarea,
   Select,
@@ -102,132 +101,138 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory }) => {
   };
 
   return (
-    <ScrollArea.Autosize type="always" offsetScrollbars mah={600}>
-      <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-        <Flex direction="column" gap={10} mx="auto" maw="auto" px={40}>
-          <Select
-            data={companies.map((company) => ({
-              value: company.id,
-              label: company.name,
+    <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
+      <Flex
+        direction="column"
+        gap={10}
+        mx="auto"
+        h={"70dvh"}
+        w={"80dvw"}
+        px={40}
+        pt={20}
+      >
+        <Select
+          data={companies.map((company) => ({
+            value: company.id,
+            label: company.name,
+          }))}
+          label="Company"
+          placeholder="Select Company"
+          value={company}
+          onChange={(value) => handleCompanyChange(value as string)}
+          withAsterisk
+        />
+        <Select
+          data={branches
+            .filter((branch) => branch.companyId === company)
+            .map((branch) => ({
+              value: branch.id,
+              label: branch.name,
             }))}
-            label="Company"
-            placeholder="Select Company"
-            value={company}
-            onChange={(value) => handleCompanyChange(value as string)}
-            withAsterisk
-          />
-          <Select
-            data={branches
-              .filter((branch) => branch.companyId === company)
-              .map((branch) => ({
-                value: branch.id,
-                label: branch.name,
-              }))}
-            label="Branch"
-            placeholder="Select Branch"
-            {...form.getInputProps("branchId")}
-            withAsterisk
-          />
-          <TextInput
-            label="Name"
-            placeholder="New Name"
-            {...form.getInputProps("name")}
-            withAsterisk
-          />
-          <Select
-            data={manufacturerSelectData}
-            label="Manufacturer"
-            placeholder="Select Manufacturer"
-            {...form.getInputProps("manufacturerId")}
-            value={form.values.manufacturerId || ""}
-          />
-          <Select
-            data={supplierSelectData}
-            label="Supplier"
-            placeholder="Select Supplier"
-            {...form.getInputProps("supplierId")}
-            value={form.values.supplierId || ""}
-          />
-          <TextInput
-            label="Model No"
-            placeholder="Model No"
-            {...form.getInputProps("modelNo")}
-            value={form.values.modelNo || ""}
-          />
-          <NumberInput
-            defaultValue={1}
-            min={1}
-            placeholder="Quantity"
-            label="Quantity"
-            {...form.getInputProps("quantity")}
-          />
-          <DateInput
-            clearable
-            label="Warranty Date"
-            placeholder="Warranty Date"
-            valueFormat="DD/MM/YYYY"
-            {...form.getInputProps("warrantyDate")}
-          />
-          <Select
-            data={categorySelectData}
-            label="Category"
-            placeholder="Select Category"
-            {...form.getInputProps("categoryId")}
-            value={form.values.categoryId || ""}
-          />
-          <Select
-            data={productStatuses.map((status) => ({
-              value: status.id,
-              label: status.name,
-            }))}
-            label="Product Status"
-            placeholder="Select Product Status"
-            {...form.getInputProps("productStatusId")}
-            value={form.values.productStatusId || ""}
-          />
-          <TextInput
-            label="Serial No"
-            placeholder="Serial No"
-            {...form.getInputProps("serialNo")}
-            value={form.values.serialNo || ""}
-          />
-          <TextInput
-            label="Order No"
-            placeholder="New Order No"
-            {...form.getInputProps("orderNo")}
-            value={form.values.orderNo || ""}
-          />
-          <NumberInput
-            placeholder="Purchase Cost"
-            label="Purchase Cost"
-            {...form.getInputProps("purchaseCost")}
-            value={form.values.purchaseCost || ""}
-            precision={2}
-          />
-          <DateInput
-            clearable
-            label="Purchase Date"
-            placeholder="Purchase Date"
-            valueFormat="DD/MM/YYYY"
-            {...form.getInputProps("purchaseDate")}
-          />
-          <Textarea
-            placeholder="Your notes here"
-            label="Note"
-            {...form.getInputProps("notes")}
-            value={form.values.notes || ""}
-          />
-          <Group position="right" mt="md">
-            <Button type="submit" color="dark">
-              Submit
-            </Button>
-            <Button onClick={() => openNextModal()} color="dark">
-              Next Modal
-            </Button>
-          </Group>
-        </Flex>
-      </form>
-    </ScrollArea.Autosize>
+          label="Branch"
+          placeholder="Select Branch"
+          {...form.getInputProps("branchId")}
+          withAsterisk
+        />
+        <TextInput
+          label="Name"
+          placeholder="New Name"
+          {...form.getInputProps("name")}
+          withAsterisk
+        />
+        <Select
+          data={manufacturerSelectData}
+          label="Manufacturer"
+          placeholder="Select Manufacturer"
+          {...form.getInputProps("manufacturerId")}
+          value={form.values.manufacturerId || ""}
+        />
+        <Select
+          data={supplierSelectData}
+          label="Supplier"
+          placeholder="Select Supplier"
+          {...form.getInputProps("supplierId")}
+          value={form.values.supplierId || ""}
+        />
+        <TextInput
+          label="Model No"
+          placeholder="Model No"
+          {...form.getInputProps("modelNo")}
+          value={form.values.modelNo || ""}
+        />
+        <NumberInput
+          defaultValue={1}
+          min={1}
+          placeholder="Quantity"
+          label="Quantity"
+          {...form.getInputProps("quantity")}
+        />
+        <DateInput
+          clearable
+          label="Warranty Date"
+          placeholder="Warranty Date"
+          valueFormat="DD/MM/YYYY"
+          {...form.getInputProps("warrantyDate")}
+        />
+        <Select
+          data={categorySelectData}
+          label="Category"
+          placeholder="Select Category"
+          {...form.getInputProps("categoryId")}
+          value={form.values.categoryId || ""}
+        />
+        <Select
+          data={productStatuses.map((status) => ({
+            value: status.id,
+            label: status.name,
+          }))}
+          label="Product Status"
+          placeholder="Select Product Status"
+          {...form.getInputProps("productStatusId")}
+          value={form.values.productStatusId || ""}
+        />
+        <TextInput
+          label="Serial No"
+          placeholder="Serial No"
+          {...form.getInputProps("serialNo")}
+          value={form.values.serialNo || ""}
+        />
+        <TextInput
+          label="Order No"
+          placeholder="New Order No"
+          {...form.getInputProps("orderNo")}
+          value={form.values.orderNo || ""}
+        />
+        <NumberInput
+          placeholder="Purchase Cost"
+          label="Purchase Cost"
+          {...form.getInputProps("purchaseCost")}
+          value={form.values.purchaseCost || ""}
+          precision={2}
+        />
+        <DateInput
+          clearable
+          label="Purchase Date"
+          placeholder="Purchase Date"
+          valueFormat="DD/MM/YYYY"
+          {...form.getInputProps("purchaseDate")}
+        />
+        <Textarea
+          placeholder="Your notes here"
+          label="Note"
+          {...form.getInputProps("notes")}
+          value={form.values.notes || ""}
+        />
+        <Group position="right" mt="md">
+          <Button type="submit" color="dark">
+            Submit
+          </Button>
+          <Button onClick={() => openNextModal()} color="dark">
+            Next Modal
+          </Button>
+        </Group>
+      </Flex>
+    </form>
   );
 };
 

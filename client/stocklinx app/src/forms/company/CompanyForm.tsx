@@ -1,5 +1,5 @@
 import React from "react";
-import { TextInput, Button, Group, ScrollArea, Flex } from "@mantine/core";
+import { TextInput, Button, Group, Flex } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { closeModal } from "@mantine/modals";
 import { modals } from "@mantine/modals";
@@ -30,11 +30,10 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ company }) => {
     },
   });
   const handleSubmit = (data: object) => {
-    // company
-    //   ? dispatch(companyActions.update({ company: data as ICompany }))
-    //   : dispatch(companyActions.create({ company: data as ICompany }));
-    // dispatch(companyActions.getAll());
-    company ? console.log("update", data) : console.log("create", data);
+    company
+      ? dispatch(companyActions.update({ company: data as ICompany }))
+      : dispatch(companyActions.create({ company: data as ICompany }));
+    dispatch(companyActions.getAll());
   };
   const openNextModel = () =>
     modals.open({
@@ -48,31 +47,37 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ company }) => {
     });
 
   return (
-    <ScrollArea.Autosize type="always" offsetScrollbars mah={600}>
-      <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-        <Flex direction="column" gap={10} mx="auto" maw="auto" px={40}>
-          <TextInput
-            label="Name"
-            placeholder="New Name"
-            {...form.getInputProps("name")}
-            withAsterisk
-          />
-          <TextInput
-            label="Email"
-            placeholder="New Email"
-            {...form.getInputProps("email")}
-          />
-          <Group position="right" mt="md">
-            <Button type="submit" color="dark">
-              Submit
-            </Button>
-            <Button onClick={() => openNextModel()} color="dark">
-              Next Modal
-            </Button>
-          </Group>
-        </Flex>
-      </form>
-    </ScrollArea.Autosize>
+    <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
+      <Flex
+        direction="column"
+        gap={10}
+        mx="auto"
+        h={"70dvh"}
+        w={"80dvw"}
+        px={40}
+        pt={20}
+      >
+        <TextInput
+          label="Name"
+          placeholder="New Name"
+          {...form.getInputProps("name")}
+          withAsterisk
+        />
+        <TextInput
+          label="Email"
+          placeholder="New Email"
+          {...form.getInputProps("email")}
+        />
+        <Group position="right" mt="md">
+          <Button type="submit" color="dark">
+            Submit
+          </Button>
+          <Button onClick={() => openNextModel()} color="dark">
+            Next Modal
+          </Button>
+        </Group>
+      </Flex>
+    </form>
   );
 };
 

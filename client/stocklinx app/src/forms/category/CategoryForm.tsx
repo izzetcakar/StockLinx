@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  TextInput,
-  Button,
-  Group,
-  ScrollArea,
-  Flex,
-  Select,
-} from "@mantine/core";
+import { TextInput, Button, Group, Flex, Select } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { closeModal } from "@mantine/modals";
 import { modals } from "@mantine/modals";
@@ -14,6 +7,7 @@ import { CategoryType, ICategory } from "../../interfaces/interfaces";
 import { useDispatch } from "react-redux";
 import { categoryActions } from "../../redux/category/actions";
 import uuid4 from "uuid4";
+import filterClasses from "../../mantineModules/baseFilter.module.scss";
 interface CategoryFormProps {
   category?: ICategory;
 }
@@ -52,40 +46,47 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ category }) => {
     });
 
   return (
-    <ScrollArea.Autosize type="always" offsetScrollbars h={600}>
-      <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-        <Flex direction="column" gap={10} mx="auto" maw="auto" px={40}>
-          <TextInput
-            label="Name"
-            placeholder="New Name"
-            {...form.getInputProps("name")}
-            withAsterisk
-          />
-          <Select
-            data={[
-              { value: CategoryType.ACCESSORY, label: "Accessory" },
-              { value: CategoryType.ASSET, label: "Product" },
-              { value: CategoryType.COMPONENT, label: "Service" },
-              { value: CategoryType.CONSUMABLE, label: "Other" },
-              { value: CategoryType.LICENSE, label: "License" },
-            ]}
-            label="Type"
-            placeholder="Select Type"
-            {...form.getInputProps("type")}
-            dropdownPosition="bottom"
-            withAsterisk
-          />
-          <Group position="right" mt="md">
-            <Button type="submit" color="dark">
-              Submit
-            </Button>
-            <Button onClick={() => openNextModel()} color="dark">
-              Next Modal
-            </Button>
-          </Group>
-        </Flex>
-      </form>
-    </ScrollArea.Autosize>
+    <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
+      <Flex
+        direction="column"
+        gap={10}
+        mx="auto"
+        h={"70dvh"}
+        w={"80dvw"}
+        px={40}
+        pt={20}
+      >
+        <TextInput
+          label="Name"
+          placeholder="New Name"
+          {...form.getInputProps("name")}
+          withAsterisk
+        />
+        <Select
+          data={[
+            { value: CategoryType.ASSET, label: "Asset" },
+            { value: CategoryType.LICENSE, label: "License" },
+            { value: CategoryType.ACCESSORY, label: "Accessory" },
+            { value: CategoryType.CONSUMABLE, label: "Consumable" },
+            { value: CategoryType.COMPONENT, label: "Component" },
+          ]}
+          label="Type"
+          placeholder="Select Type"
+          {...form.getInputProps("type")}
+          dropdownPosition="bottom"
+          classNames={filterClasses}
+          withAsterisk
+        />
+      </Flex>
+      <Group position="right">
+        <Button onClick={() => openNextModel()} color="dark">
+          Next Modal
+        </Button>
+        <Button type="submit" color="dark">
+          Submit
+        </Button>
+      </Group>
+    </form>
   );
 };
 

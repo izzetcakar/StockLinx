@@ -3,7 +3,6 @@ import {
   TextInput,
   Button,
   Group,
-  ScrollArea,
   Flex,
   Textarea,
   Select,
@@ -71,62 +70,68 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({ department }) => {
   };
 
   return (
-    <ScrollArea.Autosize type="always" offsetScrollbars mah={600}>
-      <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-        <Flex direction="column" gap={10} mx="auto" maw="auto" px={40}>
-          <Select
-            data={companies.map((company) => ({
-              value: company.id,
-              label: company.name,
+    <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
+      <Flex
+        direction="column"
+        gap={10}
+        mx="auto"
+        h={"70dvh"}
+        w={"80dvw"}
+        px={40}
+        pt={20}
+      >
+        <Select
+          data={companies.map((company) => ({
+            value: company.id,
+            label: company.name,
+          }))}
+          label="Company"
+          placeholder="Select Company"
+          value={company}
+          onChange={(value) => handleCompanyChange(value as string)}
+          withAsterisk
+        />
+        <Select
+          data={branches
+            .filter((branch) => branch.companyId === company)
+            .map((branch) => ({
+              value: branch.id,
+              label: branch.name,
             }))}
-            label="Company"
-            placeholder="Select Company"
-            value={company}
-            onChange={(value) => handleCompanyChange(value as string)}
-            withAsterisk
-          />
-          <Select
-            data={branches
-              .filter((branch) => branch.companyId === company)
-              .map((branch) => ({
-                value: branch.id,
-                label: branch.name,
-              }))}
-            label="Branch"
-            placeholder="Select Branch"
-            {...form.getInputProps("branchId")}
-            withAsterisk
-          />
-          <TextInput
-            label="Name"
-            placeholder="New Name"
-            {...form.getInputProps("name")}
-            withAsterisk
-          />
-          <Select
-            data={locationSelectData}
-            label="Location"
-            placeholder="Select Location"
-            {...form.getInputProps("locationId")}
-            value={form.values.locationId || ""}
-          />
-          <Textarea
-            placeholder="Your notes here"
-            label="Note"
-            {...form.getInputProps("notes")}
-            value={form.values.notes || ""}
-          />
-          <Group position="right" mt="md">
-            <Button type="submit" color="dark">
-              Submit
-            </Button>
-            <Button onClick={() => openNextModel()} color="dark">
-              Next Modal
-            </Button>
-          </Group>
-        </Flex>
-      </form>
-    </ScrollArea.Autosize>
+          label="Branch"
+          placeholder="Select Branch"
+          {...form.getInputProps("branchId")}
+          withAsterisk
+        />
+        <TextInput
+          label="Name"
+          placeholder="New Name"
+          {...form.getInputProps("name")}
+          withAsterisk
+        />
+        <Select
+          data={locationSelectData}
+          label="Location"
+          placeholder="Select Location"
+          {...form.getInputProps("locationId")}
+          value={form.values.locationId || ""}
+        />
+        <Textarea
+          placeholder="Your notes here"
+          label="Note"
+          {...form.getInputProps("notes")}
+          value={form.values.notes || ""}
+        />
+        <Group position="right" mt="md">
+          <Button type="submit" color="dark">
+            Submit
+          </Button>
+          <Button onClick={() => openNextModel()} color="dark">
+            Next Modal
+          </Button>
+        </Group>
+      </Flex>
+    </form>
   );
 };
 
