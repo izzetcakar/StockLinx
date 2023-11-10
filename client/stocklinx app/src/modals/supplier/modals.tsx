@@ -8,7 +8,7 @@ export const openSupplierModal = (
 ) =>
     modals.open({
         modalId: "supplier-modal",
-        title: supplier ? "Edit Supplier" : "Create Supplier",
+        title: supplier ? "Update Supplier" : "Create Supplier",
         children: <SupplierForm supplier={supplier} />,
         xOffset: "auto",
     });

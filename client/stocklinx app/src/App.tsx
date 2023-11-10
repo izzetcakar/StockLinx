@@ -31,6 +31,7 @@ import Supplier from "./pages/supplier/Supplier";
 import Location from "./pages/location/Location";
 import ProductStatus from "./pages/productStatus/ProductStatus";
 import Branch from "./pages/branch/Branch";
+import User from "./pages/user/User";
 
 const Layout = () => {
   const navigate = useNavigate();
@@ -128,6 +129,10 @@ const router = createBrowserRouter([
       {
         path: "/productStatus",
         element: <ProductStatus />,
+      },
+      {
+        path: "/user",
+        element: <User />,
       },
       {
         path: "/test",

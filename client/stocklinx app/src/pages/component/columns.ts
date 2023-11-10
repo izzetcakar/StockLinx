@@ -4,10 +4,12 @@ import { Column } from "devextreme/ui/data_grid";
 import { IComponent } from "../../interfaces/interfaces";
 import { IFormItem } from "../../components/generic/BaseDataGrid";
 import { checkInOutHeaderTemplate } from "../../components/dataGrid/location/customColumns";
+import { Column as MyColumn } from "../../components/gridTable/interfaces/interfaces";
 
 export const useColumns = () => {
   const companies = useSelector((state: RootState) => state.company.companies);
   const branches = useSelector((state: RootState) => state.branch.branches);
+  const locations = useSelector((state: RootState) => state.location.locations);
   const categories = useSelector(
     (state: RootState) => state.category.categories
   );
@@ -42,6 +44,56 @@ export const useColumns = () => {
       filter: options.data ? ["branchId", "=", options.data.branchId] : null,
     };
   };
+
+  const columns: MyColumn[] = [
+    {
+      caption: "Name",
+      dataField: "name",
+      dataType: "string",
+    },
+    {
+      caption: "Serial",
+      dataField: "serialNo",
+      dataType: "string",
+    },
+    {
+      caption: "Category",
+      dataField: "categoryId",
+      lookup: {
+        dataSource: categories,
+        valueExpr: "id",
+        displayExpr: "name",
+      },
+      dataType: "string",
+    },
+    // ADD TOTAL QUANTITY
+    // ADD AVAILABLE QUANTITY
+    {
+      caption: "Location",
+      dataField: "locationId",
+      lookup: {
+        dataSource: locations,
+        valueExpr: "id",
+        displayExpr: "name",
+      },
+      dataType: "string",
+    },
+    {
+      caption: "Order Number",
+      dataField: "orderNo",
+      dataType: "string",
+    },
+    {
+      caption: "Purchase Date",
+      dataField: "purchaseDate",
+      dataType: "date",
+    },
+    {
+      caption: "Purchase Cost",
+      dataField: "purchaseCost",
+      dataType: "number",
+    },
+  ];
 
   const devColumns: Column<IComponent>[] = [
     {
@@ -136,5 +188,5 @@ export const useColumns = () => {
     { dataField: "notes" },
   ];
 
-  return { devColumns, formItems };
+  return { columns, devColumns, formItems };
 };

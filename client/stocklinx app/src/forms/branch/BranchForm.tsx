@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   TextInput,
   Button,
@@ -42,11 +42,10 @@ const BranchForm: React.FC<BranchFormProps> = ({ branch }) => {
     },
   });
   const handleSubmit = (data: object) => {
-    // branch
-    //   ? dispatch(branchActions.update({ branch: data as IBranch }))
-    //   : dispatch(branchActions.create({ branch: data as IBranch }));
-    // dispatch(branchActions.getAll());
-    branch ? console.log("update", data) : console.log("create", data);
+    branch
+      ? dispatch(branchActions.update({ branch: data as IBranch }))
+      : dispatch(branchActions.create({ branch: data as IBranch }));
+    dispatch(branchActions.getAll());
   };
   const openNextModel = () =>
     modals.open({

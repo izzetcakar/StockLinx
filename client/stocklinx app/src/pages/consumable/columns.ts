@@ -7,10 +7,13 @@ import {
   alignedTemplate,
   checkInOutHeaderTemplate,
 } from "../../components/dataGrid/location/customColumns";
+import { Column as MyColumn } from "../../components/gridTable/interfaces/interfaces";
 
 export const useColumns = () => {
   const companies = useSelector((state: RootState) => state.company.companies);
   const branches = useSelector((state: RootState) => state.branch.branches);
+  const locations = useSelector((state: RootState) => state.location.locations);
+  const models = useSelector((state: RootState) => state.model.models);
   const categories = useSelector(
     (state: RootState) => state.category.categories
   );
@@ -45,6 +48,67 @@ export const useColumns = () => {
       filter: options.data ? ["branchId", "=", options.data.branchId] : null,
     };
   };
+
+  const columns: MyColumn[] = [
+    {
+      caption: "Name",
+      dataField: "name",
+      dataType: "string",
+    },
+    {
+      caption: "Category",
+      dataField: "categoryId",
+      lookup: {
+        dataSource: categories,
+        valueExpr: "id",
+        displayExpr: "name",
+      },
+      dataType: "string",
+    },
+    {
+      caption: "Model No",
+      dataField: "modelNo",
+      lookup: {
+        dataSource: models,
+        valueExpr: "id",
+        displayExpr: "name",
+      },
+      dataType: "string",
+    },
+    {
+      caption: "Item No",
+      dataField: "itemNo",
+      dataType: "string",
+    },
+    // ADD TOTAL QUANTITY
+    // ADD AVAILABLE QUANTITY
+    {
+      caption: "Location",
+      dataField: "locationId",
+      lookup: {
+        dataSource: locations,
+        valueExpr: "id",
+        displayExpr: "name",
+      },
+      dataType: "string",
+    },
+    {
+      caption: "Order Number",
+      dataField: "orderNo",
+      dataType: "string",
+    },
+    {
+      caption: "Purchase Date",
+      dataField: "purchaseDate",
+      dataType: "date",
+    },
+    {
+      caption: "Purchase Cost",
+      dataField: "purchaseCost",
+      dataType: "number",
+    },
+  ];
+
   const devColumns: Column<IConsumable>[] = [
     {
       dataField: "companyId",
@@ -138,5 +202,5 @@ export const useColumns = () => {
     { dataField: "notes" },
   ];
 
-  return { devColumns, formItems };
+  return { columns, devColumns, formItems };
 };

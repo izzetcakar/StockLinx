@@ -52,7 +52,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ category }) => {
     });
 
   return (
-    <ScrollArea.Autosize type="always" offsetScrollbars mah={600}>
+    <ScrollArea.Autosize type="always" offsetScrollbars h={600}>
       <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
         <Flex direction="column" gap={10} mx="auto" maw="auto" px={40}>
           <TextInput
@@ -72,6 +72,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ category }) => {
             label="Type"
             placeholder="Select Type"
             {...form.getInputProps("type")}
+            dropdownPosition="bottom"
             withAsterisk
           />
           <Group position="right" mt="md">

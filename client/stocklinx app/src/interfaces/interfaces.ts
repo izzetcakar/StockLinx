@@ -182,6 +182,7 @@ export interface ISupplier extends BaseEntity {
 export interface IUser extends BaseEntity {
   imagePath: string | null;
   departmentId: string;
+  employeeNo: string;
   firstName: string;
   lastName: string;
   email: string;

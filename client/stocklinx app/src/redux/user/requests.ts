@@ -25,10 +25,33 @@ const getWithToken = () => {
     apiType: "get",
   });
 };
+const create = (user: IUser) => {
+  return request<IUser>({
+    requestUrl: requestUrl,
+    queryData: user,
+    apiType: "post",
+  });
+};
+const update = (user: IUser) => {
+  return request<IUser>({
+    requestUrl: requestUrl,
+    queryData: user,
+    apiType: "put",
+  });
+};
+const remove = (id: string) => {
+  return request<IUser>({
+    requestUrl: requestUrl + id,
+    apiType: "delete",
+  });
+};
 
 export const userRequests = {
   getAll,
   get,
   signIn,
   getWithToken,
+  create,
+  update,
+  remove,
 };

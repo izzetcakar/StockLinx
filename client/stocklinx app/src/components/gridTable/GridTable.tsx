@@ -49,9 +49,9 @@ const Gridtable: React.FC<GridtableProps> = ({
 
   const addVisibleColumn = (columnCaption: string): void => {
     setVisibleColumns((prev) =>
-      prev.includes(columnCaption)
-        ? prev.filter((item) => item !== columnCaption)
-        : [...prev, columnCaption]
+      prev.map((x) => x.caption).includes(columnCaption)
+        ? prev.filter((item) => item.caption !== columnCaption)
+        : [...prev, columns.find((x) => x.caption === columnCaption)!]
     );
   };
   const filterData = useCallback(() => {
@@ -83,14 +83,13 @@ const Gridtable: React.FC<GridtableProps> = ({
       : " ";
   };
   const renderColumnValue = (id: string | number, column: Column) => {
-    const value = (
-      getObjectByKeyfield(id) as {
-        [key: string | number]: string | number | boolean | null;
-      }
-    )[column.dataField];
+    const obj = getObjectByKeyfield(id) as {
+      [key: string | number]: string | number | boolean | null;
+    };
+    const value = obj[column.dataField];
 
     if (column.renderComponent) {
-      return column.renderComponent(value);
+      return column.renderComponent(obj);
     }
     if (column.lookup) {
       return getLookupValue(value, column.lookup);

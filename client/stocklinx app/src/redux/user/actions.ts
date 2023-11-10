@@ -25,6 +25,8 @@ import {
   SignInSuccess,
   SignInFailure,
   LogoutUser,
+  EditUserReuqestPayload,
+  RemoveUserRequestPayload,
 } from "./type";
 
 //GET
@@ -66,8 +68,9 @@ const getFailure = (): FetchUserFailure => ({
 });
 
 //POST
-const create = (): CreateUserRequest => ({
+const create = (payload: EditUserReuqestPayload): CreateUserRequest => ({
   type: userConst.CREATE_USER_REQUEST,
+  payload,
 });
 const createSuccess = (): CreateUsersuccess => ({
   type: userConst.CREATE_USER_SUCCESS,
@@ -88,8 +91,9 @@ const signInFailure = (): SignInFailure => ({
 });
 
 //PUT
-const update = (): UpdateUserRequest => ({
+const update = (payload: EditUserReuqestPayload): UpdateUserRequest => ({
   type: userConst.UPDATE_USER_REQUEST,
+  payload,
 });
 const updateSuccess = (): UpdateUsersuccess => ({
   type: userConst.UPDATE_USER_SUCCESS,
@@ -99,8 +103,9 @@ const updateFailure = (): UpdateUserFailure => ({
 });
 
 //REMOVE
-const remove = (): RemoveUserRequest => ({
+const remove = (payload: RemoveUserRequestPayload): RemoveUserRequest => ({
   type: userConst.REMOVE_USER_REQUEST,
+  payload,
 });
 const removeSuccess = (): RemoveUsersuccess => ({
   type: userConst.REMOVE_USER_SUCCESS,

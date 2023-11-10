@@ -1,7 +1,12 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { userActions } from "./actions";
 import { userConst } from "./constant";
-import { SignInRequest } from "./type";
+import {
+  CreateUserRequest,
+  RemoveUserRequest,
+  SignInRequest,
+  UpdateUserRequest,
+} from "./type";
 import { userRequests } from "./requests";
 import { IUser } from "../../interfaces/interfaces";
 import { openNotificationError } from "../../components/notification/Notification";
@@ -19,6 +24,22 @@ interface ISignInResponse {
   status: number;
 }
 
+function* fetchUsersaga() {
+  try {
+    const { data, message, success }: IResponse = yield call(userRequests.get);
+    if (success !== undefined && !success) {
+      throw new Error(message);
+    } else {
+      yield put(
+        userActions.getSuccess({
+          user: data as IUser,
+        })
+      );
+    }
+  } catch (e) {
+    openNotificationError("User", (e as Error).message);
+  }
+}
 function* fetchUsersSaga() {
   try {
     const { data, message, success }: IResponse = yield call(
@@ -37,17 +58,46 @@ function* fetchUsersSaga() {
     openNotificationError("User", (e as Error).message);
   }
 }
-function* fetchUsersaga() {
+function* createUserSaga(action: CreateUserRequest) {
   try {
-    const { data, message, success }: IResponse = yield call(userRequests.get);
+    const { message, success }: IResponse = yield call(
+      userRequests.create,
+      action.payload.user
+    );
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(
-        userActions.getSuccess({
-          user: data as IUser,
-        })
-      );
+      yield put(userActions.createSuccess());
+    }
+  } catch (e) {
+    openNotificationError("User", (e as Error).message);
+  }
+}
+function* updateUserSaga(action: UpdateUserRequest) {
+  try {
+    const { message, success }: IResponse = yield call(
+      userRequests.update,
+      action.payload.user
+    );
+    if (success !== undefined && !success) {
+      throw new Error(message);
+    } else {
+      yield put(userActions.updateSuccess());
+    }
+  } catch (e) {
+    openNotificationError("User", (e as Error).message);
+  }
+}
+function* removeUserSaga(action: RemoveUserRequest) {
+  try {
+    const { message, success }: IResponse = yield call(
+      userRequests.remove,
+      action.payload.id
+    );
+    if (success !== undefined && !success) {
+      throw new Error(message);
+    } else {
+      yield put(userActions.removeSuccess());
     }
   } catch (e) {
     openNotificationError("User", (e as Error).message);
@@ -97,6 +147,9 @@ function* usersaga() {
   yield takeEvery(userConst.FETCH_USER_REQUEST, fetchUsersaga);
   yield takeEvery(userConst.SIGN_IN_REQUEST, signInSaga);
   yield takeEvery(userConst.GET_WITH_TOKEN_REQUEST, getUserWithTokenSaga);
+  yield takeEvery(userConst.CREATE_USER_REQUEST, createUserSaga);
+  yield takeEvery(userConst.UPDATE_USER_REQUEST, updateUserSaga);
+  yield takeEvery(userConst.REMOVE_USER_REQUEST, removeUserSaga);
 }
 // function* budgetItemSaga() {
 //   yield takeEvery(budgetItemConst.fetchList, listBudgetITem);

@@ -4,6 +4,7 @@ import { ILicense } from "../../interfaces/interfaces";
 import { Column } from "devextreme/ui/data_grid";
 import { IFormItem } from "../../components/generic/BaseDataGrid";
 import { checkInOutHeaderTemplate } from "../../components/dataGrid/location/customColumns";
+import { Column as MyColumn } from "../../components/gridTable/interfaces/interfaces";
 
 export const useColumns = () => {
   const companies = useSelector((state: RootState) => state.company.companies);
@@ -51,6 +52,41 @@ export const useColumns = () => {
       filter: options.data ? ["branchId", "=", options.data.branchId] : null,
     };
   };
+
+  const columns: MyColumn[] = [
+    {
+      caption: "Name",
+      dataField: "name",
+      dataType: "string",
+    },
+    {
+      caption: "License Key",
+      dataField: "licenseKey",
+      dataType: "string",
+    },
+    {
+      caption: "Expiration Date",
+      dataField: "expirationDate",
+      dataType: "date",
+    },
+    {
+      caption: "License Email",
+      dataField: "licenseEmail",
+      dataType: "string",
+    },
+    {
+      caption: "Manufacturer",
+      dataField: "manufacturerId",
+      lookup: {
+        dataSource: manufacturers,
+        valueExpr: "id",
+        displayExpr: "name",
+      },
+      dataType: "string",
+    },
+    // ADD TOTAL QUANTITY
+    // ADD AVAILABLE QUANTITY
+  ];
 
   const devColumns: Column<ILicense>[] = [
     {
@@ -207,5 +243,5 @@ export const useColumns = () => {
     { dataField: "notes" },
   ];
 
-  return { devColumns, formItems };
+  return { columns, devColumns, formItems };
 };

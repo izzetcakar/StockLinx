@@ -19,6 +19,12 @@ export interface SignInSuccessPayload {
 export interface SignInRequestPayload {
   user: IUserLoginDto;
 }
+export interface EditUserReuqestPayload {
+  user: IUser;
+}
+export interface RemoveUserRequestPayload {
+  id: string;
+}
 
 //GET
 export interface FetchUsersRequest {
@@ -58,12 +64,37 @@ export type FetchUserFailure = {
 //POST
 export interface CreateUserRequest {
   type: typeof userConst.CREATE_USER_REQUEST;
+  payload: EditUserReuqestPayload;
 }
 export type CreateUsersuccess = {
   type: typeof userConst.CREATE_USER_SUCCESS;
 };
 export type CreateUserFailure = {
   type: typeof userConst.CREATE_USER_FAILURE;
+};
+
+//PUT
+export interface UpdateUserRequest {
+  type: typeof userConst.UPDATE_USER_REQUEST;
+  payload: EditUserReuqestPayload;
+}
+export type UpdateUsersuccess = {
+  type: typeof userConst.UPDATE_USER_SUCCESS;
+};
+export type UpdateUserFailure = {
+  type: typeof userConst.UPDATE_USER_FAILURE;
+};
+
+//REMOVE
+export interface RemoveUserRequest {
+  type: typeof userConst.REMOVE_USER_REQUEST;
+  payload: RemoveUserRequestPayload;
+}
+export type RemoveUsersuccess = {
+  type: typeof userConst.REMOVE_USER_SUCCESS;
+};
+export type RemoveUserFailure = {
+  type: typeof userConst.REMOVE_USER_FAILURE;
 };
 
 export interface SignInRequest {
@@ -76,29 +107,6 @@ export type SignInSuccess = {
 export type SignInFailure = {
   type: typeof userConst.SIGN_IN_FAILURE;
 };
-
-//PUT
-export interface UpdateUserRequest {
-  type: typeof userConst.UPDATE_USER_REQUEST;
-}
-export type UpdateUsersuccess = {
-  type: typeof userConst.UPDATE_USER_SUCCESS;
-};
-export type UpdateUserFailure = {
-  type: typeof userConst.UPDATE_USER_FAILURE;
-};
-
-//REMOVE
-export interface RemoveUserRequest {
-  type: typeof userConst.REMOVE_USER_REQUEST;
-}
-export type RemoveUsersuccess = {
-  type: typeof userConst.REMOVE_USER_SUCCESS;
-};
-export type RemoveUserFailure = {
-  type: typeof userConst.REMOVE_USER_FAILURE;
-};
-
 //CLIENT ACTION TYPES
 export interface LogoutUser {
   type: typeof userConst.LOGOUT_USER;

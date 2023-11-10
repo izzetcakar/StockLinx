@@ -11,6 +11,7 @@ import icon_drop from "../../assets/icon_drop.png";
 import icon_disk from "../../assets/icon_disk.png";
 import icon_harddisk from "../../assets/icon_harddisk.png";
 import icon_settings from "../../assets/icon_setting.png";
+import icon_group from "../../assets/icon_group.png";
 import { useDispatch } from "react-redux";
 import { userActions } from "../../redux/user/actions";
 
@@ -70,6 +71,12 @@ const Sidebar: React.FC = () => {
       icon: icon_harddisk,
       color: "#737373",
       target: "/component",
+    },
+    {
+      title: "User",
+      icon: icon_group,
+      color: "#737373",
+      target: "/user",
     },
     {
       title: "Test",

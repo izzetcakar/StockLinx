@@ -9,6 +9,7 @@ import { Column as MyColumn } from "../../components/gridTable/interfaces/interf
 export const useColumns = () => {
   const companies = useSelector((state: RootState) => state.company.companies);
   const branches = useSelector((state: RootState) => state.branch.branches);
+  const locations = useSelector((state: RootState) => state.location.locations);
   const categories = useSelector(
     (state: RootState) => state.category.categories
   );
@@ -87,10 +88,22 @@ export const useColumns = () => {
       dataType: "string",
     },
     {
-      caption: "Quantity",
+      caption: "Location",
+      dataField: "locationId",
+      lookup: {
+        dataSource: locations,
+        valueExpr: "id",
+        displayExpr: "name",
+      },
+      dataType: "string",
+    },
+    {
+      caption: "Total",
       dataField: "quantity",
       dataType: "number",
     },
+    // ADD TOTAL QUANTITY
+    // ADD AVAILABLE QUANTITY
     {
       dataField: "purchaseCost",
       caption: "Purchase Cost",

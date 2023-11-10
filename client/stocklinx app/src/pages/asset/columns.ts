@@ -4,10 +4,12 @@ import { Column } from "devextreme/ui/data_grid";
 import { IAsset } from "../../interfaces/interfaces";
 import { IFormItem } from "../../components/generic/BaseDataGrid";
 import { checkInOutHeaderTemplate } from "../../components/dataGrid/location/customColumns";
+import { Column as MyColumn } from "../../components/gridTable/interfaces/interfaces";
 
 export const useColumns = () => {
   const companies = useSelector((state: RootState) => state.company.companies);
   const branches = useSelector((state: RootState) => state.branch.branches);
+  const locations = useSelector((state: RootState) => state.location.locations);
   const categories = useSelector(
     (state: RootState) => state.category.categories
   );
@@ -55,6 +57,70 @@ export const useColumns = () => {
       filter: options.data ? ["branchId", "=", options.data.branchId] : null,
     };
   };
+
+  const columns: MyColumn[] = [
+    {
+      dataField: "name",
+      caption: "Name",
+      dataType: "string",
+    },
+    {
+      dataField: "tagNo",
+      caption: "Asset Tag",
+      dataType: "string",
+    },
+    {
+      dataField: "serialNo",
+      caption: "Serial",
+      dataType: "string",
+    },
+    {
+      dataField: "modelId",
+      caption: "Model",
+      lookup: {
+        dataSource: models,
+        valueExpr: "id",
+        displayExpr: "name",
+      },
+      dataType: "string",
+    },
+    {
+      dataField: "categoryId",
+      caption: "Category",
+      lookup: {
+        dataSource: categories,
+        valueExpr: "id",
+        displayExpr: "name",
+      },
+      dataType: "string",
+    },
+    {
+      dataField: "productStatusId",
+      caption: "Status",
+      lookup: {
+        dataSource: productStatuses,
+        valueExpr: "id",
+        displayExpr: "name",
+      },
+      dataType: "string",
+    },
+    // ADD ASSIGNED USER
+    {
+      dataField: "locationId",
+      caption: "Location",
+      lookup: {
+        dataSource: locations,
+        valueExpr: "id",
+        displayExpr: "name",
+      },
+      dataType: "string",
+    },
+    {
+      dataField: "purchaseCost",
+      caption: "Purchase Cost",
+      dataType: "number",
+    },
+  ];
 
   const devColumns: Column<IAsset>[] = [
     {
@@ -189,5 +255,5 @@ export const useColumns = () => {
     { dataField: "notes" },
   ];
 
-  return { devColumns, formItems };
+  return { columns, devColumns, formItems };
 };

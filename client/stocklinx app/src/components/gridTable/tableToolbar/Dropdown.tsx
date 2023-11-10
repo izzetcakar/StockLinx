@@ -6,7 +6,7 @@ import { IconChevronDown } from "@tabler/icons-react";
 interface DropDownProps {
   columns: Column[];
   visibleColumns: VisibleColumn[];
-  onChange: (columnCaption: string) => void;
+  onChange: (caption: string) => void;
 }
 
 const DropDown: React.FC<DropDownProps> = ({
