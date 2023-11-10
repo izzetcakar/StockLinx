@@ -8,4 +8,5 @@ export const openManufacturerModal = (manufacturer?: IManufacturer) =>
     title: manufacturer ? "Update Manufacturer" : "Create Manufacturer",
     children: <ManufacturerForm manufacturer={manufacturer} />,
     xOffset: "auto",
+    size: "auto",
   });

@@ -8,4 +8,5 @@ export const openAccessoryModal = (accessory?: IAccessory) =>
     title: accessory ? "Update Accessory" : "Create Accessory",
     children: <AccessoryForm accessory={accessory} />,
     xOffset: "auto",
+    size: "auto",
   });

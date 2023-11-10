@@ -8,4 +8,5 @@ export const openBranchModal = (branch?: IBranch) =>
     title: branch ? "Edit Branch" : "Create Branch",
     children: <BranchForm branch={branch} />,
     xOffset: "auto",
+    size: "auto",
   });

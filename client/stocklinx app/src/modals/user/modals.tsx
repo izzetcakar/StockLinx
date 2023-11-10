@@ -8,4 +8,5 @@ export const openUserModal = (user?: IUser) =>
     title: user ? "Update User" : "Create User",
     children: <UserForm user={user} />,
     xOffset: "auto",
+    size: "auto",
   });
