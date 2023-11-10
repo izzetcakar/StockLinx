@@ -24,12 +24,12 @@
   font-family: "Helvetica Neue", "Segoe UI", helvetica, verdana, sans-serif;
 
   // empty-cells: show;
-  .table-toolbar {
+  .table__toolbar {
     padding: 8px;
     border-bottom: 1px solid #ced4da;
     max-width: 100%;
   }
-  .table-toolbar:hover {
+  .table__toolbar:hover {
     background-color: transparent;
   }
   .table-footer {
