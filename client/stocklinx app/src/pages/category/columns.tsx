@@ -1,15 +1,15 @@
 import { Column } from "devextreme/ui/data_grid";
-import { ICategory } from "../../interfaces/interfaces";
+import { CategoryType, ICategory } from "../../interfaces/interfaces";
 import { IFormItem } from "../../components/generic/BaseDataGrid";
 import { Column as MyColumn } from "../../components/gridTable/interfaces/interfaces";
 
 export const useColumns = () => {
   const productTypes = [
-    { id: 0, name: "Asset" },
-    { id: 2, name: "License" },
-    { id: 3, name: "Accessory" },
-    { id: 5, name: "Consumable" },
-    { id: 4, name: "Component" },
+    { id: CategoryType.ASSET, name: "Asset" },
+    { id: CategoryType.LICENSE, name: "License" },
+    { id: CategoryType.ACCESSORY, name: "Accessory" },
+    { id: CategoryType.CONSUMABLE, name: "Consumable" },
+    { id: CategoryType.COMPONENT, name: "Component" },
   ];
 
   const columns: MyColumn[] = [

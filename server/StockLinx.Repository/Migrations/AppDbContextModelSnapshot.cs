@@ -796,7 +796,7 @@ namespace StockLinx.Repository.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("BranchId")
+                    b.Property<Guid?>("BranchId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
@@ -1269,13 +1269,9 @@ namespace StockLinx.Repository.Migrations
 
             modelBuilder.Entity("StockLinx.Core.Entities.ProductStatus", b =>
                 {
-                    b.HasOne("StockLinx.Core.Entities.Branch", "Branch")
+                    b.HasOne("StockLinx.Core.Entities.Branch", null)
                         .WithMany("ProductStatuses")
-                        .HasForeignKey("BranchId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Branch");
+                        .HasForeignKey("BranchId");
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.Supplier", b =>
