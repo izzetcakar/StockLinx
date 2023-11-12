@@ -25,6 +25,9 @@ interface GridtableProps {
   onRowUpdate?: (row: object) => void;
   onRowRemove?: (id: string) => void;
   excelColumns?: ExcelColumn[];
+  enableExcelActions?: boolean;
+  enableEditActions?: boolean;
+  enableSelectActions?: boolean;
 }
 
 const Gridtable: React.FC<GridtableProps> = ({
@@ -37,6 +40,9 @@ const Gridtable: React.FC<GridtableProps> = ({
   onRowRemove = (id: string) => console.log(id),
   itemKey,
   excelColumns,
+  enableExcelActions = true,
+  enableEditActions = true,
+  enableSelectActions = true,
 }) => {
   const [pageNumber, setPageNumber] = useState<number>(0);
   const [visibleColumns, setVisibleColumns] = useState<VisibleColumn[]>([]);
@@ -165,26 +171,29 @@ const Gridtable: React.FC<GridtableProps> = ({
             <TableToolbar
               data={data}
               columns={columns}
+              excelColumns={excelColumns}
               visibleColumns={visibleColumns}
+              enableExcelActions={enableExcelActions}
               addVisibleColumn={addVisibleColumn}
               onRowInsert={onRowInsert}
               refreshData={refreshData}
-              excelColumns={excelColumns}
             />
           </td>
         </tr>
       </thead>
       <tbody>
         <tr className="gridtable__column__container">
-          <td className="gridtable__checkbox__cell">
-            <Checkbox
-              checked={selectedKeys.length === data.length}
-              onChange={() => handleselectAll()}
-              indeterminate={selectedKeys.length > 0}
-              radius={2}
-              size={18}
-            />
-          </td>
+          {enableSelectActions ? (
+            <td className="gridtable__checkbox__cell">
+              <Checkbox
+                checked={selectedKeys.length === data.length}
+                onChange={() => handleselectAll()}
+                indeterminate={selectedKeys.length > 0}
+                radius={2}
+                size={18}
+              />
+            </td>
+          ) : null}
           {visibleColumns.map((column) => (
             <td
               key={"column__header__" + column.caption}
@@ -193,10 +202,9 @@ const Gridtable: React.FC<GridtableProps> = ({
               {column.renderHeader ? column.renderHeader() : column.caption}
             </td>
           ))}
-          <td></td>
         </tr>
         <tr className="gridtable__filter__container">
-          <td></td>
+          {enableSelectActions ? <td></td> : null}
           {filters.map((filter: Filter) => (
             <td key={filter.field} className="gridtable__filter">
               {getFilterInput(filter)}
@@ -209,14 +217,16 @@ const Gridtable: React.FC<GridtableProps> = ({
               key={"gridtable__body__row__" + rowIndex}
               className={getSelectedRowClass(obj[keyfield])}
             >
-              <td className="gridtable__checkbox__cell">
-                <Checkbox
-                  checked={selectedKeys.includes(obj[keyfield])}
-                  onChange={() => handleSelectRow(obj[keyfield])}
-                  radius={2}
-                  size={18}
-                />
-              </td>
+              {enableSelectActions ? (
+                <td className="gridtable__checkbox__cell">
+                  <Checkbox
+                    checked={selectedKeys.includes(obj[keyfield])}
+                    onChange={() => handleSelectRow(obj[keyfield])}
+                    radius={2}
+                    size={18}
+                  />
+                </td>
+              ) : null}
               {columns.map((column, index) =>
                 visibleColumns
                   .map((x) => x.caption)
@@ -229,14 +239,16 @@ const Gridtable: React.FC<GridtableProps> = ({
                   </td>
                 ) : null
               )}
-              <td className="gridtable__edit">
-                <EditComponent
-                  obj={obj}
-                  id={obj[keyfield]}
-                  onRowUpdate={onRowUpdate}
-                  onRowRemove={onRowRemove}
-                />
-              </td>
+              {enableEditActions ? (
+                <td className="gridtable__edit">
+                  <EditComponent
+                    obj={obj}
+                    id={obj[keyfield]}
+                    onRowUpdate={onRowUpdate}
+                    onRowRemove={onRowRemove}
+                  />
+                </td>
+              ) : null}
             </tr>
           ))
         ) : (

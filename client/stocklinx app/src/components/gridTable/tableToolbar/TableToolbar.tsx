@@ -15,7 +15,7 @@ import { utils, read } from "xlsx";
 import ExcelJS from "exceljs";
 import { Button, FileInput } from "@mantine/core";
 import { IconDownload } from "@tabler/icons-react";
-import { openCategoryExcelModal } from "../../../modals/category/modals";
+import { openExcelModal } from "../../../modals/category/modals";
 import uuid4 from "uuid4";
 import "./tableToolbar.scss";
 interface TableToolbarProps {
@@ -23,6 +23,7 @@ interface TableToolbarProps {
   columns: Column[];
   excelColumns?: ExcelColumn[];
   visibleColumns: VisibleColumn[];
+  enableExcelActions: boolean;
   addVisibleColumn: (column: string) => void;
   onRowInsert?: () => void;
   refreshData?: () => Promise<void> | void;
@@ -32,6 +33,7 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
   columns,
   visibleColumns,
   excelColumns,
+  enableExcelActions,
   addVisibleColumn,
   onRowInsert,
   refreshData,
@@ -131,9 +133,7 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
       const result = await readFile();
       // setErrors(result.errors);
       // setImportedData(result.importedData);
-      console.log("data", result.importedData);
-      console.log("errors", result.errors);
-      openCategoryExcelModal(result.importedData);
+      openExcelModal(result.importedData, columns);
     }
   };
   const handleError = (
@@ -235,27 +235,29 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
           iconSize={16}
         />
       ) : null}
-      <FileInput
-        accept=".xlsx"
-        placeholder="Import Excel"
-        onChange={handleFileInputChange}
-        clearable
-      />
-      <div className="table__toolbar__last">
-        <Button
-          px="xs"
-          rightIcon={<IconDownload size={14} />}
-          onClick={() => exportToExcel(true)}
-          variant="default"
-        >
-          Base Excel Sheet
-        </Button>
-        <ActionIconBtn
-          submitFunc={() => exportToExcel(false)}
-          icon={icon_excel}
-          iconSize={16}
-        />
-      </div>
+      {enableExcelActions ? (
+        <div className="table__toolbar__last">
+          <FileInput
+            accept=".xlsx"
+            placeholder="Import Excel"
+            onChange={handleFileInputChange}
+            clearable
+          />
+          <Button
+            px="xs"
+            rightIcon={<IconDownload size={14} />}
+            onClick={() => exportToExcel(true)}
+            variant="default"
+          >
+            Base Excel Sheet
+          </Button>
+          <ActionIconBtn
+            submitFunc={() => exportToExcel(false)}
+            icon={icon_excel}
+            iconSize={16}
+          />
+        </div>
+      ) : null}
     </div>
   );
 };

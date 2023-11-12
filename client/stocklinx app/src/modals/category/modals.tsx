@@ -1,7 +1,8 @@
 import CategoryForm from "../../forms/category/CategoryForm";
 import { ICategory } from "../../interfaces/interfaces";
 import { modals } from "@mantine/modals";
-import CategoryExcel from "../../pages/category/CategoryExcel";
+import ExcelTable from "../../pages/category/ExcelTable";
+import { Column } from "../../components/gridTable/interfaces/interfaces";
 
 export const openCategoryModal = (category?: ICategory) =>
   modals.open({
@@ -11,10 +12,10 @@ export const openCategoryModal = (category?: ICategory) =>
     xOffset: "auto",
     size: "auto",
   });
-export const openCategoryExcelModal = (categories: ICategory[]) =>
+export const openExcelModal = (data: object[], columns: Column[]) =>
   modals.open({
-    modalId: "category-modal",
-    children: <CategoryExcel categories={categories} />,
+    modalId: "excel__modal",
+    children: <ExcelTable data={data} columns={columns} />,
     xOffset: "auto",
-    size: "auto",
+    style: { maxWidth: "90%" },
   });
