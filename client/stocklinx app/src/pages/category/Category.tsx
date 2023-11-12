@@ -68,6 +68,7 @@ const Category = () => {
         refreshData={refreshData}
         onRowUpdate={(category) => openCategoryModal(category as ICategory)}
         onRowInsert={() => openCategoryModal()}
+        excelColumns={useColumns().excelColumns}
       />
     </>
   );

@@ -34,3 +34,21 @@ export interface Filter {
   value: string | number | boolean | null;
   isApplied: boolean;
 }
+export interface ExcelColumn {
+  dataField: string;
+  validate?: (value: any) => boolean;
+  errorText?: string;
+}
+export interface ImportedExcelData {
+  id: string;
+  datafield: string;
+  value: any;
+}
+export interface ColumnError {
+  column: string;
+  error: string;
+}
+export interface RowError {
+  row: number;
+  errors: ColumnError[];
+}

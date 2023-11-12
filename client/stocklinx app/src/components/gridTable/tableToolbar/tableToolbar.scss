@@ -8,6 +8,10 @@
   justify-content: flex-start;
 
   .table__toolbar__last {
+    display: flex;
     margin-left: auto;
+    align-items: center;
+    gap: 10px;
+    width: fit-content;
   }
 }

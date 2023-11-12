@@ -1,7 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
 import EditComponent from "./edit/EditComponent";
 import TableToolbar from "./tableToolbar/TableToolbar";
-import { Column, Filter, Lookup, VisibleColumn } from "./interfaces/interfaces";
+import {
+  Column,
+  ExcelColumn,
+  Filter,
+  Lookup,
+  VisibleColumn,
+} from "./interfaces/interfaces";
 import PageNumber from "./tableFooter/PageNumber";
 import { Checkbox } from "@mantine/core";
 import "./gridtable.scss";
@@ -18,6 +24,7 @@ interface GridtableProps {
   onRowInsert?: () => void;
   onRowUpdate?: (row: object) => void;
   onRowRemove?: (id: string) => void;
+  excelColumns?: ExcelColumn[];
 }
 
 const Gridtable: React.FC<GridtableProps> = ({
@@ -29,6 +36,7 @@ const Gridtable: React.FC<GridtableProps> = ({
   onRowUpdate = (row: object) => console.log(row),
   onRowRemove = (id: string) => console.log(id),
   itemKey,
+  excelColumns,
 }) => {
   const [pageNumber, setPageNumber] = useState<number>(0);
   const [visibleColumns, setVisibleColumns] = useState<VisibleColumn[]>([]);
@@ -155,11 +163,13 @@ const Gridtable: React.FC<GridtableProps> = ({
         <tr>
           <td colSpan={visibleColumns.length + 1}>
             <TableToolbar
+              data={data}
               columns={columns}
               visibleColumns={visibleColumns}
               addVisibleColumn={addVisibleColumn}
               onRowInsert={onRowInsert}
               refreshData={refreshData}
+              excelColumns={excelColumns}
             />
           </td>
         </tr>
