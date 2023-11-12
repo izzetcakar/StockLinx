@@ -69,7 +69,6 @@ export const useFilter = (columns: Column[], data: object[]) => {
         );
     }
   };
-
   const filterLookupData = (field: string) => {
     const column = columns.find((column) => column.dataField === field);
     if (!column || !column.lookup) return [];
