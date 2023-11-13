@@ -131,6 +131,7 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
       };
 
       const result = await readFile();
+      console.log(result.errors);
       // setErrors(result.errors);
       // setImportedData(result.importedData);
       openExcelModal(result.importedData, columns);

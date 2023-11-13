@@ -7,7 +7,7 @@ import textInputClasses from "./textInput.module.scss";
 
 export const useFilter = (columns: Column[], data: object[]) => {
   const [filters, setFilters] = useState<Filter[]>([]);
-  
+
   const getFilterType = (field: string): FilterType => {
     const column = columns.find((column) => column.dataField === field);
     if (!column) return FilterType.TEXT;

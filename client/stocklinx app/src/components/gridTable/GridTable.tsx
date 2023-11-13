@@ -186,9 +186,12 @@ const Gridtable: React.FC<GridtableProps> = ({
           {enableSelectActions ? (
             <td className="gridtable__checkbox__cell">
               <Checkbox
-                checked={selectedKeys.length === data.length}
+                checked={selectedKeys.length === filterData().length}
                 onChange={() => handleselectAll()}
-                indeterminate={selectedKeys.length > 0}
+                indeterminate={
+                  selectedKeys.length > 0 &&
+                  selectedKeys.length < filterData().length
+                }
                 radius={2}
                 size={18}
               />
