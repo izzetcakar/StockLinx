@@ -79,11 +79,11 @@ const ProductStatusForm: React.FC<ProductStatusFormProps> = ({
         />
       </Flex>
       <Group position="right">
-        <Button type="submit" color="dark">
-          Submit
-        </Button>
         <Button onClick={() => openNextModel()} color="dark">
           Next Modal
+        </Button>
+        <Button type="submit" color="dark">
+          Submit
         </Button>
       </Group>
     </form>

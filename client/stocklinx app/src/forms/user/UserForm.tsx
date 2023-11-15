@@ -220,11 +220,11 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
           value={form.values.notes || ""}
         />
         <Group position="right" mt="md">
-          <Button type="submit" color="dark">
-            Submit
-          </Button>
           <Button onClick={() => openNextUser()} color="dark">
             Next Modal
+          </Button>
+          <Button type="submit" color="dark">
+            Submit
           </Button>
         </Group>
       </Flex>

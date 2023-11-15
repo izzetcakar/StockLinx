@@ -123,11 +123,11 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({ department }) => {
           value={form.values.notes || ""}
         />
         <Group position="right" mt="md">
-          <Button type="submit" color="dark">
-            Submit
-          </Button>
           <Button onClick={() => openNextModel()} color="dark">
             Next Modal
+          </Button>
+          <Button type="submit" color="dark">
+            Submit
           </Button>
         </Group>
       </Flex>

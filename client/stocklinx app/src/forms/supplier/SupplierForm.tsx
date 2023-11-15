@@ -125,11 +125,11 @@ const SupplierForm: React.FC<SupplierFormProps> = ({ supplier }) => {
           value={form.values.notes || ""}
         />
         <Group position="right" mt="md">
-          <Button type="submit" color="dark">
-            Submit
-          </Button>
           <Button onClick={() => openNextSupplier()} color="dark">
             Next Modal
+          </Button>
+          <Button type="submit" color="dark">
+            Submit
           </Button>
         </Group>
       </Flex>

@@ -69,11 +69,11 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ company }) => {
           {...form.getInputProps("email")}
         />
         <Group position="right" mt="md">
-          <Button type="submit" color="dark">
-            Submit
-          </Button>
           <Button onClick={() => openNextModel()} color="dark">
             Next Modal
+          </Button>
+          <Button type="submit" color="dark">
+            Submit
           </Button>
         </Group>
       </Flex>

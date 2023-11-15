@@ -1,5 +1,5 @@
 import React from "react";
-import { TextInput, Flex, Textarea } from "@mantine/core";
+import { TextInput, Flex, Textarea, Group, Button } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { ILocation } from "../../interfaces/interfaces";
 import { locationActions } from "../../redux/location/actions";
@@ -102,6 +102,11 @@ const LocationForm: React.FC<LocationFormProps> = ({ location }) => {
           {...form.getInputProps("notes")}
           value={form.values.notes || ""}
         />
+        <Group position="right" mt="md">
+          <Button type="submit" color="dark">
+            Submit
+          </Button>
+        </Group>
       </Flex>
     </form>
   );
