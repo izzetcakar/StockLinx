@@ -1,4 +1,3 @@
-import { closeModal } from "@mantine/modals";
 import { accessoryConst } from "./constant";
 import { AccessoryActions, AccessoryState } from "./type";
 
@@ -47,7 +46,6 @@ export default (state = initialState, action: AccessoryActions) => {
         ...state,
       };
     case accessoryConst.CREATE_ACCESSORY_SUCCESS:
-      closeModal("accessory-modal");
       return {
         ...state,
       };
@@ -60,7 +58,6 @@ export default (state = initialState, action: AccessoryActions) => {
         ...state,
       };
     case accessoryConst.UPDATE_ACCESSORY_SUCCESS:
-      closeModal("accessory-modal");
       return {
         ...state,
       };
