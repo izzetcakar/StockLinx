@@ -1,17 +1,15 @@
 import React, { useState, useEffect, useCallback } from "react";
 import EditComponent from "./edit/EditComponent";
 import TableToolbar from "./tableToolbar/TableToolbar";
-import {
-  Column,
-  ExcelColumn,
-  Filter,
-  Lookup,
-  VisibleColumn,
-} from "./interfaces/interfaces";
+import { Column, ExcelColumn, Filter } from "./interfaces/interfaces";
 import PageNumber from "./tableFooter/PageNumber";
 import { Checkbox } from "@mantine/core";
 import "./gridtable.scss";
 import { useFilter } from "./functions/filter";
+import { useSelectRow } from "./functions/selectRow";
+import { useVisibleColumns } from "./functions/visibleColumns";
+import { useCell } from "./functions/cell";
+import { useSelectCell } from "./functions/selectCell";
 
 interface GridtableProps {
   itemKey: string;
@@ -45,29 +43,21 @@ const Gridtable: React.FC<GridtableProps> = ({
   enableSelectActions = true,
 }) => {
   const [pageNumber, setPageNumber] = useState<number>(0);
-  const [visibleColumns, setVisibleColumns] = useState<VisibleColumn[]>([]);
-  const [selectedKeys, setSelectedKeys] = useState<(string | number)[]>([]);
   const [keyfield, setKeyfield] = useState<keyof object>(
     itemKey as keyof object
   );
+  const { visibleColumns, handleVisibleColumns, addVisibleColumn } =
+    useVisibleColumns(columns);
+  const {
+    selectedKeys,
+    handleSelectRow,
+    handleselectAll,
+    getSelectedRowClass,
+    clearSelectedKeys,
+  } = useSelectRow(data, keyfield);
   const { filters, getFilterInput, applyFilterToData, handleFilterAll } =
-    useFilter(columns, data);
-
-  useEffect(() => {
-    setKeyfield(itemKey as keyof object);
-  }, [itemKey]);
-  useEffect(() => {
-    handleVisibleColumns();
-    handleFilterAll();
-  }, [data]);
-
-  const addVisibleColumn = (columnCaption: string): void => {
-    setVisibleColumns((prev) =>
-      prev.map((x) => x.caption).includes(columnCaption)
-        ? prev.filter((item) => item.caption !== columnCaption)
-        : [...prev, columns.find((x) => x.caption === columnCaption)!]
-    );
-  };
+    useFilter(columns, data, selectedKeys, clearSelectedKeys);
+  const { renderColumnValue } = useCell();
   const filterData = useCallback(() => {
     const filteredData = applyFilterToData(data);
     if (pageNumber === 0) {
@@ -78,67 +68,21 @@ const Gridtable: React.FC<GridtableProps> = ({
       (pageNumber + 1) * itemPerPage
     );
   }, [data, itemPerPage, pageNumber, filters]);
+  const {
+    handleCellMouseDown,
+    handleCellMouseUp,
+    handleCellMouseEnter,
+    getSelectedClassName,
+  } = useSelectCell(filterData(), columns);
 
-  const getObjectByKeyfield = useCallback(
-    (id: string | number): object => {
-      return data.find((item) => item[keyfield] === id) as object;
-    },
-    [data, keyfield]
-  );
-  const getLookupValue = (value: any, lookup: Lookup) => {
-    const lookupKey = lookup.valueExpr;
-    const lookupDisplay = lookup.displayExpr;
-    const item = lookup.dataSource.find(
-      (item: { [key: string]: any }) => item[lookupKey] === value
-    );
+  useEffect(() => {
+    setKeyfield(itemKey as keyof object);
+  }, [itemKey]);
+  useEffect(() => {
+    handleVisibleColumns();
+    handleFilterAll();
+  }, [data]);
 
-    return item
-      ? ((item as { [key: string]: any })[lookupDisplay] as string)
-      : " ";
-  };
-  const renderColumnValue = (id: string | number, column: Column) => {
-    const obj = getObjectByKeyfield(id) as {
-      [key: string | number]: string | number | boolean | null;
-    };
-    const value = obj[column.dataField];
-
-    if (column.renderComponent) {
-      return column.renderComponent(obj);
-    }
-    if (column.lookup) {
-      return getLookupValue(value, column.lookup);
-    }
-    if (value === null || value === undefined) {
-      return "";
-    }
-    if (typeof value === "boolean") {
-      const name = value ? "check" : "x";
-      const color = value ? "#63bd4f" : "#ed6b6b";
-      return (
-        <i
-          className={`bx bx-${name}`}
-          style={{ fontSize: "1.5rem", color: color }}
-        />
-      );
-    }
-    return value;
-  };
-  const handleVisibleColumns = useCallback(() => {
-    setVisibleColumns(
-      columns.map((item) => {
-        return {
-          caption: item.caption,
-          dataField: item.dataField,
-          renderHeader: item.renderHeader,
-        };
-      })
-    );
-  }, [columns]);
-  const handleSelectRow = (id: string | number) => {
-    setSelectedKeys((prev) =>
-      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
-    );
-  };
   const handlePageNumber = (forward: boolean) => {
     if (forward) {
       if (pageNumber + 1 < data.length / itemPerPage) {
@@ -148,18 +92,6 @@ const Gridtable: React.FC<GridtableProps> = ({
       if (pageNumber - 1 >= 0) {
         setPageNumber((prev) => prev - 1);
       }
-    }
-  };
-  const getSelectedRowClass = (id: string | number): string => {
-    return selectedKeys.includes(id)
-      ? "gridtable__row__selected"
-      : "gridtable__row__container";
-  };
-  const handleselectAll = () => {
-    if (selectedKeys.length === data.length) {
-      setSelectedKeys([]);
-    } else {
-      setSelectedKeys(data.map((item) => item[keyfield]));
     }
   };
 
@@ -186,7 +118,10 @@ const Gridtable: React.FC<GridtableProps> = ({
           {enableSelectActions ? (
             <td className="gridtable__checkbox__cell">
               <Checkbox
-                checked={selectedKeys.length === filterData().length}
+                checked={
+                  selectedKeys.length === filterData().length &&
+                  filterData().length > 0
+                }
                 onChange={() => handleselectAll()}
                 indeterminate={
                   selectedKeys.length > 0 &&
@@ -230,15 +165,32 @@ const Gridtable: React.FC<GridtableProps> = ({
                   />
                 </td>
               ) : null}
-              {columns.map((column, index) =>
+              {columns.map((column, columnIndex) =>
                 visibleColumns
                   .map((x) => x.caption)
                   .includes(column.caption) ? (
                   <td
-                    key={`gridtable__row__cell__${index}__${column.dataField}`}
-                    className="gridtable__row__cell"
+                    key={`gridtable__row__cell__${columnIndex}__${column.dataField}`}
+                    className={getSelectedClassName(rowIndex, columnIndex)}
+                    onMouseDown={() =>
+                      handleCellMouseDown(
+                        rowIndex,
+                        columnIndex,
+                        column,
+                        (obj as { [key: string]: any })[column.dataField]
+                      )
+                    }
+                    onMouseEnter={() =>
+                      handleCellMouseEnter(
+                        rowIndex,
+                        columnIndex,
+                        column,
+                        (obj as { [key: string]: any })[column.dataField]
+                      )
+                    }
+                    onMouseUp={handleCellMouseUp}
                   >
-                    {renderColumnValue(obj[keyfield], column)}
+                    {renderColumnValue(obj, column)}
                   </td>
                 ) : null
               )}
