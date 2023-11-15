@@ -52,3 +52,9 @@ export interface RowError {
   row: number;
   errors: ColumnError[];
 }
+export interface SelectedCell {
+  rowIndex: number;
+  columnIndex: number;
+  column: string;
+  value: any;
+}
