@@ -9,8 +9,8 @@ export const useSelectRow = (data: object[], keyfield: keyof object) => {
   };
   const getSelectedRowClass = (id: string | number): string => {
     return selectedKeys.includes(id)
-      ? "gridtable__row__selected"
-      : "gridtable__row__container";
+      ? "gridtable__row selected"
+      : "gridtable__row";
   };
   const handleselectAll = () => {
     if (selectedKeys.length === data.length) {

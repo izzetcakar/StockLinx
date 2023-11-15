@@ -43,9 +43,7 @@ const Gridtable: React.FC<GridtableProps> = ({
   enableSelectActions = true,
 }) => {
   const [pageNumber, setPageNumber] = useState<number>(0);
-  const [keyfield, setKeyfield] = useState<keyof object>(
-    itemKey as keyof object
-  );
+  const keyfield = itemKey as keyof object;
   const { visibleColumns, handleVisibleColumns, addVisibleColumn } =
     useVisibleColumns(columns);
   const {
@@ -58,6 +56,7 @@ const Gridtable: React.FC<GridtableProps> = ({
   const { filters, getFilterInput, applyFilterToData, handleFilterAll } =
     useFilter(columns, data, selectedKeys, clearSelectedKeys);
   const { renderColumnValue } = useCell();
+
   const filterData = useCallback(() => {
     const filteredData = applyFilterToData(data);
     if (pageNumber === 0) {
@@ -68,16 +67,15 @@ const Gridtable: React.FC<GridtableProps> = ({
       (pageNumber + 1) * itemPerPage
     );
   }, [data, itemPerPage, pageNumber, filters]);
+
   const {
     handleCellMouseDown,
     handleCellMouseUp,
     handleCellMouseEnter,
     getSelectedClassName,
+    isDrawing,
   } = useSelectCell(filterData(), columns);
 
-  useEffect(() => {
-    setKeyfield(itemKey as keyof object);
-  }, [itemKey]);
   useEffect(() => {
     handleVisibleColumns();
     handleFilterAll();
@@ -113,19 +111,19 @@ const Gridtable: React.FC<GridtableProps> = ({
           </td>
         </tr>
       </thead>
-      <tbody>
+      <tbody className="gridtable__body">
         <tr className="gridtable__column__container">
           {enableSelectActions ? (
             <td className="gridtable__checkbox__cell">
               <Checkbox
                 checked={
-                  selectedKeys.length === filterData().length &&
-                  filterData().length > 0
+                  selectedKeys.length === applyFilterToData(data).length &&
+                  applyFilterToData(data).length > 0
                 }
                 onChange={() => handleselectAll()}
                 indeterminate={
                   selectedKeys.length > 0 &&
-                  selectedKeys.length < filterData().length
+                  selectedKeys.length < applyFilterToData(data).length
                 }
                 radius={2}
                 size={18}
@@ -153,7 +151,11 @@ const Gridtable: React.FC<GridtableProps> = ({
           filterData().map((obj, rowIndex) => (
             <tr
               key={"gridtable__body__row__" + rowIndex}
-              className={getSelectedRowClass(obj[keyfield])}
+              className={
+                isDrawing
+                  ? ""
+                  : getSelectedRowClass(obj[keyfield])
+              }
             >
               {enableSelectActions ? (
                 <td className="gridtable__checkbox__cell">

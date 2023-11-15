@@ -47,7 +47,6 @@ export const useSelectCell = (data: object[], columns: Column[]) => {
     if (!isDrawing) {
       setSelectedCells([]);
 
-      // Toggle the selection state of the clicked cell
       const isSelected = selectedCells.some(
         (cell) =>
           cell.rowIndex === rowIndex &&
@@ -99,7 +98,6 @@ export const useSelectCell = (data: object[], columns: Column[]) => {
 
       const cellsInRectangle = [];
 
-      console.log(startRow, endRow, startColumn, endColumn);
       for (let i = startRow; i <= endRow; i++) {
         for (let j = startColumn; j <= endColumn; j++) {
           const newValue = (data[i] as { [key: string]: any })[
@@ -151,5 +149,6 @@ export const useSelectCell = (data: object[], columns: Column[]) => {
     handleCellMouseUp,
     handleCellClick,
     getSelectedClassName,
+    isDrawing,
   };
 };
