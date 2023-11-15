@@ -5,7 +5,10 @@ import { assetConst } from "./constant";
 import { FetchAssetRequest, UpdateAssetRequest } from "./type";
 import { assetRequests } from "./requests";
 import { genericActions } from "../generic/actions";
-import { openNotificationError } from "../../components/notification/Notification";
+import {
+  openNotificationError,
+  openNotificationSuccess,
+} from "../../notification/Notification";
 
 interface IResponse {
   data: IAsset[] | IAsset | null;
@@ -63,6 +66,7 @@ function* createAssetSaga(action: UpdateAssetRequest) {
       throw new Error(message);
     } else {
       yield put(assetActions.createSuccess());
+      openNotificationSuccess("Asset Created");
     }
   } catch (e) {
     openNotificationError("Asset", (e as Error).message);
@@ -78,6 +82,7 @@ function* updateAssetSaga(action: UpdateAssetRequest) {
       throw new Error(message);
     } else {
       yield put(assetActions.updateSuccess());
+      openNotificationSuccess("Asset Updated");
     }
   } catch (e) {
     openNotificationError("Asset", (e as Error).message);
@@ -93,6 +98,7 @@ function* removeAssetSaga(action: FetchAssetRequest) {
       throw new Error(message);
     } else {
       yield put(assetActions.removeSuccess());
+      openNotificationSuccess("Asset Removed");
     }
   } catch (e) {
     openNotificationError("Asset", (e as Error).message);

@@ -5,7 +5,10 @@ import { companyConst } from "./constant";
 import { FetchCompanyRequest, UpdateCompanyRequest } from "./type";
 import { companyRequests } from "./requests";
 import { genericActions } from "../generic/actions";
-import { openNotificationError } from "../../components/notification/Notification";
+import {
+  openNotificationError,
+  openNotificationSuccess,
+} from "../../notification/Notification";
 
 interface IResponse {
   data: ICompany[] | ICompany | null;
@@ -63,6 +66,7 @@ function* createCompanySaga(action: UpdateCompanyRequest) {
       throw new Error(message);
     } else {
       yield put(companyActions.createSuccess());
+      openNotificationSuccess("Company Created");
     }
   } catch (e) {
     openNotificationError("Company", (e as Error).message);
@@ -78,6 +82,7 @@ function* updateCompanySaga(action: UpdateCompanyRequest) {
       throw new Error(message);
     } else {
       yield put(companyActions.updateSuccess());
+      openNotificationSuccess("Company Updated");
     }
   } catch (e) {
     openNotificationError("Company", (e as Error).message);
@@ -93,6 +98,7 @@ function* removeCompanySaga(action: FetchCompanyRequest) {
       throw new Error(message);
     } else {
       yield put(companyActions.removeSuccess());
+      openNotificationSuccess("Company Removed");
     }
   } catch (e) {
     openNotificationError("Company", (e as Error).message);

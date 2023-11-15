@@ -5,7 +5,10 @@ import { branchConst } from "./constant";
 import { FetchBranchRequest, UpdateBranchRequest } from "./type";
 import { branchRequests } from "./requests";
 import { genericActions } from "../generic/actions";
-import { openNotificationError } from "../../components/notification/Notification";
+import {
+  openNotificationError,
+  openNotificationSuccess,
+} from "../../notification/Notification";
 
 interface IResponse {
   data: IBranch[] | IBranch | null;
@@ -63,6 +66,7 @@ function* createBranchSaga(action: UpdateBranchRequest) {
       throw new Error(message);
     } else {
       yield put(branchActions.createSuccess());
+      openNotificationSuccess("Branch Created");
     }
   } catch (e) {
     openNotificationError("Branch", (e as Error).message);
@@ -78,6 +82,7 @@ function* updateBranchSaga(action: UpdateBranchRequest) {
       throw new Error(message);
     } else {
       yield put(branchActions.updateSuccess());
+      openNotificationSuccess("Branch Updated");
     }
   } catch (e) {
     openNotificationError("Branch", (e as Error).message);
@@ -93,6 +98,7 @@ function* removeBranchSaga(action: FetchBranchRequest) {
       throw new Error(message);
     } else {
       yield put(branchActions.removeSuccess());
+      openNotificationSuccess("Branch Removed");
     }
   } catch (e) {
     openNotificationError("Branch", (e as Error).message);

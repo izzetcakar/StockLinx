@@ -5,7 +5,10 @@ import { locationConst } from "./constant";
 import { FetchLocationRequest, UpdateLocationRequest } from "./type";
 import { locationRequests } from "./requests";
 import { genericActions } from "../generic/actions";
-import { openNotificationError } from "../../components/notification/Notification";
+import {
+  openNotificationError,
+  openNotificationSuccess,
+} from "../../notification/Notification";
 
 interface IResponse {
   data: ILocation[] | ILocation | ILocationCounts[] | null;
@@ -83,6 +86,7 @@ function* createLocationSaga(action: UpdateLocationRequest) {
       throw new Error(message);
     } else {
       yield put(locationActions.createSuccess());
+      openNotificationSuccess("Location Created");
     }
   } catch (e) {
     openNotificationError("Location", (e as Error).message);
@@ -98,6 +102,7 @@ function* updateLocationSaga(action: UpdateLocationRequest) {
       throw new Error(message);
     } else {
       yield put(locationActions.updateSuccess());
+      openNotificationSuccess("Location Updated");
     }
   } catch (e) {
     openNotificationError("Location", (e as Error).message);
@@ -113,6 +118,7 @@ function* removeLocationSaga(action: FetchLocationRequest) {
       throw new Error(message);
     } else {
       yield put(locationActions.removeSuccess());
+      openNotificationSuccess("Location Removed");
     }
   } catch (e) {
     openNotificationError("Location", (e as Error).message);

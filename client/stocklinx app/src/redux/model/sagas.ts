@@ -5,7 +5,10 @@ import { modelConst } from "./constant";
 import { FetchModelRequest, UpdateModelRequest } from "./type";
 import { modelRequests } from "./requests";
 import { genericActions } from "../generic/actions";
-import { openNotificationError } from "../../components/notification/Notification";
+import {
+  openNotificationError,
+  openNotificationSuccess,
+} from "../../notification/Notification";
 
 interface IResponse {
   data: IModel[] | IModel | null;
@@ -63,6 +66,7 @@ function* createModelSaga(action: UpdateModelRequest) {
       throw new Error(message as string);
     } else {
       yield put(modelActions.createSuccess());
+      openNotificationSuccess("Model Created");
     }
   } catch (e) {
     openNotificationError("Model", (e as Error).message);
@@ -78,6 +82,7 @@ function* updateModelSaga(action: UpdateModelRequest) {
       throw new Error(message);
     } else {
       yield put(modelActions.updateSuccess());
+      openNotificationSuccess("Model Updated");
     }
   } catch (e) {
     openNotificationError("Model", (e as Error).message);
@@ -93,6 +98,7 @@ function* removeModelSaga(action: FetchModelRequest) {
       throw new Error(message);
     } else {
       yield put(modelActions.removeSuccess());
+      openNotificationSuccess("Model Removed");
     }
   } catch (e) {
     openNotificationError("Model", (e as Error).message);

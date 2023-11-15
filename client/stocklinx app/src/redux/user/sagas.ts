@@ -9,7 +9,11 @@ import {
 } from "./type";
 import { userRequests } from "./requests";
 import { IUser } from "../../interfaces/interfaces";
-import { openNotificationError } from "../../components/notification/Notification";
+import {
+  openNotificationError,
+  openNotificationSuccess,
+} from "../../notification/Notification";
+import { genericActions } from "../generic/actions";
 
 interface IResponse {
   data: IUser[] | IUser | null;
@@ -25,6 +29,7 @@ interface ISignInResponse {
 }
 
 function* fetchUsersaga() {
+  yield put(genericActions.increaseLoading());
   try {
     const { data, message, success }: IResponse = yield call(userRequests.get);
     if (success !== undefined && !success) {
@@ -39,8 +44,10 @@ function* fetchUsersaga() {
   } catch (e) {
     openNotificationError("User", (e as Error).message);
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* fetchUsersSaga() {
+  yield put(genericActions.increaseLoading());
   try {
     const { data, message, success }: IResponse = yield call(
       userRequests.getAll
@@ -57,8 +64,10 @@ function* fetchUsersSaga() {
   } catch (e) {
     openNotificationError("User", (e as Error).message);
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* createUserSaga(action: CreateUserRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       userRequests.create,
@@ -68,12 +77,15 @@ function* createUserSaga(action: CreateUserRequest) {
       throw new Error(message);
     } else {
       yield put(userActions.createSuccess());
+      openNotificationSuccess("User Created");
     }
   } catch (e) {
     openNotificationError("User", (e as Error).message);
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* updateUserSaga(action: UpdateUserRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       userRequests.update,
@@ -83,12 +95,15 @@ function* updateUserSaga(action: UpdateUserRequest) {
       throw new Error(message);
     } else {
       yield put(userActions.updateSuccess());
+      openNotificationSuccess("User Updated");
     }
   } catch (e) {
     openNotificationError("User", (e as Error).message);
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* removeUserSaga(action: RemoveUserRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       userRequests.remove,
@@ -98,12 +113,15 @@ function* removeUserSaga(action: RemoveUserRequest) {
       throw new Error(message);
     } else {
       yield put(userActions.removeSuccess());
+      openNotificationSuccess("User Removed");
     }
   } catch (e) {
     openNotificationError("User", (e as Error).message);
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* signInSaga(action: SignInRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const response: ISignInResponse = yield call(
       userRequests.signIn,
@@ -119,8 +137,10 @@ function* signInSaga(action: SignInRequest) {
   } catch (e) {
     openNotificationError("User", (e as Error).message);
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* getUserWithTokenSaga() {
+  yield put(genericActions.increaseLoading());
   try {
     const { data, message, success }: IResponse = yield call(
       userRequests.getWithToken
@@ -137,6 +157,7 @@ function* getUserWithTokenSaga() {
   } catch (e) {
     openNotificationError("User", (e as Error).message);
   }
+  yield put(genericActions.decreaseLoading());
 }
 
 function* usersaga() {

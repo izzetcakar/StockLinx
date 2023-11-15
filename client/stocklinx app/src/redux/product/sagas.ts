@@ -3,7 +3,7 @@ import { productActions } from "./actions";
 import { IProductCount, IProductStausCount } from "../../interfaces/interfaces";
 import { productRequests } from "./requests";
 import { genericActions } from "../generic/actions";
-import { openNotificationError } from "../../components/notification/Notification";
+import { openNotificationError } from "../../notification/Notification";
 import { productConst } from "./constant";
 
 interface IResponse {

@@ -5,7 +5,10 @@ import { categoryConst } from "./constant";
 import { FetchCategoryRequest, UpdateCategoryRequest } from "./type";
 import { categoryRequests } from "./requests";
 import { genericActions } from "../generic/actions";
-import { openNotificationError } from "../../components/notification/Notification";
+import {
+  openNotificationError,
+  openNotificationSuccess,
+} from "../../notification/Notification";
 
 interface IResponse {
   data: ICategory[] | ICategory | ICategoryCounts[] | null;
@@ -83,6 +86,7 @@ function* createCategorySaga(action: UpdateCategoryRequest) {
       throw new Error(message);
     } else {
       yield put(categoryActions.createSuccess());
+      openNotificationSuccess("Category Created");
     }
   } catch (e) {
     openNotificationError("Category", (e as Error).message);
@@ -98,6 +102,7 @@ function* updateCategorySaga(action: UpdateCategoryRequest) {
       throw new Error(message);
     } else {
       yield put(categoryActions.updateSuccess());
+      openNotificationSuccess("Category Updated");
     }
   } catch (e) {
     openNotificationError("Category", (e as Error).message);
@@ -113,6 +118,7 @@ function* removeCategorySaga(action: FetchCategoryRequest) {
       throw new Error(message);
     } else {
       yield put(categoryActions.removeSuccess());
+      openNotificationSuccess("Category Removed");
     }
   } catch (e) {
     openNotificationError("Category", (e as Error).message);

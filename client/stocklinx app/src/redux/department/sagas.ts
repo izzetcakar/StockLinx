@@ -5,7 +5,10 @@ import { departmentConst } from "./constant";
 import { FetchDepartmentRequest, UpdateDepartmentRequest } from "./type";
 import { departmentRequests } from "./requests";
 import { genericActions } from "../generic/actions";
-import { openNotificationError } from "../../components/notification/Notification";
+import {
+  openNotificationError,
+  openNotificationSuccess,
+} from "../../notification/Notification";
 
 interface IResponse {
   data: IDepartment[] | IDepartment | null;
@@ -63,6 +66,7 @@ function* createDepartmentSaga(action: UpdateDepartmentRequest) {
       throw new Error(message);
     } else {
       yield put(departmentActions.createSuccess());
+      openNotificationSuccess("Department Created");
     }
   } catch (e) {
     openNotificationError("Department", (e as Error).message);
@@ -78,6 +82,7 @@ function* updateDepartmentSaga(action: UpdateDepartmentRequest) {
       throw new Error(message);
     } else {
       yield put(departmentActions.updateSuccess());
+      openNotificationSuccess("Department Updated");
     }
   } catch (e) {
     openNotificationError("Department", (e as Error).message);
@@ -93,6 +98,7 @@ function* removeDepartmentSaga(action: FetchDepartmentRequest) {
       throw new Error(message);
     } else {
       yield put(departmentActions.removeSuccess());
+      openNotificationSuccess("Department Removed");
     }
   } catch (e) {
     openNotificationError("Department", (e as Error).message);

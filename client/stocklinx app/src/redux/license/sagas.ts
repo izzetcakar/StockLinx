@@ -5,7 +5,10 @@ import { licenseConst } from "./constant";
 import { FetchLicenseRequest, UpdateLicenseRequest } from "./type";
 import { licenseRequests } from "./requests";
 import { genericActions } from "../generic/actions";
-import { openNotificationError } from "../../components/notification/Notification";
+import {
+  openNotificationError,
+  openNotificationSuccess,
+} from "../../notification/Notification";
 
 interface IResponse {
   data: ILicense[] | ILicense | null;
@@ -63,6 +66,7 @@ function* createLicenseSaga(action: UpdateLicenseRequest) {
       throw new Error(message);
     } else {
       yield put(licenseActions.createSuccess());
+      openNotificationSuccess("License Created");
     }
   } catch (e) {
     openNotificationError("License", (e as Error).message);
@@ -78,6 +82,7 @@ function* updateLicenseSaga(action: UpdateLicenseRequest) {
       throw new Error(message);
     } else {
       yield put(licenseActions.updateSuccess());
+      openNotificationSuccess("License Updated");
     }
   } catch (e) {
     openNotificationError("License", (e as Error).message);
@@ -93,6 +98,7 @@ function* removeLicenseSaga(action: FetchLicenseRequest) {
       throw new Error(message);
     } else {
       yield put(licenseActions.removeSuccess());
+      openNotificationSuccess("License Removed");
     }
   } catch (e) {
     openNotificationError("License", (e as Error).message);

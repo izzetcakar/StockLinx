@@ -5,7 +5,10 @@ import { consumableConst } from "./constant";
 import { FetchConsumableRequest, UpdateConsumableRequest } from "./type";
 import { consumableRequests } from "./requests";
 import { genericActions } from "../generic/actions";
-import { openNotificationError } from "../../components/notification/Notification";
+import {
+  openNotificationError,
+  openNotificationSuccess,
+} from "../../notification/Notification";
 
 interface IResponse {
   data: IConsumable[] | IConsumable | null;
@@ -63,6 +66,7 @@ function* createConsumableSaga(action: UpdateConsumableRequest) {
       throw new Error(message);
     } else {
       yield put(consumableActions.createSuccess());
+      openNotificationSuccess("Consumable Created");
     }
   } catch (e) {
     openNotificationError("Consumable", (e as Error).message);
@@ -78,6 +82,7 @@ function* updateConsumableSaga(action: UpdateConsumableRequest) {
       throw new Error(message);
     } else {
       yield put(consumableActions.updateSuccess());
+      openNotificationSuccess("Consumable Updated");
     }
   } catch (e) {
     openNotificationError("Consumable", (e as Error).message);
@@ -93,6 +98,7 @@ function* removeConsumableSaga(action: FetchConsumableRequest) {
       throw new Error(message);
     } else {
       yield put(consumableActions.removeSuccess());
+      openNotificationSuccess("Consumable Removed");
     }
   } catch (e) {
     openNotificationError("Consumable", (e as Error).message);

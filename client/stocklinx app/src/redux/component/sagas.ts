@@ -5,7 +5,10 @@ import { componentConst } from "./constant";
 import { FetchComponentRequest, UpdateComponentRequest } from "./type";
 import { componentRequests } from "./requests";
 import { genericActions } from "../generic/actions";
-import { openNotificationError } from "../../components/notification/Notification";
+import {
+  openNotificationError,
+  openNotificationSuccess,
+} from "../../notification/Notification";
 
 interface IResponse {
   data: IComponent[] | IComponent | null;
@@ -63,6 +66,7 @@ function* createComponentSaga(action: UpdateComponentRequest) {
       throw new Error(message);
     } else {
       yield put(componentActions.createSuccess());
+      openNotificationSuccess("Component Created");
     }
   } catch (e) {
     openNotificationError("Component", (e as Error).message);
@@ -78,6 +82,7 @@ function* updateComponentSaga(action: UpdateComponentRequest) {
       throw new Error(message);
     } else {
       yield put(componentActions.updateSuccess());
+      openNotificationSuccess("Component Updated");
     }
   } catch (e) {
     openNotificationError("Component", (e as Error).message);
@@ -93,6 +98,7 @@ function* removeComponentSaga(action: FetchComponentRequest) {
       throw new Error(message);
     } else {
       yield put(componentActions.removeSuccess());
+      openNotificationSuccess("Component Removed");
     }
   } catch (e) {
     openNotificationError("Component", (e as Error).message);

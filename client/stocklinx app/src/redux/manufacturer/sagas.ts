@@ -5,7 +5,7 @@ import { manufacturerConst } from "./constant";
 import { FetchManufacturerRequest, UpdateManufacturerRequest } from "./type";
 import { manufacturerRequests } from "./requests";
 import { genericActions } from "../generic/actions";
-import { openNotificationError } from "../../components/notification/Notification";
+import { openNotificationError, openNotificationSuccess } from "../../notification/Notification";
 
 interface IResponse {
   data: IManufacturer[] | IManufacturer | null;
@@ -63,6 +63,7 @@ function* createManufacturerSaga(action: UpdateManufacturerRequest) {
       throw new Error(message);
     } else {
       yield put(manufacturerActions.createSuccess());
+      openNotificationSuccess("Manufacturer Created");
     }
   } catch (e) {
     openNotificationError("Manufacurer", (e as Error).message);
@@ -78,6 +79,7 @@ function* updateManufacturerSaga(action: UpdateManufacturerRequest) {
       throw new Error(message);
     } else {
       yield put(manufacturerActions.updateSuccess());
+      openNotificationSuccess("Manufacturer Updated");
     }
   } catch (e) {
     openNotificationError("Manufacurer", (e as Error).message);
@@ -93,6 +95,7 @@ function* removeManufacturerSaga(action: FetchManufacturerRequest) {
       throw new Error(message);
     } else {
       yield put(manufacturerActions.removeSuccess());
+      openNotificationSuccess("Manufacturer Removed");
     }
   } catch (e) {
     openNotificationError("Manufacurer", (e as Error).message);

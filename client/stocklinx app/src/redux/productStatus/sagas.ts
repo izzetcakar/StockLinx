@@ -5,7 +5,10 @@ import { productStatusConst } from "./constant";
 import { FetchProductStatusRequest, UpdateProductStatusRequest } from "./type";
 import { productStatusRequests } from "./requests";
 import { genericActions } from "../generic/actions";
-import { openNotificationError } from "../../components/notification/Notification";
+import {
+  openNotificationError,
+  openNotificationSuccess,
+} from "../../notification/Notification";
 
 interface IResponse {
   data: IProductStatus[] | IProductStatus | null;
@@ -63,6 +66,7 @@ function* createProductStatusSaga(action: UpdateProductStatusRequest) {
       throw new Error(message);
     } else {
       yield put(productStatusActions.createSuccess());
+      openNotificationSuccess("Status Created");
     }
   } catch (e) {
     openNotificationError("ProductStatus", (e as Error).message);
@@ -78,6 +82,7 @@ function* updateProductStatusSaga(action: UpdateProductStatusRequest) {
       throw new Error(message);
     } else {
       yield put(productStatusActions.updateSuccess());
+      openNotificationSuccess("Status Updated");
     }
   } catch (e) {
     openNotificationError("ProductStatus", (e as Error).message);
@@ -93,6 +98,7 @@ function* removeProductStatusSaga(action: FetchProductStatusRequest) {
       throw new Error(message);
     } else {
       yield put(productStatusActions.removeSuccess());
+      openNotificationSuccess("Status Removed");
     }
   } catch (e) {
     openNotificationError("ProductStatus", (e as Error).message);
@@ -103,11 +109,26 @@ function* productStatusSaga() {
   // yield all([
   //   takeLatest(productStatusConst.FETCH_PRODUCTSTATUSES_REQUEST, fetchProductStatusesSaga),
   // ]);
-  yield takeEvery(productStatusConst.FETCH_PRODUCTSTATUSES_REQUEST, fetchProductStatusesSaga);
-  yield takeEvery(productStatusConst.FETCH_PRODUCTSTATUS_REQUEST, fetchProductStatusSaga);
-  yield takeEvery(productStatusConst.CREATE_PRODUCTSTATUS_REQUEST, createProductStatusSaga);
-  yield takeEvery(productStatusConst.UPDATE_PRODUCTSTATUS_REQUEST, updateProductStatusSaga);
-  yield takeEvery(productStatusConst.REMOVE_PRODUCTSTATUS_REQUEST, removeProductStatusSaga);
+  yield takeEvery(
+    productStatusConst.FETCH_PRODUCTSTATUSES_REQUEST,
+    fetchProductStatusesSaga
+  );
+  yield takeEvery(
+    productStatusConst.FETCH_PRODUCTSTATUS_REQUEST,
+    fetchProductStatusSaga
+  );
+  yield takeEvery(
+    productStatusConst.CREATE_PRODUCTSTATUS_REQUEST,
+    createProductStatusSaga
+  );
+  yield takeEvery(
+    productStatusConst.UPDATE_PRODUCTSTATUS_REQUEST,
+    updateProductStatusSaga
+  );
+  yield takeEvery(
+    productStatusConst.REMOVE_PRODUCTSTATUS_REQUEST,
+    removeProductStatusSaga
+  );
 }
 // function* budgetItemSaga() {
 //   yield takeEvery(budgetItemConst.fetchList, listBudgetITem);

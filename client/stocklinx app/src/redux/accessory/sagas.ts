@@ -5,7 +5,10 @@ import { accessoryConst } from "./constant";
 import { FetchAccessoryRequest, UpdateAccessoryRequest } from "./type";
 import { accessoryRequests } from "./requests";
 import { genericActions } from "../generic/actions";
-import { openNotificationError } from "../../components/notification/Notification";
+import {
+  openNotificationError,
+  openNotificationSuccess,
+} from "../../notification/Notification";
 interface IResponse {
   data: IAccessory[] | IAccessory | null;
   message: string;
@@ -62,6 +65,7 @@ function* createAccessorySaga(action: UpdateAccessoryRequest) {
       throw new Error(message);
     } else {
       yield put(accessoryActions.createSuccess());
+      openNotificationSuccess("Accessory Created");
     }
   } catch (e) {
     openNotificationError("Accessory", (e as Error).message);
@@ -77,6 +81,7 @@ function* updateAccessorySaga(action: UpdateAccessoryRequest) {
       throw new Error(message);
     } else {
       yield put(accessoryActions.updateSuccess());
+      openNotificationSuccess("Accessory Updated");
     }
   } catch (e) {
     openNotificationError("Accessory", (e as Error).message);
@@ -92,6 +97,7 @@ function* removeAccessorySaga(action: FetchAccessoryRequest) {
       throw new Error(message);
     } else {
       yield put(accessoryActions.removeSuccess());
+      openNotificationSuccess("Accessory Removed");
     }
   } catch (e) {
     openNotificationError("Accessory", (e as Error).message);

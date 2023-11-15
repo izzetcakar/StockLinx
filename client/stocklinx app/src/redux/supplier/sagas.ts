@@ -5,7 +5,10 @@ import { supplierConst } from "./constant";
 import { FetchSupplierRequest, UpdateSupplierRequest } from "./type";
 import { supplierRequests } from "./requests";
 import { genericActions } from "../generic/actions";
-import { openNotificationError } from "../../components/notification/Notification";
+import {
+  openNotificationError,
+  openNotificationSuccess,
+} from "../../notification/Notification";
 
 interface IResponse {
   data: ISupplier[] | ISupplier | null;
@@ -63,6 +66,7 @@ function* createSupplierSaga(action: UpdateSupplierRequest) {
       throw new Error(message);
     } else {
       yield put(supplierActions.createSuccess());
+      openNotificationSuccess("Supplier Created");
     }
   } catch (e) {
     openNotificationError("Supplier", (e as Error).message);
@@ -78,6 +82,7 @@ function* updateSupplierSaga(action: UpdateSupplierRequest) {
       throw new Error(message);
     } else {
       yield put(supplierActions.updateSuccess());
+      openNotificationSuccess("Supplier Updated");
     }
   } catch (e) {
     openNotificationError("Supplier", (e as Error).message);
@@ -93,6 +98,7 @@ function* removeSupplierSaga(action: FetchSupplierRequest) {
       throw new Error(message);
     } else {
       yield put(supplierActions.removeSuccess());
+      openNotificationSuccess("Supplier Removed");
     }
   } catch (e) {
     openNotificationError("Supplier", (e as Error).message);
