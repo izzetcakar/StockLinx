@@ -31,7 +31,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   >
     <Provider store={store}>
       <ModalsProvider>
-        <Notifications w={"fit-content"} />
+        <Notifications w={"fit-content"} position="top-right" />
         <App />
       </ModalsProvider>
     </Provider>
