@@ -1,11 +1,6 @@
 import { checkEmpty } from "./functions/checkEmpty";
 import "devextreme/dist/css/dx.light.compact.css";
-import {
-  createBrowserRouter,
-  RouterProvider,
-  Outlet,
-  useNavigate,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import "./app.scss";
 import Accessory from "./pages/accessory/Accessory";
 import Asset from "./pages/asset/Asset";
@@ -17,7 +12,6 @@ import Model from "./pages/model/Model";
 import Sidebar from "./components/sidebar/Sidebar";
 import Test from "./pages/Test";
 import Login from "./pages/user/Login";
-import Register from "./pages/user/Register";
 import Department from "./pages/department/Department";
 import Company from "./pages/company/Company";
 import { useSelector } from "react-redux";
@@ -34,7 +28,6 @@ import Branch from "./pages/branch/Branch";
 import User from "./pages/user/User";
 
 const Layout = () => {
-  const navigate = useNavigate();
   const userRedux = useSelector((state: RootState) => state.user.user);
   const loading = useSelector((state: RootState) => state.generic.loading);
 
@@ -60,7 +53,6 @@ const Layout = () => {
       </div>
     );
   } else {
-    navigate("/login");
     return <Login />;
   }
 };
@@ -147,10 +139,6 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
-  },
-  {
-    path: "/register",
-    element: <Register />,
   },
 ]);
 

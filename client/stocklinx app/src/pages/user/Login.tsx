@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import logo from "/logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "@mantine/form";
@@ -12,20 +12,21 @@ import {
   PasswordInput,
   TextInput,
 } from "@mantine/core";
-import "./user.scss";
 import { IconKey, IconMail } from "@tabler/icons-react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { userActions } from "../../redux/user/actions";
+import ReCAPTCHA from "react-google-recaptcha";
+import "./user.scss";
 
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const captchaSiteKey = import.meta.env.VITE_CAPTCHA_SITE_KEY;
+  const [recaptcha, setRecaptcha] = useState(false);
   const user = useSelector((state: RootState) => state.user.user);
-  const userApiStatus = useSelector(
-    (state: RootState) => state.generic.loading
-  );
+  const loading = useSelector((state: RootState) => state.generic.loading);
   const signForm = useForm<IUserLoginDto>({
     initialValues: {
       email: "",
@@ -52,8 +53,8 @@ const Login = () => {
 
   return (
     <Flex w="100%" h="100vh" justify={"center"} align={"center"} bg={"#f4f0f0"}>
+      <LoadingOverlay visible={loading > 0} />
       <Paper shadow="xs" py="md" px={40} mah="90%" maw="90%">
-        <LoadingOverlay visible={userApiStatus > 0} />
         <Flex direction="column" gap={10} maw="100%" bg={"white"}>
           <Image alt="..." src={logo} />
           <form
@@ -77,7 +78,12 @@ const Login = () => {
                 {...signForm.getInputProps("password")}
                 icon={<IconKey size="1.2rem" />}
               />
-              <Button type="submit" color="dark">
+              <ReCAPTCHA
+                onChange={() => setRecaptcha(true)}
+                type="image"
+                sitekey={captchaSiteKey}
+              />
+              <Button type="submit" color="dark" disabled={!recaptcha}>
                 Login
               </Button>
               <Flex
