@@ -5,7 +5,12 @@ import { IconSearch } from "@tabler/icons-react";
 import filterClasses from "./filter.module.scss";
 import textInputClasses from "./textInput.module.scss";
 
-export const useFilter = (columns: Column[], data: object[]) => {
+export const useFilter = (
+  columns: Column[],
+  data: object[],
+  selectedKeys: (string | number)[],
+  clearSelectedKeys: () => void
+) => {
   const [filters, setFilters] = useState<Filter[]>([]);
 
   const getFilterType = (field: string): FilterType => {
@@ -23,7 +28,6 @@ export const useFilter = (columns: Column[], data: object[]) => {
   };
   const getFilterInput = (filter: Filter) => {
     const searchIcon = <IconSearch size={16} />;
-    // const selectIcon = <IconCaretDownFilled size={12} />;
     switch (filter.type) {
       case FilterType.TEXT:
         return (
@@ -45,9 +49,12 @@ export const useFilter = (columns: Column[], data: object[]) => {
       case FilterType.BOOLEAN:
         return (
           <Select
+            classNames={filterClasses}
             placeholder="All"
+            value={filter.value as string}
             data={filterLookupData(filter.field)}
-            color="gray"
+            onChange={(e) => handleFilterChange(e, filter)}
+            variant="filled"
             radius={0}
             searchable
             clearable
@@ -85,9 +92,31 @@ export const useFilter = (columns: Column[], data: object[]) => {
       }
     );
   };
-
+  const getFilterChangedValue = (e: any, filter: Filter) => {
+    let newValue: string | number | boolean | null;
+    switch (filter.type) {
+      case FilterType.TEXT:
+        newValue = e.target.value;
+        break;
+      case FilterType.NUMBER:
+        newValue = e.target.value;
+        break;
+      case FilterType.BOOLEAN:
+        // newValue = e.currentTarget.checked;
+        newValue = e;
+        break;
+      case FilterType.LOOKUP:
+        newValue = e;
+        break;
+      default:
+        newValue = e.target.value;
+        break;
+    }
+    return newValue;
+  };
   const handleFilterChange = (e: any, filter: Filter) => {
-    const newValue = filter.type === FilterType.LOOKUP ? e : e.target.value;
+    if (selectedKeys.length > 0) clearSelectedKeys();
+    const newValue = getFilterChangedValue(e, filter);
     const newIsApplied = newValue === null || newValue === "" ? false : true;
     setFilters((prev) =>
       prev.map((item) =>
@@ -103,9 +132,9 @@ export const useFilter = (columns: Column[], data: object[]) => {
       filters.forEach((filter) => {
         if (filter.isApplied) {
           const value =
-            typeof item[filter.field] !== "string"
-              ? item[filter.field]
-              : item[filter.field].toLowerCase();
+            typeof item[filter.field] === "string"
+              ? item[filter.field].toLowerCase()
+              : item[filter.field];
           switch (filter.type) {
             case FilterType.TEXT:
               isMatch =
