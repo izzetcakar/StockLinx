@@ -1,4 +1,4 @@
-.table__toolbar {
+.gridtable__toolbar {
   display: flex;
   max-width: 100%;
   height: fit-content;
@@ -7,7 +7,7 @@
   gap: 10px;
   justify-content: flex-start;
 
-  .table__toolbar__last {
+  .gridtable__toolbar__last {
     display: flex;
     margin-left: auto;
     align-items: center;

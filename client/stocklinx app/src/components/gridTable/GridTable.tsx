@@ -2,14 +2,15 @@ import React, { useState, useEffect, useCallback } from "react";
 import EditComponent from "./edit/EditComponent";
 import TableToolbar from "./tableToolbar/TableToolbar";
 import { Column, ExcelColumn, Filter } from "./interfaces/interfaces";
-import PageNumber from "./tableFooter/PageNumber";
 import { Checkbox } from "@mantine/core";
-import "./gridtable.scss";
 import { useFilter } from "./functions/filter";
 import { useSelectRow } from "./functions/selectRow";
 import { useVisibleColumns } from "./functions/visibleColumns";
 import { useCell } from "./functions/cell";
 import { useSelectCell } from "./functions/selectCell";
+import { usePaging } from "./functions/paging";
+import TableFooter from "./tableFooter/TableFooter";
+import "./gridtable.scss";
 
 interface GridtableProps {
   itemKey: string;
@@ -17,7 +18,6 @@ interface GridtableProps {
   columns: Column[];
   noDataText?: string;
   pageSizes?: number[];
-  itemPerPage?: number;
   refreshData?: () => void;
   onRowInsert?: () => void;
   onRowUpdate?: (row: object) => void;
@@ -31,7 +31,6 @@ interface GridtableProps {
 const Gridtable: React.FC<GridtableProps> = ({
   data = [],
   columns = [],
-  itemPerPage = 5,
   refreshData,
   onRowInsert = () => console.log("Row insert"),
   onRowUpdate = (row: object) => console.log(row),
@@ -42,7 +41,6 @@ const Gridtable: React.FC<GridtableProps> = ({
   enableEditActions = true,
   enableSelectActions = true,
 }) => {
-  const [pageNumber, setPageNumber] = useState<number>(0);
   const [keyfield, setKeyfield] = useState<keyof object>(
     itemKey as keyof object
   );
@@ -55,9 +53,15 @@ const Gridtable: React.FC<GridtableProps> = ({
     getSelectedRowClass,
     clearSelectedKeys,
   } = useSelectRow(data, keyfield);
+
   const { filters, getFilterInput, applyFilterToData, handleFilterAll } =
     useFilter(columns, data, selectedKeys, clearSelectedKeys);
+
+  const { handlePageNumber, handleItemPerPage, itemPerPage, pageNumber } =
+    usePaging(data);
+
   const { renderColumnValue } = useCell();
+
   const filterData = useCallback(() => {
     const filteredData = applyFilterToData(data);
     if (pageNumber === 0) {
@@ -68,6 +72,7 @@ const Gridtable: React.FC<GridtableProps> = ({
       (pageNumber + 1) * itemPerPage
     );
   }, [data, itemPerPage, pageNumber, filters]);
+
   const {
     handleCellMouseDown,
     handleCellMouseUp,
@@ -78,21 +83,17 @@ const Gridtable: React.FC<GridtableProps> = ({
   useEffect(() => {
     setKeyfield(itemKey as keyof object);
   }, [itemKey]);
+
   useEffect(() => {
     handleVisibleColumns();
     handleFilterAll();
   }, [data]);
 
-  const handlePageNumber = (forward: boolean) => {
-    if (forward) {
-      if (pageNumber + 1 < data.length / itemPerPage) {
-        setPageNumber((prev) => prev + 1);
-      }
-    } else {
-      if (pageNumber - 1 >= 0) {
-        setPageNumber((prev) => prev - 1);
-      }
+  const handleColSpan = (index: number) => {
+    if (index === filters.length - 1 && enableEditActions) {
+      return 2;
     }
+    return 1;
   };
 
   return (
@@ -114,9 +115,9 @@ const Gridtable: React.FC<GridtableProps> = ({
         </tr>
       </thead>
       <tbody>
-        <tr className="gridtable__column__container">
+        <tr className="gridtable__column__row">
           {enableSelectActions ? (
-            <td className="gridtable__checkbox__cell">
+            <td className="gridtable__checkbox__cell border__bottom">
               <Checkbox
                 checked={
                   selectedKeys.length === filterData().length &&
@@ -132,19 +133,22 @@ const Gridtable: React.FC<GridtableProps> = ({
               />
             </td>
           ) : null}
-          {visibleColumns.map((column) => (
+          {visibleColumns.map((vColumn, vColumnIndex) => (
             <td
-              key={"column__header__" + column.caption}
+              key={"column__header__" + vColumn.caption}
               className="gridtable__column__cell"
+              colSpan={handleColSpan(vColumnIndex)}
             >
-              {column.renderHeader ? column.renderHeader() : column.caption}
+              {vColumn.renderHeader ? vColumn.renderHeader() : vColumn.caption}
             </td>
           ))}
         </tr>
-        <tr className="gridtable__filter__container">
-          {enableSelectActions ? <td></td> : null}
-          {filters.map((filter: Filter) => (
-            <td key={filter.field} className="gridtable__filter">
+        <tr className="gridtable__filter__row">
+          {enableSelectActions ? (
+            <td className="gridtable__filter__cell"></td>
+          ) : null}
+          {filters.map((filter: Filter, filterIndex) => (
+            <td colSpan={handleColSpan(filterIndex)} key={filter.field}>
               {getFilterInput(filter)}
             </td>
           ))}
@@ -152,7 +156,7 @@ const Gridtable: React.FC<GridtableProps> = ({
         {filterData().length > 0 ? (
           filterData().map((obj, rowIndex) => (
             <tr
-              key={"gridtable__body__row__" + rowIndex}
+              key={"gridtable__row__" + rowIndex}
               className={getSelectedRowClass(obj[keyfield])}
             >
               {enableSelectActions ? (
@@ -195,7 +199,7 @@ const Gridtable: React.FC<GridtableProps> = ({
                 ) : null
               )}
               {enableEditActions ? (
-                <td className="gridtable__edit">
+                <td className="gridtable__edit__cell">
                   <EditComponent
                     obj={obj}
                     id={obj[keyfield]}
@@ -214,11 +218,12 @@ const Gridtable: React.FC<GridtableProps> = ({
       </tbody>
       <tfoot>
         <tr>
-          <td className="table-footer" colSpan={visibleColumns.length + 1}>
-            <PageNumber
-              pageNumber={pageNumber}
-              itemPerPage={itemPerPage}
+          <td colSpan={visibleColumns.length + 1}>
+            <TableFooter
               dataLength={data.length}
+              itemPerPage={itemPerPage}
+              pageNumber={pageNumber}
+              handleItemPerPage={handleItemPerPage}
               handlePageNumber={handlePageNumber}
             />
           </td>

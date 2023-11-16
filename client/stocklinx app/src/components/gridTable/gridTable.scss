@@ -25,57 +25,56 @@
   font-family: "Helvetica Neue", "Segoe UI", helvetica, verdana, sans-serif;
 
   // empty-cells: show;
-  .table__toolbar {
+  .gridtable__toolbar {
     padding: 8px;
     border-bottom: 1px solid #ced4da;
     max-width: 100%;
     user-select: none;
   }
-  .table__toolbar:hover {
-    background-color: transparent;
-  }
-  .table-footer {
-    padding: 8px 12px 8px 12px;
+  .gridtable__footer {
+    padding: 8px;
     border-top: 1px solid #ced4da;
+    max-width: 100%;
     user-select: none;
   }
-  .table-footer:hover {
-    background-color: transparent;
+  .gridtable__filter__row {
+    background-color: white;
+    border-top: none !important;
+    border-bottom: none !important;
+    box-shadow: inset 0 0 0 #ced4da, inset 0 -1px 0 #ced4da;
+    position: sticky;
+    top: 39.5px;
+    z-index: 9999;
   }
-  .gridtable__filter__container {
-    border-bottom: 1px solid #ced4da;
-    .gridtable__filter {
-      padding: 0;
-      height: 34px;
-      // border-left: 1px solid #ced4da;
-      // border-right: 1px solid #ced4da;
-    }
-  }
-  .gridtable__edit {
+  .gridtable__edit__cell {
     padding: 0;
     position: sticky;
     right: 0;
+    z-index: 9999;
     width: fit-content;
     background-color: white;
-    border-left: 1px solid #ced4da;
+    box-shadow:inset 1px 0 0 0 #ced4da;
     user-select: none;
   }
 }
 .gridtable::-webkit-scrollbar {
   display: block;
 }
-.gridtable tbody {
-  .gridtable__row__container:hover {
-    background-color: #e5e5e5;
-  }
+
+.gridtable__row:hover {
+  background-color: #e5e5e5;
 }
-.gridtable__row__selected {
+.gridtable__row.selected {
   background-color: #ddd;
 }
-//COLUMN
-.gridtable__column__container {
-  border: none;
-  border-bottom: 1px solid #ced4da;
+.gridtable__column__row {
+  background-color: white;
+  border-top: none !important;
+  border-bottom: none !important;
+  box-shadow: inset 0 0 0 #ced4da, inset 0 -1px 0 #ced4da;
+  position: sticky;
+  top: 0;
+  z-index: 9999;
 }
 .gridtable__column__cell {
   padding-top: 12px;
@@ -122,4 +121,7 @@ tfoot {
   align-items: center;
   width: 100%;
   height: 100px;
+}
+table thead td {
+  background-clip: padding-box;
 }

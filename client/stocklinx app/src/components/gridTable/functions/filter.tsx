@@ -36,6 +36,7 @@ export const useFilter = (
             onChange={(e) => handleFilterChange(e, filter)}
             classNames={textInputClasses}
             icon={searchIcon}
+            variant="filled"
           />
         );
       case FilterType.NUMBER:

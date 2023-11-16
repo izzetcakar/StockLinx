@@ -8,3 +8,6 @@
 .input:not(:focus) {
   border: none;
 }
+.input:not(:active){
+  background-color: transparent;
+}

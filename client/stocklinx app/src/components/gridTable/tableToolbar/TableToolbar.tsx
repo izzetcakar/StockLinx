@@ -216,7 +216,7 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
   };
 
   return (
-    <div className="table__toolbar">
+    <div className="gridtable__toolbar">
       <Dropdown
         columns={columns}
         onChange={addVisibleColumn}
@@ -237,7 +237,7 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
         />
       ) : null}
       {enableExcelActions ? (
-        <div className="table__toolbar__last">
+        <div className="gridtable__toolbar__last">
           <FileInput
             accept=".xlsx"
             placeholder="Import Excel"

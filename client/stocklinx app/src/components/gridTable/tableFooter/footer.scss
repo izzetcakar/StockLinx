@@ -1,5 +1,22 @@
-.page-number{
+.gridtable__footer {
+  display: flex;
+  max-width: 100%;
+  height: fit-content;
+  padding: 10px;
+  align-items: center;
+  gap: 10px;
+  justify-content: flex-start;
+
+  .gridtable__footer__last {
     display: flex;
+    margin-left: auto;
     align-items: center;
-    gap: 0.4rem;
+    gap: 10px;
+    width: fit-content;
+  }
+}
+.page-number {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
 }
