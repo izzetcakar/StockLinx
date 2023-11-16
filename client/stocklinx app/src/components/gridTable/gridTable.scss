@@ -64,6 +64,10 @@
 .gridtable__row:hover {
   background-color: #e5e5e5;
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> e0c00f7c88f835cc23b8d04433f17ab8cfb8497d
 .gridtable__row.selected {
   background-color: #ddd;
 }
@@ -88,7 +92,7 @@
   text-align: left;
   font-weight: bold;
 }
-.gridtable tbody {
+.gridtable__body {
   display: block;
   overflow: auto;
   width: 100%;
@@ -103,6 +107,7 @@
   user-select: none;
 }
 .gridtable__row__cell.selected {
+  box-sizing: border-box;
   border: 1px solid #2196f3;
   background-color: #2195f339;
 }
@@ -122,6 +127,18 @@ tfoot {
   width: 100%;
   height: 100px;
 }
+<<<<<<< HEAD
 table thead td {
   background-clip: padding-box;
+=======
+.gridtable__row__cell.selected::before {
+  content: "";
+  position: absolute;
+  border: 2px solid #2196f3; /* You can choose the color you prefer */
+  pointer-events: none; /* Allows click-through to cells underneath */
+  top: -2px;
+  right: -2px;
+  bottom: -2px;
+  left: -2px;
+>>>>>>> e0c00f7c88f835cc23b8d04433f17ab8cfb8497d
 }

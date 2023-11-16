@@ -41,9 +41,14 @@ const Gridtable: React.FC<GridtableProps> = ({
   enableEditActions = true,
   enableSelectActions = true,
 }) => {
+<<<<<<< HEAD
   const [keyfield, setKeyfield] = useState<keyof object>(
     itemKey as keyof object
   );
+=======
+  const [pageNumber, setPageNumber] = useState<number>(0);
+  const keyfield = itemKey as keyof object;
+>>>>>>> e0c00f7c88f835cc23b8d04433f17ab8cfb8497d
   const { visibleColumns, handleVisibleColumns, addVisibleColumn } =
     useVisibleColumns(columns);
   const {
@@ -78,13 +83,17 @@ const Gridtable: React.FC<GridtableProps> = ({
     handleCellMouseUp,
     handleCellMouseEnter,
     getSelectedClassName,
+    isDrawing,
   } = useSelectCell(filterData(), columns);
 
   useEffect(() => {
+<<<<<<< HEAD
     setKeyfield(itemKey as keyof object);
   }, [itemKey]);
 
   useEffect(() => {
+=======
+>>>>>>> e0c00f7c88f835cc23b8d04433f17ab8cfb8497d
     handleVisibleColumns();
     handleFilterAll();
   }, [data]);
@@ -114,19 +123,24 @@ const Gridtable: React.FC<GridtableProps> = ({
           </td>
         </tr>
       </thead>
+<<<<<<< HEAD
       <tbody>
         <tr className="gridtable__column__row">
+=======
+      <tbody className="gridtable__body">
+        <tr className="gridtable__column__container">
+>>>>>>> e0c00f7c88f835cc23b8d04433f17ab8cfb8497d
           {enableSelectActions ? (
             <td className="gridtable__checkbox__cell border__bottom">
               <Checkbox
                 checked={
-                  selectedKeys.length === filterData().length &&
-                  filterData().length > 0
+                  selectedKeys.length === applyFilterToData(data).length &&
+                  applyFilterToData(data).length > 0
                 }
                 onChange={() => handleselectAll()}
                 indeterminate={
                   selectedKeys.length > 0 &&
-                  selectedKeys.length < filterData().length
+                  selectedKeys.length < applyFilterToData(data).length
                 }
                 radius={2}
                 size={18}
@@ -156,8 +170,17 @@ const Gridtable: React.FC<GridtableProps> = ({
         {filterData().length > 0 ? (
           filterData().map((obj, rowIndex) => (
             <tr
+<<<<<<< HEAD
               key={"gridtable__row__" + rowIndex}
               className={getSelectedRowClass(obj[keyfield])}
+=======
+              key={"gridtable__body__row__" + rowIndex}
+              className={
+                isDrawing
+                  ? ""
+                  : getSelectedRowClass(obj[keyfield])
+              }
+>>>>>>> e0c00f7c88f835cc23b8d04433f17ab8cfb8497d
             >
               {enableSelectActions ? (
                 <td className="gridtable__checkbox__cell">
