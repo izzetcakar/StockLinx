@@ -3,12 +3,12 @@ import EditComponent from "./edit/EditComponent";
 import TableToolbar from "./tableToolbar/TableToolbar";
 import { Column, ExcelColumn, Filter } from "./interfaces/interfaces";
 import { Checkbox } from "@mantine/core";
-import { useFilter } from "./functions/filter";
-import { useSelectRow } from "./functions/selectRow";
-import { useVisibleColumns } from "./functions/visibleColumns";
-import { useCell } from "./functions/cell";
-import { useSelectCell } from "./functions/selectCell";
-import { usePaging } from "./functions/paging";
+import { useFilter } from "./customhooks/filter";
+import { useSelectRow } from "./customhooks/selectRow";
+import { useVisibleColumns } from "./customhooks/visibleColumns";
+import { useCell } from "./customhooks/cell";
+import { useSelectCell } from "./customhooks/selectCell";
+import { usePaging } from "./customhooks/paging";
 import TableFooter from "./tableFooter/TableFooter";
 import "./gridtable.scss";
 

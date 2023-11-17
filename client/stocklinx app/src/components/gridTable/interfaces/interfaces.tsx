@@ -7,6 +7,7 @@ export interface Column {
   renderHeader?: () => React.ReactNode | string | number | null;
   lookup?: Lookup;
   dataType: "string" | "number" | "boolean" | "date" | "action";
+  invisible?: boolean;
 }
 export interface VisibleColumn {
   caption: string;
