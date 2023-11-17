@@ -26,81 +26,81 @@ import { Pie } from "react-chartjs-2";
 import "chart.js/auto";
 
 const Home = () => {
-  const dispatch = useDispatch();
-  const productCounts = useSelector((state: RootState) => state.product.counts);
-  const productStatusCounts = useSelector(
-    (state: RootState) => state.product.statusCounts
-  );
+  // const dispatch = useDispatch();
+  // const productCounts = useSelector((state: RootState) => state.product.counts);
+  // const productStatusCounts = useSelector(
+  //   (state: RootState) => state.product.statusCounts
+  // );
 
-  useEffect(() => {
-    dispatch(productActions.getCounts());
-    dispatch(productActions.getStatusCounts());
-  }, []);
+  // useEffect(() => {
+  //   dispatch(productActions.getCounts());
+  //   dispatch(productActions.getStatusCounts());
+  // }, []);
 
-  const data = [
-    {
-      color: "#39cccc",
-      count: 0,
-      title: "Assets",
-      nav: "/asset",
-      image: icon_barcode,
-    },
-    {
-      color: "#d81b60",
-      count: 0,
-      title: "Licenses",
-      nav: "/license",
-      image: icon_disk,
-    },
-    {
-      color: "#ff851b",
-      count: 0,
-      title: "Accessories",
-      nav: "/accessory",
-      image: icon_keyboard,
-    },
-    {
-      color: "#605ca8",
-      count: 0,
-      title: "Consumables",
-      nav: "/consumable",
-      image: icon_drop,
-    },
-    {
-      color: "#f39c12",
-      count: 0,
-      title: "Components",
-      nav: "/component",
-      image: icon_harddisk,
-    },
-    {
-      color: "#3c8dbc",
-      count: 0,
-      title: "People",
-      nav: "/",
-      image: icon_group,
-    },
-  ];
-  const handleProductCardData = () => {
-    return data.map((item) => {
-      const newCount = productCounts.find(
-        (count) => count.entityName === item.title
-      );
-      return {
-        ...item,
-        count: newCount ? newCount.count : 0,
-      };
-    });
-  };
+  // const data = [
+  //   {
+  //     color: "#39cccc",
+  //     count: 0,
+  //     title: "Assets",
+  //     nav: "/asset",
+  //     image: icon_barcode,
+  //   },
+  //   {
+  //     color: "#d81b60",
+  //     count: 0,
+  //     title: "Licenses",
+  //     nav: "/license",
+  //     image: icon_disk,
+  //   },
+  //   {
+  //     color: "#ff851b",
+  //     count: 0,
+  //     title: "Accessories",
+  //     nav: "/accessory",
+  //     image: icon_keyboard,
+  //   },
+  //   {
+  //     color: "#605ca8",
+  //     count: 0,
+  //     title: "Consumables",
+  //     nav: "/consumable",
+  //     image: icon_drop,
+  //   },
+  //   {
+  //     color: "#f39c12",
+  //     count: 0,
+  //     title: "Components",
+  //     nav: "/component",
+  //     image: icon_harddisk,
+  //   },
+  //   {
+  //     color: "#3c8dbc",
+  //     count: 0,
+  //     title: "People",
+  //     nav: "/",
+  //     image: icon_group,
+  //   },
+  // ];
+  // const handleProductCardData = () => {
+  //   return data.map((item) => {
+  //     const newCount = productCounts.find(
+  //       (count) => count.entityName === item.title
+  //     );
+  //     return {
+  //       ...item,
+  //       count: newCount ? newCount.count : 0,
+  //     };
+  //   });
+  // };
 
-  const [show, setShow] = useState<boolean>(true);
+  // const [show, setShow] = useState<boolean>(true);
 
   return (
     <>
       <div className="page-content-header">
         <div className="page-content-header-title">Home</div>
       </div>
-      <div className="product-card-container" style={{ marginBottom: "1rem" }}>
+      {/* <div className="product-card-container" style={{ marginBottom: "1rem" }}>
         {handleProductCardData().map((item, index) => {
           return (
             <ProductCard
@@ -188,7 +188,7 @@ const Home = () => {
             <CategoryCounts className="display" editing={false} />
           </div>
         </div>
-      </div>
+      </div> */}
     </>
   );
 };
