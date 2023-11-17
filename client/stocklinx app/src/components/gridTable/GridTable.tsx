@@ -22,7 +22,9 @@ interface GridtableProps {
   onRowInsert?: () => void;
   onRowUpdate?: (row: object) => void;
   onRowRemove?: (id: string) => void;
+  onRowRemoveRange?: (ids: string[]) => void;
   excelColumns?: ExcelColumn[];
+  enableToolbar?: boolean;
   enableExcelActions?: boolean;
   enableEditActions?: boolean;
   enableSelectActions?: boolean;
@@ -35,20 +37,17 @@ const Gridtable: React.FC<GridtableProps> = ({
   onRowInsert = () => console.log("Row insert"),
   onRowUpdate = (row: object) => console.log(row),
   onRowRemove = (id: string) => console.log(id),
+  onRowRemoveRange = (ids: string[]) => console.log(ids),
   itemKey,
   excelColumns,
-  enableExcelActions = true,
-  enableEditActions = true,
-  enableSelectActions = true,
+  enableToolbar = false,
+  enableExcelActions = false,
+  enableEditActions = false,
+  enableSelectActions = false,
 }) => {
-<<<<<<< HEAD
   const [keyfield, setKeyfield] = useState<keyof object>(
     itemKey as keyof object
   );
-=======
-  const [pageNumber, setPageNumber] = useState<number>(0);
-  const keyfield = itemKey as keyof object;
->>>>>>> e0c00f7c88f835cc23b8d04433f17ab8cfb8497d
   const { visibleColumns, handleVisibleColumns, addVisibleColumn } =
     useVisibleColumns(columns);
   const {
@@ -59,41 +58,50 @@ const Gridtable: React.FC<GridtableProps> = ({
     clearSelectedKeys,
   } = useSelectRow(data, keyfield);
 
+  const {
+    handlePageNumber,
+    handleItemPerPage,
+    resetPageNumber,
+    itemPerPage,
+    pageNumber,
+  } = usePaging(data);
   const { filters, getFilterInput, applyFilterToData, handleFilterAll } =
-    useFilter(columns, data, selectedKeys, clearSelectedKeys);
-
-  const { handlePageNumber, handleItemPerPage, itemPerPage, pageNumber } =
-    usePaging(data);
+    useFilter(columns, data, selectedKeys, clearSelectedKeys, resetPageNumber);
 
   const { renderColumnValue } = useCell();
 
-  const filterData = useCallback(() => {
-    const filteredData = applyFilterToData(data);
-    if (pageNumber === 0) {
-      return filteredData.slice(0, itemPerPage);
-    }
-    return filteredData.slice(
-      pageNumber * itemPerPage,
-      (pageNumber + 1) * itemPerPage
-    );
-  }, [data, itemPerPage, pageNumber, filters]);
+  const filterDataByInput = useCallback(
+    (inputData: object[]) => {
+      return applyFilterToData(inputData);
+    },
+    [applyFilterToData]
+  );
+
+  const filterDataByPage = useCallback(
+    (inputData: object[]) => {
+      if (pageNumber === 0) {
+        return inputData.slice(0, itemPerPage);
+      }
+      return inputData.slice(
+        pageNumber * itemPerPage,
+        (pageNumber + 1) * itemPerPage
+      );
+    },
+    [itemPerPage, pageNumber]
+  );
 
   const {
     handleCellMouseDown,
     handleCellMouseUp,
     handleCellMouseEnter,
     getSelectedClassName,
-    isDrawing,
-  } = useSelectCell(filterData(), columns);
+  } = useSelectCell(filterDataByPage(filterDataByInput(data)), columns);
 
   useEffect(() => {
-<<<<<<< HEAD
     setKeyfield(itemKey as keyof object);
   }, [itemKey]);
 
   useEffect(() => {
-=======
->>>>>>> e0c00f7c88f835cc23b8d04433f17ab8cfb8497d
     handleVisibleColumns();
     handleFilterAll();
   }, [data]);
@@ -107,40 +115,40 @@ const Gridtable: React.FC<GridtableProps> = ({
 
   return (
     <table className="gridtable">
-      <thead>
-        <tr>
-          <td colSpan={visibleColumns.length + 1}>
-            <TableToolbar
-              data={data}
-              columns={columns}
-              excelColumns={excelColumns}
-              visibleColumns={visibleColumns}
-              enableExcelActions={enableExcelActions}
-              addVisibleColumn={addVisibleColumn}
-              onRowInsert={onRowInsert}
-              refreshData={refreshData}
-            />
-          </td>
-        </tr>
-      </thead>
-<<<<<<< HEAD
+      {enableToolbar ? (
+        <thead>
+          <tr>
+            <td colSpan={visibleColumns.length + 1}>
+              <TableToolbar
+                data={data}
+                columns={columns}
+                excelColumns={excelColumns}
+                visibleColumns={visibleColumns}
+                enableExcelActions={enableExcelActions}
+                selectedKeys={selectedKeys}
+                addVisibleColumn={addVisibleColumn}
+                onRowInsert={onRowInsert}
+                onRowRemoveRange={onRowRemoveRange}
+                refreshData={refreshData}
+              />
+            </td>
+          </tr>
+        </thead>
+      ) : null}
       <tbody>
         <tr className="gridtable__column__row">
-=======
-      <tbody className="gridtable__body">
-        <tr className="gridtable__column__container">
->>>>>>> e0c00f7c88f835cc23b8d04433f17ab8cfb8497d
           {enableSelectActions ? (
             <td className="gridtable__checkbox__cell border__bottom">
               <Checkbox
                 checked={
-                  selectedKeys.length === applyFilterToData(data).length &&
-                  applyFilterToData(data).length > 0
+                  selectedKeys.length === filterDataByInput(data).length &&
+                  selectedKeys.length > 0
                 }
                 onChange={() => handleselectAll()}
                 indeterminate={
                   selectedKeys.length > 0 &&
-                  selectedKeys.length < applyFilterToData(data).length
+                  selectedKeys.length <
+                    filterDataByInput(data).length
                 }
                 radius={2}
                 size={18}
@@ -167,20 +175,11 @@ const Gridtable: React.FC<GridtableProps> = ({
             </td>
           ))}
         </tr>
-        {filterData().length > 0 ? (
-          filterData().map((obj, rowIndex) => (
+        {filterDataByPage(filterDataByInput(data)).length > 0 ? (
+          filterDataByPage(filterDataByInput(data)).map((obj, rowIndex) => (
             <tr
-<<<<<<< HEAD
               key={"gridtable__row__" + rowIndex}
               className={getSelectedRowClass(obj[keyfield])}
-=======
-              key={"gridtable__body__row__" + rowIndex}
-              className={
-                isDrawing
-                  ? ""
-                  : getSelectedRowClass(obj[keyfield])
-              }
->>>>>>> e0c00f7c88f835cc23b8d04433f17ab8cfb8497d
             >
               {enableSelectActions ? (
                 <td className="gridtable__checkbox__cell">

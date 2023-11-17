@@ -48,9 +48,14 @@ export interface ColumnError {
   column: string;
   error: string;
 }
+// export interface RowError {
+//   row: number;
+//   errors: ColumnError[];
+// }
 export interface RowError {
   row: number;
-  errors: ColumnError[];
+  column: string;
+  error: string;
 }
 export interface SelectedCell {
   rowIndex: number;

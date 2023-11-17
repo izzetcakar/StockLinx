@@ -1,13 +1,13 @@
 import { useState } from "react";
 
 export const useSelectRow = (data: object[], keyfield: keyof object) => {
-  const [selectedKeys, setSelectedKeys] = useState<(string | number)[]>([]);
-  const handleSelectRow = (id: string | number) => {
+  const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+  const handleSelectRow = (id: string) => {
     setSelectedKeys((prev) =>
       prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
     );
   };
-  const getSelectedRowClass = (id: string | number): string => {
+  const getSelectedRowClass = (id: string): string => {
     return selectedKeys.includes(id)
       ? "gridtable__row selected"
       : "gridtable__row";

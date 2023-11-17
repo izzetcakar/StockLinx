@@ -18,6 +18,15 @@ export const usePaging = (data: object[]) => {
   const handleItemPerPage = (e: any) => {
     setItemPerPage(e);
   };
+  const resetPageNumber = () => {
+    if (pageNumber !== 0) setPageNumber(0);
+  };
 
-  return { handlePageNumber, handleItemPerPage, pageNumber, itemPerPage };
+  return {
+    handlePageNumber,
+    handleItemPerPage,
+    resetPageNumber,
+    pageNumber,
+    itemPerPage,
+  };
 };

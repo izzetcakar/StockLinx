@@ -1,7 +1,8 @@
 import React from "react";
-import "./editComponent.scss";
 import icon_edit from "../../../assets/icon_pen.png";
 import icon_delete from "../../.././assets/icon_trash.png";
+import { openConfirmModal } from "../modals/modals";
+import "./editComponent.scss";
 
 interface EditComponentProps {
   obj: object;
@@ -17,15 +18,13 @@ const EditComponent: React.FC<EditComponentProps> = ({
   onRowUpdate,
 }) => {
   const onEditHandler = () => {
-    if (onRowUpdate) {
-      onRowUpdate(obj);
-    }
+    onRowUpdate(obj);
   };
 
   const onRemoveHandler = () => {
-    if (onRowRemove) {
+    openConfirmModal("Delete", "Are you sure?", () => {
       onRowRemove(id);
-    }
+    });
   };
 
   return (

@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import { Column, Filter, FilterType } from "../interfaces/interfaces";
-import { Select, TextInput } from "@mantine/core";
+import { NumberInput, Select, TextInput } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 import filterClasses from "./filter.module.scss";
 import textInputClasses from "./textInput.module.scss";
@@ -9,7 +9,8 @@ export const useFilter = (
   columns: Column[],
   data: object[],
   selectedKeys: (string | number)[],
-  clearSelectedKeys: () => void
+  clearSelectedKeys: () => void,
+  resetPageNumber: () => void
 ) => {
   const [filters, setFilters] = useState<Filter[]>([]);
 
@@ -41,10 +42,13 @@ export const useFilter = (
         );
       case FilterType.NUMBER:
         return (
-          <TextInput
-            value={filter.value as string}
+          <NumberInput
+            value={filter.value ? (filter.value as number) : ""}
             onChange={(e) => handleFilterChange(e, filter)}
-            variant="unstyled"
+            classNames={textInputClasses}
+            icon={searchIcon}
+            variant="filled"
+            hideControls
           />
         );
       case FilterType.BOOLEAN:
@@ -100,7 +104,7 @@ export const useFilter = (
         newValue = e.target.value;
         break;
       case FilterType.NUMBER:
-        newValue = e.target.value;
+        newValue = e;
         break;
       case FilterType.BOOLEAN:
         // newValue = e.currentTarget.checked;
@@ -116,6 +120,7 @@ export const useFilter = (
     return newValue;
   };
   const handleFilterChange = (e: any, filter: Filter) => {
+    resetPageNumber();
     if (selectedKeys.length > 0) clearSelectedKeys();
     const newValue = getFilterChangedValue(e, filter);
     const newIsApplied = newValue === null || newValue === "" ? false : true;
@@ -128,6 +133,7 @@ export const useFilter = (
     );
   };
   const applyFilterToData = (inputData: object[]) => {
+    if (filters.length === 0) return inputData;
     return inputData.filter((item: { [key: string]: any }) => {
       let isMatch = true;
       filters.forEach((filter) => {

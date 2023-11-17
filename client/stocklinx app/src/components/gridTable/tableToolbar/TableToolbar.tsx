@@ -14,8 +14,8 @@ import icon_excel from "../../.././assets/icon_excel.png";
 import { utils, read } from "xlsx";
 import ExcelJS from "exceljs";
 import { Button, FileInput } from "@mantine/core";
-import { IconDownload } from "@tabler/icons-react";
-import { openExcelModal } from "../../../modals/category/modals";
+import { IconDownload, IconTrashFilled } from "@tabler/icons-react";
+import { openConfirmModal, openExcelModal } from "../modals/modals";
 import uuid4 from "uuid4";
 import "./tableToolbar.scss";
 interface TableToolbarProps {
@@ -24,8 +24,10 @@ interface TableToolbarProps {
   excelColumns?: ExcelColumn[];
   visibleColumns: VisibleColumn[];
   enableExcelActions: boolean;
+  selectedKeys: string[];
   addVisibleColumn: (column: string) => void;
   onRowInsert?: () => void;
+  onRowRemoveRange: (ids: string[]) => void;
   refreshData?: () => Promise<void> | void;
 }
 const TableToolbar: React.FC<TableToolbarProps> = ({
@@ -34,13 +36,12 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
   visibleColumns,
   excelColumns,
   enableExcelActions,
+  selectedKeys,
   addVisibleColumn,
   onRowInsert,
+  onRowRemoveRange,
   refreshData,
 }) => {
-  // const [errors, setErrors] = useState<RowError[]>([]);
-  // const [importedData, setImportedData] = useState<ImportedExcelData[]>([]);
-
   const handleFileInputChange = async (file: File | null) => {
     if (file) {
       const reader = new FileReader();
@@ -72,12 +73,11 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
                     excelColumn.validate &&
                     !excelColumn.validate(row[column])
                   ) {
-                    handleError(
-                      newErrors,
-                      rowIndex,
+                    newErrors.push({
+                      row: rowIndex,
                       column,
-                      excelColumn.errorText || "Invalid validate value"
-                    );
+                      error: excelColumn.errorText || "Invalid validate value",
+                    });
                   } else if (columnData?.lookup) {
                     const selectedLookup = (
                       columnData.lookup.dataSource as { [key: string]: any }[]
@@ -95,12 +95,11 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
                       }
                     });
                     if (!selectedLookup) {
-                      handleError(
-                        newErrors,
-                        rowIndex,
+                      newErrors.push({
+                        row: rowIndex,
                         column,
-                        "Invalid lookup value"
-                      );
+                        error: "Invalid lookup value",
+                      });
                     }
                   }
                 });
@@ -132,27 +131,7 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
 
       const result = await readFile();
       console.log(result.errors);
-      // setErrors(result.errors);
-      // setImportedData(result.importedData);
-      openExcelModal(result.importedData, columns);
-    }
-  };
-  const handleError = (
-    newErrors: RowError[],
-    row: number,
-    column: string,
-    error: string
-  ) => {
-    const rowError = newErrors.find((x) => x.row === row);
-    if (rowError) {
-      const columnError = rowError.errors.find((x) => x.column === column);
-      if (columnError) {
-        columnError.error = error;
-      } else {
-        rowError.errors.push({ column, error });
-      }
-    } else {
-      newErrors.push({ row, errors: [{ column, error }] });
+      openExcelModal(result.importedData, columns, result.errors);
     }
   };
   const exportToExcel = (isBaseSheet: boolean) => {
@@ -214,6 +193,11 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
       URL.revokeObjectURL(url);
     });
   };
+  const removeRangeHandler = () => {
+    openConfirmModal("Remove Range", "Are you sure?", () =>
+      onRowRemoveRange(selectedKeys)
+    );
+  };
 
   return (
     <div className="gridtable__toolbar">
@@ -236,6 +220,13 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
           iconSize={16}
         />
       ) : null}
+      <Button
+        leftIcon={<IconTrashFilled size={16} />}
+        variant="default"
+        onClick={() => removeRangeHandler()}
+      >
+        Remove Selected Rows
+      </Button>
       {enableExcelActions ? (
         <div className="gridtable__toolbar__last">
           <FileInput
