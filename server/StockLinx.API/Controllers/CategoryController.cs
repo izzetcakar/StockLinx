@@ -49,6 +49,12 @@ namespace StockLinx.API.Controllers
             await _categoryService.CreateCategoryAsync(createDto);
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
         }
+        [HttpPost("range")]
+        public async Task<IActionResult> AddRange(List<CategoryCreateDto> createDtos)
+        {
+            await _categoryService.CreateRangeCategoryAsync(createDtos);
+            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+        }
 
         [HttpPut]
         public async Task<IActionResult> Update(CategoryUpdateDto updateDto)
@@ -62,6 +68,12 @@ namespace StockLinx.API.Controllers
         {
             var category = await _categoryService.GetByIdAsync(id);
             await _categoryService.RemoveAsync(category);
+            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+        }
+        [HttpDelete("range")]
+        public async Task<IActionResult> DeleteRange(List<Guid> categoryIds)
+        {
+            await _categoryService.DeleteRangeCategoryAsync(categoryIds);
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
         }
     }

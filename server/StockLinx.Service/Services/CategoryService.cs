@@ -74,5 +74,29 @@ namespace StockLinx.Service.Services
             var counts = await _categoryRepository.GetCounts();
             return counts;
         }
+
+        public async Task CreateRangeCategoryAsync(List<CategoryCreateDto> createDtos)
+        {
+            var newCategories = new List<Category>();
+            foreach (var createDto in createDtos)
+            {
+                var newCategory = _mapper.Map<Category>(createDto);
+                newCategory.Id = Guid.NewGuid();
+                newCategory.CreatedDate = DateTime.UtcNow;
+                newCategories.Add(newCategory);
+            }
+            await AddRangeAsync(newCategories);
+        }
+
+        public async Task DeleteRangeCategoryAsync(List<Guid> categoryIds)
+        {
+            var categories = new List<Category>();
+            foreach (var categoryId in categoryIds)
+            {
+                var category = GetByIdAsync(categoryId).Result;
+                categories.Add(category);
+            }
+            await RemoveRangeAsync(categories);
+        }
     }
 }

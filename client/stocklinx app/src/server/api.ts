@@ -29,8 +29,8 @@ export const request = async <T>({
   queryData,
 }: {
   requestUrl: string;
-  apiType: "get" | "delete" | "deleteAll" | "put" | "post";
-  queryData?: T | T[] | null;
+  apiType: "get" | "delete" | "put" | "post";
+  queryData?: T | T[] | string[] | null;
 }): Promise<ApiResponse<T>> => {
   let data: T | T[] | null;
   let status: number;

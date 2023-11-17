@@ -10,8 +10,10 @@ namespace StockLinx.Core.Services
     {
         Task<List<CategoryDto>> GetCategoryDtos();
         Task CreateCategoryAsync(CategoryCreateDto createDto);
+        Task CreateRangeCategoryAsync(List<CategoryCreateDto> createDtos);
         Task UpdateCategoryAsync(CategoryUpdateDto updateDto);
         Task DeleteCategoryAsync(Guid categoryId);
+        Task DeleteRangeCategoryAsync(List<Guid> categoryIds);
         Task<List<ProductCategoryCounterDto>> GetCounts();
     }
 }
