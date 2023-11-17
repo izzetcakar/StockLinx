@@ -2,7 +2,14 @@ import { call, put, takeEvery } from "redux-saga/effects";
 import { categoryActions } from "./actions";
 import { ICategory, ICategoryCounts } from "../../interfaces/interfaces";
 import { categoryConst } from "./constant";
-import { FetchCategoryRequest, UpdateCategoryRequest } from "./type";
+import {
+  CreateCategoryRequest,
+  CreateRangeCategoryRequest,
+  FetchCategoryRequest,
+  RemoveCategoryRequest,
+  RemoveRangeCategoryRequest,
+  UpdateCategoryRequest,
+} from "./type";
 import { categoryRequests } from "./requests";
 import { genericActions } from "../generic/actions";
 import {
@@ -76,7 +83,7 @@ function* fetchCategoryCountsSaga() {
   }
   yield put(genericActions.decreaseLoading());
 }
-function* createCategorySaga(action: UpdateCategoryRequest) {
+function* createCategorySaga(action: CreateCategoryRequest) {
   try {
     const { message, success }: IResponse = yield call(
       categoryRequests.create,
@@ -92,6 +99,23 @@ function* createCategorySaga(action: UpdateCategoryRequest) {
     openNotificationError("Category", (e as Error).message);
   }
 }
+function* createRangeCategorySaga(action: CreateRangeCategoryRequest) {
+  try {
+    const { message, success }: IResponse = yield call(
+      categoryRequests.createRange,
+      action.payload.categories
+    );
+    if (success !== undefined && !success) {
+      throw new Error(message);
+    } else {
+      yield put(categoryActions.createRangeSuccess());
+      openNotificationSuccess("Categories Created");
+    }
+  } catch (e) {
+    openNotificationError("Category", (e as Error).message);
+  }
+}
+
 function* updateCategorySaga(action: UpdateCategoryRequest) {
   try {
     const { message, success }: IResponse = yield call(
@@ -108,7 +132,7 @@ function* updateCategorySaga(action: UpdateCategoryRequest) {
     openNotificationError("Category", (e as Error).message);
   }
 }
-function* removeCategorySaga(action: FetchCategoryRequest) {
+function* removeCategorySaga(action: RemoveCategoryRequest) {
   try {
     const { message, success }: IResponse = yield call(
       categoryRequests.remove,
@@ -117,8 +141,26 @@ function* removeCategorySaga(action: FetchCategoryRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(categoryActions.removeSuccess());
+      yield put(categoryActions.removeSuccess({ id: action.payload.id }));
       openNotificationSuccess("Category Removed");
+    }
+  } catch (e) {
+    openNotificationError("Category", (e as Error).message);
+  }
+}
+function* removeRangeCategorySaga(action: RemoveRangeCategoryRequest) {
+  try {
+    const { message, success }: IResponse = yield call(
+      categoryRequests.removeRange,
+      action.payload.ids
+    );
+    if (success !== undefined && !success) {
+      throw new Error(message);
+    } else {
+      yield put(
+        categoryActions.removeRangeSuccess({ ids: action.payload.ids })
+      );
+      openNotificationSuccess("Categories Removed");
     }
   } catch (e) {
     openNotificationError("Category", (e as Error).message);
@@ -132,8 +174,16 @@ function* categoriesaga() {
   yield takeEvery(categoryConst.FETCH_CATEGORIES_REQUEST, fetchCategoriesSaga);
   yield takeEvery(categoryConst.FETCH_CATEGORY_REQUEST, fetchCategorySaga);
   yield takeEvery(categoryConst.CREATE_CATEGORY_REQUEST, createCategorySaga);
+  yield takeEvery(
+    categoryConst.CREATE_RANGE_CATEGORY_REQUEST,
+    createRangeCategorySaga
+  );
   yield takeEvery(categoryConst.UPDATE_CATEGORY_REQUEST, updateCategorySaga);
   yield takeEvery(categoryConst.REMOVE_CATEGORY_REQUEST, removeCategorySaga);
+  yield takeEvery(
+    categoryConst.REMOVE_RANGE_CATEGORY_REQUEST,
+    removeRangeCategorySaga
+  );
   yield takeEvery(
     categoryConst.FETCH_CATEGORY_COUNTS_REQUEST,
     fetchCategoryCountsSaga

@@ -53,6 +53,18 @@ export default (state = initialState, action: AccessoryActions) => {
       return {
         ...state,
       };
+    case accessoryConst.CREATE_RANGE_ACCESSORY_REQUEST:
+      return {
+        ...state,
+      };
+    case accessoryConst.CREATE_RANGE_ACCESSORY_SUCCESS:
+      return {
+        ...state,
+      };
+    case accessoryConst.CREATE_RANGE_ACCESSORY_FAILURE:
+      return {
+        ...state,
+      };
     case accessoryConst.UPDATE_ACCESSORY_REQUEST:
       return {
         ...state,
@@ -72,8 +84,26 @@ export default (state = initialState, action: AccessoryActions) => {
     case accessoryConst.REMOVE_ACCESSORY_SUCCESS:
       return {
         ...state,
+        accessories: state.accessories.filter(
+          (accessory) => accessory.id !== action.payload.id
+        ),
       };
     case accessoryConst.REMOVE_ACCESSORY_FAILURE:
+      return {
+        ...state,
+      };
+    case accessoryConst.REMOVE_RANGE_ACCESSORY_REQUEST:
+      return {
+        ...state,
+      };
+    case accessoryConst.REMOVE_RANGE_ACCESSORY_SUCCESS:
+      return {
+        ...state,
+        accessories: state.accessories.filter(
+          (accessory) => !action.payload.ids.includes(accessory.id)
+        ),
+      };
+    case accessoryConst.REMOVE_RANGE_ACCESSORY_FAILURE:
       return {
         ...state,
       };

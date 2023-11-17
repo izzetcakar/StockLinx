@@ -2,10 +2,10 @@ import { ICategory } from "../../interfaces/interfaces";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { useDispatch } from "react-redux";
-import { categoryActions } from "../../redux/category/actions";
 import { useColumns } from "./columns";
-import { companyActions } from "../../redux/company/actions";
+import { categoryActions } from "../../redux/category/actions";
 import { branchActions } from "../../redux/branch/actions";
+import { companyActions } from "../../redux/company/actions";
 import { useEffect } from "react";
 import Gridtable from "../../components/gridTable/Gridtable";
 import { openCategoryModal } from "../../modals/category/modals";
@@ -31,16 +31,21 @@ const Category = () => {
         <div className="page-content-header-title">Categories</div>
       </div>
       <Gridtable
-        data={categories.map((c) => ({
-          ...c,
-          test: c.name === "Mouse" ? true : false,
-        }))}
+        data={categories}
         itemKey="id"
         columns={useColumns().columns}
         refreshData={refreshData}
         onRowUpdate={(category) => openCategoryModal(category as ICategory)}
         onRowInsert={() => openCategoryModal()}
+        onRowRemove={(id) => dispatch(categoryActions.remove({ id: id }))}
+        onRowRemoveRange={(ids) =>
+          dispatch(categoryActions.removeRange({ ids: ids }))
+        }
         excelColumns={useColumns().excelColumns}
+        enableToolbar
+        enableEditActions
+        enableExcelActions
+        enableSelectActions
       />
     </>
   );

@@ -53,6 +53,18 @@ export default (state = initialState, action: LicenseActions) => {
       return {
         ...state,
       };
+    case licenseConst.CREATE_RANGE_LICENSE_REQUEST:
+      return {
+        ...state,
+      };
+    case licenseConst.CREATE_RANGE_LICENSE_SUCCESS:
+      return {
+        ...state,
+      };
+    case licenseConst.CREATE_RANGE_LICENSE_FAILURE:
+      return {
+        ...state,
+      };
     case licenseConst.UPDATE_LICENSE_REQUEST:
       return {
         ...state,
@@ -72,8 +84,26 @@ export default (state = initialState, action: LicenseActions) => {
     case licenseConst.REMOVE_LICENSE_SUCCESS:
       return {
         ...state,
+        licenses: state.licenses.filter(
+          (license) => license.id !== action.payload.id
+        ),
       };
     case licenseConst.REMOVE_LICENSE_FAILURE:
+      return {
+        ...state,
+      };
+    case licenseConst.REMOVE_RANGE_LICENSE_REQUEST:
+      return {
+        ...state,
+      };
+    case licenseConst.REMOVE_RANGE_LICENSE_SUCCESS:
+      return {
+        ...state,
+        licenses: state.licenses.filter(
+          (license) => !action.payload.ids.includes(license.id)
+        ),
+      };
+    case licenseConst.REMOVE_RANGE_LICENSE_FAILURE:
       return {
         ...state,
       };

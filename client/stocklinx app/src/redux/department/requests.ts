@@ -1,6 +1,5 @@
 import { IDepartment } from "../../interfaces/interfaces";
 import { request } from "../../server/api";
-
 const requestUrl = "Department/";
 
 const getAll = () => {
@@ -19,6 +18,13 @@ const create = (department: IDepartment) => {
     queryData: department,
   });
 };
+const createRange = (departments: IDepartment[]) => {
+  return request<IDepartment>({
+    requestUrl: requestUrl + "range",
+    apiType: "post",
+    queryData: departments,
+  });
+};
 const update = (department: IDepartment) => {
   return request<IDepartment>({
     requestUrl: requestUrl,
@@ -32,11 +38,20 @@ const remove = (id: string) => {
     apiType: "delete",
   });
 };
+const removeRange = (ids: string[]) => {
+  return request<IDepartment>({
+    requestUrl: requestUrl + "range",
+    apiType: "delete",
+    queryData: ids,
+  });
+};
 
 export const departmentRequests = {
   getAll,
   get,
   create,
+  createRange,
   update,
   remove,
+  removeRange,
 };

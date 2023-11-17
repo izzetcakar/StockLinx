@@ -1,6 +1,5 @@
 import { ILicense } from "../../interfaces/interfaces";
 import { request } from "../../server/api";
-
 const requestUrl = "License/";
 
 const getAll = () => {
@@ -19,6 +18,13 @@ const create = (license: ILicense) => {
     queryData: license,
   });
 };
+const createRange = (licenses: ILicense[]) => {
+  return request<ILicense>({
+    requestUrl: requestUrl + "range",
+    apiType: "post",
+    queryData: licenses,
+  });
+};
 const update = (license: ILicense) => {
   return request<ILicense>({
     requestUrl: requestUrl,
@@ -32,11 +38,20 @@ const remove = (id: string) => {
     apiType: "delete",
   });
 };
+const removeRange = (ids: string[]) => {
+  return request<ILicense>({
+    requestUrl: requestUrl + "range",
+    apiType: "delete",
+    queryData: ids,
+  });
+};
 
 export const licenseRequests = {
   getAll,
   get,
   create,
+  createRange,
   update,
   remove,
+  removeRange,
 };

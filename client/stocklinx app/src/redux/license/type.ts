@@ -6,18 +6,20 @@ export interface LicenseState {
   licenses: ILicense[];
   selectData: SelectData[];
 }
-
-export interface LicenseSucccessPayload {
-  license: ILicense;
-}
-export interface LicensesSucccessPayload {
-  licenses: ILicense[];
-}
 export interface LicenseRequestPayload {
   id: string;
 }
-export interface UpdateLicenseRequestPayload {
+export interface LicensePayload {
   license: ILicense;
+}
+export interface LicensesPayload {
+  licenses: ILicense[];
+}
+export interface LicenseRemoveRangePayload {
+  ids: string[];
+}
+export interface LicenseRemovePayload {
+  id: string;
 }
 
 //GET
@@ -26,7 +28,7 @@ export interface FetchLicensesRequest {
 }
 export type FetchLicensesSuccess = {
   type: typeof licenseConst.FETCH_LICENSES_SUCCESS;
-  payload: LicensesSucccessPayload;
+  payload: LicensesPayload;
 };
 export type FetchLicensesFailure = {
   type: typeof licenseConst.FETCH_LICENSES_FAILURE;
@@ -38,7 +40,7 @@ export interface FetchLicenseRequest {
 }
 export type FetchLicenseSuccess = {
   type: typeof licenseConst.FETCH_LICENSE_SUCCESS;
-  payload: LicenseSucccessPayload;
+  payload: LicensePayload;
 };
 export type FetchLicenseFailure = {
   type: typeof licenseConst.FETCH_LICENSE_FAILURE;
@@ -46,7 +48,7 @@ export type FetchLicenseFailure = {
 //POST
 export interface CreateLicenseRequest {
   type: typeof licenseConst.CREATE_LICENSE_REQUEST;
-  payload: UpdateLicenseRequestPayload;
+  payload: LicensePayload;
 }
 export type CreateLicenseSuccess = {
   type: typeof licenseConst.CREATE_LICENSE_SUCCESS;
@@ -54,10 +56,21 @@ export type CreateLicenseSuccess = {
 export type CreateLicenseFailure = {
   type: typeof licenseConst.CREATE_LICENSE_FAILURE;
 };
+//POST RANGE
+export interface CreateRangeLicenseRequest {
+  type: typeof licenseConst.CREATE_RANGE_LICENSE_REQUEST;
+  payload: LicensesPayload;
+}
+export type CreateRangeLicenseSuccess = {
+  type: typeof licenseConst.CREATE_RANGE_LICENSE_SUCCESS;
+};
+export type CreateRangeLicenseFailure = {
+  type: typeof licenseConst.CREATE_RANGE_LICENSE_FAILURE;
+};
 //PUT
 export interface UpdateLicenseRequest {
   type: typeof licenseConst.UPDATE_LICENSE_REQUEST;
-  payload: UpdateLicenseRequestPayload;
+  payload: LicensePayload;
 }
 export type UpdateLicenseSuccess = {
   type: typeof licenseConst.UPDATE_LICENSE_SUCCESS;
@@ -68,13 +81,26 @@ export type UpdateLicenseFailure = {
 //REMOVE
 export interface RemoveLicenseRequest {
   type: typeof licenseConst.REMOVE_LICENSE_REQUEST;
-  payload: LicenseRequestPayload;
+  payload: LicenseRemovePayload;
 }
 export type RemoveLicenseSuccess = {
   type: typeof licenseConst.REMOVE_LICENSE_SUCCESS;
+  payload: LicenseRemovePayload;
 };
 export type RemoveLicenseFailure = {
   type: typeof licenseConst.REMOVE_LICENSE_FAILURE;
+};
+//REMOVE RANGE
+export interface RemoveRangeLicenseRequest {
+  type: typeof licenseConst.REMOVE_RANGE_LICENSE_REQUEST;
+  payload: LicenseRemoveRangePayload;
+}
+export type RemoveRangeLicenseSuccess = {
+  type: typeof licenseConst.REMOVE_RANGE_LICENSE_SUCCESS;
+  payload: LicenseRemoveRangePayload;
+};
+export type RemoveRangeLicenseFailure = {
+  type: typeof licenseConst.REMOVE_RANGE_LICENSE_FAILURE;
 };
 
 //CLIENT ACTION TYPES
@@ -103,12 +129,18 @@ export type LicenseActions =
   | CreateLicenseRequest
   | CreateLicenseSuccess
   | CreateLicenseFailure
+  | CreateRangeLicenseRequest
+  | CreateRangeLicenseSuccess
+  | CreateRangeLicenseFailure
   | UpdateLicenseRequest
   | UpdateLicenseSuccess
   | UpdateLicenseFailure
   | RemoveLicenseRequest
   | RemoveLicenseSuccess
   | RemoveLicenseFailure
+  | RemoveRangeLicenseRequest
+  | RemoveRangeLicenseSuccess
+  | RemoveRangeLicenseFailure
   | SetLicense
   | SetLicenses
   | ClearLicense

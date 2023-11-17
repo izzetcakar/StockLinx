@@ -8,11 +8,9 @@ import {
   RemoveUsersuccess,
   FetchUsersFailure,
   FetchUsersRequest,
-  FetchUsersSucccessPayload,
   FetchUsersSuccess,
   FetchUserFailure,
   FetchUserRequest,
-  FetchUserSucccessPayload,
   FetchUsersuccess,
   UpdateUserFailure,
   UpdateUserRequest,
@@ -25,17 +23,23 @@ import {
   SignInSuccess,
   SignInFailure,
   LogoutUser,
-  EditUserReuqestPayload,
   RemoveUserRequestPayload,
+  UsersPayload,
+  UserPayload,
+  CreateRangeUserRequest,
+  CreateRangeUserSuccess,
+  CreateRangeUserFailure,
+  UserRemoveRangePayload,
+  RemoveRangeUserRequest,
+  RemoveRangeUserSuccess,
+  RemoveRangeUserFailure,
 } from "./type";
 
 //GET
 const getAll = (): FetchUsersRequest => ({
   type: userConst.FETCH_USERS_REQUEST,
 });
-const getAllSuccess = (
-  payload: FetchUsersSucccessPayload
-): FetchUsersSuccess => ({
+const getAllSuccess = (payload: UsersPayload): FetchUsersSuccess => ({
   type: userConst.FETCH_USERS_SUCCESS,
   payload,
 });
@@ -45,9 +49,7 @@ const getAllFailure = (): FetchUsersFailure => ({
 const getWithToken = (): GetWithTokenRequest => ({
   type: userConst.GET_WITH_TOKEN_REQUEST,
 });
-const getWithTokenSuccess = (
-  payload: FetchUserSucccessPayload
-): GetWithTokenSuccess => ({
+const getWithTokenSuccess = (payload: UserPayload): GetWithTokenSuccess => ({
   type: userConst.GET_WITH_TOKEN_SUCCESS,
   payload,
 });
@@ -59,7 +61,7 @@ const getWithTokenFailure = (): GetWithTokenFailure => ({
 const get = (): FetchUserRequest => ({
   type: userConst.FETCH_USER_REQUEST,
 });
-const getSuccess = (payload: FetchUserSucccessPayload): FetchUsersuccess => ({
+const getSuccess = (payload: UserPayload): FetchUsersuccess => ({
   type: userConst.FETCH_USER_SUCCESS,
   payload,
 });
@@ -68,7 +70,7 @@ const getFailure = (): FetchUserFailure => ({
 });
 
 //POST
-const create = (payload: EditUserReuqestPayload): CreateUserRequest => ({
+const create = (payload: UserPayload): CreateUserRequest => ({
   type: userConst.CREATE_USER_REQUEST,
   payload,
 });
@@ -90,8 +92,20 @@ const signInFailure = (): SignInFailure => ({
   type: userConst.SIGN_IN_FAILURE,
 });
 
+//POST RANGE
+const createRange = (payload: UsersPayload): CreateRangeUserRequest => ({
+  type: userConst.CREATE_RANGE_USER_REQUEST,
+  payload,
+});
+const createRangeSuccess = (): CreateRangeUserSuccess => ({
+  type: userConst.CREATE_RANGE_USER_SUCCESS,
+});
+const createRangeFailure = (): CreateRangeUserFailure => ({
+  type: userConst.CREATE_RANGE_USER_FAILURE,
+});
+
 //PUT
-const update = (payload: EditUserReuqestPayload): UpdateUserRequest => ({
+const update = (payload: UserPayload): UpdateUserRequest => ({
   type: userConst.UPDATE_USER_REQUEST,
   payload,
 });
@@ -114,6 +128,23 @@ const removeFailure = (): RemoveUserFailure => ({
   type: userConst.REMOVE_USER_FAILURE,
 });
 
+//REMOVE RANGE
+const removeRange = (
+  payload: UserRemoveRangePayload
+): RemoveRangeUserRequest => ({
+  type: userConst.REMOVE_RANGE_USER_REQUEST,
+  payload,
+});
+const removeRangeSuccess = (
+  payload: UserRemoveRangePayload
+): RemoveRangeUserSuccess => ({
+  type: userConst.REMOVE_RANGE_USER_SUCCESS,
+  payload,
+});
+const removeRangeFailure = (): RemoveRangeUserFailure => ({
+  type: userConst.REMOVE_RANGE_USER_FAILURE,
+});
+
 //CLIENT ACTIONS
 const logoutUser = (): LogoutUser => ({
   type: userConst.LOGOUT_USER,
@@ -129,12 +160,18 @@ export const userActions = {
   create,
   createSuccess,
   createFailure,
+  createRange,
+  createRangeSuccess,
+  createRangeFailure,
   update,
   updateSuccess,
   updateFailure,
   remove,
   removeSuccess,
   removeFailure,
+  removeRange,
+  removeRangeSuccess,
+  removeRangeFailure,
   getWithToken,
   getWithTokenSuccess,
   getWithTokenFailure,

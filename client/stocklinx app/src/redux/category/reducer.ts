@@ -67,6 +67,18 @@ export default (state = initialState, action: CategoryActions) => {
       return {
         ...state,
       };
+    case categoryConst.CREATE_RANGE_CATEGORY_REQUEST:
+      return {
+        ...state,
+      };
+    case categoryConst.CREATE_RANGE_CATEGORY_SUCCESS:
+      return {
+        ...state,
+      };
+    case categoryConst.CREATE_RANGE_CATEGORY_FAILURE:
+      return {
+        ...state,
+      };
     case categoryConst.UPDATE_CATEGORY_REQUEST:
       return {
         ...state,
@@ -86,8 +98,26 @@ export default (state = initialState, action: CategoryActions) => {
     case categoryConst.REMOVE_CATEGORY_SUCCESS:
       return {
         ...state,
+        categories: state.categories.filter(
+          (category) => category.id !== action.payload.id
+        ),
       };
     case categoryConst.REMOVE_CATEGORY_FAILURE:
+      return {
+        ...state,
+      };
+    case categoryConst.REMOVE_RANGE_CATEGORY_REQUEST:
+      return {
+        ...state,
+      };
+    case categoryConst.REMOVE_RANGE_CATEGORY_SUCCESS:
+      return {
+        ...state,
+        categories: state.categories.filter(
+          (category) => !action.payload.ids.includes(category.id)
+        ),
+      };
+    case categoryConst.REMOVE_RANGE_CATEGORY_FAILURE:
       return {
         ...state,
       };

@@ -1,6 +1,5 @@
 import { ISupplier } from "../../interfaces/interfaces";
 import { request } from "../../server/api";
-
 const requestUrl = "Supplier/";
 
 const getAll = () => {
@@ -19,6 +18,13 @@ const create = (supplier: ISupplier) => {
     queryData: supplier,
   });
 };
+const createRange = (suppliers: ISupplier[]) => {
+  return request<ISupplier>({
+    requestUrl: requestUrl + "range",
+    apiType: "post",
+    queryData: suppliers,
+  });
+};
 const update = (supplier: ISupplier) => {
   return request<ISupplier>({
     requestUrl: requestUrl,
@@ -32,11 +38,20 @@ const remove = (id: string) => {
     apiType: "delete",
   });
 };
+const removeRange = (ids: string[]) => {
+  return request<ISupplier>({
+    requestUrl: requestUrl + "range",
+    apiType: "delete",
+    queryData: ids,
+  });
+};
 
 export const supplierRequests = {
   getAll,
   get,
   create,
+  createRange,
   update,
   remove,
+  removeRange,
 };

@@ -9,7 +9,6 @@ import {
   RemoveCategorySuccess,
   FetchCategoriesFailure,
   FetchCategoriesRequest,
-  CategoriesSucccessPayload,
   FetchCategoriesSuccess,
   FetchCategoryFailure,
   FetchCategoryRequest,
@@ -18,8 +17,6 @@ import {
   UpdateCategoryRequest,
   UpdateCategorySuccess,
   CategoryRequestPayload,
-  UpdateCategoryRequestPayload,
-  CategorySucccessPayload,
   SetCategory,
   SetCategories,
   ClearCategory,
@@ -28,15 +25,23 @@ import {
   CategoryCountsSuccessPayload,
   FetchCategoryCountsSuccess,
   FetchCategoryCountsFailure,
+  CategoriesPayload,
+  CategoryPayload,
+  CreateRangeCategoryRequest,
+  CreateRangeCategorySuccess,
+  CreateRangeCategoryFailure,
+  RemoveRangeCategoryRequest,
+  RemoveRangeCategorySuccess,
+  RemoveRangeCategoryFailure,
+  CategoryRemoveRangePayload,
+  CategoryRemovePayload,
 } from "./type";
 
 //GET
 const getAll = (): FetchCategoriesRequest => ({
   type: categoryConst.FETCH_CATEGORIES_REQUEST,
 });
-const getAllSuccess = (
-  payload: CategoriesSucccessPayload
-): FetchCategoriesSuccess => ({
+const getAllSuccess = (payload: CategoriesPayload): FetchCategoriesSuccess => ({
   type: categoryConst.FETCH_CATEGORIES_SUCCESS,
   payload,
 });
@@ -49,9 +54,7 @@ const get = (payload: CategoryRequestPayload): FetchCategoryRequest => ({
   type: categoryConst.FETCH_CATEGORY_REQUEST,
   payload,
 });
-const getSuccess = (
-  payload: CategorySucccessPayload
-): FetchCategorySuccess => ({
+const getSuccess = (payload: CategoryPayload): FetchCategorySuccess => ({
   type: categoryConst.FETCH_CATEGORY_SUCCESS,
   payload,
 });
@@ -73,9 +76,7 @@ const getCountsFailure = (): FetchCategoryCountsFailure => ({
 });
 
 //POST
-const create = (
-  payload: UpdateCategoryRequestPayload
-): CreateCategoryRequest => ({
+const create = (payload: CategoryPayload): CreateCategoryRequest => ({
   type: categoryConst.CREATE_CATEGORY_REQUEST,
   payload,
 });
@@ -86,10 +87,22 @@ const createFailure = (): CreateCategoryFailure => ({
   type: categoryConst.CREATE_CATEGORY_FAILURE,
 });
 
+//POST RANGE
+const createRange = (
+  payload: CategoriesPayload
+): CreateRangeCategoryRequest => ({
+  type: categoryConst.CREATE_RANGE_CATEGORY_REQUEST,
+  payload,
+});
+const createRangeSuccess = (): CreateRangeCategorySuccess => ({
+  type: categoryConst.CREATE_RANGE_CATEGORY_SUCCESS,
+});
+const createRangeFailure = (): CreateRangeCategoryFailure => ({
+  type: categoryConst.CREATE_RANGE_CATEGORY_FAILURE,
+});
+
 //PUT
-const update = (
-  payload: UpdateCategoryRequestPayload
-): UpdateCategoryRequest => ({
+const update = (payload: CategoryPayload): UpdateCategoryRequest => ({
   type: categoryConst.UPDATE_CATEGORY_REQUEST,
   payload,
 });
@@ -101,15 +114,35 @@ const updateFailure = (): UpdateCategoryFailure => ({
 });
 
 //REMOVE
-const remove = (payload: CategoryRequestPayload): RemoveCategoryRequest => ({
+const remove = (payload: CategoryRemovePayload): RemoveCategoryRequest => ({
   type: categoryConst.REMOVE_CATEGORY_REQUEST,
   payload,
 });
-const removeSuccess = (): RemoveCategorySuccess => ({
+const removeSuccess = (
+  payload: CategoryRemovePayload
+): RemoveCategorySuccess => ({
   type: categoryConst.REMOVE_CATEGORY_SUCCESS,
+  payload,
 });
 const removeFailure = (): RemoveCategoryFailure => ({
   type: categoryConst.REMOVE_CATEGORY_FAILURE,
+});
+
+//REMOVE RANGE
+const removeRange = (
+  payload: CategoryRemoveRangePayload
+): RemoveRangeCategoryRequest => ({
+  type: categoryConst.REMOVE_RANGE_CATEGORY_REQUEST,
+  payload,
+});
+const removeRangeSuccess = (
+  payload: CategoryRemoveRangePayload
+): RemoveRangeCategorySuccess => ({
+  type: categoryConst.REMOVE_RANGE_CATEGORY_SUCCESS,
+  payload,
+});
+const removeRangeFailure = (): RemoveRangeCategoryFailure => ({
+  type: categoryConst.REMOVE_RANGE_CATEGORY_FAILURE,
 });
 
 //CLIENT ACTIONS
@@ -141,12 +174,18 @@ export const categoryActions = {
   create,
   createSuccess,
   createFailure,
+  createRange,
+  createRangeSuccess,
+  createRangeFailure,
   update,
   updateSuccess,
   updateFailure,
   remove,
   removeSuccess,
   removeFailure,
+  removeRange,
+  removeRangeSuccess,
+  removeRangeFailure,
   setCategory,
   clearCategory,
   setCategories,

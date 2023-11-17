@@ -1,6 +1,5 @@
 import { IModel } from "../../interfaces/interfaces";
 import { request } from "../../server/api";
-
 const requestUrl = "Model/";
 
 const getAll = () => {
@@ -19,6 +18,13 @@ const create = (model: IModel) => {
     queryData: model,
   });
 };
+const createRange = (models: IModel[]) => {
+  return request<IModel>({
+    requestUrl: requestUrl + "range",
+    apiType: "post",
+    queryData: models,
+  });
+};
 const update = (model: IModel) => {
   return request<IModel>({
     requestUrl: requestUrl,
@@ -32,11 +38,20 @@ const remove = (id: string) => {
     apiType: "delete",
   });
 };
+const removeRange = (ids: string[]) => {
+  return request<IModel>({
+    requestUrl: requestUrl + "range",
+    apiType: "delete",
+    queryData: ids,
+  });
+};
 
 export const modelRequests = {
   getAll,
   get,
   create,
+  createRange,
   update,
   remove,
+  removeRange,
 };

@@ -1,6 +1,5 @@
 import { IAccessory } from "../../interfaces/interfaces";
 import { request } from "../../server/api";
-
 const requestUrl = "Accessory/";
 
 const getAll = () => {
@@ -19,6 +18,13 @@ const create = (accessory: IAccessory) => {
     queryData: accessory,
   });
 };
+const createRange = (accessories: IAccessory[]) => {
+  return request<IAccessory>({
+    requestUrl: requestUrl + "range",
+    apiType: "post",
+    queryData: accessories,
+  });
+};
 const update = (accessory: IAccessory) => {
   return request<IAccessory>({
     requestUrl: requestUrl,
@@ -32,11 +38,20 @@ const remove = (id: string) => {
     apiType: "delete",
   });
 };
+const removeRange = (ids: string[]) => {
+  return request<IAccessory>({
+    requestUrl: requestUrl + "range",
+    apiType: "delete",
+    queryData: ids,
+  });
+};
 
 export const accessoryRequests = {
   getAll,
   get,
   create,
+  createRange,
   update,
   remove,
+  removeRange,
 };

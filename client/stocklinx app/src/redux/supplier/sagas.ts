@@ -2,7 +2,14 @@ import { call, put, takeEvery } from "redux-saga/effects";
 import { supplierActions } from "./actions";
 import { ISupplier } from "../../interfaces/interfaces";
 import { supplierConst } from "./constant";
-import { FetchSupplierRequest, UpdateSupplierRequest } from "./type";
+import {
+  CreateSupplierRequest,
+  CreateRangeSupplierRequest,
+  FetchSupplierRequest,
+  RemoveSupplierRequest,
+  RemoveRangeSupplierRequest,
+  UpdateSupplierRequest,
+} from "./type";
 import { supplierRequests } from "./requests";
 import { genericActions } from "../generic/actions";
 import {
@@ -56,7 +63,7 @@ function* fetchSupplierSaga(action: FetchSupplierRequest) {
     openNotificationError("Supplier", (e as Error).message);
   }
 }
-function* createSupplierSaga(action: UpdateSupplierRequest) {
+function* createSupplierSaga(action: CreateSupplierRequest) {
   try {
     const { message, success }: IResponse = yield call(
       supplierRequests.create,
@@ -72,6 +79,23 @@ function* createSupplierSaga(action: UpdateSupplierRequest) {
     openNotificationError("Supplier", (e as Error).message);
   }
 }
+function* createRangeSupplierSaga(action: CreateRangeSupplierRequest) {
+  try {
+    const { message, success }: IResponse = yield call(
+      supplierRequests.createRange,
+      action.payload.suppliers
+    );
+    if (success !== undefined && !success) {
+      throw new Error(message);
+    } else {
+      yield put(supplierActions.createRangeSuccess());
+      openNotificationSuccess("Suppliers Created");
+    }
+  } catch (e) {
+    openNotificationError("Supplier", (e as Error).message);
+  }
+}
+
 function* updateSupplierSaga(action: UpdateSupplierRequest) {
   try {
     const { message, success }: IResponse = yield call(
@@ -88,7 +112,7 @@ function* updateSupplierSaga(action: UpdateSupplierRequest) {
     openNotificationError("Supplier", (e as Error).message);
   }
 }
-function* removeSupplierSaga(action: FetchSupplierRequest) {
+function* removeSupplierSaga(action: RemoveSupplierRequest) {
   try {
     const { message, success }: IResponse = yield call(
       supplierRequests.remove,
@@ -97,8 +121,24 @@ function* removeSupplierSaga(action: FetchSupplierRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(supplierActions.removeSuccess());
+      yield put(supplierActions.removeSuccess({ id: action.payload.id }));
       openNotificationSuccess("Supplier Removed");
+    }
+  } catch (e) {
+    openNotificationError("Supplier", (e as Error).message);
+  }
+}
+function* removeRangeSupplierSaga(action: RemoveRangeSupplierRequest) {
+  try {
+    const { message, success }: IResponse = yield call(
+      supplierRequests.removeRange,
+      action.payload.ids
+    );
+    if (success !== undefined && !success) {
+      throw new Error(message);
+    } else {
+      yield put(supplierActions.removeRangeSuccess({ ids: action.payload.ids }));
+      openNotificationSuccess("Suppliers Removed");
     }
   } catch (e) {
     openNotificationError("Supplier", (e as Error).message);
@@ -112,8 +152,16 @@ function* suppliersaga() {
   yield takeEvery(supplierConst.FETCH_SUPPLIERS_REQUEST, fetchSuppliersSaga);
   yield takeEvery(supplierConst.FETCH_SUPPLIER_REQUEST, fetchSupplierSaga);
   yield takeEvery(supplierConst.CREATE_SUPPLIER_REQUEST, createSupplierSaga);
+  yield takeEvery(
+    supplierConst.CREATE_RANGE_SUPPLIER_REQUEST,
+    createRangeSupplierSaga
+  );
   yield takeEvery(supplierConst.UPDATE_SUPPLIER_REQUEST, updateSupplierSaga);
   yield takeEvery(supplierConst.REMOVE_SUPPLIER_REQUEST, removeSupplierSaga);
+  yield takeEvery(
+    supplierConst.REMOVE_RANGE_SUPPLIER_REQUEST,
+    removeRangeSupplierSaga
+  );
 }
 // function* budgetItemSaga() {
 //   yield takeEvery(budgetItemConst.fetchList, listBudgetITem);

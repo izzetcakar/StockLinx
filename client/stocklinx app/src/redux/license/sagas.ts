@@ -2,7 +2,14 @@ import { call, put, takeEvery } from "redux-saga/effects";
 import { licenseActions } from "./actions";
 import { ILicense } from "../../interfaces/interfaces";
 import { licenseConst } from "./constant";
-import { FetchLicenseRequest, UpdateLicenseRequest } from "./type";
+import {
+  CreateLicenseRequest,
+  CreateRangeLicenseRequest,
+  FetchLicenseRequest,
+  RemoveLicenseRequest,
+  RemoveRangeLicenseRequest,
+  UpdateLicenseRequest,
+} from "./type";
 import { licenseRequests } from "./requests";
 import { genericActions } from "../generic/actions";
 import {
@@ -56,7 +63,7 @@ function* fetchLicenseSaga(action: FetchLicenseRequest) {
     openNotificationError("License", (e as Error).message);
   }
 }
-function* createLicenseSaga(action: UpdateLicenseRequest) {
+function* createLicenseSaga(action: CreateLicenseRequest) {
   try {
     const { message, success }: IResponse = yield call(
       licenseRequests.create,
@@ -72,6 +79,23 @@ function* createLicenseSaga(action: UpdateLicenseRequest) {
     openNotificationError("License", (e as Error).message);
   }
 }
+function* createRangeLicenseSaga(action: CreateRangeLicenseRequest) {
+  try {
+    const { message, success }: IResponse = yield call(
+      licenseRequests.createRange,
+      action.payload.licenses
+    );
+    if (success !== undefined && !success) {
+      throw new Error(message);
+    } else {
+      yield put(licenseActions.createRangeSuccess());
+      openNotificationSuccess("Licenses Created");
+    }
+  } catch (e) {
+    openNotificationError("License", (e as Error).message);
+  }
+}
+
 function* updateLicenseSaga(action: UpdateLicenseRequest) {
   try {
     const { message, success }: IResponse = yield call(
@@ -88,7 +112,7 @@ function* updateLicenseSaga(action: UpdateLicenseRequest) {
     openNotificationError("License", (e as Error).message);
   }
 }
-function* removeLicenseSaga(action: FetchLicenseRequest) {
+function* removeLicenseSaga(action: RemoveLicenseRequest) {
   try {
     const { message, success }: IResponse = yield call(
       licenseRequests.remove,
@@ -97,8 +121,24 @@ function* removeLicenseSaga(action: FetchLicenseRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(licenseActions.removeSuccess());
+      yield put(licenseActions.removeSuccess({ id: action.payload.id }));
       openNotificationSuccess("License Removed");
+    }
+  } catch (e) {
+    openNotificationError("License", (e as Error).message);
+  }
+}
+function* removeRangeLicenseSaga(action: RemoveRangeLicenseRequest) {
+  try {
+    const { message, success }: IResponse = yield call(
+      licenseRequests.removeRange,
+      action.payload.ids
+    );
+    if (success !== undefined && !success) {
+      throw new Error(message);
+    } else {
+      yield put(licenseActions.removeRangeSuccess({ ids: action.payload.ids }));
+      openNotificationSuccess("Licenses Removed");
     }
   } catch (e) {
     openNotificationError("License", (e as Error).message);
@@ -112,8 +152,16 @@ function* licensesaga() {
   yield takeEvery(licenseConst.FETCH_LICENSES_REQUEST, fetchLicensesSaga);
   yield takeEvery(licenseConst.FETCH_LICENSE_REQUEST, fetchLicenseSaga);
   yield takeEvery(licenseConst.CREATE_LICENSE_REQUEST, createLicenseSaga);
+  yield takeEvery(
+    licenseConst.CREATE_RANGE_LICENSE_REQUEST,
+    createRangeLicenseSaga
+  );
   yield takeEvery(licenseConst.UPDATE_LICENSE_REQUEST, updateLicenseSaga);
   yield takeEvery(licenseConst.REMOVE_LICENSE_REQUEST, removeLicenseSaga);
+  yield takeEvery(
+    licenseConst.REMOVE_RANGE_LICENSE_REQUEST,
+    removeRangeLicenseSaga
+  );
 }
 // function* budgetItemSaga() {
 //   yield takeEvery(budgetItemConst.fetchList, listBudgetITem);

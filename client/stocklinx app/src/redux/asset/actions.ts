@@ -9,7 +9,6 @@ import {
   RemoveAssetSuccess,
   FetchAssetsFailure,
   FetchAssetsRequest,
-  AssetsSucccessPayload,
   FetchAssetsSuccess,
   FetchAssetFailure,
   FetchAssetRequest,
@@ -18,19 +17,27 @@ import {
   UpdateAssetRequest,
   UpdateAssetSuccess,
   AssetRequestPayload,
-  UpdateAssetRequestPayload,
-  AssetSucccessPayload,
   SetAsset,
   SetAssets,
   ClearAsset,
   ClearAssets,
+  AssetsPayload,
+  AssetPayload,
+  CreateRangeAssetRequest,
+  CreateRangeAssetSuccess,
+  CreateRangeAssetFailure,
+  RemoveRangeAssetRequest,
+  RemoveRangeAssetSuccess,
+  RemoveRangeAssetFailure,
+  AssetRemoveRangePayload,
+  AssetRemovePayload,
 } from "./type";
 
 //GET
 const getAll = (): FetchAssetsRequest => ({
   type: assetConst.FETCH_ASSETS_REQUEST,
 });
-const getAllSuccess = (payload: AssetsSucccessPayload): FetchAssetsSuccess => ({
+const getAllSuccess = (payload: AssetsPayload): FetchAssetsSuccess => ({
   type: assetConst.FETCH_ASSETS_SUCCESS,
   payload,
 });
@@ -43,7 +50,7 @@ const get = (payload: AssetRequestPayload): FetchAssetRequest => ({
   type: assetConst.FETCH_ASSET_REQUEST,
   payload,
 });
-const getSuccess = (payload: AssetSucccessPayload): FetchAssetSuccess => ({
+const getSuccess = (payload: AssetPayload): FetchAssetSuccess => ({
   type: assetConst.FETCH_ASSET_SUCCESS,
   payload,
 });
@@ -52,7 +59,7 @@ const getFailure = (): FetchAssetFailure => ({
 });
 
 //POST
-const create = (payload: UpdateAssetRequestPayload): CreateAssetRequest => ({
+const create = (payload: AssetPayload): CreateAssetRequest => ({
   type: assetConst.CREATE_ASSET_REQUEST,
   payload,
 });
@@ -63,8 +70,20 @@ const createFailure = (): CreateAssetFailure => ({
   type: assetConst.CREATE_ASSET_FAILURE,
 });
 
+//POST RANGE
+const createRange = (payload: AssetsPayload): CreateRangeAssetRequest => ({
+  type: assetConst.CREATE_RANGE_ASSET_REQUEST,
+  payload,
+});
+const createRangeSuccess = (): CreateRangeAssetSuccess => ({
+  type: assetConst.CREATE_RANGE_ASSET_SUCCESS,
+});
+const createRangeFailure = (): CreateRangeAssetFailure => ({
+  type: assetConst.CREATE_RANGE_ASSET_FAILURE,
+});
+
 //PUT
-const update = (payload: UpdateAssetRequestPayload): UpdateAssetRequest => ({
+const update = (payload: AssetPayload): UpdateAssetRequest => ({
   type: assetConst.UPDATE_ASSET_REQUEST,
   payload,
 });
@@ -76,15 +95,35 @@ const updateFailure = (): UpdateAssetFailure => ({
 });
 
 //REMOVE
-const remove = (payload: AssetRequestPayload): RemoveAssetRequest => ({
+const remove = (payload: AssetRemovePayload): RemoveAssetRequest => ({
   type: assetConst.REMOVE_ASSET_REQUEST,
   payload,
 });
-const removeSuccess = (): RemoveAssetSuccess => ({
+const removeSuccess = (
+  payload: AssetRemovePayload
+): RemoveAssetSuccess => ({
   type: assetConst.REMOVE_ASSET_SUCCESS,
+  payload,
 });
 const removeFailure = (): RemoveAssetFailure => ({
   type: assetConst.REMOVE_ASSET_FAILURE,
+});
+
+//REMOVE RANGE
+const removeRange = (
+  payload: AssetRemoveRangePayload
+): RemoveRangeAssetRequest => ({
+  type: assetConst.REMOVE_RANGE_ASSET_REQUEST,
+  payload,
+});
+const removeRangeSuccess = (
+  payload: AssetRemoveRangePayload
+): RemoveRangeAssetSuccess => ({
+  type: assetConst.REMOVE_RANGE_ASSET_SUCCESS,
+  payload,
+});
+const removeRangeFailure = (): RemoveRangeAssetFailure => ({
+  type: assetConst.REMOVE_RANGE_ASSET_FAILURE,
 });
 
 //CLIENT ACTIONS
@@ -113,12 +152,18 @@ export const assetActions = {
   create,
   createSuccess,
   createFailure,
+  createRange,
+  createRangeSuccess,
+  createRangeFailure,
   update,
   updateSuccess,
   updateFailure,
   remove,
   removeSuccess,
   removeFailure,
+  removeRange,
+  removeRangeSuccess,
+  removeRangeFailure,
   setAsset,
   clearAsset,
   setAssets,

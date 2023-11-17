@@ -9,7 +9,6 @@ import {
   RemoveCompanySuccess,
   FetchCompaniesFailure,
   FetchCompaniesRequest,
-  CompaniesSucccessPayload,
   FetchCompaniesSuccess,
   FetchCompanyFailure,
   FetchCompanyRequest,
@@ -18,21 +17,27 @@ import {
   UpdateCompanyRequest,
   UpdateCompanySuccess,
   CompanyRequestPayload,
-  UpdateCompanyRequestPayload,
-  CompanySucccessPayload,
   SetCompany,
   SetCompanies,
   ClearCompany,
   ClearCompanies,
+  CompaniesPayload,
+  CompanyPayload,
+  CreateRangeCompanyRequest,
+  CreateRangeCompanySuccess,
+  CreateRangeCompanyFailure,
+  RemoveRangeCompanyRequest,
+  RemoveRangeCompanySuccess,
+  RemoveRangeCompanyFailure,
+  CompanyRemoveRangePayload,
+  CompanyRemovePayload,
 } from "./type";
 
 //GET
 const getAll = (): FetchCompaniesRequest => ({
   type: companyConst.FETCH_COMPANIES_REQUEST,
 });
-const getAllSuccess = (
-  payload: CompaniesSucccessPayload
-): FetchCompaniesSuccess => ({
+const getAllSuccess = (payload: CompaniesPayload): FetchCompaniesSuccess => ({
   type: companyConst.FETCH_COMPANIES_SUCCESS,
   payload,
 });
@@ -45,7 +50,7 @@ const get = (payload: CompanyRequestPayload): FetchCompanyRequest => ({
   type: companyConst.FETCH_COMPANY_REQUEST,
   payload,
 });
-const getSuccess = (payload: CompanySucccessPayload): FetchCompanySuccess => ({
+const getSuccess = (payload: CompanyPayload): FetchCompanySuccess => ({
   type: companyConst.FETCH_COMPANY_SUCCESS,
   payload,
 });
@@ -54,9 +59,7 @@ const getFailure = (): FetchCompanyFailure => ({
 });
 
 //POST
-const create = (
-  payload: UpdateCompanyRequestPayload
-): CreateCompanyRequest => ({
+const create = (payload: CompanyPayload): CreateCompanyRequest => ({
   type: companyConst.CREATE_COMPANY_REQUEST,
   payload,
 });
@@ -67,10 +70,20 @@ const createFailure = (): CreateCompanyFailure => ({
   type: companyConst.CREATE_COMPANY_FAILURE,
 });
 
+//POST RANGE
+const createRange = (payload: CompaniesPayload): CreateRangeCompanyRequest => ({
+  type: companyConst.CREATE_RANGE_COMPANY_REQUEST,
+  payload,
+});
+const createRangeSuccess = (): CreateRangeCompanySuccess => ({
+  type: companyConst.CREATE_RANGE_COMPANY_SUCCESS,
+});
+const createRangeFailure = (): CreateRangeCompanyFailure => ({
+  type: companyConst.CREATE_RANGE_COMPANY_FAILURE,
+});
+
 //PUT
-const update = (
-  payload: UpdateCompanyRequestPayload
-): UpdateCompanyRequest => ({
+const update = (payload: CompanyPayload): UpdateCompanyRequest => ({
   type: companyConst.UPDATE_COMPANY_REQUEST,
   payload,
 });
@@ -82,15 +95,35 @@ const updateFailure = (): UpdateCompanyFailure => ({
 });
 
 //REMOVE
-const remove = (payload: CompanyRequestPayload): RemoveCompanyRequest => ({
+const remove = (payload: CompanyRemovePayload): RemoveCompanyRequest => ({
   type: companyConst.REMOVE_COMPANY_REQUEST,
   payload,
 });
-const removeSuccess = (): RemoveCompanySuccess => ({
+const removeSuccess = (
+  payload: CompanyRemovePayload
+): RemoveCompanySuccess => ({
   type: companyConst.REMOVE_COMPANY_SUCCESS,
+  payload,
 });
 const removeFailure = (): RemoveCompanyFailure => ({
   type: companyConst.REMOVE_COMPANY_FAILURE,
+});
+
+//REMOVE RANGE
+const removeRange = (
+  payload: CompanyRemoveRangePayload
+): RemoveRangeCompanyRequest => ({
+  type: companyConst.REMOVE_RANGE_COMPANY_REQUEST,
+  payload,
+});
+const removeRangeSuccess = (
+  payload: CompanyRemoveRangePayload
+): RemoveRangeCompanySuccess => ({
+  type: companyConst.REMOVE_RANGE_COMPANY_SUCCESS,
+  payload,
+});
+const removeRangeFailure = (): RemoveRangeCompanyFailure => ({
+  type: companyConst.REMOVE_RANGE_COMPANY_FAILURE,
 });
 
 //CLIENT ACTIONS
@@ -119,12 +152,18 @@ export const companyActions = {
   create,
   createSuccess,
   createFailure,
+  createRange,
+  createRangeSuccess,
+  createRangeFailure,
   update,
   updateSuccess,
   updateFailure,
   remove,
   removeSuccess,
   removeFailure,
+  removeRange,
+  removeRangeSuccess,
+  removeRangeFailure,
   setCompany,
   clearCompany,
   setCompanies,

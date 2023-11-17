@@ -1,6 +1,5 @@
 import { ICompany } from "../../interfaces/interfaces";
 import { request } from "../../server/api";
-
 const requestUrl = "Company/";
 
 const getAll = () => {
@@ -19,6 +18,13 @@ const create = (company: ICompany) => {
     queryData: company,
   });
 };
+const createRange = (companies: ICompany[]) => {
+  return request<ICompany>({
+    requestUrl: requestUrl + "range",
+    apiType: "post",
+    queryData: companies,
+  });
+};
 const update = (company: ICompany) => {
   return request<ICompany>({
     requestUrl: requestUrl,
@@ -32,11 +38,20 @@ const remove = (id: string) => {
     apiType: "delete",
   });
 };
+const removeRange = (ids: string[]) => {
+  return request<ICompany>({
+    requestUrl: requestUrl + "range",
+    apiType: "delete",
+    queryData: ids,
+  });
+};
 
 export const companyRequests = {
   getAll,
   get,
   create,
+  createRange,
   update,
   remove,
+  removeRange,
 };

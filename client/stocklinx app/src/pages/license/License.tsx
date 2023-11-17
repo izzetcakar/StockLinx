@@ -2,28 +2,19 @@ import { ILicense } from "../../interfaces/interfaces";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
-import { licenseActions } from "../../redux/license/actions";
-import { categoryActions } from "../../redux/category/actions";
-import { locationActions } from "../../redux/location/actions";
 import { companyActions } from "../../redux/company/actions";
-import { supplierActions } from "../../redux/supplier/actions";
 import { useColumns } from "./columns";
-import BaseDataGrid from "../../components/generic/BaseDataGrid";
-import {
-  RowInsertingEvent,
-  RowRemovingEvent,
-  RowUpdatingEvent,
-} from "devextreme/ui/data_grid";
-import { datagridRequest } from "../../functions/datagridRequest";
-import React from "react";
-import DataGrid from "devextreme-react/data-grid";
-import Button from "devextreme-react/button";
+import { categoryActions } from "../../redux/category/actions";
+import { licenseActions } from "../../redux/license/actions";
+import { supplierActions } from "../../redux/supplier/actions";
+import { locationActions } from "../../redux/location/actions";
 import { branchActions } from "../../redux/branch/actions";
+import Gridtable from "../../components/gridTable/Gridtable";
+import { openLicenseModal } from "../../modals/product/license/modals";
 
 const License = () => {
   const dispatch = useDispatch();
   const licenses = useSelector((state: RootState) => state.license.licenses);
-  const gridRef: React.LegacyRef<DataGrid<object>> = React.useRef(null);
 
   const refreshData = () => {
     dispatch(supplierActions.getAll());
@@ -33,43 +24,28 @@ const License = () => {
     dispatch(companyActions.getAll());
     dispatch(branchActions.getAll());
   };
-  const onRowInserting = async (e: RowInsertingEvent<ILicense>) => {
-    const newObject = { ...e.data };
-    await datagridRequest(e, "License", "post", newObject);
-  };
-  const onRowUpdating = async (e: RowUpdatingEvent<ILicense>) => {
-    const newObject = { ...e.oldData, ...e.newData };
-    await datagridRequest(e, "License", "put", newObject);
-  };
-  const onRowRemoving = (e: RowRemovingEvent<ILicense>) => {
-    datagridRequest(e, `License/${e.data.id}`, "delete");
-  };
 
   return (
     <>
       <div className="page-content-header">
         <div className="page-content-header-title">Licenses</div>
-        <Button
-          onClick={() => {
-            gridRef.current?.instance.addRow();
-            gridRef.current?.instance.deselectAll();
-          }}
-          icon="plus"
-          width={"fit-content"}
-          text="Create New"
-          type="default"
-        />
       </div>
-      <BaseDataGrid
-        title="License"
+      <Gridtable
         data={licenses}
-        gridRef={gridRef}
-        columns={useColumns().devColumns}
-        formItems={useColumns().formItems}
-        onRowInserting={onRowInserting}
-        onRowUpdating={onRowUpdating}
-        onRowRemoving={onRowRemoving}
+        itemKey="id"
+        columns={useColumns().columns}
         refreshData={refreshData}
+        onRowUpdate={(license) => openLicenseModal(license as ILicense)}
+        onRowInsert={() => openLicenseModal()}
+        onRowRemove={(id) => dispatch(licenseActions.remove({ id: id }))}
+        onRowRemoveRange={(ids) =>
+          dispatch(licenseActions.removeRange({ ids: ids }))
+        }
+        excelColumns={useColumns().excelColumns}
+        enableToolbar
+        enableEditActions
+        enableExcelActions
+        enableSelectActions
       />
     </>
   );

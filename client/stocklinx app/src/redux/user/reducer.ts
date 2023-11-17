@@ -49,6 +49,18 @@ export default (state = initialState, action: UserActions) => {
       return {
         ...state,
       };
+    case userConst.CREATE_RANGE_USER_REQUEST:
+      return {
+        ...state,
+      };
+    case userConst.CREATE_RANGE_USER_SUCCESS:
+      return {
+        ...state,
+      };
+    case userConst.CREATE_RANGE_USER_FAILURE:
+      return {
+        ...state,
+      };
     case userConst.UPDATE_USER_REQUEST:
       return {
         ...state,
@@ -70,6 +82,21 @@ export default (state = initialState, action: UserActions) => {
         ...state,
       };
     case userConst.REMOVE_USER_FAILURE:
+      return {
+        ...state,
+      };
+    case userConst.REMOVE_RANGE_USER_REQUEST:
+      return {
+        ...state,
+      };
+    case userConst.REMOVE_RANGE_USER_SUCCESS:
+      return {
+        ...state,
+        users: state.users.filter(
+          (user) => !action.payload.ids.includes(user.id)
+        ),
+      };
+    case userConst.REMOVE_RANGE_USER_FAILURE:
       return {
         ...state,
       };

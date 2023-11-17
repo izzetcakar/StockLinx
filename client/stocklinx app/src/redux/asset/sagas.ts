@@ -2,7 +2,14 @@ import { call, put, takeEvery } from "redux-saga/effects";
 import { assetActions } from "./actions";
 import { IAsset } from "../../interfaces/interfaces";
 import { assetConst } from "./constant";
-import { FetchAssetRequest, UpdateAssetRequest } from "./type";
+import {
+  CreateAssetRequest,
+  CreateRangeAssetRequest,
+  FetchAssetRequest,
+  RemoveAssetRequest,
+  RemoveRangeAssetRequest,
+  UpdateAssetRequest,
+} from "./type";
 import { assetRequests } from "./requests";
 import { genericActions } from "../generic/actions";
 import {
@@ -44,7 +51,7 @@ function* fetchAssetSaga(action: FetchAssetRequest) {
       action.payload.id
     );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(
         assetActions.getSuccess({
@@ -56,7 +63,7 @@ function* fetchAssetSaga(action: FetchAssetRequest) {
     openNotificationError("Asset", (e as Error).message);
   }
 }
-function* createAssetSaga(action: UpdateAssetRequest) {
+function* createAssetSaga(action: CreateAssetRequest) {
   try {
     const { message, success }: IResponse = yield call(
       assetRequests.create,
@@ -72,6 +79,23 @@ function* createAssetSaga(action: UpdateAssetRequest) {
     openNotificationError("Asset", (e as Error).message);
   }
 }
+function* createRangeAssetSaga(action: CreateRangeAssetRequest) {
+  try {
+    const { message, success }: IResponse = yield call(
+      assetRequests.createRange,
+      action.payload.assets
+    );
+    if (success !== undefined && !success) {
+      throw new Error(message);
+    } else {
+      yield put(assetActions.createRangeSuccess());
+      openNotificationSuccess("Assets Created");
+    }
+  } catch (e) {
+    openNotificationError("Asset", (e as Error).message);
+  }
+}
+
 function* updateAssetSaga(action: UpdateAssetRequest) {
   try {
     const { message, success }: IResponse = yield call(
@@ -88,7 +112,7 @@ function* updateAssetSaga(action: UpdateAssetRequest) {
     openNotificationError("Asset", (e as Error).message);
   }
 }
-function* removeAssetSaga(action: FetchAssetRequest) {
+function* removeAssetSaga(action: RemoveAssetRequest) {
   try {
     const { message, success }: IResponse = yield call(
       assetRequests.remove,
@@ -97,8 +121,24 @@ function* removeAssetSaga(action: FetchAssetRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(assetActions.removeSuccess());
+      yield put(assetActions.removeSuccess({ id: action.payload.id }));
       openNotificationSuccess("Asset Removed");
+    }
+  } catch (e) {
+    openNotificationError("Asset", (e as Error).message);
+  }
+}
+function* removeRangeAssetSaga(action: RemoveRangeAssetRequest) {
+  try {
+    const { message, success }: IResponse = yield call(
+      assetRequests.removeRange,
+      action.payload.ids
+    );
+    if (success !== undefined && !success) {
+      throw new Error(message);
+    } else {
+      yield put(assetActions.removeRangeSuccess({ ids: action.payload.ids }));
+      openNotificationSuccess("Assets Removed");
     }
   } catch (e) {
     openNotificationError("Asset", (e as Error).message);
@@ -112,8 +152,16 @@ function* assetsaga() {
   yield takeEvery(assetConst.FETCH_ASSETS_REQUEST, fetchAssetsSaga);
   yield takeEvery(assetConst.FETCH_ASSET_REQUEST, fetchAssetSaga);
   yield takeEvery(assetConst.CREATE_ASSET_REQUEST, createAssetSaga);
+  yield takeEvery(
+    assetConst.CREATE_RANGE_ASSET_REQUEST,
+    createRangeAssetSaga
+  );
   yield takeEvery(assetConst.UPDATE_ASSET_REQUEST, updateAssetSaga);
   yield takeEvery(assetConst.REMOVE_ASSET_REQUEST, removeAssetSaga);
+  yield takeEvery(
+    assetConst.REMOVE_RANGE_ASSET_REQUEST,
+    removeRangeAssetSaga
+  );
 }
 // function* budgetItemSaga() {
 //   yield takeEvery(budgetItemConst.fetchList, listBudgetITem);

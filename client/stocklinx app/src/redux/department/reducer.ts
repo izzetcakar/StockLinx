@@ -53,6 +53,18 @@ export default (state = initialState, action: DepartmentActions) => {
       return {
         ...state,
       };
+    case departmentConst.CREATE_RANGE_DEPARTMENT_REQUEST:
+      return {
+        ...state,
+      };
+    case departmentConst.CREATE_RANGE_DEPARTMENT_SUCCESS:
+      return {
+        ...state,
+      };
+    case departmentConst.CREATE_RANGE_DEPARTMENT_FAILURE:
+      return {
+        ...state,
+      };
     case departmentConst.UPDATE_DEPARTMENT_REQUEST:
       return {
         ...state,
@@ -72,8 +84,26 @@ export default (state = initialState, action: DepartmentActions) => {
     case departmentConst.REMOVE_DEPARTMENT_SUCCESS:
       return {
         ...state,
+        departments: state.departments.filter(
+          (department) => department.id !== action.payload.id
+        ),
       };
     case departmentConst.REMOVE_DEPARTMENT_FAILURE:
+      return {
+        ...state,
+      };
+    case departmentConst.REMOVE_RANGE_DEPARTMENT_REQUEST:
+      return {
+        ...state,
+      };
+    case departmentConst.REMOVE_RANGE_DEPARTMENT_SUCCESS:
+      return {
+        ...state,
+        departments: state.departments.filter(
+          (department) => !action.payload.ids.includes(department.id)
+        ),
+      };
+    case departmentConst.REMOVE_RANGE_DEPARTMENT_FAILURE:
       return {
         ...state,
       };

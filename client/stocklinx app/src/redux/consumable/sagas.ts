@@ -2,7 +2,14 @@ import { call, put, takeEvery } from "redux-saga/effects";
 import { consumableActions } from "./actions";
 import { IConsumable } from "../../interfaces/interfaces";
 import { consumableConst } from "./constant";
-import { FetchConsumableRequest, UpdateConsumableRequest } from "./type";
+import {
+  CreateConsumableRequest,
+  CreateRangeConsumableRequest,
+  FetchConsumableRequest,
+  RemoveConsumableRequest,
+  RemoveRangeConsumableRequest,
+  UpdateConsumableRequest,
+} from "./type";
 import { consumableRequests } from "./requests";
 import { genericActions } from "../generic/actions";
 import {
@@ -56,7 +63,7 @@ function* fetchConsumableSaga(action: FetchConsumableRequest) {
     openNotificationError("Consumable", (e as Error).message);
   }
 }
-function* createConsumableSaga(action: UpdateConsumableRequest) {
+function* createConsumableSaga(action: CreateConsumableRequest) {
   try {
     const { message, success }: IResponse = yield call(
       consumableRequests.create,
@@ -72,6 +79,23 @@ function* createConsumableSaga(action: UpdateConsumableRequest) {
     openNotificationError("Consumable", (e as Error).message);
   }
 }
+function* createRangeConsumableSaga(action: CreateRangeConsumableRequest) {
+  try {
+    const { message, success }: IResponse = yield call(
+      consumableRequests.createRange,
+      action.payload.consumables
+    );
+    if (success !== undefined && !success) {
+      throw new Error(message);
+    } else {
+      yield put(consumableActions.createRangeSuccess());
+      openNotificationSuccess("Consumables Created");
+    }
+  } catch (e) {
+    openNotificationError("Consumable", (e as Error).message);
+  }
+}
+
 function* updateConsumableSaga(action: UpdateConsumableRequest) {
   try {
     const { message, success }: IResponse = yield call(
@@ -88,7 +112,7 @@ function* updateConsumableSaga(action: UpdateConsumableRequest) {
     openNotificationError("Consumable", (e as Error).message);
   }
 }
-function* removeConsumableSaga(action: FetchConsumableRequest) {
+function* removeConsumableSaga(action: RemoveConsumableRequest) {
   try {
     const { message, success }: IResponse = yield call(
       consumableRequests.remove,
@@ -97,8 +121,24 @@ function* removeConsumableSaga(action: FetchConsumableRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(consumableActions.removeSuccess());
+      yield put(consumableActions.removeSuccess({ id: action.payload.id }));
       openNotificationSuccess("Consumable Removed");
+    }
+  } catch (e) {
+    openNotificationError("Consumable", (e as Error).message);
+  }
+}
+function* removeRangeConsumableSaga(action: RemoveRangeConsumableRequest) {
+  try {
+    const { message, success }: IResponse = yield call(
+      consumableRequests.removeRange,
+      action.payload.ids
+    );
+    if (success !== undefined && !success) {
+      throw new Error(message);
+    } else {
+      yield put(consumableActions.removeRangeSuccess({ ids: action.payload.ids }));
+      openNotificationSuccess("Consumables Removed");
     }
   } catch (e) {
     openNotificationError("Consumable", (e as Error).message);
@@ -109,25 +149,18 @@ function* consumablesaga() {
   // yield all([
   //   takeLatest(consumableConst.FETCH_CONSUMABLES_REQUEST, fetchConsumablesSaga),
   // ]);
+  yield takeEvery(consumableConst.FETCH_CONSUMABLES_REQUEST, fetchConsumablesSaga);
+  yield takeEvery(consumableConst.FETCH_CONSUMABLE_REQUEST, fetchConsumableSaga);
+  yield takeEvery(consumableConst.CREATE_CONSUMABLE_REQUEST, createConsumableSaga);
   yield takeEvery(
-    consumableConst.FETCH_CONSUMABLES_REQUEST,
-    fetchConsumablesSaga
+    consumableConst.CREATE_RANGE_CONSUMABLE_REQUEST,
+    createRangeConsumableSaga
   );
+  yield takeEvery(consumableConst.UPDATE_CONSUMABLE_REQUEST, updateConsumableSaga);
+  yield takeEvery(consumableConst.REMOVE_CONSUMABLE_REQUEST, removeConsumableSaga);
   yield takeEvery(
-    consumableConst.FETCH_CONSUMABLE_REQUEST,
-    fetchConsumableSaga
-  );
-  yield takeEvery(
-    consumableConst.CREATE_CONSUMABLE_REQUEST,
-    createConsumableSaga
-  );
-  yield takeEvery(
-    consumableConst.UPDATE_CONSUMABLE_REQUEST,
-    updateConsumableSaga
-  );
-  yield takeEvery(
-    consumableConst.REMOVE_CONSUMABLE_REQUEST,
-    removeConsumableSaga
+    consumableConst.REMOVE_RANGE_CONSUMABLE_REQUEST,
+    removeRangeConsumableSaga
   );
 }
 // function* budgetItemSaga() {

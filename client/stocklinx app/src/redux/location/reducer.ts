@@ -5,7 +5,6 @@ const initialState: LocationState = {
   location: null,
   locations: [],
   selectData: [],
-  counts: [],
 };
 
 export default (state = initialState, action: LocationActions) => {
@@ -42,19 +41,6 @@ export default (state = initialState, action: LocationActions) => {
         ...state,
         location: null,
       };
-    case locationConst.FETCH_LOCATION_COUNTS_REQUEST:
-      return {
-        ...state,
-      };
-    case locationConst.FETCH_LOCATION_COUNTS_SUCCESS:
-      return {
-        ...state,
-        counts: action.payload.counts,
-      };
-    case locationConst.FETCH_LOCATION_COUNTS_FAILURE:
-      return {
-        ...state,
-      };
     case locationConst.CREATE_LOCATION_REQUEST:
       return {
         ...state,
@@ -64,6 +50,18 @@ export default (state = initialState, action: LocationActions) => {
         ...state,
       };
     case locationConst.CREATE_LOCATION_FAILURE:
+      return {
+        ...state,
+      };
+    case locationConst.CREATE_RANGE_LOCATION_REQUEST:
+      return {
+        ...state,
+      };
+    case locationConst.CREATE_RANGE_LOCATION_SUCCESS:
+      return {
+        ...state,
+      };
+    case locationConst.CREATE_RANGE_LOCATION_FAILURE:
       return {
         ...state,
       };
@@ -86,8 +84,26 @@ export default (state = initialState, action: LocationActions) => {
     case locationConst.REMOVE_LOCATION_SUCCESS:
       return {
         ...state,
+        locations: state.locations.filter(
+          (location) => location.id !== action.payload.id
+        ),
       };
     case locationConst.REMOVE_LOCATION_FAILURE:
+      return {
+        ...state,
+      };
+    case locationConst.REMOVE_RANGE_LOCATION_REQUEST:
+      return {
+        ...state,
+      };
+    case locationConst.REMOVE_RANGE_LOCATION_SUCCESS:
+      return {
+        ...state,
+        locations: state.locations.filter(
+          (location) => !action.payload.ids.includes(location.id)
+        ),
+      };
+    case locationConst.REMOVE_RANGE_LOCATION_FAILURE:
       return {
         ...state,
       };

@@ -6,18 +6,20 @@ export interface AssetState {
   assets: IAsset[];
   selectData: SelectData[];
 }
-
-export interface AssetSucccessPayload {
-  asset: IAsset;
-}
-export interface AssetsSucccessPayload {
-  assets: IAsset[];
-}
 export interface AssetRequestPayload {
   id: string;
 }
-export interface UpdateAssetRequestPayload {
+export interface AssetPayload {
   asset: IAsset;
+}
+export interface AssetsPayload {
+  assets: IAsset[];
+}
+export interface AssetRemoveRangePayload {
+  ids: string[];
+}
+export interface AssetRemovePayload {
+  id: string;
 }
 
 //GET
@@ -26,7 +28,7 @@ export interface FetchAssetsRequest {
 }
 export type FetchAssetsSuccess = {
   type: typeof assetConst.FETCH_ASSETS_SUCCESS;
-  payload: AssetsSucccessPayload;
+  payload: AssetsPayload;
 };
 export type FetchAssetsFailure = {
   type: typeof assetConst.FETCH_ASSETS_FAILURE;
@@ -38,7 +40,7 @@ export interface FetchAssetRequest {
 }
 export type FetchAssetSuccess = {
   type: typeof assetConst.FETCH_ASSET_SUCCESS;
-  payload: AssetSucccessPayload;
+  payload: AssetPayload;
 };
 export type FetchAssetFailure = {
   type: typeof assetConst.FETCH_ASSET_FAILURE;
@@ -46,7 +48,7 @@ export type FetchAssetFailure = {
 //POST
 export interface CreateAssetRequest {
   type: typeof assetConst.CREATE_ASSET_REQUEST;
-  payload: UpdateAssetRequestPayload;
+  payload: AssetPayload;
 }
 export type CreateAssetSuccess = {
   type: typeof assetConst.CREATE_ASSET_SUCCESS;
@@ -54,10 +56,21 @@ export type CreateAssetSuccess = {
 export type CreateAssetFailure = {
   type: typeof assetConst.CREATE_ASSET_FAILURE;
 };
+//POST RANGE
+export interface CreateRangeAssetRequest {
+  type: typeof assetConst.CREATE_RANGE_ASSET_REQUEST;
+  payload: AssetsPayload;
+}
+export type CreateRangeAssetSuccess = {
+  type: typeof assetConst.CREATE_RANGE_ASSET_SUCCESS;
+};
+export type CreateRangeAssetFailure = {
+  type: typeof assetConst.CREATE_RANGE_ASSET_FAILURE;
+};
 //PUT
 export interface UpdateAssetRequest {
   type: typeof assetConst.UPDATE_ASSET_REQUEST;
-  payload: UpdateAssetRequestPayload;
+  payload: AssetPayload;
 }
 export type UpdateAssetSuccess = {
   type: typeof assetConst.UPDATE_ASSET_SUCCESS;
@@ -68,13 +81,26 @@ export type UpdateAssetFailure = {
 //REMOVE
 export interface RemoveAssetRequest {
   type: typeof assetConst.REMOVE_ASSET_REQUEST;
-  payload: AssetRequestPayload;
+  payload: AssetRemovePayload;
 }
 export type RemoveAssetSuccess = {
   type: typeof assetConst.REMOVE_ASSET_SUCCESS;
+  payload: AssetRemovePayload;
 };
 export type RemoveAssetFailure = {
   type: typeof assetConst.REMOVE_ASSET_FAILURE;
+};
+//REMOVE RANGE
+export interface RemoveRangeAssetRequest {
+  type: typeof assetConst.REMOVE_RANGE_ASSET_REQUEST;
+  payload: AssetRemoveRangePayload;
+}
+export type RemoveRangeAssetSuccess = {
+  type: typeof assetConst.REMOVE_RANGE_ASSET_SUCCESS;
+  payload: AssetRemoveRangePayload;
+};
+export type RemoveRangeAssetFailure = {
+  type: typeof assetConst.REMOVE_RANGE_ASSET_FAILURE;
 };
 
 //CLIENT ACTION TYPES
@@ -103,12 +129,18 @@ export type AssetActions =
   | CreateAssetRequest
   | CreateAssetSuccess
   | CreateAssetFailure
+  | CreateRangeAssetRequest
+  | CreateRangeAssetSuccess
+  | CreateRangeAssetFailure
   | UpdateAssetRequest
   | UpdateAssetSuccess
   | UpdateAssetFailure
   | RemoveAssetRequest
   | RemoveAssetSuccess
   | RemoveAssetFailure
+  | RemoveRangeAssetRequest
+  | RemoveRangeAssetSuccess
+  | RemoveRangeAssetFailure
   | SetAsset
   | SetAssets
   | ClearAsset

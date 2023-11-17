@@ -2,29 +2,20 @@ import { IComponent } from "../../interfaces/interfaces";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
-import { componentActions } from "../../redux/component/actions";
-import { categoryActions } from "../../redux/category/actions";
-import { locationActions } from "../../redux/location/actions";
 import { companyActions } from "../../redux/company/actions";
 import { useColumns } from "./columns";
-import BaseDataGrid from "../../components/generic/BaseDataGrid";
-import {
-  RowInsertingEvent,
-  RowRemovingEvent,
-  RowUpdatingEvent,
-} from "devextreme/ui/data_grid";
-import { datagridRequest } from "../../functions/datagridRequest";
-import React from "react";
-import DataGrid from "devextreme-react/data-grid";
-import Button from "devextreme-react/button";
+import Gridtable from "../../components/gridTable/Gridtable";
+import { categoryActions } from "../../redux/category/actions";
+import { componentActions } from "../../redux/component/actions";
+import { locationActions } from "../../redux/location/actions";
 import { branchActions } from "../../redux/branch/actions";
+import { openComponentModal } from "../../modals/product/component/modals";
 
 const Component = () => {
   const dispatch = useDispatch();
   const components = useSelector(
     (state: RootState) => state.component.components
   );
-  const gridRef: React.LegacyRef<DataGrid<object>> = React.useRef(null);
 
   const refreshData = () => {
     dispatch(componentActions.getAll());
@@ -33,43 +24,28 @@ const Component = () => {
     dispatch(companyActions.getAll());
     dispatch(branchActions.getAll());
   };
-  const onRowInserting = async (e: RowInsertingEvent<IComponent>) => {
-    const newObject = { ...e.data };
-    await datagridRequest(e, "Component", "post", newObject);
-  };
-  const onRowUpdating = async (e: RowUpdatingEvent<IComponent>) => {
-    const newObject = { ...e.oldData, ...e.newData };
-    await datagridRequest(e, "Component", "put", newObject);
-  };
-  const onRowRemoving = (e: RowRemovingEvent<IComponent>) => {
-    datagridRequest(e, `Component/${e.data.id}`, "delete");
-  };
 
   return (
     <>
       <div className="page-content-header">
         <div className="page-content-header-title">Components</div>
-        <Button
-          onClick={() => {
-            gridRef.current?.instance.addRow();
-            gridRef.current?.instance.deselectAll();
-          }}
-          icon="plus"
-          width={"fit-content"}
-          text="Create New"
-          type="default"
-        />
       </div>
-      <BaseDataGrid
-        title="Component"
+      <Gridtable
         data={components}
-        gridRef={gridRef}
-        columns={useColumns().devColumns}
-        formItems={useColumns().formItems}
-        onRowInserting={onRowInserting}
-        onRowUpdating={onRowUpdating}
-        onRowRemoving={onRowRemoving}
+        itemKey="id"
+        columns={useColumns().columns}
         refreshData={refreshData}
+        onRowUpdate={(component) => openComponentModal(component as IComponent)}
+        onRowInsert={() => openComponentModal()}
+        onRowRemove={(id) => dispatch(componentActions.remove({ id: id }))}
+        onRowRemoveRange={(ids) =>
+          dispatch(componentActions.removeRange({ ids: ids }))
+        }
+        excelColumns={useColumns().excelColumns}
+        enableToolbar
+        enableEditActions
+        enableExcelActions
+        enableSelectActions
       />
     </>
   );

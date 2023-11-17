@@ -1,6 +1,5 @@
 import { IComponent } from "../../interfaces/interfaces";
 import { request } from "../../server/api";
-
 const requestUrl = "Component/";
 
 const getAll = () => {
@@ -19,6 +18,13 @@ const create = (component: IComponent) => {
     queryData: component,
   });
 };
+const createRange = (components: IComponent[]) => {
+  return request<IComponent>({
+    requestUrl: requestUrl + "range",
+    apiType: "post",
+    queryData: components,
+  });
+};
 const update = (component: IComponent) => {
   return request<IComponent>({
     requestUrl: requestUrl,
@@ -32,11 +38,20 @@ const remove = (id: string) => {
     apiType: "delete",
   });
 };
+const removeRange = (ids: string[]) => {
+  return request<IComponent>({
+    requestUrl: requestUrl + "range",
+    apiType: "delete",
+    queryData: ids,
+  });
+};
 
 export const componentRequests = {
   getAll,
   get,
   create,
+  createRange,
   update,
   remove,
+  removeRange,
 };

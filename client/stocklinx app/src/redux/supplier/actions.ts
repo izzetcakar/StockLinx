@@ -9,7 +9,6 @@ import {
   RemoveSupplierSuccess,
   FetchSuppliersFailure,
   FetchSuppliersRequest,
-  SuppliersSucccessPayload,
   FetchSuppliersSuccess,
   FetchSupplierFailure,
   FetchSupplierRequest,
@@ -18,21 +17,27 @@ import {
   UpdateSupplierRequest,
   UpdateSupplierSuccess,
   SupplierRequestPayload,
-  UpdateSupplierRequestPayload,
-  SupplierSucccessPayload,
   SetSupplier,
   SetSuppliers,
   ClearSupplier,
   ClearSuppliers,
+  SuppliersPayload,
+  SupplierPayload,
+  CreateRangeSupplierRequest,
+  CreateRangeSupplierSuccess,
+  CreateRangeSupplierFailure,
+  RemoveRangeSupplierRequest,
+  RemoveRangeSupplierSuccess,
+  RemoveRangeSupplierFailure,
+  SupplierRemoveRangePayload,
+  SupplierRemovePayload,
 } from "./type";
 
 //GET
 const getAll = (): FetchSuppliersRequest => ({
   type: supplierConst.FETCH_SUPPLIERS_REQUEST,
 });
-const getAllSuccess = (
-  payload: SuppliersSucccessPayload
-): FetchSuppliersSuccess => ({
+const getAllSuccess = (payload: SuppliersPayload): FetchSuppliersSuccess => ({
   type: supplierConst.FETCH_SUPPLIERS_SUCCESS,
   payload,
 });
@@ -45,9 +50,7 @@ const get = (payload: SupplierRequestPayload): FetchSupplierRequest => ({
   type: supplierConst.FETCH_SUPPLIER_REQUEST,
   payload,
 });
-const getSuccess = (
-  payload: SupplierSucccessPayload
-): FetchSupplierSuccess => ({
+const getSuccess = (payload: SupplierPayload): FetchSupplierSuccess => ({
   type: supplierConst.FETCH_SUPPLIER_SUCCESS,
   payload,
 });
@@ -56,9 +59,7 @@ const getFailure = (): FetchSupplierFailure => ({
 });
 
 //POST
-const create = (
-  payload: UpdateSupplierRequestPayload
-): CreateSupplierRequest => ({
+const create = (payload: SupplierPayload): CreateSupplierRequest => ({
   type: supplierConst.CREATE_SUPPLIER_REQUEST,
   payload,
 });
@@ -69,10 +70,20 @@ const createFailure = (): CreateSupplierFailure => ({
   type: supplierConst.CREATE_SUPPLIER_FAILURE,
 });
 
+//POST RANGE
+const createRange = (payload: SuppliersPayload): CreateRangeSupplierRequest => ({
+  type: supplierConst.CREATE_RANGE_SUPPLIER_REQUEST,
+  payload,
+});
+const createRangeSuccess = (): CreateRangeSupplierSuccess => ({
+  type: supplierConst.CREATE_RANGE_SUPPLIER_SUCCESS,
+});
+const createRangeFailure = (): CreateRangeSupplierFailure => ({
+  type: supplierConst.CREATE_RANGE_SUPPLIER_FAILURE,
+});
+
 //PUT
-const update = (
-  payload: UpdateSupplierRequestPayload
-): UpdateSupplierRequest => ({
+const update = (payload: SupplierPayload): UpdateSupplierRequest => ({
   type: supplierConst.UPDATE_SUPPLIER_REQUEST,
   payload,
 });
@@ -84,15 +95,35 @@ const updateFailure = (): UpdateSupplierFailure => ({
 });
 
 //REMOVE
-const remove = (payload: SupplierRequestPayload): RemoveSupplierRequest => ({
+const remove = (payload: SupplierRemovePayload): RemoveSupplierRequest => ({
   type: supplierConst.REMOVE_SUPPLIER_REQUEST,
   payload,
 });
-const removeSuccess = (): RemoveSupplierSuccess => ({
+const removeSuccess = (
+  payload: SupplierRemovePayload
+): RemoveSupplierSuccess => ({
   type: supplierConst.REMOVE_SUPPLIER_SUCCESS,
+  payload,
 });
 const removeFailure = (): RemoveSupplierFailure => ({
   type: supplierConst.REMOVE_SUPPLIER_FAILURE,
+});
+
+//REMOVE RANGE
+const removeRange = (
+  payload: SupplierRemoveRangePayload
+): RemoveRangeSupplierRequest => ({
+  type: supplierConst.REMOVE_RANGE_SUPPLIER_REQUEST,
+  payload,
+});
+const removeRangeSuccess = (
+  payload: SupplierRemoveRangePayload
+): RemoveRangeSupplierSuccess => ({
+  type: supplierConst.REMOVE_RANGE_SUPPLIER_SUCCESS,
+  payload,
+});
+const removeRangeFailure = (): RemoveRangeSupplierFailure => ({
+  type: supplierConst.REMOVE_RANGE_SUPPLIER_FAILURE,
 });
 
 //CLIENT ACTIONS
@@ -121,12 +152,18 @@ export const supplierActions = {
   create,
   createSuccess,
   createFailure,
+  createRange,
+  createRangeSuccess,
+  createRangeFailure,
   update,
   updateSuccess,
   updateFailure,
   remove,
   removeSuccess,
   removeFailure,
+  removeRange,
+  removeRangeSuccess,
+  removeRangeFailure,
   setSupplier,
   clearSupplier,
   setSuppliers,

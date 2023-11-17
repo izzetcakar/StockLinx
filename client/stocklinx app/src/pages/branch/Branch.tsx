@@ -1,19 +1,12 @@
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
-import { branchActions } from "../../redux/branch/actions";
 import { IBranch } from "../../interfaces/interfaces";
 import { useColumns } from "./columns";
-import BaseDataGrid from "../../components/generic/BaseDataGrid";
-import {
-  RowInsertingEvent,
-  RowRemovingEvent,
-  RowUpdatingEvent,
-} from "devextreme/ui/data_grid";
-import { datagridRequest } from "../../functions/datagridRequest";
 import { companyActions } from "../../redux/company/actions";
 import Gridtable from "../../components/gridTable/Gridtable";
 import { openBranchModal } from "../../modals/branch/modals";
+import { branchActions } from "../../redux/branch/actions";
 
 const Branch = () => {
   const dispatch = useDispatch();
@@ -23,35 +16,12 @@ const Branch = () => {
     dispatch(companyActions.getAll());
     dispatch(branchActions.getAll());
   };
-  const onRowInserting = async (e: RowInsertingEvent<IBranch>) => {
-    const newObject = { ...e.data };
-    await datagridRequest(e, "Branch", "post", newObject);
-  };
-  const onRowUpdating = async (e: RowUpdatingEvent<IBranch>) => {
-    const newObject = { ...e.oldData, ...e.newData };
-    await datagridRequest(e, "Branch", "put", newObject);
-  };
-  const onRowRemoving = (e: RowRemovingEvent<IBranch>) => {
-    datagridRequest(e, `Branch/${e.data.id}`, "delete");
-  };
 
   return (
     <>
       <div className="page-content-header">
         <div className="page-content-header-title">Branches</div>
       </div>
-      <BaseDataGrid
-        title="Branch"
-        data={branches}
-        columns={useColumns().devColumns}
-        formItems={useColumns().formItems}
-        onRowInserting={onRowInserting}
-        onRowUpdating={onRowUpdating}
-        onRowRemoving={onRowRemoving}
-        refreshData={refreshData}
-        toolbarAddButton={true}
-      />
-      <div style={{ padding: "1rem 0" }} />
       <Gridtable
         data={branches}
         itemKey="id"
@@ -59,6 +29,15 @@ const Branch = () => {
         refreshData={refreshData}
         onRowUpdate={(branch) => openBranchModal(branch as IBranch)}
         onRowInsert={() => openBranchModal()}
+        onRowRemove={(id) => dispatch(branchActions.remove({ id: id }))}
+        onRowRemoveRange={(ids) =>
+          dispatch(branchActions.removeRange({ ids: ids }))
+        }
+        excelColumns={useColumns().excelColumns}
+        enableToolbar
+        enableEditActions
+        enableExcelActions
+        enableSelectActions
       />
     </>
   );

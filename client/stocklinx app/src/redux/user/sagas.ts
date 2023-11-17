@@ -2,7 +2,9 @@ import { call, put, takeEvery } from "redux-saga/effects";
 import { userActions } from "./actions";
 import { userConst } from "./constant";
 import {
+  CreateRangeUserRequest,
   CreateUserRequest,
+  RemoveRangeUserRequest,
   RemoveUserRequest,
   SignInRequest,
   UpdateUserRequest,
@@ -84,6 +86,22 @@ function* createUserSaga(action: CreateUserRequest) {
   }
   yield put(genericActions.decreaseLoading());
 }
+function* createRangeUserSaga(action: CreateRangeUserRequest) {
+  try {
+    const { message, success }: IResponse = yield call(
+      userRequests.createRange,
+      action.payload.users
+    );
+    if (success !== undefined && !success) {
+      throw new Error(message);
+    } else {
+      yield put(userActions.createRangeSuccess());
+      openNotificationSuccess("Users Created");
+    }
+  } catch (e) {
+    openNotificationError("User", (e as Error).message);
+  }
+}
 function* updateUserSaga(action: UpdateUserRequest) {
   yield put(genericActions.increaseLoading());
   try {
@@ -119,6 +137,22 @@ function* removeUserSaga(action: RemoveUserRequest) {
     openNotificationError("User", (e as Error).message);
   }
   yield put(genericActions.decreaseLoading());
+}
+function* removeRangeUserSaga(action: RemoveRangeUserRequest) {
+  try {
+    const { message, success }: IResponse = yield call(
+      userRequests.removeRange,
+      action.payload.ids
+    );
+    if (success !== undefined && !success) {
+      throw new Error(message);
+    } else {
+      yield put(userActions.removeRangeSuccess({ ids: action.payload.ids }));
+      openNotificationSuccess("Users Removed");
+    }
+  } catch (e) {
+    openNotificationError("User", (e as Error).message);
+  }
 }
 function* signInSaga(action: SignInRequest) {
   yield put(genericActions.increaseLoading());
@@ -169,8 +203,10 @@ function* usersaga() {
   yield takeEvery(userConst.SIGN_IN_REQUEST, signInSaga);
   yield takeEvery(userConst.GET_WITH_TOKEN_REQUEST, getUserWithTokenSaga);
   yield takeEvery(userConst.CREATE_USER_REQUEST, createUserSaga);
+  yield takeEvery(userConst.CREATE_RANGE_USER_REQUEST, createRangeUserSaga);
   yield takeEvery(userConst.UPDATE_USER_REQUEST, updateUserSaga);
   yield takeEvery(userConst.REMOVE_USER_REQUEST, removeUserSaga);
+  yield takeEvery(userConst.REMOVE_RANGE_USER_REQUEST, removeRangeUserSaga);
 }
 // function* budgetItemSaga() {
 //   yield takeEvery(budgetItemConst.fetchList, listBudgetITem);

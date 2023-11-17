@@ -9,7 +9,6 @@ import {
   RemoveLicenseSuccess,
   FetchLicensesFailure,
   FetchLicensesRequest,
-  LicensesSucccessPayload,
   FetchLicensesSuccess,
   FetchLicenseFailure,
   FetchLicenseRequest,
@@ -18,21 +17,27 @@ import {
   UpdateLicenseRequest,
   UpdateLicenseSuccess,
   LicenseRequestPayload,
-  UpdateLicenseRequestPayload,
-  LicenseSucccessPayload,
   SetLicense,
   SetLicenses,
   ClearLicense,
   ClearLicenses,
+  LicensesPayload,
+  LicensePayload,
+  CreateRangeLicenseRequest,
+  CreateRangeLicenseSuccess,
+  CreateRangeLicenseFailure,
+  RemoveRangeLicenseRequest,
+  RemoveRangeLicenseSuccess,
+  RemoveRangeLicenseFailure,
+  LicenseRemoveRangePayload,
+  LicenseRemovePayload,
 } from "./type";
 
 //GET
 const getAll = (): FetchLicensesRequest => ({
   type: licenseConst.FETCH_LICENSES_REQUEST,
 });
-const getAllSuccess = (
-  payload: LicensesSucccessPayload
-): FetchLicensesSuccess => ({
+const getAllSuccess = (payload: LicensesPayload): FetchLicensesSuccess => ({
   type: licenseConst.FETCH_LICENSES_SUCCESS,
   payload,
 });
@@ -45,7 +50,7 @@ const get = (payload: LicenseRequestPayload): FetchLicenseRequest => ({
   type: licenseConst.FETCH_LICENSE_REQUEST,
   payload,
 });
-const getSuccess = (payload: LicenseSucccessPayload): FetchLicenseSuccess => ({
+const getSuccess = (payload: LicensePayload): FetchLicenseSuccess => ({
   type: licenseConst.FETCH_LICENSE_SUCCESS,
   payload,
 });
@@ -54,9 +59,7 @@ const getFailure = (): FetchLicenseFailure => ({
 });
 
 //POST
-const create = (
-  payload: UpdateLicenseRequestPayload
-): CreateLicenseRequest => ({
+const create = (payload: LicensePayload): CreateLicenseRequest => ({
   type: licenseConst.CREATE_LICENSE_REQUEST,
   payload,
 });
@@ -67,10 +70,20 @@ const createFailure = (): CreateLicenseFailure => ({
   type: licenseConst.CREATE_LICENSE_FAILURE,
 });
 
+//POST RANGE
+const createRange = (payload: LicensesPayload): CreateRangeLicenseRequest => ({
+  type: licenseConst.CREATE_RANGE_LICENSE_REQUEST,
+  payload,
+});
+const createRangeSuccess = (): CreateRangeLicenseSuccess => ({
+  type: licenseConst.CREATE_RANGE_LICENSE_SUCCESS,
+});
+const createRangeFailure = (): CreateRangeLicenseFailure => ({
+  type: licenseConst.CREATE_RANGE_LICENSE_FAILURE,
+});
+
 //PUT
-const update = (
-  payload: UpdateLicenseRequestPayload
-): UpdateLicenseRequest => ({
+const update = (payload: LicensePayload): UpdateLicenseRequest => ({
   type: licenseConst.UPDATE_LICENSE_REQUEST,
   payload,
 });
@@ -82,15 +95,35 @@ const updateFailure = (): UpdateLicenseFailure => ({
 });
 
 //REMOVE
-const remove = (payload: LicenseRequestPayload): RemoveLicenseRequest => ({
+const remove = (payload: LicenseRemovePayload): RemoveLicenseRequest => ({
   type: licenseConst.REMOVE_LICENSE_REQUEST,
   payload,
 });
-const removeSuccess = (): RemoveLicenseSuccess => ({
+const removeSuccess = (
+  payload: LicenseRemovePayload
+): RemoveLicenseSuccess => ({
   type: licenseConst.REMOVE_LICENSE_SUCCESS,
+  payload,
 });
 const removeFailure = (): RemoveLicenseFailure => ({
   type: licenseConst.REMOVE_LICENSE_FAILURE,
+});
+
+//REMOVE RANGE
+const removeRange = (
+  payload: LicenseRemoveRangePayload
+): RemoveRangeLicenseRequest => ({
+  type: licenseConst.REMOVE_RANGE_LICENSE_REQUEST,
+  payload,
+});
+const removeRangeSuccess = (
+  payload: LicenseRemoveRangePayload
+): RemoveRangeLicenseSuccess => ({
+  type: licenseConst.REMOVE_RANGE_LICENSE_SUCCESS,
+  payload,
+});
+const removeRangeFailure = (): RemoveRangeLicenseFailure => ({
+  type: licenseConst.REMOVE_RANGE_LICENSE_FAILURE,
 });
 
 //CLIENT ACTIONS
@@ -119,12 +152,18 @@ export const licenseActions = {
   create,
   createSuccess,
   createFailure,
+  createRange,
+  createRangeSuccess,
+  createRangeFailure,
   update,
   updateSuccess,
   updateFailure,
   remove,
   removeSuccess,
   removeFailure,
+  removeRange,
+  removeRangeSuccess,
+  removeRangeFailure,
   setLicense,
   clearLicense,
   setLicenses,

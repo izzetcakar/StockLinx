@@ -6,18 +6,20 @@ export interface DepartmentState {
   departments: IDepartment[];
   selectData: SelectData[];
 }
-
-export interface DepartmentSucccessPayload {
-  department: IDepartment;
-}
-export interface DepartmentsSucccessPayload {
-  departments: IDepartment[];
-}
 export interface DepartmentRequestPayload {
   id: string;
 }
-export interface UpdateDepartmentRequestPayload {
+export interface DepartmentPayload {
   department: IDepartment;
+}
+export interface DepartmentsPayload {
+  departments: IDepartment[];
+}
+export interface DepartmentRemoveRangePayload {
+  ids: string[];
+}
+export interface DepartmentRemovePayload {
+  id: string;
 }
 
 //GET
@@ -26,7 +28,7 @@ export interface FetchDepartmentsRequest {
 }
 export type FetchDepartmentsSuccess = {
   type: typeof departmentConst.FETCH_DEPARTMENTS_SUCCESS;
-  payload: DepartmentsSucccessPayload;
+  payload: DepartmentsPayload;
 };
 export type FetchDepartmentsFailure = {
   type: typeof departmentConst.FETCH_DEPARTMENTS_FAILURE;
@@ -38,7 +40,7 @@ export interface FetchDepartmentRequest {
 }
 export type FetchDepartmentSuccess = {
   type: typeof departmentConst.FETCH_DEPARTMENT_SUCCESS;
-  payload: DepartmentSucccessPayload;
+  payload: DepartmentPayload;
 };
 export type FetchDepartmentFailure = {
   type: typeof departmentConst.FETCH_DEPARTMENT_FAILURE;
@@ -46,7 +48,7 @@ export type FetchDepartmentFailure = {
 //POST
 export interface CreateDepartmentRequest {
   type: typeof departmentConst.CREATE_DEPARTMENT_REQUEST;
-  payload: UpdateDepartmentRequestPayload;
+  payload: DepartmentPayload;
 }
 export type CreateDepartmentSuccess = {
   type: typeof departmentConst.CREATE_DEPARTMENT_SUCCESS;
@@ -54,10 +56,21 @@ export type CreateDepartmentSuccess = {
 export type CreateDepartmentFailure = {
   type: typeof departmentConst.CREATE_DEPARTMENT_FAILURE;
 };
+//POST RANGE
+export interface CreateRangeDepartmentRequest {
+  type: typeof departmentConst.CREATE_RANGE_DEPARTMENT_REQUEST;
+  payload: DepartmentsPayload;
+}
+export type CreateRangeDepartmentSuccess = {
+  type: typeof departmentConst.CREATE_RANGE_DEPARTMENT_SUCCESS;
+};
+export type CreateRangeDepartmentFailure = {
+  type: typeof departmentConst.CREATE_RANGE_DEPARTMENT_FAILURE;
+};
 //PUT
 export interface UpdateDepartmentRequest {
   type: typeof departmentConst.UPDATE_DEPARTMENT_REQUEST;
-  payload: UpdateDepartmentRequestPayload;
+  payload: DepartmentPayload;
 }
 export type UpdateDepartmentSuccess = {
   type: typeof departmentConst.UPDATE_DEPARTMENT_SUCCESS;
@@ -68,13 +81,26 @@ export type UpdateDepartmentFailure = {
 //REMOVE
 export interface RemoveDepartmentRequest {
   type: typeof departmentConst.REMOVE_DEPARTMENT_REQUEST;
-  payload: DepartmentRequestPayload;
+  payload: DepartmentRemovePayload;
 }
 export type RemoveDepartmentSuccess = {
   type: typeof departmentConst.REMOVE_DEPARTMENT_SUCCESS;
+  payload: DepartmentRemovePayload;
 };
 export type RemoveDepartmentFailure = {
   type: typeof departmentConst.REMOVE_DEPARTMENT_FAILURE;
+};
+//REMOVE RANGE
+export interface RemoveRangeDepartmentRequest {
+  type: typeof departmentConst.REMOVE_RANGE_DEPARTMENT_REQUEST;
+  payload: DepartmentRemoveRangePayload;
+}
+export type RemoveRangeDepartmentSuccess = {
+  type: typeof departmentConst.REMOVE_RANGE_DEPARTMENT_SUCCESS;
+  payload: DepartmentRemoveRangePayload;
+};
+export type RemoveRangeDepartmentFailure = {
+  type: typeof departmentConst.REMOVE_RANGE_DEPARTMENT_FAILURE;
 };
 
 //CLIENT ACTION TYPES
@@ -103,12 +129,18 @@ export type DepartmentActions =
   | CreateDepartmentRequest
   | CreateDepartmentSuccess
   | CreateDepartmentFailure
+  | CreateRangeDepartmentRequest
+  | CreateRangeDepartmentSuccess
+  | CreateRangeDepartmentFailure
   | UpdateDepartmentRequest
   | UpdateDepartmentSuccess
   | UpdateDepartmentFailure
   | RemoveDepartmentRequest
   | RemoveDepartmentSuccess
   | RemoveDepartmentFailure
+  | RemoveRangeDepartmentRequest
+  | RemoveRangeDepartmentSuccess
+  | RemoveRangeDepartmentFailure
   | SetDepartment
   | SetDepartments
   | ClearDepartment

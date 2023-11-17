@@ -1,6 +1,5 @@
-import { ILocation, ILocationCounts } from "../../interfaces/interfaces";
+import { ILocation } from "../../interfaces/interfaces";
 import { request } from "../../server/api";
-
 const requestUrl = "Location/";
 
 const getAll = () => {
@@ -19,6 +18,13 @@ const create = (location: ILocation) => {
     queryData: location,
   });
 };
+const createRange = (locations: ILocation[]) => {
+  return request<ILocation>({
+    requestUrl: requestUrl + "range",
+    apiType: "post",
+    queryData: locations,
+  });
+};
 const update = (location: ILocation) => {
   return request<ILocation>({
     requestUrl: requestUrl,
@@ -32,18 +38,20 @@ const remove = (id: string) => {
     apiType: "delete",
   });
 };
-const getCounts = () => {
-  return request<ILocationCounts>({
-    requestUrl: requestUrl + "GetCounts",
-    apiType: "get",
+const removeRange = (ids: string[]) => {
+  return request<ILocation>({
+    requestUrl: requestUrl + "range",
+    apiType: "delete",
+    queryData: ids,
   });
 };
 
 export const locationRequests = {
-  get,
   getAll,
+  get,
   create,
+  createRange,
   update,
   remove,
-  getCounts,
+  removeRange,
 };

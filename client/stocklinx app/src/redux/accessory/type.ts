@@ -6,18 +6,20 @@ export interface AccessoryState {
   accessories: IAccessory[];
   selectData: SelectData[];
 }
-
-export interface AccessorySucccessPayload {
-  accessory: IAccessory;
-}
-export interface AccessoriesSucccessPayload {
-  accessories: IAccessory[];
-}
 export interface AccessoryRequestPayload {
   id: string;
 }
-export interface UpdateAccessoryRequestPayload {
+export interface AccessoryPayload {
   accessory: IAccessory;
+}
+export interface AccessoriesPayload {
+  accessories: IAccessory[];
+}
+export interface AccessoryRemoveRangePayload {
+  ids: string[];
+}
+export interface AccessoryRemovePayload {
+  id: string;
 }
 
 //GET
@@ -26,7 +28,7 @@ export interface FetchAccessoriesRequest {
 }
 export type FetchAccessoriesSuccess = {
   type: typeof accessoryConst.FETCH_ACCESSORIES_SUCCESS;
-  payload: AccessoriesSucccessPayload;
+  payload: AccessoriesPayload;
 };
 export type FetchAccessoriesFailure = {
   type: typeof accessoryConst.FETCH_ACCESSORIES_FAILURE;
@@ -38,7 +40,7 @@ export interface FetchAccessoryRequest {
 }
 export type FetchAccessorySuccess = {
   type: typeof accessoryConst.FETCH_ACCESSORY_SUCCESS;
-  payload: AccessorySucccessPayload;
+  payload: AccessoryPayload;
 };
 export type FetchAccessoryFailure = {
   type: typeof accessoryConst.FETCH_ACCESSORY_FAILURE;
@@ -46,7 +48,7 @@ export type FetchAccessoryFailure = {
 //POST
 export interface CreateAccessoryRequest {
   type: typeof accessoryConst.CREATE_ACCESSORY_REQUEST;
-  payload: UpdateAccessoryRequestPayload;
+  payload: AccessoryPayload;
 }
 export type CreateAccessorySuccess = {
   type: typeof accessoryConst.CREATE_ACCESSORY_SUCCESS;
@@ -54,10 +56,21 @@ export type CreateAccessorySuccess = {
 export type CreateAccessoryFailure = {
   type: typeof accessoryConst.CREATE_ACCESSORY_FAILURE;
 };
+//POST RANGE
+export interface CreateRangeAccessoryRequest {
+  type: typeof accessoryConst.CREATE_RANGE_ACCESSORY_REQUEST;
+  payload: AccessoriesPayload;
+}
+export type CreateRangeAccessorySuccess = {
+  type: typeof accessoryConst.CREATE_RANGE_ACCESSORY_SUCCESS;
+};
+export type CreateRangeAccessoryFailure = {
+  type: typeof accessoryConst.CREATE_RANGE_ACCESSORY_FAILURE;
+};
 //PUT
 export interface UpdateAccessoryRequest {
   type: typeof accessoryConst.UPDATE_ACCESSORY_REQUEST;
-  payload: UpdateAccessoryRequestPayload;
+  payload: AccessoryPayload;
 }
 export type UpdateAccessorySuccess = {
   type: typeof accessoryConst.UPDATE_ACCESSORY_SUCCESS;
@@ -68,13 +81,26 @@ export type UpdateAccessoryFailure = {
 //REMOVE
 export interface RemoveAccessoryRequest {
   type: typeof accessoryConst.REMOVE_ACCESSORY_REQUEST;
-  payload: AccessoryRequestPayload;
+  payload: AccessoryRemovePayload;
 }
 export type RemoveAccessorySuccess = {
   type: typeof accessoryConst.REMOVE_ACCESSORY_SUCCESS;
+  payload: AccessoryRemovePayload;
 };
 export type RemoveAccessoryFailure = {
   type: typeof accessoryConst.REMOVE_ACCESSORY_FAILURE;
+};
+//REMOVE RANGE
+export interface RemoveRangeAccessoryRequest {
+  type: typeof accessoryConst.REMOVE_RANGE_ACCESSORY_REQUEST;
+  payload: AccessoryRemoveRangePayload;
+}
+export type RemoveRangeAccessorySuccess = {
+  type: typeof accessoryConst.REMOVE_RANGE_ACCESSORY_SUCCESS;
+  payload: AccessoryRemoveRangePayload;
+};
+export type RemoveRangeAccessoryFailure = {
+  type: typeof accessoryConst.REMOVE_RANGE_ACCESSORY_FAILURE;
 };
 
 //CLIENT ACTION TYPES
@@ -103,12 +129,18 @@ export type AccessoryActions =
   | CreateAccessoryRequest
   | CreateAccessorySuccess
   | CreateAccessoryFailure
+  | CreateRangeAccessoryRequest
+  | CreateRangeAccessorySuccess
+  | CreateRangeAccessoryFailure
   | UpdateAccessoryRequest
   | UpdateAccessorySuccess
   | UpdateAccessoryFailure
   | RemoveAccessoryRequest
   | RemoveAccessorySuccess
   | RemoveAccessoryFailure
+  | RemoveRangeAccessoryRequest
+  | RemoveRangeAccessorySuccess
+  | RemoveRangeAccessoryFailure
   | SetAccessory
   | SetAccessories
   | ClearAccessory

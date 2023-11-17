@@ -2,7 +2,14 @@ import { call, put, takeEvery } from "redux-saga/effects";
 import { componentActions } from "./actions";
 import { IComponent } from "../../interfaces/interfaces";
 import { componentConst } from "./constant";
-import { FetchComponentRequest, UpdateComponentRequest } from "./type";
+import {
+  CreateComponentRequest,
+  CreateRangeComponentRequest,
+  FetchComponentRequest,
+  RemoveComponentRequest,
+  RemoveRangeComponentRequest,
+  UpdateComponentRequest,
+} from "./type";
 import { componentRequests } from "./requests";
 import { genericActions } from "../generic/actions";
 import {
@@ -56,7 +63,7 @@ function* fetchComponentSaga(action: FetchComponentRequest) {
     openNotificationError("Component", (e as Error).message);
   }
 }
-function* createComponentSaga(action: UpdateComponentRequest) {
+function* createComponentSaga(action: CreateComponentRequest) {
   try {
     const { message, success }: IResponse = yield call(
       componentRequests.create,
@@ -72,6 +79,23 @@ function* createComponentSaga(action: UpdateComponentRequest) {
     openNotificationError("Component", (e as Error).message);
   }
 }
+function* createRangeComponentSaga(action: CreateRangeComponentRequest) {
+  try {
+    const { message, success }: IResponse = yield call(
+      componentRequests.createRange,
+      action.payload.components
+    );
+    if (success !== undefined && !success) {
+      throw new Error(message);
+    } else {
+      yield put(componentActions.createRangeSuccess());
+      openNotificationSuccess("Components Created");
+    }
+  } catch (e) {
+    openNotificationError("Component", (e as Error).message);
+  }
+}
+
 function* updateComponentSaga(action: UpdateComponentRequest) {
   try {
     const { message, success }: IResponse = yield call(
@@ -88,7 +112,7 @@ function* updateComponentSaga(action: UpdateComponentRequest) {
     openNotificationError("Component", (e as Error).message);
   }
 }
-function* removeComponentSaga(action: FetchComponentRequest) {
+function* removeComponentSaga(action: RemoveComponentRequest) {
   try {
     const { message, success }: IResponse = yield call(
       componentRequests.remove,
@@ -97,8 +121,24 @@ function* removeComponentSaga(action: FetchComponentRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(componentActions.removeSuccess());
+      yield put(componentActions.removeSuccess({ id: action.payload.id }));
       openNotificationSuccess("Component Removed");
+    }
+  } catch (e) {
+    openNotificationError("Component", (e as Error).message);
+  }
+}
+function* removeRangeComponentSaga(action: RemoveRangeComponentRequest) {
+  try {
+    const { message, success }: IResponse = yield call(
+      componentRequests.removeRange,
+      action.payload.ids
+    );
+    if (success !== undefined && !success) {
+      throw new Error(message);
+    } else {
+      yield put(componentActions.removeRangeSuccess({ ids: action.payload.ids }));
+      openNotificationSuccess("Components Removed");
     }
   } catch (e) {
     openNotificationError("Component", (e as Error).message);
@@ -112,8 +152,16 @@ function* componentsaga() {
   yield takeEvery(componentConst.FETCH_COMPONENTS_REQUEST, fetchComponentsSaga);
   yield takeEvery(componentConst.FETCH_COMPONENT_REQUEST, fetchComponentSaga);
   yield takeEvery(componentConst.CREATE_COMPONENT_REQUEST, createComponentSaga);
+  yield takeEvery(
+    componentConst.CREATE_RANGE_COMPONENT_REQUEST,
+    createRangeComponentSaga
+  );
   yield takeEvery(componentConst.UPDATE_COMPONENT_REQUEST, updateComponentSaga);
   yield takeEvery(componentConst.REMOVE_COMPONENT_REQUEST, removeComponentSaga);
+  yield takeEvery(
+    componentConst.REMOVE_RANGE_COMPONENT_REQUEST,
+    removeRangeComponentSaga
+  );
 }
 // function* budgetItemSaga() {
 //   yield takeEvery(budgetItemConst.fetchList, listBudgetITem);

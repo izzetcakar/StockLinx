@@ -1,6 +1,5 @@
 import { IManufacturer } from "../../interfaces/interfaces";
 import { request } from "../../server/api";
-
 const requestUrl = "Manufacturer/";
 
 const getAll = () => {
@@ -19,6 +18,13 @@ const create = (manufacturer: IManufacturer) => {
     queryData: manufacturer,
   });
 };
+const createRange = (manufacturers: IManufacturer[]) => {
+  return request<IManufacturer>({
+    requestUrl: requestUrl + "range",
+    apiType: "post",
+    queryData: manufacturers,
+  });
+};
 const update = (manufacturer: IManufacturer) => {
   return request<IManufacturer>({
     requestUrl: requestUrl,
@@ -32,11 +38,20 @@ const remove = (id: string) => {
     apiType: "delete",
   });
 };
+const removeRange = (ids: string[]) => {
+  return request<IManufacturer>({
+    requestUrl: requestUrl + "range",
+    apiType: "delete",
+    queryData: ids,
+  });
+};
 
 export const manufacturerRequests = {
   getAll,
   get,
   create,
+  createRange,
   update,
   remove,
+  removeRange,
 };

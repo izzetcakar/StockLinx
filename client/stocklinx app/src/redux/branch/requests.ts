@@ -1,6 +1,5 @@
 import { IBranch } from "../../interfaces/interfaces";
 import { request } from "../../server/api";
-
 const requestUrl = "Branch/";
 
 const getAll = () => {
@@ -19,6 +18,13 @@ const create = (branch: IBranch) => {
     queryData: branch,
   });
 };
+const createRange = (branches: IBranch[]) => {
+  return request<IBranch>({
+    requestUrl: requestUrl + "range",
+    apiType: "post",
+    queryData: branches,
+  });
+};
 const update = (branch: IBranch) => {
   return request<IBranch>({
     requestUrl: requestUrl,
@@ -32,11 +38,20 @@ const remove = (id: string) => {
     apiType: "delete",
   });
 };
+const removeRange = (ids: string[]) => {
+  return request<IBranch>({
+    requestUrl: requestUrl + "range",
+    apiType: "delete",
+    queryData: ids,
+  });
+};
 
 export const branchRequests = {
   getAll,
   get,
   create,
+  createRange,
   update,
   remove,
+  removeRange,
 };

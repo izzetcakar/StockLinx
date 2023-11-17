@@ -2,7 +2,14 @@ import { call, put, takeEvery } from "redux-saga/effects";
 import { departmentActions } from "./actions";
 import { IDepartment } from "../../interfaces/interfaces";
 import { departmentConst } from "./constant";
-import { FetchDepartmentRequest, UpdateDepartmentRequest } from "./type";
+import {
+  CreateDepartmentRequest,
+  CreateRangeDepartmentRequest,
+  FetchDepartmentRequest,
+  RemoveDepartmentRequest,
+  RemoveRangeDepartmentRequest,
+  UpdateDepartmentRequest,
+} from "./type";
 import { departmentRequests } from "./requests";
 import { genericActions } from "../generic/actions";
 import {
@@ -56,7 +63,7 @@ function* fetchDepartmentSaga(action: FetchDepartmentRequest) {
     openNotificationError("Department", (e as Error).message);
   }
 }
-function* createDepartmentSaga(action: UpdateDepartmentRequest) {
+function* createDepartmentSaga(action: CreateDepartmentRequest) {
   try {
     const { message, success }: IResponse = yield call(
       departmentRequests.create,
@@ -72,6 +79,23 @@ function* createDepartmentSaga(action: UpdateDepartmentRequest) {
     openNotificationError("Department", (e as Error).message);
   }
 }
+function* createRangeDepartmentSaga(action: CreateRangeDepartmentRequest) {
+  try {
+    const { message, success }: IResponse = yield call(
+      departmentRequests.createRange,
+      action.payload.departments
+    );
+    if (success !== undefined && !success) {
+      throw new Error(message);
+    } else {
+      yield put(departmentActions.createRangeSuccess());
+      openNotificationSuccess("Departments Created");
+    }
+  } catch (e) {
+    openNotificationError("Department", (e as Error).message);
+  }
+}
+
 function* updateDepartmentSaga(action: UpdateDepartmentRequest) {
   try {
     const { message, success }: IResponse = yield call(
@@ -88,7 +112,7 @@ function* updateDepartmentSaga(action: UpdateDepartmentRequest) {
     openNotificationError("Department", (e as Error).message);
   }
 }
-function* removeDepartmentSaga(action: FetchDepartmentRequest) {
+function* removeDepartmentSaga(action: RemoveDepartmentRequest) {
   try {
     const { message, success }: IResponse = yield call(
       departmentRequests.remove,
@@ -97,8 +121,24 @@ function* removeDepartmentSaga(action: FetchDepartmentRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(departmentActions.removeSuccess());
+      yield put(departmentActions.removeSuccess({ id: action.payload.id }));
       openNotificationSuccess("Department Removed");
+    }
+  } catch (e) {
+    openNotificationError("Department", (e as Error).message);
+  }
+}
+function* removeRangeDepartmentSaga(action: RemoveRangeDepartmentRequest) {
+  try {
+    const { message, success }: IResponse = yield call(
+      departmentRequests.removeRange,
+      action.payload.ids
+    );
+    if (success !== undefined && !success) {
+      throw new Error(message);
+    } else {
+      yield put(departmentActions.removeRangeSuccess({ ids: action.payload.ids }));
+      openNotificationSuccess("Departments Removed");
     }
   } catch (e) {
     openNotificationError("Department", (e as Error).message);
@@ -109,25 +149,18 @@ function* departmentsaga() {
   // yield all([
   //   takeLatest(departmentConst.FETCH_DEPARTMENTS_REQUEST, fetchDepartmentsSaga),
   // ]);
+  yield takeEvery(departmentConst.FETCH_DEPARTMENTS_REQUEST, fetchDepartmentsSaga);
+  yield takeEvery(departmentConst.FETCH_DEPARTMENT_REQUEST, fetchDepartmentSaga);
+  yield takeEvery(departmentConst.CREATE_DEPARTMENT_REQUEST, createDepartmentSaga);
   yield takeEvery(
-    departmentConst.FETCH_DEPARTMENTS_REQUEST,
-    fetchDepartmentsSaga
+    departmentConst.CREATE_RANGE_DEPARTMENT_REQUEST,
+    createRangeDepartmentSaga
   );
+  yield takeEvery(departmentConst.UPDATE_DEPARTMENT_REQUEST, updateDepartmentSaga);
+  yield takeEvery(departmentConst.REMOVE_DEPARTMENT_REQUEST, removeDepartmentSaga);
   yield takeEvery(
-    departmentConst.FETCH_DEPARTMENT_REQUEST,
-    fetchDepartmentSaga
-  );
-  yield takeEvery(
-    departmentConst.CREATE_DEPARTMENT_REQUEST,
-    createDepartmentSaga
-  );
-  yield takeEvery(
-    departmentConst.UPDATE_DEPARTMENT_REQUEST,
-    updateDepartmentSaga
-  );
-  yield takeEvery(
-    departmentConst.REMOVE_DEPARTMENT_REQUEST,
-    removeDepartmentSaga
+    departmentConst.REMOVE_RANGE_DEPARTMENT_REQUEST,
+    removeRangeDepartmentSaga
   );
 }
 // function* budgetItemSaga() {

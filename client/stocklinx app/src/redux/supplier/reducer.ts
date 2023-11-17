@@ -53,6 +53,18 @@ export default (state = initialState, action: SupplierActions) => {
       return {
         ...state,
       };
+    case supplierConst.CREATE_RANGE_SUPPLIER_REQUEST:
+      return {
+        ...state,
+      };
+    case supplierConst.CREATE_RANGE_SUPPLIER_SUCCESS:
+      return {
+        ...state,
+      };
+    case supplierConst.CREATE_RANGE_SUPPLIER_FAILURE:
+      return {
+        ...state,
+      };
     case supplierConst.UPDATE_SUPPLIER_REQUEST:
       return {
         ...state,
@@ -72,8 +84,26 @@ export default (state = initialState, action: SupplierActions) => {
     case supplierConst.REMOVE_SUPPLIER_SUCCESS:
       return {
         ...state,
+        suppliers: state.suppliers.filter(
+          (supplier) => supplier.id !== action.payload.id
+        ),
       };
     case supplierConst.REMOVE_SUPPLIER_FAILURE:
+      return {
+        ...state,
+      };
+    case supplierConst.REMOVE_RANGE_SUPPLIER_REQUEST:
+      return {
+        ...state,
+      };
+    case supplierConst.REMOVE_RANGE_SUPPLIER_SUCCESS:
+      return {
+        ...state,
+        suppliers: state.suppliers.filter(
+          (supplier) => !action.payload.ids.includes(supplier.id)
+        ),
+      };
+    case supplierConst.REMOVE_RANGE_SUPPLIER_FAILURE:
       return {
         ...state,
       };

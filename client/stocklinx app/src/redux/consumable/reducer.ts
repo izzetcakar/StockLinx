@@ -53,6 +53,18 @@ export default (state = initialState, action: ConsumableActions) => {
       return {
         ...state,
       };
+    case consumableConst.CREATE_RANGE_CONSUMABLE_REQUEST:
+      return {
+        ...state,
+      };
+    case consumableConst.CREATE_RANGE_CONSUMABLE_SUCCESS:
+      return {
+        ...state,
+      };
+    case consumableConst.CREATE_RANGE_CONSUMABLE_FAILURE:
+      return {
+        ...state,
+      };
     case consumableConst.UPDATE_CONSUMABLE_REQUEST:
       return {
         ...state,
@@ -72,8 +84,26 @@ export default (state = initialState, action: ConsumableActions) => {
     case consumableConst.REMOVE_CONSUMABLE_SUCCESS:
       return {
         ...state,
+        consumables: state.consumables.filter(
+          (consumable) => consumable.id !== action.payload.id
+        ),
       };
     case consumableConst.REMOVE_CONSUMABLE_FAILURE:
+      return {
+        ...state,
+      };
+    case consumableConst.REMOVE_RANGE_CONSUMABLE_REQUEST:
+      return {
+        ...state,
+      };
+    case consumableConst.REMOVE_RANGE_CONSUMABLE_SUCCESS:
+      return {
+        ...state,
+        consumables: state.consumables.filter(
+          (consumable) => !action.payload.ids.includes(consumable.id)
+        ),
+      };
+    case consumableConst.REMOVE_RANGE_CONSUMABLE_FAILURE:
       return {
         ...state,
       };

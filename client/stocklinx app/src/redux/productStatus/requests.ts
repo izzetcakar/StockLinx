@@ -1,6 +1,5 @@
 import { IProductStatus } from "../../interfaces/interfaces";
 import { request } from "../../server/api";
-
 const requestUrl = "ProductStatus/";
 
 const getAll = () => {
@@ -19,6 +18,13 @@ const create = (productStatus: IProductStatus) => {
     queryData: productStatus,
   });
 };
+const createRange = (productStatuses: IProductStatus[]) => {
+  return request<IProductStatus>({
+    requestUrl: requestUrl + "range",
+    apiType: "post",
+    queryData: productStatuses,
+  });
+};
 const update = (productStatus: IProductStatus) => {
   return request<IProductStatus>({
     requestUrl: requestUrl,
@@ -32,11 +38,20 @@ const remove = (id: string) => {
     apiType: "delete",
   });
 };
+const removeRange = (ids: string[]) => {
+  return request<IProductStatus>({
+    requestUrl: requestUrl + "range",
+    apiType: "delete",
+    queryData: ids,
+  });
+};
 
 export const productStatusRequests = {
   getAll,
   get,
   create,
+  createRange,
   update,
   remove,
+  removeRange,
 };

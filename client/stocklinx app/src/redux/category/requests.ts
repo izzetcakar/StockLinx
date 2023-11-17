@@ -18,6 +18,13 @@ const create = (category: ICategory) => {
     queryData: category,
   });
 };
+const createRange = (categories: ICategory[]) => {
+  return request<ICategory>({
+    requestUrl: requestUrl + "range",
+    apiType: "post",
+    queryData: categories,
+  });
+};
 const update = (category: ICategory) => {
   return request<ICategory>({
     requestUrl: requestUrl,
@@ -31,6 +38,13 @@ const remove = (id: string) => {
     apiType: "delete",
   });
 };
+const removeRange = (ids: string[]) => {
+  return request<ICategory>({
+    requestUrl: requestUrl + "range",
+    apiType: "delete",
+    queryData: ids,
+  });
+};
 const getCounts = () => {
   return request<ICategoryCounts>({
     requestUrl: requestUrl + "counts",
@@ -42,7 +56,9 @@ export const categoryRequests = {
   getAll,
   get,
   create,
+  createRange,
   update,
   remove,
+  removeRange,
   getCounts,
 };

@@ -7,10 +7,13 @@ export interface UserState {
   selectData: SelectData[];
 }
 
-export interface FetchUserSucccessPayload {
+export interface UserRequestPayload {
+  id: string;
+}
+export interface UserPayload {
   user: IUser;
 }
-export interface FetchUsersSucccessPayload {
+export interface UsersPayload {
   users: IUser[];
 }
 export interface SignInSuccessPayload {
@@ -19,11 +22,11 @@ export interface SignInSuccessPayload {
 export interface SignInRequestPayload {
   user: IUserLoginDto;
 }
-export interface EditUserReuqestPayload {
-  user: IUser;
-}
 export interface RemoveUserRequestPayload {
   id: string;
+}
+export interface UserRemoveRangePayload {
+  ids: string[];
 }
 
 //GET
@@ -32,39 +35,37 @@ export interface FetchUsersRequest {
 }
 export type FetchUsersSuccess = {
   type: typeof userConst.FETCH_USERS_SUCCESS;
-  payload: FetchUsersSucccessPayload;
+  payload: UsersPayload;
 };
 export type FetchUsersFailure = {
   type: typeof userConst.FETCH_USERS_FAILURE;
 };
-
+//GET WITH TOKEN
 export interface GetWithTokenRequest {
   type: typeof userConst.GET_WITH_TOKEN_REQUEST;
 }
 export type GetWithTokenSuccess = {
   type: typeof userConst.GET_WITH_TOKEN_SUCCESS;
-  payload: FetchUserSucccessPayload;
+  payload: UserPayload;
 };
 export type GetWithTokenFailure = {
   type: typeof userConst.GET_WITH_TOKEN_FAILURE;
 };
-
 //GET:/ID
 export interface FetchUserRequest {
   type: typeof userConst.FETCH_USER_REQUEST;
 }
 export type FetchUsersuccess = {
   type: typeof userConst.FETCH_USER_SUCCESS;
-  payload: FetchUserSucccessPayload;
+  payload: UserPayload;
 };
 export type FetchUserFailure = {
   type: typeof userConst.FETCH_USER_FAILURE;
 };
-
 //POST
 export interface CreateUserRequest {
   type: typeof userConst.CREATE_USER_REQUEST;
-  payload: EditUserReuqestPayload;
+  payload: UserPayload;
 }
 export type CreateUsersuccess = {
   type: typeof userConst.CREATE_USER_SUCCESS;
@@ -72,11 +73,21 @@ export type CreateUsersuccess = {
 export type CreateUserFailure = {
   type: typeof userConst.CREATE_USER_FAILURE;
 };
-
+//POST RANGE
+export interface CreateRangeUserRequest {
+  type: typeof userConst.CREATE_RANGE_USER_REQUEST;
+  payload: UsersPayload;
+}
+export type CreateRangeUserSuccess = {
+  type: typeof userConst.CREATE_RANGE_USER_SUCCESS;
+};
+export type CreateRangeUserFailure = {
+  type: typeof userConst.CREATE_RANGE_USER_FAILURE;
+};
 //PUT
 export interface UpdateUserRequest {
   type: typeof userConst.UPDATE_USER_REQUEST;
-  payload: EditUserReuqestPayload;
+  payload: UserPayload;
 }
 export type UpdateUsersuccess = {
   type: typeof userConst.UPDATE_USER_SUCCESS;
@@ -84,7 +95,6 @@ export type UpdateUsersuccess = {
 export type UpdateUserFailure = {
   type: typeof userConst.UPDATE_USER_FAILURE;
 };
-
 //REMOVE
 export interface RemoveUserRequest {
   type: typeof userConst.REMOVE_USER_REQUEST;
@@ -96,7 +106,19 @@ export type RemoveUsersuccess = {
 export type RemoveUserFailure = {
   type: typeof userConst.REMOVE_USER_FAILURE;
 };
-
+//REMOVE RANGE
+export interface RemoveRangeUserRequest {
+  type: typeof userConst.REMOVE_RANGE_USER_REQUEST;
+  payload: UserRemoveRangePayload;
+}
+export type RemoveRangeUserSuccess = {
+  type: typeof userConst.REMOVE_RANGE_USER_SUCCESS;
+  payload: UserRemoveRangePayload;
+};
+export type RemoveRangeUserFailure = {
+  type: typeof userConst.REMOVE_RANGE_USER_FAILURE;
+};
+//LOGIN
 export interface SignInRequest {
   type: typeof userConst.SIGN_IN_REQUEST;
   payload: SignInRequestPayload;
@@ -122,12 +144,18 @@ export type UserActions =
   | CreateUserRequest
   | CreateUsersuccess
   | CreateUserFailure
+  | CreateRangeUserRequest
+  | CreateRangeUserSuccess
+  | CreateRangeUserFailure
   | UpdateUserRequest
   | UpdateUsersuccess
   | UpdateUserFailure
   | RemoveUserRequest
   | RemoveUsersuccess
   | RemoveUserFailure
+  | RemoveRangeUserRequest
+  | RemoveRangeUserSuccess
+  | RemoveRangeUserFailure
   | SignInRequest
   | SignInSuccess
   | SignInFailure

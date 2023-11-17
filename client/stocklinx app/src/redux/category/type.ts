@@ -11,21 +11,23 @@ export interface CategoryState {
   selectData: SelectData[];
   counts: ICategoryCounts[];
 }
-
-export interface CategorySucccessPayload {
-  category: ICategory;
-}
-export interface CategoriesSucccessPayload {
-  categories: ICategory[];
-}
 export interface CategoryRequestPayload {
   id: string;
 }
-export interface UpdateCategoryRequestPayload {
-  category: ICategory;
-}
 export interface CategoryCountsSuccessPayload {
   counts: ICategoryCounts[];
+}
+export interface CategoryPayload {
+  category: ICategory;
+}
+export interface CategoriesPayload {
+  categories: ICategory[];
+}
+export interface CategoryRemoveRangePayload {
+  ids: string[];
+}
+export interface CategoryRemovePayload {
+  id: string;
 }
 
 //GET
@@ -34,7 +36,7 @@ export interface FetchCategoriesRequest {
 }
 export type FetchCategoriesSuccess = {
   type: typeof categoryConst.FETCH_CATEGORIES_SUCCESS;
-  payload: CategoriesSucccessPayload;
+  payload: CategoriesPayload;
 };
 export type FetchCategoriesFailure = {
   type: typeof categoryConst.FETCH_CATEGORIES_FAILURE;
@@ -57,7 +59,7 @@ export interface FetchCategoryRequest {
 }
 export type FetchCategorySuccess = {
   type: typeof categoryConst.FETCH_CATEGORY_SUCCESS;
-  payload: CategorySucccessPayload;
+  payload: CategoryPayload;
 };
 export type FetchCategoryFailure = {
   type: typeof categoryConst.FETCH_CATEGORY_FAILURE;
@@ -65,7 +67,7 @@ export type FetchCategoryFailure = {
 //POST
 export interface CreateCategoryRequest {
   type: typeof categoryConst.CREATE_CATEGORY_REQUEST;
-  payload: UpdateCategoryRequestPayload;
+  payload: CategoryPayload;
 }
 export type CreateCategorySuccess = {
   type: typeof categoryConst.CREATE_CATEGORY_SUCCESS;
@@ -73,10 +75,21 @@ export type CreateCategorySuccess = {
 export type CreateCategoryFailure = {
   type: typeof categoryConst.CREATE_CATEGORY_FAILURE;
 };
+//POST RANGE
+export interface CreateRangeCategoryRequest {
+  type: typeof categoryConst.CREATE_RANGE_CATEGORY_REQUEST;
+  payload: CategoriesPayload;
+}
+export type CreateRangeCategorySuccess = {
+  type: typeof categoryConst.CREATE_RANGE_CATEGORY_SUCCESS;
+};
+export type CreateRangeCategoryFailure = {
+  type: typeof categoryConst.CREATE_RANGE_CATEGORY_FAILURE;
+};
 //PUT
 export interface UpdateCategoryRequest {
   type: typeof categoryConst.UPDATE_CATEGORY_REQUEST;
-  payload: UpdateCategoryRequestPayload;
+  payload: CategoryPayload;
 }
 export type UpdateCategorySuccess = {
   type: typeof categoryConst.UPDATE_CATEGORY_SUCCESS;
@@ -87,13 +100,26 @@ export type UpdateCategoryFailure = {
 //REMOVE
 export interface RemoveCategoryRequest {
   type: typeof categoryConst.REMOVE_CATEGORY_REQUEST;
-  payload: CategoryRequestPayload;
+  payload: CategoryRemovePayload;
 }
 export type RemoveCategorySuccess = {
   type: typeof categoryConst.REMOVE_CATEGORY_SUCCESS;
+  payload: CategoryRemovePayload;
 };
 export type RemoveCategoryFailure = {
   type: typeof categoryConst.REMOVE_CATEGORY_FAILURE;
+};
+//REMOVE RANGE
+export interface RemoveRangeCategoryRequest {
+  type: typeof categoryConst.REMOVE_RANGE_CATEGORY_REQUEST;
+  payload: CategoryRemoveRangePayload;
+}
+export type RemoveRangeCategorySuccess = {
+  type: typeof categoryConst.REMOVE_RANGE_CATEGORY_SUCCESS;
+  payload: CategoryRemoveRangePayload;
+};
+export type RemoveRangeCategoryFailure = {
+  type: typeof categoryConst.REMOVE_RANGE_CATEGORY_FAILURE;
 };
 
 //CLIENT ACTION TYPES
@@ -125,12 +151,18 @@ export type CategoryActions =
   | CreateCategoryRequest
   | CreateCategorySuccess
   | CreateCategoryFailure
+  | CreateRangeCategoryRequest
+  | CreateRangeCategorySuccess
+  | CreateRangeCategoryFailure
   | UpdateCategoryRequest
   | UpdateCategorySuccess
   | UpdateCategoryFailure
   | RemoveCategoryRequest
   | RemoveCategorySuccess
   | RemoveCategoryFailure
+  | RemoveRangeCategoryRequest
+  | RemoveRangeCategorySuccess
+  | RemoveRangeCategoryFailure
   | SetCategory
   | SetCategories
   | ClearCategory

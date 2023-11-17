@@ -5,7 +5,6 @@ import {
   ExcelColumn,
   Column as MyColumn,
 } from "../../components/gridTable/interfaces/interfaces";
-import { Checkbox } from "@mantine/core";
 
 export const useColumns = () => {
   const productTypes = [
@@ -32,22 +31,6 @@ export const useColumns = () => {
       },
       dataType: "number",
     },
-    {
-      dataField: "test",
-      caption: "Test",
-      dataType: "boolean",
-      lookup: {
-        dataSource: [
-          { id: true, name: "Checked" },
-          { id: false, name: "Not Checked" },
-        ],
-        valueExpr: "id",
-        displayExpr: "name",
-      },
-      renderComponent(value) {
-        return <Checkbox checked={value} disabled />;
-      },
-    },
   ];
   const excelColumns: ExcelColumn[] = [
     {
@@ -59,9 +42,6 @@ export const useColumns = () => {
     },
     {
       dataField: "type",
-    },
-    {
-      dataField: "test",
     },
   ];
   const devColumns: Column<ICategory>[] = [

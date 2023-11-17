@@ -9,7 +9,6 @@ import {
   RemoveConsumableSuccess,
   FetchConsumablesFailure,
   FetchConsumablesRequest,
-  ConsumablesSucccessPayload,
   FetchConsumablesSuccess,
   FetchConsumableFailure,
   FetchConsumableRequest,
@@ -18,21 +17,27 @@ import {
   UpdateConsumableRequest,
   UpdateConsumableSuccess,
   ConsumableRequestPayload,
-  UpdateConsumableRequestPayload,
-  ConsumableSucccessPayload,
   SetConsumable,
   SetConsumables,
   ClearConsumable,
   ClearConsumables,
+  ConsumablesPayload,
+  ConsumablePayload,
+  CreateRangeConsumableRequest,
+  CreateRangeConsumableSuccess,
+  CreateRangeConsumableFailure,
+  RemoveRangeConsumableRequest,
+  RemoveRangeConsumableSuccess,
+  RemoveRangeConsumableFailure,
+  ConsumableRemoveRangePayload,
+  ConsumableRemovePayload,
 } from "./type";
 
 //GET
 const getAll = (): FetchConsumablesRequest => ({
   type: consumableConst.FETCH_CONSUMABLES_REQUEST,
 });
-const getAllSuccess = (
-  payload: ConsumablesSucccessPayload
-): FetchConsumablesSuccess => ({
+const getAllSuccess = (payload: ConsumablesPayload): FetchConsumablesSuccess => ({
   type: consumableConst.FETCH_CONSUMABLES_SUCCESS,
   payload,
 });
@@ -45,9 +50,7 @@ const get = (payload: ConsumableRequestPayload): FetchConsumableRequest => ({
   type: consumableConst.FETCH_CONSUMABLE_REQUEST,
   payload,
 });
-const getSuccess = (
-  payload: ConsumableSucccessPayload
-): FetchConsumableSuccess => ({
+const getSuccess = (payload: ConsumablePayload): FetchConsumableSuccess => ({
   type: consumableConst.FETCH_CONSUMABLE_SUCCESS,
   payload,
 });
@@ -56,9 +59,7 @@ const getFailure = (): FetchConsumableFailure => ({
 });
 
 //POST
-const create = (
-  payload: UpdateConsumableRequestPayload
-): CreateConsumableRequest => ({
+const create = (payload: ConsumablePayload): CreateConsumableRequest => ({
   type: consumableConst.CREATE_CONSUMABLE_REQUEST,
   payload,
 });
@@ -69,10 +70,20 @@ const createFailure = (): CreateConsumableFailure => ({
   type: consumableConst.CREATE_CONSUMABLE_FAILURE,
 });
 
+//POST RANGE
+const createRange = (payload: ConsumablesPayload): CreateRangeConsumableRequest => ({
+  type: consumableConst.CREATE_RANGE_CONSUMABLE_REQUEST,
+  payload,
+});
+const createRangeSuccess = (): CreateRangeConsumableSuccess => ({
+  type: consumableConst.CREATE_RANGE_CONSUMABLE_SUCCESS,
+});
+const createRangeFailure = (): CreateRangeConsumableFailure => ({
+  type: consumableConst.CREATE_RANGE_CONSUMABLE_FAILURE,
+});
+
 //PUT
-const update = (
-  payload: UpdateConsumableRequestPayload
-): UpdateConsumableRequest => ({
+const update = (payload: ConsumablePayload): UpdateConsumableRequest => ({
   type: consumableConst.UPDATE_CONSUMABLE_REQUEST,
   payload,
 });
@@ -84,17 +95,35 @@ const updateFailure = (): UpdateConsumableFailure => ({
 });
 
 //REMOVE
-const remove = (
-  payload: ConsumableRequestPayload
-): RemoveConsumableRequest => ({
+const remove = (payload: ConsumableRemovePayload): RemoveConsumableRequest => ({
   type: consumableConst.REMOVE_CONSUMABLE_REQUEST,
   payload,
 });
-const removeSuccess = (): RemoveConsumableSuccess => ({
+const removeSuccess = (
+  payload: ConsumableRemovePayload
+): RemoveConsumableSuccess => ({
   type: consumableConst.REMOVE_CONSUMABLE_SUCCESS,
+  payload,
 });
 const removeFailure = (): RemoveConsumableFailure => ({
   type: consumableConst.REMOVE_CONSUMABLE_FAILURE,
+});
+
+//REMOVE RANGE
+const removeRange = (
+  payload: ConsumableRemoveRangePayload
+): RemoveRangeConsumableRequest => ({
+  type: consumableConst.REMOVE_RANGE_CONSUMABLE_REQUEST,
+  payload,
+});
+const removeRangeSuccess = (
+  payload: ConsumableRemoveRangePayload
+): RemoveRangeConsumableSuccess => ({
+  type: consumableConst.REMOVE_RANGE_CONSUMABLE_SUCCESS,
+  payload,
+});
+const removeRangeFailure = (): RemoveRangeConsumableFailure => ({
+  type: consumableConst.REMOVE_RANGE_CONSUMABLE_FAILURE,
 });
 
 //CLIENT ACTIONS
@@ -123,12 +152,18 @@ export const consumableActions = {
   create,
   createSuccess,
   createFailure,
+  createRange,
+  createRangeSuccess,
+  createRangeFailure,
   update,
   updateSuccess,
   updateFailure,
   remove,
   removeSuccess,
   removeFailure,
+  removeRange,
+  removeRangeSuccess,
+  removeRangeFailure,
   setConsumable,
   clearConsumable,
   setConsumables,

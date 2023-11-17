@@ -53,6 +53,18 @@ export default (state = initialState, action: AssetActions) => {
       return {
         ...state,
       };
+    case assetConst.CREATE_RANGE_ASSET_REQUEST:
+      return {
+        ...state,
+      };
+    case assetConst.CREATE_RANGE_ASSET_SUCCESS:
+      return {
+        ...state,
+      };
+    case assetConst.CREATE_RANGE_ASSET_FAILURE:
+      return {
+        ...state,
+      };
     case assetConst.UPDATE_ASSET_REQUEST:
       return {
         ...state,
@@ -72,8 +84,26 @@ export default (state = initialState, action: AssetActions) => {
     case assetConst.REMOVE_ASSET_SUCCESS:
       return {
         ...state,
+        assets: state.assets.filter(
+          (asset) => asset.id !== action.payload.id
+        ),
       };
     case assetConst.REMOVE_ASSET_FAILURE:
+      return {
+        ...state,
+      };
+    case assetConst.REMOVE_RANGE_ASSET_REQUEST:
+      return {
+        ...state,
+      };
+    case assetConst.REMOVE_RANGE_ASSET_SUCCESS:
+      return {
+        ...state,
+        assets: state.assets.filter(
+          (asset) => !action.payload.ids.includes(asset.id)
+        ),
+      };
+    case assetConst.REMOVE_RANGE_ASSET_FAILURE:
       return {
         ...state,
       };

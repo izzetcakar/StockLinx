@@ -53,6 +53,18 @@ export default (state = initialState, action: ComponentActions) => {
       return {
         ...state,
       };
+    case componentConst.CREATE_RANGE_COMPONENT_REQUEST:
+      return {
+        ...state,
+      };
+    case componentConst.CREATE_RANGE_COMPONENT_SUCCESS:
+      return {
+        ...state,
+      };
+    case componentConst.CREATE_RANGE_COMPONENT_FAILURE:
+      return {
+        ...state,
+      };
     case componentConst.UPDATE_COMPONENT_REQUEST:
       return {
         ...state,
@@ -72,8 +84,26 @@ export default (state = initialState, action: ComponentActions) => {
     case componentConst.REMOVE_COMPONENT_SUCCESS:
       return {
         ...state,
+        components: state.components.filter(
+          (component) => component.id !== action.payload.id
+        ),
       };
     case componentConst.REMOVE_COMPONENT_FAILURE:
+      return {
+        ...state,
+      };
+    case componentConst.REMOVE_RANGE_COMPONENT_REQUEST:
+      return {
+        ...state,
+      };
+    case componentConst.REMOVE_RANGE_COMPONENT_SUCCESS:
+      return {
+        ...state,
+        components: state.components.filter(
+          (component) => !action.payload.ids.includes(component.id)
+        ),
+      };
+    case componentConst.REMOVE_RANGE_COMPONENT_FAILURE:
       return {
         ...state,
       };

@@ -1,6 +1,5 @@
 import { IAsset } from "../../interfaces/interfaces";
 import { request } from "../../server/api";
-
 const requestUrl = "Asset/";
 
 const getAll = () => {
@@ -19,6 +18,13 @@ const create = (asset: IAsset) => {
     queryData: asset,
   });
 };
+const createRange = (assets: IAsset[]) => {
+  return request<IAsset>({
+    requestUrl: requestUrl + "range",
+    apiType: "post",
+    queryData: assets,
+  });
+};
 const update = (asset: IAsset) => {
   return request<IAsset>({
     requestUrl: requestUrl,
@@ -32,11 +38,20 @@ const remove = (id: string) => {
     apiType: "delete",
   });
 };
+const removeRange = (ids: string[]) => {
+  return request<IAsset>({
+    requestUrl: requestUrl + "range",
+    apiType: "delete",
+    queryData: ids,
+  });
+};
 
 export const assetRequests = {
   getAll,
   get,
   create,
+  createRange,
   update,
   remove,
+  removeRange,
 };

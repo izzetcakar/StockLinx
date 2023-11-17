@@ -9,7 +9,6 @@ import {
   RemoveLocationSuccess,
   FetchLocationsFailure,
   FetchLocationsRequest,
-  LocationsSucccessPayload,
   FetchLocationsSuccess,
   FetchLocationFailure,
   FetchLocationRequest,
@@ -18,25 +17,27 @@ import {
   UpdateLocationRequest,
   UpdateLocationSuccess,
   LocationRequestPayload,
-  UpdateLocationRequestPayload,
-  LocationSucccessPayload,
   SetLocation,
   SetLocations,
   ClearLocation,
   ClearLocations,
-  LocationCountsSuccessPayload,
-  FetchLocationCountsSuccess,
-  FetchLocationCountsRequest,
-  FetchLocationCountsFailure,
+  LocationsPayload,
+  LocationPayload,
+  CreateRangeLocationRequest,
+  CreateRangeLocationSuccess,
+  CreateRangeLocationFailure,
+  RemoveRangeLocationRequest,
+  RemoveRangeLocationSuccess,
+  RemoveRangeLocationFailure,
+  LocationRemoveRangePayload,
+  LocationRemovePayload,
 } from "./type";
 
 //GET
 const getAll = (): FetchLocationsRequest => ({
   type: locationConst.FETCH_LOCATIONS_REQUEST,
 });
-const getAllSuccess = (
-  payload: LocationsSucccessPayload
-): FetchLocationsSuccess => ({
+const getAllSuccess = (payload: LocationsPayload): FetchLocationsSuccess => ({
   type: locationConst.FETCH_LOCATIONS_SUCCESS,
   payload,
 });
@@ -49,9 +50,7 @@ const get = (payload: LocationRequestPayload): FetchLocationRequest => ({
   type: locationConst.FETCH_LOCATION_REQUEST,
   payload,
 });
-const getSuccess = (
-  payload: LocationSucccessPayload
-): FetchLocationSuccess => ({
+const getSuccess = (payload: LocationPayload): FetchLocationSuccess => ({
   type: locationConst.FETCH_LOCATION_SUCCESS,
   payload,
 });
@@ -59,24 +58,8 @@ const getFailure = (): FetchLocationFailure => ({
   type: locationConst.FETCH_LOCATION_FAILURE,
 });
 
-//GET PRODUCT LOCATIONS
-const getCounts = (): FetchLocationCountsRequest => ({
-  type: locationConst.FETCH_LOCATION_COUNTS_REQUEST,
-});
-const getCountsSuccess = (
-  payload: LocationCountsSuccessPayload
-): FetchLocationCountsSuccess => ({
-  type: locationConst.FETCH_LOCATION_COUNTS_SUCCESS,
-  payload,
-});
-const getCountsFailure = (): FetchLocationCountsFailure => ({
-  type: locationConst.FETCH_LOCATION_COUNTS_FAILURE,
-});
-
 //POST
-const create = (
-  payload: UpdateLocationRequestPayload
-): CreateLocationRequest => ({
+const create = (payload: LocationPayload): CreateLocationRequest => ({
   type: locationConst.CREATE_LOCATION_REQUEST,
   payload,
 });
@@ -87,10 +70,20 @@ const createFailure = (): CreateLocationFailure => ({
   type: locationConst.CREATE_LOCATION_FAILURE,
 });
 
+//POST RANGE
+const createRange = (payload: LocationsPayload): CreateRangeLocationRequest => ({
+  type: locationConst.CREATE_RANGE_LOCATION_REQUEST,
+  payload,
+});
+const createRangeSuccess = (): CreateRangeLocationSuccess => ({
+  type: locationConst.CREATE_RANGE_LOCATION_SUCCESS,
+});
+const createRangeFailure = (): CreateRangeLocationFailure => ({
+  type: locationConst.CREATE_RANGE_LOCATION_FAILURE,
+});
+
 //PUT
-const update = (
-  payload: UpdateLocationRequestPayload
-): UpdateLocationRequest => ({
+const update = (payload: LocationPayload): UpdateLocationRequest => ({
   type: locationConst.UPDATE_LOCATION_REQUEST,
   payload,
 });
@@ -102,15 +95,35 @@ const updateFailure = (): UpdateLocationFailure => ({
 });
 
 //REMOVE
-const remove = (payload: LocationRequestPayload): RemoveLocationRequest => ({
+const remove = (payload: LocationRemovePayload): RemoveLocationRequest => ({
   type: locationConst.REMOVE_LOCATION_REQUEST,
   payload,
 });
-const removeSuccess = (): RemoveLocationSuccess => ({
+const removeSuccess = (
+  payload: LocationRemovePayload
+): RemoveLocationSuccess => ({
   type: locationConst.REMOVE_LOCATION_SUCCESS,
+  payload,
 });
 const removeFailure = (): RemoveLocationFailure => ({
   type: locationConst.REMOVE_LOCATION_FAILURE,
+});
+
+//REMOVE RANGE
+const removeRange = (
+  payload: LocationRemoveRangePayload
+): RemoveRangeLocationRequest => ({
+  type: locationConst.REMOVE_RANGE_LOCATION_REQUEST,
+  payload,
+});
+const removeRangeSuccess = (
+  payload: LocationRemoveRangePayload
+): RemoveRangeLocationSuccess => ({
+  type: locationConst.REMOVE_RANGE_LOCATION_SUCCESS,
+  payload,
+});
+const removeRangeFailure = (): RemoveRangeLocationFailure => ({
+  type: locationConst.REMOVE_RANGE_LOCATION_FAILURE,
 });
 
 //CLIENT ACTIONS
@@ -139,17 +152,20 @@ export const locationActions = {
   create,
   createSuccess,
   createFailure,
+  createRange,
+  createRangeSuccess,
+  createRangeFailure,
   update,
   updateSuccess,
   updateFailure,
   remove,
   removeSuccess,
   removeFailure,
+  removeRange,
+  removeRangeSuccess,
+  removeRangeFailure,
   setLocation,
   clearLocation,
   setLocations,
   clearLocations,
-  getCounts,
-  getCountsSuccess,
-  getCountsFailure,
 };

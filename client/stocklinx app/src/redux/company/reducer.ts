@@ -53,6 +53,18 @@ export default (state = initialState, action: CompanyActions) => {
       return {
         ...state,
       };
+    case companyConst.CREATE_RANGE_COMPANY_REQUEST:
+      return {
+        ...state,
+      };
+    case companyConst.CREATE_RANGE_COMPANY_SUCCESS:
+      return {
+        ...state,
+      };
+    case companyConst.CREATE_RANGE_COMPANY_FAILURE:
+      return {
+        ...state,
+      };
     case companyConst.UPDATE_COMPANY_REQUEST:
       return {
         ...state,
@@ -72,8 +84,26 @@ export default (state = initialState, action: CompanyActions) => {
     case companyConst.REMOVE_COMPANY_SUCCESS:
       return {
         ...state,
+        companies: state.companies.filter(
+          (company) => company.id !== action.payload.id
+        ),
       };
     case companyConst.REMOVE_COMPANY_FAILURE:
+      return {
+        ...state,
+      };
+    case companyConst.REMOVE_RANGE_COMPANY_REQUEST:
+      return {
+        ...state,
+      };
+    case companyConst.REMOVE_RANGE_COMPANY_SUCCESS:
+      return {
+        ...state,
+        companies: state.companies.filter(
+          (company) => !action.payload.ids.includes(company.id)
+        ),
+      };
+    case companyConst.REMOVE_RANGE_COMPANY_FAILURE:
       return {
         ...state,
       };

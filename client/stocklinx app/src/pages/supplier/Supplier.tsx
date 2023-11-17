@@ -2,20 +2,13 @@ import { ISupplier } from "../../interfaces/interfaces";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
-import { supplierActions } from "../../redux/supplier/actions";
-import { locationActions } from "../../redux/location/actions";
 import { useColumns } from "./columns";
-import BaseDataGrid from "../../components/generic/BaseDataGrid";
-import {
-  RowInsertingEvent,
-  RowRemovingEvent,
-  RowUpdatingEvent,
-} from "devextreme/ui/data_grid";
-import { datagridRequest } from "../../functions/datagridRequest";
-import { companyActions } from "../../redux/company/actions";
-import { branchActions } from "../../redux/branch/actions";
 import Gridtable from "../../components/gridTable/Gridtable";
 import { openSupplierModal } from "../../modals/supplier/modals";
+import { companyActions } from "../../redux/company/actions";
+import { supplierActions } from "../../redux/supplier/actions";
+import { locationActions } from "../../redux/location/actions";
+import { branchActions } from "../../redux/branch/actions";
 
 const Supplier = () => {
   const dispatch = useDispatch();
@@ -27,42 +20,28 @@ const Supplier = () => {
     dispatch(companyActions.getAll());
     dispatch(branchActions.getAll());
   };
-  const onRowInserting = async (e: RowInsertingEvent<ISupplier>) => {
-    const newObject = { ...e.data };
-    await datagridRequest(e, "Supplier", "post", newObject);
-  };
-  const onRowUpdating = async (e: RowUpdatingEvent<ISupplier>) => {
-    const newObject = { ...e.oldData, ...e.newData };
-    await datagridRequest(e, "Supplier", "put", newObject);
-  };
-  const onRowRemoving = (e: RowRemovingEvent<ISupplier>) => {
-    datagridRequest(e, `Supplier/${e.data.id}`, "delete");
-  };
 
   return (
     <>
       <div className="page-content-header">
         <div className="page-content-header-title">Suppliers</div>
       </div>
-      <BaseDataGrid
-        title="Supplier"
-        data={suppliers}
-        columns={useColumns().devColumns}
-        formItems={useColumns().formItems}
-        onRowInserting={onRowInserting}
-        onRowUpdating={onRowUpdating}
-        onRowRemoving={onRowRemoving}
-        refreshData={refreshData}
-        toolbarAddButton={true}
-      />
-      <div style={{ padding: "1rem 0" }} />
       <Gridtable
         data={suppliers}
         itemKey="id"
         columns={useColumns().columns}
         refreshData={refreshData}
-        onRowInsert={() => openSupplierModal()}
         onRowUpdate={(supplier) => openSupplierModal(supplier as ISupplier)}
+        onRowInsert={() => openSupplierModal()}
+        onRowRemove={(id) => dispatch(supplierActions.remove({ id: id }))}
+        onRowRemoveRange={(ids) =>
+          dispatch(supplierActions.removeRange({ ids: ids }))
+        }
+        excelColumns={useColumns().excelColumns}
+        enableToolbar
+        enableEditActions
+        enableExcelActions
+        enableSelectActions
       />
     </>
   );

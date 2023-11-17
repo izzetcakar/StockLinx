@@ -2,13 +2,13 @@ import { IUser } from "../../interfaces/interfaces";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
-import { userActions } from "../../redux/user/actions";
-import { locationActions } from "../../redux/location/actions";
 import { useColumns } from "./columns";
-import { companyActions } from "../../redux/company/actions";
-import { branchActions } from "../../redux/branch/actions";
 import Gridtable from "../../components/gridTable/Gridtable";
 import { openUserModal } from "../../modals/user/modals";
+import { userActions } from "../../redux/user/actions";
+import { companyActions } from "../../redux/company/actions";
+import { locationActions } from "../../redux/location/actions";
+import { branchActions } from "../../redux/branch/actions";
 import { departmentActions } from "../../redux/department/actions";
 
 const User = () => {
@@ -33,8 +33,17 @@ const User = () => {
         itemKey="id"
         columns={useColumns().columns}
         refreshData={refreshData}
-        onRowInsert={() => openUserModal()}
         onRowUpdate={(user) => openUserModal(user as IUser)}
+        onRowInsert={() => openUserModal()}
+        onRowRemove={(id) => dispatch(userActions.remove({ id: id }))}
+        onRowRemoveRange={(ids) =>
+          dispatch(userActions.removeRange({ ids: ids }))
+        }
+        excelColumns={useColumns().excelColumns}
+        enableToolbar
+        enableEditActions
+        enableExcelActions
+        enableSelectActions
       />
     </>
   );

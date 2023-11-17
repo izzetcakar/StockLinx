@@ -32,6 +32,13 @@ const create = (user: IUser) => {
     apiType: "post",
   });
 };
+const createRange = (users: IUser[]) => {
+  return request<IUser>({
+    requestUrl: requestUrl + "range",
+    apiType: "post",
+    queryData: users,
+  });
+};
 const update = (user: IUser) => {
   return request<IUser>({
     requestUrl: requestUrl,
@@ -45,6 +52,13 @@ const remove = (id: string) => {
     apiType: "delete",
   });
 };
+const removeRange = (ids: string[]) => {
+  return request<IUser>({
+    requestUrl: requestUrl + "range",
+    apiType: "delete",
+    queryData: ids,
+  });
+};
 
 export const userRequests = {
   getAll,
@@ -52,6 +66,8 @@ export const userRequests = {
   signIn,
   getWithToken,
   create,
+  createRange,
   update,
   remove,
+  removeRange,
 };

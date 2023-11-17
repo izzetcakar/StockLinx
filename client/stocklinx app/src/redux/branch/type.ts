@@ -6,18 +6,20 @@ export interface BranchState {
   branches: IBranch[];
   selectData: SelectData[];
 }
-
-export interface BranchSucccessPayload {
-  branch: IBranch;
-}
-export interface BranchesSucccessPayload {
-  branches: IBranch[];
-}
 export interface BranchRequestPayload {
   id: string;
 }
-export interface UpdateBranchRequestPayload {
+export interface BranchPayload {
   branch: IBranch;
+}
+export interface BranchesPayload {
+  branches: IBranch[];
+}
+export interface BranchRemoveRangePayload {
+  ids: string[];
+}
+export interface BranchRemovePayload {
+  id: string;
 }
 
 //GET
@@ -26,7 +28,7 @@ export interface FetchBranchesRequest {
 }
 export type FetchBranchesSuccess = {
   type: typeof branchConst.FETCH_BRANCHES_SUCCESS;
-  payload: BranchesSucccessPayload;
+  payload: BranchesPayload;
 };
 export type FetchBranchesFailure = {
   type: typeof branchConst.FETCH_BRANCHES_FAILURE;
@@ -38,7 +40,7 @@ export interface FetchBranchRequest {
 }
 export type FetchBranchSuccess = {
   type: typeof branchConst.FETCH_BRANCH_SUCCESS;
-  payload: BranchSucccessPayload;
+  payload: BranchPayload;
 };
 export type FetchBranchFailure = {
   type: typeof branchConst.FETCH_BRANCH_FAILURE;
@@ -46,7 +48,7 @@ export type FetchBranchFailure = {
 //POST
 export interface CreateBranchRequest {
   type: typeof branchConst.CREATE_BRANCH_REQUEST;
-  payload: UpdateBranchRequestPayload;
+  payload: BranchPayload;
 }
 export type CreateBranchSuccess = {
   type: typeof branchConst.CREATE_BRANCH_SUCCESS;
@@ -54,10 +56,21 @@ export type CreateBranchSuccess = {
 export type CreateBranchFailure = {
   type: typeof branchConst.CREATE_BRANCH_FAILURE;
 };
+//POST RANGE
+export interface CreateRangeBranchRequest {
+  type: typeof branchConst.CREATE_RANGE_BRANCH_REQUEST;
+  payload: BranchesPayload;
+}
+export type CreateRangeBranchSuccess = {
+  type: typeof branchConst.CREATE_RANGE_BRANCH_SUCCESS;
+};
+export type CreateRangeBranchFailure = {
+  type: typeof branchConst.CREATE_RANGE_BRANCH_FAILURE;
+};
 //PUT
 export interface UpdateBranchRequest {
   type: typeof branchConst.UPDATE_BRANCH_REQUEST;
-  payload: UpdateBranchRequestPayload;
+  payload: BranchPayload;
 }
 export type UpdateBranchSuccess = {
   type: typeof branchConst.UPDATE_BRANCH_SUCCESS;
@@ -68,14 +81,43 @@ export type UpdateBranchFailure = {
 //REMOVE
 export interface RemoveBranchRequest {
   type: typeof branchConst.REMOVE_BRANCH_REQUEST;
-  payload: BranchRequestPayload;
+  payload: BranchRemovePayload;
 }
 export type RemoveBranchSuccess = {
   type: typeof branchConst.REMOVE_BRANCH_SUCCESS;
+  payload: BranchRemovePayload;
 };
 export type RemoveBranchFailure = {
   type: typeof branchConst.REMOVE_BRANCH_FAILURE;
 };
+//REMOVE RANGE
+export interface RemoveRangeBranchRequest {
+  type: typeof branchConst.REMOVE_RANGE_BRANCH_REQUEST;
+  payload: BranchRemoveRangePayload;
+}
+export type RemoveRangeBranchSuccess = {
+  type: typeof branchConst.REMOVE_RANGE_BRANCH_SUCCESS;
+  payload: BranchRemoveRangePayload;
+};
+export type RemoveRangeBranchFailure = {
+  type: typeof branchConst.REMOVE_RANGE_BRANCH_FAILURE;
+};
+
+//CLIENT ACTION TYPES
+export interface SetBranch {
+  type: typeof branchConst.SET_BRANCH;
+  payload: IBranch | null;
+}
+export interface SetBranches {
+  type: typeof branchConst.SET_BRANCHES;
+  payload: IBranch[];
+}
+export interface ClearBranch {
+  type: typeof branchConst.CLEAR_BRANCH;
+}
+export interface ClearBranches {
+  type: typeof branchConst.CLEAR_BRANCHES;
+}
 
 export type BranchActions =
   | FetchBranchesRequest
@@ -87,9 +129,19 @@ export type BranchActions =
   | CreateBranchRequest
   | CreateBranchSuccess
   | CreateBranchFailure
+  | CreateRangeBranchRequest
+  | CreateRangeBranchSuccess
+  | CreateRangeBranchFailure
   | UpdateBranchRequest
   | UpdateBranchSuccess
   | UpdateBranchFailure
   | RemoveBranchRequest
   | RemoveBranchSuccess
-  | RemoveBranchFailure;
+  | RemoveBranchFailure
+  | RemoveRangeBranchRequest
+  | RemoveRangeBranchSuccess
+  | RemoveRangeBranchFailure
+  | SetBranch
+  | SetBranches
+  | ClearBranch
+  | ClearBranches;

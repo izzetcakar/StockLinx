@@ -53,6 +53,18 @@ export default (state = initialState, action: ModelActions) => {
       return {
         ...state,
       };
+    case modelConst.CREATE_RANGE_MODEL_REQUEST:
+      return {
+        ...state,
+      };
+    case modelConst.CREATE_RANGE_MODEL_SUCCESS:
+      return {
+        ...state,
+      };
+    case modelConst.CREATE_RANGE_MODEL_FAILURE:
+      return {
+        ...state,
+      };
     case modelConst.UPDATE_MODEL_REQUEST:
       return {
         ...state,
@@ -72,8 +84,26 @@ export default (state = initialState, action: ModelActions) => {
     case modelConst.REMOVE_MODEL_SUCCESS:
       return {
         ...state,
+        models: state.models.filter(
+          (model) => model.id !== action.payload.id
+        ),
       };
     case modelConst.REMOVE_MODEL_FAILURE:
+      return {
+        ...state,
+      };
+    case modelConst.REMOVE_RANGE_MODEL_REQUEST:
+      return {
+        ...state,
+      };
+    case modelConst.REMOVE_RANGE_MODEL_SUCCESS:
+      return {
+        ...state,
+        models: state.models.filter(
+          (model) => !action.payload.ids.includes(model.id)
+        ),
+      };
+    case modelConst.REMOVE_RANGE_MODEL_FAILURE:
       return {
         ...state,
       };

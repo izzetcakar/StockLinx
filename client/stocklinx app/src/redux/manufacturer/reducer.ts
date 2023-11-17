@@ -53,6 +53,18 @@ export default (state = initialState, action: ManufacturerActions) => {
       return {
         ...state,
       };
+    case manufacturerConst.CREATE_RANGE_MANUFACTURER_REQUEST:
+      return {
+        ...state,
+      };
+    case manufacturerConst.CREATE_RANGE_MANUFACTURER_SUCCESS:
+      return {
+        ...state,
+      };
+    case manufacturerConst.CREATE_RANGE_MANUFACTURER_FAILURE:
+      return {
+        ...state,
+      };
     case manufacturerConst.UPDATE_MANUFACTURER_REQUEST:
       return {
         ...state,
@@ -72,8 +84,26 @@ export default (state = initialState, action: ManufacturerActions) => {
     case manufacturerConst.REMOVE_MANUFACTURER_SUCCESS:
       return {
         ...state,
+        manufacturers: state.manufacturers.filter(
+          (manufacturer) => manufacturer.id !== action.payload.id
+        ),
       };
     case manufacturerConst.REMOVE_MANUFACTURER_FAILURE:
+      return {
+        ...state,
+      };
+    case manufacturerConst.REMOVE_RANGE_MANUFACTURER_REQUEST:
+      return {
+        ...state,
+      };
+    case manufacturerConst.REMOVE_RANGE_MANUFACTURER_SUCCESS:
+      return {
+        ...state,
+        manufacturers: state.manufacturers.filter(
+          (manufacturer) => !action.payload.ids.includes(manufacturer.id)
+        ),
+      };
+    case manufacturerConst.REMOVE_RANGE_MANUFACTURER_FAILURE:
       return {
         ...state,
       };

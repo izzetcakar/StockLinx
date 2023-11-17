@@ -1,6 +1,5 @@
 import { IConsumable } from "../../interfaces/interfaces";
 import { request } from "../../server/api";
-
 const requestUrl = "Consumable/";
 
 const getAll = () => {
@@ -19,6 +18,13 @@ const create = (consumable: IConsumable) => {
     queryData: consumable,
   });
 };
+const createRange = (consumables: IConsumable[]) => {
+  return request<IConsumable>({
+    requestUrl: requestUrl + "range",
+    apiType: "post",
+    queryData: consumables,
+  });
+};
 const update = (consumable: IConsumable) => {
   return request<IConsumable>({
     requestUrl: requestUrl,
@@ -32,11 +38,20 @@ const remove = (id: string) => {
     apiType: "delete",
   });
 };
+const removeRange = (ids: string[]) => {
+  return request<IConsumable>({
+    requestUrl: requestUrl + "range",
+    apiType: "delete",
+    queryData: ids,
+  });
+};
 
 export const consumableRequests = {
   getAll,
   get,
   create,
+  createRange,
   update,
   remove,
+  removeRange,
 };

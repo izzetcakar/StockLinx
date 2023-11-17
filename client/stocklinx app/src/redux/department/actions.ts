@@ -9,7 +9,6 @@ import {
   RemoveDepartmentSuccess,
   FetchDepartmentsFailure,
   FetchDepartmentsRequest,
-  DepartmentsSucccessPayload,
   FetchDepartmentsSuccess,
   FetchDepartmentFailure,
   FetchDepartmentRequest,
@@ -18,21 +17,27 @@ import {
   UpdateDepartmentRequest,
   UpdateDepartmentSuccess,
   DepartmentRequestPayload,
-  UpdateDepartmentRequestPayload,
-  DepartmentSucccessPayload,
   SetDepartment,
   SetDepartments,
   ClearDepartment,
   ClearDepartments,
+  DepartmentsPayload,
+  DepartmentPayload,
+  CreateRangeDepartmentRequest,
+  CreateRangeDepartmentSuccess,
+  CreateRangeDepartmentFailure,
+  RemoveRangeDepartmentRequest,
+  RemoveRangeDepartmentSuccess,
+  RemoveRangeDepartmentFailure,
+  DepartmentRemoveRangePayload,
+  DepartmentRemovePayload,
 } from "./type";
 
 //GET
 const getAll = (): FetchDepartmentsRequest => ({
   type: departmentConst.FETCH_DEPARTMENTS_REQUEST,
 });
-const getAllSuccess = (
-  payload: DepartmentsSucccessPayload
-): FetchDepartmentsSuccess => ({
+const getAllSuccess = (payload: DepartmentsPayload): FetchDepartmentsSuccess => ({
   type: departmentConst.FETCH_DEPARTMENTS_SUCCESS,
   payload,
 });
@@ -45,9 +50,7 @@ const get = (payload: DepartmentRequestPayload): FetchDepartmentRequest => ({
   type: departmentConst.FETCH_DEPARTMENT_REQUEST,
   payload,
 });
-const getSuccess = (
-  payload: DepartmentSucccessPayload
-): FetchDepartmentSuccess => ({
+const getSuccess = (payload: DepartmentPayload): FetchDepartmentSuccess => ({
   type: departmentConst.FETCH_DEPARTMENT_SUCCESS,
   payload,
 });
@@ -56,9 +59,7 @@ const getFailure = (): FetchDepartmentFailure => ({
 });
 
 //POST
-const create = (
-  payload: UpdateDepartmentRequestPayload
-): CreateDepartmentRequest => ({
+const create = (payload: DepartmentPayload): CreateDepartmentRequest => ({
   type: departmentConst.CREATE_DEPARTMENT_REQUEST,
   payload,
 });
@@ -69,10 +70,20 @@ const createFailure = (): CreateDepartmentFailure => ({
   type: departmentConst.CREATE_DEPARTMENT_FAILURE,
 });
 
+//POST RANGE
+const createRange = (payload: DepartmentsPayload): CreateRangeDepartmentRequest => ({
+  type: departmentConst.CREATE_RANGE_DEPARTMENT_REQUEST,
+  payload,
+});
+const createRangeSuccess = (): CreateRangeDepartmentSuccess => ({
+  type: departmentConst.CREATE_RANGE_DEPARTMENT_SUCCESS,
+});
+const createRangeFailure = (): CreateRangeDepartmentFailure => ({
+  type: departmentConst.CREATE_RANGE_DEPARTMENT_FAILURE,
+});
+
 //PUT
-const update = (
-  payload: UpdateDepartmentRequestPayload
-): UpdateDepartmentRequest => ({
+const update = (payload: DepartmentPayload): UpdateDepartmentRequest => ({
   type: departmentConst.UPDATE_DEPARTMENT_REQUEST,
   payload,
 });
@@ -84,17 +95,35 @@ const updateFailure = (): UpdateDepartmentFailure => ({
 });
 
 //REMOVE
-const remove = (
-  payload: DepartmentRequestPayload
-): RemoveDepartmentRequest => ({
+const remove = (payload: DepartmentRemovePayload): RemoveDepartmentRequest => ({
   type: departmentConst.REMOVE_DEPARTMENT_REQUEST,
   payload,
 });
-const removeSuccess = (): RemoveDepartmentSuccess => ({
+const removeSuccess = (
+  payload: DepartmentRemovePayload
+): RemoveDepartmentSuccess => ({
   type: departmentConst.REMOVE_DEPARTMENT_SUCCESS,
+  payload,
 });
 const removeFailure = (): RemoveDepartmentFailure => ({
   type: departmentConst.REMOVE_DEPARTMENT_FAILURE,
+});
+
+//REMOVE RANGE
+const removeRange = (
+  payload: DepartmentRemoveRangePayload
+): RemoveRangeDepartmentRequest => ({
+  type: departmentConst.REMOVE_RANGE_DEPARTMENT_REQUEST,
+  payload,
+});
+const removeRangeSuccess = (
+  payload: DepartmentRemoveRangePayload
+): RemoveRangeDepartmentSuccess => ({
+  type: departmentConst.REMOVE_RANGE_DEPARTMENT_SUCCESS,
+  payload,
+});
+const removeRangeFailure = (): RemoveRangeDepartmentFailure => ({
+  type: departmentConst.REMOVE_RANGE_DEPARTMENT_FAILURE,
 });
 
 //CLIENT ACTIONS
@@ -123,12 +152,18 @@ export const departmentActions = {
   create,
   createSuccess,
   createFailure,
+  createRange,
+  createRangeSuccess,
+  createRangeFailure,
   update,
   updateSuccess,
   updateFailure,
   remove,
   removeSuccess,
   removeFailure,
+  removeRange,
+  removeRangeSuccess,
+  removeRangeFailure,
   setDepartment,
   clearDepartment,
   setDepartments,

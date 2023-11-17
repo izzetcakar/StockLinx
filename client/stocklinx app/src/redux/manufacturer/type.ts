@@ -6,18 +6,20 @@ export interface ManufacturerState {
   manufacturers: IManufacturer[];
   selectData: SelectData[];
 }
-
-export interface ManufacturerSucccessPayload {
-  manufacturer: IManufacturer;
-}
-export interface ManufacturersSucccessPayload {
-  manufacturers: IManufacturer[];
-}
 export interface ManufacturerRequestPayload {
   id: string;
 }
-export interface UpdateManufacturerRequestPayload {
+export interface ManufacturerPayload {
   manufacturer: IManufacturer;
+}
+export interface ManufacturersPayload {
+  manufacturers: IManufacturer[];
+}
+export interface ManufacturerRemoveRangePayload {
+  ids: string[];
+}
+export interface ManufacturerRemovePayload {
+  id: string;
 }
 
 //GET
@@ -26,7 +28,7 @@ export interface FetchManufacturersRequest {
 }
 export type FetchManufacturersSuccess = {
   type: typeof manufacturerConst.FETCH_MANUFACTURERS_SUCCESS;
-  payload: ManufacturersSucccessPayload;
+  payload: ManufacturersPayload;
 };
 export type FetchManufacturersFailure = {
   type: typeof manufacturerConst.FETCH_MANUFACTURERS_FAILURE;
@@ -38,7 +40,7 @@ export interface FetchManufacturerRequest {
 }
 export type FetchManufacturerSuccess = {
   type: typeof manufacturerConst.FETCH_MANUFACTURER_SUCCESS;
-  payload: ManufacturerSucccessPayload;
+  payload: ManufacturerPayload;
 };
 export type FetchManufacturerFailure = {
   type: typeof manufacturerConst.FETCH_MANUFACTURER_FAILURE;
@@ -46,7 +48,7 @@ export type FetchManufacturerFailure = {
 //POST
 export interface CreateManufacturerRequest {
   type: typeof manufacturerConst.CREATE_MANUFACTURER_REQUEST;
-  payload: UpdateManufacturerRequestPayload;
+  payload: ManufacturerPayload;
 }
 export type CreateManufacturerSuccess = {
   type: typeof manufacturerConst.CREATE_MANUFACTURER_SUCCESS;
@@ -54,10 +56,21 @@ export type CreateManufacturerSuccess = {
 export type CreateManufacturerFailure = {
   type: typeof manufacturerConst.CREATE_MANUFACTURER_FAILURE;
 };
+//POST RANGE
+export interface CreateRangeManufacturerRequest {
+  type: typeof manufacturerConst.CREATE_RANGE_MANUFACTURER_REQUEST;
+  payload: ManufacturersPayload;
+}
+export type CreateRangeManufacturerSuccess = {
+  type: typeof manufacturerConst.CREATE_RANGE_MANUFACTURER_SUCCESS;
+};
+export type CreateRangeManufacturerFailure = {
+  type: typeof manufacturerConst.CREATE_RANGE_MANUFACTURER_FAILURE;
+};
 //PUT
 export interface UpdateManufacturerRequest {
   type: typeof manufacturerConst.UPDATE_MANUFACTURER_REQUEST;
-  payload: UpdateManufacturerRequestPayload;
+  payload: ManufacturerPayload;
 }
 export type UpdateManufacturerSuccess = {
   type: typeof manufacturerConst.UPDATE_MANUFACTURER_SUCCESS;
@@ -68,13 +81,26 @@ export type UpdateManufacturerFailure = {
 //REMOVE
 export interface RemoveManufacturerRequest {
   type: typeof manufacturerConst.REMOVE_MANUFACTURER_REQUEST;
-  payload: ManufacturerRequestPayload;
+  payload: ManufacturerRemovePayload;
 }
 export type RemoveManufacturerSuccess = {
   type: typeof manufacturerConst.REMOVE_MANUFACTURER_SUCCESS;
+  payload: ManufacturerRemovePayload;
 };
 export type RemoveManufacturerFailure = {
   type: typeof manufacturerConst.REMOVE_MANUFACTURER_FAILURE;
+};
+//REMOVE RANGE
+export interface RemoveRangeManufacturerRequest {
+  type: typeof manufacturerConst.REMOVE_RANGE_MANUFACTURER_REQUEST;
+  payload: ManufacturerRemoveRangePayload;
+}
+export type RemoveRangeManufacturerSuccess = {
+  type: typeof manufacturerConst.REMOVE_RANGE_MANUFACTURER_SUCCESS;
+  payload: ManufacturerRemoveRangePayload;
+};
+export type RemoveRangeManufacturerFailure = {
+  type: typeof manufacturerConst.REMOVE_RANGE_MANUFACTURER_FAILURE;
 };
 
 //CLIENT ACTION TYPES
@@ -103,12 +129,18 @@ export type ManufacturerActions =
   | CreateManufacturerRequest
   | CreateManufacturerSuccess
   | CreateManufacturerFailure
+  | CreateRangeManufacturerRequest
+  | CreateRangeManufacturerSuccess
+  | CreateRangeManufacturerFailure
   | UpdateManufacturerRequest
   | UpdateManufacturerSuccess
   | UpdateManufacturerFailure
   | RemoveManufacturerRequest
   | RemoveManufacturerSuccess
   | RemoveManufacturerFailure
+  | RemoveRangeManufacturerRequest
+  | RemoveRangeManufacturerSuccess
+  | RemoveRangeManufacturerFailure
   | SetManufacturer
   | SetManufacturers
   | ClearManufacturer

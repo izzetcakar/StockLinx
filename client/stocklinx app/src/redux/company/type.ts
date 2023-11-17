@@ -6,18 +6,20 @@ export interface CompanyState {
   companies: ICompany[];
   selectData: SelectData[];
 }
-
-export interface CompanySucccessPayload {
-  company: ICompany;
-}
-export interface CompaniesSucccessPayload {
-  companies: ICompany[];
-}
 export interface CompanyRequestPayload {
   id: string;
 }
-export interface UpdateCompanyRequestPayload {
+export interface CompanyPayload {
   company: ICompany;
+}
+export interface CompaniesPayload {
+  companies: ICompany[];
+}
+export interface CompanyRemovePayload {
+  id: string;
+}
+export interface CompanyRemoveRangePayload {
+  ids: string[];
 }
 
 //GET
@@ -26,7 +28,7 @@ export interface FetchCompaniesRequest {
 }
 export type FetchCompaniesSuccess = {
   type: typeof companyConst.FETCH_COMPANIES_SUCCESS;
-  payload: CompaniesSucccessPayload;
+  payload: CompaniesPayload;
 };
 export type FetchCompaniesFailure = {
   type: typeof companyConst.FETCH_COMPANIES_FAILURE;
@@ -38,7 +40,7 @@ export interface FetchCompanyRequest {
 }
 export type FetchCompanySuccess = {
   type: typeof companyConst.FETCH_COMPANY_SUCCESS;
-  payload: CompanySucccessPayload;
+  payload: CompanyPayload;
 };
 export type FetchCompanyFailure = {
   type: typeof companyConst.FETCH_COMPANY_FAILURE;
@@ -46,7 +48,7 @@ export type FetchCompanyFailure = {
 //POST
 export interface CreateCompanyRequest {
   type: typeof companyConst.CREATE_COMPANY_REQUEST;
-  payload: UpdateCompanyRequestPayload;
+  payload: CompanyPayload;
 }
 export type CreateCompanySuccess = {
   type: typeof companyConst.CREATE_COMPANY_SUCCESS;
@@ -54,10 +56,21 @@ export type CreateCompanySuccess = {
 export type CreateCompanyFailure = {
   type: typeof companyConst.CREATE_COMPANY_FAILURE;
 };
+//POST RANGE
+export interface CreateRangeCompanyRequest {
+  type: typeof companyConst.CREATE_RANGE_COMPANY_REQUEST;
+  payload: CompaniesPayload;
+}
+export type CreateRangeCompanySuccess = {
+  type: typeof companyConst.CREATE_RANGE_COMPANY_SUCCESS;
+};
+export type CreateRangeCompanyFailure = {
+  type: typeof companyConst.CREATE_RANGE_COMPANY_FAILURE;
+};
 //PUT
 export interface UpdateCompanyRequest {
   type: typeof companyConst.UPDATE_COMPANY_REQUEST;
-  payload: UpdateCompanyRequestPayload;
+  payload: CompanyPayload;
 }
 export type UpdateCompanySuccess = {
   type: typeof companyConst.UPDATE_COMPANY_SUCCESS;
@@ -68,13 +81,26 @@ export type UpdateCompanyFailure = {
 //REMOVE
 export interface RemoveCompanyRequest {
   type: typeof companyConst.REMOVE_COMPANY_REQUEST;
-  payload: CompanyRequestPayload;
+  payload: CompanyRemovePayload;
 }
 export type RemoveCompanySuccess = {
   type: typeof companyConst.REMOVE_COMPANY_SUCCESS;
+  payload: CompanyRemovePayload;
 };
 export type RemoveCompanyFailure = {
   type: typeof companyConst.REMOVE_COMPANY_FAILURE;
+};
+//REMOVE RANGE
+export interface RemoveRangeCompanyRequest {
+  type: typeof companyConst.REMOVE_RANGE_COMPANY_REQUEST;
+  payload: CompanyRemoveRangePayload;
+}
+export type RemoveRangeCompanySuccess = {
+  type: typeof companyConst.REMOVE_RANGE_COMPANY_SUCCESS;
+  payload: CompanyRemoveRangePayload;
+};
+export type RemoveRangeCompanyFailure = {
+  type: typeof companyConst.REMOVE_RANGE_COMPANY_FAILURE;
 };
 
 //CLIENT ACTION TYPES
@@ -103,12 +129,18 @@ export type CompanyActions =
   | CreateCompanyRequest
   | CreateCompanySuccess
   | CreateCompanyFailure
+  | CreateRangeCompanyRequest
+  | CreateRangeCompanySuccess
+  | CreateRangeCompanyFailure
   | UpdateCompanyRequest
   | UpdateCompanySuccess
   | UpdateCompanyFailure
   | RemoveCompanyRequest
   | RemoveCompanySuccess
   | RemoveCompanyFailure
+  | RemoveRangeCompanyRequest
+  | RemoveRangeCompanySuccess
+  | RemoveRangeCompanyFailure
   | SetCompany
   | SetCompanies
   | ClearCompany

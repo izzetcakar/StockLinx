@@ -9,7 +9,6 @@ import {
   RemoveComponentSuccess,
   FetchComponentsFailure,
   FetchComponentsRequest,
-  ComponentsSucccessPayload,
   FetchComponentsSuccess,
   FetchComponentFailure,
   FetchComponentRequest,
@@ -18,21 +17,27 @@ import {
   UpdateComponentRequest,
   UpdateComponentSuccess,
   ComponentRequestPayload,
-  UpdateComponentRequestPayload,
-  ComponentSucccessPayload,
   SetComponent,
   SetComponents,
   ClearComponent,
   ClearComponents,
+  ComponentsPayload,
+  ComponentPayload,
+  CreateRangeComponentRequest,
+  CreateRangeComponentSuccess,
+  CreateRangeComponentFailure,
+  RemoveRangeComponentRequest,
+  RemoveRangeComponentSuccess,
+  RemoveRangeComponentFailure,
+  ComponentRemoveRangePayload,
+  ComponentRemovePayload,
 } from "./type";
 
 //GET
 const getAll = (): FetchComponentsRequest => ({
   type: componentConst.FETCH_COMPONENTS_REQUEST,
 });
-const getAllSuccess = (
-  payload: ComponentsSucccessPayload
-): FetchComponentsSuccess => ({
+const getAllSuccess = (payload: ComponentsPayload): FetchComponentsSuccess => ({
   type: componentConst.FETCH_COMPONENTS_SUCCESS,
   payload,
 });
@@ -45,9 +50,7 @@ const get = (payload: ComponentRequestPayload): FetchComponentRequest => ({
   type: componentConst.FETCH_COMPONENT_REQUEST,
   payload,
 });
-const getSuccess = (
-  payload: ComponentSucccessPayload
-): FetchComponentSuccess => ({
+const getSuccess = (payload: ComponentPayload): FetchComponentSuccess => ({
   type: componentConst.FETCH_COMPONENT_SUCCESS,
   payload,
 });
@@ -56,9 +59,7 @@ const getFailure = (): FetchComponentFailure => ({
 });
 
 //POST
-const create = (
-  payload: UpdateComponentRequestPayload
-): CreateComponentRequest => ({
+const create = (payload: ComponentPayload): CreateComponentRequest => ({
   type: componentConst.CREATE_COMPONENT_REQUEST,
   payload,
 });
@@ -69,10 +70,20 @@ const createFailure = (): CreateComponentFailure => ({
   type: componentConst.CREATE_COMPONENT_FAILURE,
 });
 
+//POST RANGE
+const createRange = (payload: ComponentsPayload): CreateRangeComponentRequest => ({
+  type: componentConst.CREATE_RANGE_COMPONENT_REQUEST,
+  payload,
+});
+const createRangeSuccess = (): CreateRangeComponentSuccess => ({
+  type: componentConst.CREATE_RANGE_COMPONENT_SUCCESS,
+});
+const createRangeFailure = (): CreateRangeComponentFailure => ({
+  type: componentConst.CREATE_RANGE_COMPONENT_FAILURE,
+});
+
 //PUT
-const update = (
-  payload: UpdateComponentRequestPayload
-): UpdateComponentRequest => ({
+const update = (payload: ComponentPayload): UpdateComponentRequest => ({
   type: componentConst.UPDATE_COMPONENT_REQUEST,
   payload,
 });
@@ -84,15 +95,35 @@ const updateFailure = (): UpdateComponentFailure => ({
 });
 
 //REMOVE
-const remove = (payload: ComponentRequestPayload): RemoveComponentRequest => ({
+const remove = (payload: ComponentRemovePayload): RemoveComponentRequest => ({
   type: componentConst.REMOVE_COMPONENT_REQUEST,
   payload,
 });
-const removeSuccess = (): RemoveComponentSuccess => ({
+const removeSuccess = (
+  payload: ComponentRemovePayload
+): RemoveComponentSuccess => ({
   type: componentConst.REMOVE_COMPONENT_SUCCESS,
+  payload,
 });
 const removeFailure = (): RemoveComponentFailure => ({
   type: componentConst.REMOVE_COMPONENT_FAILURE,
+});
+
+//REMOVE RANGE
+const removeRange = (
+  payload: ComponentRemoveRangePayload
+): RemoveRangeComponentRequest => ({
+  type: componentConst.REMOVE_RANGE_COMPONENT_REQUEST,
+  payload,
+});
+const removeRangeSuccess = (
+  payload: ComponentRemoveRangePayload
+): RemoveRangeComponentSuccess => ({
+  type: componentConst.REMOVE_RANGE_COMPONENT_SUCCESS,
+  payload,
+});
+const removeRangeFailure = (): RemoveRangeComponentFailure => ({
+  type: componentConst.REMOVE_RANGE_COMPONENT_FAILURE,
 });
 
 //CLIENT ACTIONS
@@ -121,12 +152,18 @@ export const componentActions = {
   create,
   createSuccess,
   createFailure,
+  createRange,
+  createRangeSuccess,
+  createRangeFailure,
   update,
   updateSuccess,
   updateFailure,
   remove,
   removeSuccess,
   removeFailure,
+  removeRange,
+  removeRangeSuccess,
+  removeRangeFailure,
   setComponent,
   clearComponent,
   setComponents,

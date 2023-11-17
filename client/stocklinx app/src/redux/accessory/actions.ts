@@ -9,7 +9,6 @@ import {
   RemoveAccessorySuccess,
   FetchAccessoriesFailure,
   FetchAccessoriesRequest,
-  AccessoriesSucccessPayload,
   FetchAccessoriesSuccess,
   FetchAccessoryFailure,
   FetchAccessoryRequest,
@@ -18,12 +17,20 @@ import {
   UpdateAccessoryRequest,
   UpdateAccessorySuccess,
   AccessoryRequestPayload,
-  UpdateAccessoryRequestPayload,
-  AccessorySucccessPayload,
   SetAccessory,
   SetAccessories,
   ClearAccessory,
   ClearAccessories,
+  AccessoriesPayload,
+  AccessoryPayload,
+  CreateRangeAccessoryRequest,
+  CreateRangeAccessorySuccess,
+  CreateRangeAccessoryFailure,
+  RemoveRangeAccessoryRequest,
+  RemoveRangeAccessorySuccess,
+  RemoveRangeAccessoryFailure,
+  AccessoryRemoveRangePayload,
+  AccessoryRemovePayload,
 } from "./type";
 
 //GET
@@ -31,13 +38,12 @@ const getAll = (): FetchAccessoriesRequest => ({
   type: accessoryConst.FETCH_ACCESSORIES_REQUEST,
 });
 const getAllSuccess = (
-  payload: AccessoriesSucccessPayload
+  payload: AccessoriesPayload
 ): FetchAccessoriesSuccess => ({
   type: accessoryConst.FETCH_ACCESSORIES_SUCCESS,
   payload,
 });
-const getAllFailure = (
-): FetchAccessoriesFailure => ({
+const getAllFailure = (): FetchAccessoriesFailure => ({
   type: accessoryConst.FETCH_ACCESSORIES_FAILURE,
 });
 
@@ -46,58 +52,82 @@ const get = (payload: AccessoryRequestPayload): FetchAccessoryRequest => ({
   type: accessoryConst.FETCH_ACCESSORY_REQUEST,
   payload,
 });
-const getSuccess = (
-  payload: AccessorySucccessPayload
-): FetchAccessorySuccess => ({
+const getSuccess = (payload: AccessoryPayload): FetchAccessorySuccess => ({
   type: accessoryConst.FETCH_ACCESSORY_SUCCESS,
   payload,
 });
-const getFailure = (
-): FetchAccessoryFailure => ({
+const getFailure = (): FetchAccessoryFailure => ({
   type: accessoryConst.FETCH_ACCESSORY_FAILURE,
 });
 
 //POST
-const create = (
-  payload: UpdateAccessoryRequestPayload
-): CreateAccessoryRequest => ({
+const create = (payload: AccessoryPayload): CreateAccessoryRequest => ({
   type: accessoryConst.CREATE_ACCESSORY_REQUEST,
   payload,
 });
 const createSuccess = (): CreateAccessorySuccess => ({
   type: accessoryConst.CREATE_ACCESSORY_SUCCESS,
 });
-const createFailure = (
-): CreateAccessoryFailure => ({
+const createFailure = (): CreateAccessoryFailure => ({
   type: accessoryConst.CREATE_ACCESSORY_FAILURE,
 });
 
+//POST RANGE
+const createRange = (
+  payload: AccessoriesPayload
+): CreateRangeAccessoryRequest => ({
+  type: accessoryConst.CREATE_RANGE_ACCESSORY_REQUEST,
+  payload,
+});
+const createRangeSuccess = (): CreateRangeAccessorySuccess => ({
+  type: accessoryConst.CREATE_RANGE_ACCESSORY_SUCCESS,
+});
+const createRangeFailure = (): CreateRangeAccessoryFailure => ({
+  type: accessoryConst.CREATE_RANGE_ACCESSORY_FAILURE,
+});
+
 //PUT
-const update = (
-  payload: UpdateAccessoryRequestPayload
-): UpdateAccessoryRequest => ({
+const update = (payload: AccessoryPayload): UpdateAccessoryRequest => ({
   type: accessoryConst.UPDATE_ACCESSORY_REQUEST,
   payload,
 });
 const updateSuccess = (): UpdateAccessorySuccess => ({
   type: accessoryConst.UPDATE_ACCESSORY_SUCCESS,
 });
-const updateFailure = (
-): UpdateAccessoryFailure => ({
+const updateFailure = (): UpdateAccessoryFailure => ({
   type: accessoryConst.UPDATE_ACCESSORY_FAILURE,
 });
 
 //REMOVE
-const remove = (payload: AccessoryRequestPayload): RemoveAccessoryRequest => ({
+const remove = (payload: AccessoryRemovePayload): RemoveAccessoryRequest => ({
   type: accessoryConst.REMOVE_ACCESSORY_REQUEST,
   payload,
 });
-const removeSuccess = (): RemoveAccessorySuccess => ({
+const removeSuccess = (
+  payload: AccessoryRemovePayload
+): RemoveAccessorySuccess => ({
   type: accessoryConst.REMOVE_ACCESSORY_SUCCESS,
+  payload,
 });
-const removeFailure = (
-): RemoveAccessoryFailure => ({
+const removeFailure = (): RemoveAccessoryFailure => ({
   type: accessoryConst.REMOVE_ACCESSORY_FAILURE,
+});
+
+//REMOVE RANGE
+const removeRange = (
+  payload: AccessoryRemoveRangePayload
+): RemoveRangeAccessoryRequest => ({
+  type: accessoryConst.REMOVE_RANGE_ACCESSORY_REQUEST,
+  payload,
+});
+const removeRangeSuccess = (
+  payload: AccessoryRemoveRangePayload
+): RemoveRangeAccessorySuccess => ({
+  type: accessoryConst.REMOVE_RANGE_ACCESSORY_SUCCESS,
+  payload,
+});
+const removeRangeFailure = (): RemoveRangeAccessoryFailure => ({
+  type: accessoryConst.REMOVE_RANGE_ACCESSORY_FAILURE,
 });
 
 //CLIENT ACTIONS
@@ -126,12 +156,18 @@ export const accessoryActions = {
   create,
   createSuccess,
   createFailure,
+  createRange,
+  createRangeSuccess,
+  createRangeFailure,
   update,
   updateSuccess,
   updateFailure,
   remove,
   removeSuccess,
   removeFailure,
+  removeRange,
+  removeRangeSuccess,
+  removeRangeFailure,
   setAccessory,
   clearAccessory,
   setAccessories,

@@ -9,7 +9,6 @@ import {
   RemoveModelSuccess,
   FetchModelsFailure,
   FetchModelsRequest,
-  ModelsSucccessPayload,
   FetchModelsSuccess,
   FetchModelFailure,
   FetchModelRequest,
@@ -18,19 +17,27 @@ import {
   UpdateModelRequest,
   UpdateModelSuccess,
   ModelRequestPayload,
-  UpdateModelRequestPayload,
-  ModelSucccessPayload,
   SetModel,
   SetModels,
   ClearModel,
   ClearModels,
+  ModelsPayload,
+  ModelPayload,
+  CreateRangeModelRequest,
+  CreateRangeModelSuccess,
+  CreateRangeModelFailure,
+  RemoveRangeModelRequest,
+  RemoveRangeModelSuccess,
+  RemoveRangeModelFailure,
+  ModelRemoveRangePayload,
+  ModelRemovePayload,
 } from "./type";
 
 //GET
 const getAll = (): FetchModelsRequest => ({
   type: modelConst.FETCH_MODELS_REQUEST,
 });
-const getAllSuccess = (payload: ModelsSucccessPayload): FetchModelsSuccess => ({
+const getAllSuccess = (payload: ModelsPayload): FetchModelsSuccess => ({
   type: modelConst.FETCH_MODELS_SUCCESS,
   payload,
 });
@@ -43,7 +50,7 @@ const get = (payload: ModelRequestPayload): FetchModelRequest => ({
   type: modelConst.FETCH_MODEL_REQUEST,
   payload,
 });
-const getSuccess = (payload: ModelSucccessPayload): FetchModelSuccess => ({
+const getSuccess = (payload: ModelPayload): FetchModelSuccess => ({
   type: modelConst.FETCH_MODEL_SUCCESS,
   payload,
 });
@@ -52,7 +59,7 @@ const getFailure = (): FetchModelFailure => ({
 });
 
 //POST
-const create = (payload: UpdateModelRequestPayload): CreateModelRequest => ({
+const create = (payload: ModelPayload): CreateModelRequest => ({
   type: modelConst.CREATE_MODEL_REQUEST,
   payload,
 });
@@ -63,8 +70,20 @@ const createFailure = (): CreateModelFailure => ({
   type: modelConst.CREATE_MODEL_FAILURE,
 });
 
+//POST RANGE
+const createRange = (payload: ModelsPayload): CreateRangeModelRequest => ({
+  type: modelConst.CREATE_RANGE_MODEL_REQUEST,
+  payload,
+});
+const createRangeSuccess = (): CreateRangeModelSuccess => ({
+  type: modelConst.CREATE_RANGE_MODEL_SUCCESS,
+});
+const createRangeFailure = (): CreateRangeModelFailure => ({
+  type: modelConst.CREATE_RANGE_MODEL_FAILURE,
+});
+
 //PUT
-const update = (payload: UpdateModelRequestPayload): UpdateModelRequest => ({
+const update = (payload: ModelPayload): UpdateModelRequest => ({
   type: modelConst.UPDATE_MODEL_REQUEST,
   payload,
 });
@@ -76,15 +95,35 @@ const updateFailure = (): UpdateModelFailure => ({
 });
 
 //REMOVE
-const remove = (payload: ModelRequestPayload): RemoveModelRequest => ({
+const remove = (payload: ModelRemovePayload): RemoveModelRequest => ({
   type: modelConst.REMOVE_MODEL_REQUEST,
   payload,
 });
-const removeSuccess = (): RemoveModelSuccess => ({
+const removeSuccess = (
+  payload: ModelRemovePayload
+): RemoveModelSuccess => ({
   type: modelConst.REMOVE_MODEL_SUCCESS,
+  payload,
 });
 const removeFailure = (): RemoveModelFailure => ({
   type: modelConst.REMOVE_MODEL_FAILURE,
+});
+
+//REMOVE RANGE
+const removeRange = (
+  payload: ModelRemoveRangePayload
+): RemoveRangeModelRequest => ({
+  type: modelConst.REMOVE_RANGE_MODEL_REQUEST,
+  payload,
+});
+const removeRangeSuccess = (
+  payload: ModelRemoveRangePayload
+): RemoveRangeModelSuccess => ({
+  type: modelConst.REMOVE_RANGE_MODEL_SUCCESS,
+  payload,
+});
+const removeRangeFailure = (): RemoveRangeModelFailure => ({
+  type: modelConst.REMOVE_RANGE_MODEL_FAILURE,
 });
 
 //CLIENT ACTIONS
@@ -113,12 +152,18 @@ export const modelActions = {
   create,
   createSuccess,
   createFailure,
+  createRange,
+  createRangeSuccess,
+  createRangeFailure,
   update,
   updateSuccess,
   updateFailure,
   remove,
   removeSuccess,
   removeFailure,
+  removeRange,
+  removeRangeSuccess,
+  removeRangeFailure,
   setModel,
   clearModel,
   setModels,

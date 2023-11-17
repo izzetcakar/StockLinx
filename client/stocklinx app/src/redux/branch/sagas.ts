@@ -2,7 +2,14 @@ import { call, put, takeEvery } from "redux-saga/effects";
 import { branchActions } from "./actions";
 import { IBranch } from "../../interfaces/interfaces";
 import { branchConst } from "./constant";
-import { FetchBranchRequest, UpdateBranchRequest } from "./type";
+import {
+  CreateBranchRequest,
+  CreateRangeBranchRequest,
+  FetchBranchRequest,
+  RemoveBranchRequest,
+  RemoveRangeBranchRequest,
+  UpdateBranchRequest,
+} from "./type";
 import { branchRequests } from "./requests";
 import { genericActions } from "../generic/actions";
 import {
@@ -24,7 +31,7 @@ function* fetchBranchesSaga() {
       branchRequests.getAll
     );
     if (success !== undefined && !success) {
-      throw new Error(message as string);
+      throw new Error(message);
     } else {
       yield put(
         branchActions.getAllSuccess({
@@ -56,7 +63,7 @@ function* fetchBranchSaga(action: FetchBranchRequest) {
     openNotificationError("Branch", (e as Error).message);
   }
 }
-function* createBranchSaga(action: UpdateBranchRequest) {
+function* createBranchSaga(action: CreateBranchRequest) {
   try {
     const { message, success }: IResponse = yield call(
       branchRequests.create,
@@ -72,6 +79,23 @@ function* createBranchSaga(action: UpdateBranchRequest) {
     openNotificationError("Branch", (e as Error).message);
   }
 }
+function* createRangeBranchSaga(action: CreateRangeBranchRequest) {
+  try {
+    const { message, success }: IResponse = yield call(
+      branchRequests.createRange,
+      action.payload.branches
+    );
+    if (success !== undefined && !success) {
+      throw new Error(message);
+    } else {
+      yield put(branchActions.createRangeSuccess());
+      openNotificationSuccess("Branches Created");
+    }
+  } catch (e) {
+    openNotificationError("Branch", (e as Error).message);
+  }
+}
+
 function* updateBranchSaga(action: UpdateBranchRequest) {
   try {
     const { message, success }: IResponse = yield call(
@@ -88,7 +112,7 @@ function* updateBranchSaga(action: UpdateBranchRequest) {
     openNotificationError("Branch", (e as Error).message);
   }
 }
-function* removeBranchSaga(action: FetchBranchRequest) {
+function* removeBranchSaga(action: RemoveBranchRequest) {
   try {
     const { message, success }: IResponse = yield call(
       branchRequests.remove,
@@ -97,23 +121,47 @@ function* removeBranchSaga(action: FetchBranchRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(branchActions.removeSuccess());
+      yield put(branchActions.removeSuccess({ id: action.payload.id }));
       openNotificationSuccess("Branch Removed");
     }
   } catch (e) {
     openNotificationError("Branch", (e as Error).message);
   }
 }
+function* removeRangeBranchSaga(action: RemoveRangeBranchRequest) {
+  try {
+    const { message, success }: IResponse = yield call(
+      branchRequests.removeRange,
+      action.payload.ids
+    );
+    if (success !== undefined && !success) {
+      throw new Error(message);
+    } else {
+      yield put(branchActions.removeRangeSuccess({ ids: action.payload.ids }));
+      openNotificationSuccess("Branches Removed");
+    }
+  } catch (e) {
+    openNotificationError("Branch", (e as Error).message);
+  }
+}
 
-function* branchSaga() {
+function* branchesaga() {
   // yield all([
   //   takeLatest(branchConst.FETCH_BRANCHES_REQUEST, fetchBranchesSaga),
   // ]);
   yield takeEvery(branchConst.FETCH_BRANCHES_REQUEST, fetchBranchesSaga);
   yield takeEvery(branchConst.FETCH_BRANCH_REQUEST, fetchBranchSaga);
   yield takeEvery(branchConst.CREATE_BRANCH_REQUEST, createBranchSaga);
+  yield takeEvery(
+    branchConst.CREATE_RANGE_BRANCH_REQUEST,
+    createRangeBranchSaga
+  );
   yield takeEvery(branchConst.UPDATE_BRANCH_REQUEST, updateBranchSaga);
   yield takeEvery(branchConst.REMOVE_BRANCH_REQUEST, removeBranchSaga);
+  yield takeEvery(
+    branchConst.REMOVE_RANGE_BRANCH_REQUEST,
+    removeRangeBranchSaga
+  );
 }
 // function* budgetItemSaga() {
 //   yield takeEvery(budgetItemConst.fetchList, listBudgetITem);
@@ -121,4 +169,4 @@ function* branchSaga() {
 //   yield takeEvery(budgetItemConst.fetchUpdate,updateBudgetITem);
 // }
 
-export default branchSaga;
+export default branchesaga;

@@ -1,31 +1,25 @@
-import {
-  ILocation,
-  ILocationCounts,
-  SelectData,
-} from "../../interfaces/interfaces";
+import { ILocation, SelectData } from "../../interfaces/interfaces";
 import { locationConst } from "./constant";
 
 export interface LocationState {
   location: ILocation | null;
   locations: ILocation[];
   selectData: SelectData[];
-  counts: ILocationCounts[];
-}
-
-export interface LocationSucccessPayload {
-  location: ILocation;
-}
-export interface LocationsSucccessPayload {
-  locations: ILocation[];
 }
 export interface LocationRequestPayload {
   id: string;
 }
-export interface UpdateLocationRequestPayload {
+export interface LocationPayload {
   location: ILocation;
 }
-export interface LocationCountsSuccessPayload {
-  counts: ILocationCounts[];
+export interface LocationsPayload {
+  locations: ILocation[];
+}
+export interface LocationRemoveRangePayload {
+  ids: string[];
+}
+export interface LocationRemovePayload {
+  id: string;
 }
 
 //GET
@@ -34,21 +28,10 @@ export interface FetchLocationsRequest {
 }
 export type FetchLocationsSuccess = {
   type: typeof locationConst.FETCH_LOCATIONS_SUCCESS;
-  payload: LocationsSucccessPayload;
+  payload: LocationsPayload;
 };
 export type FetchLocationsFailure = {
   type: typeof locationConst.FETCH_LOCATIONS_FAILURE;
-};
-//GET COUNTS
-export interface FetchLocationCountsRequest {
-  type: typeof locationConst.FETCH_LOCATION_COUNTS_REQUEST;
-}
-export type FetchLocationCountsSuccess = {
-  type: typeof locationConst.FETCH_LOCATION_COUNTS_SUCCESS;
-  payload: LocationCountsSuccessPayload;
-};
-export type FetchLocationCountsFailure = {
-  type: typeof locationConst.FETCH_LOCATION_COUNTS_FAILURE;
 };
 //GET:/ID
 export interface FetchLocationRequest {
@@ -57,7 +40,7 @@ export interface FetchLocationRequest {
 }
 export type FetchLocationSuccess = {
   type: typeof locationConst.FETCH_LOCATION_SUCCESS;
-  payload: LocationSucccessPayload;
+  payload: LocationPayload;
 };
 export type FetchLocationFailure = {
   type: typeof locationConst.FETCH_LOCATION_FAILURE;
@@ -65,7 +48,7 @@ export type FetchLocationFailure = {
 //POST
 export interface CreateLocationRequest {
   type: typeof locationConst.CREATE_LOCATION_REQUEST;
-  payload: UpdateLocationRequestPayload;
+  payload: LocationPayload;
 }
 export type CreateLocationSuccess = {
   type: typeof locationConst.CREATE_LOCATION_SUCCESS;
@@ -73,10 +56,21 @@ export type CreateLocationSuccess = {
 export type CreateLocationFailure = {
   type: typeof locationConst.CREATE_LOCATION_FAILURE;
 };
+//POST RANGE
+export interface CreateRangeLocationRequest {
+  type: typeof locationConst.CREATE_RANGE_LOCATION_REQUEST;
+  payload: LocationsPayload;
+}
+export type CreateRangeLocationSuccess = {
+  type: typeof locationConst.CREATE_RANGE_LOCATION_SUCCESS;
+};
+export type CreateRangeLocationFailure = {
+  type: typeof locationConst.CREATE_RANGE_LOCATION_FAILURE;
+};
 //PUT
 export interface UpdateLocationRequest {
   type: typeof locationConst.UPDATE_LOCATION_REQUEST;
-  payload: UpdateLocationRequestPayload;
+  payload: LocationPayload;
 }
 export type UpdateLocationSuccess = {
   type: typeof locationConst.UPDATE_LOCATION_SUCCESS;
@@ -87,13 +81,26 @@ export type UpdateLocationFailure = {
 //REMOVE
 export interface RemoveLocationRequest {
   type: typeof locationConst.REMOVE_LOCATION_REQUEST;
-  payload: LocationRequestPayload;
+  payload: LocationRemovePayload;
 }
 export type RemoveLocationSuccess = {
   type: typeof locationConst.REMOVE_LOCATION_SUCCESS;
+  payload: LocationRemovePayload;
 };
 export type RemoveLocationFailure = {
   type: typeof locationConst.REMOVE_LOCATION_FAILURE;
+};
+//REMOVE RANGE
+export interface RemoveRangeLocationRequest {
+  type: typeof locationConst.REMOVE_RANGE_LOCATION_REQUEST;
+  payload: LocationRemoveRangePayload;
+}
+export type RemoveRangeLocationSuccess = {
+  type: typeof locationConst.REMOVE_RANGE_LOCATION_SUCCESS;
+  payload: LocationRemoveRangePayload;
+};
+export type RemoveRangeLocationFailure = {
+  type: typeof locationConst.REMOVE_RANGE_LOCATION_FAILURE;
 };
 
 //CLIENT ACTION TYPES
@@ -119,18 +126,21 @@ export type LocationActions =
   | FetchLocationRequest
   | FetchLocationSuccess
   | FetchLocationFailure
-  | FetchLocationCountsRequest
-  | FetchLocationCountsSuccess
-  | FetchLocationCountsFailure
   | CreateLocationRequest
   | CreateLocationSuccess
   | CreateLocationFailure
+  | CreateRangeLocationRequest
+  | CreateRangeLocationSuccess
+  | CreateRangeLocationFailure
   | UpdateLocationRequest
   | UpdateLocationSuccess
   | UpdateLocationFailure
   | RemoveLocationRequest
   | RemoveLocationSuccess
   | RemoveLocationFailure
+  | RemoveRangeLocationRequest
+  | RemoveRangeLocationSuccess
+  | RemoveRangeLocationFailure
   | SetLocation
   | SetLocations
   | ClearLocation
