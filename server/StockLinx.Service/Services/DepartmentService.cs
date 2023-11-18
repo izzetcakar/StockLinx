@@ -42,22 +42,28 @@ namespace StockLinx.Service.Services
             var newDepartment = _mapper.Map<Department>(createDto);
             newDepartment.Id = Guid.NewGuid();
             newDepartment.CreatedDate = DateTime.UtcNow;
-
-            //Check if newDepartment.ImagePath is base64 or not and not null
-            if (newDepartment.ImagePath != null && newDepartment.ImagePath.Contains("data:image/png;base64,"))
-            {
-                string base64 = newDepartment.ImagePath.Substring(newDepartment.ImagePath.IndexOf(',') + 1);
-                string path = newDepartment.Name + DateTime.Now.ToString("yyyyMMddHHmmss");
-                ImageHandler.UploadBase64AsFile(base64, path);
-            }
             await AddAsync(newDepartment);
         }
+
+        public async Task CreateRangeDepartmentAsync(List<DepartmentCreateDto> createDtos)
+        {
+            var newDepartments = new List<Department>();
+            foreach (var createDto in createDtos)
+            {
+                var newDepartment = _mapper.Map<Department>(createDto);
+                newDepartment.Id = Guid.NewGuid();
+                newDepartment.CreatedDate = DateTime.UtcNow;
+                newDepartments.Add(newDepartment);
+            }
+            await AddRangeAsync(newDepartments);
+        }
+
         public async Task UpdateDepartmentAsync(DepartmentUpdateDto updateDto)
         {
             var departmentInDb = await GetByIdAsync(updateDto.Id);
             if (departmentInDb == null)
             {
-                throw new ArgumentNullException(nameof(updateDto.Id), "The ID of the Department to update is null.");
+                throw new ArgumentNullException(nameof(updateDto.Id), $"The ID of the department to update is null.");
             }
             var updatedDepartment = _mapper.Map<Department>(updateDto);
             updatedDepartment.UpdatedDate = DateTime.UtcNow;
@@ -69,14 +75,25 @@ namespace StockLinx.Service.Services
         {
             if (departmentId == Guid.Empty)
             {
-                throw new ArgumentNullException(nameof(departmentId), "The ID of the Department to delete is null.");
+                throw new ArgumentNullException(nameof(departmentId), $"The ID of the department to delete is null.");
             }
-            var Department = await GetByIdAsync(departmentId);
-            if (Department == null)
+            var department = await GetByIdAsync(departmentId);
+            if (department == null)
             {
-                throw new ArgumentNullException(nameof(Department), "The Department to delete is null.");
+                throw new ArgumentNullException(nameof(department), $"The department to delete is null.");
             }
-            await RemoveAsync(Department);
+            await RemoveAsync(department);
+        }
+
+        public async Task DeleteRangeDepartmentAsync(List<Guid> departmentIds)
+        {
+            var departments = new List<Department>();
+            foreach (var departmentId in departmentIds)
+            {
+                var department = GetByIdAsync(departmentId).Result;
+                departments.Add(department);
+            }
+            await RemoveRangeAsync(departments);
         }
     }
 }

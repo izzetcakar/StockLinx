@@ -8,8 +8,6 @@ using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 using StockLinx.Core.Services;
 using StockLinx.Core.UnitOfWork;
-using StockLinx.Repository.Repositories.EF_Core;
-using StockLinx.Repository.UnitOfWork;
 
 namespace StockLinx.Service.Services
 {
@@ -56,22 +54,28 @@ namespace StockLinx.Service.Services
             var newAsset = _mapper.Map<Asset>(createDto);
             newAsset.Id = Guid.NewGuid();
             newAsset.CreatedDate = DateTime.UtcNow;
-
-            //Check if newAsset.ImagePath is base64 or not and not null
-            if (newAsset.ImagePath != null && newAsset.ImagePath.Contains("data:image/png;base64,"))
-            {
-                string base64 = newAsset.ImagePath.Substring(newAsset.ImagePath.IndexOf(',') + 1);
-                string path = newAsset.Name + DateTime.Now.ToString("yyyyMMddHHmmss");
-                ImageHandler.UploadBase64AsFile(base64, path);
-            }
             await AddAsync(newAsset);
         }
+
+        public async Task CreateRangeAssetAsync(List<AssetCreateDto> createDtos)
+        {
+            var newAssets = new List<Asset>();
+            foreach (var createDto in createDtos)
+            {
+                var newAsset = _mapper.Map<Asset>(createDto);
+                newAsset.Id = Guid.NewGuid();
+                newAsset.CreatedDate = DateTime.UtcNow;
+                newAssets.Add(newAsset);
+            }
+            await AddRangeAsync(newAssets);
+        }
+
         public async Task UpdateAssetAsync(AssetUpdateDto updateDto)
         {
             var assetInDb = await GetByIdAsync(updateDto.Id);
             if (assetInDb == null)
             {
-                throw new ArgumentNullException(nameof(updateDto.Id), "The ID of the Asset to update is null.");
+                throw new ArgumentNullException(nameof(updateDto.Id), $"The ID of the asset to update is null.");
             }
             var updatedAsset = _mapper.Map<Asset>(updateDto);
             updatedAsset.UpdatedDate = DateTime.UtcNow;
@@ -83,14 +87,25 @@ namespace StockLinx.Service.Services
         {
             if (assetId == Guid.Empty)
             {
-                throw new ArgumentNullException(nameof(assetId), "The ID of the Asset to delete is null.");
+                throw new ArgumentNullException(nameof(assetId), $"The ID of the asset to delete is null.");
             }
-            var Asset = await GetByIdAsync(assetId);
-            if (Asset == null)
+            var asset = await GetByIdAsync(assetId);
+            if (asset == null)
             {
-                throw new ArgumentNullException(nameof(Asset), "The Asset to delete is null.");
+                throw new ArgumentNullException(nameof(asset), $"The asset to delete is null.");
             }
-            await RemoveAsync(Asset);
+            await RemoveAsync(asset);
+        }
+
+        public async Task DeleteRangeAssetAsync(List<Guid> assetIds)
+        {
+            var assets = new List<Asset>();
+            foreach (var assetId in assetIds)
+            {
+                var asset = GetByIdAsync(assetId).Result;
+                assets.Add(asset);
+            }
+            await RemoveRangeAsync(assets);
         }
         public async Task<ProductCounter> GetAllCountAsync()
         {
@@ -98,7 +113,6 @@ namespace StockLinx.Service.Services
             var assetCount = assets.Count();
             return new ProductCounter { EntityName = "Assets", Count = assetCount };
         }
-
         public async Task<List<ProductStatusCounter>> GetStatusCount()
         {
             var assets = await _assetRepository.GetAll().Include(x => x.ProductStatus).ToListAsync();

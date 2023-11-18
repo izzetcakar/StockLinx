@@ -10,8 +10,10 @@ namespace StockLinx.Core.Services
     {
         Task<List<LicenseDto>> GetLicenseDtos();
         Task CreateLicenseAsync(LicenseCreateDto createDto);
+        Task CreateRangeLicenseAsync(List<LicenseCreateDto> createDtos);
         Task UpdateLicenseAsync(LicenseUpdateDto updateDto);
         Task DeleteLicenseAsync(Guid licenseId);
+        Task DeleteRangeLicenseAsync(List<Guid> licenseIds);
         Task<ProductCounter> GetAllCountAsync();
         Task<List<ProductStatusCounter>> GetStatusCount();
     }

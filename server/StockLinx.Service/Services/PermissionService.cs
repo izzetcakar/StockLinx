@@ -31,24 +31,31 @@ namespace StockLinx.Service.Services
         }
         public async Task CreatePermissionAsync(PermissionCreateDto createDto)
         {
-            if (createDto == null)
-            {
-                throw new ArgumentNullException(nameof(createDto), "The permission create DTO is null.");
-            }
-
             var newPermission = _mapper.Map<Permission>(createDto);
-            var permissionId = Guid.NewGuid();
-            newPermission.Id = permissionId;
+            newPermission.Id = Guid.NewGuid();
             newPermission.CreatedDate = DateTime.UtcNow;
-            await _permissionRepository.AddAsync(newPermission);
-            await _unitOfWork.CommitAsync();
+            await AddAsync(newPermission);
         }
+
+        public async Task CreateRangePermissionAsync(List<PermissionCreateDto> createDtos)
+        {
+            var newPermissions = new List<Permission>();
+            foreach (var createDto in createDtos)
+            {
+                var newPermission = _mapper.Map<Permission>(createDto);
+                newPermission.Id = Guid.NewGuid();
+                newPermission.CreatedDate = DateTime.UtcNow;
+                newPermissions.Add(newPermission);
+            }
+            await AddRangeAsync(newPermissions);
+        }
+
         public async Task UpdatePermissionAsync(PermissionUpdateDto updateDto)
         {
             var permissionInDb = await GetByIdAsync(updateDto.Id);
             if (permissionInDb == null)
             {
-                throw new ArgumentNullException(nameof(updateDto.Id), "The ID of the Permission to update is null.");
+                throw new ArgumentNullException(nameof(updateDto.Id), $"The ID of the permission to update is null.");
             }
             var updatedPermission = _mapper.Map<Permission>(updateDto);
             updatedPermission.UpdatedDate = DateTime.UtcNow;
@@ -56,18 +63,29 @@ namespace StockLinx.Service.Services
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task DeletePermissionAsync(Guid id)
+        public async Task DeletePermissionAsync(Guid permissionId)
         {
-            if (id == Guid.Empty)
+            if (permissionId == Guid.Empty)
             {
-                throw new ArgumentNullException(nameof(id), "The ID of the Permission to delete is null.");
+                throw new ArgumentNullException(nameof(permissionId), $"The ID of the permission to delete is null.");
             }
-            var permission = await GetByIdAsync(id);
+            var permission = await GetByIdAsync(permissionId);
             if (permission == null)
             {
-                throw new ArgumentNullException(nameof(permission), "The Permission to delete is null.");
+                throw new ArgumentNullException(nameof(permission), $"The permission to delete is null.");
             }
             await RemoveAsync(permission);
+        }
+
+        public async Task DeleteRangePermissionAsync(List<Guid> permissionIds)
+        {
+            var permissions = new List<Permission>();
+            foreach (var permissionId in permissionIds)
+            {
+                var permission = GetByIdAsync(permissionId).Result;
+                permissions.Add(permission);
+            }
+            await RemoveRangeAsync(permissions);
         }
     }
 }

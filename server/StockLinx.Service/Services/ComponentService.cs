@@ -8,8 +8,6 @@ using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 using StockLinx.Core.Services;
 using StockLinx.Core.UnitOfWork;
-using StockLinx.Repository.Repositories.EF_Core;
-using StockLinx.Repository.UnitOfWork;
 
 namespace StockLinx.Service.Services
 {
@@ -52,41 +50,58 @@ namespace StockLinx.Service.Services
             var newComponent = _mapper.Map<Component>(createDto);
             newComponent.Id = Guid.NewGuid();
             newComponent.CreatedDate = DateTime.UtcNow;
-
-            //Check if newComponent.ImagePath is base64 or not and not null
-            if (newComponent.ImagePath != null && newComponent.ImagePath.Contains("data:image/png;base64,"))
-            {
-                string base64 = newComponent.ImagePath.Substring(newComponent.ImagePath.IndexOf(',') + 1);
-                string path = newComponent.Name + DateTime.Now.ToString("yyyyMMddHHmmss");
-                ImageHandler.UploadBase64AsFile(base64, path);
-            }
             await AddAsync(newComponent);
         }
+
+        public async Task CreateRangeComponentAsync(List<ComponentCreateDto> createDtos)
+        {
+            var newComponents = new List<Component>();
+            foreach (var createDto in createDtos)
+            {
+                var newComponent = _mapper.Map<Component>(createDto);
+                newComponent.Id = Guid.NewGuid();
+                newComponent.CreatedDate = DateTime.UtcNow;
+                newComponents.Add(newComponent);
+            }
+            await AddRangeAsync(newComponents);
+        }
+
         public async Task UpdateComponentAsync(ComponentUpdateDto updateDto)
         {
-            var ComponentInDb = await GetByIdAsync(updateDto.Id);
-            if (ComponentInDb == null)
+            var componentInDb = await GetByIdAsync(updateDto.Id);
+            if (componentInDb == null)
             {
-                throw new ArgumentNullException(nameof(updateDto.Id), "The ID of the Component to update is null.");
+                throw new ArgumentNullException(nameof(updateDto.Id), $"The ID of the component to update is null.");
             }
             var updatedComponent = _mapper.Map<Component>(updateDto);
             updatedComponent.UpdatedDate = DateTime.UtcNow;
-            await UpdateAsync(ComponentInDb, updatedComponent);
+            await UpdateAsync(componentInDb, updatedComponent);
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task DeleteComponentAsync(Guid ComponentId)
+        public async Task DeleteComponentAsync(Guid componentId)
         {
-            if (ComponentId == Guid.Empty)
+            if (componentId == Guid.Empty)
             {
-                throw new ArgumentNullException(nameof(ComponentId), "The ID of the Component to delete is null.");
+                throw new ArgumentNullException(nameof(componentId), $"The ID of the component to delete is null.");
             }
-            var Component = await GetByIdAsync(ComponentId);
-            if (Component == null)
+            var component = await GetByIdAsync(componentId);
+            if (component == null)
             {
-                throw new ArgumentNullException(nameof(Component), "The Component to delete is null.");
+                throw new ArgumentNullException(nameof(component), $"The component to delete is null.");
             }
-            await RemoveAsync(Component);
+            await RemoveAsync(component);
+        }
+
+        public async Task DeleteRangeComponentAsync(List<Guid> componentIds)
+        {
+            var components = new List<Component>();
+            foreach (var componentId in componentIds)
+            {
+                var component = GetByIdAsync(componentId).Result;
+                components.Add(component);
+            }
+            await RemoveRangeAsync(components);
         }
         public async Task<ProductCounter> GetAllCountAsync()
         {

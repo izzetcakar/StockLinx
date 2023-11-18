@@ -7,7 +7,9 @@ namespace StockLinx.Core.Services
     public interface ICompanyService : IService<Company>
     {
         Task CreateCompanyAsync(CompanyCreateDto createDto);
+        Task CreateRangeCompanyAsync(List<CompanyCreateDto> createDtos);
         Task UpdateCompanyAsync(CompanyUpdateDto updateDto);
         Task DeleteCompanyAsync(Guid companyId);
+        Task DeleteRangeCompanyAsync(List<Guid> companyIds);
     }
 }

@@ -43,6 +43,13 @@ namespace StockLinx.API.Controllers
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
         }
 
+        [HttpPost("range")]
+        public async Task<IActionResult> AddRangeBranches(List<BranchCreateDto> createDtos)
+        {
+            await _branchService.CreateRangeBranchAsync(createDtos);
+            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+        }
+
         [HttpPut]
         public async Task<IActionResult> Update(BranchUpdateDto updateDto)
         {
@@ -55,6 +62,13 @@ namespace StockLinx.API.Controllers
         {
             var branch = await _branchService.GetByIdAsync(id);
             await _branchService.RemoveAsync(branch);
+            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+        }
+
+        [HttpDelete("range")]
+        public async Task<IActionResult> DeleteRangeBranches(List<Guid> branchIds)
+        {
+            await _branchService.DeleteRangeBranchAsync(branchIds);
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
         }
     }

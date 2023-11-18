@@ -20,7 +20,7 @@ namespace StockLinx.Service.Services
         private readonly IUnitOfWork _unitOfWork;
 
         public UserService(IRepository<User> repository, IUnitOfWork unitOfWork,
-            IUserRepository userRepository,IMapper mapper, IHttpContextAccessor httpContextAccessor) : base(repository, unitOfWork)
+            IUserRepository userRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor) : base(repository, unitOfWork)
         {
             _userRepository = userRepository;
             _httpContextAccessor = httpContextAccessor;
@@ -105,14 +105,63 @@ namespace StockLinx.Service.Services
             }
         }
 
-        public Task UpdateUserAsync(UserUpdateDto updateDto)
+        public async Task CreateUserAsync(UserCreateDto createDto)
         {
-            throw new NotImplementedException();
+            var newUser = _mapper.Map<User>(createDto);
+            newUser.Id = Guid.NewGuid();
+            newUser.CreatedDate = DateTime.UtcNow;
+            await AddAsync(newUser);
         }
 
-        public Task DeleteUserAsync(Guid userId)
+        public async Task CreateRangeUserAsync(List<UserCreateDto> createDtos)
         {
-            throw new NotImplementedException();
+            var newUsers = new List<User>();
+            foreach (var createDto in createDtos)
+            {
+                var newUser = _mapper.Map<User>(createDto);
+                newUser.Id = Guid.NewGuid();
+                newUser.CreatedDate = DateTime.UtcNow;
+                newUsers.Add(newUser);
+            }
+            await AddRangeAsync(newUsers);
+        }
+
+        public async Task UpdateUserAsync(UserUpdateDto updateDto)
+        {
+            var userInDb = await GetByIdAsync(updateDto.Id);
+            if (userInDb == null)
+            {
+                throw new ArgumentNullException(nameof(updateDto.Id), $"The ID of the user to update is null.");
+            }
+            var updatedUser = _mapper.Map<User>(updateDto);
+            updatedUser.UpdatedDate = DateTime.UtcNow;
+            await UpdateAsync(userInDb, updatedUser);
+            await _unitOfWork.CommitAsync();
+        }
+
+        public async Task DeleteUserAsync(Guid userId)
+        {
+            if (userId == Guid.Empty)
+            {
+                throw new ArgumentNullException(nameof(userId), $"The ID of the user to delete is null.");
+            }
+            var user = await GetByIdAsync(userId);
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user), $"The user to delete is null.");
+            }
+            await RemoveAsync(user);
+        }
+
+        public async Task DeleteRangeUserAsync(List<Guid> userIds)
+        {
+            var users = new List<User>();
+            foreach (var userId in userIds)
+            {
+                var user = GetByIdAsync(userId).Result;
+                users.Add(user);
+            }
+            await RemoveRangeAsync(users);
         }
     }
 }

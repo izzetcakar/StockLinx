@@ -9,7 +9,9 @@ namespace StockLinx.Core.Services
     {
         Task<List<DepartmentDto>> GetDepartmentDtos();
         Task CreateDepartmentAsync(DepartmentCreateDto createDto);
+        Task CreateRangeDepartmentAsync(List<DepartmentCreateDto> createDtos);
         Task UpdateDepartmentAsync(DepartmentUpdateDto updateDto);
         Task DeleteDepartmentAsync(Guid departmentId);
+        Task DeleteRangeDepartmentAsync(List<Guid> departmentIds);
     }
 }

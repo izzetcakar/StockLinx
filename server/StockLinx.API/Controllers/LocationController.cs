@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
@@ -52,6 +51,13 @@ namespace StockLinx.API.Controllers
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
         }
 
+        [HttpPost("range")]
+        public async Task<IActionResult> AddRangeLocations(List<LocationCreateDto> createDtos)
+        {
+            await _locationService.CreateRangeLocationAsync(createDtos);
+            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+        }
+
         [HttpPut]
         public async Task<IActionResult> Update(LocationUpdateDto updateDto)
         {
@@ -64,6 +70,13 @@ namespace StockLinx.API.Controllers
         {
             var location = await _locationService.GetByIdAsync(id);
             await _locationService.RemoveAsync(location);
+            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+        }
+
+        [HttpDelete("range")]
+        public async Task<IActionResult> DeleteRangeLocations(List<Guid> locationIds)
+        {
+            await _locationService.DeleteRangeLocationAsync(locationIds);
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
         }
     }

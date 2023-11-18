@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
@@ -46,6 +45,13 @@ namespace StockLinx.API.Controllers
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
         }
 
+        [HttpPost("range")]
+        public async Task<IActionResult> AddRangeManufacturers(List<ManufacturerCreateDto> createDtos)
+        {
+            await _manufacturerService.CreateRangeManufacturerAsync(createDtos);
+            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+        }
+
         [HttpPut]
         public async Task<IActionResult> Update(ManufacturerUpdateDto updateDto)
         {
@@ -58,6 +64,13 @@ namespace StockLinx.API.Controllers
         {
             var manufacturer = await _manufacturerService.GetByIdAsync(id);
             await _manufacturerService.RemoveAsync(manufacturer);
+            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+        }
+
+        [HttpDelete("range")]
+        public async Task<IActionResult> DeleteRangeManufacturers(List<Guid> manufacturerIds)
+        {
+            await _manufacturerService.DeleteRangeManufacturerAsync(manufacturerIds);
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
         }
     }

@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
@@ -31,12 +30,26 @@ namespace StockLinx.Service.Services
             newLocation.CreatedDate = DateTime.UtcNow;
             await AddAsync(newLocation);
         }
+
+        public async Task CreateRangeLocationAsync(List<LocationCreateDto> createDtos)
+        {
+            var newLocations = new List<Location>();
+            foreach (var createDto in createDtos)
+            {
+                var newLocation = _mapper.Map<Location>(createDto);
+                newLocation.Id = Guid.NewGuid();
+                newLocation.CreatedDate = DateTime.UtcNow;
+                newLocations.Add(newLocation);
+            }
+            await AddRangeAsync(newLocations);
+        }
+
         public async Task UpdateLocationAsync(LocationUpdateDto updateDto)
         {
             var locationInDb = await GetByIdAsync(updateDto.Id);
             if (locationInDb == null)
             {
-                throw new ArgumentNullException(nameof(updateDto.Id), "The ID of the Location to update is null.");
+                throw new ArgumentNullException(nameof(updateDto.Id), $"The ID of the location to update is null.");
             }
             var updatedLocation = _mapper.Map<Location>(updateDto);
             updatedLocation.UpdatedDate = DateTime.UtcNow;
@@ -48,14 +61,25 @@ namespace StockLinx.Service.Services
         {
             if (locationId == Guid.Empty)
             {
-                throw new ArgumentNullException(nameof(locationId), "The ID of the Location to delete is null.");
+                throw new ArgumentNullException(nameof(locationId), $"The ID of the location to delete is null.");
             }
-            var Location = await GetByIdAsync(locationId);
-            if (Location == null)
+            var location = await GetByIdAsync(locationId);
+            if (location == null)
             {
-                throw new ArgumentNullException(nameof(Location), "The Location to delete is null.");
+                throw new ArgumentNullException(nameof(location), $"The location to delete is null.");
             }
-            await RemoveAsync(Location);
+            await RemoveAsync(location);
+        }
+
+        public async Task DeleteRangeLocationAsync(List<Guid> locationIds)
+        {
+            var locations = new List<Location>();
+            foreach (var locationId in locationIds)
+            {
+                var location = GetByIdAsync(locationId).Result;
+                locations.Add(location);
+            }
+            await RemoveRangeAsync(locations);
         }
 
         public async Task<List<ProductLocationCounterDto>> GetAllCounts()

@@ -32,22 +32,28 @@ namespace StockLinx.Service.Services
             var newSupplier = _mapper.Map<Supplier>(createDto);
             newSupplier.Id = Guid.NewGuid();
             newSupplier.CreatedDate = DateTime.UtcNow;
-
-            //Check if newSupplier.ImagePath is base64 or not and not null
-            if (newSupplier.ImagePath != null && newSupplier.ImagePath.Contains("data:image/png;base64,"))
-            {
-                string base64 = newSupplier.ImagePath.Substring(newSupplier.ImagePath.IndexOf(',') + 1);
-                string path = newSupplier.Name + DateTime.Now.ToString("yyyyMMddHHmmss");
-                ImageHandler.UploadBase64AsFile(base64, path);
-            }
             await AddAsync(newSupplier);
         }
+
+        public async Task CreateRangeSupplierAsync(List<SupplierCreateDto> createDtos)
+        {
+            var newSuppliers = new List<Supplier>();
+            foreach (var createDto in createDtos)
+            {
+                var newSupplier = _mapper.Map<Supplier>(createDto);
+                newSupplier.Id = Guid.NewGuid();
+                newSupplier.CreatedDate = DateTime.UtcNow;
+                newSuppliers.Add(newSupplier);
+            }
+            await AddRangeAsync(newSuppliers);
+        }
+
         public async Task UpdateSupplierAsync(SupplierUpdateDto updateDto)
         {
             var supplierInDb = await GetByIdAsync(updateDto.Id);
             if (supplierInDb == null)
             {
-                throw new ArgumentNullException(nameof(updateDto.Id), "The ID of the Supplier to update is null.");
+                throw new ArgumentNullException(nameof(updateDto.Id), $"The ID of the supplier to update is null.");
             }
             var updatedSupplier = _mapper.Map<Supplier>(updateDto);
             updatedSupplier.UpdatedDate = DateTime.UtcNow;
@@ -59,14 +65,25 @@ namespace StockLinx.Service.Services
         {
             if (supplierId == Guid.Empty)
             {
-                throw new ArgumentNullException(nameof(supplierId), "The ID of the Supplier to delete is null.");
+                throw new ArgumentNullException(nameof(supplierId), $"The ID of the supplier to delete is null.");
             }
-            var Supplier = await GetByIdAsync(supplierId);
-            if (Supplier == null)
+            var supplier = await GetByIdAsync(supplierId);
+            if (supplier == null)
             {
-                throw new ArgumentNullException(nameof(Supplier), "The Supplier to delete is null.");
+                throw new ArgumentNullException(nameof(supplier), $"The supplier to delete is null.");
             }
-            await RemoveAsync(Supplier);
+            await RemoveAsync(supplier);
+        }
+
+        public async Task DeleteRangeSupplierAsync(List<Guid> supplierIds)
+        {
+            var suppliers = new List<Supplier>();
+            foreach (var supplierId in supplierIds)
+            {
+                var supplier = GetByIdAsync(supplierId).Result;
+                suppliers.Add(supplier);
+            }
+            await RemoveRangeAsync(suppliers);
         }
     }
 }

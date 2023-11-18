@@ -12,7 +12,10 @@ namespace StockLinx.Core.Services
         Task<User> Register(UserCreateDto createUser);
         Guid GetIdByToken();
         Task<User> GetCurrentUser();
+        Task CreateUserAsync(UserCreateDto createDto);
+        Task CreateRangeUserAsync(List<UserCreateDto> createDtos);
         Task UpdateUserAsync(UserUpdateDto updateDto);
         Task DeleteUserAsync(Guid userId);
+        Task DeleteRangeUserAsync(List<Guid> userIds);
     }
 }

@@ -9,7 +9,9 @@ namespace StockLinx.Core.Services
     {
         Task<List<PermissionDto>> GetPermissionDtos();
         Task CreatePermissionAsync(PermissionCreateDto createDto);
+        Task CreateRangePermissionAsync(List<PermissionCreateDto> createDtos);
         Task UpdatePermissionAsync(PermissionUpdateDto updateDto);
-        Task DeletePermissionAsync(Guid accessoryId);
+        Task DeletePermissionAsync(Guid permissionId);
+        Task DeleteRangePermissionAsync(List<Guid> permissionIds);
     }
 }

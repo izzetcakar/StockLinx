@@ -9,7 +9,9 @@ namespace StockLinx.Core.Services
     {
         Task<List<ModelDto>> GetModelDtos();
         Task CreateModelAsync(ModelCreateDto createDto);
+        Task CreateRangeModelAsync(List<ModelCreateDto> createDtos);
         Task UpdateModelAsync(ModelUpdateDto updateDto);
         Task DeleteModelAsync(Guid modelId);
+        Task DeleteRangeModelAsync(List<Guid> modelIds);
     }
 }

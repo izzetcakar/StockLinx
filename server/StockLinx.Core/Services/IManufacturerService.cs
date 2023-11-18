@@ -9,7 +9,9 @@ namespace StockLinx.Core.Services
     {
         Task<List<ManufacturerDto>> GetManufacturerDtos();
         Task CreateManufacturerAsync(ManufacturerCreateDto createDto);
+        Task CreateRangeManufacturerAsync(List<ManufacturerCreateDto> createDtos);
         Task UpdateManufacturerAsync(ManufacturerUpdateDto updateDto);
         Task DeleteManufacturerAsync(Guid manufacturerId);
+        Task DeleteRangeManufacturerAsync(List<Guid> manufacturerIds);
     }
 }

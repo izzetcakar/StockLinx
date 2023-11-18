@@ -42,6 +42,13 @@ namespace StockLinx.API.Controllers
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
         }
 
+        [HttpPost("range")]
+        public async Task<IActionResult> AddRangeConsumables(List<ConsumableCreateDto> createDtos)
+        {
+            await _consumableService.CreateRangeConsumableAsync(createDtos);
+            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+        }
+
         [HttpPut]
         public async Task<IActionResult> Update(ConsumableUpdateDto updateDto)
         {
@@ -54,6 +61,13 @@ namespace StockLinx.API.Controllers
         {
             var consumable = await _consumableService.GetByIdAsync(id);
             await _consumableService.RemoveAsync(consumable);
+            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+        }
+
+        [HttpDelete("range")]
+        public async Task<IActionResult> DeleteRangeConsumables(List<Guid> consumableIds)
+        {
+            await _consumableService.DeleteRangeConsumableAsync(consumableIds);
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
         }
     }

@@ -42,6 +42,13 @@ namespace StockLinx.API.Controllers
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
         }
 
+        [HttpPost("range")]
+        public async Task<IActionResult> AddRangeAccessories(List<AccessoryCreateDto> createDtos)
+        {
+            await _accessoryService.CreateRangeAccessoryAsync(createDtos);
+            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+        }
+
         [HttpPut]
         public async Task<IActionResult> Update(AccessoryUpdateDto updateDto)
         {
@@ -54,6 +61,13 @@ namespace StockLinx.API.Controllers
         {
             var accessory = await _accessoryService.GetByIdAsync(id);
             await _accessoryService.RemoveAsync(accessory);
+            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+        }
+
+        [HttpDelete("range")]
+        public async Task<IActionResult> DeleteRangeAccessories(List<Guid> accessoryIds)
+        {
+            await _accessoryService.DeleteRangeAccessoryAsync(accessoryIds);
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
         }
     }

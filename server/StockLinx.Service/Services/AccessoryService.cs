@@ -9,7 +9,6 @@ using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 using StockLinx.Core.Services;
 using StockLinx.Core.UnitOfWork;
-using StockLinx.Repository.Repositories.EF_Core;
 
 namespace StockLinx.Service.Services
 {
@@ -56,70 +55,61 @@ namespace StockLinx.Service.Services
         }
         public async Task CreateAccessoryAsync(AccessoryCreateDto createDto)
         {
-            if (createDto == null)
-            {
-                throw new ArgumentNullException(nameof(createDto), "The accessory create DTO is null.");
-            }
-            try
+            var newAccessory = _mapper.Map<Accessory>(createDto);
+            newAccessory.Id = Guid.NewGuid();
+            newAccessory.CreatedDate = DateTime.UtcNow;
+            await AddAsync(newAccessory);
+        }
+
+        public async Task CreateRangeAccessoryAsync(List<AccessoryCreateDto> createDtos)
+        {
+            var newAccessories = new List<Accessory>();
+            foreach (var createDto in createDtos)
             {
                 var newAccessory = _mapper.Map<Accessory>(createDto);
-                var accessoryId = Guid.NewGuid();
-                newAccessory.Id = accessoryId;
+                newAccessory.Id = Guid.NewGuid();
                 newAccessory.CreatedDate = DateTime.UtcNow;
-                if (createDto.ImagePath != null)
-                {
-                    string fileName = $"Accessory - {newAccessory.Name} - {DateTime.UtcNow}";
-                    ImageHandler.UploadBase64AsFile(createDto.ImagePath, fileName);
-                    newAccessory.ImagePath = fileName;
-                }
-                await _accessoryRepository.AddAsync(newAccessory);
-                await _unitOfWork.CommitAsync();
+                newAccessories.Add(newAccessory);
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while creating the accessory.");
-                throw;
-            }
+            await AddRangeAsync(newAccessories);
         }
+
         public async Task UpdateAccessoryAsync(AccessoryUpdateDto updateDto)
         {
-            try
+            var accessoryInDb = await GetByIdAsync(updateDto.Id);
+            if (accessoryInDb == null)
             {
-                var accessoryId = updateDto?.Id;
-                if (accessoryId == null)
-                {
-                    throw new ArgumentNullException(nameof(updateDto.Id), "The ID of the accessory to update is null.");
-                }
-
-                var accessoryInDb = await GetByIdAsync((Guid)accessoryId);
-                var updatedAccessory = _mapper.Map<Accessory>(updateDto);
-                updatedAccessory.UpdatedDate = DateTime.UtcNow;
-                _accessoryRepository.Update(accessoryInDb, updatedAccessory);
-
-                if (updateDto?.ImagePath != null)
-                {
-                    string fileName = $"Accessory - {updatedAccessory.Name} - {DateTime.UtcNow}";
-                    ImageHandler.UploadBase64AsFile(updateDto.ImagePath, fileName);
-                    updatedAccessory.ImagePath = fileName;
-                }
-
-                await _unitOfWork.CommitAsync();
+                throw new ArgumentNullException(nameof(updateDto.Id), "The ID of the accessory to update is null.");
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while updating the accessory.");
-                throw;
-            }
+            var updatedAccessory = _mapper.Map<Accessory>(updateDto);
+            updatedAccessory.UpdatedDate = DateTime.UtcNow;
+            await UpdateAsync(accessoryInDb, updatedAccessory);
+            await _unitOfWork.CommitAsync();
         }
+
         public async Task DeleteAccessoryAsync(Guid accessoryId)
         {
-            var accessoryInDb = await GetByIdAsync(accessoryId);
-            if (accessoryInDb == null)
+            if (accessoryId == Guid.Empty)
             {
                 throw new ArgumentNullException(nameof(accessoryId), "The ID of the accessory to delete is null.");
             }
-            await RemoveAsync(accessoryInDb);
-            await _unitOfWork.CommitAsync();
+            var accessory = await GetByIdAsync(accessoryId);
+            if (accessory == null)
+            {
+                throw new ArgumentNullException(nameof(accessory), "The accessory to delete is null.");
+            }
+            await RemoveAsync(accessory);
+        }
+
+        public async Task DeleteRangeAccessoryAsync(List<Guid> accessoryIds)
+        {
+            var accessories = new List<Accessory>();
+            foreach (var accessoryId in accessoryIds)
+            {
+                var accessory = GetByIdAsync(accessoryId).Result;
+                accessories.Add(accessory);
+            }
+            await RemoveRangeAsync(accessories);
         }
         public async Task<ProductCounter> GetAllCountAsync()
         {

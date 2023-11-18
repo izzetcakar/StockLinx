@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
@@ -43,6 +42,13 @@ namespace StockLinx.API.Controllers
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
         }
 
+        [HttpPost("range")]
+        public async Task<IActionResult> AddRangeDepartments(List<DepartmentCreateDto> createDtos)
+        {
+            await _departmentService.CreateRangeDepartmentAsync(createDtos);
+            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+        }
+
         [HttpPut]
         public async Task<IActionResult> Update(DepartmentUpdateDto updateDto)
         {
@@ -55,6 +61,13 @@ namespace StockLinx.API.Controllers
         {
             var department = await _departmentService.GetByIdAsync(id);
             await _departmentService.RemoveAsync(department);
+            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+        }
+
+        [HttpDelete("range")]
+        public async Task<IActionResult> DeleteRangeDepartments(List<Guid> departmentIds)
+        {
+            await _departmentService.DeleteRangeDepartmentAsync(departmentIds);
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
         }
     }

@@ -10,8 +10,10 @@ namespace StockLinx.Core.Services
     {
         Task<List<AssetDto>> GetAssetDtos();
         Task CreateAssetAsync(AssetCreateDto createDto);
+        Task CreateRangeAssetAsync(List<AssetCreateDto> createDtos);
         Task UpdateAssetAsync(AssetUpdateDto updateDto);
         Task DeleteAssetAsync(Guid assetId);
+        Task DeleteRangeAssetAsync(List<Guid> assetIds);
         Task<ProductCounter> GetAllCountAsync();
         Task<List<ProductStatusCounter>> GetStatusCount();
     }

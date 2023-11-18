@@ -8,7 +8,6 @@ using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 using StockLinx.Core.Services;
 using StockLinx.Core.UnitOfWork;
-using StockLinx.Repository.UnitOfWork;
 
 namespace StockLinx.Service.Services
 {
@@ -54,22 +53,28 @@ namespace StockLinx.Service.Services
             var newConsumable = _mapper.Map<Consumable>(createDto);
             newConsumable.Id = Guid.NewGuid();
             newConsumable.CreatedDate = DateTime.UtcNow;
-
-            //Check if newConsumable.ImagePath is base64 or not and not null
-            if (newConsumable.ImagePath != null && newConsumable.ImagePath.Contains("data:image/png;base64,"))
-            {
-                string base64 = newConsumable.ImagePath.Substring(newConsumable.ImagePath.IndexOf(',') + 1);
-                string path = newConsumable.Name + DateTime.Now.ToString("yyyyMMddHHmmss");
-                ImageHandler.UploadBase64AsFile(base64, path);
-            }
             await AddAsync(newConsumable);
         }
+
+        public async Task CreateRangeConsumableAsync(List<ConsumableCreateDto> createDtos)
+        {
+            var newConsumables = new List<Consumable>();
+            foreach (var createDto in createDtos)
+            {
+                var newConsumable = _mapper.Map<Consumable>(createDto);
+                newConsumable.Id = Guid.NewGuid();
+                newConsumable.CreatedDate = DateTime.UtcNow;
+                newConsumables.Add(newConsumable);
+            }
+            await AddRangeAsync(newConsumables);
+        }
+
         public async Task UpdateConsumableAsync(ConsumableUpdateDto updateDto)
         {
             var consumableInDb = await GetByIdAsync(updateDto.Id);
             if (consumableInDb == null)
             {
-                throw new ArgumentNullException(nameof(updateDto.Id), "The ID of the Consumable to update is null.");
+                throw new ArgumentNullException(nameof(updateDto.Id), $"The ID of the consumable to update is null.");
             }
             var updatedConsumable = _mapper.Map<Consumable>(updateDto);
             updatedConsumable.UpdatedDate = DateTime.UtcNow;
@@ -81,14 +86,25 @@ namespace StockLinx.Service.Services
         {
             if (consumableId == Guid.Empty)
             {
-                throw new ArgumentNullException(nameof(consumableId), "The ID of the Consumable to delete is null.");
+                throw new ArgumentNullException(nameof(consumableId), $"The ID of the consumable to delete is null.");
             }
-            var Consumable = await GetByIdAsync(consumableId);
-            if (Consumable == null)
+            var consumable = await GetByIdAsync(consumableId);
+            if (consumable == null)
             {
-                throw new ArgumentNullException(nameof(Consumable), "The Consumable to delete is null.");
+                throw new ArgumentNullException(nameof(consumable), $"The consumable to delete is null.");
             }
-            await RemoveAsync(Consumable);
+            await RemoveAsync(consumable);
+        }
+
+        public async Task DeleteRangeConsumableAsync(List<Guid> consumableIds)
+        {
+            var consumables = new List<Consumable>();
+            foreach (var consumableId in consumableIds)
+            {
+                var consumable = GetByIdAsync(consumableId).Result;
+                consumables.Add(consumable);
+            }
+            await RemoveRangeAsync(consumables);
         }
         public async Task<ProductCounter> GetAllCountAsync()
         {

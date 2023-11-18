@@ -33,22 +33,28 @@ namespace StockLinx.Service.Services
             var newModel = _mapper.Map<Model>(createDto);
             newModel.Id = Guid.NewGuid();
             newModel.CreatedDate = DateTime.UtcNow;
-
-            //Check if newModel.ImagePath is base64 or not and not null
-            if (newModel.ImagePath != null && newModel.ImagePath.Contains("data:image/png;base64,"))
-            {
-                string base64 = newModel.ImagePath.Substring(newModel.ImagePath.IndexOf(',') + 1);
-                string path = newModel.Name + DateTime.Now.ToString("yyyyMMddHHmmss");
-                ImageHandler.UploadBase64AsFile(base64, path);
-            }
             await AddAsync(newModel);
         }
+
+        public async Task CreateRangeModelAsync(List<ModelCreateDto> createDtos)
+        {
+            var newModels = new List<Model>();
+            foreach (var createDto in createDtos)
+            {
+                var newModel = _mapper.Map<Model>(createDto);
+                newModel.Id = Guid.NewGuid();
+                newModel.CreatedDate = DateTime.UtcNow;
+                newModels.Add(newModel);
+            }
+            await AddRangeAsync(newModels);
+        }
+
         public async Task UpdateModelAsync(ModelUpdateDto updateDto)
         {
             var modelInDb = await GetByIdAsync(updateDto.Id);
             if (modelInDb == null)
             {
-                throw new ArgumentNullException(nameof(updateDto.Id), "The ID of the Model to update is null.");
+                throw new ArgumentNullException(nameof(updateDto.Id), $"The ID of the model to update is null.");
             }
             var updatedModel = _mapper.Map<Model>(updateDto);
             updatedModel.UpdatedDate = DateTime.UtcNow;
@@ -60,14 +66,25 @@ namespace StockLinx.Service.Services
         {
             if (modelId == Guid.Empty)
             {
-                throw new ArgumentNullException(nameof(modelId), "The ID of the Model to delete is null.");
+                throw new ArgumentNullException(nameof(modelId), $"The ID of the model to delete is null.");
             }
-            var Model = await GetByIdAsync(modelId);
-            if (Model == null)
+            var model = await GetByIdAsync(modelId);
+            if (model == null)
             {
-                throw new ArgumentNullException(nameof(Model), "The Model to delete is null.");
+                throw new ArgumentNullException(nameof(model), $"The model to delete is null.");
             }
-            await RemoveAsync(Model);
+            await RemoveAsync(model);
+        }
+
+        public async Task DeleteRangeModelAsync(List<Guid> modelIds)
+        {
+            var models = new List<Model>();
+            foreach (var modelId in modelIds)
+            {
+                var model = GetByIdAsync(modelId).Result;
+                models.Add(model);
+            }
+            await RemoveRangeAsync(models);
         }
     }
 }

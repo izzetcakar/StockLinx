@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
@@ -44,6 +43,13 @@ namespace StockLinx.API.Controllers
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
         }
 
+        [HttpPost("range")]
+        public async Task<IActionResult> AddRangeLicenses(List<LicenseCreateDto> createDtos)
+        {
+            await _licenseService.CreateRangeLicenseAsync(createDtos);
+            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+        }
+
         [HttpPut]
         public async Task<IActionResult> Update(LicenseUpdateDto updateDto)
         {
@@ -56,6 +62,13 @@ namespace StockLinx.API.Controllers
         {
             var license = await _licenseService.GetByIdAsync(id);
             await _licenseService.RemoveAsync(license);
+            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+        }
+
+        [HttpDelete("range")]
+        public async Task<IActionResult> DeleteRangeLicenses(List<Guid> licenseIds)
+        {
+            await _licenseService.DeleteRangeLicenseAsync(licenseIds);
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
         }
     }

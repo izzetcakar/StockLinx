@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.Extensions.Logging;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
@@ -27,34 +26,58 @@ namespace StockLinx.Service.Services
             var newBranch = _mapper.Map<Branch>(createDto);
             newBranch.Id = Guid.NewGuid();
             newBranch.CreatedDate = DateTime.UtcNow;
-
             await AddAsync(newBranch);
         }
+
+        public async Task CreateRangeBranchAsync(List<BranchCreateDto> createDtos)
+        {
+            var newBranches = new List<Branch>();
+            foreach (var createDto in createDtos)
+            {
+                var newBranch = _mapper.Map<Branch>(createDto);
+                newBranch.Id = Guid.NewGuid();
+                newBranch.CreatedDate = DateTime.UtcNow;
+                newBranches.Add(newBranch);
+            }
+            await AddRangeAsync(newBranches);
+        }
+
         public async Task UpdateBranchAsync(BranchUpdateDto updateDto)
         {
-            var BranchInDb = await GetByIdAsync(updateDto.Id);
-            if (BranchInDb == null)
+            var branchInDb = await GetByIdAsync(updateDto.Id);
+            if (branchInDb == null)
             {
-                throw new ArgumentNullException(nameof(updateDto.Id), "The ID of the Branch to update is null.");
+                throw new ArgumentNullException(nameof(updateDto.Id), $"The ID of the branch to update is null.");
             }
             var updatedBranch = _mapper.Map<Branch>(updateDto);
             updatedBranch.UpdatedDate = DateTime.UtcNow;
-            await UpdateAsync(BranchInDb, updatedBranch);
+            await UpdateAsync(branchInDb, updatedBranch);
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task DeleteBranchAsync(Guid BranchId)
+        public async Task DeleteBranchAsync(Guid branchId)
         {
-            if (BranchId == Guid.Empty)
+            if (branchId == Guid.Empty)
             {
-                throw new ArgumentNullException(nameof(BranchId), "The ID of the Branch to delete is null.");
+                throw new ArgumentNullException(nameof(branchId), $"The ID of the branch to delete is null.");
             }
-            var Branch = await GetByIdAsync(BranchId);
-            if (Branch == null)
+            var branch = await GetByIdAsync(branchId);
+            if (branch == null)
             {
-                throw new ArgumentNullException(nameof(Branch), "The Branch to delete is null.");
+                throw new ArgumentNullException(nameof(branch), $"The branch to delete is null.");
             }
-            await RemoveAsync(Branch);
+            await RemoveAsync(branch);
+        }
+
+        public async Task DeleteRangeBranchAsync(List<Guid> branchIds)
+        {
+            var branches = new List<Branch>();
+            foreach (var branchId in branchIds)
+            {
+                var branch = GetByIdAsync(branchId).Result;
+                branches.Add(branch);
+            }
+            await RemoveRangeAsync(branches);
         }
     }
 }

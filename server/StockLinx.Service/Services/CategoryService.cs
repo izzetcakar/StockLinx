@@ -8,7 +8,6 @@ using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 using StockLinx.Core.Services;
 using StockLinx.Core.UnitOfWork;
-using StockLinx.Repository.UnitOfWork;
 
 namespace StockLinx.Service.Services
 {
@@ -34,15 +33,19 @@ namespace StockLinx.Service.Services
             var newCategory = _mapper.Map<Category>(createDto);
             newCategory.Id = Guid.NewGuid();
             newCategory.CreatedDate = DateTime.UtcNow;
-
-            //Check if newCategory.ImagePath is base64 or not and not null
-            if (newCategory.ImagePath != null && newCategory.ImagePath.Contains("data:image/png;base64,"))
-            {
-                string base64 = newCategory.ImagePath.Substring(newCategory.ImagePath.IndexOf(',') + 1);
-                string path = newCategory.Name + DateTime.Now.ToString("yyyyMMddHHmmss");
-                ImageHandler.UploadBase64AsFile(base64, path);
-            }
             await AddAsync(newCategory);
+        }
+        public async Task CreateRangeCategoryAsync(List<CategoryCreateDto> createDtos)
+        {
+            var newCategories = new List<Category>();
+            foreach (var createDto in createDtos)
+            {
+                var newCategory = _mapper.Map<Category>(createDto);
+                newCategory.Id = Guid.NewGuid();
+                newCategory.CreatedDate = DateTime.UtcNow;
+                newCategories.Add(newCategory);
+            }
+            await AddRangeAsync(newCategories);
         }
         public async Task UpdateCategoryAsync(CategoryUpdateDto updateDto)
         {
@@ -69,25 +72,6 @@ namespace StockLinx.Service.Services
             }
             await RemoveAsync(category);
         }
-        public async Task<List<ProductCategoryCounterDto>> GetCounts()
-        {
-            var counts = await _categoryRepository.GetCounts();
-            return counts;
-        }
-
-        public async Task CreateRangeCategoryAsync(List<CategoryCreateDto> createDtos)
-        {
-            var newCategories = new List<Category>();
-            foreach (var createDto in createDtos)
-            {
-                var newCategory = _mapper.Map<Category>(createDto);
-                newCategory.Id = Guid.NewGuid();
-                newCategory.CreatedDate = DateTime.UtcNow;
-                newCategories.Add(newCategory);
-            }
-            await AddRangeAsync(newCategories);
-        }
-
         public async Task DeleteRangeCategoryAsync(List<Guid> categoryIds)
         {
             var categories = new List<Category>();
@@ -98,5 +82,11 @@ namespace StockLinx.Service.Services
             }
             await RemoveRangeAsync(categories);
         }
+        public async Task<List<ProductCategoryCounterDto>> GetCounts()
+        {
+            var counts = await _categoryRepository.GetCounts();
+            return counts;
+        }
+
     }
 }

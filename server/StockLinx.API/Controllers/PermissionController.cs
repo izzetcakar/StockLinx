@@ -42,6 +42,13 @@ namespace StockLinx.API.Controllers
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
         }
 
+        [HttpPost("range")]
+        public async Task<IActionResult> AddRangePermissions(List<PermissionCreateDto> createDtos)
+        {
+            await _permissionService.CreateRangePermissionAsync(createDtos);
+            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+        }
+
         [HttpPut]
         public async Task<IActionResult> Update(PermissionUpdateDto updateDto)
         {
@@ -54,6 +61,13 @@ namespace StockLinx.API.Controllers
         {
             var permission = await _permissionService.GetByIdAsync(id);
             await _permissionService.RemoveAsync(permission);
+            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+        }
+
+        [HttpDelete("range")]
+        public async Task<IActionResult> DeleteRangePermissions(List<Guid> permissionIds)
+        {
+            await _permissionService.DeleteRangePermissionAsync(permissionIds);
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
         }
     }

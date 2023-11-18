@@ -31,24 +31,31 @@ namespace StockLinx.Service.Services
         }
         public async Task CreateProductStatusAsync(ProductStatusCreateDto createDto)
         {
-            if (createDto == null)
-            {
-                throw new ArgumentNullException(nameof(createDto), "The productStatus create DTO is null.");
-            }
-
             var newProductStatus = _mapper.Map<ProductStatus>(createDto);
-            var productStatusId = Guid.NewGuid();
-            newProductStatus.Id = productStatusId;
+            newProductStatus.Id = Guid.NewGuid();
             newProductStatus.CreatedDate = DateTime.UtcNow;
-            await _productStatusRepository.AddAsync(newProductStatus);
-            await _unitOfWork.CommitAsync();
+            await AddAsync(newProductStatus);
         }
+
+        public async Task CreateRangeProductStatusAsync(List<ProductStatusCreateDto> createDtos)
+        {
+            var newProductStatuses = new List<ProductStatus>();
+            foreach (var createDto in createDtos)
+            {
+                var newProductStatus = _mapper.Map<ProductStatus>(createDto);
+                newProductStatus.Id = Guid.NewGuid();
+                newProductStatus.CreatedDate = DateTime.UtcNow;
+                newProductStatuses.Add(newProductStatus);
+            }
+            await AddRangeAsync(newProductStatuses);
+        }
+
         public async Task UpdateProductStatusAsync(ProductStatusUpdateDto updateDto)
         {
             var productStatusInDb = await GetByIdAsync(updateDto.Id);
             if (productStatusInDb == null)
             {
-                throw new ArgumentNullException(nameof(updateDto.Id), "The ID of the ProductStatus to update is null.");
+                throw new ArgumentNullException(nameof(updateDto.Id), $"The ID of the product status to update is null.");
             }
             var updatedProductStatus = _mapper.Map<ProductStatus>(updateDto);
             updatedProductStatus.UpdatedDate = DateTime.UtcNow;
@@ -56,18 +63,29 @@ namespace StockLinx.Service.Services
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task DeleteProductStatusAsync(Guid id)
+        public async Task DeleteProductStatusAsync(Guid productStatusId)
         {
-            if (id == Guid.Empty)
+            if (productStatusId == Guid.Empty)
             {
-                throw new ArgumentNullException(nameof(id), "The ID of the ProductStatus to delete is null.");
+                throw new ArgumentNullException(nameof(productStatusId), $"The ID of the product status to delete is null.");
             }
-            var productStatus = await GetByIdAsync(id);
+            var productStatus = await GetByIdAsync(productStatusId);
             if (productStatus == null)
             {
-                throw new ArgumentNullException(nameof(productStatus), "The ProductStatus to delete is null.");
+                throw new ArgumentNullException(nameof(productStatus), $"The product status to delete is null.");
             }
             await RemoveAsync(productStatus);
+        }
+
+        public async Task DeleteRangeProductStatusAsync(List<Guid> productStatusIds)
+        {
+            var productStatuses = new List<ProductStatus>();
+            foreach (var productStatusId in productStatusIds)
+            {
+                var productStatus = GetByIdAsync(productStatusId).Result;
+                productStatuses.Add(productStatus);
+            }
+            await RemoveRangeAsync(productStatuses);
         }
     }
 }

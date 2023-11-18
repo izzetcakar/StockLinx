@@ -43,6 +43,13 @@ namespace StockLinx.API.Controllers
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
         }
 
+        [HttpPost("range")]
+        public async Task<IActionResult> AddRangeCompanies(List<CompanyCreateDto> createDtos)
+        {
+            await _companyService.CreateRangeCompanyAsync(createDtos);
+            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+        }
+
         [HttpPut]
         public async Task<IActionResult> Update(CompanyUpdateDto updateDto)
         {
@@ -55,6 +62,13 @@ namespace StockLinx.API.Controllers
         {
             var company = await _companyService.GetByIdAsync(id);
             await _companyService.RemoveAsync(company);
+            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+        }
+
+        [HttpDelete("range")]
+        public async Task<IActionResult> DeleteRangeCompanies(List<Guid> companyIds)
+        {
+            await _companyService.DeleteRangeCompanyAsync(companyIds);
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
         }
     }

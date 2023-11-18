@@ -137,5 +137,18 @@ namespace StockLinx.API.Controllers
 
             return jwt;
         }
+        [HttpPost("range")]
+        public async Task<IActionResult> AddRangeUsers(List<UserCreateDto> createDtos)
+        {
+            await _userService.CreateRangeUserAsync(createDtos);
+            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+        }
+
+        [HttpDelete("range")]
+        public async Task<IActionResult> DeleteRangeUsers(List<Guid> userIds)
+        {
+            await _userService.DeleteRangeUserAsync(userIds);
+            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+        }
     }
 }

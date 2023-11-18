@@ -33,22 +33,28 @@ namespace StockLinx.Service.Services
             var newManufacturer = _mapper.Map<Manufacturer>(createDto);
             newManufacturer.Id = Guid.NewGuid();
             newManufacturer.CreatedDate = DateTime.UtcNow;
-
-            //Check if newManufacturer.ImagePath is base64 or not and not null
-            if (newManufacturer.ImagePath != null && newManufacturer.ImagePath.Contains("data:image/png;base64,"))
-            {
-                string base64 = newManufacturer.ImagePath.Substring(newManufacturer.ImagePath.IndexOf(',') + 1);
-                string path = newManufacturer.Name + DateTime.Now.ToString("yyyyMMddHHmmss");
-                ImageHandler.UploadBase64AsFile(base64, path);
-            }
             await AddAsync(newManufacturer);
         }
+
+        public async Task CreateRangeManufacturerAsync(List<ManufacturerCreateDto> createDtos)
+        {
+            var newManufacturers = new List<Manufacturer>();
+            foreach (var createDto in createDtos)
+            {
+                var newManufacturer = _mapper.Map<Manufacturer>(createDto);
+                newManufacturer.Id = Guid.NewGuid();
+                newManufacturer.CreatedDate = DateTime.UtcNow;
+                newManufacturers.Add(newManufacturer);
+            }
+            await AddRangeAsync(newManufacturers);
+        }
+
         public async Task UpdateManufacturerAsync(ManufacturerUpdateDto updateDto)
         {
             var manufacturerInDb = await GetByIdAsync(updateDto.Id);
             if (manufacturerInDb == null)
             {
-                throw new ArgumentNullException(nameof(updateDto.Id), "The ID of the Manufacturer to update is null.");
+                throw new ArgumentNullException(nameof(updateDto.Id), $"The ID of the manufacturer to update is null.");
             }
             var updatedManufacturer = _mapper.Map<Manufacturer>(updateDto);
             updatedManufacturer.UpdatedDate = DateTime.UtcNow;
@@ -60,14 +66,25 @@ namespace StockLinx.Service.Services
         {
             if (manufacturerId == Guid.Empty)
             {
-                throw new ArgumentNullException(nameof(manufacturerId), "The ID of the Manufacturer to delete is null.");
+                throw new ArgumentNullException(nameof(manufacturerId), $"The ID of the manufacturer to delete is null.");
             }
-            var Manufacturer = await GetByIdAsync(manufacturerId);
-            if (Manufacturer == null)
+            var manufacturer = await GetByIdAsync(manufacturerId);
+            if (manufacturer == null)
             {
-                throw new ArgumentNullException(nameof(Manufacturer), "The Manufacturer to delete is null.");
+                throw new ArgumentNullException(nameof(manufacturer), $"The manufacturer to delete is null.");
             }
-            await RemoveAsync(Manufacturer);
+            await RemoveAsync(manufacturer);
+        }
+
+        public async Task DeleteRangeManufacturerAsync(List<Guid> manufacturerIds)
+        {
+            var manufacturers = new List<Manufacturer>();
+            foreach (var manufacturerId in manufacturerIds)
+            {
+                var manufacturer = GetByIdAsync(manufacturerId).Result;
+                manufacturers.Add(manufacturer);
+            }
+            await RemoveRangeAsync(manufacturers);
         }
     }
 }
