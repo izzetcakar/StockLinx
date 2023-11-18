@@ -9,9 +9,8 @@ import { useColumns } from "./columns";
 import Gridtable from "../../components/gridTable/Gridtable";
 import { openAssetModal } from "../../modals/product/asset/modals";
 import { assetActions } from "../../redux/asset/actions";
-import { manufacturerActions } from "../../redux/manufacturer/actions";
-import { locationActions } from "../../redux/location/actions";
 import { branchActions } from "../../redux/branch/actions";
+import { productStatusActions } from "../../redux/productStatus/actions";
 
 const Asset = () => {
   const dispatch = useDispatch();
@@ -19,12 +18,11 @@ const Asset = () => {
 
   const refreshData = () => {
     dispatch(assetActions.getAll());
-    dispatch(manufacturerActions.getAll());
     dispatch(categoryActions.getAll());
-    dispatch(locationActions.getAll());
     dispatch(modelActions.getAll());
     dispatch(companyActions.getAll());
     dispatch(branchActions.getAll());
+    dispatch(productStatusActions.getAll());
   };
 
   return (

@@ -123,7 +123,7 @@ export interface IAsset extends IBaseProduct {
           tagNo: string;
         }
       ]
-    | null;
+    | [];
 }
 export interface IComponent extends IBaseProduct {
   quantity: number;
