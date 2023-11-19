@@ -15,7 +15,7 @@ export const useCell = () => {
   const renderColumnValue = (obj: object, column: Column) => {
     const value = (
       obj as {
-        [key: string | number]: string | number | boolean | null;
+        [key: string | number]: any;
       }
     )[column.dataField];
 
@@ -28,7 +28,7 @@ export const useCell = () => {
     if (value === null || value === undefined) {
       return "";
     }
-    if (typeof value === "boolean") {
+    if (column.dataType === "boolean") {
       const name = value ? "check" : "x";
       const color = value ? "#63bd4f" : "#ed6b6b";
       return (
@@ -37,6 +37,9 @@ export const useCell = () => {
           style={{ fontSize: "1.5rem", color: color }}
         />
       );
+    }
+    if (column.dataType === "date") {
+      return new Date(value).toLocaleDateString();
     }
     return value;
   };
