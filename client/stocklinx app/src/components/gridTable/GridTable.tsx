@@ -66,7 +66,13 @@ const Gridtable: React.FC<GridtableProps> = ({
     pageNumber,
   } = usePaging(data);
   const { filters, getFilterInput, applyFilterToData, handleFilterAll } =
-    useFilter(columns, data, selectedKeys, clearSelectedKeys, resetPageNumber);
+    useFilter(
+      columns.filter((c) => c.visible !== false),
+      data,
+      selectedKeys,
+      clearSelectedKeys,
+      resetPageNumber
+    );
 
   const { renderColumnValue } = useCell();
 
@@ -106,8 +112,8 @@ const Gridtable: React.FC<GridtableProps> = ({
     handleFilterAll();
   }, [data]);
 
-  const handleColSpan = (index: number) => {
-    if (index === filters.length - 1 && enableEditActions) {
+  const getColSpan = (index: number) => {
+    if (index === visibleColumns.length) {
       return 2;
     }
     return 1;
@@ -147,8 +153,7 @@ const Gridtable: React.FC<GridtableProps> = ({
                 onChange={() => handleselectAll()}
                 indeterminate={
                   selectedKeys.length > 0 &&
-                  selectedKeys.length <
-                    filterDataByInput(data).length
+                  selectedKeys.length < filterDataByInput(data).length
                 }
                 radius={2}
                 size={18}
@@ -159,7 +164,7 @@ const Gridtable: React.FC<GridtableProps> = ({
             <td
               key={"column__header__" + vColumn.caption}
               className="gridtable__column__cell"
-              colSpan={handleColSpan(vColumnIndex)}
+              colSpan={getColSpan(vColumnIndex)}
             >
               {vColumn.renderHeader ? vColumn.renderHeader() : vColumn.caption}
             </td>
@@ -170,7 +175,7 @@ const Gridtable: React.FC<GridtableProps> = ({
             <td className="gridtable__filter__cell"></td>
           ) : null}
           {filters.map((filter: Filter, filterIndex) => (
-            <td colSpan={handleColSpan(filterIndex)} key={filter.field}>
+            <td colSpan={getColSpan(filterIndex)} key={filter.field}>
               {getFilterInput(filter)}
             </td>
           ))}
