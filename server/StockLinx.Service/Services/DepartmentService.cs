@@ -30,8 +30,9 @@ namespace StockLinx.Service.Services
                     Id = x.Id,
                     Name = x.Name,
                     BranchId = x.BranchId,
+                    LocationId = x.LocationId,
+                    ManagerId = x.ManagerId,
                     CompanyId = x.Branch.CompanyId,
-                    ImagePath = x.ImagePath,
                     CreatedDate = x.CreatedDate,
                     UpdatedDate = x.UpdatedDate
                 }).ToListAsync();

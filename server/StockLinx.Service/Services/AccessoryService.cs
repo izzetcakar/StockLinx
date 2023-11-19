@@ -17,28 +17,30 @@ namespace StockLinx.Service.Services
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IAccessoryRepository _accessoryRepository;
+        private readonly IDeployedProductRepository _deployedProductRepository;
         private readonly ILogger<AccessoryService> _logger;
-        public AccessoryService(IRepository<Accessory> repository, IAccessoryRepository accessoryRepository
+        public AccessoryService(IRepository<Accessory> repository, IAccessoryRepository accessoryRepository, IDeployedProductRepository deployedProductRepository
             , IUnitOfWork unitOfWork, IMapper mapper, ILogger<AccessoryService> logger) : base(repository, unitOfWork)
         {
             _mapper = mapper;
             _accessoryRepository = accessoryRepository;
+            _deployedProductRepository = deployedProductRepository;
             _unitOfWork = unitOfWork;
             _logger = logger;
         }
         public async Task<List<AccessoryDto>> GetAccessoryDtos()
         {
-            var accessories = await _accessoryRepository.GetAll().Include(x => x.Branch)
+            var deployedProducts = await _deployedProductRepository.GetAll().ToListAsync();
+            var accessories = await _accessoryRepository.GetAll().Include(x => x.Branch).ToListAsync();
+            var accessoryDtos = accessories
              .Select(x => new AccessoryDto
              {
                  Id = x.Id,
                  CompanyId = x.Branch.CompanyId,
                  BranchId = x.BranchId,
                  CategoryId = x.CategoryId,
-                 ProductStatusId = x.ProductStatusId,
                  Name = x.Name,
                  ImagePath = x.ImagePath,
-                 SerialNo = x.SerialNo,
                  OrderNo = x.OrderNo,
                  Notes = x.Notes,
                  PurchaseDate = x.PurchaseDate,
@@ -49,9 +51,11 @@ namespace StockLinx.Service.Services
                  SupplierId = x.SupplierId,
                  ModelNo = x.ModelNo,
                  Quantity = x.Quantity,
-                 WarrantyDate = x.WarrantyDate,
-             }).ToListAsync();
-            return accessories;
+                 AvailableQuantity = x.Quantity - deployedProducts
+                .Where(d => d.AccessoryId.HasValue && d.AccessoryId == x.Id)
+                .Count(),
+             }).ToList();
+            return accessoryDtos;
         }
         public async Task CreateAccessoryAsync(AccessoryCreateDto createDto)
         {
@@ -120,18 +124,9 @@ namespace StockLinx.Service.Services
 
         public async Task<List<ProductStatusCounter>> GetStatusCount()
         {
-            var accessories = await _accessoryRepository.GetAll().Include(x => x.ProductStatus).ToListAsync();
-            var productStatusCounts = accessories
-                .Where(accessory => accessory.ProductStatus != null)
-                .GroupBy(accessory => accessory.ProductStatus.Type)
-                .Select(group => new ProductStatusCounter
-                {
-                    Status = group.Key.ToString(),
-                    Count = group.Count()
-                })
-                .ToList();
+            var accessories = new List<ProductStatusCounter>();
 
-            return productStatusCounts;
+            return accessories;
         }
     }
 }

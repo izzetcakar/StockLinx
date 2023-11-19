@@ -14,28 +14,33 @@ namespace StockLinx.Service.Services
     public class ConsumableService : Service<Consumable>, IConsumableService
     {
         private readonly IConsumableRepository _consumableRepository;
+        private readonly IDeployedProductRepository _deployedProductRepository;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        public ConsumableService(IRepository<Consumable> repository, IConsumableRepository consumableRepository, IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork)
+        public ConsumableService(IRepository<Consumable> repository, IConsumableRepository consumableRepository, IDeployedProductRepository deployedProductRepository,
+            IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork)
         {
             _consumableRepository = consumableRepository;
+            _deployedProductRepository = deployedProductRepository;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
 
         public async Task<List<ConsumableDto>> GetConsumableDtos()
         {
-            var consumables = await _consumableRepository.GetAll().Include(x => x.Branch)
+            var deployedProducts = await _deployedProductRepository.GetAll().ToListAsync();
+            var consumables = await _consumableRepository.GetAll().Include(x => x.Branch).ToListAsync();
+            var consumableDtos = consumables
                 .Select(x => new ConsumableDto
                 {
                     Id = x.Id,
                     CompanyId = x.Branch.CompanyId,
                     BranchId = x.BranchId,
                     CategoryId = x.CategoryId,
-                    ProductStatusId = x.ProductStatusId,
+                    ManufacturerId = x.ManufacturerId,
+                    SupplierId = x.SupplierId,
                     Name = x.Name,
                     ImagePath = x.ImagePath,
-                    SerialNo = x.SerialNo,
                     OrderNo = x.OrderNo,
                     Notes = x.Notes,
                     PurchaseDate = x.PurchaseDate,
@@ -43,10 +48,15 @@ namespace StockLinx.Service.Services
                     CheckinCounter = x.CheckinCounter,
                     CheckoutCounter = x.CheckoutCounter,
                     Quantity = x.Quantity,
+                    AvailableQuantity = x.Quantity - deployedProducts
+                .Where(d => d.ConsumableId.HasValue && d.ConsumableId == x.Id)
+                .Count(),
                     ItemNo = x.ItemNo,
                     ModelNo = x.ModelNo,
-                }).ToListAsync();
-            return consumables;
+                    CreatedDate = x.CreatedDate,
+                    UpdatedDate = x.UpdatedDate,
+                }).ToList();
+            return consumableDtos;
         }
         public async Task CreateConsumableAsync(ConsumableCreateDto createDto)
         {
@@ -114,18 +124,8 @@ namespace StockLinx.Service.Services
         }
         public async Task<List<ProductStatusCounter>> GetStatusCount()
         {
-            var consumables = await _consumableRepository.GetAll().Include(x => x.ProductStatus).ToListAsync();
-            var productStatusCounts = consumables
-                .Where(consumable => consumable.ProductStatus != null)
-                .GroupBy(consumable => consumable.ProductStatus.Type)
-                .Select(group => new ProductStatusCounter
-                {
-                    Status = group.Key.ToString(),
-                    Count = group.Count()
-                })
-                .ToList();
-
-            return productStatusCounts;
+            var consumables = new List<ProductStatusCounter>();
+            return consumables;
         }
     }
 }

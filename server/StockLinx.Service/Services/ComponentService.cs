@@ -14,24 +14,29 @@ namespace StockLinx.Service.Services
     public class ComponentService : Service<Component>, IComponentService
     {
         private readonly IComponentRepository _componentRepository;
+        private readonly IDeployedProductRepository _deployedProductRepository;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        public ComponentService(IRepository<Component> repository, IComponentRepository componentRepository, IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork)
+        public ComponentService(IRepository<Component> repository, IComponentRepository componentRepository, IDeployedProductRepository deployedProductRepository,
+            IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork)
         {
             _componentRepository = componentRepository;
+            _deployedProductRepository = deployedProductRepository;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
         public async Task<List<ComponentDto>> GetComponentDtos()
         {
-            var components = await _componentRepository.GetAll().Include(x => x.ProductStatus)
+            var deployedProducts = await _deployedProductRepository.GetAll().ToListAsync();
+            var components = await _componentRepository.GetAll().Include(x => x.Branch).ToListAsync();
+            var componentDtos = components
                 .Select(x => new ComponentDto
                 {
                     Id = x.Id,
                     CompanyId = x.Branch.CompanyId,
                     BranchId = x.BranchId,
                     CategoryId = x.CategoryId,
-                    ProductStatusId = x.ProductStatusId,
+                    SupplierId = x.SupplierId,
                     Name = x.Name,
                     ImagePath = x.ImagePath,
                     SerialNo = x.SerialNo,
@@ -42,8 +47,13 @@ namespace StockLinx.Service.Services
                     CheckinCounter = x.CheckinCounter,
                     CheckoutCounter = x.CheckoutCounter,
                     Quantity = x.Quantity,
-                }).ToListAsync();
-            return components;
+                    AvailableQuantity = x.Quantity - deployedProducts
+                .Where(d => d.ComponentId.HasValue && d.ComponentId == x.Id)
+                .Count(),
+                    CreatedDate = x.CreatedDate,
+                    UpdatedDate = x.UpdatedDate,
+                }).ToList();
+            return componentDtos;
         }
         public async Task CreateComponentAsync(ComponentCreateDto createDto)
         {
@@ -112,18 +122,9 @@ namespace StockLinx.Service.Services
 
         public async Task<List<ProductStatusCounter>> GetStatusCount()
         {
-            var components = await _componentRepository.GetAll().Include(x => x.ProductStatus).ToListAsync();
-            var productStatusCounts = components
-                .Where(component => component.ProductStatus != null)
-                .GroupBy(component => component.ProductStatus.Type)
-                .Select(group => new ProductStatusCounter
-                {
-                    Status = group.Key.ToString(),
-                    Count = group.Count()
-                })
-                .ToList();
+            var components = new List<ProductStatusCounter>();
 
-            return productStatusCounts;
+            return components;
         }
     }
 }

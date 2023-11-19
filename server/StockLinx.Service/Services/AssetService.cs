@@ -30,7 +30,6 @@ namespace StockLinx.Service.Services
                 Id = x.Id,
                 CompanyId = x.Branch.CompanyId,
                 BranchId = x.BranchId,
-                CategoryId = x.CategoryId,
                 ProductStatusId = x.ProductStatusId,
                 Name = x.Name,
                 ImagePath = x.ImagePath,
@@ -41,7 +40,6 @@ namespace StockLinx.Service.Services
                 PurchaseCost = x.PurchaseCost,
                 CheckinCounter = x.CheckinCounter,
                 CheckoutCounter = x.CheckoutCounter,
-                ManufacturerId = x.ManufacturerId,
                 ModelId = x.ModelId,
                 TagNo = x.TagNo,
                 CreatedDate = x.CreatedDate,
@@ -51,10 +49,24 @@ namespace StockLinx.Service.Services
         }
         public async Task CreateAssetAsync(AssetCreateDto createDto)
         {
+            var assets = new List<Asset>();
             var newAsset = _mapper.Map<Asset>(createDto);
             newAsset.Id = Guid.NewGuid();
             newAsset.CreatedDate = DateTime.UtcNow;
-            await AddAsync(newAsset);
+            assets.Add(newAsset);
+
+            if (createDto.OverageAssets != null && createDto.OverageAssets.Count > 0)
+            {
+                foreach (var overageAsset in createDto.OverageAssets)
+                {
+                    var extraAsset = _mapper.Map<Asset>(createDto);
+                    extraAsset.Id = Guid.NewGuid();
+                    extraAsset.SerialNo = overageAsset.SerialNo;
+                    extraAsset.TagNo = overageAsset.TagNo;
+                    assets.Add(extraAsset);
+                }
+            }
+            await AddRangeAsync(assets);
         }
 
         public async Task CreateRangeAssetAsync(List<AssetCreateDto> createDtos)
