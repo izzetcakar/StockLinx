@@ -69,6 +69,7 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
                   if (row[column] === undefined) {
                     row[column] = null;
                   }
+                  if (row[column] == null && excelColumn.nullable) return;
                   if (
                     excelColumn.validate &&
                     !excelColumn.validate(row[column])
@@ -128,7 +129,7 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
           reader.readAsArrayBuffer(file);
         });
       };
-
+      console.log(file);
       const result = await readFile();
       console.log(result.errors);
       openExcelModal(result.importedData, columns, result.errors);
