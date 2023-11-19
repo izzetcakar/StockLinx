@@ -7,7 +7,7 @@ export interface Column {
   renderHeader?: () => React.ReactNode | string | number | null;
   lookup?: Lookup;
   dataType: "string" | "number" | "boolean" | "date" | "action";
-  invisible?: boolean;
+  visible?: boolean;
 }
 export interface VisibleColumn {
   caption: string;
@@ -39,6 +39,7 @@ export interface ExcelColumn {
   dataField: string;
   validate?: (value: any) => boolean;
   errorText?: string;
+  nullable?: boolean;
 }
 export interface ImportedExcelData {
   id: string;
