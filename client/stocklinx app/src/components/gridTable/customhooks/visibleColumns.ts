@@ -14,7 +14,7 @@ export const useVisibleColumns = (columns: Column[]) => {
   const handleVisibleColumns = useCallback(() => {
     setVisibleColumns(
       columns
-        .filter((c) => !c.invisible)
+        .filter((c) => c.visible !== false)
         .map((item) => {
           return {
             caption: item.caption,
