@@ -1,9 +1,7 @@
-import { Column } from "devextreme/ui/data_grid";
-import { CategoryType, ICategory } from "../../interfaces/interfaces";
-import { IFormItem } from "../../components/generic/BaseDataGrid";
+import { CategoryType } from "../../interfaces/interfaces";
 import {
+  Column,
   ExcelColumn,
-  Column as MyColumn,
 } from "../../components/gridTable/interfaces/interfaces";
 
 export const useColumns = () => {
@@ -15,7 +13,7 @@ export const useColumns = () => {
     { id: CategoryType.COMPONENT, name: "Component" },
   ];
 
-  const columns: MyColumn[] = [
+  const columns: Column[] = [
     {
       dataField: "name",
       caption: "Name",
@@ -44,29 +42,6 @@ export const useColumns = () => {
       dataField: "type",
     },
   ];
-  const devColumns: Column<ICategory>[] = [
-    {
-      dataField: "name",
-      caption: "Name",
-      validationRules: [{ type: "required" }],
-    },
-    {
-      dataField: "type",
-      caption: "Type",
-      lookup: {
-        dataSource: productTypes,
-        valueExpr: "id",
-        displayExpr: "name",
-      },
-      validationRules: [{ type: "required" }],
-    },
-  ];
-  const formItems: IFormItem[] = [
-    { dataField: "companyId" },
-    { dataField: "branchId" },
-    { dataField: "name" },
-    { dataField: "type" },
-  ];
 
-  return { excelColumns, columns, devColumns, formItems };
+  return { columns, excelColumns };
 };

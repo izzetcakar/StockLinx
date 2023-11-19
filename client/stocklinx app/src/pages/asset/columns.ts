@@ -1,64 +1,18 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
-import { Column } from "devextreme/ui/data_grid";
-import { IAsset } from "../../interfaces/interfaces";
-import { IFormItem } from "../../components/generic/BaseDataGrid";
-import { checkInOutHeaderTemplate } from "../../components/dataGrid/location/customColumns";
-import { Column as MyColumn } from "../../components/gridTable/interfaces/interfaces";
+import {
+  ExcelColumn,
+  Column,
+} from "../../components/gridTable/interfaces/interfaces";
 
 export const useColumns = () => {
-  const companies = useSelector((state: RootState) => state.company.companies);
   const branches = useSelector((state: RootState) => state.branch.branches);
-  const locations = useSelector((state: RootState) => state.location.locations);
-  const categories = useSelector(
-    (state: RootState) => state.category.categories
-  );
-  const manufacturers = useSelector(
-    (state: RootState) => state.manufacturer.manufacturers
-  );
   const models = useSelector((state: RootState) => state.model.models);
   const productStatuses = useSelector(
     (state: RootState) => state.productStatus.productStatuses
   );
 
-  const getFilteredBranches = (options: { data?: IAsset; key?: string }) => {
-    return {
-      store: branches,
-      filter: options.data ? ["companyId", "=", options.data.companyId] : null,
-    };
-  };
-  const getFilteredCategories = (options: { data?: IAsset; key?: string }) => {
-    return {
-      store: categories,
-      filter: options.data ? ["branchId", "=", options.data.branchId] : null,
-    };
-  };
-  const getFilteredManufacturers = (options: {
-    data?: IAsset;
-    key?: string;
-  }) => {
-    return {
-      store: manufacturers,
-      filter: options.data ? ["branchId", "=", options.data.branchId] : null,
-    };
-  };
-  const getFilteredModels = (options: { data?: IAsset; key?: string }) => {
-    return {
-      store: models,
-      filter: options.data ? ["branchId", "=", options.data.branchId] : null,
-    };
-  };
-  const getFilteredProductStatuses = (options: {
-    data?: IAsset;
-    key?: string;
-  }) => {
-    return {
-      store: productStatuses,
-      filter: options.data ? ["branchId", "=", options.data.branchId] : null,
-    };
-  };
-
-  const columns: MyColumn[] = [
+  const columns: Column[] = [
     {
       dataField: "name",
       caption: "Name",
@@ -85,16 +39,6 @@ export const useColumns = () => {
       dataType: "string",
     },
     {
-      dataField: "categoryId",
-      caption: "Category",
-      lookup: {
-        dataSource: categories,
-        valueExpr: "id",
-        displayExpr: "name",
-      },
-      dataType: "string",
-    },
-    {
       dataField: "productStatusId",
       caption: "Status",
       lookup: {
@@ -106,154 +50,100 @@ export const useColumns = () => {
     },
     // ADD ASSIGNED USER
     {
-      dataField: "locationId",
-      caption: "Location",
-      lookup: {
-        dataSource: locations,
-        valueExpr: "id",
-        displayExpr: "name",
-      },
-      dataType: "string",
-    },
-    {
       dataField: "purchaseCost",
       caption: "Purchase Cost",
       dataType: "number",
     },
-  ];
-
-  const devColumns: Column<IAsset>[] = [
-    {
-      dataField: "companyId",
-      caption: "Company",
-      lookup: {
-        dataSource: companies,
-        valueExpr: "id",
-        displayExpr: "name",
-      },
-      setCellValue(newData, value) {
-        newData.companyId = value;
-        newData.branchId = "";
-      },
-      visible: false,
-    },
+    // INVISIBLE COLUMNS
     {
       dataField: "branchId",
       caption: "Branch",
       lookup: {
-        dataSource: getFilteredBranches,
+        dataSource: branches,
         valueExpr: "id",
         displayExpr: "name",
       },
-      setCellValue(newData, value) {
-        newData.branchId = value;
-        newData.categoryId = null;
-        newData.manufacturerId = null;
-        newData.modelId = null;
-        newData.productStatusId = "";
-      },
-      validationRules: [{ type: "required" }],
-    },
-    {
-      dataField: "name",
-      caption: "Name",
-      validationRules: [{ type: "required" }],
-    },
-    //ADD IMAGE
-    {
-      dataField: "tagNo",
-      caption: "Tag No",
-    },
-    {
-      dataField: "serialNo",
-      caption: "Serial No",
-    },
-    {
-      dataField: "modelId",
-      caption: "Model",
-      lookup: {
-        dataSource: getFilteredModels,
-        valueExpr: "id",
-        displayExpr: "name",
-      },
-    },
-    {
-      dataField: "categoryId",
-      caption: "Category",
-      lookup: {
-        dataSource: getFilteredCategories,
-        valueExpr: "id",
-        displayExpr: "name",
-      },
-    },
-    {
-      dataField: "productStatusId",
-      caption: "Status",
-      lookup: {
-        dataSource: getFilteredProductStatuses,
-        valueExpr: "id",
-        displayExpr: "name",
-      },
-      validationRules: [{ type: "required" }],
-    },
-    // ADD ASSIGNED USER
-    {
-      dataField: "purchaseCost",
-      caption: "Purchase Cost",
-    },
-    {
-      caption: "Checkin/Checkout",
-      alignment: "center",
-      cellTemplate: checkInOutHeaderTemplate,
-    },
-    // VISIBLE : FALSE
-    {
-      dataField: "manufacturerId",
-      caption: "Manufacturer",
-      lookup: {
-        dataSource: getFilteredManufacturers,
-        valueExpr: "id",
-        displayExpr: "name",
-      },
-      visible: false,
-    },
-    {
-      dataField: "warrantyDate",
-      caption: "Warranty Date",
+      dataType: "string",
       visible: false,
     },
     {
       dataField: "orderNo",
       caption: "Order No",
+      dataType: "string",
       visible: false,
     },
     {
       dataField: "purchaseDate",
       caption: "Purchase Date",
+      dataType: "date",
+      visible: false,
+    },
+    {
+      dataField: "imagePath",
+      caption: "Image",
+      dataType: "string",
       visible: false,
     },
     {
       dataField: "notes",
       caption: "Notes",
+      dataType: "string",
       visible: false,
     },
   ];
-  const formItems: IFormItem[] = [
-    { dataField: "companyId" },
-    { dataField: "branchId" },
-    { dataField: "name" },
-    { dataField: "manufacturerId" },
-    { dataField: "modelId" },
-    { dataField: "tagNo" },
-    { dataField: "warrantyDate" },
-    { dataField: "categoryId" },
-    { dataField: "productStatusId" },
-    { dataField: "serialNo" },
-    { dataField: "orderNo" },
-    { dataField: "purchaseCost" },
-    { dataField: "purchaseDate" },
-    { dataField: "notes" },
+  const excelColumns: ExcelColumn[] = [
+    {
+      dataField: "branchId",
+      validate(value) {
+        return value !== null;
+      },
+      errorText: "Branch is required",
+    },
+    {
+      dataField: "name",
+      validate(value) {
+        return value !== null;
+      },
+      errorText: "Name is required",
+    },
+    {
+      dataField: "tagNo",
+    },
+    {
+      dataField: "serialNo",
+    },
+    {
+      dataField: "modelId",
+      nullable: true,
+    },
+    {
+      dataField: "productStatusId",
+      validate(value) {
+        return value !== null;
+      },
+      errorText: "Status is required",
+    },
+    {
+      dataField: "orderNo",
+    },
+    {
+      dataField: "purchaseCost",
+      validate(value) {
+        if (value !== null && value < 0) return false;
+        return true;
+      },
+      errorText: "Purchase Cost must be a positive number",
+    },
+    {
+      dataField: "purchaseDate",
+    },
+    {
+      dataField: "imagePath",
+    },
+    {
+      dataField: "notes",
+    },
   ];
 
-  return { columns, devColumns, formItems };
+  return { columns, excelColumns };
 };

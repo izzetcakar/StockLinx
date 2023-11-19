@@ -1,14 +1,14 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
-import { ISupplier } from "../../interfaces/interfaces";
-import { Column } from "devextreme/ui/data_grid";
-import { IFormItem } from "../../components/generic/BaseDataGrid";
-import { Column as MyColumn } from "../../components/gridTable/interfaces/interfaces";
+import {
+  Column,
+  ExcelColumn,
+} from "../../components/gridTable/interfaces/interfaces";
 
 export const useColumns = () => {
   const locations = useSelector((state: RootState) => state.location.locations);
 
-  const columns: MyColumn[] = [
+  const columns: Column[] = [
     {
       dataField: "name",
       caption: "Name",
@@ -54,48 +54,49 @@ export const useColumns = () => {
       caption: "Notes",
       dataType: "string",
     },
+    // INVISIBLE COLUMNS
+    {
+      dataField: "imagePath",
+      caption: "Image",
+      dataType: "string",
+      visible: false,
+    },
   ];
 
-  const devColumns: Column<ISupplier>[] = [
+  const excelColumns: ExcelColumn[] = [
     {
       dataField: "name",
-      caption: "Name",
-      validationRules: [{ type: "required" }],
+      validate(value) {
+        return value !== null;
+      },
+      errorText: "Name is required",
     },
     {
       dataField: "locationId",
-      caption: "Location",
-      lookup: {
-        dataSource: locations,
-        valueExpr: "id",
-        displayExpr: "name",
-      },
+      nullable: true,
     },
     {
       dataField: "contactName",
-      caption: "Contact Name",
     },
     {
       dataField: "contactEmail",
-      caption: "Email",
     },
     {
       dataField: "contactPhone",
-      caption: "Phone",
+    },
+    {
+      dataField: "website",
+    },
+    {
+      dataField: "fax",
+    },
+    {
+      dataField: "imagePath",
+    },
+    {
+      dataField: "notes",
     },
   ];
-  const formItems: IFormItem[] = [
-    { dataField: "companyId" },
-    { dataField: "branchId" },
-    { dataField: "name" },
-    { dataField: "locationId" },
-    { dataField: "contactName" },
-    { dataField: "contactPhone" },
-    { dataField: "contactEmail" },
-    { dataField: "website" },
-    { dataField: "fax" },
-    { dataField: "notes" },
-  ];
 
-  return { columns, devColumns, formItems };
+  return { columns, excelColumns };
 };

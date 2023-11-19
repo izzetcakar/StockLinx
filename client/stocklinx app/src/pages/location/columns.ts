@@ -1,10 +1,10 @@
-import { Column } from "devextreme/ui/data_grid";
-import { ILocation } from "../../interfaces/interfaces";
-import { IFormItem } from "../../components/generic/BaseDataGrid";
-import { Column as MyColumn } from "../../components/gridTable/interfaces/interfaces";
+import {
+  Column,
+  ExcelColumn,
+} from "../../components/gridTable/interfaces/interfaces";
 
 export const useColumns = () => {
-  const columns: MyColumn[] = [
+  const columns: Column[] = [
     {
       dataField: "name",
       caption: "Name",
@@ -51,52 +51,39 @@ export const useColumns = () => {
       dataType: "string",
     },
   ];
-  const devColumns: Column<ILocation>[] = [
+  const excelColumns: ExcelColumn[] = [
     {
       dataField: "name",
-      caption: "Name",
-      validationRules: [{ type: "required" }],
-    },
-    {
-      dataField: "state",
-      caption: "State",
+      validate(value) {
+        return value !== null;
+      },
+      errorText: "Name is required",
     },
     {
       dataField: "country",
-      caption: "Country",
+    },
+    {
+      dataField: "state",
     },
     {
       dataField: "city",
-      caption: "City",
     },
-    //VISIBLE : FALSE
     {
       dataField: "address",
-      caption: "Address",
-      visible: false,
     },
     {
       dataField: "address2",
-      caption: "Address2",
-      visible: false,
+    },
+    {
+      dataField: "zipCode",
     },
     {
       dataField: "currency",
-      caption: "Currency",
-      visible: false,
+    },
+    {
+      dataField: "notes",
     },
   ];
-  const formItems: IFormItem[] = [
-    { dataField: "name" },
-    { dataField: "country" },
-    { dataField: "state" },
-    { dataField: "city" },
-    { dataField: "address" },
-    { dataField: "address2" },
-    { dataField: "zipCode" },
-    { dataField: "currency" },
-    { dataField: "notes" },
-  ];
 
-  return { columns, devColumns, formItems };
+  return { columns, excelColumns };
 };

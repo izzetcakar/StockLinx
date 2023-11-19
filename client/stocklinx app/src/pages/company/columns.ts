@@ -1,13 +1,27 @@
-import { Column } from "devextreme/ui/data_grid";
-import { Column as MyColumn } from "../../components/gridTable/interfaces/interfaces";
-import { ICompany } from "../../interfaces/interfaces";
-import { IFormItem } from "../../components/generic/BaseDataGrid";
+import { useSelector } from "react-redux";
+import {
+  Column,
+  ExcelColumn,
+} from "../../components/gridTable/interfaces/interfaces";
+import { RootState } from "../../redux/rootReducer";
 
 export const useColumns = () => {
-  const columns: MyColumn[] = [
+  const locations = useSelector((state: RootState) => state.location.locations);
+
+  const columns: Column[] = [
     {
       dataField: "name",
       caption: "Name",
+      dataType: "string",
+    },
+    {
+      caption: "Location",
+      dataField: "locationId",
+      lookup: {
+        dataSource: locations,
+        valueExpr: "id",
+        displayExpr: "name",
+      },
       dataType: "string",
     },
     {
@@ -15,27 +29,32 @@ export const useColumns = () => {
       caption: "Email",
       dataType: "string",
     },
+    {
+      dataField: "imagePath",
+      caption: "Image",
+      dataType: "string",
+      visible: false,
+    },
   ];
-  const devColumns: Column<ICompany>[] = [
-    // ADD IMAGE
+  const excelColumns: ExcelColumn[] = [
     {
       dataField: "name",
-      caption: "Name",
-      validationRules: [{ type: "required" }],
+      validate(value) {
+        return value !== null;
+      },
+      errorText: "Name is required",
+    },
+    {
+      dataField: "locationId",
+      nullable: true,
     },
     {
       dataField: "email",
-      caption: "Email",
-    },
-  ];
-  const formItems: IFormItem[] = [
-    {
-      dataField: "name",
     },
     {
-      dataField: "email",
+      dataField: "imagePath",
     },
   ];
 
-  return { columns, devColumns, formItems };
+  return { columns, excelColumns };
 };

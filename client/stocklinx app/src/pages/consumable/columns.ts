@@ -1,55 +1,22 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
-import { Column } from "devextreme/ui/data_grid";
-import { IConsumable } from "../../interfaces/interfaces";
-import { IFormItem } from "../../components/generic/BaseDataGrid";
 import {
-  alignedTemplate,
-  checkInOutHeaderTemplate,
-} from "../../components/dataGrid/location/customColumns";
-import { Column as MyColumn } from "../../components/gridTable/interfaces/interfaces";
+  Column,
+  ExcelColumn,
+} from "../../components/gridTable/interfaces/interfaces";
+import { CategoryType } from "../../interfaces/interfaces";
 
 export const useColumns = () => {
-  const companies = useSelector((state: RootState) => state.company.companies);
   const branches = useSelector((state: RootState) => state.branch.branches);
-  const locations = useSelector((state: RootState) => state.location.locations);
-  const models = useSelector((state: RootState) => state.model.models);
+  const suppliers = useSelector((state: RootState) => state.supplier.suppliers);
+  const manufacturers = useSelector(
+    (state: RootState) => state.manufacturer.manufacturers
+  );
   const categories = useSelector(
     (state: RootState) => state.category.categories
   );
-  const productStatuses = useSelector(
-    (state: RootState) => state.productStatus.productStatuses
-  );
 
-  const getFilteredBranches = (options: {
-    data?: IConsumable;
-    key?: string;
-  }) => {
-    return {
-      store: branches,
-      filter: options.data ? ["companyId", "=", options.data.companyId] : null,
-    };
-  };
-  const getFilteredCategories = (options: {
-    data?: IConsumable;
-    key?: string;
-  }) => {
-    return {
-      store: categories,
-      filter: options.data ? ["branchId", "=", options.data.branchId] : null,
-    };
-  };
-  const getFilteredProductStatuses = (options: {
-    data?: IConsumable;
-    key?: string;
-  }) => {
-    return {
-      store: productStatuses,
-      filter: options.data ? ["branchId", "=", options.data.branchId] : null,
-    };
-  };
-
-  const columns: MyColumn[] = [
+  const columns: Column[] = [
     {
       caption: "Name",
       dataField: "name",
@@ -59,7 +26,9 @@ export const useColumns = () => {
       caption: "Category",
       dataField: "categoryId",
       lookup: {
-        dataSource: categories,
+        dataSource: categories.filter(
+          (category) => category.type === CategoryType.CONSUMABLE
+        ),
         valueExpr: "id",
         displayExpr: "name",
       },
@@ -68,11 +37,6 @@ export const useColumns = () => {
     {
       caption: "Model No",
       dataField: "modelNo",
-      lookup: {
-        dataSource: models,
-        valueExpr: "id",
-        displayExpr: "name",
-      },
       dataType: "string",
     },
     {
@@ -80,17 +44,15 @@ export const useColumns = () => {
       dataField: "itemNo",
       dataType: "string",
     },
-    // ADD TOTAL QUANTITY
-    // ADD AVAILABLE QUANTITY
     {
-      caption: "Location",
-      dataField: "locationId",
-      lookup: {
-        dataSource: locations,
-        valueExpr: "id",
-        displayExpr: "name",
-      },
-      dataType: "string",
+      caption: "Total",
+      dataField: "quantity",
+      dataType: "number",
+    },
+    {
+      caption: "Avail",
+      dataField: "availableQuantity",
+      dataType: "number",
     },
     {
       caption: "Order Number",
@@ -107,100 +69,121 @@ export const useColumns = () => {
       dataField: "purchaseCost",
       dataType: "number",
     },
-  ];
-
-  const devColumns: Column<IConsumable>[] = [
+    // INVISIBLE COLUMNS
     {
-      dataField: "companyId",
-      caption: "Company",
+      caption: "Branch",
+      dataField: "branchId",
       lookup: {
-        dataSource: companies,
+        dataSource: branches,
         valueExpr: "id",
         displayExpr: "name",
       },
-      setCellValue(newData, value) {
-        newData.companyId = value;
-        newData.branchId = "";
-      },
+      dataType: "string",
       visible: false,
     },
     {
-      dataField: "branchId",
-      caption: "Branch",
+      caption: "Supplier",
+      dataField: "supplierId",
       lookup: {
-        dataSource: getFilteredBranches,
+        dataSource: suppliers,
         valueExpr: "id",
         displayExpr: "name",
       },
-      setCellValue(newData, value) {
-        newData.branchId = value;
-        newData.categoryId = null;
-        newData.productStatusId = "";
-      },
-      validationRules: [{ type: "required" }],
+      dataType: "string",
       visible: false,
+    },
+    {
+      caption: "Manufacturer",
+      dataField: "manufacturerId",
+      lookup: {
+        dataSource: manufacturers,
+        valueExpr: "id",
+        displayExpr: "name",
+      },
+      dataType: "string",
+      visible: false,
+    },
+    {
+      dataField: "imagePath",
+      caption: "Image",
+      dataType: "string",
+      visible: false,
+    },
+    {
+      caption: "Notes",
+      dataField: "notes",
+      dataType: "string",
+      visible: false,
+    },
+  ];
+
+  const excelColumns: ExcelColumn[] = [
+    {
+      dataField: "branchId",
+      validate(value) {
+        return value !== null;
+      },
+      errorText: "Branch is required",
     },
     {
       dataField: "name",
-      caption: "Name",
-      validationRules: [{ type: "required" }],
+      validate(value) {
+        return value !== null;
+      },
+      errorText: "Name is required",
     },
     {
       dataField: "categoryId",
-      caption: "Category",
-      lookup: {
-        dataSource: getFilteredCategories,
-        valueExpr: "id",
-        displayExpr: "name",
+      validate(value) {
+        return value !== null;
       },
+      errorText: "Category is required",
     },
-    { dataField: "modelNo", caption: "Model No" },
-    { dataField: "itemNo", caption: "Item No" },
+    {
+      dataField: "modelNo",
+    },
+    {
+      dataField: "itemNo",
+    },
     {
       dataField: "quantity",
-      dataType: "number",
-      caption: "Quantity",
-      alignment: "center",
-      cellTemplate: alignedTemplate,
-    },
-    // ADD AVAILABLE QUANTITY
-    { dataField: "orderNo", caption: "Order No" },
-    { dataField: "purchaseDate", caption: "Purchase Date" },
-    { dataField: "purchaseCost", caption: "Purchase Cost", alignment: "left" },
-    {
-      caption: "Checkin/Checkout",
-      alignment: "center",
-      cellTemplate: checkInOutHeaderTemplate,
-    },
-    // VISIBLE : FALSE
-    {
-      dataField: "productStatusId",
-      caption: "Status",
-      lookup: {
-        dataSource: getFilteredProductStatuses,
-        valueExpr: "id",
-        displayExpr: "name",
+      validate(value) {
+        if (value === null || value < 0) return false;
+        return true;
       },
-      visible: false,
+      errorText: "Quantity must be a positive number",
     },
-    { dataField: "serialNo", caption: "Serial No", visible: false },
-    { dataField: "note", caption: "Note", visible: false },
-  ];
-  const formItems: IFormItem[] = [
-    { dataField: "companyId" },
-    { dataField: "branchId" },
-    { dataField: "name" },
-    { dataField: "categoryId" },
-    { dataField: "modelNo" },
-    { dataField: "itemNo" },
-    { dataField: "quantity" },
-    { dataField: "orderNo" },
-    { dataField: "productStatusId" },
-    { dataField: "serialNo" },
-    { dataField: "purchaseCost" },
-    { dataField: "purchaseDate" },
-    { dataField: "notes" },
+    {
+      dataField: "orderNo",
+    },
+    {
+      dataField: "purchaseDate",
+    },
+    {
+      dataField: "purchaseCost",
+      validate(value) {
+        if (value !== null && value < 0) {
+          return false;
+        }
+        return true;
+      },
+      errorText: "Purchase Cost must be a positive number",
+    },
+    {
+      dataField: "supplierId",
+      nullable: true,
+    },
+    {
+      dataField: "manufacturerId",
+      nullable: true,
+    },
+    {
+      dataField: "imagePath",
+    },
+    {
+      dataField: "notes",
+    },
   ];
 
-  return { columns, devColumns, formItems };
+  return { columns, excelColumns };
 };

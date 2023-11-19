@@ -1,59 +1,22 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
-import { ILicense } from "../../interfaces/interfaces";
-import { Column } from "devextreme/ui/data_grid";
-import { IFormItem } from "../../components/generic/BaseDataGrid";
-import { checkInOutHeaderTemplate } from "../../components/dataGrid/location/customColumns";
-import { Column as MyColumn } from "../../components/gridTable/interfaces/interfaces";
+import {
+  Column,
+  ExcelColumn,
+} from "../../components/gridTable/interfaces/interfaces";
+import { CategoryType } from "../../interfaces/interfaces";
 
 export const useColumns = () => {
-  const companies = useSelector((state: RootState) => state.company.companies);
   const branches = useSelector((state: RootState) => state.branch.branches);
-  const categories = useSelector(
-    (state: RootState) => state.category.categories
-  );
   const manufacturers = useSelector(
     (state: RootState) => state.manufacturer.manufacturers
   );
-  const productStatuses = useSelector(
-    (state: RootState) => state.productStatus.productStatuses
+  const suppliers = useSelector((state: RootState) => state.supplier.suppliers);
+  const categories = useSelector(
+    (state: RootState) => state.category.categories
   );
 
-  const getFilteredBranches = (options: { data?: ILicense; key?: string }) => {
-    return {
-      store: branches,
-      filter: options.data ? ["companyId", "=", options.data.companyId] : null,
-    };
-  };
-  const getFilteredCategories = (options: {
-    data?: ILicense;
-    key?: string;
-  }) => {
-    return {
-      store: categories,
-      filter: options.data ? ["branchId", "=", options.data.branchId] : null,
-    };
-  };
-  const getFilteredProductStatuses = (options: {
-    data?: ILicense;
-    key?: string;
-  }) => {
-    return {
-      store: productStatuses,
-      filter: options.data ? ["branchId", "=", options.data.branchId] : null,
-    };
-  };
-  const getFilteredManufacturers = (options: {
-    data?: ILicense;
-    key?: string;
-  }) => {
-    return {
-      store: manufacturers,
-      filter: options.data ? ["branchId", "=", options.data.branchId] : null,
-    };
-  };
-
-  const columns: MyColumn[] = [
+  const columns: Column[] = [
     {
       caption: "Name",
       dataField: "name",
@@ -75,6 +38,11 @@ export const useColumns = () => {
       dataType: "string",
     },
     {
+      caption: "Licensed To",
+      dataField: "licensedTo",
+      dataType: "string",
+    },
+    {
       caption: "Manufacturer",
       dataField: "manufacturerId",
       lookup: {
@@ -84,164 +52,191 @@ export const useColumns = () => {
       },
       dataType: "string",
     },
-    // ADD TOTAL QUANTITY
-    // ADD AVAILABLE QUANTITY
-  ];
-
-  const devColumns: Column<ILicense>[] = [
     {
-      dataField: "companyId",
-      caption: "Company",
+      caption: "Total",
+      dataField: "quantity",
+      dataType: "number",
+    },
+    {
+      caption: "Avail",
+      dataField: "availableQuantity",
+      dataType: "number",
+    },
+    // INVISIBLE COLUMNS
+    {
+      caption: "Branch",
+      dataField: "branchId",
       lookup: {
-        dataSource: companies,
+        dataSource: branches,
         valueExpr: "id",
         displayExpr: "name",
       },
-      setCellValue(newData, value) {
-        newData.companyId = value;
-        newData.branchId = "";
-      },
+      dataType: "string",
       visible: false,
     },
     {
-      dataField: "branchId",
-      caption: "Branch",
+      caption: "Order No",
+      dataField: "orderNo",
+      dataType: "string",
+      visible: false,
+    },
+    {
+      caption: "Purchase Date",
+      dataField: "purchaseDate",
+      dataType: "date",
+      visible: false,
+    },
+    {
+      caption: "Purchase Cost",
+      dataField: "purchaseCost",
+      dataType: "number",
+      visible: false,
+    },
+    {
+      caption: "Supplier",
+      dataField: "supplierId",
       lookup: {
-        dataSource: getFilteredBranches,
+        dataSource: suppliers,
         valueExpr: "id",
         displayExpr: "name",
       },
-      setCellValue(newData, value) {
-        newData.branchId = value;
-        newData.categoryId = null;
-        newData.manufacturerId = null;
-        newData.productStatusId = "";
-      },
-      validationRules: [{ type: "required" }],
+      dataType: "string",
       visible: false,
+    },
+    {
+      caption: "Category",
+      dataField: "categoryId",
+      lookup: {
+        dataSource: categories.filter((c) => c.type === CategoryType.LICENSE),
+        valueExpr: "id",
+        displayExpr: "name",
+      },
+      dataType: "string",
+      visible: false,
+    },
+    {
+      caption: "Maintained",
+      dataField: "maintained",
+      dataType: "boolean",
+      visible: false,
+    },
+    {
+      caption: "Reassignable",
+      dataField: "reassignable",
+      dataType: "boolean",
+      visible: false,
+    },
+    {
+      caption: "Termination Date",
+      dataField: "terminationDate",
+      dataType: "date",
+      visible: false,
+    },
+    {
+      dataField: "imagePath",
+      caption: "Image",
+      dataType: "string",
+      visible: false,
+    },
+    {
+      caption: "Notes",
+      dataField: "notes",
+      dataType: "string",
+      visible: false,
+    },
+  ];
+
+  const excelColumns: ExcelColumn[] = [
+    {
+      dataField: "branchId",
+      validate(value) {
+        return value !== null;
+      },
+      errorText: "Branch is required",
     },
     {
       dataField: "name",
-      caption: "Name",
-      validationRules: [{ type: "required" }],
+      validate(value) {
+        return value !== null;
+      },
+      errorText: "Name is required",
     },
     {
       dataField: "licenseKey",
-      caption: "License Key",
-      validationRules: [{ type: "required" }],
+      validate(value) {
+        return value !== null;
+      },
+      errorText: "License Key is required",
     },
     {
       dataField: "expirationDate",
-      caption: "Expiration Date",
     },
     {
       dataField: "licenseEmail",
-      caption: "License Email",
     },
-    // ADD LICENSED NAME
+    {
+      dataField: "licensedTo",
+    },
     {
       dataField: "manufacturerId",
-      caption: "Manufacturer",
-      lookup: {
-        dataSource: getFilteredManufacturers,
-        valueExpr: "id",
-        displayExpr: "name",
-      },
+      nullable: true,
     },
     {
       dataField: "quantity",
-      caption: "Quantity",
-    },
-    // VISIBLE : FALSE
-    {
-      dataField: "maintained",
-      caption: "Maintained",
-      visible: false,
-      validationRules: [{ type: "required" }],
-    },
-    {
-      dataField: "reassignable",
-      caption: "Reassignable",
-      visible: false,
-      validationRules: [{ type: "required" }],
-    },
-    {
-      dataField: "terminationDate",
-      caption: "Termination Date",
-      visible: false,
-    },
-    {
-      dataField: "categoryId",
-      caption: "Category",
-      lookup: {
-        dataSource: getFilteredCategories,
-        valueExpr: "id",
-        displayExpr: "name",
+      validate(value) {
+        if (value === null || value < 0) return false;
+        return true;
       },
-      visible: false,
-    },
-    {
-      dataField: "productStatusId",
-      caption: "Status",
-      lookup: {
-        dataSource: getFilteredProductStatuses,
-        valueExpr: "id",
-        displayExpr: "name",
-      },
-      visible: false,
-      validationRules: [{ type: "required" }],
-    },
-    {
-      dataField: "serialNo",
-      caption: "Serial No",
-      visible: false,
+      errorText: "Quantity must be a positive number",
     },
     {
       dataField: "orderNo",
-      caption: "Order No",
-      visible: false,
-    },
-    {
-      dataField: "purchaseCost",
-      caption: "Purchase Cost",
-      visible: false,
     },
     {
       dataField: "purchaseDate",
-      caption: "Purchase Date",
-      visible: false,
+    },
+    {
+      dataField: "purchaseCost",
+      validate(value) {
+        if (value !== null && value < 0) return false;
+        return true;
+      },
+    },
+    {
+      dataField: "supplierId",
+      nullable: true,
+    },
+    {
+      dataField: "categoryId",
+      validate(value) {
+        return value !== null;
+      },
+      errorText: "Category is required",
+    },
+    {
+      dataField: "maintained",
+      validate(value) {
+        return value !== null;
+      },
+      errorText: "Maintained is required",
+    },
+    {
+      dataField: "reassignable",
+      validate(value) {
+        return value !== null;
+      },
+      errorText: "Reassignable is required",
+    },
+    {
+      dataField: "terminationDate",
+    },
+    {
+      dataField: "imagePath",
     },
     {
       dataField: "notes",
-      caption: "Notes",
-      visible: false,
     },
-    {
-      caption: "Checkin/Checkout",
-      alignment: "center",
-      cellTemplate: checkInOutHeaderTemplate,
-    },
-  ];
-  const formItems: IFormItem[] = [
-    { dataField: "companyId" },
-    { dataField: "branchId" },
-    { dataField: "manufacturerId" },
-    { dataField: "licenseKey" },
-    { dataField: "licenseEmail" },
-    { dataField: "maintained" },
-    { dataField: "reassignable" },
-    { dataField: "expirationDate" },
-    { dataField: "terminationDate" },
-    { dataField: "categoryId" },
-    { dataField: "productStatusId" },
-    { dataField: "name" },
-    { dataField: "serialNo" },
-    { dataField: "orderNo" },
-    { dataField: "purchaseCost" },
-    { dataField: "quantity" },
-    { dataField: "purchaseDate" },
-    { dataField: "notes" },
   ];
 
-  return { columns, devColumns, formItems };
+  return { columns, excelColumns };
 };

@@ -1,10 +1,10 @@
-import { Column } from "devextreme/ui/data_grid";
-import { IManufacturer } from "../../interfaces/interfaces";
-import { IFormItem } from "../../components/generic/BaseDataGrid";
-import { Column as MyColumn } from "../../components/gridTable/interfaces/interfaces";
+import {
+  Column,
+  ExcelColumn,
+} from "../../components/gridTable/interfaces/interfaces";
 
 export const useColumns = () => {
-  const columns: MyColumn[] = [
+  const columns: Column[] = [
     {
       dataField: "name",
       caption: "Name",
@@ -29,40 +29,49 @@ export const useColumns = () => {
       dataField: "supportEmail",
       caption: "Support Email",
       dataType: "string",
+    },
+    // INVISIBLE COLUMNS
+    {
+      dataField: "imagePath",
+      caption: "Image",
+      dataType: "string",
+      visible: false,
+    },
+    {
+      dataField: "notes",
+      caption: "Notes",
+      dataType: "string",
+      visible: false,
     },
   ];
 
-  const devColumns: Column<IManufacturer>[] = [
+  const excelColumns: ExcelColumn[] = [
     {
       dataField: "name",
-      caption: "Name",
-      validationRules: [{ type: "required" }],
+      validate(value) {
+        return value !== null;
+      },
+      errorText: "Name is required",
     },
     {
       dataField: "url",
-      caption: "URL",
     },
     {
       dataField: "supportURL",
-      caption: "Support URL",
     },
     {
       dataField: "supportPhone",
-      caption: "Support Phone",
     },
     {
       dataField: "supportEmail",
-      caption: "Support Email",
+    },
+    {
+      dataField: "imagePath",
+    },
+    {
+      dataField: "notes",
     },
   ];
-  const formItems: IFormItem[] = [
-    { dataField: "companyId" },
-    { dataField: "branchId" },
-    { dataField: "name" },
-    { dataField: "url" },
-    { dataField: "supportURL" },
-    { dataField: "supportPhone" },
-    { dataField: "supportEmail" },
-  ];
-  return { columns, devColumns, formItems };
+
+  return { columns, excelColumns };
 };
