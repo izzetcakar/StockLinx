@@ -2,9 +2,10 @@
 {
     public class AssetCreateDto : BaseProductCreateDto
     {
-        public Guid? ManufacturerId { get; set; }
         public Guid? ModelId { get; set; }
+        public Guid ProductStatusId { get; set; }
         public string? TagNo { get; set; }
-        public List<ExtraAssetDto>? ExtraAsset { get; set; }
+        public string? SerialNo { get; set; }
+        public List<OverageAssetDto>? OverageAssets { get; set; }
     }
 }

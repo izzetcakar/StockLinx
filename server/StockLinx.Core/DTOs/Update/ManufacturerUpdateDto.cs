@@ -8,5 +8,6 @@
         public string? SupportURL { get; set; }
         public string? SupportPhone { get; set; }
         public string? SupportEmail { get; set; }
+        public string? Notes { get; set; }
     }
 }
