@@ -4,18 +4,18 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using StockLinx.Repository;
-using Swashbuckle.AspNetCore.Filters;
-using System.Text.Json.Serialization;
-using System.Text;
-using System.Reflection;
-using StockLinx.Core.UnitOfWork;
 using StockLinx.Core.Repositories;
-using StockLinx.Repository.Repositories.EF_Core;
 using StockLinx.Core.Services;
-using StockLinx.Service.Services;
+using StockLinx.Core.UnitOfWork;
+using StockLinx.Repository;
+using StockLinx.Repository.Repositories.EF_Core;
 using StockLinx.Repository.UnitOfWork;
 using StockLinx.Service.Mapping;
+using StockLinx.Service.Services;
+using Swashbuckle.AspNetCore.Filters;
+using System.Reflection;
+using System.Text;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
