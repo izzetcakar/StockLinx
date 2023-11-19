@@ -1,5 +1,5 @@
 import React from "react";
-import Gridtable from "../Gridtable";
+import Gridtable from "../GridTable";
 import {
   Column,
   RowError,
