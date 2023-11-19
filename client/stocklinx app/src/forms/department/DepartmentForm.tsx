@@ -8,14 +8,13 @@ import {
   Select,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { closeModal } from "@mantine/modals";
 import { modals } from "@mantine/modals";
 import { IDepartment } from "../../interfaces/interfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { departmentActions } from "../../redux/department/actions";
 import uuid4 from "uuid4";
 import { RootState } from "../../redux/rootReducer";
-
+import filterClasses from "../../mantineModules/baseFilter.module.scss";
 interface DepartmentFormProps {
   department?: IDepartment;
 }
@@ -38,7 +37,6 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({ department }) => {
           locationId: null,
           managerId: null,
           name: "",
-          imagePath: null,
           notes: null,
         },
     validate: {
@@ -54,16 +52,6 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({ department }) => {
       : dispatch(departmentActions.create({ department: data as IDepartment }));
     modals.close("department-modal");
   };
-  const openNextModel = () =>
-    modals.open({
-      modalId: "next-modal",
-      title: "Page 2",
-      children: (
-        <Button fullWidth onClick={() => closeModal("next-modal")} color="dark">
-          Back
-        </Button>
-      ),
-    });
   const handleCompanyChange = (value: string) => {
     setCompany(value);
     form.setFieldValue("branchId", "");
@@ -89,6 +77,9 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({ department }) => {
           placeholder="Select Company"
           value={company}
           onChange={(value) => handleCompanyChange(value as string)}
+          classNames={filterClasses}
+          dropdownPosition="bottom"
+          nothingFound="No company found"
           withAsterisk
         />
         <Select
@@ -101,6 +92,9 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({ department }) => {
           label="Branch"
           placeholder="Select Branch"
           {...form.getInputProps("branchId")}
+          classNames={filterClasses}
+          dropdownPosition="bottom"
+          nothingFound="No branch found"
           withAsterisk
         />
         <TextInput
@@ -115,6 +109,9 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({ department }) => {
           placeholder="Select Location"
           {...form.getInputProps("locationId")}
           value={form.values.locationId || ""}
+          classNames={filterClasses}
+          dropdownPosition="bottom"
+          nothingFound="No location found"
         />
         <Textarea
           placeholder="Your notes here"
@@ -123,9 +120,6 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({ department }) => {
           value={form.values.notes || ""}
         />
         <Group position="right" mt="md">
-          <Button onClick={() => openNextModel()} color="dark">
-            Next Modal
-          </Button>
           <Button type="submit" color="dark">
             Submit
           </Button>

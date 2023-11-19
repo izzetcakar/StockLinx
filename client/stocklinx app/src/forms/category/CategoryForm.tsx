@@ -1,8 +1,6 @@
 import React from "react";
 import { TextInput, Button, Group, Flex, Select } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { closeModal } from "@mantine/modals";
-import { modals } from "@mantine/modals";
 import { CategoryType, ICategory } from "../../interfaces/interfaces";
 import { useDispatch } from "react-redux";
 import { categoryActions } from "../../redux/category/actions";
@@ -19,9 +17,8 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ category }) => {
       ? { ...category }
       : {
           id: uuid4(),
-          type: CategoryType.ACCESSORY,
+          type: CategoryType.ASSET,
           name: "",
-          imagePath: null,
         },
     validate: {
       name: (value: string) =>
@@ -32,18 +29,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ category }) => {
     category
       ? dispatch(categoryActions.update({ category: data as ICategory }))
       : dispatch(categoryActions.create({ category: data as ICategory }));
-    dispatch(categoryActions.getAll());
   };
-  const openNextModel = () =>
-    modals.open({
-      modalId: "next-modal",
-      title: "Page 2",
-      children: (
-        <Button fullWidth onClick={() => closeModal("next-modal")} color="dark">
-          Back
-        </Button>
-      ),
-    });
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
@@ -63,25 +49,24 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ category }) => {
           withAsterisk
         />
         <Select
-          data={[
-            { value: CategoryType.ASSET, label: "Asset" },
-            { value: CategoryType.LICENSE, label: "License" },
-            { value: CategoryType.ACCESSORY, label: "Accessory" },
-            { value: CategoryType.CONSUMABLE, label: "Consumable" },
-            { value: CategoryType.COMPONENT, label: "Component" },
-          ]}
+          data={
+            [
+              { value: CategoryType.ASSET, label: "Asset" },
+              { value: CategoryType.LICENSE, label: "License" },
+              { value: CategoryType.ACCESSORY, label: "Accessory" },
+              { value: CategoryType.CONSUMABLE, label: "Consumable" },
+              { value: CategoryType.COMPONENT, label: "Component" },
+            ] as any
+          }
           label="Type"
           placeholder="Select Type"
           {...form.getInputProps("type")}
-          dropdownPosition="bottom"
           classNames={filterClasses}
+          dropdownPosition="bottom"
           withAsterisk
         />
       </Flex>
       <Group position="right">
-        <Button onClick={() => openNextModel()} color="dark">
-          Next Modal
-        </Button>
         <Button type="submit" color="dark">
           Submit
         </Button>

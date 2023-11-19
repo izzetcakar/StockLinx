@@ -1,8 +1,6 @@
 import React from "react";
 import { TextInput, Button, Group, Flex } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { closeModal } from "@mantine/modals";
-import { modals } from "@mantine/modals";
 import { ICompany } from "../../interfaces/interfaces";
 import { useDispatch } from "react-redux";
 import { companyActions } from "../../redux/company/actions";
@@ -35,16 +33,6 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ company }) => {
       : dispatch(companyActions.create({ company: data as ICompany }));
     dispatch(companyActions.getAll());
   };
-  const openNextModel = () =>
-    modals.open({
-      modalId: "next-modal",
-      title: "Page 2",
-      children: (
-        <Button fullWidth onClick={() => closeModal("next-modal")} color="dark">
-          Back
-        </Button>
-      ),
-    });
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
@@ -69,9 +57,6 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ company }) => {
           {...form.getInputProps("email")}
         />
         <Group position="right" mt="md">
-          <Button onClick={() => openNextModel()} color="dark">
-            Next Modal
-          </Button>
           <Button type="submit" color="dark">
             Submit
           </Button>

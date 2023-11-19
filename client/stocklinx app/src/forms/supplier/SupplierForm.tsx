@@ -8,8 +8,6 @@ import {
   Select,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { closeModal } from "@mantine/modals";
-import { modals } from "@mantine/modals";
 import { ISupplier } from "../../interfaces/interfaces";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
@@ -53,16 +51,6 @@ const SupplierForm: React.FC<SupplierFormProps> = ({ supplier }) => {
       : dispatch(supplierActions.create({ supplier: data as ISupplier }));
     dispatch(supplierActions.getAll());
   };
-  const openNextSupplier = () =>
-    modals.open({
-      modalId: "next-modal",
-      title: "Page 2",
-      children: (
-        <Button fullWidth onClick={() => closeModal("next-modal")} color="dark">
-          Back
-        </Button>
-      ),
-    });
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
@@ -87,6 +75,7 @@ const SupplierForm: React.FC<SupplierFormProps> = ({ supplier }) => {
           placeholder="Select Location"
           {...form.getInputProps("locationId")}
           value={form.values.locationId || ""}
+          clearable
         />
         <TextInput
           label="Contact Name"
@@ -125,9 +114,6 @@ const SupplierForm: React.FC<SupplierFormProps> = ({ supplier }) => {
           value={form.values.notes || ""}
         />
         <Group position="right" mt="md">
-          <Button onClick={() => openNextSupplier()} color="dark">
-            Next Modal
-          </Button>
           <Button type="submit" color="dark">
             Submit
           </Button>

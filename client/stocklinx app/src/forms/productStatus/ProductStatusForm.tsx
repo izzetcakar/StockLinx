@@ -1,12 +1,11 @@
 import React from "react";
 import { TextInput, Button, Group, Flex, Select } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { closeModal } from "@mantine/modals";
-import { modals } from "@mantine/modals";
 import { ProductStatusType, IProductStatus } from "../../interfaces/interfaces";
 import { useDispatch } from "react-redux";
 import { productStatusActions } from "../../redux/productStatus/actions";
 import uuid4 from "uuid4";
+import filterClasses from "../../mantineModules/baseFilter.module.scss";
 interface ProductStatusFormProps {
   productStatus?: IProductStatus;
 }
@@ -37,16 +36,6 @@ const ProductStatusForm: React.FC<ProductStatusFormProps> = ({
           productStatusActions.create({ productStatus: data as IProductStatus })
         );
   };
-  const openNextModel = () =>
-    modals.open({
-      modalId: "next-modal",
-      title: "Page 2",
-      children: (
-        <Button fullWidth onClick={() => closeModal("next-modal")} color="dark">
-          Back
-        </Button>
-      ),
-    });
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
@@ -66,22 +55,25 @@ const ProductStatusForm: React.FC<ProductStatusFormProps> = ({
           withAsterisk
         />
         <Select
-          data={[
-            { value: ProductStatusType.AVAILABLE, label: "Avaliable" },
-            { value: ProductStatusType.DAMAGED, label: "Damaged" },
-            { value: ProductStatusType.DEPLOYED, label: "Deployed" },
-            { value: ProductStatusType.ORDERED, label: "Ordered" },
-            { value: ProductStatusType.OUT_OF_STOCK, label: "Out of Stock" },
-          ]}
+          data={
+            [
+              { value: ProductStatusType.AVAILABLE, label: "Avaliable" },
+              { value: ProductStatusType.DAMAGED, label: "Damaged" },
+              { value: ProductStatusType.DEPLOYED, label: "Deployed" },
+              { value: ProductStatusType.ORDERED, label: "Ordered" },
+              { value: ProductStatusType.OUT_OF_STOCK, label: "Out of Stock" },
+            ] as any
+          }
           label="Type"
           placeholder="Select Type"
           {...form.getInputProps("type")}
+          classNames={filterClasses}
+          dropdownPosition="bottom"
+          nothingFound="No type found"
+          withAsterisk
         />
       </Flex>
       <Group position="right">
-        <Button onClick={() => openNextModel()} color="dark">
-          Next Modal
-        </Button>
         <Button type="submit" color="dark">
           Submit
         </Button>

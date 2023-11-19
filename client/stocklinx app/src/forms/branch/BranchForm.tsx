@@ -1,13 +1,12 @@
 import React from "react";
 import { TextInput, Button, Group, Flex, Select } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { closeModal } from "@mantine/modals";
-import { modals } from "@mantine/modals";
 import { IBranch } from "../../interfaces/interfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { branchActions } from "../../redux/branch/actions";
 import uuid4 from "uuid4";
 import { RootState } from "../../redux/rootReducer";
+import filterClasses from "../../mantineModules/baseFilter.module.scss";
 interface BranchFormProps {
   branch?: IBranch;
 }
@@ -40,16 +39,6 @@ const BranchForm: React.FC<BranchFormProps> = ({ branch }) => {
       : dispatch(branchActions.create({ branch: data as IBranch }));
     dispatch(branchActions.getAll());
   };
-  const openNextModel = () =>
-    modals.open({
-      modalId: "next-modal",
-      title: "Page 2",
-      children: (
-        <Button fullWidth onClick={() => closeModal("next-modal")} color="dark">
-          Back
-        </Button>
-      ),
-    });
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
@@ -75,22 +64,23 @@ const BranchForm: React.FC<BranchFormProps> = ({ branch }) => {
           }))}
           label="Company"
           placeholder="Select Company"
-          dropdownPosition="bottom"
           {...form.getInputProps("companyId")}
+          classNames={filterClasses}
+          dropdownPosition="bottom"
+          nothingFound="No company found"
           withAsterisk
         />
         <Select
           data={locationSelectData}
           label="Location"
           placeholder="Select Location"
-          dropdownPosition="bottom"
           {...form.getInputProps("locationId")}
           value={form.values.locationId || ""}
+          classNames={filterClasses}
+          dropdownPosition="bottom"
+          nothingFound="No location found"
         />
         <Group position="right" mt="md">
-          <Button onClick={() => openNextModel()} color="dark">
-            Next Modal
-          </Button>
           <Button type="submit" color="dark">
             Submit
           </Button>

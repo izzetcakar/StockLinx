@@ -1,8 +1,6 @@
 import React from "react";
-import { TextInput, Button, Group, Flex } from "@mantine/core";
+import { TextInput, Button, Group, Flex, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { closeModal } from "@mantine/modals";
-import { modals } from "@mantine/modals";
 import { IManufacturer } from "../../interfaces/interfaces";
 import { useDispatch } from "react-redux";
 import { manufacturerActions } from "../../redux/manufacturer/actions";
@@ -27,6 +25,7 @@ const ManufacturerForm: React.FC<ManufacturerFormProps> = ({
           supportURL: null,
           supportEmail: null,
           supportPhone: null,
+          notes: null,
         },
     validate: {
       name: (value: string) =>
@@ -42,16 +41,7 @@ const ManufacturerForm: React.FC<ManufacturerFormProps> = ({
           manufacturerActions.create({ manufacturer: data as IManufacturer })
         );
   };
-  const openNextModel = () =>
-    modals.open({
-      modalId: "next-modal",
-      title: "Page 2",
-      children: (
-        <Button fullWidth onClick={() => closeModal("next-modal")} color="dark">
-          Back
-        </Button>
-      ),
-    });
+
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
       <Flex
@@ -93,11 +83,14 @@ const ManufacturerForm: React.FC<ManufacturerFormProps> = ({
           {...form.getInputProps("supportPhone")}
           value={form.values.supportPhone || ""}
         />
+        <Textarea
+          label="Notes"
+          placeholder="Notes"
+          {...form.getInputProps("notes")}
+          value={form.values.notes || ""}
+        />
       </Flex>
       <Group position="right" mt="md">
-        <Button onClick={() => openNextModel()} color="dark">
-          Next Modal
-        </Button>
         <Button type="submit" color="dark">
           Submit
         </Button>

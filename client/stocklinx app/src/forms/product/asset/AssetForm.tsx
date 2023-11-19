@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import uuid4 from "uuid4";
 import { RootState } from "../../../redux/rootReducer";
 import filterClasses from "../../../mantineModules/baseFilter.module.scss";
+import { assetActions } from "../../../redux/asset/actions";
 
 interface AssetFormProps {
   asset?: IAsset;
@@ -33,14 +34,13 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
   );
   const suppliers = useSelector((state: RootState) => state.supplier.suppliers);
   const [company, setCompany] = useState(asset?.companyId || "");
+
   const form = useForm<IAsset>({
     initialValues: asset
       ? { ...asset }
       : {
           id: uuid4(),
           branchId: "",
-          categoryId: null,
-          productStatusId: "",
           name: "",
           imagePath: null,
           serialNo: null,
@@ -48,8 +48,8 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
           purchaseCost: null,
           purchaseDate: null,
           notes: null,
-          manufacturerId: null,
           modelId: null,
+          productStatusId: "",
           tagNo: null,
           overageAssets: [],
         },
@@ -63,6 +63,8 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
             : "Purchase cost must be a non-negative number";
         }
       },
+      productStatusId: (value: string) =>
+        value !== "" ? null : "Product status should not be empty",
     },
   });
   const overageAssetFields = form.values?.overageAssets?.map((_, index) => (
@@ -70,23 +72,23 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
       <Text mah="fit-content">{index + 1}. Asset</Text>
       <TextInput
         placeholder="Tag No"
-        withAsterisk
         sx={{ flex: 1 }}
         {...form.getInputProps(`overageAssets.${index}.tagNo`)}
         value={
           form.values.overageAssets?.find((_, arrIndex) => arrIndex === index)
             ?.tagNo || ""
         }
+        withAsterisk
       />
       <TextInput
         placeholder="Serial No"
-        withAsterisk
         sx={{ flex: 1 }}
         {...form.getInputProps(`overageAssets.${index}.serialNo`)}
         value={
           form.values.overageAssets?.find((_, arrIndex) => arrIndex === index)
             ?.serialNo || ""
         }
+        withAsterisk
       />
       <ActionIcon
         color="red"
@@ -97,11 +99,10 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
     </Group>
   ));
 
-  const handleSubmit = (data: object) => {
-    // asset
-    //   ? dispatch(assetActions.update({ asset: data as IAsset }))
-    //   : dispatch(assetActions.create({ asset: data as IAsset }));
-    asset ? console.log("update", data) : console.log("create", data);
+  const handleSubmit = (data: IAsset) => {
+    asset
+      ? dispatch(assetActions.update({ asset: data }))
+      : dispatch(assetActions.create({ asset: data }));
   };
   const handleCompanyChange = (value: string) => {
     setCompany(value);
@@ -128,8 +129,10 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
           placeholder="Select Company"
           value={company}
           onChange={(value) => handleCompanyChange(value as string)}
-          withAsterisk
           classNames={filterClasses}
+          dropdownPosition="bottom"
+          nothingFound="No company found"
+          withAsterisk
         />
         <Select
           data={branches
@@ -141,8 +144,10 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
           label="Branch"
           placeholder="Select Branch"
           {...form.getInputProps("branchId")}
-          withAsterisk
           classNames={filterClasses}
+          dropdownPosition="bottom"
+          nothingFound="No branch found"
+          withAsterisk
         />
         <Flex w="100%" gap={10} align={"center"}>
           <TextInput
@@ -181,9 +186,10 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
           placeholder="Select Model"
           {...form.getInputProps("modelId")}
           value={form.values.modelId || ""}
-          clearable
-          nothingFound="No models found"
           classNames={filterClasses}
+          dropdownPosition="bottom"
+          nothingFound="No models found"
+          clearable
         />
         <Select
           data={productStatuses.map((model) => ({
@@ -193,9 +199,10 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
           label="Product Status"
           placeholder="Select Product Status"
           {...form.getInputProps("productStatusId")}
-          clearable
-          nothingFound="No product statuses found"
           classNames={filterClasses}
+          dropdownPosition="bottom"
+          nothingFound="No product statuses found"
+          withAsterisk
         />
         <Textarea
           placeholder="Your notes here"
@@ -207,13 +214,6 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
           label="Name"
           placeholder="New Name"
           {...form.getInputProps("name")}
-        />
-        <DateInput
-          clearable
-          label="Warranty Expiry Date"
-          placeholder="Warranty Expiry Date"
-          valueFormat="DD/MM/YYYY"
-          {...form.getInputProps("warrantyDate")}
         />
         <TextInput
           label="Order No"
@@ -229,15 +229,19 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
           label="Supplier"
           placeholder="Select Supplier"
           {...form.getInputProps("supplierId")}
-          clearable
           classNames={filterClasses}
+          dropdownPosition="bottom"
+          nothingFound="No suppliers found"
+          clearable
         />
         <DateInput
           clearable
           label="Purchase Date"
           placeholder="Purchase Date"
-          valueFormat="DD/MM/YYYY"
           {...form.getInputProps("purchaseDate")}
+          value={
+            form.values.purchaseDate ? new Date(form.values.purchaseDate) : null
+          }
         />
         <NumberInput
           placeholder="Purchase Cost"
