@@ -11,7 +11,7 @@ import { manufacturerActions } from "../../redux/manufacturer/actions";
 import { supplierActions } from "../../redux/supplier/actions";
 import { locationActions } from "../../redux/location/actions";
 import { branchActions } from "../../redux/branch/actions";
-import Gridtable from "../../components/gridTable/Gridtable";
+import Gridtable from "../../components/gridTable/GridTable";
 
 const Accessory = () => {
   const dispatch = useDispatch();

@@ -35,11 +35,11 @@ const Asset = () => {
         itemKey="id"
         columns={useColumns().columns}
         refreshData={refreshData}
-        onRowUpdate={(category) => openAssetModal(category as IAsset)}
+        onRowUpdate={(asset) => openAssetModal(asset as IAsset)}
         onRowInsert={() => openAssetModal()}
-        onRowRemove={(id) => dispatch(categoryActions.remove({ id: id }))}
+        onRowRemove={(id) => dispatch(assetActions.remove({ id: id }))}
         onRowRemoveRange={(ids) =>
-          dispatch(categoryActions.removeRange({ ids: ids }))
+          dispatch(assetActions.removeRange({ ids: ids }))
         }
         excelColumns={useColumns().excelColumns}
         enableToolbar
