@@ -15,5 +15,6 @@
         //Relates
         public Location? Location { get; set; }
         public ICollection<Accessory> Accessories { get; set; }
+        public ICollection<License> Licenses { get; set; }
     }
 }

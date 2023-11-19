@@ -14,7 +14,6 @@ namespace StockLinx.Repository.Configurations
 
             builder.HasOne(x => x.Branch).WithMany(x => x.Consumables).HasForeignKey(x => x.BranchId).OnDelete(DeleteBehavior.Cascade);
             builder.HasOne(x => x.Category).WithMany(x => x.Consumables).HasForeignKey(x => x.CategoryId).OnDelete(DeleteBehavior.SetNull);
-            builder.HasOne(x => x.ProductStatus).WithMany(x => x.Consumables).HasForeignKey(x => x.ProductStatusId).OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

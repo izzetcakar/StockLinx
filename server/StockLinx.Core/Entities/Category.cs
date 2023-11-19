@@ -3,7 +3,6 @@
     public class Category : BaseEntity
     {
         public string Name { get; set; }
-        public string? ImagePath { get; set; }
         public CategoryType Type { get; set; }
 
         //Relates

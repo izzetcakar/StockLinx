@@ -8,10 +8,10 @@
         public string? SupportURL { get; set; }
         public string? SupportPhone { get; set; }
         public string? SupportEmail { get; set; }
+        public string? Notes { get; set; }
 
         //Relates
         public ICollection<Accessory> Accessories { get; set; }
-        public ICollection<Asset> Assets { get; set; }
         public ICollection<Model> Models { get; set; }
     }
 }

@@ -3,13 +3,14 @@
 
     public class Asset : BaseProduct
     {
-        public Guid? ManufacturerId { get; set; }
         public Guid? ModelId { get; set; }
+        public Guid ProductStatusId { get; set; }
         public string? TagNo { get; set; }
+        public string? SerialNo { get; set; }
 
         //Relates
-        public Manufacturer? Manufacturer { get; set; }
         public Model? Model { get; set; }
+        public ProductStatus ProductStatus { get; set; }
         public ICollection<DeployedProduct>? DeployedProducts { get; set; }
     }
 }
