@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Column, SelectedCell } from "../interfaces/interfaces";
+import { Column, Lookup, SelectedCell } from "../interfaces/interfaces";
 import { useCell } from "./cell";
 
 export const useSelectCell = (data: object[], columns: Column[]) => {
@@ -8,6 +8,12 @@ export const useSelectCell = (data: object[], columns: Column[]) => {
   const [isDrawing, setIsDrawing] = useState(false);
   const startCellRef = useRef<SelectedCell | null>();
 
+  const getCellValue = (value: any, lookup: Lookup | undefined) => {
+    if (value === null || value === undefined) {
+      return "";
+    }
+    return lookup ? getLookupValue(value, lookup) : value;
+  };
   const handleCellMouseDown = (
     rowIndex: number,
     columnIndex: number,
@@ -47,7 +53,7 @@ export const useSelectCell = (data: object[], columns: Column[]) => {
     if (!isDrawing) {
       setSelectedCells([]);
 
-      const isSelected = selectedCells.some(
+      const isSelected = selectedCells.find(
         (cell) =>
           cell.rowIndex === rowIndex &&
           cell.columnIndex === columnIndex &&
@@ -72,9 +78,7 @@ export const useSelectCell = (data: object[], columns: Column[]) => {
             rowIndex,
             columnIndex,
             column: column.dataField,
-            value: column?.lookup
-              ? getLookupValue(value, column.lookup)
-              : value,
+            value: getCellValue(value, column.lookup),
           },
         ]);
       }
@@ -108,7 +112,7 @@ export const useSelectCell = (data: object[], columns: Column[]) => {
             rowIndex: i,
             columnIndex: j,
             column: columns[j].dataField,
-            value: lookup ? getLookupValue(newValue, lookup) : newValue,
+            value: getCellValue(newValue, lookup),
           };
           cellsInRectangle.push(cell);
         }
