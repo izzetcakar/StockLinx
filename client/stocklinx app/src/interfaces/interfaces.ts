@@ -70,7 +70,6 @@ export interface IDepartment extends BaseEntity {
   locationId: string | null;
   managerId: string | null;
   name: string;
-  imagePath: string | null;
   notes: string | null;
 }
 export interface ILocation extends BaseEntity {
@@ -88,16 +87,12 @@ export interface ILocation extends BaseEntity {
 export interface ICategory extends BaseEntity {
   name: string;
   type: CategoryType;
-  imagePath: string | null;
 }
 export interface IBaseProduct extends BaseEntity {
   companyId?: string;
   branchId: string;
-  categoryId: string | null;
-  productStatusId: string;
   name: string;
   imagePath: string | null;
-  serialNo: string | null;
   orderNo: string | null;
   notes: string | null;
   purchaseCost: number | null;
@@ -108,30 +103,34 @@ export interface IBaseProduct extends BaseEntity {
 export interface IAccessory extends IBaseProduct {
   manufacturerId: string | null;
   supplierId: string | null;
-  quantity: number;
-  warrantyDate: Date | null;
+  categoryId: string;
   modelNo: string;
+  quantity: number;
 }
 export interface IAsset extends IBaseProduct {
-  manufacturerId: string | null;
   modelId: string | null;
+  productStatusId: string;
   tagNo: string | null;
-  overageAssets?:
-    | [
-        {
-          serialNo: string;
-          tagNo: string;
-        }
-      ]
-    | [];
+  serialNo: string | null;
+  overageAssets?: OverageAsset[];
+}
+export interface OverageAsset {
+  serialNo: string;
+  tagNo: string;
 }
 export interface IComponent extends IBaseProduct {
+  categoryId: string;
+  supplierId: string | null;
+  serialNo: string | null;
   quantity: number;
 }
 export interface ILicense extends IBaseProduct {
+  categoryId: string;
   manufacturerId: string | null;
+  supplierId: string | null;
   licenseKey: string;
   licenseEmail: string | null;
+  licensedTo: string | null;
   maintained: boolean;
   reassignable: boolean;
   expirationDate: Date | null;
@@ -139,12 +138,16 @@ export interface ILicense extends IBaseProduct {
   quantity: number;
 }
 export interface IConsumable extends IBaseProduct {
+  categoryId: string;
+  supplierId: string | null;
+  manufacturerId: string | null;
   modelNo: string | null;
   itemNo: string | null;
   quantity: number;
 }
 export interface IModel extends BaseEntity {
   manufacturerId: string | null;
+  categoryId: string;
   name: string;
   imagePath: string | null;
   modelNo: string | null;
@@ -167,6 +170,7 @@ export interface IManufacturer extends BaseEntity {
   supportURL: string | null;
   supportPhone: string | null;
   supportEmail: string | null;
+  notes: string | null;
 }
 export interface ISupplier extends BaseEntity {
   locationId: string | null;
