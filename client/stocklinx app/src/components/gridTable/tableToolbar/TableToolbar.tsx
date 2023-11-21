@@ -50,6 +50,7 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
         return new Promise<{
           errors: RowError[];
           importedData: ImportedExcelData[];
+          test: ImportedExcelData[];
         }>((resolve) => {
           reader.onload = (e: ProgressEvent<FileReader>) => {
             if (e.target && e.target.result) {
@@ -59,46 +60,54 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
               const importedData: { [key: string]: any }[] =
                 utils.sheet_to_json(worksheet);
               const newErrors: RowError[] = [];
+              const newData: { [key: string]: any }[] = [...importedData];
 
               excelColumns?.forEach((excelColumn) => {
                 importedData.forEach((row, rowIndex) => {
-                  const column = excelColumn.dataField;
-                  const columnData = columns.find(
-                    (x) => x.dataField === column
+                  const column = columns.find(
+                    (x) => x.caption === excelColumn.caption
                   );
-                  if (row[column] === undefined) {
-                    row[column] = null;
+                  if (!column) return;
+                  const columnCaption = column.caption;
+                  const columnData = column.dataField;
+                  newData[rowIndex][columnData] = row[columnCaption];
+                  if (row[columnCaption] === undefined) {
+                    row[columnCaption] = null;
+                    newData[rowIndex][columnData] = null;
                   }
-                  if (row[column] == null && excelColumn.nullable) return;
+                  if (row[columnCaption] == null && excelColumn.nullable)
+                    return;
                   if (
                     excelColumn.validate &&
-                    !excelColumn.validate(row[column])
+                    !excelColumn.validate(row[columnCaption])
                   ) {
                     newErrors.push({
                       row: rowIndex,
-                      column,
+                      column: columnCaption,
                       error: excelColumn.errorText || "Invalid validate value",
                     });
-                  } else if (columnData?.lookup) {
+                  } else if (column?.lookup) {
                     const selectedLookup = (
-                      columnData.lookup.dataSource as { [key: string]: any }[]
+                      column.lookup.dataSource as { [key: string]: any }[]
                     ).find((lookupData) => {
-                      if (!columnData.lookup) {
+                      if (!column.lookup) {
                         return false;
                       }
                       if (
-                        lookupData[columnData.lookup.displayExpr as string] ===
-                        row[columnData.dataField]
+                        lookupData[column.lookup.displayExpr as string] ===
+                        row[columnCaption]
                       ) {
-                        row[column] =
-                          lookupData[columnData.lookup.valueExpr as string];
+                        row[columnCaption] =
+                          lookupData[column.lookup.valueExpr as string];
+                        newData[rowIndex][columnData] =
+                          lookupData[column.lookup.valueExpr as string];
                         return lookupData;
                       }
                     });
                     if (!selectedLookup) {
                       newErrors.push({
                         row: rowIndex,
-                        column,
+                        column: columnCaption,
                         error: "Invalid lookup value",
                       });
                     }
@@ -111,9 +120,19 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
                   return { datafield: row.datafield, value: row.value };
                 }
               });
+              const filteredNewData = newData.filter((row, index) => {
+                if (!updatedErrors.some((err) => err.row === index)) {
+                  return { datafield: row.datafield, value: row.value };
+                }
+              });
 
               resolve({
-                errors: updatedErrors,
+                errors: updatedErrors.map((err) => {
+                  return {
+                    ...err,
+                    row: err.row + 2,
+                  };
+                }),
                 importedData: (filteredImportedData as ImportedExcelData[]).map(
                   (row) => {
                     return {
@@ -122,6 +141,12 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
                     };
                   }
                 ),
+                test: (filteredNewData as ImportedExcelData[]).map((row) => {
+                  return {
+                    ...row,
+                    id: uuid4(),
+                  };
+                }),
               });
             }
           };
@@ -129,10 +154,13 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
           reader.readAsArrayBuffer(file);
         });
       };
-      console.log(file);
       const result = await readFile();
       console.log(result.errors);
-      openExcelModal(result.importedData, columns, result.errors);
+      openExcelModal(
+        result.test,
+        columns.map((c) => ({ ...c, visible: true })),
+        result.errors
+      );
     }
   };
   const exportToExcel = (isBaseSheet: boolean) => {
@@ -140,17 +168,15 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
     const worksheet = workbook.addWorksheet("Sheet1");
     worksheet.columns =
       excelColumns?.map((x) => ({
-        header: x.dataField,
-        key: x.dataField,
+        header: x.caption,
+        key: x.caption,
       })) || [];
 
     !isBaseSheet &&
       (data as { [key: string]: any }[]).map((item) => {
         let newRow = {} as { [key: string]: any };
         excelColumns?.map((excelColumn) => {
-          const column = columns.find(
-            (c) => c.dataField === excelColumn.dataField
-          );
+          const column = columns.find((c) => c.caption === excelColumn.caption);
           let datafield = column?.dataField as string;
           let value = item[datafield as string];
 
@@ -177,7 +203,7 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
             if (!column) return;
             value = item[datafield as string];
           }
-          newRow = { ...newRow, [excelColumn.dataField]: value };
+          newRow = { ...newRow, [excelColumn.caption]: value };
         });
         worksheet.addRow(newRow);
       });

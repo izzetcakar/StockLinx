@@ -36,14 +36,14 @@ export interface Filter {
   isApplied: boolean;
 }
 export interface ExcelColumn {
-  dataField: string;
+  caption: string;
   validate?: (value: any) => boolean;
   errorText?: string;
   nullable?: boolean;
 }
 export interface ImportedExcelData {
   id: string;
-  datafield: string;
+  caption: string;
   value: any;
 }
 export interface ColumnError {

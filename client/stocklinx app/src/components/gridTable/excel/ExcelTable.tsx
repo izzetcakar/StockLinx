@@ -1,9 +1,6 @@
 import React from "react";
 import Gridtable from "../GridTable";
-import {
-  Column,
-  RowError,
-} from "../interfaces/interfaces";
+import { Column, RowError } from "../interfaces/interfaces";
 
 interface ExcelTableProps {
   data: object[];
@@ -43,7 +40,9 @@ const ExcelTable: React.FC<ExcelTableProps> = ({ data, columns, errors }) => {
         maxWidth: "80dvw",
       }}
     >
-      <Gridtable data={data} itemKey="id" columns={columns} />
+      <div style={{ maxWidth: "50%" }}>
+        <Gridtable data={data} itemKey="id" columns={columns} />
+      </div>
       <Gridtable data={errors} itemKey="id" columns={errorColumns} />
     </div>
   );

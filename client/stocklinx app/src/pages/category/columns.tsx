@@ -32,14 +32,14 @@ export const useColumns = () => {
   ];
   const excelColumns: ExcelColumn[] = [
     {
-      dataField: "name",
+      caption: "Name",
       validate(value) {
         return value !== null;
       },
       errorText: "Name is required",
     },
     {
-      dataField: "type",
+      caption: "Type",
     },
   ];
 
