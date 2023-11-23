@@ -2,7 +2,6 @@
 {
     public class CustomField : BaseEntity
     {
-        public Guid FieldSetId { get; set; }
         public string Name { get; set; }
         public string Type { get; set; }
         public string? HelpText { get; set; }
@@ -12,7 +11,7 @@
         public string? ValidationText { get; set; }
 
         //Relates
-        public FieldSet FieldSet { get; set; }
+        public ICollection<FieldSetCustomField>? FieldSetCustomFields { get; set; }
         public ICollection<ModelFieldData>? ModelFieldData { get; set; }
     }
 }

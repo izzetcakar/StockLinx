@@ -427,9 +427,6 @@ namespace StockLinx.Repository.Migrations
                     b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("FieldSetId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("HelpText")
                         .HasColumnType("text");
 
@@ -456,8 +453,6 @@ namespace StockLinx.Repository.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("FieldSetId");
 
                     b.ToTable("CustomFields");
                 });
@@ -570,9 +565,6 @@ namespace StockLinx.Repository.Migrations
                     b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("ModelId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -582,10 +574,37 @@ namespace StockLinx.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ModelId")
-                        .IsUnique();
-
                     b.ToTable("FieldSets");
+                });
+
+            modelBuilder.Entity("StockLinx.Core.Entities.FieldSetCustomField", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("CustomFieldId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("FieldSetId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomFieldId");
+
+                    b.HasIndex("FieldSetId");
+
+                    b.ToTable("FieldSetCustomFields");
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.License", b =>
@@ -785,6 +804,9 @@ namespace StockLinx.Repository.Migrations
                     b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<Guid?>("FieldSetId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("ImagePath")
                         .HasColumnType("text");
 
@@ -807,6 +829,8 @@ namespace StockLinx.Repository.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("FieldSetId");
 
                     b.HasIndex("ManufacturerId");
 
@@ -1184,17 +1208,6 @@ namespace StockLinx.Repository.Migrations
                     b.Navigation("Supplier");
                 });
 
-            modelBuilder.Entity("StockLinx.Core.Entities.CustomField", b =>
-                {
-                    b.HasOne("StockLinx.Core.Entities.FieldSet", "FieldSet")
-                        .WithMany("CustomFields")
-                        .HasForeignKey("FieldSetId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("FieldSet");
-                });
-
             modelBuilder.Entity("StockLinx.Core.Entities.Department", b =>
                 {
                     b.HasOne("StockLinx.Core.Entities.Branch", "Branch")
@@ -1259,15 +1272,23 @@ namespace StockLinx.Repository.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("StockLinx.Core.Entities.FieldSet", b =>
+            modelBuilder.Entity("StockLinx.Core.Entities.FieldSetCustomField", b =>
                 {
-                    b.HasOne("StockLinx.Core.Entities.Model", "Model")
-                        .WithOne("FieldSet")
-                        .HasForeignKey("StockLinx.Core.Entities.FieldSet", "ModelId")
+                    b.HasOne("StockLinx.Core.Entities.CustomField", "CustomField")
+                        .WithMany("FieldSetCustomFields")
+                        .HasForeignKey("CustomFieldId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Model");
+                    b.HasOne("StockLinx.Core.Entities.FieldSet", "FieldSet")
+                        .WithMany("FieldSetCustomFields")
+                        .HasForeignKey("FieldSetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CustomField");
+
+                    b.Navigation("FieldSet");
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.License", b =>
@@ -1310,12 +1331,19 @@ namespace StockLinx.Repository.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("StockLinx.Core.Entities.FieldSet", "FieldSet")
+                        .WithMany("Models")
+                        .HasForeignKey("FieldSetId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("StockLinx.Core.Entities.Manufacturer", "Manufacturer")
                         .WithMany("Models")
                         .HasForeignKey("ManufacturerId")
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Category");
+
+                    b.Navigation("FieldSet");
 
                     b.Navigation("Manufacturer");
                 });
@@ -1446,6 +1474,8 @@ namespace StockLinx.Repository.Migrations
 
             modelBuilder.Entity("StockLinx.Core.Entities.CustomField", b =>
                 {
+                    b.Navigation("FieldSetCustomFields");
+
                     b.Navigation("ModelFieldData");
                 });
 
@@ -1456,7 +1486,9 @@ namespace StockLinx.Repository.Migrations
 
             modelBuilder.Entity("StockLinx.Core.Entities.FieldSet", b =>
                 {
-                    b.Navigation("CustomFields");
+                    b.Navigation("FieldSetCustomFields");
+
+                    b.Navigation("Models");
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.License", b =>
@@ -1487,8 +1519,6 @@ namespace StockLinx.Repository.Migrations
             modelBuilder.Entity("StockLinx.Core.Entities.Model", b =>
                 {
                     b.Navigation("Assets");
-
-                    b.Navigation("FieldSet");
 
                     b.Navigation("ModelFieldData");
                 });

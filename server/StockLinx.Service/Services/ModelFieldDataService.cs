@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
-using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 using StockLinx.Core.Services;
@@ -38,22 +36,22 @@ namespace StockLinx.Service.Services
             }).ToListAsync();
             return modelFieldDatas;
         }
-        public async Task CreateModelFieldDataAsync(ModelFieldDataCreateDto createDto)
+        public async Task CreateModelFieldDataAsync(ModelFieldDataDto dto)
         {
             var modelFieldDatas = new List<ModelFieldData>();
-            var newModelFieldData = _mapper.Map<ModelFieldData>(createDto);
+            var newModelFieldData = _mapper.Map<ModelFieldData>(dto);
             newModelFieldData.Id = Guid.NewGuid();
             newModelFieldData.CreatedDate = DateTime.UtcNow;
             modelFieldDatas.Add(newModelFieldData);
             await AddRangeAsync(modelFieldDatas);
         }
 
-        public async Task CreateRangeModelFieldDataAsync(List<ModelFieldDataCreateDto> createDtos)
+        public async Task CreateRangeModelFieldDataAsync(List<ModelFieldDataDto> dtos)
         {
             var newModelFieldDatas = new List<ModelFieldData>();
-            foreach (var createDto in createDtos)
+            foreach (var dto in dtos)
             {
-                var newModelFieldData = _mapper.Map<ModelFieldData>(createDto);
+                var newModelFieldData = _mapper.Map<ModelFieldData>(dto);
                 newModelFieldData.Id = Guid.NewGuid();
                 newModelFieldData.CreatedDate = DateTime.UtcNow;
                 newModelFieldDatas.Add(newModelFieldData);
@@ -61,26 +59,26 @@ namespace StockLinx.Service.Services
             await AddRangeAsync(newModelFieldDatas);
         }
 
-        public async Task UpdateModelFieldDataAsync(ModelFieldDataUpdateDto updateDto)
+        public async Task UpdateModelFieldDataAsync(ModelFieldDataDto dto)
         {
-            var modelFieldDataInDb = await GetByIdAsync(updateDto.Id);
+            var modelFieldDataInDb = await GetByIdAsync(dto.Id);
             if (modelFieldDataInDb == null)
             {
-                throw new ArgumentNullException(nameof(updateDto.Id), $"The ID of the modelFieldData to update is null.");
+                throw new ArgumentNullException(nameof(dto.Id), $"The ID of the modelFieldData to update is null.");
             }
-            var updatedModelFieldData = _mapper.Map<ModelFieldData>(updateDto);
+            var updatedModelFieldData = _mapper.Map<ModelFieldData>(dto);
             updatedModelFieldData.UpdatedDate = DateTime.UtcNow;
             await UpdateAsync(modelFieldDataInDb, updatedModelFieldData);
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task DeleteModelFieldDataAsync(Guid modelFieldDataId)
+        public async Task DeleteModelFieldDataAsync(Guid id)
         {
-            if (modelFieldDataId == Guid.Empty)
+            if (id == Guid.Empty)
             {
-                throw new ArgumentNullException(nameof(modelFieldDataId), $"The ID of the modelFieldData to delete is null.");
+                throw new ArgumentNullException(nameof(id), $"The ID of the modelFieldData to delete is null.");
             }
-            var modelFieldData = await GetByIdAsync(modelFieldDataId);
+            var modelFieldData = await GetByIdAsync(id);
             if (modelFieldData == null)
             {
                 throw new ArgumentNullException(nameof(modelFieldData), $"The modelFieldData to delete is null.");
@@ -88,12 +86,12 @@ namespace StockLinx.Service.Services
             await RemoveAsync(modelFieldData);
         }
 
-        public async Task DeleteRangeModelFieldDataAsync(List<Guid> modelFieldDataIds)
+        public async Task DeleteRangeModelFieldDataAsync(List<Guid> ids)
         {
             var modelFieldDatas = new List<ModelFieldData>();
-            foreach (var modelFieldDataId in modelFieldDataIds)
+            foreach (var id in ids)
             {
-                var modelFieldData = GetByIdAsync(modelFieldDataId).Result;
+                var modelFieldData = GetByIdAsync(id).Result;
                 modelFieldDatas.Add(modelFieldData);
             }
             await RemoveRangeAsync(modelFieldDatas);

@@ -32,7 +32,6 @@ namespace StockLinx.Service.Services
             {
                 Id = x.Id,
                 Name = x.Name,
-                FieldSetId = x.FieldSetId,
                 DefaultValue = x.DefaultValue,
                 HelpText = x.HelpText,
                 IsRequired = x.IsRequired,

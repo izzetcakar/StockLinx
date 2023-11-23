@@ -57,8 +57,7 @@ namespace StockLinx.Service.Mapping
             CreateMap<CustomField, CustomFieldCreateDto>().ReverseMap();
             CreateMap<CustomField, CustomFieldUpdateDto>().ReverseMap();
             CreateMap<ModelFieldData, ModelFieldDataDto>().ReverseMap();
-            CreateMap<ModelFieldData, ModelFieldDataCreateDto>().ReverseMap();
-            CreateMap<ModelFieldData, ModelFieldDataUpdateDto>().ReverseMap();
+            CreateMap<FieldSetCustomField, FieldSetCustomFieldDto>().ReverseMap();
             CreateMap<Supplier, SupplierDto>().ReverseMap();
             CreateMap<Supplier, SupplierCreateDto>().ReverseMap();
             CreateMap<Supplier, SupplierUpdateDto>().ReverseMap();

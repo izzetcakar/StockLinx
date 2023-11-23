@@ -1,6 +1,4 @@
-﻿using StockLinx.Core.DTOs.Create;
-using StockLinx.Core.DTOs.Generic;
-using StockLinx.Core.DTOs.Update;
+﻿using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.Entities;
 
 namespace StockLinx.Core.Services
@@ -8,9 +6,9 @@ namespace StockLinx.Core.Services
     public interface IModelFieldDataService : IService<ModelFieldData>
     {
         Task<List<ModelFieldDataDto>> GetModelFieldDataDtos();
-        Task CreateModelFieldDataAsync(ModelFieldDataCreateDto createDto);
-        Task CreateRangeModelFieldDataAsync(List<ModelFieldDataCreateDto> createDtos);
-        Task UpdateModelFieldDataAsync(ModelFieldDataUpdateDto updateDto);
+        Task CreateModelFieldDataAsync(ModelFieldDataDto dto);
+        Task CreateRangeModelFieldDataAsync(List<ModelFieldDataDto> dto);
+        Task UpdateModelFieldDataAsync(ModelFieldDataDto dto);
         Task DeleteModelFieldDataAsync(Guid modelFieldDataId);
         Task DeleteRangeModelFieldDataAsync(List<Guid> modelFieldDataIds);
     }

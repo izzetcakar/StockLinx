@@ -31,7 +31,6 @@ namespace StockLinx.Service.Services
              {
                  Id = x.Id,
                  Name = x.Name,
-                 ModelId = x.ModelId,
                  CreatedDate = x.CreatedDate,
                  UpdatedDate = x.UpdatedDate,
                  DeletedDate = x.DeletedDate,

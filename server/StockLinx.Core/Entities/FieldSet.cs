@@ -2,11 +2,9 @@
 {
     public class FieldSet : BaseEntity
     {
-        public Guid ModelId { get; set; }
         public string Name { get; set; }
-
         //Relates
-        public Model Model { get; set; }
-        public ICollection<CustomField>? CustomFields { get; set; }
+        public ICollection<Model>? Models { get; set; }
+        public ICollection<FieldSetCustomField>? FieldSetCustomFields { get; set; }
     }
 }
