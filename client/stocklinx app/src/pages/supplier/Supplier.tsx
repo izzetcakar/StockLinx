@@ -3,12 +3,12 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { useColumns } from "./columns";
-import Gridtable from "../../components/gridTable/Gridtable";
-import { openSupplierModal } from "../../modals/supplier/modals";
+import Gridtable from "../../components/gridTable/GridTable";
 import { companyActions } from "../../redux/company/actions";
 import { supplierActions } from "../../redux/supplier/actions";
 import { locationActions } from "../../redux/location/actions";
 import { branchActions } from "../../redux/branch/actions";
+import { openSupplierModal } from "../../modals/modals";
 
 const Supplier = () => {
   const dispatch = useDispatch();

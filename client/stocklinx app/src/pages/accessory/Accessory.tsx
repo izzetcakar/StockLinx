@@ -1,4 +1,3 @@
-import React from "react";
 import { IAccessory } from "../../interfaces/interfaces";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
@@ -6,12 +5,12 @@ import { useDispatch } from "react-redux";
 import { accessoryActions } from "../../redux/accessory/actions";
 import { companyActions } from "../../redux/company/actions";
 import { useColumns } from "./columns";
-import { openAccessoryModal } from "../../modals/product/accessory/modals";
 import { manufacturerActions } from "../../redux/manufacturer/actions";
 import { supplierActions } from "../../redux/supplier/actions";
 import { locationActions } from "../../redux/location/actions";
 import { branchActions } from "../../redux/branch/actions";
 import Gridtable from "../../components/gridTable/GridTable";
+import { openAccessoryModal } from "../../modals/modals";
 
 const Accessory = () => {
   const dispatch = useDispatch();

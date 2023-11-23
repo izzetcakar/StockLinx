@@ -3,11 +3,11 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { useDispatch } from "react-redux";
 import { useColumns } from "./columns";
-import Gridtable from "../../components/gridTable/Gridtable";
-import { openProductStatusModal } from "../../modals/productStatus/modals";
+import Gridtable from "../../components/gridTable/GridTable";
 import { productStatusActions } from "../../redux/productStatus/actions";
 import { companyActions } from "../../redux/company/actions";
 import { branchActions } from "../../redux/branch/actions";
+import { openProductStatusModal } from "../../modals/modals";
 
 const ProductStatus = () => {
   const dispatch = useDispatch();

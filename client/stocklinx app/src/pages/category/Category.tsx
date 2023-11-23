@@ -8,7 +8,7 @@ import { branchActions } from "../../redux/branch/actions";
 import { companyActions } from "../../redux/company/actions";
 import { useEffect } from "react";
 import Gridtable from "../../components/gridTable/GridTable";
-import { openCategoryModal } from "../../modals/category/modals";
+import { openCategoryModal } from "../../modals/modals";
 
 const Category = () => {
   const dispatch = useDispatch();

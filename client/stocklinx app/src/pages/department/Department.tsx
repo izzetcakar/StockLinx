@@ -4,11 +4,11 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { useColumns } from "./columns";
 import { companyActions } from "../../redux/company/actions";
-import Gridtable from "../../components/gridTable/Gridtable";
-import { openDepartmentModal } from "../../modals/department/modals";
+import Gridtable from "../../components/gridTable/GridTable";
 import { branchActions } from "../../redux/branch/actions";
 import { departmentActions } from "../../redux/department/actions";
 import { locationActions } from "../../redux/location/actions";
+import { openDepartmentModal } from "../../modals/modals";
 
 const Department = () => {
   const dispatch = useDispatch();

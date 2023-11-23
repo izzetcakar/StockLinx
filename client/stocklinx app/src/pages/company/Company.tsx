@@ -4,8 +4,8 @@ import { RootState } from "../../redux/rootReducer";
 import { companyActions } from "../../redux/company/actions";
 import { ICompany } from "../../interfaces/interfaces";
 import { useColumns } from "./columns";
-import Gridtable from "../../components/gridTable/Gridtable";
-import { openCompanyModal } from "../../modals/company/modals";
+import Gridtable from "../../components/gridTable/GridTable";
+import { openCompanyModal } from "../../modals/modals";
 
 const Company = () => {
   const dispatch = useDispatch();

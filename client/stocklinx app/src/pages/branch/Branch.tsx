@@ -5,8 +5,8 @@ import { IBranch } from "../../interfaces/interfaces";
 import { useColumns } from "./columns";
 import { companyActions } from "../../redux/company/actions";
 import Gridtable from "../../components/gridTable/GridTable";
-import { openBranchModal } from "../../modals/branch/modals";
 import { branchActions } from "../../redux/branch/actions";
+import { openBranchModal } from "../../modals/modals";
 
 const Branch = () => {
   const dispatch = useDispatch();

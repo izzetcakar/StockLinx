@@ -3,9 +3,9 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { useColumns } from "./columns";
-import Gridtable from "../../components/gridTable/Gridtable";
-import { openLocationModal } from "../../modals/location/modals";
+import Gridtable from "../../components/gridTable/GridTable";
 import { locationActions } from "../../redux/location/actions";
+import { openLocationModal } from "../../modals/modals";
 
 const Location = () => {
   const dispatch = useDispatch();

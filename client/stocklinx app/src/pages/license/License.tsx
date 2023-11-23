@@ -9,8 +9,8 @@ import { licenseActions } from "../../redux/license/actions";
 import { supplierActions } from "../../redux/supplier/actions";
 import { locationActions } from "../../redux/location/actions";
 import { branchActions } from "../../redux/branch/actions";
-import Gridtable from "../../components/gridTable/Gridtable";
-import { openLicenseModal } from "../../modals/product/license/modals";
+import Gridtable from "../../components/gridTable/GridTable";
+import { openLicenseModal } from "../../modals/modals";
 
 const License = () => {
   const dispatch = useDispatch();

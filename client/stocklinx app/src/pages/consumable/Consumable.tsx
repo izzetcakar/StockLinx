@@ -8,8 +8,8 @@ import { consumableActions } from "../../redux/consumable/actions";
 import { locationActions } from "../../redux/location/actions";
 import { productStatusActions } from "../../redux/productStatus/actions";
 import { branchActions } from "../../redux/branch/actions";
-import Gridtable from "../../components/gridTable/Gridtable";
-import { openConsumableModal } from "../../modals/product/consumable/modals";
+import Gridtable from "../../components/gridTable/GridTable";
+import { openConsumableModal } from "../../modals/modals";
 
 const Consumable = () => {
   const dispatch = useDispatch();

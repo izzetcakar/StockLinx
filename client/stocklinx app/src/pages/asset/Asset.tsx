@@ -6,11 +6,11 @@ import { companyActions } from "../../redux/company/actions";
 import { categoryActions } from "../../redux/category/actions";
 import { modelActions } from "../../redux/model/actions";
 import { useColumns } from "./columns";
-import Gridtable from "../../components/gridTable/Gridtable";
-import { openAssetModal } from "../../modals/product/asset/modals";
+import Gridtable from "../../components/gridTable/GridTable";
 import { assetActions } from "../../redux/asset/actions";
 import { branchActions } from "../../redux/branch/actions";
 import { productStatusActions } from "../../redux/productStatus/actions";
+import { openAssetModal } from "../../modals/modals";
 
 const Asset = () => {
   const dispatch = useDispatch();

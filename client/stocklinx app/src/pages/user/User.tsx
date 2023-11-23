@@ -3,13 +3,13 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { useColumns } from "./columns";
-import Gridtable from "../../components/gridTable/Gridtable";
-import { openUserModal } from "../../modals/user/modals";
+import Gridtable from "../../components/gridTable/GridTable";
 import { userActions } from "../../redux/user/actions";
 import { companyActions } from "../../redux/company/actions";
 import { locationActions } from "../../redux/location/actions";
 import { branchActions } from "../../redux/branch/actions";
 import { departmentActions } from "../../redux/department/actions";
+import { openUserModal } from "../../modals/modals";
 
 const User = () => {
   const dispatch = useDispatch();
