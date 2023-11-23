@@ -148,41 +148,41 @@ export const useColumns = () => {
 
   const excelColumns: ExcelColumn[] = [
     {
-      dataField: "branchId",
+      caption: "Branch",
       validate(value) {
         return value !== null;
       },
       errorText: "Branch is required",
     },
     {
-      dataField: "name",
+      caption: "Name",
       validate(value) {
         return value !== null;
       },
       errorText: "Name is required",
     },
     {
-      dataField: "licenseKey",
+      caption: "License Key",
       validate(value) {
         return value !== null;
       },
       errorText: "License Key is required",
     },
     {
-      dataField: "expirationDate",
+      caption: "Expiration Date",
     },
     {
-      dataField: "licenseEmail",
+      caption: "License Email",
     },
     {
-      dataField: "licensedTo",
+      caption: "Licensed To",
     },
     {
-      dataField: "manufacturerId",
+      caption: "Manufacturer",
       nullable: true,
     },
     {
-      dataField: "quantity",
+      caption: "Total",
       validate(value) {
         if (value === null || value < 0) return false;
         return true;
@@ -190,51 +190,51 @@ export const useColumns = () => {
       errorText: "Quantity must be a positive number",
     },
     {
-      dataField: "orderNo",
+      caption: "Avail",
     },
     {
-      dataField: "purchaseDate",
+      caption: "Purchase Date",
     },
     {
-      dataField: "purchaseCost",
+      caption: "Purchase Cost",
       validate(value) {
         if (value !== null && value < 0) return false;
         return true;
       },
     },
     {
-      dataField: "supplierId",
+      caption: "Supplier",
       nullable: true,
     },
     {
-      dataField: "categoryId",
+      caption: "Category",
       validate(value) {
         return value !== null;
       },
       errorText: "Category is required",
     },
     {
-      dataField: "maintained",
+      caption: "Maintained",
       validate(value) {
         return value !== null;
       },
       errorText: "Maintained is required",
     },
     {
-      dataField: "reassignable",
+      caption: "Reassignable",
       validate(value) {
         return value !== null;
       },
       errorText: "Reassignable is required",
     },
     {
-      dataField: "terminationDate",
+      caption: "Termination Date",
     },
     {
-      dataField: "imagePath",
+      caption: "Image",
     },
     {
-      dataField: "notes",
+      caption: "Notes",
     },
   ];
 

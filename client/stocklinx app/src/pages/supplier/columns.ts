@@ -31,12 +31,12 @@ export const useColumns = () => {
     },
     {
       dataField: "contactEmail",
-      caption: "Email",
+      caption: "Contact Email",
       dataType: "string",
     },
     {
       dataField: "contactPhone",
-      caption: "Phone",
+      caption: "Contact Phone",
       dataType: "string",
     },
     {
@@ -65,36 +65,36 @@ export const useColumns = () => {
 
   const excelColumns: ExcelColumn[] = [
     {
-      dataField: "name",
+      caption: "Name",
       validate(value) {
         return value !== null;
       },
       errorText: "Name is required",
     },
     {
-      dataField: "locationId",
+      caption: "Location",
       nullable: true,
     },
     {
-      dataField: "contactName",
+      caption: "Contact Name",
     },
     {
-      dataField: "contactEmail",
+      caption: "Contact Email",
     },
     {
-      dataField: "contactPhone",
+      caption: "Contact Phone",
     },
     {
-      dataField: "website",
+      caption: "Website",
     },
     {
-      dataField: "fax",
+      caption: "Fax",
     },
     {
-      dataField: "imagePath",
+      caption: "Image",
     },
     {
-      dataField: "notes",
+      caption: "Notes",
     },
   ];
 

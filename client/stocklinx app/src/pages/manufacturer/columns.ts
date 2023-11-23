@@ -47,29 +47,29 @@ export const useColumns = () => {
 
   const excelColumns: ExcelColumn[] = [
     {
-      dataField: "name",
+      caption: "Name",
       validate(value) {
         return value !== null;
       },
       errorText: "Name is required",
     },
     {
-      dataField: "url",
+      caption: "URL",
     },
     {
-      dataField: "supportURL",
+      caption: "Support URL",
     },
     {
-      dataField: "supportPhone",
+      caption: "Support Phone",
     },
     {
-      dataField: "supportEmail",
+      caption: "Support Email",
     },
     {
-      dataField: "imagePath",
+      caption: "Image",
     },
     {
-      dataField: "notes",
+      caption: "Notes",
     },
   ];
 

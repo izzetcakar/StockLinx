@@ -37,21 +37,21 @@ export const useColumns = () => {
   ];
   const excelColumns: ExcelColumn[] = [
     {
-      dataField: "companyId",
+      caption: "Company",
       validate(value) {
         return value !== null;
       },
       errorText: "Company is required",
     },
     {
-      dataField: "name",
+      caption: "Name",
       validate(value) {
         return value !== null;
       },
       errorText: "Name is required",
     },
     {
-      dataField: "locationId",
+      caption: "Location",
       nullable: true,
     },
   ];

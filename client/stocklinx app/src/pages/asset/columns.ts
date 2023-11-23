@@ -93,41 +93,41 @@ export const useColumns = () => {
   ];
   const excelColumns: ExcelColumn[] = [
     {
-      dataField: "branchId",
+      caption: "Branch",
       validate(value) {
         return value !== null;
       },
       errorText: "Branch is required",
     },
     {
-      dataField: "name",
+      caption: "Name",
       validate(value) {
         return value !== null;
       },
       errorText: "Name is required",
     },
     {
-      dataField: "tagNo",
+      caption: "Asset Tag",
     },
     {
-      dataField: "serialNo",
+      caption: "Serial",
     },
     {
-      dataField: "modelId",
+      caption: "Model",
       nullable: true,
     },
     {
-      dataField: "productStatusId",
+      caption: "Status",
       validate(value) {
         return value !== null;
       },
       errorText: "Status is required",
     },
     {
-      dataField: "orderNo",
+      caption: "Order No",
     },
     {
-      dataField: "purchaseCost",
+      caption: "Purchase Cost",
       validate(value) {
         if (value !== null && value < 0) return false;
         return true;
@@ -135,13 +135,13 @@ export const useColumns = () => {
       errorText: "Purchase Cost must be a positive number",
     },
     {
-      dataField: "purchaseDate",
+      caption: "Purchase Date",
     },
     {
-      dataField: "imagePath",
+      caption: "Image",
     },
     {
-      dataField: "notes",
+      caption: "Notes",
     },
   ];
 

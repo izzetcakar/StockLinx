@@ -57,29 +57,29 @@ export const useColumns = () => {
 
   const excelColumns: ExcelColumn[] = [
     {
-      dataField: "branchId",
+      caption: "Branch",
       validate(value) {
         return value !== null;
       },
       errorText: "Branch is required",
     },
     {
-      dataField: "name",
+      caption: "Name",
       validate(value) {
         return value !== null;
       },
       errorText: "Name is required",
     },
     {
-      dataField: "locationId",
+      caption: "Location",
       nullable: true,
     },
     {
-      dataField: "managerId",
+      caption: "Manager",
       nullable: true,
     },
     {
-      dataField: "notes",
+      caption: "Notes",
     },
   ];
 
