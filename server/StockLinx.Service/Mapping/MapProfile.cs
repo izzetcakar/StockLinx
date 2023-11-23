@@ -50,6 +50,15 @@ namespace StockLinx.Service.Mapping
             CreateMap<Model, ModelDto>().ReverseMap();
             CreateMap<Model, ModelCreateDto>().ReverseMap();
             CreateMap<Model, ModelUpdateDto>().ReverseMap();
+            CreateMap<FieldSet, FieldSetDto>().ReverseMap();
+            CreateMap<FieldSet, FieldSetCreateDto>().ReverseMap();
+            CreateMap<FieldSet, FieldSetUpdateDto>().ReverseMap();
+            CreateMap<CustomField, CustomFieldDto>().ReverseMap();
+            CreateMap<CustomField, CustomFieldCreateDto>().ReverseMap();
+            CreateMap<CustomField, CustomFieldUpdateDto>().ReverseMap();
+            CreateMap<ModelFieldData, ModelFieldDataDto>().ReverseMap();
+            CreateMap<ModelFieldData, ModelFieldDataCreateDto>().ReverseMap();
+            CreateMap<ModelFieldData, ModelFieldDataUpdateDto>().ReverseMap();
             CreateMap<Supplier, SupplierDto>().ReverseMap();
             CreateMap<Supplier, SupplierCreateDto>().ReverseMap();
             CreateMap<Supplier, SupplierUpdateDto>().ReverseMap();
@@ -63,6 +72,12 @@ namespace StockLinx.Service.Mapping
             CreateMap<Branch, BranchDto>().ReverseMap();
             CreateMap<Branch, BranchCreateDto>().ReverseMap();
             CreateMap<Branch, BranchUpdateDto>().ReverseMap();
+            CreateMap<CustomField, CustomFieldDto>().ReverseMap();
+            CreateMap<CustomField, CustomFieldCreateDto>().ReverseMap();
+            CreateMap<CustomField, CustomFieldUpdateDto>().ReverseMap();
+            CreateMap<FieldSet, FieldSetDto>().ReverseMap();
+            CreateMap<FieldSet, FieldSetCreateDto>().ReverseMap();
+            CreateMap<FieldSet, FieldSetUpdateDto>().ReverseMap();
         }
     }
 }

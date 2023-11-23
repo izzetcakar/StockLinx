@@ -146,12 +146,26 @@ export interface IConsumable extends IBaseProduct {
   quantity: number;
 }
 export interface IModel extends BaseEntity {
-  manufacturerId: string | null;
   categoryId: string;
+  manufacturerId: string | null;
   name: string;
   imagePath: string | null;
   modelNo: string | null;
   notes: string | null;
+}
+export interface IFieldSet extends BaseEntity {
+  modelId: string;
+  name: string;
+}
+export interface ICustomField extends BaseEntity {
+  fieldSetId: string;
+  name: string;
+  type: string;
+  isRequired: boolean;
+  helpText: string | null;
+  defaultValue: string | null;
+  validationRegex: string | null;
+  validationText: string | null;
 }
 export interface IDeployedProduct extends BaseEntity {
   userId: string;

@@ -11,7 +11,7 @@
         public string? Notes { get; set; }
 
         //Relates
-        public ICollection<Accessory> Accessories { get; set; }
-        public ICollection<Model> Models { get; set; }
+        public ICollection<Accessory>? Accessories { get; set; }
+        public ICollection<Model>? Models { get; set; }
     }
 }

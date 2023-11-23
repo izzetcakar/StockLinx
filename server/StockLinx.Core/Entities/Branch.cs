@@ -16,11 +16,6 @@
         public ICollection<Consumable>? Consumables { get; set; }
         public ICollection<License>? Licenses { get; set; }
         public ICollection<Department>? Departments { get; set; }
-        public ICollection<ProductStatus>? ProductStatuses { get; set; }
-        public ICollection<Manufacturer>? Manufacturers { get; set; }
-        public ICollection<Category>? Categories { get; set; }
-        public ICollection<Model>? Models { get; set; }
-        public ICollection<Supplier>? Suppliers { get; set; }
         public ICollection<User>? Users { get; set; }
     }
 }

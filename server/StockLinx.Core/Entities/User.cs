@@ -17,10 +17,10 @@
         public bool? IsAdmin { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime? EndDate { get; set; }
-        public Department Department { get; set; }
 
         //Relates
+        public Department Department { get; set; }
         public ICollection<Permission>? Permissions { get; set; }
-        public ICollection<DeployedProduct> DeployedProducts { get; set; }
+        public ICollection<DeployedProduct>? DeployedProducts { get; set; }
     }
 }

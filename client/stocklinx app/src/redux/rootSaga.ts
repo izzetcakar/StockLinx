@@ -15,6 +15,8 @@ import userSaga from "./user/sagas";
 import productSaga from "./product/sagas";
 import productStatusSaga from "./productStatus/sagas";
 import branchSaga from "./branch/sagas";
+import fieldSetsaga from "./fieldSet/sagas";
+import customFieldSaga from "./customField/sagas";
 
 export function* rootSaga() {
   yield all([
@@ -29,6 +31,8 @@ export function* rootSaga() {
     fork(locationSaga),
     fork(manufacturerSaga),
     fork(modelSaga),
+    fork(fieldSetsaga),
+    fork(customFieldSaga),
     fork(supplierSaga),
     fork(userSaga),
     fork(productSaga),

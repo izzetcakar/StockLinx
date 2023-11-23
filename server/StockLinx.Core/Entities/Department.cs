@@ -11,6 +11,6 @@
         //Relates
         public Branch Branch { get; set; }
         public Location? Location { get; set; }
-        public ICollection<User> Users { get; set; }
+        public ICollection<User>? Users { get; set; }
     }
 }

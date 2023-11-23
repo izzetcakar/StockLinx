@@ -77,6 +77,12 @@ builder.Services.AddScoped<IProductStatusRepository, ProductStatusRepository>();
 builder.Services.AddScoped<IProductStatusService, ProductStatusService>();
 builder.Services.AddScoped<IBranchRepository, BranchRepository>();
 builder.Services.AddScoped<IBranchService, BranchService>();
+builder.Services.AddScoped<IFieldSetRepository, FieldSetRepository>();
+builder.Services.AddScoped<IFieldSetService, FieldSetService>();
+builder.Services.AddScoped<ICustomFieldRepository, CustomFieldRepository>();
+builder.Services.AddScoped<ICustomFieldService, CustomFieldService>();
+builder.Services.AddScoped<IModelFieldDataRepository, ModelFieldDataRepository>();
+builder.Services.AddScoped<IModelFieldDataService, ModelFieldDataService>();
 builder.Services.AddAutoMapper(typeof(MapProfile));
 builder.Services.AddHttpContextAccessor();
 

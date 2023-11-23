@@ -13,6 +13,6 @@
         public Category Category { get; set; }
         public Supplier? Supplier { get; set; }
         public Manufacturer? Manufacturer { get; set; }
-        public ICollection<DeployedProduct> DeployedProducts { get; set; }
+        public ICollection<DeployedProduct>? DeployedProducts { get; set; }
     }
 }
