@@ -11,5 +11,6 @@ namespace StockLinx.Core.Services
         Task UpdateFieldSetCustomFieldAsync(FieldSetCustomFieldDto dto);
         Task DeleteFieldSetCustomFieldAsync(Guid id);
         Task DeleteRangeFieldSetCustomFieldAsync(List<Guid> ids);
+        Task SynchronizeFieldSetCustomFieldsAsync(List<FieldSetCustomFieldDto> dtos);
     }
 }

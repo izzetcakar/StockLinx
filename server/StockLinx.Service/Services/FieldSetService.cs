@@ -47,15 +47,15 @@ namespace StockLinx.Service.Services
 
         public async Task CreateRangeFieldSetAsync(List<FieldSetCreateDto> createDtos)
         {
-            var newAccessories = new List<FieldSet>();
+            var newEntities = new List<FieldSet>();
             foreach (var createDto in createDtos)
             {
                 var newFieldSet = _mapper.Map<FieldSet>(createDto);
                 newFieldSet.Id = Guid.NewGuid();
                 newFieldSet.CreatedDate = DateTime.UtcNow;
-                newAccessories.Add(newFieldSet);
+                newEntities.Add(newFieldSet);
             }
-            await AddRangeAsync(newAccessories);
+            await AddRangeAsync(newEntities);
         }
 
         public async Task UpdateFieldSetAsync(FieldSetUpdateDto updateDto)

@@ -4,7 +4,7 @@ namespace StockLinx.Core.DTOs.Generic
 {
     public class FieldSetCustomFieldDto : BaseEntity
     {
-        public int FieldSetId { get; set; }
-        public int CustomFieldId { get; set; }
+        public Guid FieldSetId { get; set; }
+        public Guid CustomFieldId { get; set; }
     }
 }
