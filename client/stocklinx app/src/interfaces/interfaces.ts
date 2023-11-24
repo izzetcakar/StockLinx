@@ -157,13 +157,7 @@ export interface IModel extends BaseEntity {
 export interface IFieldSet extends BaseEntity {
   name: string;
 }
-export interface IModelFieldData extends BaseEntity {
-  modelId: string;
-  customFieldId: string;
-  value: string;
-}
 export interface ICustomField extends BaseEntity {
-  fieldSetId: string;
   name: string;
   type: string;
   isRequired: boolean;
@@ -171,6 +165,11 @@ export interface ICustomField extends BaseEntity {
   defaultValue: string | null;
   validationRegex: string | null;
   validationText: string | null;
+}
+export interface IModelFieldData extends BaseEntity {
+  modelId: string;
+  customFieldId: string;
+  value: string;
 }
 export interface IFieldSetCustomField extends BaseEntity {
   fieldSetId: string;
