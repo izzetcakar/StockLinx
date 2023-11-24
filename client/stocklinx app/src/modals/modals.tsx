@@ -165,7 +165,7 @@ export const openUserModal = (user?: IUser) =>
     xOffset: "auto",
     size: "auto",
   });
-export const openfieldSetModal = (fieldSet?: IFieldSet) => {
+export const openFieldSetModal = (fieldSet?: IFieldSet) => {
   modals.open({
     modalId: "fieldSet-modal",
     title: fieldSet ? "Update FieldSet" : "Create FieldSet",
@@ -174,7 +174,7 @@ export const openfieldSetModal = (fieldSet?: IFieldSet) => {
     size: "auto",
   });
 };
-export const customFieldModal = (customField?: ICustomField) => {
+export const openCustomFieldModal = (customField?: ICustomField) => {
   modals.open({
     modalId: "customField-modal",
     title: customField ? "Update CustomField" : "Create CustomField",

@@ -61,7 +61,7 @@ const CustomFieldForm: React.FC<CustomFieldFormProps> = ({ customField }) => {
           withAsterisk
         />
         <Select
-          data={["string", "number", "boolean", "date", "enum"]}
+          data={["string", "number", "boolean", "date"]}
           label="Type"
           placeholder="Select Type"
           {...form.getInputProps("type")}
@@ -82,6 +82,8 @@ const CustomFieldForm: React.FC<CustomFieldFormProps> = ({ customField }) => {
         <Switch
           label="Is Required"
           checked={form.values.isRequired}
+          labelPosition="left"
+          radius={10}
           {...form.getInputProps("isRequired")}
         />
         <TextInput

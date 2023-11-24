@@ -10,7 +10,6 @@ import Home from "./pages/home/Home";
 import License from "./pages/license/License";
 import Model from "./pages/model/Model";
 import Sidebar from "./components/sidebar/Sidebar";
-import Test from "./pages/Test";
 import Login from "./pages/user/Login";
 import Department from "./pages/department/Department";
 import Company from "./pages/company/Company";
@@ -26,6 +25,7 @@ import Location from "./pages/location/Location";
 import ProductStatus from "./pages/productStatus/ProductStatus";
 import Branch from "./pages/branch/Branch";
 import User from "./pages/user/User";
+import CustomFields from "./pages/customFields/CustomFields";
 
 const Layout = () => {
   const userRedux = useSelector((state: RootState) => state.user.user);
@@ -119,7 +119,7 @@ const router = createBrowserRouter([
         element: <Location />,
       },
       {
-        path: "/productStatus",
+        path: "/productstatus",
         element: <ProductStatus />,
       },
       {
@@ -127,8 +127,8 @@ const router = createBrowserRouter([
         element: <User />,
       },
       {
-        path: "/test",
-        element: <Test />,
+        path: "/customfields",
+        element: <CustomFields />,
       },
       {
         path: "/generic",

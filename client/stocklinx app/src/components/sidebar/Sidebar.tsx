@@ -96,10 +96,16 @@ const Sidebar: React.FC = () => {
       color: "#737373",
       subItems: [
         {
+          title: "Custom Fields",
+          icon: icon_harddisk,
+          color: "#737373",
+          target: "/customfields",
+        },
+        {
           title: "Status Labels",
           icon: icon_harddisk,
           color: "#737373",
-          target: "/productStatus",
+          target: "/productstatus",
         },
         {
           title: "Asset Models",

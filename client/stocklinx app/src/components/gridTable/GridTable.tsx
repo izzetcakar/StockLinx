@@ -33,6 +33,7 @@ interface GridtableProps {
 const Gridtable: React.FC<GridtableProps> = ({
   data = [],
   columns = [],
+  noDataText = "No Data Found",
   refreshData,
   onRowInsert = () => console.log("Row insert"),
   onRowUpdate = (row: object) => console.log(row),
@@ -239,7 +240,7 @@ const Gridtable: React.FC<GridtableProps> = ({
           ))
         ) : (
           <tr className="gridtable__nodata__row">
-            <td>No Data</td>
+            <td>{noDataText}</td>
           </tr>
         )}
       </tbody>
