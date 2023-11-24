@@ -41,10 +41,12 @@ function* fetchCompaniesSaga() {
     }
   } catch (e) {
     openNotificationError("Company", (e as Error).message);
+    yield put(companyActions.getAllFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
 function* fetchCompanySaga(action: FetchCompanyRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { data, message, success }: IResponse = yield call(
       companyRequests.get,
@@ -61,9 +63,12 @@ function* fetchCompanySaga(action: FetchCompanyRequest) {
     }
   } catch (e) {
     openNotificationError("Company", (e as Error).message);
+    yield put(companyActions.getFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* createCompanySaga(action: CreateCompanyRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       companyRequests.create,
@@ -72,14 +77,16 @@ function* createCompanySaga(action: CreateCompanyRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(companyActions.createSuccess());
       openNotificationSuccess("Company Created");
+      yield put(companyActions.createSuccess());
     }
   } catch (e) {
     openNotificationError("Company", (e as Error).message);
+    yield put(companyActions.createFailure());
   }
 }
 function* createRangeCompanySaga(action: CreateRangeCompanyRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       companyRequests.createRange,
@@ -88,15 +95,18 @@ function* createRangeCompanySaga(action: CreateRangeCompanyRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(companyActions.createRangeSuccess());
       openNotificationSuccess("Companies Created");
+      yield put(companyActions.createRangeSuccess());
     }
   } catch (e) {
     openNotificationError("Company", (e as Error).message);
+    yield put(companyActions.createRangeFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 
 function* updateCompanySaga(action: UpdateCompanyRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       companyRequests.update,
@@ -105,14 +115,17 @@ function* updateCompanySaga(action: UpdateCompanyRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(companyActions.updateSuccess());
       openNotificationSuccess("Company Updated");
+      yield put(companyActions.updateSuccess());
     }
   } catch (e) {
     openNotificationError("Company", (e as Error).message);
+    yield put(companyActions.updateFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* removeCompanySaga(action: RemoveCompanyRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       companyRequests.remove,
@@ -121,14 +134,17 @@ function* removeCompanySaga(action: RemoveCompanyRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(companyActions.removeSuccess({ id: action.payload.id }));
       openNotificationSuccess("Company Removed");
+      yield put(companyActions.removeSuccess({ id: action.payload.id }));
     }
   } catch (e) {
     openNotificationError("Company", (e as Error).message);
+    yield put(companyActions.removeFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* removeRangeCompanySaga(action: RemoveRangeCompanyRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       companyRequests.removeRange,
@@ -137,15 +153,17 @@ function* removeRangeCompanySaga(action: RemoveRangeCompanyRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(companyActions.removeRangeSuccess({ ids: action.payload.ids }));
       openNotificationSuccess("Companies Removed");
+      yield put(companyActions.removeRangeSuccess({ ids: action.payload.ids }));
     }
   } catch (e) {
     openNotificationError("Company", (e as Error).message);
+    yield put(companyActions.removeRangeFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 
-function* companiesaga() {
+function* companysaga() {
   // yield all([
   //   takeLatest(companyConst.FETCH_COMPANIES_REQUEST, fetchCompaniesSaga),
   // ]);
@@ -169,4 +187,4 @@ function* companiesaga() {
 //   yield takeEvery(budgetItemConst.fetchUpdate,updateBudgetITem);
 // }
 
-export default companiesaga;
+export default companysaga;

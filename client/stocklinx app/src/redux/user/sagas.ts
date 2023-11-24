@@ -45,6 +45,7 @@ function* fetchUsersaga() {
     }
   } catch (e) {
     openNotificationError("User", (e as Error).message);
+    yield put(userActions.getFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
@@ -65,6 +66,7 @@ function* fetchUsersSaga() {
     }
   } catch (e) {
     openNotificationError("User", (e as Error).message);
+    yield put(userActions.getAllFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
@@ -83,10 +85,12 @@ function* createUserSaga(action: CreateUserRequest) {
     }
   } catch (e) {
     openNotificationError("User", (e as Error).message);
+    yield put(userActions.createFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
 function* createRangeUserSaga(action: CreateRangeUserRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       userRequests.createRange,
@@ -100,7 +104,9 @@ function* createRangeUserSaga(action: CreateRangeUserRequest) {
     }
   } catch (e) {
     openNotificationError("User", (e as Error).message);
+    yield put(userActions.createRangeFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* updateUserSaga(action: UpdateUserRequest) {
   yield put(genericActions.increaseLoading());
@@ -112,11 +118,12 @@ function* updateUserSaga(action: UpdateUserRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(userActions.updateSuccess());
       openNotificationSuccess("User Updated");
+      yield put(userActions.updateSuccess());
     }
   } catch (e) {
     openNotificationError("User", (e as Error).message);
+    yield put(userActions.updateFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
@@ -130,15 +137,17 @@ function* removeUserSaga(action: RemoveUserRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(userActions.removeSuccess());
       openNotificationSuccess("User Removed");
+      yield put(userActions.removeSuccess());
     }
   } catch (e) {
     openNotificationError("User", (e as Error).message);
+    yield put(userActions.removeFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
 function* removeRangeUserSaga(action: RemoveRangeUserRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       userRequests.removeRange,
@@ -147,12 +156,14 @@ function* removeRangeUserSaga(action: RemoveRangeUserRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(userActions.removeRangeSuccess({ ids: action.payload.ids }));
       openNotificationSuccess("Users Removed");
+      yield put(userActions.removeRangeSuccess({ ids: action.payload.ids }));
     }
   } catch (e) {
     openNotificationError("User", (e as Error).message);
+    yield put(userActions.removeRangeFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* signInSaga(action: SignInRequest) {
   yield put(genericActions.increaseLoading());
@@ -170,6 +181,7 @@ function* signInSaga(action: SignInRequest) {
     }
   } catch (e) {
     openNotificationError("User", (e as Error).message);
+    yield put(userActions.signInFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
@@ -190,6 +202,7 @@ function* getUserWithTokenSaga() {
     }
   } catch (e) {
     openNotificationError("User", (e as Error).message);
+    yield put(userActions.getFailure());
   }
   yield put(genericActions.decreaseLoading());
 }

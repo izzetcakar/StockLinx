@@ -41,10 +41,12 @@ function* fetchLicensesSaga() {
     }
   } catch (e) {
     openNotificationError("License", (e as Error).message);
+    yield put(licenseActions.getAllFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
 function* fetchLicenseSaga(action: FetchLicenseRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { data, message, success }: IResponse = yield call(
       licenseRequests.get,
@@ -61,9 +63,12 @@ function* fetchLicenseSaga(action: FetchLicenseRequest) {
     }
   } catch (e) {
     openNotificationError("License", (e as Error).message);
+    yield put(licenseActions.getFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* createLicenseSaga(action: CreateLicenseRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       licenseRequests.create,
@@ -72,14 +77,17 @@ function* createLicenseSaga(action: CreateLicenseRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(licenseActions.createSuccess());
       openNotificationSuccess("License Created");
+      yield put(licenseActions.createSuccess());
     }
   } catch (e) {
     openNotificationError("License", (e as Error).message);
+    yield put(licenseActions.createFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* createRangeLicenseSaga(action: CreateRangeLicenseRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       licenseRequests.createRange,
@@ -88,15 +96,18 @@ function* createRangeLicenseSaga(action: CreateRangeLicenseRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(licenseActions.createRangeSuccess());
       openNotificationSuccess("Licenses Created");
+      yield put(licenseActions.createRangeSuccess());
     }
   } catch (e) {
     openNotificationError("License", (e as Error).message);
+    yield put(licenseActions.createRangeFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 
 function* updateLicenseSaga(action: UpdateLicenseRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       licenseRequests.update,
@@ -105,14 +116,17 @@ function* updateLicenseSaga(action: UpdateLicenseRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(licenseActions.updateSuccess());
       openNotificationSuccess("License Updated");
+      yield put(licenseActions.updateSuccess());
     }
   } catch (e) {
     openNotificationError("License", (e as Error).message);
+    yield put(licenseActions.updateFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* removeLicenseSaga(action: RemoveLicenseRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       licenseRequests.remove,
@@ -121,14 +135,17 @@ function* removeLicenseSaga(action: RemoveLicenseRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(licenseActions.removeSuccess({ id: action.payload.id }));
       openNotificationSuccess("License Removed");
+      yield put(licenseActions.removeSuccess({ id: action.payload.id }));
     }
   } catch (e) {
     openNotificationError("License", (e as Error).message);
+    yield put(licenseActions.removeFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* removeRangeLicenseSaga(action: RemoveRangeLicenseRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       licenseRequests.removeRange,
@@ -137,11 +154,12 @@ function* removeRangeLicenseSaga(action: RemoveRangeLicenseRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(licenseActions.removeRangeSuccess({ ids: action.payload.ids }));
       openNotificationSuccess("Licenses Removed");
+      yield put(licenseActions.removeRangeSuccess({ ids: action.payload.ids }));
     }
   } catch (e) {
     openNotificationError("License", (e as Error).message);
+    yield put(licenseActions.removeRangeFailure());
   }
 }
 

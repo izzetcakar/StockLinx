@@ -18,6 +18,8 @@ import productStatusReducer from "./productStatus/reducer";
 import branchReducer from "./branch/reducer";
 import fieldSetReducer from "./fieldSet/reducer";
 import customFieldReducer from "./customField/reducer";
+import fieldSetCustomField from "./fieldSetCustomField/reducer";
+import modelFieldData from "./modelFieldData/reducer";
 
 const rootReducer = combineReducers({
   accessory: accessoryReducer,
@@ -33,6 +35,8 @@ const rootReducer = combineReducers({
   model: modelReducer,
   fieldSet: fieldSetReducer,
   customField: customFieldReducer,
+  fieldSetCustomField: fieldSetCustomField,
+  modelFieldData: modelFieldData,
   supplier: supplierReducer,
   product: productReducer,
   productStatus: productStatusReducer,

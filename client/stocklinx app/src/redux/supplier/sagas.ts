@@ -41,10 +41,12 @@ function* fetchSuppliersSaga() {
     }
   } catch (e) {
     openNotificationError("Supplier", (e as Error).message);
+    yield put(supplierActions.getAllFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
 function* fetchSupplierSaga(action: FetchSupplierRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { data, message, success }: IResponse = yield call(
       supplierRequests.get,
@@ -61,9 +63,12 @@ function* fetchSupplierSaga(action: FetchSupplierRequest) {
     }
   } catch (e) {
     openNotificationError("Supplier", (e as Error).message);
+    yield put(supplierActions.getFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* createSupplierSaga(action: CreateSupplierRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       supplierRequests.create,
@@ -72,14 +77,17 @@ function* createSupplierSaga(action: CreateSupplierRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(supplierActions.createSuccess());
       openNotificationSuccess("Supplier Created");
+      yield put(supplierActions.createSuccess());
     }
   } catch (e) {
     openNotificationError("Supplier", (e as Error).message);
+    yield put(supplierActions.createFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* createRangeSupplierSaga(action: CreateRangeSupplierRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       supplierRequests.createRange,
@@ -88,15 +96,18 @@ function* createRangeSupplierSaga(action: CreateRangeSupplierRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(supplierActions.createRangeSuccess());
       openNotificationSuccess("Suppliers Created");
+      yield put(supplierActions.createRangeSuccess());
     }
   } catch (e) {
     openNotificationError("Supplier", (e as Error).message);
+    yield put(supplierActions.createRangeFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 
 function* updateSupplierSaga(action: UpdateSupplierRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       supplierRequests.update,
@@ -105,14 +116,17 @@ function* updateSupplierSaga(action: UpdateSupplierRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(supplierActions.updateSuccess());
       openNotificationSuccess("Supplier Updated");
+      yield put(supplierActions.updateSuccess());
     }
   } catch (e) {
     openNotificationError("Supplier", (e as Error).message);
+    yield put(supplierActions.updateFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* removeSupplierSaga(action: RemoveSupplierRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       supplierRequests.remove,
@@ -121,14 +135,17 @@ function* removeSupplierSaga(action: RemoveSupplierRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(supplierActions.removeSuccess({ id: action.payload.id }));
       openNotificationSuccess("Supplier Removed");
+      yield put(supplierActions.removeSuccess({ id: action.payload.id }));
     }
   } catch (e) {
     openNotificationError("Supplier", (e as Error).message);
+    yield put(supplierActions.removeFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* removeRangeSupplierSaga(action: RemoveRangeSupplierRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       supplierRequests.removeRange,
@@ -137,11 +154,14 @@ function* removeRangeSupplierSaga(action: RemoveRangeSupplierRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(supplierActions.removeRangeSuccess({ ids: action.payload.ids }));
       openNotificationSuccess("Suppliers Removed");
+      yield put(
+        supplierActions.removeRangeSuccess({ ids: action.payload.ids })
+      );
     }
   } catch (e) {
     openNotificationError("Supplier", (e as Error).message);
+    yield put(supplierActions.removeRangeFailure());
   }
 }
 

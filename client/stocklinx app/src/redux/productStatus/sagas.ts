@@ -41,10 +41,12 @@ function* fetchProductStatusesSaga() {
     }
   } catch (e) {
     openNotificationError("ProductStatus", (e as Error).message);
+    yield put(productStatusActions.getAllFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
 function* fetchProductStatusSaga(action: FetchProductStatusRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { data, message, success }: IResponse = yield call(
       productStatusRequests.get,
@@ -61,9 +63,12 @@ function* fetchProductStatusSaga(action: FetchProductStatusRequest) {
     }
   } catch (e) {
     openNotificationError("ProductStatus", (e as Error).message);
+    yield put(productStatusActions.getFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* createProductStatusSaga(action: CreateProductStatusRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       productStatusRequests.create,
@@ -72,14 +77,18 @@ function* createProductStatusSaga(action: CreateProductStatusRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(productStatusActions.createSuccess());
       openNotificationSuccess("ProductStatus Created");
+      yield put(productStatusActions.createSuccess());
     }
   } catch (e) {
     openNotificationError("ProductStatus", (e as Error).message);
+    yield put(productStatusActions.createFailure());
   }
 }
-function* createRangeProductStatusSaga(action: CreateRangeProductStatusRequest) {
+function* createRangeProductStatusSaga(
+  action: CreateRangeProductStatusRequest
+) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       productStatusRequests.createRange,
@@ -88,15 +97,18 @@ function* createRangeProductStatusSaga(action: CreateRangeProductStatusRequest) 
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(productStatusActions.createRangeSuccess());
       openNotificationSuccess("ProductStatuses Created");
+      yield put(productStatusActions.createRangeSuccess());
     }
   } catch (e) {
     openNotificationError("ProductStatus", (e as Error).message);
+    yield put(productStatusActions.createRangeFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 
 function* updateProductStatusSaga(action: UpdateProductStatusRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       productStatusRequests.update,
@@ -105,14 +117,17 @@ function* updateProductStatusSaga(action: UpdateProductStatusRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(productStatusActions.updateSuccess());
       openNotificationSuccess("ProductStatus Updated");
+      yield put(productStatusActions.updateSuccess());
     }
   } catch (e) {
     openNotificationError("ProductStatus", (e as Error).message);
+    yield put(productStatusActions.updateFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* removeProductStatusSaga(action: RemoveProductStatusRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       productStatusRequests.remove,
@@ -121,14 +136,19 @@ function* removeProductStatusSaga(action: RemoveProductStatusRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(productStatusActions.removeSuccess({ id: action.payload.id }));
       openNotificationSuccess("ProductStatus Removed");
+      yield put(productStatusActions.removeSuccess({ id: action.payload.id }));
     }
   } catch (e) {
     openNotificationError("ProductStatus", (e as Error).message);
+    yield put(productStatusActions.removeFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
-function* removeRangeProductStatusSaga(action: RemoveRangeProductStatusRequest) {
+function* removeRangeProductStatusSaga(
+  action: RemoveRangeProductStatusRequest
+) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       productStatusRequests.removeRange,
@@ -137,27 +157,46 @@ function* removeRangeProductStatusSaga(action: RemoveRangeProductStatusRequest) 
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(productStatusActions.removeRangeSuccess({ ids: action.payload.ids }));
       openNotificationSuccess("ProductStatuses Removed");
+      yield put(
+        productStatusActions.removeRangeSuccess({ ids: action.payload.ids })
+      );
     }
   } catch (e) {
     openNotificationError("ProductStatus", (e as Error).message);
+    yield put(productStatusActions.removeRangeFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 
-function* productStatusesaga() {
+function* productStatussaga() {
   // yield all([
   //   takeLatest(productStatusConst.FETCH_PRODUCTSTATUSES_REQUEST, fetchProductStatusesSaga),
   // ]);
-  yield takeEvery(productStatusConst.FETCH_PRODUCTSTATUSES_REQUEST, fetchProductStatusesSaga);
-  yield takeEvery(productStatusConst.FETCH_PRODUCTSTATUS_REQUEST, fetchProductStatusSaga);
-  yield takeEvery(productStatusConst.CREATE_PRODUCTSTATUS_REQUEST, createProductStatusSaga);
+  yield takeEvery(
+    productStatusConst.FETCH_PRODUCTSTATUSES_REQUEST,
+    fetchProductStatusesSaga
+  );
+  yield takeEvery(
+    productStatusConst.FETCH_PRODUCTSTATUS_REQUEST,
+    fetchProductStatusSaga
+  );
+  yield takeEvery(
+    productStatusConst.CREATE_PRODUCTSTATUS_REQUEST,
+    createProductStatusSaga
+  );
   yield takeEvery(
     productStatusConst.CREATE_RANGE_PRODUCTSTATUS_REQUEST,
     createRangeProductStatusSaga
   );
-  yield takeEvery(productStatusConst.UPDATE_PRODUCTSTATUS_REQUEST, updateProductStatusSaga);
-  yield takeEvery(productStatusConst.REMOVE_PRODUCTSTATUS_REQUEST, removeProductStatusSaga);
+  yield takeEvery(
+    productStatusConst.UPDATE_PRODUCTSTATUS_REQUEST,
+    updateProductStatusSaga
+  );
+  yield takeEvery(
+    productStatusConst.REMOVE_PRODUCTSTATUS_REQUEST,
+    removeProductStatusSaga
+  );
   yield takeEvery(
     productStatusConst.REMOVE_RANGE_PRODUCTSTATUS_REQUEST,
     removeRangeProductStatusSaga
@@ -169,4 +208,4 @@ function* productStatusesaga() {
 //   yield takeEvery(budgetItemConst.fetchUpdate,updateBudgetITem);
 // }
 
-export default productStatusesaga;
+export default productStatussaga;

@@ -41,10 +41,12 @@ function* fetchDepartmentsSaga() {
     }
   } catch (e) {
     openNotificationError("Department", (e as Error).message);
+    yield put(departmentActions.getAllFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
 function* fetchDepartmentSaga(action: FetchDepartmentRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { data, message, success }: IResponse = yield call(
       departmentRequests.get,
@@ -61,9 +63,12 @@ function* fetchDepartmentSaga(action: FetchDepartmentRequest) {
     }
   } catch (e) {
     openNotificationError("Department", (e as Error).message);
+    yield put(departmentActions.getFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* createDepartmentSaga(action: CreateDepartmentRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       departmentRequests.create,
@@ -72,14 +77,17 @@ function* createDepartmentSaga(action: CreateDepartmentRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(departmentActions.createSuccess());
       openNotificationSuccess("Department Created");
+      yield put(departmentActions.createSuccess());
     }
   } catch (e) {
     openNotificationError("Department", (e as Error).message);
+    yield put(departmentActions.createFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* createRangeDepartmentSaga(action: CreateRangeDepartmentRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       departmentRequests.createRange,
@@ -88,15 +96,18 @@ function* createRangeDepartmentSaga(action: CreateRangeDepartmentRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(departmentActions.createRangeSuccess());
       openNotificationSuccess("Departments Created");
+      yield put(departmentActions.createRangeSuccess());
     }
   } catch (e) {
     openNotificationError("Department", (e as Error).message);
+    yield put(departmentActions.createRangeFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 
 function* updateDepartmentSaga(action: UpdateDepartmentRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       departmentRequests.update,
@@ -105,14 +116,17 @@ function* updateDepartmentSaga(action: UpdateDepartmentRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(departmentActions.updateSuccess());
       openNotificationSuccess("Department Updated");
+      yield put(departmentActions.updateSuccess());
     }
   } catch (e) {
     openNotificationError("Department", (e as Error).message);
+    yield put(departmentActions.updateFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* removeDepartmentSaga(action: RemoveDepartmentRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       departmentRequests.remove,
@@ -121,14 +135,17 @@ function* removeDepartmentSaga(action: RemoveDepartmentRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(departmentActions.removeSuccess({ id: action.payload.id }));
       openNotificationSuccess("Department Removed");
+      yield put(departmentActions.removeSuccess({ id: action.payload.id }));
     }
   } catch (e) {
     openNotificationError("Department", (e as Error).message);
+    yield put(departmentActions.removeFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* removeRangeDepartmentSaga(action: RemoveRangeDepartmentRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       departmentRequests.removeRange,
@@ -137,11 +154,12 @@ function* removeRangeDepartmentSaga(action: RemoveRangeDepartmentRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(departmentActions.removeRangeSuccess({ ids: action.payload.ids }));
       openNotificationSuccess("Departments Removed");
+      yield put(departmentActions.removeRangeSuccess({ ids: action.payload.ids }));
     }
   } catch (e) {
     openNotificationError("Department", (e as Error).message);
+    yield put(departmentActions.removeRangeFailure());
   }
 }
 
@@ -152,16 +170,10 @@ function* departmentsaga() {
   yield takeEvery(departmentConst.FETCH_DEPARTMENTS_REQUEST, fetchDepartmentsSaga);
   yield takeEvery(departmentConst.FETCH_DEPARTMENT_REQUEST, fetchDepartmentSaga);
   yield takeEvery(departmentConst.CREATE_DEPARTMENT_REQUEST, createDepartmentSaga);
-  yield takeEvery(
-    departmentConst.CREATE_RANGE_DEPARTMENT_REQUEST,
-    createRangeDepartmentSaga
-  );
+  yield takeEvery(departmentConst.CREATE_RANGE_DEPARTMENT_REQUEST, createRangeDepartmentSaga);
   yield takeEvery(departmentConst.UPDATE_DEPARTMENT_REQUEST, updateDepartmentSaga);
   yield takeEvery(departmentConst.REMOVE_DEPARTMENT_REQUEST, removeDepartmentSaga);
-  yield takeEvery(
-    departmentConst.REMOVE_RANGE_DEPARTMENT_REQUEST,
-    removeRangeDepartmentSaga
-  );
+  yield takeEvery(departmentConst.REMOVE_RANGE_DEPARTMENT_REQUEST, removeRangeDepartmentSaga);
 }
 // function* budgetItemSaga() {
 //   yield takeEvery(budgetItemConst.fetchList, listBudgetITem);

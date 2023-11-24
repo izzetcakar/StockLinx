@@ -41,10 +41,12 @@ function* fetchModelsSaga() {
     }
   } catch (e) {
     openNotificationError("Model", (e as Error).message);
+    yield put(modelActions.getAllFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
 function* fetchModelSaga(action: FetchModelRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { data, message, success }: IResponse = yield call(
       modelRequests.get,
@@ -61,9 +63,12 @@ function* fetchModelSaga(action: FetchModelRequest) {
     }
   } catch (e) {
     openNotificationError("Model", (e as Error).message);
+    yield put(modelActions.getFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* createModelSaga(action: CreateModelRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       modelRequests.create,
@@ -72,14 +77,17 @@ function* createModelSaga(action: CreateModelRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(modelActions.createSuccess());
       openNotificationSuccess("Model Created");
+      yield put(modelActions.createSuccess());
     }
   } catch (e) {
     openNotificationError("Model", (e as Error).message);
+    yield put(modelActions.createFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* createRangeModelSaga(action: CreateRangeModelRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       modelRequests.createRange,
@@ -88,15 +96,18 @@ function* createRangeModelSaga(action: CreateRangeModelRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(modelActions.createRangeSuccess());
       openNotificationSuccess("Models Created");
+      yield put(modelActions.createRangeSuccess());
     }
   } catch (e) {
     openNotificationError("Model", (e as Error).message);
+    yield put(modelActions.createRangeFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 
 function* updateModelSaga(action: UpdateModelRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       modelRequests.update,
@@ -105,14 +116,17 @@ function* updateModelSaga(action: UpdateModelRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(modelActions.updateSuccess());
       openNotificationSuccess("Model Updated");
+      yield put(modelActions.updateSuccess());
     }
   } catch (e) {
     openNotificationError("Model", (e as Error).message);
+    yield put(modelActions.updateFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* removeModelSaga(action: RemoveModelRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       modelRequests.remove,
@@ -121,14 +135,17 @@ function* removeModelSaga(action: RemoveModelRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(modelActions.removeSuccess({ id: action.payload.id }));
       openNotificationSuccess("Model Removed");
+      yield put(modelActions.removeSuccess({ id: action.payload.id }));
     }
   } catch (e) {
     openNotificationError("Model", (e as Error).message);
+    yield put(modelActions.removeFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* removeRangeModelSaga(action: RemoveRangeModelRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       modelRequests.removeRange,
@@ -137,11 +154,12 @@ function* removeRangeModelSaga(action: RemoveRangeModelRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(modelActions.removeRangeSuccess({ ids: action.payload.ids }));
       openNotificationSuccess("Models Removed");
+      yield put(modelActions.removeRangeSuccess({ ids: action.payload.ids }));
     }
   } catch (e) {
     openNotificationError("Model", (e as Error).message);
+    yield put(modelActions.removeRangeFailure());
   }
 }
 
@@ -152,16 +170,10 @@ function* modelsaga() {
   yield takeEvery(modelConst.FETCH_MODELS_REQUEST, fetchModelsSaga);
   yield takeEvery(modelConst.FETCH_MODEL_REQUEST, fetchModelSaga);
   yield takeEvery(modelConst.CREATE_MODEL_REQUEST, createModelSaga);
-  yield takeEvery(
-    modelConst.CREATE_RANGE_MODEL_REQUEST,
-    createRangeModelSaga
-  );
+  yield takeEvery(modelConst.CREATE_RANGE_MODEL_REQUEST, createRangeModelSaga);
   yield takeEvery(modelConst.UPDATE_MODEL_REQUEST, updateModelSaga);
   yield takeEvery(modelConst.REMOVE_MODEL_REQUEST, removeModelSaga);
-  yield takeEvery(
-    modelConst.REMOVE_RANGE_MODEL_REQUEST,
-    removeRangeModelSaga
-  );
+  yield takeEvery(modelConst.REMOVE_RANGE_MODEL_REQUEST, removeRangeModelSaga);
 }
 // function* budgetItemSaga() {
 //   yield takeEvery(budgetItemConst.fetchList, listBudgetITem);

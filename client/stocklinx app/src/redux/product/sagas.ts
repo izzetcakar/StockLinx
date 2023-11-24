@@ -30,6 +30,7 @@ function* fetchProductCountsSaga() {
     }
   } catch (e) {
     openNotificationError("Product Count", (e as Error).message);
+    yield put(productActions.getCountsFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
@@ -50,6 +51,7 @@ function* fetchProductStatusCountsSaga() {
     }
   } catch (e) {
     openNotificationError("Product Status", (e as Error).message);
+    yield put(productActions.getStatusCountsFailure());
   }
   yield put(genericActions.decreaseLoading());
 }

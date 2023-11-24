@@ -41,10 +41,12 @@ function* fetchAccessoriesSaga() {
     }
   } catch (e) {
     openNotificationError("Accessory", (e as Error).message);
+    yield put(accessoryActions.getAllFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
 function* fetchAccessorySaga(action: FetchAccessoryRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { data, message, success }: IResponse = yield call(
       accessoryRequests.get,
@@ -61,9 +63,12 @@ function* fetchAccessorySaga(action: FetchAccessoryRequest) {
     }
   } catch (e) {
     openNotificationError("Accessory", (e as Error).message);
+    yield put(accessoryActions.getFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* createAccessorySaga(action: CreateAccessoryRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       accessoryRequests.create,
@@ -72,14 +77,16 @@ function* createAccessorySaga(action: CreateAccessoryRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(accessoryActions.createSuccess());
       openNotificationSuccess("Accessory Created");
+      yield put(accessoryActions.createSuccess());
     }
   } catch (e) {
     openNotificationError("Accessory", (e as Error).message);
+    yield put(accessoryActions.createFailure());
   }
 }
 function* createRangeAccessorySaga(action: CreateRangeAccessoryRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       accessoryRequests.createRange,
@@ -88,15 +95,18 @@ function* createRangeAccessorySaga(action: CreateRangeAccessoryRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(accessoryActions.createRangeSuccess());
       openNotificationSuccess("Accessories Created");
+      yield put(accessoryActions.createRangeSuccess());
     }
   } catch (e) {
     openNotificationError("Accessory", (e as Error).message);
+    yield put(accessoryActions.createRangeFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 
 function* updateAccessorySaga(action: UpdateAccessoryRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       accessoryRequests.update,
@@ -105,14 +115,17 @@ function* updateAccessorySaga(action: UpdateAccessoryRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(accessoryActions.updateSuccess());
       openNotificationSuccess("Accessory Updated");
+      yield put(accessoryActions.updateSuccess());
     }
   } catch (e) {
     openNotificationError("Accessory", (e as Error).message);
+    yield put(accessoryActions.updateFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* removeAccessorySaga(action: RemoveAccessoryRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       accessoryRequests.remove,
@@ -121,14 +134,17 @@ function* removeAccessorySaga(action: RemoveAccessoryRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(accessoryActions.removeSuccess({ id: action.payload.id }));
       openNotificationSuccess("Accessory Removed");
+      yield put(accessoryActions.removeSuccess({ id: action.payload.id }));
     }
   } catch (e) {
     openNotificationError("Accessory", (e as Error).message);
+    yield put(accessoryActions.removeFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* removeRangeAccessorySaga(action: RemoveRangeAccessoryRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       accessoryRequests.removeRange,
@@ -137,17 +153,19 @@ function* removeRangeAccessorySaga(action: RemoveRangeAccessoryRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
+      openNotificationSuccess("Accessories Removed");
       yield put(
         accessoryActions.removeRangeSuccess({ ids: action.payload.ids })
       );
-      openNotificationSuccess("Accessories Removed");
     }
   } catch (e) {
     openNotificationError("Accessory", (e as Error).message);
+    yield put(accessoryActions.removeRangeFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 
-function* accessoriesaga() {
+function* accessorysaga() {
   // yield all([
   //   takeLatest(accessoryConst.FETCH_ACCESSORIES_REQUEST, fetchAccessoriesSaga),
   // ]);
@@ -174,4 +192,4 @@ function* accessoriesaga() {
 //   yield takeEvery(budgetItemConst.fetchUpdate,updateBudgetITem);
 // }
 
-export default accessoriesaga;
+export default accessorysaga;

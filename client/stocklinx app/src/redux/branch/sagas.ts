@@ -41,10 +41,12 @@ function* fetchBranchesSaga() {
     }
   } catch (e) {
     openNotificationError("Branch", (e as Error).message);
+    yield put(branchActions.getAllFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
 function* fetchBranchSaga(action: FetchBranchRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { data, message, success }: IResponse = yield call(
       branchRequests.get,
@@ -61,9 +63,12 @@ function* fetchBranchSaga(action: FetchBranchRequest) {
     }
   } catch (e) {
     openNotificationError("Branch", (e as Error).message);
+    yield put(branchActions.getFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* createBranchSaga(action: CreateBranchRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       branchRequests.create,
@@ -72,14 +77,16 @@ function* createBranchSaga(action: CreateBranchRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(branchActions.createSuccess());
       openNotificationSuccess("Branch Created");
+      yield put(branchActions.createSuccess());
     }
   } catch (e) {
     openNotificationError("Branch", (e as Error).message);
+    yield put(branchActions.createFailure());
   }
 }
 function* createRangeBranchSaga(action: CreateRangeBranchRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       branchRequests.createRange,
@@ -88,15 +95,18 @@ function* createRangeBranchSaga(action: CreateRangeBranchRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(branchActions.createRangeSuccess());
       openNotificationSuccess("Branches Created");
+      yield put(branchActions.createRangeSuccess());
     }
   } catch (e) {
     openNotificationError("Branch", (e as Error).message);
+    yield put(branchActions.createRangeFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 
 function* updateBranchSaga(action: UpdateBranchRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       branchRequests.update,
@@ -105,14 +115,17 @@ function* updateBranchSaga(action: UpdateBranchRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(branchActions.updateSuccess());
       openNotificationSuccess("Branch Updated");
+      yield put(branchActions.updateSuccess());
     }
   } catch (e) {
     openNotificationError("Branch", (e as Error).message);
+    yield put(branchActions.updateFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* removeBranchSaga(action: RemoveBranchRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       branchRequests.remove,
@@ -121,14 +134,17 @@ function* removeBranchSaga(action: RemoveBranchRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(branchActions.removeSuccess({ id: action.payload.id }));
       openNotificationSuccess("Branch Removed");
+      yield put(branchActions.removeSuccess({ id: action.payload.id }));
     }
   } catch (e) {
     openNotificationError("Branch", (e as Error).message);
+    yield put(branchActions.removeFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* removeRangeBranchSaga(action: RemoveRangeBranchRequest) {
+  yield put(genericActions.increaseLoading());
   try {
     const { message, success }: IResponse = yield call(
       branchRequests.removeRange,
@@ -137,15 +153,17 @@ function* removeRangeBranchSaga(action: RemoveRangeBranchRequest) {
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(branchActions.removeRangeSuccess({ ids: action.payload.ids }));
       openNotificationSuccess("Branches Removed");
+      yield put(branchActions.removeRangeSuccess({ ids: action.payload.ids }));
     }
   } catch (e) {
     openNotificationError("Branch", (e as Error).message);
+    yield put(branchActions.removeRangeFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 
-function* branchesaga() {
+function* branchsaga() {
   // yield all([
   //   takeLatest(branchConst.FETCH_BRANCHES_REQUEST, fetchBranchesSaga),
   // ]);
@@ -169,4 +187,4 @@ function* branchesaga() {
 //   yield takeEvery(budgetItemConst.fetchUpdate,updateBudgetITem);
 // }
 
-export default branchesaga;
+export default branchsaga;
