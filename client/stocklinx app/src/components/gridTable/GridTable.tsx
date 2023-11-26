@@ -56,7 +56,6 @@ const Gridtable: React.FC<GridtableProps> = ({
     handleSelectRow,
     handleselectAll,
     getSelectedRowClass,
-    clearSelectedKeys,
   } = useSelectRow(data, keyfield);
 
   const {
@@ -70,8 +69,6 @@ const Gridtable: React.FC<GridtableProps> = ({
     useFilter(
       columns.filter((c) => c.visible !== false),
       data,
-      selectedKeys,
-      clearSelectedKeys,
       resetPageNumber
     );
 
@@ -148,13 +145,11 @@ const Gridtable: React.FC<GridtableProps> = ({
             <td className="gridtable__checkbox__cell border__bottom">
               <Checkbox
                 checked={
-                  selectedKeys.length === filterDataByInput(data).length &&
-                  selectedKeys.length > 0
+                  selectedKeys.length === data.length && selectedKeys.length > 0
                 }
                 onChange={() => handleselectAll()}
                 indeterminate={
-                  selectedKeys.length > 0 &&
-                  selectedKeys.length < filterDataByInput(data).length
+                  selectedKeys.length > 0 && selectedKeys.length < data.length
                 }
                 radius={2}
                 size={18}

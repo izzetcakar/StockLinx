@@ -55,6 +55,7 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ company }) => {
           label="Email"
           placeholder="New Email"
           {...form.getInputProps("email")}
+          value={form.values.email || ""}
         />
         <Group position="right" mt="md">
           <Button type="submit" color="dark">

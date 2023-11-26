@@ -8,8 +8,6 @@ import textInputClasses from "./textInput.module.scss";
 export const useFilter = (
   columns: Column[],
   data: object[],
-  selectedKeys: (string | number)[],
-  clearSelectedKeys: () => void,
   resetPageNumber: () => void
 ) => {
   const [filters, setFilters] = useState<Filter[]>([]);
@@ -121,7 +119,6 @@ export const useFilter = (
   };
   const handleFilterChange = (e: any, filter: Filter) => {
     resetPageNumber();
-    if (selectedKeys.length > 0) clearSelectedKeys();
     const newValue = getFilterChangedValue(e, filter);
     const newIsApplied = newValue === null || newValue === "" ? false : true;
     setFilters((prev) =>
