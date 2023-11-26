@@ -9,8 +9,6 @@ import {
   PasswordInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { closeModal } from "@mantine/modals";
-import { modals } from "@mantine/modals";
 import { IUser } from "../../interfaces/interfaces";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
@@ -94,16 +92,6 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
       : dispatch(userActions.create({ user: data as IUser }));
     dispatch(userActions.getAll());
   };
-  const openNextUser = () =>
-    modals.open({
-      modalId: "next-modal",
-      title: "Page 2",
-      children: (
-        <Button fullWidth onClick={() => closeModal("next-modal")} color="dark">
-          Back
-        </Button>
-      ),
-    });
 
   const handleCompanyChange = (value: string) => {
     setCompany(value);
@@ -220,9 +208,6 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
           value={form.values.notes || ""}
         />
         <Group position="right" mt="md">
-          <Button onClick={() => openNextUser()} color="dark">
-            Next Modal
-          </Button>
           <Button type="submit" color="dark">
             Submit
           </Button>
