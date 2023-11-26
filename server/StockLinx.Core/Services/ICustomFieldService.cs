@@ -7,7 +7,7 @@ namespace StockLinx.Core.Services
 {
     public interface ICustomFieldService : IService<CustomField>
     {
-        Task<List<CustomFieldDto>> GetCustomFieldDtos();
+        Task<List<CustomFieldDto>> GetAllCustomFieldDtos();
         Task CreateCustomFieldAsync(CustomFieldCreateDto createDto);
         Task CreateRangeCustomFieldAsync(List<CustomFieldCreateDto> createDtos);
         Task UpdateCustomFieldAsync(CustomFieldUpdateDto updateDto);

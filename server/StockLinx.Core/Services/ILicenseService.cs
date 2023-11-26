@@ -8,9 +8,9 @@ namespace StockLinx.Core.Services
 {
     public interface ILicenseService : IService<License>
     {
-        Task<List<LicenseDto>> GetLicenseDtos();
-        Task CreateLicenseAsync(LicenseCreateDto createDto);
-        Task CreateRangeLicenseAsync(List<LicenseCreateDto> createDtos);
+        Task<List<LicenseDto>> GetAllLicenseDtos();
+        Task<LicenseDto> CreateLicenseAsync(LicenseCreateDto createDto);
+        Task<List<LicenseDto>> CreateRangeLicenseAsync(List<LicenseCreateDto> createDtos);
         Task UpdateLicenseAsync(LicenseUpdateDto updateDto);
         Task DeleteLicenseAsync(Guid licenseId);
         Task DeleteRangeLicenseAsync(List<Guid> licenseIds);
