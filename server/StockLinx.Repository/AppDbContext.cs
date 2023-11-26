@@ -25,11 +25,12 @@ namespace StockLinx.Repository
         public DbSet<FieldSet> FieldSets { get; set; }
         public DbSet<CustomField> CustomFields { get; set; }
         public DbSet<FieldSetCustomField> FieldSetCustomFields { get; set; }
-        public DbSet<ModelFieldData> ModelFieldData { get; set; }
+        public DbSet<ModelFieldData> ModelFieldDatas { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }
         public DbSet<ProductStatus> ProductStatuses { get; set; }
         public DbSet<Branch> Branches { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Permission> Permissions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
