@@ -1,7 +1,6 @@
 import React from "react";
 import { TextInput, Button, Group, Flex } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { modals } from "@mantine/modals";
 import { IFieldSet } from "../../interfaces/interfaces";
 import { useDispatch } from "react-redux";
 import { fieldSetActions } from "../../redux/fieldSet/actions";
@@ -29,7 +28,6 @@ const FieldSetForm: React.FC<FieldSetFormProps> = ({ fieldSet }) => {
     fieldSet
       ? dispatch(fieldSetActions.update({ fieldSet: data as IFieldSet }))
       : dispatch(fieldSetActions.create({ fieldSet: data as IFieldSet }));
-    modals.close("fieldSet-modal");
   };
 
   return (

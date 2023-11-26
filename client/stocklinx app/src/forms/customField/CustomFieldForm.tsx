@@ -157,6 +157,10 @@ const CustomFieldForm: React.FC<CustomFieldFormProps> = ({ customField }) => {
             .filter((f) => value.map((x) => x.fieldSetId).includes(f.id))
             .map((f) => f.id)}
           onChange={test}
+          classNames={filterClasses}
+          placeholder="Select Field Sets"
+          dropdownPosition="bottom"
+          nothingFound="No field sets found"
         />
         <Group position="right" mt="md">
           <Button type="submit" color="dark">

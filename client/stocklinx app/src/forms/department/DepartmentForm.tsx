@@ -8,7 +8,6 @@ import {
   Select,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { modals } from "@mantine/modals";
 import { IDepartment } from "../../interfaces/interfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { departmentActions } from "../../redux/department/actions";
@@ -50,7 +49,6 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({ department }) => {
     department
       ? dispatch(departmentActions.update({ department: data as IDepartment }))
       : dispatch(departmentActions.create({ department: data as IDepartment }));
-    modals.close("department-modal");
   };
   const handleCompanyChange = (value: string) => {
     setCompany(value);
