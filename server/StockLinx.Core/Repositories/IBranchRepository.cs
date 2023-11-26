@@ -5,8 +5,8 @@ namespace StockLinx.Core.Repositories
 {
     public interface IBranchRepository : IRepository<Branch>
     {
-        BranchDto GetBranchDto(Branch branch);
-        List<BranchDto> GetBranchDtos(List<Branch> branches);
-        Task<List<BranchDto>> GetAllBranchDtos();
+        BranchDto GetDto(Branch entity);
+        List<BranchDto> GetDtos(List<Branch> entities);
+        Task<List<BranchDto>> GetAllDtos();
     }
 }

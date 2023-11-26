@@ -24,7 +24,7 @@ namespace StockLinx.API.Controllers
         [HttpGet]
         public async Task<IActionResult> All()
         {
-            var fieldSets = await _fieldSetService.GetAllFieldSetDtos();
+            var fieldSets = await _fieldSetService.GetAllDtos();
             return CreateActionResult(CustomResponseDto<List<FieldSetDto>>.Success(200, fieldSets));
         }
 

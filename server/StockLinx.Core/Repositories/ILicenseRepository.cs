@@ -5,8 +5,8 @@ namespace StockLinx.Core.Repositories
 {
     public interface ILicenseRepository : IRepository<License>
     {
-        Task<LicenseDto> GetLicenseDto(License license);
-        Task<List<LicenseDto>> GetLicenseDtos(List<License> licenses);
-        Task<List<LicenseDto>> GetAllLicenseDtos();
+        Task<LicenseDto> GetDto(License entity);
+        Task<List<LicenseDto>> GetDtos(List<License> entities);
+        Task<List<LicenseDto>> GetAllDtos();
     }
 }

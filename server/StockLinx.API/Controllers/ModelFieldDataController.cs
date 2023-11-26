@@ -22,7 +22,7 @@ namespace StockLinx.API.Controllers
         [HttpGet]
         public async Task<IActionResult> All()
         {
-            var modelFieldDatas = await _modelFieldDataService.GetAllModelFieldDataDtos();
+            var modelFieldDatas = await _modelFieldDataService.GetAllDtos();
             return CreateActionResult(CustomResponseDto<List<ModelFieldDataDto>>.Success(200, modelFieldDatas));
         }
 

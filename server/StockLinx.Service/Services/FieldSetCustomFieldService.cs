@@ -21,9 +21,9 @@ namespace StockLinx.Service.Services
             _mapper = mapper;
         }
 
-        public async Task<List<FieldSetCustomFieldDto>> GetAllFieldSetCustomFieldDtos()
+        public async Task<List<FieldSetCustomFieldDto>> GetAllDtos()
         {
-            return await _repository.GetAllFieldSetCustomFieldDtos();
+            return await _repository.GetAllDtos();
         }
         public async Task<FieldSetCustomFieldDto> CreateFieldSetCustomFieldAsync(FieldSetCustomFieldDto dto)
         {
@@ -31,7 +31,7 @@ namespace StockLinx.Service.Services
             newFieldSetCustomField.Id = Guid.NewGuid();
             newFieldSetCustomField.CreatedDate = DateTime.UtcNow;
             var added = await AddAsync(newFieldSetCustomField);
-            return _repository.GetFieldSetCustomFieldDto(added);
+            return _repository.GetDto(added);
         }
 
         public async Task<List<FieldSetCustomFieldDto>> CreateRangeFieldSetCustomFieldAsync(List<FieldSetCustomFieldDto> dtos)
@@ -45,7 +45,7 @@ namespace StockLinx.Service.Services
                 newEntities.Add(newFieldSetCustomField);
             }
             var added = await AddRangeAsync(newEntities);
-            return _repository.GetFieldSetCustomFieldDtos(added.ToList());
+            return _repository.GetDtos(added.ToList());
         }
 
         public async Task UpdateFieldSetCustomFieldAsync(FieldSetCustomFieldDto dto)

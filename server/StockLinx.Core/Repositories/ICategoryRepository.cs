@@ -6,9 +6,9 @@ namespace StockLinx.Core.Repositories
 {
     public interface ICategoryRepository : IRepository<Category>
     {
-        CategoryDto GetCategoryDto(Category category);
-        List<CategoryDto> GetCategoryDtos(List<Category> categories);
-        Task<List<CategoryDto>> GetAllCategoryDtos();
+        CategoryDto GetDto(Category entity);
+        List<CategoryDto> GetDtos(List<Category> entities);
+        Task<List<CategoryDto>> GetAllDtos();
         Task<List<ProductCategoryCounterDto>> GetCounts();
     }
 }

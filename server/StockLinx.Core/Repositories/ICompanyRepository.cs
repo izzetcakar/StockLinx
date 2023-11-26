@@ -5,9 +5,9 @@ namespace StockLinx.Core.Repositories
 {
     public interface ICompanyRepository : IRepository<Company>
     {
-        CompanyDto GetCompanyDto(Company company);
-        List<CompanyDto> GetCompanyDtos(List<Company> companies);
-        Task<List<CompanyDto>> GetAllCompanyDtos();
+        CompanyDto GetDto(Company entity);
+        List<CompanyDto> GetDtos(List<Company> entities);
+        Task<List<CompanyDto>> GetAllDtos();
         Task CreateBaseAdmin();
     }
 }

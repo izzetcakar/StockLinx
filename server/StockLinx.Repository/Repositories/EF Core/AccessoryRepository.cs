@@ -14,45 +14,45 @@ namespace StockLinx.Repository.Repositories.EF_Core
             _mapper = mapper;
         }
 
-        public async Task<AccessoryDto> GetAccessoryDto(Accessory accessory)
+        public async Task<AccessoryDto> GetDto(Accessory entity)
         {
             var deployedProducts = await dbContext.DeployedProducts.AsNoTracking().ToListAsync();
-            var companyId = await dbContext.Branches.Where(b => b.Id == accessory.BranchId).Select(b => b.CompanyId).FirstOrDefaultAsync();
+            var companyId = await dbContext.Branches.Where(b => b.Id == entity.BranchId).Select(b => b.CompanyId).FirstOrDefaultAsync();
             if (companyId == null)
             {
                 return null;
             }
-            var availableQuantity = accessory.Quantity - deployedProducts.Count(d => d.AccessoryId.HasValue && d.AccessoryId == accessory.Id);
-            var accessoryDto = _mapper.Map<AccessoryDto>(accessory);
-            accessoryDto.CompanyId = companyId;
-            accessoryDto.AvailableQuantity = availableQuantity;
-            return accessoryDto;
+            var availableQuantity = entity.Quantity - deployedProducts.Count(d => d.AccessoryId.HasValue && d.AccessoryId == entity.Id);
+            var dto = _mapper.Map<AccessoryDto>(entity);
+            dto.CompanyId = companyId;
+            dto.AvailableQuantity = availableQuantity;
+            return dto;
         }
-        public async Task<List<AccessoryDto>> GetAccessoryDtos(List<Accessory> accessories)
+        public async Task<List<AccessoryDto>> GetDtos(List<Accessory> entities)
         {
             var deployedProducts = await dbContext.DeployedProducts.AsNoTracking().ToListAsync();
-            var accessoryDtos = new List<AccessoryDto>();
+            var dtos = new List<AccessoryDto>();
 
-            foreach (var accessory in accessories)
+            foreach (var entity in entities)
             {
-                var companyId = await dbContext.Branches.Where(b => b.Id == accessory.BranchId).Select(b => b.CompanyId).FirstOrDefaultAsync();
+                var companyId = await dbContext.Branches.Where(b => b.Id == entity.BranchId).Select(b => b.CompanyId).FirstOrDefaultAsync();
                 if (companyId == null)
                 {
                     continue;
                 }
-                var availableQuantity = accessory.Quantity - deployedProducts
-                    .Count(d => d.AccessoryId.HasValue && d.AccessoryId == accessory.Id);
-                var accessoryDto = _mapper.Map<AccessoryDto>(accessory);
-                accessoryDto.CompanyId = companyId;
-                accessoryDto.AvailableQuantity = availableQuantity;
-                accessoryDtos.Add(accessoryDto);
+                var availableQuantity = entity.Quantity - deployedProducts
+                    .Count(d => d.AccessoryId.HasValue && d.AccessoryId == entity.Id);
+                var dto = _mapper.Map<AccessoryDto>(entity);
+                dto.CompanyId = companyId;
+                dto.AvailableQuantity = availableQuantity;
+                dtos.Add(dto);
             }
-            return accessoryDtos;
+            return dtos;
         }
-        public async Task<List<AccessoryDto>> GetAllAccessoryDtos()
+        public async Task<List<AccessoryDto>> GetAllDtos()
         {
-            var accessories = await dbContext.Accessories.AsNoTracking().ToListAsync();
-            return await GetAccessoryDtos(accessories);
+            var entities = await dbContext.Accessories.AsNoTracking().ToListAsync();
+            return await GetDtos(entities);
         }
     }
 }

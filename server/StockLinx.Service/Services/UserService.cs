@@ -107,7 +107,7 @@ namespace StockLinx.Service.Services
             newUser.Id = Guid.NewGuid();
             newUser.CreatedDate = DateTime.UtcNow;
             var added = await AddAsync(newUser);
-            return _userRepository.GetUserDto(added);
+            return _userRepository.GetDto(added);
         }
 
         public async Task<List<UserDto>> CreateRangeUserAsync(List<UserCreateDto> createDtos)
@@ -121,7 +121,7 @@ namespace StockLinx.Service.Services
                 newUsers.Add(newUser);
             }
             var added = await AddRangeAsync(newUsers);
-            return _userRepository.GetUserDtos(added.ToList());
+            return _userRepository.GetDtos(added.ToList());
         }
 
         public async Task UpdateUserAsync(UserUpdateDto updateDto)

@@ -8,7 +8,7 @@ namespace StockLinx.Core.Services
 {
     public interface IConsumableService : IService<Consumable>
     {
-        Task<List<ConsumableDto>> GetAllConsumableDtos();
+        Task<List<ConsumableDto>> GetAllDtos();
         Task<ConsumableDto> CreateConsumableAsync(ConsumableCreateDto createDto);
         Task<List<ConsumableDto>> CreateRangeConsumableAsync(List<ConsumableCreateDto> createDtos);
         Task UpdateConsumableAsync(ConsumableUpdateDto updateDto);

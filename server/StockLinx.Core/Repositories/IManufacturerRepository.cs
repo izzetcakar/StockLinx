@@ -5,8 +5,8 @@ namespace StockLinx.Core.Repositories
 {
     public interface IManufacturerRepository : IRepository<Manufacturer>
     {
-        ManufacturerDto GetManufacturerDto(Manufacturer manufacturer);
-        List<ManufacturerDto> GetManufacturerDtos(List<Manufacturer> manufacturers);
-        Task<List<ManufacturerDto>> GetAllManufacturerDtos();
+        ManufacturerDto GetDto(Manufacturer entity);
+        List<ManufacturerDto> GetDtos(List<Manufacturer> entities);
+        Task<List<ManufacturerDto>> GetAllDtos();
     }
 }

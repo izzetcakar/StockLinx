@@ -14,23 +14,22 @@ namespace StockLinx.Repository.Repositories.EF_Core
             _mapper = mapper;
         }
 
-        public async Task<List<DepartmentDto>> GetAllDepartmentDtos()
+
+        public DepartmentDto GetDto(Department entity)
         {
-            var departments = await dbContext.Departments.AsNoTracking().ToListAsync();
-            return GetDepartmentDtos(departments);
+            return _mapper.Map<DepartmentDto>(entity);
         }
 
-        public DepartmentDto GetDepartmentDto(Department department)
+        public List<DepartmentDto> GetDtos(List<Department> entities)
         {
-            var departmentDto = _mapper.Map<DepartmentDto>(department);
-            return departmentDto;
+            var dtos = new List<DepartmentDto>();
+            dtos = _mapper.Map<List<DepartmentDto>>(entities);
+            return dtos;
         }
-
-        public List<DepartmentDto> GetDepartmentDtos(List<Department> departments)
+        public async Task<List<DepartmentDto>> GetAllDtos()
         {
-            var departmentDtos = new List<DepartmentDto>();
-            departmentDtos = _mapper.Map<List<DepartmentDto>>(departments);
-            return departmentDtos;
+            var entities = await dbContext.Departments.AsNoTracking().ToListAsync();
+            return GetDtos(entities);
         }
     }
 }

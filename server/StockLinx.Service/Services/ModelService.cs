@@ -21,9 +21,9 @@ namespace StockLinx.Service.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<List<ModelDto>> GetAllModelDtos()
+        public async Task<List<ModelDto>> GetAllDtos()
         {
-            return await _modelRepository.GetAllModelDtos();
+            return await _modelRepository.GetAllDtos();
         }
         public async Task<ModelDto> CreateModelAsync(ModelCreateDto createDto)
         {
@@ -31,7 +31,7 @@ namespace StockLinx.Service.Services
             newModel.Id = Guid.NewGuid();
             newModel.CreatedDate = DateTime.UtcNow;
             var added = await AddAsync(newModel);
-            return _modelRepository.GetModelDto(added);
+            return _modelRepository.GetDto(added);
         }
 
         public async Task<List<ModelDto>> CreateRangeModelAsync(List<ModelCreateDto> createDtos)
@@ -45,7 +45,7 @@ namespace StockLinx.Service.Services
                 newModels.Add(newModel);
             }
             var added = await AddRangeAsync(newModels);
-            return _modelRepository.GetModelDtos(added.ToList());
+            return _modelRepository.GetDtos(added.ToList());
         }
 
         public async Task UpdateModelAsync(ModelUpdateDto updateDto)

@@ -21,9 +21,9 @@ namespace StockLinx.Service.Services
             _unitOfWork = unitOfWork;
             _categoryRepository = categoryRepository;
         }
-        public async Task<List<CategoryDto>> GetAllCategoryDtos()
+        public async Task<List<CategoryDto>> GetAllDtos()
         {
-            return await _categoryRepository.GetAllCategoryDtos();
+            return await _categoryRepository.GetAllDtos();
         }
         public async Task<CategoryDto> CreateCategoryAsync(CategoryCreateDto createDto)
         {
@@ -31,7 +31,7 @@ namespace StockLinx.Service.Services
             newCategory.Id = Guid.NewGuid();
             newCategory.CreatedDate = DateTime.UtcNow;
             var addedCategory = await AddAsync(newCategory);
-            return _categoryRepository.GetCategoryDto(addedCategory);
+            return _categoryRepository.GetDto(addedCategory);
         }
         public async Task<List<CategoryDto>> CreateRangeCategoryAsync(List<CategoryCreateDto> createDtos)
         {
@@ -44,7 +44,7 @@ namespace StockLinx.Service.Services
                 newCategories.Add(newCategory);
             }
             var addedCategories = await AddRangeAsync(newCategories);
-            return _categoryRepository.GetCategoryDtos(addedCategories.ToList());
+            return _categoryRepository.GetDtos(addedCategories.ToList());
         }
         public async Task UpdateCategoryAsync(CategoryUpdateDto updateDto)
         {

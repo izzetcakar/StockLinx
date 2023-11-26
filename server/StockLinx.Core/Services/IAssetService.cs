@@ -8,7 +8,7 @@ namespace StockLinx.Core.Services
 {
     public interface IAssetService : IService<Asset>
     {
-        Task<List<AssetDto>> GetAllAssetDtos();
+        Task<List<AssetDto>> GetAllDtos();
         Task<List<AssetDto>> CreateAssetAsync(AssetCreateDto createDto);
         Task<List<AssetDto>> CreateRangeAssetAsync(List<AssetCreateDto> createDtos);
         Task UpdateAssetAsync(AssetUpdateDto updateDto);

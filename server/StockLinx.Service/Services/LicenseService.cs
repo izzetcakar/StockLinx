@@ -24,9 +24,9 @@ namespace StockLinx.Service.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<List<LicenseDto>> GetAllLicenseDtos()
+        public async Task<List<LicenseDto>> GetAllDtos()
         {
-            return await _licenseRepository.GetAllLicenseDtos();
+            return await _licenseRepository.GetAllDtos();
         }
         public async Task<LicenseDto> CreateLicenseAsync(LicenseCreateDto createDto)
         {
@@ -34,7 +34,7 @@ namespace StockLinx.Service.Services
             newLicense.Id = Guid.NewGuid();
             newLicense.CreatedDate = DateTime.UtcNow;
             var added = await AddAsync(newLicense);
-            return await _licenseRepository.GetLicenseDto(added);
+            return await _licenseRepository.GetDto(added);
         }
 
         public async Task<List<LicenseDto>> CreateRangeLicenseAsync(List<LicenseCreateDto> createDtos)
@@ -48,7 +48,7 @@ namespace StockLinx.Service.Services
                 newLicenses.Add(newLicense);
             }
             var added = await AddRangeAsync(newLicenses);
-            return await _licenseRepository.GetLicenseDtos(added.ToList());
+            return await _licenseRepository.GetDtos(added.ToList());
         }
 
         public async Task UpdateLicenseAsync(LicenseUpdateDto updateDto)

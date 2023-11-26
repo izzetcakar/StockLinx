@@ -13,44 +13,44 @@ namespace StockLinx.Repository.Repositories.EF_Core
         {
         }
 
-        public async Task<ConsumableDto> GetConsumableDto(Consumable consumable)
+        public async Task<ConsumableDto> GetDto(Consumable entity)
         {
             var deployedProducts = await dbContext.DeployedProducts.AsNoTracking().ToListAsync();
-            var companyId = await dbContext.Branches.Where(b => b.Id == consumable.BranchId).Select(b => b.CompanyId).FirstOrDefaultAsync();
-            var availableQuantity = consumable.Quantity - deployedProducts.Count(d => d.ConsumableId.HasValue && d.ConsumableId == consumable.Id);
+            var companyId = await dbContext.Branches.Where(b => b.Id == entity.BranchId).Select(b => b.CompanyId).FirstOrDefaultAsync();
+            var availableQuantity = entity.Quantity - deployedProducts.Count(d => d.ConsumableId.HasValue && d.ConsumableId == entity.Id);
             if (companyId == null)
             {
                 return null;
             }
-            var consumableDto = _mapper.Map<ConsumableDto>(consumable);
-            consumableDto.CompanyId = companyId;
-            consumableDto.AvailableQuantity = availableQuantity;
-            return consumableDto;
+            var dto = _mapper.Map<ConsumableDto>(entity);
+            dto.CompanyId = companyId;
+            dto.AvailableQuantity = availableQuantity;
+            return dto;
         }
-        public async Task<List<ConsumableDto>> GetConsumableDtos(List<Consumable> consumables)
+        public async Task<List<ConsumableDto>> GetDtos(List<Consumable> entities)
         {
             var deployedProducts = await dbContext.DeployedProducts.AsNoTracking().ToListAsync();
-            var consumableDtos = new List<ConsumableDto>();
+            var dtos = new List<ConsumableDto>();
 
-            foreach (var consumable in consumables)
+            foreach (var entity in entities)
             {
-                var companyId = await dbContext.Branches.Where(b => b.Id == consumable.BranchId).Select(b => b.CompanyId).FirstOrDefaultAsync();
-                var availableQuantity = consumable.Quantity - deployedProducts.Count(d => d.ConsumableId.HasValue && d.ConsumableId == consumable.Id);
+                var companyId = await dbContext.Branches.Where(b => b.Id == entity.BranchId).Select(b => b.CompanyId).FirstOrDefaultAsync();
+                var availableQuantity = entity.Quantity - deployedProducts.Count(d => d.ConsumableId.HasValue && d.ConsumableId == entity.Id);
                 if (companyId == null)
                 {
                     continue;
                 }
-                var consumableDto = _mapper.Map<ConsumableDto>(consumable);
-                consumableDto.CompanyId = companyId;
-                consumableDto.AvailableQuantity = availableQuantity;
-                consumableDtos.Add(consumableDto);
+                var dto = _mapper.Map<ConsumableDto>(entity);
+                dto.CompanyId = companyId;
+                dto.AvailableQuantity = availableQuantity;
+                dtos.Add(dto);
             }
-            return consumableDtos;
+            return dtos;
         }
-        public async Task<List<ConsumableDto>> GetAllConsumableDtos()
+        public async Task<List<ConsumableDto>> GetAllDtos()
         {
-            var consumables = await dbContext.Consumables.AsNoTracking().ToListAsync();
-            return await GetConsumableDtos(consumables);
+            var entities = await dbContext.Consumables.AsNoTracking().ToListAsync();
+            return await GetDtos(entities);
         }
     }
 }

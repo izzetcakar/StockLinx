@@ -14,26 +14,26 @@ namespace StockLinx.Repository.Repositories.EF_Core
             _mapper = mapper;
         }
 
-        public async Task<LicenseDto> GetLicenseDto(License license)
+        public async Task<LicenseDto> GetDto(License entity)
         {
             var deployedProducts = await dbContext.DeployedProducts.AsNoTracking().ToListAsync();
-            var companyId = await dbContext.Branches.Where(b => b.Id == license.BranchId).Select(b => b.CompanyId).FirstOrDefaultAsync();
-            var availableQuantity = license.Quantity - deployedProducts.Count(d => d.LicenseId.HasValue && d.LicenseId == license.Id);
+            var companyId = await dbContext.Branches.Where(b => b.Id == entity.BranchId).Select(b => b.CompanyId).FirstOrDefaultAsync();
+            var availableQuantity = entity.Quantity - deployedProducts.Count(d => d.LicenseId.HasValue && d.LicenseId == entity.Id);
             if (companyId == null)
             {
                 return null;
             }
-            var licenseDto = _mapper.Map<LicenseDto>(license);
-            licenseDto.CompanyId = companyId;
-            licenseDto.AvailableQuantity = availableQuantity;
-            return licenseDto;
+            var dto = _mapper.Map<LicenseDto>(entity);
+            dto.CompanyId = companyId;
+            dto.AvailableQuantity = availableQuantity;
+            return dto;
         }
-        public async Task<List<LicenseDto>> GetLicenseDtos(List<License> licenses)
+        public async Task<List<LicenseDto>> GetDtos(List<License> entities)
         {
             var deployedProducts = await dbContext.DeployedProducts.AsNoTracking().ToListAsync();
-            var licenseDtos = new List<LicenseDto>();
+            var dtos = new List<LicenseDto>();
 
-            foreach (var license in licenses)
+            foreach (var license in entities)
             {
                 var companyId = await dbContext.Branches.Where(b => b.Id == license.BranchId).Select(b => b.CompanyId).FirstOrDefaultAsync();
                 var availableQuantity = license.Quantity - deployedProducts.Count(d => d.LicenseId.HasValue && d.LicenseId == license.Id);
@@ -41,17 +41,17 @@ namespace StockLinx.Repository.Repositories.EF_Core
                 {
                     continue;
                 }
-                var licenseDto = _mapper.Map<LicenseDto>(license);
-                licenseDto.CompanyId = companyId;
-                licenseDto.AvailableQuantity = availableQuantity;
-                licenseDtos.Add(licenseDto);
+                var dto = _mapper.Map<LicenseDto>(license);
+                dto.CompanyId = companyId;
+                dto.AvailableQuantity = availableQuantity;
+                dtos.Add(dto);
             }
-            return licenseDtos;
+            return dtos;
         }
-        public async Task<List<LicenseDto>> GetAllLicenseDtos()
+        public async Task<List<LicenseDto>> GetAllDtos()
         {
-            var licenses = await dbContext.Licenses.AsNoTracking().ToListAsync();
-            return await GetLicenseDtos(licenses);
+            var entities = await dbContext.Licenses.AsNoTracking().ToListAsync();
+            return await GetDtos(entities);
         }
     }
 }

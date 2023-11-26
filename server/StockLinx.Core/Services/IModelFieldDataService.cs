@@ -5,7 +5,7 @@ namespace StockLinx.Core.Services
 {
     public interface IModelFieldDataService : IService<ModelFieldData>
     {
-        Task<List<ModelFieldDataDto>> GetAllModelFieldDataDtos();
+        Task<List<ModelFieldDataDto>> GetAllDtos();
         Task<ModelFieldDataDto> CreateModelFieldDataAsync(ModelFieldDataDto dto);
         Task<List<ModelFieldDataDto>> CreateRangeModelFieldDataAsync(List<ModelFieldDataDto> dto);
         Task UpdateModelFieldDataAsync(ModelFieldDataDto dto);

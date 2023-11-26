@@ -5,8 +5,8 @@ namespace StockLinx.Core.Repositories
 {
     public interface IModelFieldDataRepository : IRepository<ModelFieldData>
     {
-        ModelFieldDataDto GetModelFieldDataDto(ModelFieldData modelFieldData);
-        List<ModelFieldDataDto> GetModelFieldDataDtos(List<ModelFieldData> modelFieldDatas);
-        Task<List<ModelFieldDataDto>> GetAllModelFieldDataDtos();
+        ModelFieldDataDto GetDto(ModelFieldData entity);
+        List<ModelFieldDataDto> GetDtos(List<ModelFieldData> entities);
+        Task<List<ModelFieldDataDto>> GetAllDtos();
     }
 }

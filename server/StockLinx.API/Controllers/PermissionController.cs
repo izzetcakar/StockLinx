@@ -23,7 +23,7 @@ namespace StockLinx.API.Controllers
         [HttpGet]
         public async Task<IActionResult> All()
         {
-            var accessories = await _permissionService.GetAllPermissionDtos();
+            var accessories = await _permissionService.GetAllDtos();
             return CreateActionResult(CustomResponseDto<List<PermissionDto>>.Success(200, accessories));
         }
 

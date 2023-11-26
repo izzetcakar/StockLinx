@@ -22,9 +22,9 @@ namespace StockLinx.Service.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<List<PermissionDto>> GetAllPermissionDtos()
+        public async Task<List<PermissionDto>> GetAllDtos()
         {
-            return await _permissionRepository.GetAllPermissionDtos();
+            return await _permissionRepository.GetAllDtos();
         }
         public async Task<PermissionDto> CreatePermissionAsync(PermissionCreateDto createDto)
         {
@@ -32,7 +32,7 @@ namespace StockLinx.Service.Services
             newPermission.Id = Guid.NewGuid();
             newPermission.CreatedDate = DateTime.UtcNow;
             var added = await AddAsync(newPermission);
-            return _permissionRepository.GetPermissionDto(added);
+            return _permissionRepository.GetDto(added);
         }
 
         public async Task<List<PermissionDto>> CreateRangePermissionAsync(List<PermissionCreateDto> createDtos)
@@ -46,7 +46,7 @@ namespace StockLinx.Service.Services
                 newPermissions.Add(newPermission);
             }
             var added = await AddRangeAsync(newPermissions);
-            return _permissionRepository.GetPermissionDtos(added.ToList());
+            return _permissionRepository.GetDtos(added.ToList());
         }
 
         public async Task UpdatePermissionAsync(PermissionUpdateDto updateDto)

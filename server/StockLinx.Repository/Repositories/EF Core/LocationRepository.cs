@@ -14,21 +14,20 @@ namespace StockLinx.Repository.Repositories.EF_Core
             _mapper = mapper;
         }
 
-        public LocationDto GetLocationDto(Location location)
+        public LocationDto GetDto(Location entity)
         {
-            var locationDto = _mapper.Map<LocationDto>(location);
-            return locationDto;
+            return _mapper.Map<LocationDto>(entity);
         }
-        public List<LocationDto> GetLocationDtos(List<Location> locations)
+        public List<LocationDto> GetDtos(List<Location> entities)
         {
-            var locationDtos = new List<LocationDto>();
-            locationDtos = _mapper.Map<List<LocationDto>>(locations);
-            return locationDtos;
+            var dtos = new List<LocationDto>();
+            dtos = _mapper.Map<List<LocationDto>>(entities);
+            return dtos;
         }
-        public async Task<List<LocationDto>> GetAllLocationDtos()
+        public async Task<List<LocationDto>> GetAllDtos()
         {
-            var locations = await dbContext.Locations.AsNoTracking().ToListAsync();
-            return GetLocationDtos(locations);
+            var entities = await dbContext.Locations.AsNoTracking().ToListAsync();
+            return GetDtos(entities);
         }
     }
 }

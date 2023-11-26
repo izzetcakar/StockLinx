@@ -5,8 +5,8 @@ namespace StockLinx.Core.Repositories
 {
     public interface IAssetRepository : IRepository<Asset>
     {
-        Task<AssetDto> GetAssetDto(Asset asset);
-        Task<List<AssetDto>> GetAssetDtos(List<Asset> assets);
-        Task<List<AssetDto>> GetAllAssetDtos();
+        Task<AssetDto> GetDto(Asset entity);
+        Task<List<AssetDto>> GetDtos(List<Asset> entities);
+        Task<List<AssetDto>> GetAllDtos();
     }
 }

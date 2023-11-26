@@ -24,7 +24,7 @@ namespace StockLinx.API.Controllers
         [HttpGet]
         public async Task<IActionResult> All()
         {
-            var companies = await _companyService.GetAllCompanyDtos();
+            var companies = await _companyService.GetAllDtos();
             return CreateActionResult(CustomResponseDto<List<CompanyDto>>.Success(200, companies));
         }
 

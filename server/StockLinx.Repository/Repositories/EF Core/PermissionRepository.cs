@@ -14,21 +14,20 @@ namespace StockLinx.Repository.Repositories.EF_Core
             _mapper = mapper;
         }
 
-        public PermissionDto GetPermissionDto(Permission permission)
+        public PermissionDto GetDto(Permission entity)
         {
-            var permissionDto = _mapper.Map<PermissionDto>(permission);
-            return permissionDto;
+            return _mapper.Map<PermissionDto>(entity);
         }
-        public List<PermissionDto> GetPermissionDtos(List<Permission> permissions)
+        public List<PermissionDto> GetDtos(List<Permission> entities)
         {
-            var permissionDtos = new List<PermissionDto>();
-            permissionDtos = _mapper.Map<List<PermissionDto>>(permissions);
-            return permissionDtos;
+            var dtos = new List<PermissionDto>();
+            dtos = _mapper.Map<List<PermissionDto>>(entities);
+            return dtos;
         }
-        public async Task<List<PermissionDto>> GetAllPermissionDtos()
+        public async Task<List<PermissionDto>> GetAllDtos()
         {
-            var permissions = await dbContext.Permissions.AsNoTracking().ToListAsync();
-            return GetPermissionDtos(permissions);
+            var entities = await dbContext.Permissions.AsNoTracking().ToListAsync();
+            return GetDtos(entities);
         }
     }
 }

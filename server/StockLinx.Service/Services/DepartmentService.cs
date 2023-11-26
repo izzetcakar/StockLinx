@@ -21,9 +21,9 @@ namespace StockLinx.Service.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<List<DepartmentDto>> GetAllDepartmentDtos()
+        public async Task<List<DepartmentDto>> GetAllDtos()
         {
-            return await _departmentRepository.GetAllDepartmentDtos();
+            return await _departmentRepository.GetAllDtos();
         }
         public async Task<DepartmentDto> CreateDepartmentAsync(DepartmentCreateDto createDto)
         {
@@ -31,7 +31,7 @@ namespace StockLinx.Service.Services
             newDepartment.Id = Guid.NewGuid();
             newDepartment.CreatedDate = DateTime.UtcNow;
             var addedDepartment = await AddAsync(newDepartment);
-            return _departmentRepository.GetDepartmentDto(addedDepartment);
+            return _departmentRepository.GetDto(addedDepartment);
         }
 
         public async Task<List<DepartmentDto>> CreateRangeDepartmentAsync(List<DepartmentCreateDto> createDtos)
@@ -45,7 +45,7 @@ namespace StockLinx.Service.Services
                 newDepartments.Add(newDepartment);
             }
             var addedDepartments = await AddRangeAsync(newDepartments);
-            return _departmentRepository.GetDepartmentDtos(addedDepartments.ToList());
+            return _departmentRepository.GetDtos(addedDepartments.ToList());
         }
 
         public async Task UpdateDepartmentAsync(DepartmentUpdateDto updateDto)

@@ -15,21 +15,21 @@ namespace StockLinx.Repository.Repositories.EF_Core
         }
 
 
-        public BranchDto GetBranchDto(Branch branch)
+        public BranchDto GetDto(Branch entity)
         {
-            return _mapper.Map<BranchDto>(branch);
+            return _mapper.Map<BranchDto>(entity);
         }
 
-        public List<BranchDto> GetBranchDtos(List<Branch> branches)
+        public List<BranchDto> GetDtos(List<Branch> entities)
         {
-            List<BranchDto> branchDtos = new List<BranchDto>();
-            branchDtos = _mapper.Map<List<BranchDto>>(branches);
-            return branchDtos;
+            List<BranchDto> dtos = new List<BranchDto>();
+            dtos = _mapper.Map<List<BranchDto>>(entities);
+            return dtos;
         }
-        public async Task<List<BranchDto>> GetAllBranchDtos()
+        public async Task<List<BranchDto>> GetAllDtos()
         {
-            var branches = await dbContext.Branches.AsNoTracking().ToListAsync();
-            return GetBranchDtos(branches);
+            var entities = await dbContext.Branches.AsNoTracking().ToListAsync();
+            return GetDtos(entities);
         }
     }
 }

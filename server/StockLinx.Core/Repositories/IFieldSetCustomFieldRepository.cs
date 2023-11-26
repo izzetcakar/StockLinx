@@ -5,8 +5,8 @@ namespace StockLinx.Core.Repositories
 {
     public interface IFieldSetCustomFieldRepository : IRepository<FieldSetCustomField>
     {
-        Task<List<FieldSetCustomFieldDto>> GetAllFieldSetCustomFieldDtos();
-        FieldSetCustomFieldDto GetFieldSetCustomFieldDto(FieldSetCustomField fieldSetCustomField);
-        List<FieldSetCustomFieldDto> GetFieldSetCustomFieldDtos(List<FieldSetCustomField> fieldSetCustomFields);
+        FieldSetCustomFieldDto GetDto(FieldSetCustomField entity);
+        List<FieldSetCustomFieldDto> GetDtos(List<FieldSetCustomField> entities);
+        Task<List<FieldSetCustomFieldDto>> GetAllDtos();
     }
 }

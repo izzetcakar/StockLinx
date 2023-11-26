@@ -5,8 +5,8 @@ namespace StockLinx.Core.Repositories
 {
     public interface IModelRepository : IRepository<Model>
     {
-        ModelDto GetModelDto(Model model);
-        List<ModelDto> GetModelDtos(List<Model> models);
-        Task<List<ModelDto>> GetAllModelDtos();
+        ModelDto GetDto(Model entity);
+        List<ModelDto> GetDtos(List<Model> entities);
+        Task<List<ModelDto>> GetAllDtos();
     }
 }

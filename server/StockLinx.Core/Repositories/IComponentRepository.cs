@@ -5,8 +5,8 @@ namespace StockLinx.Core.Repositories
 {
     public interface IComponentRepository : IRepository<Component>
     {
-        Task<ComponentDto> GetComponentDto(Component component);
-        Task<List<ComponentDto>> GetComponentDtos(List<Component> components);
-        Task<List<ComponentDto>> GetAllComponentDtos();
+        Task<ComponentDto> GetDto(Component entity);
+        Task<List<ComponentDto>> GetDtos(List<Component> entities);
+        Task<List<ComponentDto>> GetAllDtos();
     }
 }

@@ -22,9 +22,9 @@ namespace StockLinx.Service.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public async Task<List<AssetDto>> GetAllAssetDtos()
+        public async Task<List<AssetDto>> GetAllDtos()
         {
-            return await _assetRepository.GetAllAssetDtos();
+            return await _assetRepository.GetAllDtos();
         }
         public async Task<List<AssetDto>> CreateAssetAsync(AssetCreateDto createDto)
         {
@@ -46,7 +46,7 @@ namespace StockLinx.Service.Services
                 }
             }
             var addedAssets = await AddRangeAsync(assets);
-            return await _assetRepository.GetAssetDtos(addedAssets.ToList());
+            return await _assetRepository.GetDtos(addedAssets.ToList());
         }
 
         public async Task<List<AssetDto>> CreateRangeAssetAsync(List<AssetCreateDto> createDtos)
@@ -60,7 +60,7 @@ namespace StockLinx.Service.Services
                 newAssets.Add(newAsset);
             }
             var addedAssets = await AddRangeAsync(newAssets);
-            return await _assetRepository.GetAssetDtos(addedAssets.ToList());
+            return await _assetRepository.GetDtos(addedAssets.ToList());
         }
 
         public async Task UpdateAssetAsync(AssetUpdateDto updateDto)

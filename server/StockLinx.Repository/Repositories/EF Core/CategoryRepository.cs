@@ -15,21 +15,20 @@ namespace StockLinx.Repository.Repositories.EF_Core
             _mapper = mapper;
         }
 
-        public CategoryDto GetCategoryDto(Category category)
+        public CategoryDto GetDto(Category entity)
         {
-            var categoryDto = _mapper.Map<CategoryDto>(category);
-            return categoryDto;
+            return _mapper.Map<CategoryDto>(entity);
         }
-        public List<CategoryDto> GetCategoryDtos(List<Category> categories)
+        public List<CategoryDto> GetDtos(List<Category> entities)
         {
-            var categoryDtos = new List<CategoryDto>();
-            categoryDtos = _mapper.Map<List<CategoryDto>>(categories);
-            return categoryDtos;
+            var dtos = new List<CategoryDto>();
+            dtos = _mapper.Map<List<CategoryDto>>(entities);
+            return dtos;
         }
-        public async Task<List<CategoryDto>> GetAllCategoryDtos()
+        public async Task<List<CategoryDto>> GetAllDtos()
         {
-            var categories = await dbContext.Categories.AsNoTracking().ToListAsync();
-            return GetCategoryDtos(categories);
+            var entities = await dbContext.Categories.AsNoTracking().ToListAsync();
+            return GetDtos(entities);
         }
         public Task<List<ProductCategoryCounterDto>> GetCounts()
         {

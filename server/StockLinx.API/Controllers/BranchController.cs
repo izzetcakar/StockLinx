@@ -24,7 +24,7 @@ namespace StockLinx.API.Controllers
         [HttpGet]
         public async Task<IActionResult> All()
         {
-            var branchs = await _branchService.GetAllBranchDtos();
+            var branchs = await _branchService.GetAllDtos();
             return CreateActionResult(CustomResponseDto<List<BranchDto>>.Success(200, branchs));
         }
 

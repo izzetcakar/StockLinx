@@ -24,9 +24,9 @@ namespace StockLinx.Service.Services
             _mapper = mapper;
         }
 
-        public async Task<List<CustomFieldDto>> GetAllCustomFieldDtos()
+        public async Task<List<CustomFieldDto>> GetAllDtos()
         {
-            return await _customFieldRepository.GetAllCustomFieldDtos();
+            return await _customFieldRepository.GetAllDtos();
         }
         public async Task CreateCustomFieldAsync(CustomFieldCreateDto createDto)
         {

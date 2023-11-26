@@ -23,9 +23,9 @@ namespace StockLinx.Service.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<List<LocationDto>> GetAllLocationDtos()
+        public async Task<List<LocationDto>> GetAllDtos()
         {
-            return await _locationRepository.GetAllLocationDtos();
+            return await _locationRepository.GetAllDtos();
         }
 
         public async Task<LocationDto> CreateLocationAsync(LocationCreateDto createDto)
@@ -34,7 +34,7 @@ namespace StockLinx.Service.Services
             newLocation.Id = Guid.NewGuid();
             newLocation.CreatedDate = DateTime.UtcNow;
             var added = await AddAsync(newLocation);
-            return _locationRepository.GetLocationDto(added);
+            return _locationRepository.GetDto(added);
         }
 
         public async Task<List<LocationDto>> CreateRangeLocationAsync(List<LocationCreateDto> createDtos)
@@ -48,7 +48,7 @@ namespace StockLinx.Service.Services
                 newLocations.Add(newLocation);
             }
             var added = await AddRangeAsync(newLocations);
-            return _locationRepository.GetLocationDtos(added.ToList());
+            return _locationRepository.GetDtos(added.ToList());
         }
 
         public async Task UpdateLocationAsync(LocationUpdateDto updateDto)

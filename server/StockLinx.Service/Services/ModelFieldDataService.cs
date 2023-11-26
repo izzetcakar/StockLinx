@@ -20,9 +20,9 @@ namespace StockLinx.Service.Services
             _mapper = mapper;
         }
 
-        public async Task<List<ModelFieldDataDto>> GetAllModelFieldDataDtos()
+        public async Task<List<ModelFieldDataDto>> GetAllDtos()
         {
-            return await _modelFieldDataRepository.GetAllModelFieldDataDtos();
+            return await _modelFieldDataRepository.GetAllDtos();
         }
         public async Task<ModelFieldDataDto> CreateModelFieldDataAsync(ModelFieldDataDto dto)
         {
@@ -30,7 +30,7 @@ namespace StockLinx.Service.Services
             newModelFieldData.Id = Guid.NewGuid();
             newModelFieldData.CreatedDate = DateTime.UtcNow;
             var added = await AddAsync(newModelFieldData);
-            return _modelFieldDataRepository.GetModelFieldDataDto(added);
+            return _modelFieldDataRepository.GetDto(added);
         }
 
         public async Task<List<ModelFieldDataDto>> CreateRangeModelFieldDataAsync(List<ModelFieldDataDto> dtos)
@@ -44,7 +44,7 @@ namespace StockLinx.Service.Services
                 newModelFieldDatas.Add(newModelFieldData);
             }
             var added = await AddRangeAsync(newModelFieldDatas);
-            return _modelFieldDataRepository.GetModelFieldDataDtos(added.ToList());
+            return _modelFieldDataRepository.GetDtos(added.ToList());
         }
 
         public async Task UpdateModelFieldDataAsync(ModelFieldDataDto dto)

@@ -5,8 +5,8 @@ namespace StockLinx.Core.Repositories
 {
     public interface IAccessoryRepository : IRepository<Accessory>
     {
-        Task<AccessoryDto> GetAccessoryDto(Accessory accessory);
-        Task<List<AccessoryDto>> GetAccessoryDtos(List<Accessory> accessories);
-        Task<List<AccessoryDto>> GetAllAccessoryDtos();
+        Task<AccessoryDto> GetDto(Accessory entity);
+        Task<List<AccessoryDto>> GetDtos(List<Accessory> entities);
+        Task<List<AccessoryDto>> GetAllDtos();
     }
 }

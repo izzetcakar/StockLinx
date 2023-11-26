@@ -32,9 +32,9 @@ namespace StockLinx.Service.Services
                 throw new Exception("An error occurred while creating the base admin.", ex);
             }
         }
-        public async Task<List<CompanyDto>> GetAllCompanyDtos()
+        public async Task<List<CompanyDto>> GetAllDtos()
         {
-            return await _companyRepository.GetAllCompanyDtos();
+            return await _companyRepository.GetAllDtos();
         }
         public async Task<CompanyDto> CreateCompanyAsync(CompanyCreateDto createDto)
         {
@@ -42,7 +42,7 @@ namespace StockLinx.Service.Services
             newCompany.Id = Guid.NewGuid();
             newCompany.CreatedDate = DateTime.UtcNow;
             var addedCompany = await AddAsync(newCompany);
-            return _companyRepository.GetCompanyDto(addedCompany);
+            return _companyRepository.GetDto(addedCompany);
         }
 
         public async Task<List<CompanyDto>> CreateRangeCompanyAsync(List<CompanyCreateDto> createDtos)
@@ -56,7 +56,7 @@ namespace StockLinx.Service.Services
                 newCompanies.Add(newCompany);
             }
             var addedCompanies = await AddRangeAsync(newCompanies);
-            return _companyRepository.GetCompanyDtos(addedCompanies.ToList());
+            return _companyRepository.GetDtos(addedCompanies.ToList());
         }
 
         public async Task UpdateCompanyAsync(CompanyUpdateDto updateDto)

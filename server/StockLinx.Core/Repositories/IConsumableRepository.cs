@@ -5,8 +5,8 @@ namespace StockLinx.Core.Repositories
 {
     public interface IConsumableRepository : IRepository<Consumable>
     {
-        Task<ConsumableDto> GetConsumableDto(Consumable consumable);
-        Task<List<ConsumableDto>> GetConsumableDtos(List<Consumable> consumables);
-        Task<List<ConsumableDto>> GetAllConsumableDtos();
+        Task<ConsumableDto> GetDto(Consumable entity);
+        Task<List<ConsumableDto>> GetDtos(List<Consumable> entities);
+        Task<List<ConsumableDto>> GetAllDtos();
     }
 }

@@ -25,9 +25,9 @@ namespace StockLinx.Service.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<List<ConsumableDto>> GetAllConsumableDtos()
+        public async Task<List<ConsumableDto>> GetAllDtos()
         {
-            return await _consumableRepository.GetAllConsumableDtos();
+            return await _consumableRepository.GetAllDtos();
         }
         public async Task<ConsumableDto> CreateConsumableAsync(ConsumableCreateDto createDto)
         {
@@ -35,7 +35,7 @@ namespace StockLinx.Service.Services
             newConsumable.Id = Guid.NewGuid();
             newConsumable.CreatedDate = DateTime.UtcNow;
             var addedConsumable = await AddAsync(newConsumable);
-            return await _consumableRepository.GetConsumableDto(addedConsumable);
+            return await _consumableRepository.GetDto(addedConsumable);
         }
 
         public async Task<List<ConsumableDto>> CreateRangeConsumableAsync(List<ConsumableCreateDto> createDtos)
@@ -49,7 +49,7 @@ namespace StockLinx.Service.Services
                 newConsumables.Add(newConsumable);
             }
             var addedConsumables = await AddRangeAsync(newConsumables);
-            return await _consumableRepository.GetConsumableDtos(addedConsumables.ToList());
+            return await _consumableRepository.GetDtos(addedConsumables.ToList());
         }
 
         public async Task UpdateConsumableAsync(ConsumableUpdateDto updateDto)

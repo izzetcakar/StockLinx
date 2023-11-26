@@ -22,9 +22,9 @@ namespace StockLinx.Service.Services
             _mapper = mapper;
         }
 
-        public async Task<List<FieldSetDto>> GetAllFieldSetDtos()
+        public async Task<List<FieldSetDto>> GetAllDtos()
         {
-            return await _fieldSetRepository.GetAllFieldSetDtos();
+            return await _fieldSetRepository.GetAllDtos();
         }
         public async Task<FieldSetDto> CreateFieldSetAsync(FieldSetCreateDto createDto)
         {
@@ -32,7 +32,7 @@ namespace StockLinx.Service.Services
             newFieldSet.Id = Guid.NewGuid();
             newFieldSet.CreatedDate = DateTime.UtcNow;
             var added = await AddAsync(newFieldSet);
-            return _fieldSetRepository.GetFieldSetDto(added);
+            return _fieldSetRepository.GetDto(added);
         }
 
         public async Task<List<FieldSetDto>> CreateRangeFieldSetAsync(List<FieldSetCreateDto> createDtos)
@@ -46,7 +46,7 @@ namespace StockLinx.Service.Services
                 newEntities.Add(newFieldSet);
             }
             var added = await AddRangeAsync(newEntities);
-            return _fieldSetRepository.GetFieldSetDtos(added.ToList());
+            return _fieldSetRepository.GetDtos(added.ToList());
         }
 
         public async Task UpdateFieldSetAsync(FieldSetUpdateDto updateDto)

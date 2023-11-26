@@ -5,8 +5,8 @@ namespace StockLinx.Core.Repositories
 {
     public interface ILocationRepository : IRepository<Location>
     {
-        LocationDto GetLocationDto(Location location);
-        List<LocationDto> GetLocationDtos(List<Location> locations);
-        Task<List<LocationDto>> GetAllLocationDtos();
+        LocationDto GetDto(Location entity);
+        List<LocationDto> GetDtos(List<Location> entities);
+        Task<List<LocationDto>> GetAllDtos();
     }
 }

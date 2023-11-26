@@ -21,9 +21,9 @@ namespace StockLinx.Service.Services
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
-        public async Task<List<SupplierDto>> GetAllSupplierDtos()
+        public async Task<List<SupplierDto>> GetAllDtos()
         {
-            return await _supplierRepository.GetAllSupplierDtos();
+            return await _supplierRepository.GetAllDtos();
         }
         public async Task<SupplierDto> CreateSupplierAsync(SupplierCreateDto createDto)
         {
@@ -31,7 +31,7 @@ namespace StockLinx.Service.Services
             newSupplier.Id = Guid.NewGuid();
             newSupplier.CreatedDate = DateTime.UtcNow;
             var added = await AddAsync(newSupplier);
-            return _supplierRepository.GetSupplierDto(added);
+            return _supplierRepository.GetDto(added);
         }
 
         public async Task<List<SupplierDto>> CreateRangeSupplierAsync(List<SupplierCreateDto> createDtos)
@@ -45,7 +45,7 @@ namespace StockLinx.Service.Services
                 newSuppliers.Add(newSupplier);
             }
             var added = await AddRangeAsync(newSuppliers);
-            return _supplierRepository.GetSupplierDtos(added.ToList());
+            return _supplierRepository.GetDtos(added.ToList());
         }
 
         public async Task UpdateSupplierAsync(SupplierUpdateDto updateDto)

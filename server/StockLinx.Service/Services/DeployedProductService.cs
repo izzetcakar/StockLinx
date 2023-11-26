@@ -20,9 +20,9 @@ namespace StockLinx.Service.Services
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
-        public async Task<List<DeployedProductDto>> GetAllDeployedProductDtos()
+        public async Task<List<DeployedProductDto>> GetAllDtos()
         {
-            return await _deployedProductRepository.GetAllDeployedProductDtos();
+            return await _deployedProductRepository.GetAllDtos();
         }
         public async Task<DeployedProductDto> CreateDeployedProductAsync(DeployedProductCreateDto createDto)
         {
@@ -30,7 +30,7 @@ namespace StockLinx.Service.Services
             newDeployedProduct.Id = Guid.NewGuid();
             newDeployedProduct.CreatedDate = DateTime.UtcNow;
             var added = await AddAsync(newDeployedProduct);
-            return _deployedProductRepository.GetDeployedProductDto(added);
+            return _deployedProductRepository.GetDto(added);
         }
 
         public async Task<List<DeployedProductDto>> CreateRangeDeployedProductAsync(List<DeployedProductCreateDto> createDtos)
@@ -44,7 +44,7 @@ namespace StockLinx.Service.Services
                 newDeployedProducts.Add(newDeployedProduct);
             }
             var added = await AddRangeAsync(newDeployedProducts);
-            return _deployedProductRepository.GetDeployedProductDtos(added.ToList());
+            return _deployedProductRepository.GetDtos(added.ToList());
         }
         public async Task UpdateDeployedProductAsync(DeployedProductUpdateDto updateDto)
         {

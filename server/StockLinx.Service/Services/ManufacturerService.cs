@@ -21,9 +21,9 @@ namespace StockLinx.Service.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<List<ManufacturerDto>> GetAllManufacturerDtos()
+        public async Task<List<ManufacturerDto>> GetAllDtos()
         {
-            return await _manufacturerRepository.GetAllManufacturerDtos();
+            return await _manufacturerRepository.GetAllDtos();
         }
         public async Task<ManufacturerDto> CreateManufacturerAsync(ManufacturerCreateDto createDto)
         {
@@ -31,7 +31,7 @@ namespace StockLinx.Service.Services
             newManufacturer.Id = Guid.NewGuid();
             newManufacturer.CreatedDate = DateTime.UtcNow;
             var added = await AddAsync(newManufacturer);
-            return _manufacturerRepository.GetManufacturerDto(added);
+            return _manufacturerRepository.GetDto(added);
         }
 
         public async Task<List<ManufacturerDto>> CreateRangeManufacturerAsync(List<ManufacturerCreateDto> createDtos)
@@ -45,7 +45,7 @@ namespace StockLinx.Service.Services
                 newManufacturers.Add(newManufacturer);
             }
             var added = await AddRangeAsync(newManufacturers);
-            return _manufacturerRepository.GetManufacturerDtos(added.ToList());
+            return _manufacturerRepository.GetDtos(added.ToList());
         }
 
         public async Task UpdateManufacturerAsync(ManufacturerUpdateDto updateDto)

@@ -32,21 +32,20 @@ namespace StockLinx.Repository.Repositories.EF_Core
             }
             await dbContext.AddRangeAsync(fcToAdd);
         }
-        public CustomFieldDto GetCustomFieldDto(CustomField customField)
+        public CustomFieldDto GetDto(CustomField entity)
         {
-            var customFieldDto = _mapper.Map<CustomFieldDto>(customField);
-            return customFieldDto;
+            return _mapper.Map<CustomFieldDto>(entity);
         }
-        public List<CustomFieldDto> GetCustomFieldDtos(List<CustomField> customFields)
+        public List<CustomFieldDto> GetDtos(List<CustomField> entities)
         {
-            var customFieldDtos = new List<CustomFieldDto>();
-            customFieldDtos = _mapper.Map<List<CustomFieldDto>>(customFields);
-            return customFieldDtos;
+            var dtos = new List<CustomFieldDto>();
+            dtos = _mapper.Map<List<CustomFieldDto>>(entities);
+            return dtos;
         }
-        public async Task<List<CustomFieldDto>> GetAllCustomFieldDtos()
+        public async Task<List<CustomFieldDto>> GetAllDtos()
         {
-            var customFields = await dbContext.CustomFields.AsNoTracking().ToListAsync();
-            return GetCustomFieldDtos(customFields);
+            var entities = await dbContext.CustomFields.AsNoTracking().ToListAsync();
+            return GetDtos(entities);
         }
     }
 }

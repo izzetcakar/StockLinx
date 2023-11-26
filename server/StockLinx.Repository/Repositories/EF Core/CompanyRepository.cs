@@ -47,21 +47,20 @@ namespace StockLinx.Repository.Repositories.EF_Core
             newUser.StartDate = DateTime.UtcNow;
             dbContext.Users.Add(newUser);
         }
-        public CompanyDto GetCompanyDto(Company company)
+        public CompanyDto GetDto(Company entity)
         {
-            var companyDto = _mapper.Map<CompanyDto>(company);
-            return companyDto;
+            return _mapper.Map<CompanyDto>(entity);
         }
-        public List<CompanyDto> GetCompanyDtos(List<Company> companies)
+        public List<CompanyDto> GetDtos(List<Company> entities)
         {
-            var companyDtos = new List<CompanyDto>();
-            companyDtos = _mapper.Map<List<CompanyDto>>(companies);
-            return companyDtos;
+            var dtos = new List<CompanyDto>();
+            dtos = _mapper.Map<List<CompanyDto>>(entities);
+            return dtos;
         }
-        public async Task<List<CompanyDto>> GetAllCompanyDtos()
+        public async Task<List<CompanyDto>> GetAllDtos()
         {
-            var companyDtos = await dbContext.Companies.AsNoTracking().ToListAsync();
-            return GetCompanyDtos(companyDtos);
+            var entities = await dbContext.Companies.AsNoTracking().ToListAsync();
+            return GetDtos(entities);
         }
     }
 }

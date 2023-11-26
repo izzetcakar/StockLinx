@@ -22,9 +22,9 @@ namespace StockLinx.Service.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<List<ProductStatusDto>> GetAllProductStatusDtos()
+        public async Task<List<ProductStatusDto>> GetAllDtos()
         {
-            return await _productStatusRepository.GetAllProductStatusDtos();
+            return await _productStatusRepository.GetAllDtos();
         }
         public async Task<ProductStatusDto> CreateProductStatusAsync(ProductStatusCreateDto createDto)
         {
@@ -32,7 +32,7 @@ namespace StockLinx.Service.Services
             newProductStatus.Id = Guid.NewGuid();
             newProductStatus.CreatedDate = DateTime.UtcNow;
             var added = await AddAsync(newProductStatus);
-            return _productStatusRepository.GetProductStatusDto(added);
+            return _productStatusRepository.GetDto(added);
         }
 
         public async Task<List<ProductStatusDto>> CreateRangeProductStatusAsync(List<ProductStatusCreateDto> createDtos)
@@ -46,7 +46,7 @@ namespace StockLinx.Service.Services
                 newProductStatuses.Add(newProductStatus);
             }
             var added = await AddRangeAsync(newProductStatuses);
-            return _productStatusRepository.GetProductStatusDtos(added.ToList());
+            return _productStatusRepository.GetDtos(added.ToList());
         }
 
         public async Task UpdateProductStatusAsync(ProductStatusUpdateDto updateDto)

@@ -25,9 +25,9 @@ namespace StockLinx.Service.Services
             _unitOfWork = unitOfWork;
             _logger = logger;
         }
-        public async Task<List<AccessoryDto>> GetAllAccessoryDtos()
+        public async Task<List<AccessoryDto>> GetAllDtos()
         {
-            return await _accessoryRepository.GetAllAccessoryDtos();
+            return await _accessoryRepository.GetAllDtos();
         }
         public async Task<AccessoryDto> CreateAccessoryAsync(AccessoryCreateDto createDto)
         {
@@ -35,7 +35,7 @@ namespace StockLinx.Service.Services
             newAccessory.Id = Guid.NewGuid();
             newAccessory.CreatedDate = DateTime.UtcNow;
             var addedAccessory = await AddAsync(newAccessory);
-            return await _accessoryRepository.GetAccessoryDto(addedAccessory);
+            return await _accessoryRepository.GetDto(addedAccessory);
         }
         public async Task<List<AccessoryDto>> CreateRangeAccessoryAsync(List<AccessoryCreateDto> createDtos)
         {
@@ -48,7 +48,7 @@ namespace StockLinx.Service.Services
                 newAccessories.Add(newAccessory);
             }
             var addedAccessories = await AddRangeAsync(newAccessories);
-            return await _accessoryRepository.GetAccessoryDtos(addedAccessories.ToList());
+            return await _accessoryRepository.GetDtos(addedAccessories.ToList());
         }
         public async Task UpdateAccessoryAsync(AccessoryUpdateDto updateDto)
         {

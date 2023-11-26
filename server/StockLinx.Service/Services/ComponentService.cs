@@ -22,9 +22,9 @@ namespace StockLinx.Service.Services
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
-        public async Task<List<ComponentDto>> GetAllComponentDtos()
+        public async Task<List<ComponentDto>> GetAllDtos()
         {
-            return await _componentRepository.GetAllComponentDtos();
+            return await _componentRepository.GetAllDtos();
         }
         public async Task<ComponentDto> CreateComponentAsync(ComponentCreateDto createDto)
         {
@@ -32,7 +32,7 @@ namespace StockLinx.Service.Services
             newComponent.Id = Guid.NewGuid();
             newComponent.CreatedDate = DateTime.UtcNow;
             var addedComponent = await AddAsync(newComponent);
-            return await _componentRepository.GetComponentDto(addedComponent);
+            return await _componentRepository.GetDto(addedComponent);
         }
 
         public async Task<List<ComponentDto>> CreateRangeComponentAsync(List<ComponentCreateDto> createDtos)
@@ -46,7 +46,7 @@ namespace StockLinx.Service.Services
                 newComponents.Add(newComponent);
             }
             var addedComponents = await AddRangeAsync(newComponents);
-            return await _componentRepository.GetComponentDtos(addedComponents.ToList());
+            return await _componentRepository.GetDtos(addedComponents.ToList());
         }
 
         public async Task UpdateComponentAsync(ComponentUpdateDto updateDto)

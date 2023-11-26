@@ -6,8 +6,8 @@ namespace StockLinx.Core.Repositories
 
     public interface IUserRepository : IRepository<User>
     {
-        UserDto GetUserDto(User user);
-        List<UserDto> GetUserDtos(List<User> users);
-        Task<List<UserDto>> GetAllUserDtos();
+        UserDto GetDto(User entity);
+        List<UserDto> GetDtos(List<User> entities);
+        Task<List<UserDto>> GetAllDtos();
     }
 }

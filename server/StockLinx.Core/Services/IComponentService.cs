@@ -8,7 +8,7 @@ namespace StockLinx.Core.Services
 {
     public interface IComponentService : IService<Component>
     {
-        Task<List<ComponentDto>> GetAllComponentDtos();
+        Task<List<ComponentDto>> GetAllDtos();
         Task<ComponentDto> CreateComponentAsync(ComponentCreateDto createDto);
         Task<List<ComponentDto>> CreateRangeComponentAsync(List<ComponentCreateDto> createDtos);
         Task UpdateComponentAsync(ComponentUpdateDto updateDto);

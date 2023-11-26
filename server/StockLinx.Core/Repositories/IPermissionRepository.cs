@@ -5,8 +5,8 @@ namespace StockLinx.Core.Repositories
 {
     public interface IPermissionRepository : IRepository<Permission>
     {
-        PermissionDto GetPermissionDto(Permission permission);
-        List<PermissionDto> GetPermissionDtos(List<Permission> permissions);
-        Task<List<PermissionDto>> GetAllPermissionDtos();
+        PermissionDto GetDto(Permission entity);
+        List<PermissionDto> GetDtos(List<Permission> entities);
+        Task<List<PermissionDto>> GetAllDtos();
     }
 }

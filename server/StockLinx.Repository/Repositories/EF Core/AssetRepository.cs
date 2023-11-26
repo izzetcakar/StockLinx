@@ -14,40 +14,40 @@ namespace StockLinx.Repository.Repositories.EF_Core
             _mapper = mapper;
         }
 
-        public async Task<AssetDto> GetAssetDto(Asset asset)
+        public async Task<AssetDto> GetDto(Asset entity)
         {
             var deployedProducts = await dbContext.DeployedProducts.AsNoTracking().ToListAsync();
-            var companyId = await dbContext.Branches.Where(b => b.Id == asset.BranchId).Select(b => b.CompanyId).FirstOrDefaultAsync();
+            var companyId = await dbContext.Branches.Where(b => b.Id == entity.BranchId).Select(b => b.CompanyId).FirstOrDefaultAsync();
             if (companyId == null)
             {
                 return null;
             }
-            var assetDto = _mapper.Map<AssetDto>(asset);
-            assetDto.CompanyId = companyId;
-            return assetDto;
+            var dto = _mapper.Map<AssetDto>(entity);
+            dto.CompanyId = companyId;
+            return dto;
         }
-        public async Task<List<AssetDto>> GetAssetDtos(List<Asset> assets)
+        public async Task<List<AssetDto>> GetDtos(List<Asset> entities)
         {
             var deployedProducts = await dbContext.DeployedProducts.AsNoTracking().ToListAsync();
-            var assetDtos = new List<AssetDto>();
+            var dtos = new List<AssetDto>();
 
-            foreach (var asset in assets)
+            foreach (var asset in entities)
             {
                 var companyId = await dbContext.Branches.Where(b => b.Id == asset.BranchId).Select(b => b.CompanyId).FirstOrDefaultAsync();
                 if (companyId == null)
                 {
                     continue;
                 }
-                var assetDto = _mapper.Map<AssetDto>(asset);
-                assetDto.CompanyId = companyId;
-                assetDtos.Add(assetDto);
+                var dto = _mapper.Map<AssetDto>(asset);
+                dto.CompanyId = companyId;
+                dtos.Add(dto);
             }
-            return assetDtos;
+            return dtos;
         }
-        public async Task<List<AssetDto>> GetAllAssetDtos()
+        public async Task<List<AssetDto>> GetAllDtos()
         {
-            var assets = await dbContext.Assets.AsNoTracking().ToListAsync();
-            return await GetAssetDtos(assets);
+            var entities = await dbContext.Assets.AsNoTracking().ToListAsync();
+            return await GetDtos(entities);
         }
     }
 }

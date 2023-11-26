@@ -5,8 +5,8 @@ namespace StockLinx.Core.Repositories
 {
     public interface IFieldSetRepository : IRepository<FieldSet>
     {
-        FieldSetDto GetFieldSetDto(FieldSet fieldSet);
-        List<FieldSetDto> GetFieldSetDtos(List<FieldSet> fieldSets);
-        Task<List<FieldSetDto>> GetAllFieldSetDtos();
+        FieldSetDto GetDto(FieldSet entity);
+        List<FieldSetDto> GetDtos(List<FieldSet> entities);
+        Task<List<FieldSetDto>> GetAllDtos();
     }
 }

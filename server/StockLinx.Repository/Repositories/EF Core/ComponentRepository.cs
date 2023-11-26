@@ -14,44 +14,44 @@ namespace StockLinx.Repository.Repositories.EF_Core
             _mapper = mapper;
         }
 
-        public async Task<ComponentDto> GetComponentDto(Component component)
+        public async Task<ComponentDto> GetDto(Component entity)
         {
             var deployedProducts = await dbContext.DeployedProducts.AsNoTracking().ToListAsync();
-            var companyId = await dbContext.Branches.Where(b => b.Id == component.BranchId).Select(b => b.CompanyId).FirstOrDefaultAsync();
-            var availableQuantity = component.Quantity - deployedProducts.Count(d => d.ComponentId.HasValue && d.ComponentId == component.Id);
+            var companyId = await dbContext.Branches.Where(b => b.Id == entity.BranchId).Select(b => b.CompanyId).FirstOrDefaultAsync();
+            var availableQuantity = entity.Quantity - deployedProducts.Count(d => d.ComponentId.HasValue && d.ComponentId == entity.Id);
             if (companyId == null)
             {
                 return null;
             }
-            var componentDto = _mapper.Map<ComponentDto>(component);
-            componentDto.CompanyId = companyId;
-            componentDto.AvailableQuantity = availableQuantity;
-            return componentDto;
+            var dto = _mapper.Map<ComponentDto>(entity);
+            dto.CompanyId = companyId;
+            dto.AvailableQuantity = availableQuantity;
+            return dto;
         }
-        public async Task<List<ComponentDto>> GetComponentDtos(List<Component> components)
+        public async Task<List<ComponentDto>> GetDtos(List<Component> entities)
         {
             var deployedProducts = await dbContext.DeployedProducts.AsNoTracking().ToListAsync();
-            var componentDtos = new List<ComponentDto>();
+            var dtos = new List<ComponentDto>();
 
-            foreach (var component in components)
+            foreach (var entity in entities)
             {
-                var companyId = await dbContext.Branches.Where(b => b.Id == component.BranchId).Select(b => b.CompanyId).FirstOrDefaultAsync();
-                var availableQuantity = component.Quantity - deployedProducts.Count(d => d.ComponentId.HasValue && d.ComponentId == component.Id);
+                var companyId = await dbContext.Branches.Where(b => b.Id == entity.BranchId).Select(b => b.CompanyId).FirstOrDefaultAsync();
+                var availableQuantity = entity.Quantity - deployedProducts.Count(d => d.ComponentId.HasValue && d.ComponentId == entity.Id);
                 if (companyId == null)
                 {
                     continue;
                 }
-                var componentDto = _mapper.Map<ComponentDto>(component);
-                componentDto.CompanyId = companyId;
-                componentDto.AvailableQuantity = availableQuantity;
-                componentDtos.Add(componentDto);
+                var dto = _mapper.Map<ComponentDto>(entity);
+                dto.CompanyId = companyId;
+                dto.AvailableQuantity = availableQuantity;
+                dtos.Add(dto);
             }
-            return componentDtos;
+            return dtos;
         }
-        public async Task<List<ComponentDto>> GetAllComponentDtos()
+        public async Task<List<ComponentDto>> GetAllDtos()
         {
-            var components = await dbContext.Components.AsNoTracking().ToListAsync();
-            return await GetComponentDtos(components);
+            var entities = await dbContext.Components.AsNoTracking().ToListAsync();
+            return await GetDtos(entities);
         }
     }
 }

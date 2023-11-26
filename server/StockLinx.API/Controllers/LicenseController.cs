@@ -25,7 +25,7 @@ namespace StockLinx.API.Controllers
         [HttpGet]
         public async Task<IActionResult> All()
         {
-            var licenses = await _licenseService.GetAllLicenseDtos();
+            var licenses = await _licenseService.GetAllDtos();
             return CreateActionResult(CustomResponseDto<List<LicenseDto>>.Success(200, licenses));
         }
 
