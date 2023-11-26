@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Update;
@@ -22,31 +21,20 @@ namespace StockLinx.Service.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<List<DepartmentDto>> GetDepartmentDtos()
+        public async Task<List<DepartmentDto>> GetAllDepartmentDtos()
         {
-            var departments = await _departmentRepository.GetAll().Include(x => x.Branch)
-                .Select(x => new DepartmentDto
-                {
-                    Id = x.Id,
-                    Name = x.Name,
-                    BranchId = x.BranchId,
-                    LocationId = x.LocationId,
-                    ManagerId = x.ManagerId,
-                    CompanyId = x.Branch.CompanyId,
-                    CreatedDate = x.CreatedDate,
-                    UpdatedDate = x.UpdatedDate
-                }).ToListAsync();
-            return departments;
+            return await _departmentRepository.GetAllDepartmentDtos();
         }
-        public async Task CreateDepartmentAsync(DepartmentCreateDto createDto)
+        public async Task<DepartmentDto> CreateDepartmentAsync(DepartmentCreateDto createDto)
         {
             var newDepartment = _mapper.Map<Department>(createDto);
             newDepartment.Id = Guid.NewGuid();
             newDepartment.CreatedDate = DateTime.UtcNow;
-            await AddAsync(newDepartment);
+            var addedDepartment = await AddAsync(newDepartment);
+            return _departmentRepository.GetDepartmentDto(addedDepartment);
         }
 
-        public async Task CreateRangeDepartmentAsync(List<DepartmentCreateDto> createDtos)
+        public async Task<List<DepartmentDto>> CreateRangeDepartmentAsync(List<DepartmentCreateDto> createDtos)
         {
             var newDepartments = new List<Department>();
             foreach (var createDto in createDtos)
@@ -56,7 +44,8 @@ namespace StockLinx.Service.Services
                 newDepartment.CreatedDate = DateTime.UtcNow;
                 newDepartments.Add(newDepartment);
             }
-            await AddRangeAsync(newDepartments);
+            var addedDepartments = await AddRangeAsync(newDepartments);
+            return _departmentRepository.GetDepartmentDtos(addedDepartments.ToList());
         }
 
         public async Task UpdateDepartmentAsync(DepartmentUpdateDto updateDto)

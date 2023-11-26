@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using StockLinx.Core.DTOs.Create;
+using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
@@ -19,16 +20,32 @@ namespace StockLinx.Service.Services
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
-
-        public async Task CreateCompanyAsync(CompanyCreateDto createDto)
+        public async Task CreateBaseAdmin()
+        {
+            try
+            {
+                await _companyRepository.CreateBaseAdmin();
+                await _unitOfWork.CommitAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while creating the base admin.", ex);
+            }
+        }
+        public async Task<List<CompanyDto>> GetAllCompanyDtos()
+        {
+            return await _companyRepository.GetAllCompanyDtos();
+        }
+        public async Task<CompanyDto> CreateCompanyAsync(CompanyCreateDto createDto)
         {
             var newCompany = _mapper.Map<Company>(createDto);
             newCompany.Id = Guid.NewGuid();
             newCompany.CreatedDate = DateTime.UtcNow;
-            await AddAsync(newCompany);
+            var addedCompany = await AddAsync(newCompany);
+            return _companyRepository.GetCompanyDto(addedCompany);
         }
 
-        public async Task CreateRangeCompanyAsync(List<CompanyCreateDto> createDtos)
+        public async Task<List<CompanyDto>> CreateRangeCompanyAsync(List<CompanyCreateDto> createDtos)
         {
             var newCompanies = new List<Company>();
             foreach (var createDto in createDtos)
@@ -38,7 +55,8 @@ namespace StockLinx.Service.Services
                 newCompany.CreatedDate = DateTime.UtcNow;
                 newCompanies.Add(newCompany);
             }
-            await AddRangeAsync(newCompanies);
+            var addedCompanies = await AddRangeAsync(newCompanies);
+            return _companyRepository.GetCompanyDtos(addedCompanies.ToList());
         }
 
         public async Task UpdateCompanyAsync(CompanyUpdateDto updateDto)

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Create;
+using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
@@ -86,15 +87,10 @@ namespace StockLinx.Service.Services
             user.CreatedDate = DateTime.UtcNow;
             user.IsAdmin = false;
             var employeeNoExist = await _userRepository.AnyAsync(x => x.EmployeeNo == user.EmployeeNo);
-            var emailExist = await _userRepository.AnyAsync(x => x.Email == user.Email);
 
             if (employeeNoExist)
             {
                 throw new Exception("EmployeeNo already exists");
-            }
-            else if (emailExist)
-            {
-                throw new Exception("Email already exists");
             }
             else
             {
@@ -105,15 +101,16 @@ namespace StockLinx.Service.Services
             }
         }
 
-        public async Task CreateUserAsync(UserCreateDto createDto)
+        public async Task<UserDto> CreateUserAsync(UserCreateDto createDto)
         {
             var newUser = _mapper.Map<User>(createDto);
             newUser.Id = Guid.NewGuid();
             newUser.CreatedDate = DateTime.UtcNow;
-            await AddAsync(newUser);
+            var added = await AddAsync(newUser);
+            return _userRepository.GetUserDto(added);
         }
 
-        public async Task CreateRangeUserAsync(List<UserCreateDto> createDtos)
+        public async Task<List<UserDto>> CreateRangeUserAsync(List<UserCreateDto> createDtos)
         {
             var newUsers = new List<User>();
             foreach (var createDto in createDtos)
@@ -123,7 +120,8 @@ namespace StockLinx.Service.Services
                 newUser.CreatedDate = DateTime.UtcNow;
                 newUsers.Add(newUser);
             }
-            await AddRangeAsync(newUsers);
+            var added = await AddRangeAsync(newUsers);
+            return _userRepository.GetUserDtos(added.ToList());
         }
 
         public async Task UpdateUserAsync(UserUpdateDto updateDto)

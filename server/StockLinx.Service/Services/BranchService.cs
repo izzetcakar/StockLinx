@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using StockLinx.Core.DTOs.Create;
+using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
@@ -20,16 +21,20 @@ namespace StockLinx.Service.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-
-        public async Task CreateBranchAsync(BranchCreateDto createDto)
+        public async Task<List<BranchDto>> GetAllBranchDtos()
+        {
+            return await _branchRepository.GetAllBranchDtos();
+        }
+        public async Task<BranchDto> CreateBranchAsync(BranchCreateDto createDto)
         {
             var newBranch = _mapper.Map<Branch>(createDto);
             newBranch.Id = Guid.NewGuid();
             newBranch.CreatedDate = DateTime.UtcNow;
-            await AddAsync(newBranch);
+            var addedBranch = await AddAsync(newBranch);
+            return _branchRepository.GetBranchDto(addedBranch);
         }
 
-        public async Task CreateRangeBranchAsync(List<BranchCreateDto> createDtos)
+        public async Task<List<BranchDto>> CreateRangeBranchAsync(List<BranchCreateDto> createDtos)
         {
             var newBranches = new List<Branch>();
             foreach (var createDto in createDtos)
@@ -39,7 +44,8 @@ namespace StockLinx.Service.Services
                 newBranch.CreatedDate = DateTime.UtcNow;
                 newBranches.Add(newBranch);
             }
-            await AddRangeAsync(newBranches);
+            var addedBranches = await AddRangeAsync(newBranches);
+            return _branchRepository.GetBranchDtos(addedBranches.ToList());
         }
 
         public async Task UpdateBranchAsync(BranchUpdateDto updateDto)

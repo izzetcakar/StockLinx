@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Update;
@@ -22,21 +21,20 @@ namespace StockLinx.Service.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<List<ManufacturerDto>> GetManufacturerDtos()
+        public async Task<List<ManufacturerDto>> GetAllManufacturerDtos()
         {
-            var manufacturers = await _manufacturerRepository.GetAll().ToListAsync();
-            var manufacturerDtos = _mapper.Map<List<ManufacturerDto>>(manufacturers);
-            return manufacturerDtos;
+            return await _manufacturerRepository.GetAllManufacturerDtos();
         }
-        public async Task CreateManufacturerAsync(ManufacturerCreateDto createDto)
+        public async Task<ManufacturerDto> CreateManufacturerAsync(ManufacturerCreateDto createDto)
         {
             var newManufacturer = _mapper.Map<Manufacturer>(createDto);
             newManufacturer.Id = Guid.NewGuid();
             newManufacturer.CreatedDate = DateTime.UtcNow;
-            await AddAsync(newManufacturer);
+            var added = await AddAsync(newManufacturer);
+            return _manufacturerRepository.GetManufacturerDto(added);
         }
 
-        public async Task CreateRangeManufacturerAsync(List<ManufacturerCreateDto> createDtos)
+        public async Task<List<ManufacturerDto>> CreateRangeManufacturerAsync(List<ManufacturerCreateDto> createDtos)
         {
             var newManufacturers = new List<Manufacturer>();
             foreach (var createDto in createDtos)
@@ -46,7 +44,8 @@ namespace StockLinx.Service.Services
                 newManufacturer.CreatedDate = DateTime.UtcNow;
                 newManufacturers.Add(newManufacturer);
             }
-            await AddRangeAsync(newManufacturers);
+            var added = await AddRangeAsync(newManufacturers);
+            return _manufacturerRepository.GetManufacturerDtos(added.ToList());
         }
 
         public async Task UpdateManufacturerAsync(ManufacturerUpdateDto updateDto)

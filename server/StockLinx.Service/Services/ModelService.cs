@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Update;
@@ -22,21 +21,20 @@ namespace StockLinx.Service.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<List<ModelDto>> GetModelDtos()
+        public async Task<List<ModelDto>> GetAllModelDtos()
         {
-            var models = await _modelRepository.GetAll().ToListAsync();
-            var modelDtos = _mapper.Map<List<ModelDto>>(models);
-            return modelDtos;
+            return await _modelRepository.GetAllModelDtos();
         }
-        public async Task CreateModelAsync(ModelCreateDto createDto)
+        public async Task<ModelDto> CreateModelAsync(ModelCreateDto createDto)
         {
             var newModel = _mapper.Map<Model>(createDto);
             newModel.Id = Guid.NewGuid();
             newModel.CreatedDate = DateTime.UtcNow;
-            await AddAsync(newModel);
+            var added = await AddAsync(newModel);
+            return _modelRepository.GetModelDto(added);
         }
 
-        public async Task CreateRangeModelAsync(List<ModelCreateDto> createDtos)
+        public async Task<List<ModelDto>> CreateRangeModelAsync(List<ModelCreateDto> createDtos)
         {
             var newModels = new List<Model>();
             foreach (var createDto in createDtos)
@@ -46,7 +44,8 @@ namespace StockLinx.Service.Services
                 newModel.CreatedDate = DateTime.UtcNow;
                 newModels.Add(newModel);
             }
-            await AddRangeAsync(newModels);
+            var added = await AddRangeAsync(newModels);
+            return _modelRepository.GetModelDtos(added.ToList());
         }
 
         public async Task UpdateModelAsync(ModelUpdateDto updateDto)

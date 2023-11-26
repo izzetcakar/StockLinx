@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
@@ -14,64 +13,31 @@ namespace StockLinx.Service.Services
     public class LicenseService : Service<License>, ILicenseService
     {
         private readonly ILicenseRepository _licenseRepository;
-        private readonly IDeployedProductRepository _deployedProductRepository;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        public LicenseService(IRepository<License> repository, ILicenseRepository licenseRepository, IDeployedProductRepository deployedProductRepository,
+        public LicenseService(IRepository<License> repository, ILicenseRepository licenseRepository,
             IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork)
         {
             _licenseRepository = licenseRepository;
-            _deployedProductRepository = deployedProductRepository;
+
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<List<LicenseDto>> GetLicenseDtos()
+        public async Task<List<LicenseDto>> GetAllLicenseDtos()
         {
-            var deployedProducts = await _deployedProductRepository.GetAll().ToListAsync();
-            var licenses = await _licenseRepository.GetAll().Include(x => x.Branch).ToListAsync();
-            var licenseDtos = licenses
-            .Select(x => new LicenseDto
-            {
-                Id = x.Id,
-                CompanyId = x.Branch.CompanyId,
-                BranchId = x.BranchId,
-                CategoryId = x.CategoryId,
-                ManufacturerId = x.ManufacturerId,
-                SupplierId = x.SupplierId,
-                Name = x.Name,
-                ImagePath = x.ImagePath,
-                OrderNo = x.OrderNo,
-                Notes = x.Notes,
-                PurchaseDate = x.PurchaseDate,
-                PurchaseCost = x.PurchaseCost,
-                CheckinCounter = x.CheckinCounter,
-                CheckoutCounter = x.CheckoutCounter,
-                LicenseKey = x.LicenseKey,
-                LicenseEmail = x.LicenseEmail,
-                LicensedTo = x.LicensedTo,
-                Maintained = x.Maintained,
-                Reassignable = x.Reassignable,
-                ExpirationDate = x.ExpirationDate,
-                TerminationDate = x.TerminationDate,
-                Quantity = x.Quantity,
-                AvailableQuantity = x.Quantity - deployedProducts
-                .Where(d => d.LicenseId.HasValue && d.LicenseId == x.Id)
-                .Count(),
-                CreatedDate = x.CreatedDate,
-                UpdatedDate = x.UpdatedDate,
-            }).ToList();
-            return licenseDtos;
+            return await _licenseRepository.GetAllLicenseDtos();
         }
-        public async Task CreateLicenseAsync(LicenseCreateDto createDto)
+        public async Task<LicenseDto> CreateLicenseAsync(LicenseCreateDto createDto)
         {
             var newLicense = _mapper.Map<License>(createDto);
             newLicense.Id = Guid.NewGuid();
             newLicense.CreatedDate = DateTime.UtcNow;
-            await AddAsync(newLicense);
+            var added = await AddAsync(newLicense);
+            return await _licenseRepository.GetLicenseDto(added);
         }
 
-        public async Task CreateRangeLicenseAsync(List<LicenseCreateDto> createDtos)
+        public async Task<List<LicenseDto>> CreateRangeLicenseAsync(List<LicenseCreateDto> createDtos)
         {
             var newLicenses = new List<License>();
             foreach (var createDto in createDtos)
@@ -81,7 +47,8 @@ namespace StockLinx.Service.Services
                 newLicense.CreatedDate = DateTime.UtcNow;
                 newLicenses.Add(newLicense);
             }
-            await AddRangeAsync(newLicenses);
+            var added = await AddRangeAsync(newLicenses);
+            return await _licenseRepository.GetLicenseDtos(added.ToList());
         }
 
         public async Task UpdateLicenseAsync(LicenseUpdateDto updateDto)

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using StockLinx.Core.DTOs.Create;
+using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
@@ -13,18 +14,37 @@ namespace StockLinx.Service.Services
         private readonly IDeployedProductRepository _deployedProductRepository;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        public DeployedProductService(IRepository<DeployedProduct> repository, IDeployedProductRepository deployedProductRepository,IMapper mapper,IUnitOfWork unitOfWork) : base(repository, unitOfWork)
+        public DeployedProductService(IRepository<DeployedProduct> repository, IDeployedProductRepository deployedProductRepository, IMapper mapper, IUnitOfWork unitOfWork) : base(repository, unitOfWork)
         {
             _deployedProductRepository = deployedProductRepository;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
-        public async Task CreateDeployedProductAsync(DeployedProductCreateDto createDto)
+        public async Task<List<DeployedProductDto>> GetAllDeployedProductDtos()
+        {
+            return await _deployedProductRepository.GetAllDeployedProductDtos();
+        }
+        public async Task<DeployedProductDto> CreateDeployedProductAsync(DeployedProductCreateDto createDto)
         {
             var newDeployedProduct = _mapper.Map<DeployedProduct>(createDto);
             newDeployedProduct.Id = Guid.NewGuid();
             newDeployedProduct.CreatedDate = DateTime.UtcNow;
-            await AddAsync(newDeployedProduct);
+            var added = await AddAsync(newDeployedProduct);
+            return _deployedProductRepository.GetDeployedProductDto(added);
+        }
+
+        public async Task<List<DeployedProductDto>> CreateRangeDeployedProductAsync(List<DeployedProductCreateDto> createDtos)
+        {
+            var newDeployedProducts = new List<DeployedProduct>();
+            foreach (var deployedProduct in createDtos)
+            {
+                var newDeployedProduct = _mapper.Map<DeployedProduct>(deployedProduct);
+                newDeployedProduct.Id = Guid.NewGuid();
+                newDeployedProduct.CreatedDate = DateTime.UtcNow;
+                newDeployedProducts.Add(newDeployedProduct);
+            }
+            var added = await AddRangeAsync(newDeployedProducts);
+            return _deployedProductRepository.GetDeployedProductDtos(added.ToList());
         }
         public async Task UpdateDeployedProductAsync(DeployedProductUpdateDto updateDto)
         {

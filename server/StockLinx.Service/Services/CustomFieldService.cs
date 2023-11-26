@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Update;
@@ -25,25 +24,9 @@ namespace StockLinx.Service.Services
             _mapper = mapper;
         }
 
-        public async Task<List<CustomFieldDto>> GetCustomFieldDtos()
+        public async Task<List<CustomFieldDto>> GetAllCustomFieldDtos()
         {
-            var customFields = await _customFieldRepository.GetAll().ToListAsync();
-            var customFieldDtos = customFields
-            .Select(x => new CustomFieldDto
-            {
-                Id = x.Id,
-                Name = x.Name,
-                DefaultValue = x.DefaultValue,
-                HelpText = x.HelpText,
-                IsRequired = x.IsRequired,
-                Type = x.Type,
-                ValidationText = x.ValidationText,
-                ValidationRegex = x.ValidationRegex,
-                CreatedDate = x.CreatedDate,
-                UpdatedDate = x.UpdatedDate,
-                DeletedDate = x.DeletedDate,
-            }).ToList();
-            return customFieldDtos;
+            return await _customFieldRepository.GetAllCustomFieldDtos();
         }
         public async Task CreateCustomFieldAsync(CustomFieldCreateDto createDto)
         {

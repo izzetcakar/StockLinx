@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
@@ -22,20 +21,19 @@ namespace StockLinx.Service.Services
             _unitOfWork = unitOfWork;
             _categoryRepository = categoryRepository;
         }
-        public async Task<List<CategoryDto>> GetCategoryDtos()
+        public async Task<List<CategoryDto>> GetAllCategoryDtos()
         {
-            var categories = await _categoryRepository.GetAll().ToListAsync();
-            var categoryDtos = _mapper.Map<List<CategoryDto>>(categories);
-            return categoryDtos;
+            return await _categoryRepository.GetAllCategoryDtos();
         }
-        public async Task CreateCategoryAsync(CategoryCreateDto createDto)
+        public async Task<CategoryDto> CreateCategoryAsync(CategoryCreateDto createDto)
         {
             var newCategory = _mapper.Map<Category>(createDto);
             newCategory.Id = Guid.NewGuid();
             newCategory.CreatedDate = DateTime.UtcNow;
-            await AddAsync(newCategory);
+            var addedCategory = await AddAsync(newCategory);
+            return _categoryRepository.GetCategoryDto(addedCategory);
         }
-        public async Task CreateRangeCategoryAsync(List<CategoryCreateDto> createDtos)
+        public async Task<List<CategoryDto>> CreateRangeCategoryAsync(List<CategoryCreateDto> createDtos)
         {
             var newCategories = new List<Category>();
             foreach (var createDto in createDtos)
@@ -45,7 +43,8 @@ namespace StockLinx.Service.Services
                 newCategory.CreatedDate = DateTime.UtcNow;
                 newCategories.Add(newCategory);
             }
-            await AddRangeAsync(newCategories);
+            var addedCategories = await AddRangeAsync(newCategories);
+            return _categoryRepository.GetCategoryDtos(addedCategories.ToList());
         }
         public async Task UpdateCategoryAsync(CategoryUpdateDto updateDto)
         {

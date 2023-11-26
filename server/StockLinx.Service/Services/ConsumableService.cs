@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
@@ -26,47 +25,20 @@ namespace StockLinx.Service.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<List<ConsumableDto>> GetConsumableDtos()
+        public async Task<List<ConsumableDto>> GetAllConsumableDtos()
         {
-            var deployedProducts = await _deployedProductRepository.GetAll().ToListAsync();
-            var consumables = await _consumableRepository.GetAll().Include(x => x.Branch).ToListAsync();
-            var consumableDtos = consumables
-                .Select(x => new ConsumableDto
-                {
-                    Id = x.Id,
-                    CompanyId = x.Branch.CompanyId,
-                    BranchId = x.BranchId,
-                    CategoryId = x.CategoryId,
-                    ManufacturerId = x.ManufacturerId,
-                    SupplierId = x.SupplierId,
-                    Name = x.Name,
-                    ImagePath = x.ImagePath,
-                    OrderNo = x.OrderNo,
-                    Notes = x.Notes,
-                    PurchaseDate = x.PurchaseDate,
-                    PurchaseCost = x.PurchaseCost,
-                    CheckinCounter = x.CheckinCounter,
-                    CheckoutCounter = x.CheckoutCounter,
-                    Quantity = x.Quantity,
-                    AvailableQuantity = x.Quantity - deployedProducts
-                .Where(d => d.ConsumableId.HasValue && d.ConsumableId == x.Id)
-                .Count(),
-                    ItemNo = x.ItemNo,
-                    ModelNo = x.ModelNo,
-                    CreatedDate = x.CreatedDate,
-                    UpdatedDate = x.UpdatedDate,
-                }).ToList();
-            return consumableDtos;
+            return await _consumableRepository.GetAllConsumableDtos();
         }
-        public async Task CreateConsumableAsync(ConsumableCreateDto createDto)
+        public async Task<ConsumableDto> CreateConsumableAsync(ConsumableCreateDto createDto)
         {
             var newConsumable = _mapper.Map<Consumable>(createDto);
             newConsumable.Id = Guid.NewGuid();
             newConsumable.CreatedDate = DateTime.UtcNow;
-            await AddAsync(newConsumable);
+            var addedConsumable = await AddAsync(newConsumable);
+            return await _consumableRepository.GetConsumableDto(addedConsumable);
         }
 
-        public async Task CreateRangeConsumableAsync(List<ConsumableCreateDto> createDtos)
+        public async Task<List<ConsumableDto>> CreateRangeConsumableAsync(List<ConsumableCreateDto> createDtos)
         {
             var newConsumables = new List<Consumable>();
             foreach (var createDto in createDtos)
@@ -76,7 +48,8 @@ namespace StockLinx.Service.Services
                 newConsumable.CreatedDate = DateTime.UtcNow;
                 newConsumables.Add(newConsumable);
             }
-            await AddRangeAsync(newConsumables);
+            var addedConsumables = await AddRangeAsync(newConsumables);
+            return await _consumableRepository.GetConsumableDtos(addedConsumables.ToList());
         }
 
         public async Task UpdateConsumableAsync(ConsumableUpdateDto updateDto)

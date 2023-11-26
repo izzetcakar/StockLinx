@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Update;
@@ -15,27 +14,27 @@ namespace StockLinx.Service.Services
         private readonly ISupplierRepository _supplierRepository;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        public SupplierService(IRepository<Supplier> repository, ISupplierRepository supplierRepository, IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork)
+        public SupplierService(IRepository<Supplier> repository, ISupplierRepository supplierRepository,
+            IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork)
         {
             _supplierRepository = supplierRepository;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
-        public async Task<List<SupplierDto>> GetSupplierDtos()
+        public async Task<List<SupplierDto>> GetAllSupplierDtos()
         {
-            var suppliers = await _supplierRepository.GetAll().ToListAsync();
-            var supplierDtos = _mapper.Map<List<SupplierDto>>(suppliers);
-            return supplierDtos;
+            return await _supplierRepository.GetAllSupplierDtos();
         }
-        public async Task CreateSupplierAsync(SupplierCreateDto createDto)
+        public async Task<SupplierDto> CreateSupplierAsync(SupplierCreateDto createDto)
         {
             var newSupplier = _mapper.Map<Supplier>(createDto);
             newSupplier.Id = Guid.NewGuid();
             newSupplier.CreatedDate = DateTime.UtcNow;
-            await AddAsync(newSupplier);
+            var added = await AddAsync(newSupplier);
+            return _supplierRepository.GetSupplierDto(added);
         }
 
-        public async Task CreateRangeSupplierAsync(List<SupplierCreateDto> createDtos)
+        public async Task<List<SupplierDto>> CreateRangeSupplierAsync(List<SupplierCreateDto> createDtos)
         {
             var newSuppliers = new List<Supplier>();
             foreach (var createDto in createDtos)
@@ -45,7 +44,8 @@ namespace StockLinx.Service.Services
                 newSupplier.CreatedDate = DateTime.UtcNow;
                 newSuppliers.Add(newSupplier);
             }
-            await AddRangeAsync(newSuppliers);
+            var added = await AddRangeAsync(newSuppliers);
+            return _supplierRepository.GetSupplierDtos(added.ToList());
         }
 
         public async Task UpdateSupplierAsync(SupplierUpdateDto updateDto)

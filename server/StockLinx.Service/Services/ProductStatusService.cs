@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Update;
@@ -23,21 +22,20 @@ namespace StockLinx.Service.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<List<ProductStatusDto>> GetProductStatusDtos()
+        public async Task<List<ProductStatusDto>> GetAllProductStatusDtos()
         {
-            var productStatuses = await _productStatusRepository.GetAll().ToListAsync();
-            var productStatusDtos = _mapper.Map<List<ProductStatusDto>>(productStatuses);
-            return productStatusDtos;
+            return await _productStatusRepository.GetAllProductStatusDtos();
         }
-        public async Task CreateProductStatusAsync(ProductStatusCreateDto createDto)
+        public async Task<ProductStatusDto> CreateProductStatusAsync(ProductStatusCreateDto createDto)
         {
             var newProductStatus = _mapper.Map<ProductStatus>(createDto);
             newProductStatus.Id = Guid.NewGuid();
             newProductStatus.CreatedDate = DateTime.UtcNow;
-            await AddAsync(newProductStatus);
+            var added = await AddAsync(newProductStatus);
+            return _productStatusRepository.GetProductStatusDto(added);
         }
 
-        public async Task CreateRangeProductStatusAsync(List<ProductStatusCreateDto> createDtos)
+        public async Task<List<ProductStatusDto>> CreateRangeProductStatusAsync(List<ProductStatusCreateDto> createDtos)
         {
             var newProductStatuses = new List<ProductStatus>();
             foreach (var createDto in createDtos)
@@ -47,7 +45,8 @@ namespace StockLinx.Service.Services
                 newProductStatus.CreatedDate = DateTime.UtcNow;
                 newProductStatuses.Add(newProductStatus);
             }
-            await AddRangeAsync(newProductStatuses);
+            var added = await AddRangeAsync(newProductStatuses);
+            return _productStatusRepository.GetProductStatusDtos(added.ToList());
         }
 
         public async Task UpdateProductStatusAsync(ProductStatusUpdateDto updateDto)

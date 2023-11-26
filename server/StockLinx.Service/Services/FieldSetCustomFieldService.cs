@@ -21,30 +21,20 @@ namespace StockLinx.Service.Services
             _mapper = mapper;
         }
 
-        public async Task<List<FieldSetCustomFieldDto>> GetFieldSetCustomFieldDtos()
+        public async Task<List<FieldSetCustomFieldDto>> GetAllFieldSetCustomFieldDtos()
         {
-            var fieldSetCustomFields = await _repository.GetAll().ToListAsync();
-            var fieldSetCustomFieldDtos = fieldSetCustomFields
-             .Select(x => new FieldSetCustomFieldDto
-             {
-                 Id = x.Id,
-                 CustomFieldId = x.CustomFieldId,
-                 FieldSetId = x.FieldSetId,
-                 CreatedDate = x.CreatedDate,
-                 UpdatedDate = x.UpdatedDate,
-                 DeletedDate = x.DeletedDate,
-             }).ToList();
-            return fieldSetCustomFieldDtos;
+            return await _repository.GetAllFieldSetCustomFieldDtos();
         }
-        public async Task CreateFieldSetCustomFieldAsync(FieldSetCustomFieldDto dto)
+        public async Task<FieldSetCustomFieldDto> CreateFieldSetCustomFieldAsync(FieldSetCustomFieldDto dto)
         {
             var newFieldSetCustomField = _mapper.Map<FieldSetCustomField>(dto);
             newFieldSetCustomField.Id = Guid.NewGuid();
             newFieldSetCustomField.CreatedDate = DateTime.UtcNow;
-            await AddAsync(newFieldSetCustomField);
+            var added = await AddAsync(newFieldSetCustomField);
+            return _repository.GetFieldSetCustomFieldDto(added);
         }
 
-        public async Task CreateRangeFieldSetCustomFieldAsync(List<FieldSetCustomFieldDto> dtos)
+        public async Task<List<FieldSetCustomFieldDto>> CreateRangeFieldSetCustomFieldAsync(List<FieldSetCustomFieldDto> dtos)
         {
             var newEntities = new List<FieldSetCustomField>();
             foreach (var dto in dtos)
@@ -54,7 +44,8 @@ namespace StockLinx.Service.Services
                 newFieldSetCustomField.CreatedDate = DateTime.UtcNow;
                 newEntities.Add(newFieldSetCustomField);
             }
-            await AddRangeAsync(newEntities);
+            var added = await AddRangeAsync(newEntities);
+            return _repository.GetFieldSetCustomFieldDtos(added.ToList());
         }
 
         public async Task UpdateFieldSetCustomFieldAsync(FieldSetCustomFieldDto dto)

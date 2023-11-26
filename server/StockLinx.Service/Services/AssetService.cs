@@ -22,32 +22,11 @@ namespace StockLinx.Service.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public async Task<List<AssetDto>> GetAssetDtos()
+        public async Task<List<AssetDto>> GetAllAssetDtos()
         {
-            var assets = await _assetRepository.GetAll().Include(x => x.Branch)
-            .Select(x => new AssetDto
-            {
-                Id = x.Id,
-                CompanyId = x.Branch.CompanyId,
-                BranchId = x.BranchId,
-                ProductStatusId = x.ProductStatusId,
-                Name = x.Name,
-                ImagePath = x.ImagePath,
-                SerialNo = x.SerialNo,
-                OrderNo = x.OrderNo,
-                Notes = x.Notes,
-                PurchaseDate = x.PurchaseDate,
-                PurchaseCost = x.PurchaseCost,
-                CheckinCounter = x.CheckinCounter,
-                CheckoutCounter = x.CheckoutCounter,
-                ModelId = x.ModelId,
-                TagNo = x.TagNo,
-                CreatedDate = x.CreatedDate,
-                UpdatedDate = x.UpdatedDate,
-            }).ToListAsync();
-            return assets;
+            return await _assetRepository.GetAllAssetDtos();
         }
-        public async Task CreateAssetAsync(AssetCreateDto createDto)
+        public async Task<List<AssetDto>> CreateAssetAsync(AssetCreateDto createDto)
         {
             var assets = new List<Asset>();
             var newAsset = _mapper.Map<Asset>(createDto);
@@ -66,10 +45,11 @@ namespace StockLinx.Service.Services
                     assets.Add(extraAsset);
                 }
             }
-            await AddRangeAsync(assets);
+            var addedAssets = await AddRangeAsync(assets);
+            return await _assetRepository.GetAssetDtos(addedAssets.ToList());
         }
 
-        public async Task CreateRangeAssetAsync(List<AssetCreateDto> createDtos)
+        public async Task<List<AssetDto>> CreateRangeAssetAsync(List<AssetCreateDto> createDtos)
         {
             var newAssets = new List<Asset>();
             foreach (var createDto in createDtos)
@@ -79,7 +59,8 @@ namespace StockLinx.Service.Services
                 newAsset.CreatedDate = DateTime.UtcNow;
                 newAssets.Add(newAsset);
             }
-            await AddRangeAsync(newAssets);
+            var addedAssets = await AddRangeAsync(newAssets);
+            return await _assetRepository.GetAssetDtos(addedAssets.ToList());
         }
 
         public async Task UpdateAssetAsync(AssetUpdateDto updateDto)

@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
@@ -21,32 +20,20 @@ namespace StockLinx.Service.Services
             _mapper = mapper;
         }
 
-        public async Task<List<ModelFieldDataDto>> GetModelFieldDataDtos()
+        public async Task<List<ModelFieldDataDto>> GetAllModelFieldDataDtos()
         {
-            var modelFieldDatas = await _modelFieldDataRepository.GetAll()
-            .Select(x => new ModelFieldDataDto
-            {
-                Id = x.Id,
-                ModelId = x.ModelId,
-                CustomFieldId = x.CustomFieldId,
-                Value = x.Value,
-                CreatedDate = x.CreatedDate,
-                UpdatedDate = x.UpdatedDate,
-                DeletedDate = x.DeletedDate,
-            }).ToListAsync();
-            return modelFieldDatas;
+            return await _modelFieldDataRepository.GetAllModelFieldDataDtos();
         }
-        public async Task CreateModelFieldDataAsync(ModelFieldDataDto dto)
+        public async Task<ModelFieldDataDto> CreateModelFieldDataAsync(ModelFieldDataDto dto)
         {
-            var modelFieldDatas = new List<ModelFieldData>();
             var newModelFieldData = _mapper.Map<ModelFieldData>(dto);
             newModelFieldData.Id = Guid.NewGuid();
             newModelFieldData.CreatedDate = DateTime.UtcNow;
-            modelFieldDatas.Add(newModelFieldData);
-            await AddRangeAsync(modelFieldDatas);
+            var added = await AddAsync(newModelFieldData);
+            return _modelFieldDataRepository.GetModelFieldDataDto(added);
         }
 
-        public async Task CreateRangeModelFieldDataAsync(List<ModelFieldDataDto> dtos)
+        public async Task<List<ModelFieldDataDto>> CreateRangeModelFieldDataAsync(List<ModelFieldDataDto> dtos)
         {
             var newModelFieldDatas = new List<ModelFieldData>();
             foreach (var dto in dtos)
@@ -56,7 +43,8 @@ namespace StockLinx.Service.Services
                 newModelFieldData.CreatedDate = DateTime.UtcNow;
                 newModelFieldDatas.Add(newModelFieldData);
             }
-            await AddRangeAsync(newModelFieldDatas);
+            var added = await AddRangeAsync(newModelFieldDatas);
+            return _modelFieldDataRepository.GetModelFieldDataDtos(added.ToList());
         }
 
         public async Task UpdateModelFieldDataAsync(ModelFieldDataDto dto)

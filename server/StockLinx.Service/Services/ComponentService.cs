@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
@@ -14,56 +13,29 @@ namespace StockLinx.Service.Services
     public class ComponentService : Service<Component>, IComponentService
     {
         private readonly IComponentRepository _componentRepository;
-        private readonly IDeployedProductRepository _deployedProductRepository;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        public ComponentService(IRepository<Component> repository, IComponentRepository componentRepository, IDeployedProductRepository deployedProductRepository,
+        public ComponentService(IRepository<Component> repository, IComponentRepository componentRepository,
             IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork)
         {
             _componentRepository = componentRepository;
-            _deployedProductRepository = deployedProductRepository;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
-        public async Task<List<ComponentDto>> GetComponentDtos()
+        public async Task<List<ComponentDto>> GetAllComponentDtos()
         {
-            var deployedProducts = await _deployedProductRepository.GetAll().ToListAsync();
-            var components = await _componentRepository.GetAll().Include(x => x.Branch).ToListAsync();
-            var componentDtos = components
-                .Select(x => new ComponentDto
-                {
-                    Id = x.Id,
-                    CompanyId = x.Branch.CompanyId,
-                    BranchId = x.BranchId,
-                    CategoryId = x.CategoryId,
-                    SupplierId = x.SupplierId,
-                    Name = x.Name,
-                    ImagePath = x.ImagePath,
-                    SerialNo = x.SerialNo,
-                    OrderNo = x.OrderNo,
-                    Notes = x.Notes,
-                    PurchaseDate = x.PurchaseDate,
-                    PurchaseCost = x.PurchaseCost,
-                    CheckinCounter = x.CheckinCounter,
-                    CheckoutCounter = x.CheckoutCounter,
-                    Quantity = x.Quantity,
-                    AvailableQuantity = x.Quantity - deployedProducts
-                .Where(d => d.ComponentId.HasValue && d.ComponentId == x.Id)
-                .Count(),
-                    CreatedDate = x.CreatedDate,
-                    UpdatedDate = x.UpdatedDate,
-                }).ToList();
-            return componentDtos;
+            return await _componentRepository.GetAllComponentDtos();
         }
-        public async Task CreateComponentAsync(ComponentCreateDto createDto)
+        public async Task<ComponentDto> CreateComponentAsync(ComponentCreateDto createDto)
         {
             var newComponent = _mapper.Map<Component>(createDto);
             newComponent.Id = Guid.NewGuid();
             newComponent.CreatedDate = DateTime.UtcNow;
-            await AddAsync(newComponent);
+            var addedComponent = await AddAsync(newComponent);
+            return await _componentRepository.GetComponentDto(addedComponent);
         }
 
-        public async Task CreateRangeComponentAsync(List<ComponentCreateDto> createDtos)
+        public async Task<List<ComponentDto>> CreateRangeComponentAsync(List<ComponentCreateDto> createDtos)
         {
             var newComponents = new List<Component>();
             foreach (var createDto in createDtos)
@@ -73,7 +45,8 @@ namespace StockLinx.Service.Services
                 newComponent.CreatedDate = DateTime.UtcNow;
                 newComponents.Add(newComponent);
             }
-            await AddRangeAsync(newComponents);
+            var addedComponents = await AddRangeAsync(newComponents);
+            return await _componentRepository.GetComponentDtos(addedComponents.ToList());
         }
 
         public async Task UpdateComponentAsync(ComponentUpdateDto updateDto)

@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Update;
@@ -23,29 +22,20 @@ namespace StockLinx.Service.Services
             _mapper = mapper;
         }
 
-        public async Task<List<FieldSetDto>> GetFieldSetDtos()
+        public async Task<List<FieldSetDto>> GetAllFieldSetDtos()
         {
-            var fieldSets = await _fieldSetRepository.GetAll().ToListAsync();
-            var fieldSetDtos = fieldSets
-             .Select(x => new FieldSetDto
-             {
-                 Id = x.Id,
-                 Name = x.Name,
-                 CreatedDate = x.CreatedDate,
-                 UpdatedDate = x.UpdatedDate,
-                 DeletedDate = x.DeletedDate,
-             }).ToList();
-            return fieldSetDtos;
+            return await _fieldSetRepository.GetAllFieldSetDtos();
         }
-        public async Task CreateFieldSetAsync(FieldSetCreateDto createDto)
+        public async Task<FieldSetDto> CreateFieldSetAsync(FieldSetCreateDto createDto)
         {
             var newFieldSet = _mapper.Map<FieldSet>(createDto);
             newFieldSet.Id = Guid.NewGuid();
             newFieldSet.CreatedDate = DateTime.UtcNow;
-            await AddAsync(newFieldSet);
+            var added = await AddAsync(newFieldSet);
+            return _fieldSetRepository.GetFieldSetDto(added);
         }
 
-        public async Task CreateRangeFieldSetAsync(List<FieldSetCreateDto> createDtos)
+        public async Task<List<FieldSetDto>> CreateRangeFieldSetAsync(List<FieldSetCreateDto> createDtos)
         {
             var newEntities = new List<FieldSet>();
             foreach (var createDto in createDtos)
@@ -55,7 +45,8 @@ namespace StockLinx.Service.Services
                 newFieldSet.CreatedDate = DateTime.UtcNow;
                 newEntities.Add(newFieldSet);
             }
-            await AddRangeAsync(newEntities);
+            var added = await AddRangeAsync(newEntities);
+            return _fieldSetRepository.GetFieldSetDtos(added.ToList());
         }
 
         public async Task UpdateFieldSetAsync(FieldSetUpdateDto updateDto)

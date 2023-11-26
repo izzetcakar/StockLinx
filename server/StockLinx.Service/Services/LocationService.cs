@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using StockLinx.Core.DTOs.Create;
+using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
@@ -12,26 +13,31 @@ namespace StockLinx.Service.Services
     public class LocationService : Service<Location>, ILocationService
     {
         private readonly ILocationRepository _locationRepository;
-        private readonly ICompanyRepository _companyRepository;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        public LocationService(IRepository<Location> repository, ILocationRepository locationRepository, ICompanyRepository companyRepository, IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork)
+        public LocationService(IRepository<Location> repository, ILocationRepository locationRepository,
+            IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork)
         {
             _locationRepository = locationRepository;
-            _companyRepository = companyRepository;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
 
-        public async Task CreateLocationAsync(LocationCreateDto createDto)
+        public async Task<List<LocationDto>> GetAllLocationDtos()
+        {
+            return await _locationRepository.GetAllLocationDtos();
+        }
+
+        public async Task<LocationDto> CreateLocationAsync(LocationCreateDto createDto)
         {
             var newLocation = _mapper.Map<Location>(createDto);
             newLocation.Id = Guid.NewGuid();
             newLocation.CreatedDate = DateTime.UtcNow;
-            await AddAsync(newLocation);
+            var added = await AddAsync(newLocation);
+            return _locationRepository.GetLocationDto(added);
         }
 
-        public async Task CreateRangeLocationAsync(List<LocationCreateDto> createDtos)
+        public async Task<List<LocationDto>> CreateRangeLocationAsync(List<LocationCreateDto> createDtos)
         {
             var newLocations = new List<Location>();
             foreach (var createDto in createDtos)
@@ -41,7 +47,8 @@ namespace StockLinx.Service.Services
                 newLocation.CreatedDate = DateTime.UtcNow;
                 newLocations.Add(newLocation);
             }
-            await AddRangeAsync(newLocations);
+            var added = await AddRangeAsync(newLocations);
+            return _locationRepository.GetLocationDtos(added.ToList());
         }
 
         public async Task UpdateLocationAsync(LocationUpdateDto updateDto)

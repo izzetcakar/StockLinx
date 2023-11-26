@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Update;
@@ -23,21 +22,20 @@ namespace StockLinx.Service.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<List<PermissionDto>> GetPermissionDtos()
+        public async Task<List<PermissionDto>> GetAllPermissionDtos()
         {
-            var permissiones = await _permissionRepository.GetAll().ToListAsync();
-            var permissionDtos = _mapper.Map<List<PermissionDto>>(permissiones);
-            return permissionDtos;
+            return await _permissionRepository.GetAllPermissionDtos();
         }
-        public async Task CreatePermissionAsync(PermissionCreateDto createDto)
+        public async Task<PermissionDto> CreatePermissionAsync(PermissionCreateDto createDto)
         {
             var newPermission = _mapper.Map<Permission>(createDto);
             newPermission.Id = Guid.NewGuid();
             newPermission.CreatedDate = DateTime.UtcNow;
-            await AddAsync(newPermission);
+            var added = await AddAsync(newPermission);
+            return _permissionRepository.GetPermissionDto(added);
         }
 
-        public async Task CreateRangePermissionAsync(List<PermissionCreateDto> createDtos)
+        public async Task<List<PermissionDto>> CreateRangePermissionAsync(List<PermissionCreateDto> createDtos)
         {
             var newPermissions = new List<Permission>();
             foreach (var createDto in createDtos)
@@ -47,7 +45,8 @@ namespace StockLinx.Service.Services
                 newPermission.CreatedDate = DateTime.UtcNow;
                 newPermissions.Add(newPermission);
             }
-            await AddRangeAsync(newPermissions);
+            var added = await AddRangeAsync(newPermissions);
+            return _permissionRepository.GetPermissionDtos(added.ToList());
         }
 
         public async Task UpdatePermissionAsync(PermissionUpdateDto updateDto)
