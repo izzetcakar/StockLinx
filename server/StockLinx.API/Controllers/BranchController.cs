@@ -24,9 +24,8 @@ namespace StockLinx.API.Controllers
         [HttpGet]
         public async Task<IActionResult> All()
         {
-            var branchs = await _branchService.GetAllAsync();
-            var branchDtos = _mapper.Map<List<BranchDto>>(branchs).ToList();
-            return CreateActionResult(CustomResponseDto<List<BranchDto>>.Success(200, branchDtos));
+            var branchs = await _branchService.GetAllBranchDtos();
+            return CreateActionResult(CustomResponseDto<List<BranchDto>>.Success(200, branchs));
         }
 
         [HttpGet("{id}")]
@@ -39,15 +38,15 @@ namespace StockLinx.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(BranchCreateDto createDto)
         {
-            await _branchService.CreateBranchAsync(createDto);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+            var added = await _branchService.CreateBranchAsync(createDto);
+            return CreateActionResult(CustomResponseDto<BranchDto>.Success(201, added));
         }
 
         [HttpPost("range")]
         public async Task<IActionResult> AddRangeBranches(List<BranchCreateDto> createDtos)
         {
-            await _branchService.CreateRangeBranchAsync(createDtos);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+            var added = await _branchService.CreateRangeBranchAsync(createDtos);
+            return CreateActionResult(CustomResponseDto<List<BranchDto>>.Success(201, added));
         }
 
         [HttpPut]

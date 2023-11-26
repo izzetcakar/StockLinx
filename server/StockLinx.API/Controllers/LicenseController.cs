@@ -25,7 +25,7 @@ namespace StockLinx.API.Controllers
         [HttpGet]
         public async Task<IActionResult> All()
         {
-            var licenses = await _licenseService.GetLicenseDtos();
+            var licenses = await _licenseService.GetAllLicenseDtos();
             return CreateActionResult(CustomResponseDto<List<LicenseDto>>.Success(200, licenses));
         }
 
@@ -39,15 +39,15 @@ namespace StockLinx.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(LicenseCreateDto createDto)
         {
-            await _licenseService.CreateLicenseAsync(createDto);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+            var added = await _licenseService.CreateLicenseAsync(createDto);
+            return CreateActionResult(CustomResponseDto<LicenseDto>.Success(201, added));
         }
 
         [HttpPost("range")]
         public async Task<IActionResult> AddRangeLicenses(List<LicenseCreateDto> createDtos)
         {
-            await _licenseService.CreateRangeLicenseAsync(createDtos);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+            var added = await _licenseService.CreateRangeLicenseAsync(createDtos);
+            return CreateActionResult(CustomResponseDto<List<LicenseDto>>.Success(201, added));
         }
 
         [HttpPut]

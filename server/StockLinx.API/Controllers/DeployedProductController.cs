@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
+using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Services;
 
@@ -24,9 +25,8 @@ namespace StockLinx.API.Controllers
         [HttpGet]
         public async Task<IActionResult> All()
         {
-            var deployedProducts = await _deployedProductService.GetAllAsync();
-            var deployedProductDtos = _mapper.Map<List<DeployedProductDto>>(deployedProducts).ToList();
-            return CreateActionResult(CustomResponseDto<List<DeployedProductDto>>.Success(200, deployedProductDtos));
+            var deployedProducts = await _deployedProductService.GetAllDeployedProductDtos();
+            return CreateActionResult(CustomResponseDto<List<DeployedProductDto>>.Success(200, deployedProducts));
         }
 
         [HttpGet("{id}")]
@@ -37,16 +37,23 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(DeployedProductDto deployedProductDto)
+        public async Task<IActionResult> Add(DeployedProductCreateDto createDto)
         {
-            // Create
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+            var added = await _deployedProductService.CreateDeployedProductAsync(createDto);
+            return CreateActionResult(CustomResponseDto<DeployedProductDto>.Success(201, added));
+        }
+
+        [HttpPost("range")]
+        public async Task<IActionResult> AddRange(List<DeployedProductCreateDto> createRangeDto)
+        {
+            var added = await _deployedProductService.CreateRangeDeployedProductAsync(createRangeDto);
+            return CreateActionResult(CustomResponseDto<List<DeployedProductDto>>.Success(201, added));
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(DeployedProductDto deployedProductDto)
+        public async Task<IActionResult> Update(DeployedProductUpdateDto updateDto)
         {
-            // Update
+            await _deployedProductService.UpdateDeployedProductAsync(updateDto);
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
         }
 

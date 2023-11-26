@@ -25,7 +25,7 @@ namespace StockLinx.API.Controllers
         [HttpGet]
         public async Task<IActionResult> All()
         {
-            var manufacturers = await _manufacturerService.GetManufacturerDtos();
+            var manufacturers = await _manufacturerService.GetAllManufacturerDtos();
             return CreateActionResult(CustomResponseDto<List<ManufacturerDto>>.Success(200, manufacturers));
         }
 
@@ -39,17 +39,15 @@ namespace StockLinx.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(ManufacturerCreateDto createDto)
         {
-            var newManufacturer = _mapper.Map<Manufacturer>(createDto);
-            newManufacturer.Id = Guid.NewGuid();
-            await _manufacturerService.AddAsync(newManufacturer);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+            var added = await _manufacturerService.CreateManufacturerAsync(createDto);
+            return CreateActionResult(CustomResponseDto<ManufacturerDto>.Success(201, added));
         }
 
         [HttpPost("range")]
         public async Task<IActionResult> AddRangeManufacturers(List<ManufacturerCreateDto> createDtos)
         {
-            await _manufacturerService.CreateRangeManufacturerAsync(createDtos);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+            var added = await _manufacturerService.CreateRangeManufacturerAsync(createDtos);
+            return CreateActionResult(CustomResponseDto<List<ManufacturerDto>>.Success(201, added));
         }
 
         [HttpPut]

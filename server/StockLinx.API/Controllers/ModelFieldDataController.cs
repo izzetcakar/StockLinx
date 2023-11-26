@@ -22,7 +22,7 @@ namespace StockLinx.API.Controllers
         [HttpGet]
         public async Task<IActionResult> All()
         {
-            var modelFieldDatas = await _modelFieldDataService.GetModelFieldDataDtos();
+            var modelFieldDatas = await _modelFieldDataService.GetAllModelFieldDataDtos();
             return CreateActionResult(CustomResponseDto<List<ModelFieldDataDto>>.Success(200, modelFieldDatas));
         }
 
@@ -36,15 +36,15 @@ namespace StockLinx.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(ModelFieldDataDto dto)
         {
-            await _modelFieldDataService.CreateModelFieldDataAsync(dto);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+            var added = await _modelFieldDataService.CreateModelFieldDataAsync(dto);
+            return CreateActionResult(CustomResponseDto<ModelFieldDataDto>.Success(201, added));
         }
 
         [HttpPost("range")]
         public async Task<IActionResult> AddRangeModelFieldDatas(List<ModelFieldDataDto> dtos)
         {
-            await _modelFieldDataService.CreateRangeModelFieldDataAsync(dtos);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+            var added = await _modelFieldDataService.CreateRangeModelFieldDataAsync(dtos);
+            return CreateActionResult(CustomResponseDto<List<ModelFieldDataDto>>.Success(201, added));
         }
 
         [HttpPut]

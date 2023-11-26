@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
@@ -25,7 +24,7 @@ namespace StockLinx.API.Controllers
         [HttpGet]
         public async Task<IActionResult> All()
         {
-            var customFields = await _customFieldService.GetCustomFieldDtos();
+            var customFields = await _customFieldService.GetAllCustomFieldDtos();
             return CreateActionResult(CustomResponseDto<List<CustomFieldDto>>.Success(200, customFields));
         }
 

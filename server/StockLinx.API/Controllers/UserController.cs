@@ -137,11 +137,17 @@ namespace StockLinx.API.Controllers
 
             return jwt;
         }
+        [HttpPost]
+        public async Task<IActionResult> Add(UserCreateDto createDto)
+        {
+            var added = await _userService.CreateUserAsync(createDto);
+            return CreateActionResult(CustomResponseDto<UserDto>.Success(201, added));
+        }
         [HttpPost("range")]
         public async Task<IActionResult> AddRangeUsers(List<UserCreateDto> createDtos)
         {
-            await _userService.CreateRangeUserAsync(createDtos);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+            var added = await _userService.CreateRangeUserAsync(createDtos);
+            return CreateActionResult(CustomResponseDto<List<UserDto>>.Success(201, added));
         }
 
         [HttpDelete("range")]

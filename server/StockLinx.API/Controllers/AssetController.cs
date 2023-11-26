@@ -24,7 +24,7 @@ namespace StockLinx.API.Controllers
         [HttpGet]
         public async Task<IActionResult> All()
         {
-            var assets = await _assetService.GetAssetDtos();
+            var assets = await _assetService.GetAllAssetDtos();
             return CreateActionResult(CustomResponseDto<List<AssetDto>>.Success(200, assets));
         }
 
@@ -38,15 +38,15 @@ namespace StockLinx.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(AssetCreateDto createDto)
         {
-            await _assetService.CreateAssetAsync(createDto);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+            var added = await _assetService.CreateAssetAsync(createDto);
+            return CreateActionResult(CustomResponseDto<List<AssetDto>>.Success(201, added));
         }
 
         [HttpPost("range")]
         public async Task<IActionResult> AddRangeAssets(List<AssetCreateDto> createDtos)
         {
-            await _assetService.CreateRangeAssetAsync(createDtos);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+            var added = await _assetService.CreateRangeAssetAsync(createDtos);
+            return CreateActionResult(CustomResponseDto<List<AssetDto>>.Success(201, added));
         }
 
         [HttpPut]

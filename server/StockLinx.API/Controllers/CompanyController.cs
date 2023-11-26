@@ -24,9 +24,8 @@ namespace StockLinx.API.Controllers
         [HttpGet]
         public async Task<IActionResult> All()
         {
-            var companies = await _companyService.GetAllAsync();
-            var companyDtos = _mapper.Map<List<CompanyDto>>(companies).ToList();
-            return CreateActionResult(CustomResponseDto<List<CompanyDto>>.Success(200, companyDtos));
+            var companies = await _companyService.GetAllCompanyDtos();
+            return CreateActionResult(CustomResponseDto<List<CompanyDto>>.Success(200, companies));
         }
 
         [HttpGet("{id}")]
@@ -39,15 +38,15 @@ namespace StockLinx.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(CompanyCreateDto createDto)
         {
-            await _companyService.CreateCompanyAsync(createDto);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+            var added = await _companyService.CreateCompanyAsync(createDto);
+            return CreateActionResult(CustomResponseDto<CompanyDto>.Success(201, added));
         }
 
         [HttpPost("range")]
         public async Task<IActionResult> AddRangeCompanies(List<CompanyCreateDto> createDtos)
         {
-            await _companyService.CreateRangeCompanyAsync(createDtos);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+            var added = await _companyService.CreateRangeCompanyAsync(createDtos);
+            return CreateActionResult(CustomResponseDto<List<CompanyDto>>.Success(201, added));
         }
 
         [HttpPut]
@@ -69,6 +68,13 @@ namespace StockLinx.API.Controllers
         public async Task<IActionResult> DeleteRangeCompanies(List<Guid> companyIds)
         {
             await _companyService.DeleteRangeCompanyAsync(companyIds);
+            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+        }
+
+        [HttpGet("createbase")]
+        public async Task<IActionResult> CreateBaseAdmin()
+        {
+            await _companyService.CreateBaseAdmin();
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
         }
     }

@@ -23,7 +23,7 @@ namespace StockLinx.API.Controllers
         [HttpGet]
         public async Task<IActionResult> All()
         {
-            var productStatuses = await _productStatusService.GetProductStatusDtos();
+            var productStatuses = await _productStatusService.GetAllProductStatusDtos();
             return CreateActionResult(CustomResponseDto<List<ProductStatusDto>>.Success(200, productStatuses));
         }
 
@@ -38,15 +38,15 @@ namespace StockLinx.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(ProductStatusCreateDto createDto)
         {
-            await _productStatusService.CreateProductStatusAsync(createDto);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+            var added = await _productStatusService.CreateProductStatusAsync(createDto);
+            return CreateActionResult(CustomResponseDto<ProductStatusDto>.Success(201, added));
         }
 
         [HttpPost("range")]
         public async Task<IActionResult> AddRangeProductStatuses(List<ProductStatusCreateDto> createDtos)
         {
-            await _productStatusService.CreateRangeProductStatusAsync(createDtos);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+            var added = await _productStatusService.CreateRangeProductStatusAsync(createDtos);
+            return CreateActionResult(CustomResponseDto<List<ProductStatusDto>>.Success(201, added));
         }
 
         [HttpPut]

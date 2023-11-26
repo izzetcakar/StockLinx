@@ -24,7 +24,7 @@ namespace StockLinx.API.Controllers
         [HttpGet]
         public async Task<IActionResult> All()
         {
-            var components = await _componentService.GetComponentDtos();
+            var components = await _componentService.GetAllComponentDtos();
             return CreateActionResult(CustomResponseDto<List<ComponentDto>>.Success(200, components));
         }
 
@@ -38,15 +38,15 @@ namespace StockLinx.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(ComponentCreateDto createDto)
         {
-            await _componentService.CreateComponentAsync(createDto);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+            var added = await _componentService.CreateComponentAsync(createDto);
+            return CreateActionResult(CustomResponseDto<ComponentDto>.Success(201, added));
         }
 
         [HttpPost("range")]
         public async Task<IActionResult> AddRangeComponents(List<ComponentCreateDto> createDtos)
         {
-            await _componentService.CreateRangeComponentAsync(createDtos);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+            var added = await _componentService.CreateRangeComponentAsync(createDtos);
+            return CreateActionResult(CustomResponseDto<List<ComponentDto>>.Success(201, added));
         }
 
         [HttpPut]

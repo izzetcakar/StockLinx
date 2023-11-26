@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
@@ -25,7 +24,7 @@ namespace StockLinx.API.Controllers
         [HttpGet]
         public async Task<IActionResult> All()
         {
-            var categories = await _categoryService.GetCategoryDtos();
+            var categories = await _categoryService.GetAllCategoryDtos();
             return CreateActionResult(CustomResponseDto<List<CategoryDto>>.Success(200, categories));
         }
 
@@ -46,14 +45,14 @@ namespace StockLinx.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(CategoryCreateDto createDto)
         {
-            await _categoryService.CreateCategoryAsync(createDto);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+            var added = await _categoryService.CreateCategoryAsync(createDto);
+            return CreateActionResult(CustomResponseDto<CategoryDto>.Success(201, added));
         }
         [HttpPost("range")]
         public async Task<IActionResult> AddRange(List<CategoryCreateDto> createDtos)
         {
-            await _categoryService.CreateRangeCategoryAsync(createDtos);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+            var added = await _categoryService.CreateRangeCategoryAsync(createDtos);
+            return CreateActionResult(CustomResponseDto<List<CategoryDto>>.Success(201, added));
         }
 
         [HttpPut]

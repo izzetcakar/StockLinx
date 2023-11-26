@@ -23,7 +23,7 @@ namespace StockLinx.API.Controllers
         [HttpGet]
         public async Task<IActionResult> All()
         {
-            var accessories = await _permissionService.GetPermissionDtos();
+            var accessories = await _permissionService.GetAllPermissionDtos();
             return CreateActionResult(CustomResponseDto<List<PermissionDto>>.Success(200, accessories));
         }
 
@@ -38,15 +38,15 @@ namespace StockLinx.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(PermissionCreateDto createDto)
         {
-            await _permissionService.CreatePermissionAsync(createDto);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+            var added = await _permissionService.CreatePermissionAsync(createDto);
+            return CreateActionResult(CustomResponseDto<PermissionDto>.Success(201, added));
         }
 
         [HttpPost("range")]
         public async Task<IActionResult> AddRangePermissions(List<PermissionCreateDto> createDtos)
         {
-            await _permissionService.CreateRangePermissionAsync(createDtos);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+            var added = await _permissionService.CreateRangePermissionAsync(createDtos);
+            return CreateActionResult(CustomResponseDto<List<PermissionDto>>.Success(201, added));
         }
 
         [HttpPut]

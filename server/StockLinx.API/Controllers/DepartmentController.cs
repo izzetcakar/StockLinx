@@ -24,7 +24,7 @@ namespace StockLinx.API.Controllers
         [HttpGet]
         public async Task<IActionResult> All()
         {
-            var departments = await _departmentService.GetDepartmentDtos();
+            var departments = await _departmentService.GetAllDepartmentDtos();
             return CreateActionResult(CustomResponseDto<List<DepartmentDto>>.Success(200, departments));
         }
 
@@ -38,15 +38,15 @@ namespace StockLinx.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(DepartmentCreateDto createDto)
         {
-            await _departmentService.CreateDepartmentAsync(createDto);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+            var added = await _departmentService.CreateDepartmentAsync(createDto);
+            return CreateActionResult(CustomResponseDto<DepartmentDto>.Success(201, added));
         }
 
         [HttpPost("range")]
         public async Task<IActionResult> AddRangeDepartments(List<DepartmentCreateDto> createDtos)
         {
-            await _departmentService.CreateRangeDepartmentAsync(createDtos);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+            var added = await _departmentService.CreateRangeDepartmentAsync(createDtos);
+            return CreateActionResult(CustomResponseDto<List<DepartmentDto>>.Success(201, added));
         }
 
         [HttpPut]

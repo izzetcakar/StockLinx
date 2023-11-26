@@ -24,7 +24,7 @@ namespace StockLinx.API.Controllers
         [HttpGet]
         public async Task<IActionResult> All()
         {
-            var consumables = await _consumableService.GetConsumableDtos();
+            var consumables = await _consumableService.GetAllConsumableDtos();
             return CreateActionResult(CustomResponseDto<List<ConsumableDto>>.Success(200, consumables));
         }
 
@@ -38,15 +38,15 @@ namespace StockLinx.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(ConsumableCreateDto createDto)
         {
-            await _consumableService.CreateConsumableAsync(createDto);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+            var added = await _consumableService.CreateConsumableAsync(createDto);
+            return CreateActionResult(CustomResponseDto<ConsumableDto>.Success(201, added));
         }
 
         [HttpPost("range")]
         public async Task<IActionResult> AddRangeConsumables(List<ConsumableCreateDto> createDtos)
         {
-            await _consumableService.CreateRangeConsumableAsync(createDtos);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+            var added = await _consumableService.CreateRangeConsumableAsync(createDtos);
+            return CreateActionResult(CustomResponseDto<List<ConsumableDto>>.Success(201, added));
         }
 
         [HttpPut]

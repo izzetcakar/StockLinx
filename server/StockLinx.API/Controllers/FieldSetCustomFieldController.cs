@@ -22,7 +22,7 @@ namespace StockLinx.API.Controllers
         [HttpGet]
         public async Task<IActionResult> All()
         {
-            var fieldSetCustomFields = await _fieldSetCustomFieldService.GetFieldSetCustomFieldDtos();
+            var fieldSetCustomFields = await _fieldSetCustomFieldService.GetAllFieldSetCustomFieldDtos();
             return CreateActionResult(CustomResponseDto<List<FieldSetCustomFieldDto>>.Success(200, fieldSetCustomFields));
         }
 
@@ -36,15 +36,15 @@ namespace StockLinx.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(FieldSetCustomFieldDto dto)
         {
-            await _fieldSetCustomFieldService.CreateFieldSetCustomFieldAsync(dto);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+            var added = await _fieldSetCustomFieldService.CreateFieldSetCustomFieldAsync(dto);
+            return CreateActionResult(CustomResponseDto<FieldSetCustomFieldDto>.Success(201, added));
         }
 
         [HttpPost("range")]
         public async Task<IActionResult> AddRangeFieldSetCustomFields(List<FieldSetCustomFieldDto> dtos)
         {
-            await _fieldSetCustomFieldService.CreateRangeFieldSetCustomFieldAsync(dtos);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+            var added = await _fieldSetCustomFieldService.CreateRangeFieldSetCustomFieldAsync(dtos);
+            return CreateActionResult(CustomResponseDto<List<FieldSetCustomFieldDto>>.Success(201, added));
         }
 
         [HttpPut]

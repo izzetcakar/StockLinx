@@ -47,15 +47,15 @@ namespace StockLinx.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(LocationCreateDto createDto)
         {
-            await _locationService.CreateLocationAsync(createDto);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+            var added = await _locationService.CreateLocationAsync(createDto);
+            return CreateActionResult(CustomResponseDto<LocationDto>.Success(201, added));
         }
 
         [HttpPost("range")]
         public async Task<IActionResult> AddRangeLocations(List<LocationCreateDto> createDtos)
         {
-            await _locationService.CreateRangeLocationAsync(createDtos);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+            var added = await _locationService.CreateRangeLocationAsync(createDtos);
+            return CreateActionResult(CustomResponseDto<List<LocationDto>>.Success(201, added));
         }
 
         [HttpPut]
