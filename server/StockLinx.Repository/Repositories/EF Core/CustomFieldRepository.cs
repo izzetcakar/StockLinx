@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Create;
+using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 
@@ -29,6 +31,22 @@ namespace StockLinx.Repository.Repositories.EF_Core
                 fcToAdd.Add(newFieldSetCustomField);
             }
             await dbContext.AddRangeAsync(fcToAdd);
+        }
+        public CustomFieldDto GetCustomFieldDto(CustomField customField)
+        {
+            var customFieldDto = _mapper.Map<CustomFieldDto>(customField);
+            return customFieldDto;
+        }
+        public List<CustomFieldDto> GetCustomFieldDtos(List<CustomField> customFields)
+        {
+            var customFieldDtos = new List<CustomFieldDto>();
+            customFieldDtos = _mapper.Map<List<CustomFieldDto>>(customFields);
+            return customFieldDtos;
+        }
+        public async Task<List<CustomFieldDto>> GetAllCustomFieldDtos()
+        {
+            var customFields = await dbContext.CustomFields.AsNoTracking().ToListAsync();
+            return GetCustomFieldDtos(customFields);
         }
     }
 }
