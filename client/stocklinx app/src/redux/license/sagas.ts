@@ -161,6 +161,7 @@ function* removeRangeLicenseSaga(action: RemoveRangeLicenseRequest) {
     openNotificationError("License", (e as Error).message);
     yield put(licenseActions.removeRangeFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 
 function* licensesaga() {

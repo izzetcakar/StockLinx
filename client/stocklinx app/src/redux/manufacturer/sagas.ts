@@ -161,6 +161,7 @@ function* removeRangeManufacturerSaga(action: RemoveRangeManufacturerRequest) {
     openNotificationError("Manufacturer", (e as Error).message);
     yield put(manufacturerActions.removeRangeFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 
 function* manufacturersaga() {

@@ -161,6 +161,7 @@ function* removeRangeFieldSetSaga(action: RemoveRangeFieldSetRequest) {
     openNotificationError("FieldSet", (e as Error).message);
     yield put(fieldSetActions.removeRangeFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 
 function* fieldSetsaga() {

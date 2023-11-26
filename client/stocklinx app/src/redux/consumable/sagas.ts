@@ -163,6 +163,7 @@ function* removeRangeConsumableSaga(action: RemoveRangeConsumableRequest) {
     openNotificationError("Consumable", (e as Error).message);
     yield put(consumableActions.removeRangeFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 
 function* consumablesaga() {

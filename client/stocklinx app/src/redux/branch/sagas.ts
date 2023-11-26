@@ -84,6 +84,7 @@ function* createBranchSaga(action: CreateBranchRequest) {
     openNotificationError("Branch", (e as Error).message);
     yield put(branchActions.createFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* createRangeBranchSaga(action: CreateRangeBranchRequest) {
   yield put(genericActions.increaseLoading());

@@ -163,6 +163,7 @@ function* removeRangeComponentSaga(action: RemoveRangeComponentRequest) {
     openNotificationError("Component", (e as Error).message);
     yield put(componentActions.removeRangeFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 
 function* componentsaga() {

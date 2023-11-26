@@ -161,6 +161,7 @@ function* removeRangeModelSaga(action: RemoveRangeModelRequest) {
     openNotificationError("Model", (e as Error).message);
     yield put(modelActions.removeRangeFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 
 function* modelsaga() {

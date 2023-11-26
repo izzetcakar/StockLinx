@@ -84,6 +84,7 @@ function* createCategorySaga(action: CreateCategoryRequest) {
     openNotificationError("Category", (e as Error).message);
     yield put(categoryActions.createFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* createRangeCategorySaga(action: CreateRangeCategoryRequest) {
   yield put(genericActions.increaseLoading());

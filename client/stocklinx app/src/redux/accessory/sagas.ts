@@ -84,6 +84,7 @@ function* createAccessorySaga(action: CreateAccessoryRequest) {
     openNotificationError("Accessory", (e as Error).message);
     yield put(accessoryActions.createFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* createRangeAccessorySaga(action: CreateRangeAccessoryRequest) {
   yield put(genericActions.increaseLoading());

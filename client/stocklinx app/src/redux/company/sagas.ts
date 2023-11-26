@@ -84,6 +84,7 @@ function* createCompanySaga(action: CreateCompanyRequest) {
     openNotificationError("Company", (e as Error).message);
     yield put(companyActions.createFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* createRangeCompanySaga(action: CreateRangeCompanyRequest) {
   yield put(genericActions.increaseLoading());

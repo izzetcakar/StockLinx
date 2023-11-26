@@ -84,6 +84,7 @@ function* createProductStatusSaga(action: CreateProductStatusRequest) {
     openNotificationError("ProductStatus", (e as Error).message);
     yield put(productStatusActions.createFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 function* createRangeProductStatusSaga(
   action: CreateRangeProductStatusRequest

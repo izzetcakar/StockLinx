@@ -163,6 +163,7 @@ function* removeRangeSupplierSaga(action: RemoveRangeSupplierRequest) {
     openNotificationError("Supplier", (e as Error).message);
     yield put(supplierActions.removeRangeFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 
 function* suppliersaga() {

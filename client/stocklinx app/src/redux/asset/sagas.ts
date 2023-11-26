@@ -161,6 +161,7 @@ function* removeRangeAssetSaga(action: RemoveRangeAssetRequest) {
     openNotificationError("Asset", (e as Error).message);
     yield put(assetActions.removeRangeFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 
 function* assetsaga() {

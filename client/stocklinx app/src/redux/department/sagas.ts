@@ -161,6 +161,7 @@ function* removeRangeDepartmentSaga(action: RemoveRangeDepartmentRequest) {
     openNotificationError("Department", (e as Error).message);
     yield put(departmentActions.removeRangeFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 
 function* departmentsaga() {

@@ -167,6 +167,7 @@ function* removeRangeModelFieldDataSaga(
     openNotificationError("ModelFieldData", (e as Error).message);
     yield put(modelFieldDataActions.removeRangeFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 
 function* modelFieldDatasaga() {

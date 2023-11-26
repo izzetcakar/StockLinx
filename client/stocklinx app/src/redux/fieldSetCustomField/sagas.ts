@@ -194,7 +194,6 @@ function* scnyronizeFieldSetCustomFieldsSaga(
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      openNotificationSuccess("FieldSetCustomFields Synchronized");
       yield put(fieldSetCustomFieldActions.synchronizeSuccess());
     }
   } catch (e) {

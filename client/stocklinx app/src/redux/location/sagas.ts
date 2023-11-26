@@ -161,6 +161,7 @@ function* removeRangeLocationSaga(action: RemoveRangeLocationRequest) {
     openNotificationError("Location", (e as Error).message);
     yield put(locationActions.removeRangeFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 
 function* locationsaga() {
