@@ -163,6 +163,7 @@ function* removeRangeCustomFieldSaga(action: RemoveRangeCustomFieldRequest) {
     openNotificationError("CustomField", (e as Error).message);
     yield put(customFieldActions.removeRangeFailure());
   }
+  yield put(genericActions.decreaseLoading());
 }
 
 function* customFieldsaga() {

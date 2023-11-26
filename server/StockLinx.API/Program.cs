@@ -83,6 +83,8 @@ builder.Services.AddScoped<ICustomFieldRepository, CustomFieldRepository>();
 builder.Services.AddScoped<ICustomFieldService, CustomFieldService>();
 builder.Services.AddScoped<IModelFieldDataRepository, ModelFieldDataRepository>();
 builder.Services.AddScoped<IModelFieldDataService, ModelFieldDataService>();
+builder.Services.AddScoped<IFieldSetCustomFieldRepository, FieldSetCustomFieldRepository>();
+builder.Services.AddScoped<IFieldSetCustomFieldService, FieldSetCustomFieldService>();
 builder.Services.AddAutoMapper(typeof(MapProfile));
 builder.Services.AddHttpContextAccessor();
 

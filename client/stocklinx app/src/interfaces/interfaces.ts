@@ -165,6 +165,7 @@ export interface ICustomField extends BaseEntity {
   defaultValue: string | null;
   validationRegex: string | null;
   validationText: string | null;
+  fieldSetCustomFields?: IFieldSetCustomField[];
 }
 export interface IModelFieldData extends BaseEntity {
   modelId: string;

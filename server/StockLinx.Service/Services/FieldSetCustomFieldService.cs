@@ -8,12 +8,12 @@ using StockLinx.Core.UnitOfWork;
 
 namespace StockLinx.Service.Services
 {
-    public class FieldSetCustomFieldCustomFieldService : Service<FieldSetCustomField>, IFieldSetCustomFieldService
+    public class FieldSetCustomFieldService : Service<FieldSetCustomField>, IFieldSetCustomFieldService
     {
         private readonly IFieldSetCustomFieldRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public FieldSetCustomFieldCustomFieldService(IRepository<FieldSetCustomField> repository, IFieldSetCustomFieldRepository fieldSetCustomFieldRepository,
+        public FieldSetCustomFieldService(IRepository<FieldSetCustomField> repository, IFieldSetCustomFieldRepository fieldSetCustomFieldRepository,
             IMapper mapper, IUnitOfWork unitOfWork) : base(repository, unitOfWork)
         {
             _repository = fieldSetCustomFieldRepository;

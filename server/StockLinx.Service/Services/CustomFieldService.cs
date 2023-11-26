@@ -7,18 +7,19 @@ using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 using StockLinx.Core.Services;
 using StockLinx.Core.UnitOfWork;
-using System.Text;
 
 namespace StockLinx.Service.Services
 {
     public class CustomFieldService : Service<CustomField>, ICustomFieldService
     {
         private readonly ICustomFieldRepository _customFieldRepository;
+        private readonly IRepository<CustomField> _repository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         public CustomFieldService(IRepository<CustomField> repository, ICustomFieldRepository customFieldRepository,
-            IMapper mapper, IUnitOfWork unitOfWork) : base(repository, unitOfWork)
+              IMapper mapper, IUnitOfWork unitOfWork) : base(repository, unitOfWork)
         {
+            _repository = repository;
             _customFieldRepository = customFieldRepository;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -46,12 +47,15 @@ namespace StockLinx.Service.Services
         }
         public async Task CreateCustomFieldAsync(CustomFieldCreateDto createDto)
         {
-            var customFields = new List<CustomField>();
-            var newCustomField = _mapper.Map<CustomField>(createDto);
-            newCustomField.Id = Guid.NewGuid();
-            newCustomField.CreatedDate = DateTime.UtcNow;
-            customFields.Add(newCustomField);
-            await AddRangeAsync(customFields);
+            try
+            {
+                await _customFieldRepository.CreateCustomField(createDto);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            await _unitOfWork.CommitAsync();
         }
 
         public async Task CreateRangeCustomFieldAsync(List<CustomFieldCreateDto> createDtos)

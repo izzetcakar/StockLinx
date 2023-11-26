@@ -5,6 +5,8 @@ import { useColumns } from "./columns";
 import { customFieldActions } from "../../redux/customField/actions";
 import { fieldSetActions } from "../../redux/fieldSet/actions";
 import { openFieldSetModal, openCustomFieldModal } from "../../modals/modals";
+import { fieldSetCustomFieldActions } from "../../redux/fieldSetCustomField/actions";
+import { ICustomField } from "../../interfaces/interfaces";
 
 const CustomFields = () => {
   const dispatch = useDispatch();
@@ -13,11 +15,10 @@ const CustomFields = () => {
     (state: RootState) => state.customField.customFields
   );
 
-  const customFieldRefreshData = () => {
+  const refreshData = () => {
     dispatch(customFieldActions.getAll());
-  };
-  const fieldsSetRefreshData = () => {
     dispatch(fieldSetActions.getAll());
+    dispatch(fieldSetCustomFieldActions.getAll());
   };
 
   return (
@@ -29,7 +30,7 @@ const CustomFields = () => {
         itemKey="id"
         data={fieldSets}
         columns={useColumns().fieldSetColumns}
-        refreshData={fieldsSetRefreshData}
+        refreshData={refreshData}
         onRowInsert={() => openFieldSetModal()}
         enableEditActions
         enableSelectActions
@@ -43,8 +44,13 @@ const CustomFields = () => {
         itemKey="id"
         data={customFields}
         columns={useColumns().customFieldColumns}
-        refreshData={customFieldRefreshData}
+        refreshData={refreshData}
         onRowInsert={() => openCustomFieldModal()}
+        onRowUpdate={(data) => openCustomFieldModal(data as ICustomField)}
+        onRowRemove={(id) => dispatch(customFieldActions.remove({ id: id }))}
+        onRowRemoveRange={(ids) =>
+          dispatch(customFieldActions.removeRange({ ids: ids }))
+        }
         enableEditActions
         enableSelectActions
         enableToolbar
