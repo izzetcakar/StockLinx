@@ -12,7 +12,7 @@ export const useColumns = () => {
     {
       dataField: "companyId",
       caption: "Company",
-      dataType: "string",
+      dataType: "action",
       lookup: {
         dataSource: companies,
         valueExpr: "id",

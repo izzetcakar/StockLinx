@@ -18,11 +18,6 @@ const ExcelTable: React.FC<ExcelTableProps> = ({ data, columns, errors }) => {
       dataField: "column",
       caption: "Column",
       dataType: "string",
-      lookup: {
-        dataSource: columns,
-        valueExpr: "dataField",
-        displayExpr: "caption",
-      },
     },
     {
       dataField: "error",

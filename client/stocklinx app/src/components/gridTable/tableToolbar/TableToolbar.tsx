@@ -155,7 +155,6 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
         });
       };
       const result = await readFile();
-      console.log(result.errors);
       openExcelModal(
         result.test,
         columns.map((c) => ({ ...c, visible: true })),

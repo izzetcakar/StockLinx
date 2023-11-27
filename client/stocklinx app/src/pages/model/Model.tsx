@@ -9,6 +9,7 @@ import { modelActions } from "../../redux/model/actions";
 import { locationActions } from "../../redux/location/actions";
 import { branchActions } from "../../redux/branch/actions";
 import { openModelModal } from "../../modals/modals";
+import { categoryActions } from "../../redux/category/actions";
 
 const Model = () => {
   const dispatch = useDispatch();
@@ -19,6 +20,7 @@ const Model = () => {
     dispatch(locationActions.getAll());
     dispatch(companyActions.getAll());
     dispatch(branchActions.getAll());
+    dispatch(categoryActions.getAll());
   };
 
   return (
