@@ -16,12 +16,28 @@ namespace StockLinx.Repository.Repositories.EF_Core
 
         public ModelDto GetDto(Model entity)
         {
-            return _mapper.Map<ModelDto>(entity);
+            var modelFieldData = new List<ModelFieldDataDto>();
+            modelFieldData = dbContext.ModelFieldDatas.Where(x => x.ModelId == entity.Id).Select(x => new ModelFieldDataDto
+            {
+                Id = x.Id,
+                ModelId = x.ModelId,
+                CustomFieldId = x.CustomFieldId,
+                Value = x.Value,
+                CreatedDate = x.CreatedDate,
+                UpdatedDate = x.UpdatedDate,
+                DeletedDate = x.DeletedDate,
+            }).ToList();
+            var dto = _mapper.Map<ModelDto>(entity);
+            dto.ModelFieldData = modelFieldData;
+            return dto;
         }
         public List<ModelDto> GetDtos(List<Model> entities)
         {
             var dtos = new List<ModelDto>();
-            dtos = _mapper.Map<List<ModelDto>>(entities);
+            foreach (var entity in entities)
+            {
+                dtos.Add(GetDto(entity));
+            }
             return dtos;
         }
         public async Task<List<ModelDto>> GetAllDtos()

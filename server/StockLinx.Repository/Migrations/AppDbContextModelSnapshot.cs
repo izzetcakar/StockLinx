@@ -868,7 +868,7 @@ namespace StockLinx.Repository.Migrations
 
                     b.HasIndex("ModelId");
 
-                    b.ToTable("ModelFieldData");
+                    b.ToTable("ModelFieldDatas");
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.Permission", b =>
@@ -898,7 +898,7 @@ namespace StockLinx.Repository.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Permission");
+                    b.ToTable("Permissions");
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.ProductStatus", b =>

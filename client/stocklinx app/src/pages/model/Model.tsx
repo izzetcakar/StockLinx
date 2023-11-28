@@ -4,12 +4,13 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { useColumns } from "./columns";
 import Gridtable from "../../components/gridTable/GridTable";
-import { companyActions } from "../../redux/company/actions";
 import { modelActions } from "../../redux/model/actions";
-import { locationActions } from "../../redux/location/actions";
 import { branchActions } from "../../redux/branch/actions";
 import { openModelModal } from "../../modals/modals";
 import { categoryActions } from "../../redux/category/actions";
+import { fieldSetActions } from "../../redux/fieldSet/actions";
+import { fieldSetCustomFieldActions } from "../../redux/fieldSetCustomField/actions";
+import { customFieldActions } from "../../redux/customField/actions";
 
 const Model = () => {
   const dispatch = useDispatch();
@@ -17,10 +18,11 @@ const Model = () => {
 
   const refreshData = () => {
     dispatch(modelActions.getAll());
-    dispatch(locationActions.getAll());
-    dispatch(companyActions.getAll());
     dispatch(branchActions.getAll());
     dispatch(categoryActions.getAll());
+    dispatch(fieldSetActions.getAll());
+    dispatch(fieldSetCustomFieldActions.getAll());
+    dispatch(customFieldActions.getAll());
   };
 
   return (

@@ -9,5 +9,6 @@
         public string? ImagePath { get; set; }
         public string? ModelNo { get; set; }
         public string? Notes { get; set; }
+        public List<ModelFieldDataDto> ModelFieldData { get; set; }
     }
 }

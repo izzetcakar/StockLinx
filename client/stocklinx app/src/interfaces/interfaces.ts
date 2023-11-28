@@ -152,6 +152,7 @@ export interface IModel extends BaseEntity {
   name: string;
   imagePath: string | null;
   modelNo: string | null;
+  modelFieldData: IModelFieldData[];
   notes: string | null;
 }
 export interface IFieldSet extends BaseEntity {
