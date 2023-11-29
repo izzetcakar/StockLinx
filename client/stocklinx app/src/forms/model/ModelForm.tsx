@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   TextInput,
   Button,
@@ -9,12 +9,8 @@ import {
   NumberInput,
   Switch,
 } from "@mantine/core";
-import { useForm } from "@mantine/form";
-import {
-  ICustomField,
-  IModel,
-  IModelFieldData,
-} from "../../interfaces/interfaces";
+import { FORM_INDEX, useForm } from "@mantine/form";
+import { IModel, IModelFieldData } from "../../interfaces/interfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { modelActions } from "../../redux/model/actions";
 import uuid4 from "uuid4";
@@ -42,6 +38,7 @@ const ModelForm: React.FC<ModelFormProps> = ({ model }) => {
   );
 
   const form = useForm<IModel>({
+    validateInputOnChange: ["name", `modelFieldData.${FORM_INDEX}.value`],
     initialValues: model
       ? {
           ...model,
@@ -60,22 +57,30 @@ const ModelForm: React.FC<ModelFormProps> = ({ model }) => {
     validate: {
       name: (value: string) =>
         /(?!^$)([^\s])/.test(value) ? null : "Name should not be empty",
+      modelFieldData: {
+        value: (value, _, index) => {
+          console.log(index.split(".")[1]);
+          if (!value) return "Job must have a value";
+        },
+      },
     },
   });
 
   const handleModelFieldData = (
     modelId: string,
-    fieldSetId: string,
-    array: IModelFieldData[]
+    fieldSetId: string
   ): IModelFieldData[] => {
+    const oldModelFieldData = form.values.modelFieldData;
     const filteredFc = fieldSetCustomFields.filter(
       (f) => f.fieldSetId === fieldSetId
     );
+    console.log(fieldSetCustomFields);
+    if (filteredFc.length === 0) return [];
     const cfIds = filteredFc.map((fc) => fc.customFieldId);
     const notExist = cfIds.filter(
-      (item) => !array.map((x) => x.customFieldId).includes(item)
+      (item) => !oldModelFieldData.map((x) => x.customFieldId).includes(item)
     );
-    const newArray = [...array];
+    const newArray = [...oldModelFieldData];
     notExist.forEach((element) => {
       newArray.push({
         id: uuid4(),
@@ -87,14 +92,6 @@ const ModelForm: React.FC<ModelFormProps> = ({ model }) => {
     return newArray;
   };
 
-  useEffect(() => {
-    form.values.modelFieldData = handleModelFieldData(
-      form.values.id,
-      form.values.fieldSetId as string,
-      form.values.modelFieldData
-    );
-  }, [form.values.fieldSetId]);
-
   const handleSubmit = (data: object) => {
     // model
     //   ? dispatch(modelActions.update({ model: data as IModel }))
@@ -105,12 +102,6 @@ const ModelForm: React.FC<ModelFormProps> = ({ model }) => {
     const customField = customFields.find((c) => c.id === id);
     if (!customField) return;
     return customField;
-  };
-  const getFC = () => {
-    const fc = fieldSetCustomFields.filter(
-      (f) => f.fieldSetId === form.values.fieldSetId
-    );
-    return fc;
   };
   const getCustomFieldInput = (customFieldId: string, index: number) => {
     const customField = getCustomField(customFieldId);
@@ -174,6 +165,11 @@ const ModelForm: React.FC<ModelFormProps> = ({ model }) => {
         return null;
     }
   };
+  const test = (e: string) => {
+    form.setFieldValue("fieldSetId", e);
+    const newModelFieldData = handleModelFieldData(form.values.id, e as string);
+    form.setFieldValue("modelFieldData", newModelFieldData);
+  };
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
@@ -186,7 +182,6 @@ const ModelForm: React.FC<ModelFormProps> = ({ model }) => {
         px={40}
         pt={20}
       >
-        <button onClick={() => console.log(form.values)}>show</button>
         <Select
           data={categories.map((category) => ({
             value: category.id,
@@ -211,6 +206,7 @@ const ModelForm: React.FC<ModelFormProps> = ({ model }) => {
           classNames={filterClasses}
           dropdownPosition="bottom"
           nothingFound="No field set found"
+          onChange={(e) => test(e as string)}
         />
         <Select
           data={manufacturers.map((manufacturer) => ({
