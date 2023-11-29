@@ -21,17 +21,23 @@ namespace StockLinx.Repository.Repositories.EF_Core
             var fcToAdd = new List<FieldSetCustomField>();
             newCustomField.Id = Guid.NewGuid();
             newCustomField.CreatedDate = DateTime.UtcNow;
-            await dbContext.AddAsync(newCustomField);
-            foreach (var fieldSetCustomFieldDto in dto.FieldSetCustomFields)
+
+            if (dto.FieldSetCustomFields != null && dto.FieldSetCustomFields.Any())
             {
-                var newFieldSetCustomField = _mapper.Map<FieldSetCustomField>(fieldSetCustomFieldDto);
-                newFieldSetCustomField.Id = Guid.NewGuid();
-                newFieldSetCustomField.CreatedDate = DateTime.UtcNow;
-                newFieldSetCustomField.CustomFieldId = newCustomField.Id;
-                fcToAdd.Add(newFieldSetCustomField);
+                foreach (var fieldSetCustomFieldDto in dto.FieldSetCustomFields)
+                {
+                    var newFieldSetCustomField = _mapper.Map<FieldSetCustomField>(fieldSetCustomFieldDto);
+                    newFieldSetCustomField.Id = Guid.NewGuid();
+                    newFieldSetCustomField.CreatedDate = DateTime.UtcNow;
+                    newFieldSetCustomField.CustomFieldId = newCustomField.Id;
+                    fcToAdd.Add(newFieldSetCustomField);
+                }
+                dbContext.AddRange(fcToAdd);
             }
-            await dbContext.AddRangeAsync(fcToAdd);
+            newCustomField.FieldSetCustomFields = null;
+            dbContext.Add(newCustomField);
         }
+
         public CustomFieldDto GetDto(CustomField entity)
         {
             return _mapper.Map<CustomFieldDto>(entity);

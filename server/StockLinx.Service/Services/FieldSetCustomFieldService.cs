@@ -25,6 +25,7 @@ namespace StockLinx.Service.Services
         {
             return await _repository.GetAllDtos();
         }
+
         public async Task<FieldSetCustomFieldDto> CreateFieldSetCustomFieldAsync(FieldSetCustomFieldDto dto)
         {
             var newFieldSetCustomField = _mapper.Map<FieldSetCustomField>(dto);
@@ -90,14 +91,13 @@ namespace StockLinx.Service.Services
         {
             var itemsToDelete = new List<FieldSetCustomField>();
             var itemsToAdd = new List<FieldSetCustomField>();
-            var itemsInDb = await _repository.GetAll().ToListAsync();
+            var itemsInDb = await _repository.Where(x => x.CustomFieldId == dtos[0].CustomFieldId).ToListAsync();
 
             foreach (var itemInDb in itemsInDb)
             {
-                var itemInDbDto = _mapper.Map<FieldSetCustomFieldDto>(itemInDb);
-                var itemInDbDtoInList = dtos.FirstOrDefault(x => x.Id == itemInDbDto.Id);
+                var isItemExist = dtos.Any(x => x.Id == itemInDb.Id);
 
-                if (itemInDbDtoInList == null)
+                if (isItemExist == false)
                 {
                     itemsToDelete.Add(itemInDb);
                 }
@@ -112,8 +112,8 @@ namespace StockLinx.Service.Services
                     newItem.CreatedDate = DateTime.UtcNow;
                     return newItem;
                 }));
-            await RemoveRangeAsync(itemsToDelete);
             await AddRangeAsync(itemsToAdd);
+            await RemoveRangeAsync(itemsToDelete);
         }
 
     }

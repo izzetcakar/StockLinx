@@ -33,12 +33,12 @@ namespace StockLinx.Service.Services
             try
             {
                 await _customFieldRepository.CreateCustomField(createDto);
+                await _unitOfWork.CommitAsync();
             }
             catch (Exception ex)
             {
                 throw ex;
             }
-            await _unitOfWork.CommitAsync();
         }
 
         public async Task CreateRangeCustomFieldAsync(List<CustomFieldCreateDto> createDtos)
