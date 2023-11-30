@@ -97,7 +97,7 @@ namespace StockLinx.Service.Services
             {
                 var isItemExist = dtos.Any(x => x.Id == itemInDb.Id);
 
-                if (isItemExist == false)
+                if (!isItemExist)
                 {
                     itemsToDelete.Add(itemInDb);
                 }
