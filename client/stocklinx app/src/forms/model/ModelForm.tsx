@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useLayoutEffect } from "react";
 import {
   TextInput,
   Button,
@@ -17,6 +17,7 @@ import uuid4 from "uuid4";
 import filterClasses from "../../mantineModules/baseFilter.module.scss";
 import { RootState } from "../../redux/rootReducer";
 import { DateInput } from "@mantine/dates";
+import { modelFieldDataActions } from "../../redux/modelFieldData/actions";
 interface ModelFormProps {
   model?: IModel;
 }
@@ -35,6 +36,9 @@ const ModelForm: React.FC<ModelFormProps> = ({ model }) => {
   );
   const manufacturers = useSelector(
     (state: RootState) => state.manufacturer.manufacturers
+  );
+  const modelFieldDatas = useSelector(
+    (state: RootState) => state.modelFieldData.modelFieldDatas
   );
 
   const form = useForm<IModel>({
@@ -58,9 +62,23 @@ const ModelForm: React.FC<ModelFormProps> = ({ model }) => {
       name: (value: string) =>
         /(?!^$)([^\s])/.test(value) ? null : "Name should not be empty",
       modelFieldData: {
-        value: (value, _, index) => {
-          console.log(index.split(".")[1]);
-          if (!value) return "Job must have a value";
+        value: (value, values, index) => {
+          const customFieldId =
+            values.modelFieldData[Number(index.split(".")[1])]?.customFieldId;
+          const customField = getCustomField(customFieldId);
+          if (!customField) return null;
+          else if (
+            customField.isRequired &&
+            !value &&
+            customField.type !== "boolean"
+          )
+            return "This field is required";
+          else if (customField.validationRegex) {
+            const regex = new RegExp(customField.validationRegex);
+            if (!regex.test(value.toString()))
+              return customField.validationText || "Not valid to regex";
+            else return null;
+          } else return null;
         },
       },
     },
@@ -70,15 +88,19 @@ const ModelForm: React.FC<ModelFormProps> = ({ model }) => {
     modelId: string,
     fieldSetId: string
   ): IModelFieldData[] => {
-    const oldModelFieldData = form.values.modelFieldData;
+    const oldModelFieldData = modelFieldDatas.filter(
+      (m) => m.modelId === modelId
+    );
     const filteredFc = fieldSetCustomFields.filter(
       (f) => f.fieldSetId === fieldSetId
     );
-    console.log(fieldSetCustomFields);
     if (filteredFc.length === 0) return [];
     const cfIds = filteredFc.map((fc) => fc.customFieldId);
     const notExist = cfIds.filter(
       (item) => !oldModelFieldData.map((x) => x.customFieldId).includes(item)
+    );
+    const extra = oldModelFieldData.filter(
+      (item) => !cfIds.includes(item.customFieldId)
     );
     const newArray = [...oldModelFieldData];
     notExist.forEach((element) => {
@@ -86,23 +108,46 @@ const ModelForm: React.FC<ModelFormProps> = ({ model }) => {
         id: uuid4(),
         modelId: modelId,
         customFieldId: element,
-        value: "",
+        value: getCustomField(element)?.defaultValue || "",
       });
+    });
+    extra.forEach((element) => {
+      newArray.splice(newArray.indexOf(element), 1);
     });
     return newArray;
   };
-
-  const handleSubmit = (data: object) => {
-    // model
-    //   ? dispatch(modelActions.update({ model: data as IModel }))
-    //   : dispatch(modelActions.create({ model: data as IModel }));
-    model ? console.log("update", data) : console.log("create", data);
+  const convertValuesToString = () => {
+    const newModelFieldData = form.values.modelFieldData.map((m) => {
+      return { ...m, value: m.value.toString() };
+    });
+    return newModelFieldData;
+  };
+  const handleSubmit = (data: IModel) => {
+    const newModelFieldData = convertValuesToString();
+    model
+      ? dispatch(
+          modelActions.update({
+            model: { ...data, modelFieldData: newModelFieldData },
+          })
+        )
+      : dispatch(
+          modelActions.create({
+            model: { ...data, modelFieldData: newModelFieldData },
+          })
+        );
+    dispatch(modelActions.getAll());
+    dispatch(modelFieldDataActions.getAll());
   };
   const getCustomField = (id: string) => {
     const customField = customFields.find((c) => c.id === id);
     if (!customField) return;
     return customField;
   };
+  const getBooleanValue = (value: string) => {
+    if (value.toLowerCase() === "true") return true;
+    else return false;
+  };
+
   const getCustomFieldInput = (customFieldId: string, index: number) => {
     const customField = getCustomField(customFieldId);
     if (!customField) return;
@@ -110,6 +155,8 @@ const ModelForm: React.FC<ModelFormProps> = ({ model }) => {
     const placeholder = customField.name;
     const description = customField.helpText || "";
     const error = customField.validationText || "";
+    const defaultValue = customField.defaultValue || "";
+
     switch (customField.type) {
       case "string":
         return (
@@ -119,8 +166,7 @@ const ModelForm: React.FC<ModelFormProps> = ({ model }) => {
             description={description}
             error={error}
             {...form.getInputProps(`modelFieldData.${index}.value`)}
-            value={form.values.modelFieldData[index].value || ""}
-            defaultValue={customField.defaultValue || ""}
+            value={form.values.modelFieldData[index].value || defaultValue}
           />
         );
       case "number":
@@ -131,8 +177,10 @@ const ModelForm: React.FC<ModelFormProps> = ({ model }) => {
             description={description}
             error={error}
             {...form.getInputProps(`modelFieldData.${index}.value`)}
-            value={Number(form.values.modelFieldData[index].value) || ""}
-            defaultValue={Number(customField.defaultValue) || ""}
+            value={Number(form.values.modelFieldData[index].value)}
+            onChange={(e) => {
+              form.setFieldValue(`modelFieldData.${index}.value`, e.toString());
+            }}
             hideControls
           />
         );
@@ -143,9 +191,17 @@ const ModelForm: React.FC<ModelFormProps> = ({ model }) => {
             placeholder={placeholder}
             description={description}
             error={error}
+            defaultValue={defaultValue}
             {...form.getInputProps(`modelFieldData.${index}.value`)}
-            value={form.values.modelFieldData[index].value || ""}
-            defaultValue={customField.defaultValue || ""}
+            labelPosition="left"
+            defaultChecked={false}
+            checked={getBooleanValue(form.values.modelFieldData[index].value)}
+            onChange={(e) => {
+              form.setFieldValue(
+                `modelFieldData.${index}.value`,
+                e.target.checked.toString()
+              );
+            }}
           />
         );
       case "date":
@@ -157,19 +213,23 @@ const ModelForm: React.FC<ModelFormProps> = ({ model }) => {
             description={description}
             error={error}
             {...form.getInputProps(`modelFieldData.${index}.value`)}
-            value={new Date(form.values.modelFieldData[index].value) || ""}
-            defaultValue={new Date(customField.defaultValue as string) || null}
+            value={new Date(form.values.modelFieldData[index].value)}
           />
         );
       default:
         return null;
     }
   };
-  const test = (e: string) => {
+  const onFieldIdChange = (e: string) => {
     form.setFieldValue("fieldSetId", e);
     const newModelFieldData = handleModelFieldData(form.values.id, e as string);
     form.setFieldValue("modelFieldData", newModelFieldData);
   };
+  useLayoutEffect(() => {
+    if (model && model.fieldSetId) {
+      onFieldIdChange(model.fieldSetId);
+    }
+  }, [model]);
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
@@ -206,7 +266,7 @@ const ModelForm: React.FC<ModelFormProps> = ({ model }) => {
           classNames={filterClasses}
           dropdownPosition="bottom"
           nothingFound="No field set found"
-          onChange={(e) => test(e as string)}
+          onChange={(e) => onFieldIdChange(e as string)}
         />
         <Select
           data={manufacturers.map((manufacturer) => ({
