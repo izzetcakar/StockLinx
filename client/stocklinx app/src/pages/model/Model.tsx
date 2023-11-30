@@ -11,6 +11,7 @@ import { categoryActions } from "../../redux/category/actions";
 import { fieldSetActions } from "../../redux/fieldSet/actions";
 import { fieldSetCustomFieldActions } from "../../redux/fieldSetCustomField/actions";
 import { customFieldActions } from "../../redux/customField/actions";
+import { modelFieldDataActions } from "../../redux/modelFieldData/actions";
 
 const Model = () => {
   const dispatch = useDispatch();
@@ -23,6 +24,7 @@ const Model = () => {
     dispatch(fieldSetActions.getAll());
     dispatch(fieldSetCustomFieldActions.getAll());
     dispatch(customFieldActions.getAll());
+    dispatch(modelFieldDataActions.getAll());
   };
 
   return (
