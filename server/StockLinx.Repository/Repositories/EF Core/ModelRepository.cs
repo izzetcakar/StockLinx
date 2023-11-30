@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
+using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 
@@ -44,6 +46,76 @@ namespace StockLinx.Repository.Repositories.EF_Core
         {
             var entities = await dbContext.Models.AsNoTracking().ToListAsync();
             return GetDtos(entities);
+        }
+
+        public void UpdateModel(ModelUpdateDto dto)
+        {
+            var entity = dbContext.Models.SingleOrDefault(x => x.Id == dto.Id);
+            if (entity == null)
+            {
+                throw new Exception("Model not found");
+            }
+            var updatedEntity = _mapper.Map<Model>(dto);
+            updatedEntity.UpdatedDate = DateTime.UtcNow;
+            Update(entity, updatedEntity);
+            var itemsToAdd = new List<ModelFieldData>();
+            var itemsToDelete = new List<ModelFieldData>();
+            var itemsInDb = dbContext.ModelFieldDatas.Where(x => x.ModelId == dto.Id).ToList();
+            foreach (var item in itemsInDb)
+            {
+                var itemDto = dto.ModelFieldData.SingleOrDefault(x => x.Id == item.Id);
+                var isExist = dto.ModelFieldData.Any(x => x.Id == item.Id);
+                if (!isExist)
+                {
+                    itemsToDelete.Add(item);
+                }
+                else
+                {
+                    if (item.Value != itemDto?.Value)
+                    {
+                        item.Value = itemDto.Value;
+                        item.UpdatedDate = DateTime.UtcNow;
+                        dbContext.ModelFieldDatas.Update(item);
+                    }
+                }
+            }
+            var idsInDb = itemsInDb.Select(x => x.Id);
+            itemsToAdd.AddRange(dto.ModelFieldData.Where(x => !idsInDb.Contains(x.Id)).Select(x => new ModelFieldData
+            {
+                Id = x.Id,
+                ModelId = x.ModelId,
+                CustomFieldId = x.CustomFieldId,
+                Value = x.Value,
+                CreatedDate = x.CreatedDate,
+                UpdatedDate = x.UpdatedDate,
+                DeletedDate = x.DeletedDate,
+            }));
+            dbContext.ModelFieldDatas.AddRange(itemsToAdd);
+            dbContext.ModelFieldDatas.RemoveRange(itemsToDelete);
+        }
+
+        public ModelDto CreateModel(ModelCreateDto dto)
+        {
+            var entity = _mapper.Map<Model>(dto);
+            entity.Id = Guid.NewGuid();
+            entity.CreatedDate = DateTime.UtcNow;
+
+            if (dto.ModelFieldData != null && dto.ModelFieldData.Any())
+            {
+                var itemsToAdd = new List<ModelFieldData>();
+                foreach (var item in dto.ModelFieldData)
+                {
+                    var modelFieldData = _mapper.Map<ModelFieldData>(item);
+                    modelFieldData.Id = Guid.NewGuid();
+                    modelFieldData.CreatedDate = DateTime.UtcNow;
+                    modelFieldData.ModelId = entity.Id;
+                    itemsToAdd.Add(modelFieldData);
+                }
+                dbContext.ModelFieldDatas.AddRange(itemsToAdd);
+            }
+            entity.ModelFieldData = null;
+            dbContext.Models.Add(entity);
+            return GetDto(entity);
         }
     }
 }

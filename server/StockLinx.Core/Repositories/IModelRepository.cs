@@ -1,5 +1,7 @@
-﻿using StockLinx.Core.DTOs.Generic;
-using StockLinx.Core.Entities;
+﻿using StockLinx.Core.Entities;
+using StockLinx.Core.DTOs.Generic;
+using StockLinx.Core.DTOs.Create;
+using StockLinx.Core.DTOs.Update;
 
 namespace StockLinx.Core.Repositories
 {
@@ -8,5 +10,7 @@ namespace StockLinx.Core.Repositories
         ModelDto GetDto(Model entity);
         List<ModelDto> GetDtos(List<Model> entities);
         Task<List<ModelDto>> GetAllDtos();
+        ModelDto CreateModel(ModelCreateDto dto);
+        void UpdateModel(ModelUpdateDto dto);
     }
 }

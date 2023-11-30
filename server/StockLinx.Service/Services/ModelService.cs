@@ -27,11 +27,16 @@ namespace StockLinx.Service.Services
         }
         public async Task<ModelDto> CreateModelAsync(ModelCreateDto createDto)
         {
-            var newModel = _mapper.Map<Model>(createDto);
-            newModel.Id = Guid.NewGuid();
-            newModel.CreatedDate = DateTime.UtcNow;
-            var added = await AddAsync(newModel);
-            return _modelRepository.GetDto(added);
+            try
+            {
+                var added = _modelRepository.CreateModel(createDto);
+                await _unitOfWork.CommitAsync();
+                return added;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         public async Task<List<ModelDto>> CreateRangeModelAsync(List<ModelCreateDto> createDtos)
@@ -55,10 +60,16 @@ namespace StockLinx.Service.Services
             {
                 throw new ArgumentNullException(nameof(updateDto.Id), $"The ID of the model to update is null.");
             }
-            var updatedModel = _mapper.Map<Model>(updateDto);
-            updatedModel.UpdatedDate = DateTime.UtcNow;
-            await UpdateAsync(modelInDb, updatedModel);
-            await _unitOfWork.CommitAsync();
+            try
+            {
+                _modelRepository.UpdateModel(updateDto);
+                await _unitOfWork.CommitAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
         }
 
         public async Task DeleteModelAsync(Guid modelId)
