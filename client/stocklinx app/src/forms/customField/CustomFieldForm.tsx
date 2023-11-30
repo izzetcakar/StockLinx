@@ -70,8 +70,10 @@ const CustomFieldForm: React.FC<CustomFieldFormProps> = ({ customField }) => {
         })
       );
     }
+    dispatch(customFieldActions.getAll());
+    dispatch(fieldSetCustomFieldActions.getAll());
   };
-  const test = (e: any[]) => {
+  const onFieldSetsChange = (e: any[]) => {
     const filteredValue = value.filter((v) => e.includes(v.fieldSetId));
     e.forEach((element) => {
       const fieldSet = fieldSets.find((f) => f.id === element);
@@ -156,7 +158,7 @@ const CustomFieldForm: React.FC<CustomFieldFormProps> = ({ customField }) => {
           value={fieldSets
             .filter((f) => value.map((x) => x.fieldSetId).includes(f.id))
             .map((f) => f.id)}
-          onChange={test}
+          onChange={onFieldSetsChange}
           classNames={filterClasses}
           placeholder="Select Field Sets"
           dropdownPosition="bottom"
