@@ -10,6 +10,11 @@
   flex-direction: column;
   gap: 1rem;
 }
+.gridtable__footer {
+  max-width: 100%;
+  user-select: none;
+}
+
 .gridtable {
   display: block;
   table-layout: fixed;
@@ -17,24 +22,18 @@
   border-collapse: collapse;
   max-width: 100%;
   max-height: 100%;
-  border: 1px solid #ced4da;
-  border-radius: 4px;
+  border: 0;
   border-spacing: 0;
   font-size: 12px;
   color: #333;
-  line-height: 1.33334;
+  // line-height: 1.33334;
+  overflow: auto;
   font-family: "Helvetica Neue", "Segoe UI", helvetica, verdana, sans-serif;
 
   // empty-cells: show;
   .gridtable__toolbar {
     padding: 8px;
     border-bottom: 1px solid #ced4da;
-    max-width: 100%;
-    user-select: none;
-  }
-  .gridtable__footer {
-    padding: 8px;
-    border-top: 1px solid #ced4da;
     max-width: 100%;
     user-select: none;
   }
@@ -97,9 +96,11 @@
 .gridtable tbody {
   display: block;
   overflow: auto;
-  width: 100%;
-  max-height: 200px;
+  max-width: 100%;
+  max-height: 100%;
   font-weight: 400;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
 }
 .gridtable__row__cell {
   width: 100vw;
@@ -116,20 +117,12 @@
   width: fit-content;
   padding: 8px;
 }
-thead,
-tfoot {
-  display: table;
-  width: 100%;
-}
 .gridtable__nodata__row {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
   height: 100px;
-}
-table thead td {
-  background-clip: padding-box;
 }
 .gridtable__empty__edit__cell {
   padding: 0;

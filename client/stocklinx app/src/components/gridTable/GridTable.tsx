@@ -250,20 +250,16 @@ const Gridtable: React.FC<GridtableProps> = ({
             )}
           </tbody>
         )}
-        <tfoot>
-          <tr>
-            <td colSpan={visibleColumns.length + 1}>
-              <TableFooter
-                dataLength={data.length}
-                itemPerPage={itemPerPage}
-                pageNumber={pageNumber}
-                handleItemPerPage={handleItemPerPage}
-                handlePageNumber={handlePageNumber}
-              />
-            </td>
-          </tr>
-        </tfoot>
       </table>
+      <div className="gridtable__footer">
+        <TableFooter
+          dataLength={data.length}
+          itemPerPage={itemPerPage}
+          pageNumber={pageNumber}
+          handleItemPerPage={handleItemPerPage}
+          handlePageNumber={handlePageNumber}
+        />
+      </div>
     </div>
   );
 };
