@@ -61,6 +61,7 @@ export const useFilter = (
             radius={0}
             searchable
             clearable
+            withinPortal
           />
         );
       case FilterType.LOOKUP:
@@ -75,6 +76,7 @@ export const useFilter = (
             radius={0}
             searchable
             clearable
+            withinPortal
           />
         );
     }

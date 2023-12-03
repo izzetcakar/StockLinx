@@ -69,6 +69,7 @@ const BranchForm: React.FC<BranchFormProps> = ({ branch }) => {
           dropdownPosition="bottom"
           nothingFound="No company found"
           withAsterisk
+          withinPortal
         />
         <Select
           data={locationSelectData}
@@ -79,6 +80,7 @@ const BranchForm: React.FC<BranchFormProps> = ({ branch }) => {
           classNames={filterClasses}
           dropdownPosition="bottom"
           nothingFound="No location found"
+          withinPortal
         />
         <Group position="right" mt="md">
           <Button type="submit" color="dark">

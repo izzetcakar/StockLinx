@@ -120,6 +120,7 @@ const CustomFieldForm: React.FC<CustomFieldFormProps> = ({ customField }) => {
           classNames={filterClasses}
           dropdownPosition="bottom"
           withAsterisk
+          withinPortal
         />
         <TextInput
           label="Default Value"

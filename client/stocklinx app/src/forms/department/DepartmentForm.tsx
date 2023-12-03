@@ -79,6 +79,7 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({ department }) => {
           dropdownPosition="bottom"
           nothingFound="No company found"
           withAsterisk
+          withinPortal
         />
         <Select
           data={branches
@@ -94,6 +95,7 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({ department }) => {
           dropdownPosition="bottom"
           nothingFound="No branch found"
           withAsterisk
+          withinPortal
         />
         <TextInput
           label="Name"
@@ -110,6 +112,7 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({ department }) => {
           classNames={filterClasses}
           dropdownPosition="bottom"
           nothingFound="No location found"
+          withinPortal
         />
         <Textarea
           placeholder="Your notes here"

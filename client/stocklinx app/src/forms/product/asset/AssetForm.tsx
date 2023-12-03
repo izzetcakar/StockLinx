@@ -133,6 +133,7 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
           dropdownPosition="bottom"
           nothingFound="No company found"
           withAsterisk
+          withinPortal
         />
         <Select
           data={branches
@@ -148,6 +149,7 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
           dropdownPosition="bottom"
           nothingFound="No branch found"
           withAsterisk
+          withinPortal
         />
         <Flex w="100%" gap={10} align={"center"}>
           <TextInput
@@ -190,6 +192,7 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
           dropdownPosition="bottom"
           nothingFound="No models found"
           clearable
+          withinPortal
         />
         <Select
           data={productStatuses.map((model) => ({
@@ -203,6 +206,7 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
           dropdownPosition="bottom"
           nothingFound="No product statuses found"
           withAsterisk
+          withinPortal
         />
         <Textarea
           placeholder="Your notes here"
@@ -233,6 +237,7 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
           dropdownPosition="bottom"
           nothingFound="No suppliers found"
           clearable
+          withinPortal
         />
         <DateInput
           clearable

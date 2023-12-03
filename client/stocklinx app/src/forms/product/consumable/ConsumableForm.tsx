@@ -108,6 +108,7 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({ consumable }) => {
           dropdownPosition="bottom"
           nothingFound="No company found"
           withAsterisk
+          withinPortal
         />
         <Select
           data={branches
@@ -123,6 +124,7 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({ consumable }) => {
           dropdownPosition="bottom"
           nothingFound="No branch found"
           withAsterisk
+          withinPortal
         />
         <TextInput
           label="Name"
@@ -142,6 +144,7 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({ consumable }) => {
           dropdownPosition="bottom"
           nothingFound="No category found"
           withAsterisk
+          withinPortal
         />
         <Select
           data={suppliers.map((supplier) => ({
@@ -155,6 +158,7 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({ consumable }) => {
           dropdownPosition="bottom"
           nothingFound="No supplier found"
           clearable
+          withinPortal
         />
         <Select
           data={manufacturers.map((manufacturer) => ({
@@ -168,6 +172,7 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({ consumable }) => {
           dropdownPosition="bottom"
           nothingFound="No manufacturer found"
           clearable
+          withinPortal
         />
         <TextInput
           label="Model No"

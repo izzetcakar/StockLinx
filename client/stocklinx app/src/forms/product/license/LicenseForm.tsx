@@ -108,6 +108,7 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license }) => {
           dropdownPosition="bottom"
           nothingFound="No company found"
           withAsterisk
+          withinPortal
         />
         <Select
           data={branches
@@ -123,6 +124,7 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license }) => {
           dropdownPosition="bottom"
           nothingFound="No branch found"
           withAsterisk
+          withinPortal
         />
         <TextInput
           label="Name"
@@ -143,6 +145,7 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license }) => {
           dropdownPosition="bottom"
           nothingFound="No categories found"
           withAsterisk
+          withinPortal
         />
         <TextInput
           label="License Key"
@@ -172,6 +175,7 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license }) => {
           dropdownPosition="bottom"
           nothingFound="No manufacturers found"
           clearable
+          withinPortal
         />
         <TextInput
           label="Licensed To"
@@ -202,6 +206,7 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license }) => {
           dropdownPosition="bottom"
           nothingFound="No suppliers found"
           clearable
+          withinPortal
         />
         <TextInput
           label="Order No"

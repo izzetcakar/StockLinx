@@ -254,6 +254,7 @@ const ModelForm: React.FC<ModelFormProps> = ({ model }) => {
           dropdownPosition="bottom"
           nothingFound="No category found"
           withAsterisk
+          withinPortal
         />
         <Select
           data={fieldSets.map((fieldSet) => ({
@@ -267,6 +268,7 @@ const ModelForm: React.FC<ModelFormProps> = ({ model }) => {
           dropdownPosition="bottom"
           nothingFound="No field set found"
           onChange={(e) => onFieldIdChange(e as string)}
+          withinPortal
         />
         <Select
           data={manufacturers.map((manufacturer) => ({
@@ -279,6 +281,7 @@ const ModelForm: React.FC<ModelFormProps> = ({ model }) => {
           classNames={filterClasses}
           dropdownPosition="bottom"
           nothingFound="No manufacturer found"
+          withinPortal
         />
         <TextInput
           label="Name"

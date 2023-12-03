@@ -106,6 +106,7 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory }) => {
           dropdownPosition="bottom"
           nothingFound="No company found"
           withAsterisk
+          withinPortal
         />
         <Select
           data={branches
@@ -121,6 +122,7 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory }) => {
           dropdownPosition="bottom"
           nothingFound="No branch found"
           withAsterisk
+          withinPortal
         />
         <TextInput
           label="Name"
@@ -143,6 +145,7 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory }) => {
           dropdownPosition="bottom"
           nothingFound="No categories found"
           withAsterisk
+          withinPortal
         />
         <Select
           data={suppliers.map((supplier) => ({
@@ -157,6 +160,7 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory }) => {
           dropdownPosition="bottom"
           nothingFound="No suppliers found"
           clearable
+          withinPortal
         />
         <Select
           data={manufacturers.map((manufacturer) => ({
@@ -171,6 +175,7 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory }) => {
           dropdownPosition="bottom"
           nothingFound="No manufacturers found"
           clearable
+          withinPortal
         />
         <TextInput
           label="Model No"

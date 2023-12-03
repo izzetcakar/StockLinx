@@ -21,6 +21,7 @@ const PerPageSelector: React.FC<PerPageSelectorProps> = ({
       onChange={handleItemPerPage}
       size="xs"
       w={60}
+      withinPortal
     />
   );
 };

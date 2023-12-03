@@ -121,6 +121,7 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
           value={company}
           onChange={(value) => handleCompanyChange(value as string)}
           withAsterisk
+          withinPortal
         />
         <Select
           data={branches
@@ -131,6 +132,7 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
           value={branch}
           onChange={(value) => handleBranchChange(value as string)}
           withAsterisk
+          withinPortal
         />
         <Select
           data={departments
@@ -143,6 +145,7 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
           placeholder="Select Department"
           {...form.getInputProps("departmentId")}
           withAsterisk
+          withinPortal
         />
         <TextInput
           label="First Name"

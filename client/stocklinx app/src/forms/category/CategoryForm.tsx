@@ -64,6 +64,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ category }) => {
           classNames={filterClasses}
           dropdownPosition="bottom"
           withAsterisk
+          withinPortal
         />
       </Flex>
       <Group position="right">

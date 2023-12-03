@@ -102,6 +102,7 @@ const ComponentForm: React.FC<ComponentFormProps> = ({ component }) => {
           dropdownPosition="bottom"
           nothingFound="No company found"
           withAsterisk
+          withinPortal
         />
         <Select
           data={branches
@@ -117,6 +118,7 @@ const ComponentForm: React.FC<ComponentFormProps> = ({ component }) => {
           dropdownPosition="bottom"
           nothingFound="No branch found"
           withAsterisk
+          withinPortal
         />
         <TextInput
           label="Name"
@@ -137,6 +139,7 @@ const ComponentForm: React.FC<ComponentFormProps> = ({ component }) => {
           dropdownPosition="bottom"
           nothingFound="No category found"
           withAsterisk
+          withinPortal
         />
         <NumberInput
           defaultValue={1}
@@ -165,6 +168,7 @@ const ComponentForm: React.FC<ComponentFormProps> = ({ component }) => {
           dropdownPosition="bottom"
           nothingFound="No supplier found"
           clearable
+          withinPortal
         />
         <TextInput
           label="Order No"

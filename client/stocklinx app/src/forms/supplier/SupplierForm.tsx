@@ -76,6 +76,7 @@ const SupplierForm: React.FC<SupplierFormProps> = ({ supplier }) => {
           {...form.getInputProps("locationId")}
           value={form.values.locationId || ""}
           clearable
+          withinPortal
         />
         <TextInput
           label="Contact Name"

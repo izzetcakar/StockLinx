@@ -71,6 +71,7 @@ const ProductStatusForm: React.FC<ProductStatusFormProps> = ({
           dropdownPosition="bottom"
           nothingFound="No type found"
           withAsterisk
+          withinPortal
         />
       </Flex>
       <Group position="right">
