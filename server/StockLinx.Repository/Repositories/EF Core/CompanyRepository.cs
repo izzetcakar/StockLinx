@@ -419,7 +419,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
                   },
             };
             dbContext.CustomFields.AddRange(newCustomFields);
-            var productStatuses = new List<ProductStatus>
+            var newProductStatuses = new List<ProductStatus>
             {
                 new ProductStatus
                 {
@@ -453,10 +453,11 @@ namespace StockLinx.Repository.Repositories.EF_Core
                 {
                     Id = Guid.NewGuid(),
                     CreatedDate = DateTime.UtcNow,
-                    Name = "İade",
-                    Type = ProductStatusType.
+                    Name = "Sipariş Edildi",
+                    Type = ProductStatusType.ORDERED
                 },
-            }
+            };
+            dbContext.ProductStatuses.AddRange(newProductStatuses);
         }
         public CompanyDto GetDto(Company entity)
         {
