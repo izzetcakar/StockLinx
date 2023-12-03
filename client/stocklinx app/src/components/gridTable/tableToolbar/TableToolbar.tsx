@@ -10,14 +10,14 @@ import Dropdown from "./Dropdown";
 import icon_plus from "../../.././assets/icon_plus.png";
 import icon_refresh from "../../.././assets/icon_refresh.png";
 import ActionIconBtn from "../../generic/ActionIconBtn";
-import icon_excel from "../../.././assets/icon_excel.png";
 import { utils, read } from "xlsx";
 import ExcelJS from "exceljs";
 import { Button, FileInput } from "@mantine/core";
-import { IconDownload, IconTrashFilled } from "@tabler/icons-react";
+import { IconTrashFilled } from "@tabler/icons-react";
 import { openConfirmModal, openExcelModal } from "../modals/modals";
 import uuid4 from "uuid4";
 import "./tableToolbar.scss";
+import ExcelButton from "./ExcelButton";
 interface TableToolbarProps {
   data: object[];
   columns: Column[];
@@ -247,6 +247,7 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
         />
       ) : null}
       <Button
+        size="xs"
         leftIcon={<IconTrashFilled size={16} />}
         variant="default"
         onClick={() => removeRangeHandler()}
@@ -256,23 +257,15 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
       {enableExcelActions ? (
         <div className="gridtable__toolbar__last">
           <FileInput
+            size="xs"
             accept=".xlsx"
             placeholder="Import Excel"
             onChange={handleFileInputChange}
             clearable
           />
-          <Button
-            px="xs"
-            rightIcon={<IconDownload size={14} />}
-            onClick={() => exportToExcel(true)}
-            variant="default"
-          >
-            Base Excel Sheet
-          </Button>
-          <ActionIconBtn
-            submitFunc={() => exportToExcel(false)}
-            icon={icon_excel}
-            iconSize={16}
+          <ExcelButton
+            onDownloadTemplate={() => exportToExcel(true)}
+            onExportAll={() => exportToExcel(false)}
           />
         </div>
       ) : null}
