@@ -85,6 +85,8 @@ builder.Services.AddScoped<IModelFieldDataRepository, ModelFieldDataRepository>(
 builder.Services.AddScoped<IModelFieldDataService, ModelFieldDataService>();
 builder.Services.AddScoped<IFieldSetCustomFieldRepository, FieldSetCustomFieldRepository>();
 builder.Services.AddScoped<IFieldSetCustomFieldService, FieldSetCustomFieldService>();
+builder.Services.AddScoped<IGenericRepository, GenericRepository>();
+builder.Services.AddScoped<IGenericService, GenericService>();
 builder.Services.AddAutoMapper(typeof(MapProfile));
 builder.Services.AddHttpContextAccessor();
 
