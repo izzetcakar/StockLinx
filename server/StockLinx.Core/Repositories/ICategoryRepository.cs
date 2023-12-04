@@ -1,5 +1,4 @@
 ﻿using StockLinx.Core.DTOs.Generic;
-using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.Entities;
 
 namespace StockLinx.Core.Repositories
@@ -9,6 +8,5 @@ namespace StockLinx.Core.Repositories
         CategoryDto GetDto(Category entity);
         List<CategoryDto> GetDtos(List<Category> entities);
         Task<List<CategoryDto>> GetAllDtos();
-        Task<List<ProductCategoryCounterDto>> GetCounts();
     }
 }
