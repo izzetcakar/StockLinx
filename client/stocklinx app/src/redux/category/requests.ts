@@ -1,4 +1,4 @@
-import { ICategory, ICategoryCounts } from "../../interfaces/interfaces";
+import { ICategory } from "../../interfaces/interfaces";
 import { request } from "../../server/api";
 const requestUrl = "Category/";
 
@@ -45,12 +45,6 @@ const removeRange = (ids: string[]) => {
     queryData: ids,
   });
 };
-const getCounts = () => {
-  return request<ICategoryCounts>({
-    requestUrl: requestUrl + "counts",
-    apiType: "get",
-  });
-};
 
 export const categoryRequests = {
   getAll,
@@ -60,5 +54,4 @@ export const categoryRequests = {
   update,
   remove,
   removeRange,
-  getCounts,
 };

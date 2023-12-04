@@ -1,6 +1,5 @@
 import {
   ICategory,
-  ICategoryCounts,
   SelectData,
 } from "../../interfaces/interfaces";
 import { categoryConst } from "./constant";
@@ -9,13 +8,9 @@ export interface CategoryState {
   category: ICategory | null;
   categories: ICategory[];
   selectData: SelectData[];
-  counts: ICategoryCounts[];
 }
 export interface CategoryRequestPayload {
   id: string;
-}
-export interface CategoryCountsSuccessPayload {
-  counts: ICategoryCounts[];
 }
 export interface CategoryPayload {
   category: ICategory;
@@ -40,17 +35,6 @@ export type FetchCategoriesSuccess = {
 };
 export type FetchCategoriesFailure = {
   type: typeof categoryConst.FETCH_CATEGORIES_FAILURE;
-};
-//GET COUNTS
-export interface FetchCategoryCountsRequest {
-  type: typeof categoryConst.FETCH_CATEGORY_COUNTS_REQUEST;
-}
-export type FetchCategoryCountsSuccess = {
-  type: typeof categoryConst.FETCH_CATEGORY_COUNTS_SUCCESS;
-  payload: CategoryCountsSuccessPayload;
-};
-export type FetchCategoryCountsFailure = {
-  type: typeof categoryConst.FETCH_CATEGORY_COUNTS_FAILURE;
 };
 //GET:/ID
 export interface FetchCategoryRequest {
@@ -145,9 +129,6 @@ export type CategoryActions =
   | FetchCategoryRequest
   | FetchCategorySuccess
   | FetchCategoryFailure
-  | FetchCategoryCountsRequest
-  | FetchCategoryCountsSuccess
-  | FetchCategoryCountsFailure
   | CreateCategoryRequest
   | CreateCategorySuccess
   | CreateCategoryFailure

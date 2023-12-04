@@ -5,7 +5,6 @@ const initialState: CategoryState = {
   category: null,
   categories: [],
   selectData: [],
-  counts: [],
 };
 
 export default (state = initialState, action: CategoryActions) => {
@@ -41,19 +40,6 @@ export default (state = initialState, action: CategoryActions) => {
       return {
         ...state,
         category: null,
-      };
-    case categoryConst.FETCH_CATEGORY_COUNTS_REQUEST:
-      return {
-        ...state,
-      };
-    case categoryConst.FETCH_CATEGORY_COUNTS_SUCCESS:
-      return {
-        ...state,
-        counts: action.payload.counts,
-      };
-    case categoryConst.FETCH_CATEGORY_COUNTS_FAILURE:
-      return {
-        ...state,
       };
     case categoryConst.CREATE_CATEGORY_REQUEST:
       return {
