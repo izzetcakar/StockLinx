@@ -8,6 +8,8 @@ namespace StockLinx.Core.Services
 {
     public interface IUserService : IService<User>
     {
+        Task<UserDto> GetDto(Guid id);
+        Task<List<UserDto>> GetAllDtos();
         Task<User> Login(UserLoginDto userLoginDto);
         Task Logout();
         Task<User> Register(UserCreateDto createUser);

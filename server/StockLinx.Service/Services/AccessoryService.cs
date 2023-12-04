@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Logging;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
-using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
@@ -13,9 +12,9 @@ namespace StockLinx.Service.Services
 {
     public class AccessoryService : Service<Accessory>, IAccessoryService
     {
+        private readonly IAccessoryRepository _accessoryRepository;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IAccessoryRepository _accessoryRepository;
         private readonly ILogger<AccessoryService> _logger;
         public AccessoryService(IRepository<Accessory> repository, IAccessoryRepository accessoryRepository, IUnitOfWork unitOfWork,
             IMapper mapper, ILogger<AccessoryService> logger) : base(repository, unitOfWork)
@@ -25,10 +24,18 @@ namespace StockLinx.Service.Services
             _unitOfWork = unitOfWork;
             _logger = logger;
         }
+
+        public async Task<AccessoryDto> GetDto(Guid id)
+        {
+            var accessory = await GetByIdAsync(id);
+            return await _accessoryRepository.GetDto(accessory);
+        }
+
         public async Task<List<AccessoryDto>> GetAllDtos()
         {
             return await _accessoryRepository.GetAllDtos();
         }
+
         public async Task<AccessoryDto> CreateAccessoryAsync(AccessoryCreateDto createDto)
         {
             var newAccessory = _mapper.Map<Accessory>(createDto);
@@ -37,6 +44,7 @@ namespace StockLinx.Service.Services
             var addedAccessory = await AddAsync(newAccessory);
             return await _accessoryRepository.GetDto(addedAccessory);
         }
+
         public async Task<List<AccessoryDto>> CreateRangeAccessoryAsync(List<AccessoryCreateDto> createDtos)
         {
             var newAccessories = new List<Accessory>();
@@ -50,6 +58,7 @@ namespace StockLinx.Service.Services
             var addedAccessories = await AddRangeAsync(newAccessories);
             return await _accessoryRepository.GetDtos(addedAccessories.ToList());
         }
+
         public async Task UpdateAccessoryAsync(AccessoryUpdateDto updateDto)
         {
             var accessoryInDb = await GetByIdAsync(updateDto.Id);
@@ -62,6 +71,7 @@ namespace StockLinx.Service.Services
             await UpdateAsync(accessoryInDb, updatedAccessory);
             await _unitOfWork.CommitAsync();
         }
+
         public async Task DeleteAccessoryAsync(Guid accessoryId)
         {
             if (accessoryId == Guid.Empty)
@@ -75,6 +85,7 @@ namespace StockLinx.Service.Services
             }
             await RemoveAsync(accessory);
         }
+
         public async Task DeleteRangeAccessoryAsync(List<Guid> accessoryIds)
         {
             var accessories = new List<Accessory>();
@@ -84,18 +95,6 @@ namespace StockLinx.Service.Services
                 accessories.Add(accessory);
             }
             await RemoveRangeAsync(accessories);
-        }
-        public async Task<ProductCounter> GetAllCountAsync()
-        {
-            var accessories = await GetAllAsync();
-            var accessoryCount = accessories.Count();
-            return new ProductCounter { EntityName = "Accessories", Count = accessoryCount };
-        }
-        public async Task<List<ProductStatusCounter>> GetStatusCount()
-        {
-            var accessories = new List<ProductStatusCounter>();
-
-            return accessories;
         }
     }
 }

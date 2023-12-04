@@ -1,10 +1,8 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
-using StockLinx.Core.Entities;
 using StockLinx.Core.Services;
 
 namespace StockLinx.API.Controllers
@@ -13,11 +11,9 @@ namespace StockLinx.API.Controllers
     [ApiController]
     public class CompanyController : CustomBaseController
     {
-        private readonly IMapper _mapper;
         private readonly ICompanyService _companyService;
-        public CompanyController(IMapper mapper, ICompanyService companyService)
+        public CompanyController(ICompanyService companyService)
         {
-            _mapper = mapper;
             _companyService = companyService;
         }
 
@@ -31,8 +27,8 @@ namespace StockLinx.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var company = await _companyService.GetByIdAsync(id);
-            return CreateActionResult(CustomResponseDto<Company>.Success(200, company));
+            var companyDto = await _companyService.GetDto(id);
+            return CreateActionResult(CustomResponseDto<CompanyDto>.Success(200, companyDto));
         }
 
         [HttpPost]

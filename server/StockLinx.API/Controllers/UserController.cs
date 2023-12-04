@@ -31,15 +31,14 @@ namespace StockLinx.API.Controllers
         [HttpGet]
         public async Task<IActionResult> All()
         {
-            var users = await _userService.GetAllAsync();
-            var userDtos = _mapper.Map<List<UserDto>>(users).ToList();
+            var userDtos = await _userService.GetAllDtos();
             return CreateActionResult(CustomResponseDto<List<UserDto>>.Success(200, userDtos));
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var user = await _userService.GetByIdAsync(id);
-            return CreateActionResult(CustomResponseDto<User>.Success(200, user));
+            var userDto = await _userService.GetDto(id);
+            return CreateActionResult(CustomResponseDto<UserDto>.Success(200, userDto));
         }
         [HttpPut]
         public async Task<IActionResult> Update(UserUpdateDto updateDto)

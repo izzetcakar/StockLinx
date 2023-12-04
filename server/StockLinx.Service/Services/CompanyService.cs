@@ -32,10 +32,17 @@ namespace StockLinx.Service.Services
                 throw new Exception("An error occurred while creating the base admin.", ex);
             }
         }
+        public async Task<CompanyDto> GetDto(Guid id)
+        {
+            var company = await GetByIdAsync(id);
+            return _companyRepository.GetDto(company);
+        }
+
         public async Task<List<CompanyDto>> GetAllDtos()
         {
             return await _companyRepository.GetAllDtos();
         }
+
         public async Task<CompanyDto> CreateCompanyAsync(CompanyCreateDto createDto)
         {
             var newCompany = _mapper.Map<Company>(createDto);

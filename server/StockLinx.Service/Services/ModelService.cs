@@ -21,10 +21,17 @@ namespace StockLinx.Service.Services
             _unitOfWork = unitOfWork;
         }
 
+        public async Task<ModelDto> GetDto(Guid id)
+        {
+            var model = await GetByIdAsync(id);
+            return _modelRepository.GetDto(model);
+        }
+
         public async Task<List<ModelDto>> GetAllDtos()
         {
             return await _modelRepository.GetAllDtos();
         }
+
         public async Task<ModelDto> CreateModelAsync(ModelCreateDto createDto)
         {
             try

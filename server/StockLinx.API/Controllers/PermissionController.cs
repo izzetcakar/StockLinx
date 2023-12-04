@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
@@ -12,11 +11,9 @@ namespace StockLinx.API.Controllers
     [ApiController]
     public class PermissionController : CustomBaseController
     {
-        private readonly IMapper _mapper;
         private readonly IPermissionService _permissionService;
-        public PermissionController(IMapper mapper, IPermissionService permissionService)
+        public PermissionController(IPermissionService permissionService)
         {
-            _mapper = mapper;
             _permissionService = permissionService;
         }
 
@@ -30,8 +27,7 @@ namespace StockLinx.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var permission = await _permissionService.GetByIdAsync(id);
-            var permissionDto = _mapper.Map<PermissionDto>(permission);
+            var permissionDto = await _permissionService.GetDto(id);
             return CreateActionResult(CustomResponseDto<PermissionDto>.Success(200, permissionDto));
         }
 

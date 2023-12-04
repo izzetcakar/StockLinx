@@ -1,8 +1,6 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
-using StockLinx.Core.Entities;
 using StockLinx.Core.Services;
 
 namespace StockLinx.API.Controllers
@@ -12,11 +10,9 @@ namespace StockLinx.API.Controllers
     public class FieldSetCustomFieldController : CustomBaseController
     {
         private readonly IFieldSetCustomFieldService _fieldSetCustomFieldService;
-        private readonly IMapper _mapper;
-        public FieldSetCustomFieldController(IMapper mapper, IFieldSetCustomFieldService fieldSetCustomFieldService)
+        public FieldSetCustomFieldController(IFieldSetCustomFieldService fieldSetCustomFieldService)
         {
             _fieldSetCustomFieldService = fieldSetCustomFieldService;
-            _mapper = mapper;
         }
 
         [HttpGet]
@@ -29,8 +25,8 @@ namespace StockLinx.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var fieldSetCustomField = await _fieldSetCustomFieldService.GetByIdAsync(id);
-            return CreateActionResult(CustomResponseDto<FieldSetCustomField>.Success(200, fieldSetCustomField));
+            var fieldSetCustomFieldDto = await _fieldSetCustomFieldService.GetDto(id);
+            return CreateActionResult(CustomResponseDto<FieldSetCustomFieldDto>.Success(200, fieldSetCustomFieldDto));
         }
 
         [HttpPost]

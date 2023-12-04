@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
-using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
@@ -22,10 +21,18 @@ namespace StockLinx.Service.Services
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
+
+        public async Task<ComponentDto> GetDto(Guid id)
+        {
+            var component = await GetByIdAsync(id);
+            return await _componentRepository.GetDto(component);
+        }
+
         public async Task<List<ComponentDto>> GetAllDtos()
         {
             return await _componentRepository.GetAllDtos();
         }
+
         public async Task<ComponentDto> CreateComponentAsync(ComponentCreateDto createDto)
         {
             var newComponent = _mapper.Map<Component>(createDto);
@@ -85,19 +92,6 @@ namespace StockLinx.Service.Services
                 components.Add(component);
             }
             await RemoveRangeAsync(components);
-        }
-        public async Task<ProductCounter> GetAllCountAsync()
-        {
-            var components = await GetAllAsync();
-            var componentCount = components.Count();
-            return new ProductCounter { EntityName = "Components", Count = componentCount };
-        }
-
-        public async Task<List<ProductStatusCounter>> GetStatusCount()
-        {
-            var components = new List<ProductStatusCounter>();
-
-            return components;
         }
     }
 }

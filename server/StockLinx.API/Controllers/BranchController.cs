@@ -1,10 +1,8 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
-using StockLinx.Core.Entities;
 using StockLinx.Core.Services;
 
 namespace StockLinx.API.Controllers
@@ -13,11 +11,9 @@ namespace StockLinx.API.Controllers
     [ApiController]
     public class BranchController : CustomBaseController
     {
-        private readonly IMapper _mapper;
         private readonly IBranchService _branchService;
-        public BranchController(IMapper mapper, IBranchService branchService)
+        public BranchController(IBranchService branchService)
         {
-            _mapper = mapper;
             _branchService = branchService;
         }
 
@@ -31,8 +27,8 @@ namespace StockLinx.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var branch = await _branchService.GetByIdAsync(id);
-            return CreateActionResult(CustomResponseDto<Branch>.Success(200, branch));
+            var branchDto = await _branchService.GetDto(id);
+            return CreateActionResult(CustomResponseDto<BranchDto>.Success(200, branchDto));
         }
 
         [HttpPost]

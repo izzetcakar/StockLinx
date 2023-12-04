@@ -21,6 +21,12 @@ namespace StockLinx.Service.Services
             _unitOfWork = unitOfWork;
         }
 
+        public async Task<ManufacturerDto> GetDto(Guid id)
+        {
+            var manufacturer = await GetByIdAsync(id);
+            return _manufacturerRepository.GetDto(manufacturer);
+        }
+
         public async Task<List<ManufacturerDto>> GetAllDtos()
         {
             return await _manufacturerRepository.GetAllDtos();

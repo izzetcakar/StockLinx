@@ -11,9 +11,9 @@ namespace StockLinx.Service.Services
 {
     public class BranchService : Service<Branch>, IBranchService
     {
+        private readonly IBranchRepository _branchRepository;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IBranchRepository _branchRepository;
         public BranchService(IRepository<Branch> repository, IBranchRepository branchRepository,
             IMapper mapper, IUnitOfWork unitOfWork) : base(repository, unitOfWork)
         {
@@ -21,10 +21,18 @@ namespace StockLinx.Service.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
+
+        public async Task<BranchDto> GetDto(Guid id)
+        {
+            var branch = await GetByIdAsync(id);
+            return _branchRepository.GetDto(branch);
+        }
+
         public async Task<List<BranchDto>> GetAllDtos()
         {
             return await _branchRepository.GetAllDtos();
         }
+
         public async Task<BranchDto> CreateBranchAsync(BranchCreateDto createDto)
         {
             var newBranch = _mapper.Map<Branch>(createDto);

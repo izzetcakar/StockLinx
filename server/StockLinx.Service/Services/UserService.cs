@@ -28,6 +28,16 @@ namespace StockLinx.Service.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
+        public async Task<UserDto> GetDto(Guid id)
+        {
+            var user = await GetByIdAsync(id);
+            return _userRepository.GetDto(user);
+        }
+        public async Task<List<UserDto>> GetAllDtos()
+        {
+            return await _userRepository.GetAllDtos();
+        }
+
         public Guid GetIdByToken()
         {
             if (_httpContextAccessor.HttpContext != null)

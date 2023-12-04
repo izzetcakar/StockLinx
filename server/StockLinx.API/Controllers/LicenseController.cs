@@ -1,10 +1,8 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
-using StockLinx.Core.Entities;
 using StockLinx.Core.Services;
 
 namespace StockLinx.API.Controllers
@@ -13,12 +11,10 @@ namespace StockLinx.API.Controllers
     [ApiController]
     public class LicenseController : CustomBaseController
     {
-        private readonly IMapper _mapper;
         private readonly ILicenseService _licenseService;
 
-        public LicenseController(IMapper mapper, ILicenseService licenseService)
+        public LicenseController(ILicenseService licenseService)
         {
-            _mapper = mapper;
             _licenseService = licenseService;
         }
 
@@ -32,8 +28,8 @@ namespace StockLinx.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var license = await _licenseService.GetByIdAsync(id);
-            return CreateActionResult(CustomResponseDto<License>.Success(200, license));
+            var licenseDto = await _licenseService.GetDto(id);
+            return CreateActionResult(CustomResponseDto<LicenseDto>.Success(200, licenseDto));
         }
 
         [HttpPost]

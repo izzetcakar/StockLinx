@@ -22,6 +22,12 @@ namespace StockLinx.Service.Services
             _mapper = mapper;
         }
 
+        public async Task<FieldSetDto> GetDto(Guid id)
+        {
+            var fieldSet = await GetByIdAsync(id);
+            return _fieldSetRepository.GetDto(fieldSet);
+        }
+
         public async Task<List<FieldSetDto>> GetAllDtos()
         {
             return await _fieldSetRepository.GetAllDtos();

@@ -22,10 +22,17 @@ namespace StockLinx.Service.Services
             _unitOfWork = unitOfWork;
         }
 
+        public async Task<PermissionDto> GetDto(Guid id)
+        {
+            var permission = await GetByIdAsync(id);
+            return _permissionRepository.GetDto(permission);
+        }
+
         public async Task<List<PermissionDto>> GetAllDtos()
         {
             return await _permissionRepository.GetAllDtos();
         }
+
         public async Task<PermissionDto> CreatePermissionAsync(PermissionCreateDto createDto)
         {
             var newPermission = _mapper.Map<Permission>(createDto);

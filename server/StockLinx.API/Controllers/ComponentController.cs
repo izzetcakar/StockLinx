@@ -1,10 +1,8 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
-using StockLinx.Core.Entities;
 using StockLinx.Core.Services;
 
 namespace StockLinx.API.Controllers
@@ -13,11 +11,9 @@ namespace StockLinx.API.Controllers
     [ApiController]
     public class ComponentController : CustomBaseController
     {
-        private readonly IMapper _mapper;
         private readonly IComponentService _componentService;
-        public ComponentController(IMapper mapper, IComponentService componentService)
+        public ComponentController(IComponentService componentService)
         {
-            _mapper = mapper;
             _componentService = componentService;
         }
 
@@ -31,8 +27,8 @@ namespace StockLinx.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var component = await _componentService.GetByIdAsync(id);
-            return CreateActionResult(CustomResponseDto<Component>.Success(200, component));
+            var componentDto = await _componentService.GetDto(id);
+            return CreateActionResult(CustomResponseDto<ComponentDto>.Success(200, componentDto));
         }
 
         [HttpPost]

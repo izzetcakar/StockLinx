@@ -22,6 +22,12 @@ namespace StockLinx.Service.Services
             _unitOfWork = unitOfWork;
         }
 
+        public async Task<ProductStatusDto> GetDto(Guid id)
+        {
+            var productStatus = await GetByIdAsync(id);
+            return _productStatusRepository.GetDto(productStatus);
+        }
+
         public async Task<List<ProductStatusDto>> GetAllDtos()
         {
             return await _productStatusRepository.GetAllDtos();

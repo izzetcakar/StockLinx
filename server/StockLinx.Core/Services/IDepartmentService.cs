@@ -7,6 +7,7 @@ namespace StockLinx.Core.Services
 {
     public interface IDepartmentService : IService<Department>
     {
+        Task<DepartmentDto> GetDto(Guid id);
         Task<List<DepartmentDto>> GetAllDtos();
         Task<DepartmentDto> CreateDepartmentAsync(DepartmentCreateDto createDto);
         Task<List<DepartmentDto>> CreateRangeDepartmentAsync(List<DepartmentCreateDto> createDtos);

@@ -1,10 +1,8 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
-using StockLinx.Core.Entities;
 using StockLinx.Core.Services;
 
 namespace StockLinx.API.Controllers
@@ -13,11 +11,9 @@ namespace StockLinx.API.Controllers
     [ApiController]
     public class CategoryController : CustomBaseController
     {
-        private readonly IMapper _mapper;
         private readonly ICategoryService _categoryService;
-        public CategoryController(IMapper mapper, ICategoryService categoryService)
+        public CategoryController(ICategoryService categoryService)
         {
-            _mapper = mapper;
             _categoryService = categoryService;
         }
 
@@ -28,18 +24,11 @@ namespace StockLinx.API.Controllers
             return CreateActionResult(CustomResponseDto<List<CategoryDto>>.Success(200, categories));
         }
 
-        [HttpGet("counts")]
-        public async Task<IActionResult> CategoryCount()
-        {
-            var categoryCounts = await _categoryService.GetCounts();
-            return CreateActionResult(CustomResponseDto<List<ProductCategoryCounterDto>>.Success(200, categoryCounts));
-        }
-
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var category = await _categoryService.GetByIdAsync(id);
-            return CreateActionResult(CustomResponseDto<Category>.Success(200, category));
+            var categoryDto = await _categoryService.GetDto(id);
+            return CreateActionResult(CustomResponseDto<CategoryDto>.Success(201, categoryDto));
         }
 
         [HttpPost]

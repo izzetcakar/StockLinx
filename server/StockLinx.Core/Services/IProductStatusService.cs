@@ -7,6 +7,7 @@ namespace StockLinx.Core.Services
 {
     public interface IProductStatusService : IService<ProductStatus>
     {
+        Task<ProductStatusDto> GetDto(Guid id);
         Task<List<ProductStatusDto>> GetAllDtos();
         Task<ProductStatusDto> CreateProductStatusAsync(ProductStatusCreateDto createDto);
         Task<List<ProductStatusDto>> CreateRangeProductStatusAsync(List<ProductStatusCreateDto> createDtos);

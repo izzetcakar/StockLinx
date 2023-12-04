@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
@@ -12,11 +11,9 @@ namespace StockLinx.API.Controllers
     [ApiController]
     public class ProductStatusController : CustomBaseController
     {
-        private readonly IMapper _mapper;
         private readonly IProductStatusService _productStatusService;
-        public ProductStatusController(IMapper mapper, IProductStatusService productStatusService)
+        public ProductStatusController(IProductStatusService productStatusService)
         {
-            _mapper = mapper;
             _productStatusService = productStatusService;
         }
 
@@ -30,8 +27,7 @@ namespace StockLinx.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var productStatus = await _productStatusService.GetByIdAsync(id);
-            var productStatusDto = _mapper.Map<ProductStatusDto>(productStatus);
+            var productStatusDto = await _productStatusService.GetDto(id);
             return CreateActionResult(CustomResponseDto<ProductStatusDto>.Success(200, productStatusDto));
         }
 

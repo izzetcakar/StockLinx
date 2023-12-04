@@ -1,10 +1,8 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
-using StockLinx.Core.Entities;
 using StockLinx.Core.Services;
 
 namespace StockLinx.API.Controllers
@@ -13,12 +11,10 @@ namespace StockLinx.API.Controllers
     [ApiController]
     public class DeployedProductController : CustomBaseController
     {
-        private readonly IMapper _mapper;
         private readonly IDeployedProductService _deployedProductService;
 
-        public DeployedProductController(IMapper mapper, IDeployedProductService deployedProductService)
+        public DeployedProductController(IDeployedProductService deployedProductService)
         {
-            _mapper = mapper;
             _deployedProductService = deployedProductService;
         }
 
@@ -32,8 +28,8 @@ namespace StockLinx.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var deployedProduct = await _deployedProductService.GetByIdAsync(id);
-            return CreateActionResult(CustomResponseDto<DeployedProduct>.Success(200, deployedProduct));
+            var deployedProductDto = await _deployedProductService.GetDto(id);
+            return CreateActionResult(CustomResponseDto<DeployedProductDto>.Success(200, deployedProductDto));
         }
 
         [HttpPost]

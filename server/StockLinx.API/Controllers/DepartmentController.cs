@@ -1,10 +1,8 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
-using StockLinx.Core.Entities;
 using StockLinx.Core.Services;
 
 namespace StockLinx.API.Controllers
@@ -13,11 +11,9 @@ namespace StockLinx.API.Controllers
     [ApiController]
     public class DepartmentController : CustomBaseController
     {
-        private readonly IMapper _mapper;
         private readonly IDepartmentService _departmentService;
-        public DepartmentController(IMapper mapper, IDepartmentService departmentService)
+        public DepartmentController(IDepartmentService departmentService)
         {
-            _mapper = mapper;
             _departmentService = departmentService;
         }
 
@@ -31,8 +27,8 @@ namespace StockLinx.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var department = await _departmentService.GetByIdAsync(id);
-            return CreateActionResult(CustomResponseDto<Department>.Success(200, department));
+            var departmentDto = await _departmentService.GetDto(id);
+            return CreateActionResult(CustomResponseDto<DepartmentDto>.Success(200, departmentDto));
         }
 
         [HttpPost]

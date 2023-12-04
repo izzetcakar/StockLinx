@@ -7,6 +7,7 @@ namespace StockLinx.Core.Services
 {
     public interface IFieldSetService : IService<FieldSet>
     {
+        Task<FieldSetDto> GetDto(Guid id);
         Task<List<FieldSetDto>> GetAllDtos();
         Task<FieldSetDto> CreateFieldSetAsync(FieldSetCreateDto createDto);
         Task<List<FieldSetDto>> CreateRangeFieldSetAsync(List<FieldSetCreateDto> createDtos);

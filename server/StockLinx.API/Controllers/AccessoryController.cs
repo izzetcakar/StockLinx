@@ -1,10 +1,8 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
-using StockLinx.Core.Entities;
 using StockLinx.Core.Services;
 
 namespace StockLinx.API.Controllers
@@ -13,11 +11,9 @@ namespace StockLinx.API.Controllers
     [ApiController]
     public class AccessoryController : CustomBaseController
     {
-        private readonly IMapper _mapper;
         private readonly IAccessoryService _accessoryService;
-        public AccessoryController(IMapper mapper, IAccessoryService accessoryService)
+        public AccessoryController(IAccessoryService accessoryService)
         {
-            _mapper = mapper;
             _accessoryService = accessoryService;
         }
 
@@ -31,8 +27,8 @@ namespace StockLinx.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var accessory = await _accessoryService.GetByIdAsync(id);
-            return CreateActionResult(CustomResponseDto<Accessory>.Success(200, accessory));
+            var accessoryDto = await _accessoryService.GetDto(id);
+            return CreateActionResult(CustomResponseDto<AccessoryDto>.Success(200, accessoryDto));
         }
 
         [HttpPost]

@@ -1,10 +1,8 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
-using StockLinx.Core.Entities;
 using StockLinx.Core.Services;
 
 namespace StockLinx.API.Controllers
@@ -13,11 +11,9 @@ namespace StockLinx.API.Controllers
     [ApiController]
     public class ConsumableController : CustomBaseController
     {
-        private readonly IMapper _mapper;
         private readonly IConsumableService _consumableService;
-        public ConsumableController(IMapper mapper, IConsumableService consumableService)
+        public ConsumableController(IConsumableService consumableService)
         {
-            _mapper = mapper;
             _consumableService = consumableService;
         }
 
@@ -31,8 +27,8 @@ namespace StockLinx.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var consumable = await _consumableService.GetByIdAsync(id);
-            return CreateActionResult(CustomResponseDto<Consumable>.Success(200, consumable));
+            var consumableDto = await _consumableService.GetDto(id);
+            return CreateActionResult(CustomResponseDto<ConsumableDto>.Success(200, consumableDto));
         }
 
         [HttpPost]

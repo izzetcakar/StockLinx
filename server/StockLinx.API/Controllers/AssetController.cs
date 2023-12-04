@@ -1,10 +1,8 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
-using StockLinx.Core.Entities;
 using StockLinx.Core.Services;
 
 namespace StockLinx.API.Controllers
@@ -13,11 +11,9 @@ namespace StockLinx.API.Controllers
     [ApiController]
     public class AssetController : CustomBaseController
     {
-        private readonly IMapper _mapper;
         private readonly IAssetService _assetService;
-        public AssetController(IMapper mapper, IAssetService assetService)
+        public AssetController(IAssetService assetService)
         {
-            _mapper = mapper;
             _assetService = assetService;
         }
 
@@ -31,8 +27,8 @@ namespace StockLinx.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var asset = await _assetService.GetByIdAsync(id);
-            return CreateActionResult(CustomResponseDto<Asset>.Success(200, asset));
+            var assetDto = await _assetService.GetDto(id);
+            return CreateActionResult(CustomResponseDto<AssetDto>.Success(200, assetDto));
         }
 
         [HttpPost]

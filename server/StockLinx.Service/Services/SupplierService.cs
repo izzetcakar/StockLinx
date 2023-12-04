@@ -21,10 +21,17 @@ namespace StockLinx.Service.Services
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
+        public async Task<SupplierDto> GetDto(Guid id)
+        {
+            var supplier = await GetByIdAsync(id);
+            return _supplierRepository.GetDto(supplier);
+        }
+
         public async Task<List<SupplierDto>> GetAllDtos()
         {
             return await _supplierRepository.GetAllDtos();
         }
+
         public async Task<SupplierDto> CreateSupplierAsync(SupplierCreateDto createDto)
         {
             var newSupplier = _mapper.Map<Supplier>(createDto);

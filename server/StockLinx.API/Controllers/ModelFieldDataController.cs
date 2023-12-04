@@ -1,8 +1,6 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
-using StockLinx.Core.Entities;
 using StockLinx.Core.Services;
 
 namespace StockLinx.API.Controllers
@@ -12,11 +10,9 @@ namespace StockLinx.API.Controllers
     public class ModelFieldDataController : CustomBaseController
     {
         private readonly IModelFieldDataService _modelFieldDataService;
-        private readonly IMapper _mapper;
-        public ModelFieldDataController(IMapper mapper, IModelFieldDataService modelFieldDataService)
+        public ModelFieldDataController(IModelFieldDataService modelFieldDataService)
         {
             _modelFieldDataService = modelFieldDataService;
-            _mapper = mapper;
         }
 
         [HttpGet]
@@ -29,8 +25,8 @@ namespace StockLinx.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var modelFieldData = await _modelFieldDataService.GetByIdAsync(id);
-            return CreateActionResult(CustomResponseDto<ModelFieldData>.Success(200, modelFieldData));
+            var modelFieldDataDto = await _modelFieldDataService.GetDto(id);
+            return CreateActionResult(CustomResponseDto<ModelFieldDataDto>.Success(200, modelFieldDataDto));
         }
 
         [HttpPost]

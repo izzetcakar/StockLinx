@@ -1,10 +1,8 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
-using StockLinx.Core.Entities;
 using StockLinx.Core.Services;
 
 namespace StockLinx.API.Controllers
@@ -13,12 +11,10 @@ namespace StockLinx.API.Controllers
     [ApiController]
     public class ManufacturerController : CustomBaseController
     {
-        private readonly IMapper _mapper;
         private readonly IManufacturerService _manufacturerService;
 
-        public ManufacturerController(IMapper mapper, IManufacturerService manufacturerService)
+        public ManufacturerController(IManufacturerService manufacturerService)
         {
-            _mapper = mapper;
             _manufacturerService = manufacturerService;
         }
 
@@ -32,8 +28,8 @@ namespace StockLinx.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var manufacturer = await _manufacturerService.GetByIdAsync(id);
-            return CreateActionResult(CustomResponseDto<Manufacturer>.Success(200, manufacturer));
+            var manufacturerDto = await _manufacturerService.GetDto(id);
+            return CreateActionResult(CustomResponseDto<ManufacturerDto>.Success(200, manufacturerDto));
         }
 
         [HttpPost]

@@ -20,10 +20,18 @@ namespace StockLinx.Service.Services
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
+
+        public async Task<DeployedProductDto> GetDto(Guid id)
+        {
+            var deployedProduct = await GetByIdAsync(id);
+            return _deployedProductRepository.GetDto(deployedProduct);
+        }
+
         public async Task<List<DeployedProductDto>> GetAllDtos()
         {
             return await _deployedProductRepository.GetAllDtos();
         }
+
         public async Task<DeployedProductDto> CreateDeployedProductAsync(DeployedProductCreateDto createDto)
         {
             var newDeployedProduct = _mapper.Map<DeployedProduct>(createDto);

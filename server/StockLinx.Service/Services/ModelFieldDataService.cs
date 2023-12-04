@@ -20,10 +20,17 @@ namespace StockLinx.Service.Services
             _mapper = mapper;
         }
 
+        public async Task<ModelFieldDataDto> GetDto(Guid id)
+        {
+            var modelFieldData = await GetByIdAsync(id);
+            return _modelFieldDataRepository.GetDto(modelFieldData);
+        }
+
         public async Task<List<ModelFieldDataDto>> GetAllDtos()
         {
             return await _modelFieldDataRepository.GetAllDtos();
         }
+
         public async Task<ModelFieldDataDto> CreateModelFieldDataAsync(ModelFieldDataDto dto)
         {
             var newModelFieldData = _mapper.Map<ModelFieldData>(dto);

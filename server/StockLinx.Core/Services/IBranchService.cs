@@ -7,6 +7,7 @@ namespace StockLinx.Core.Services
 {
     public interface IBranchService : IService<Branch>
     {
+        Task<BranchDto> GetDto(Guid id);
         Task<List<BranchDto>> GetAllDtos();
         Task<BranchDto> CreateBranchAsync(BranchCreateDto createDto);
         Task<List<BranchDto>> CreateRangeBranchAsync(List<BranchCreateDto> createDtos);

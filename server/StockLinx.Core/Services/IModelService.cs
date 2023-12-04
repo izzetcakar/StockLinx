@@ -7,6 +7,7 @@ namespace StockLinx.Core.Services
 {
     public interface IModelService : IService<Model>
     {
+        Task<ModelDto> GetDto(Guid id);
         Task<List<ModelDto>> GetAllDtos();
         Task<ModelDto> CreateModelAsync(ModelCreateDto createDto);
         Task<List<ModelDto>> CreateRangeModelAsync(List<ModelCreateDto> createDtos);

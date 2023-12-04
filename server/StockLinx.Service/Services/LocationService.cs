@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
-using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
@@ -21,6 +20,12 @@ namespace StockLinx.Service.Services
             _locationRepository = locationRepository;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+        }
+
+        public async Task<LocationDto> GetDto(Guid id)
+        {
+            var location = await GetByIdAsync(id);
+            return _locationRepository.GetDto(location);
         }
 
         public async Task<List<LocationDto>> GetAllDtos()
@@ -88,37 +93,5 @@ namespace StockLinx.Service.Services
             }
             await RemoveRangeAsync(locations);
         }
-
-        public async Task<List<ProductLocationCounterDto>> GetAllCounts()
-        {
-            var list = new List<ProductLocationCounterDto>();
-            //var locations = await _locationRepository.GetAll().ToListAsync();
-            //var companies = await _companyRepository.GetAll()
-            //    .Include(x => x.Accessories)
-            //    .Include(x => x.Assets)
-            //    .Include(x => x.Components)
-            //    .Include(x => x.Consumables)
-            //    .Include(x => x.Licenses)
-            //    .Include(x => x.Location)
-            //    .Where(x => x.LocationId != null).ToListAsync();
-            //foreach (var company in companies)
-            //{
-            //    var location = locations.FirstOrDefault(x => x.Id == company.LocationId);
-            //    if (location != null)
-            //    {
-            //        list.Add(
-            //            new ProductLocationCounterDto
-            //            {
-            //                LocationId = location.Id,
-            //                LocationName = location.Name,
-            //                ProductCount = company.Accessories.Count + company.Assets.Count + company.Components.Count + company.Consumables.Count + company.Licenses.Count,
-            //                AssignedCount = company.Accessories.Count(p => p.ProductStatus.Type == ProductStatusType.DEPLOYED)
-            //            }
-            //            );
-            //    }
-            //}
-            return list;
-        }
-
     }
 }

@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
-using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
@@ -14,18 +12,26 @@ namespace StockLinx.Service.Services
     public class AssetService : Service<Asset>, IAssetService
     {
         private readonly IAssetRepository _assetRepository;
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
         public AssetService(IRepository<Asset> repository, IAssetRepository assetRepository, IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork)
         {
             _assetRepository = assetRepository;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
+
+        public async Task<AssetDto> GetDto(Guid id)
+        {
+            var asset = await GetByIdAsync(id);
+            return await _assetRepository.GetDto(asset);
+        }
+
         public async Task<List<AssetDto>> GetAllDtos()
         {
             return await _assetRepository.GetAllDtos();
         }
+
         public async Task<List<AssetDto>> CreateAssetAsync(AssetCreateDto createDto)
         {
             var assets = new List<Asset>();
@@ -99,27 +105,6 @@ namespace StockLinx.Service.Services
                 assets.Add(asset);
             }
             await RemoveRangeAsync(assets);
-        }
-        public async Task<ProductCounter> GetAllCountAsync()
-        {
-            var assets = await GetAllAsync();
-            var assetCount = assets.Count();
-            return new ProductCounter { EntityName = "Assets", Count = assetCount };
-        }
-        public async Task<List<ProductStatusCounter>> GetStatusCount()
-        {
-            var assets = await _assetRepository.GetAll().Include(x => x.ProductStatus).ToListAsync();
-            var productStatusCounts = assets
-                .Where(asset => asset.ProductStatus != null)
-                .GroupBy(asset => asset.ProductStatus.Type)
-                .Select(group => new ProductStatusCounter
-                {
-                    Status = group.Key.ToString(),
-                    Count = group.Count()
-                })
-                .ToList();
-
-            return productStatusCounts;
         }
     }
 }
