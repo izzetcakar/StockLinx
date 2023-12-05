@@ -14,6 +14,5 @@ namespace StockLinx.Core.Services
         Task UpdateCompanyAsync(CompanyUpdateDto updateDto);
         Task DeleteCompanyAsync(Guid companyId);
         Task DeleteRangeCompanyAsync(List<Guid> companyIds);
-        Task CreateBaseAdmin();
     }
 }

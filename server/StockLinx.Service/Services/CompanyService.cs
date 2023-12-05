@@ -20,18 +20,7 @@ namespace StockLinx.Service.Services
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
-        public async Task CreateBaseAdmin()
-        {
-            try
-            {
-                await _companyRepository.CreateBaseAdmin();
-                await _unitOfWork.CommitAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("An error occurred while creating the base admin.", ex);
-            }
-        }
+
         public async Task<CompanyDto> GetDto(Guid id)
         {
             var company = await GetByIdAsync(id);

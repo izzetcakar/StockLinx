@@ -66,12 +66,5 @@ namespace StockLinx.API.Controllers
             await _companyService.DeleteRangeCompanyAsync(companyIds);
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
         }
-
-        [HttpGet("createbase")]
-        public async Task<IActionResult> CreateBaseAdmin()
-        {
-            await _companyService.CreateBaseAdmin();
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
-        }
     }
 }

@@ -8,6 +8,5 @@ namespace StockLinx.Core.Repositories
         CompanyDto GetDto(Company entity);
         List<CompanyDto> GetDtos(List<Company> entities);
         Task<List<CompanyDto>> GetAllDtos();
-        Task CreateBaseAdmin();
     }
 }
