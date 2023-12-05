@@ -73,14 +73,14 @@ function* fetchUsersSaga() {
 function* createUserSaga(action: CreateUserRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       userRequests.create,
       action.payload.user
     );
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(userActions.createSuccess());
+      yield put(userActions.createSuccess({ user: data as IUser }));
       openNotificationSuccess("User Created");
     }
   } catch (e) {
@@ -92,14 +92,14 @@ function* createUserSaga(action: CreateUserRequest) {
 function* createRangeUserSaga(action: CreateRangeUserRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       userRequests.createRange,
       action.payload.users
     );
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {
-      yield put(userActions.createRangeSuccess());
+      yield put(userActions.createRangeSuccess({ users: data as IUser[] }));
       openNotificationSuccess("Users Created");
     }
   } catch (e) {

@@ -51,6 +51,7 @@ export interface CreateFieldSetCustomFieldRequest {
 }
 export type CreateFieldSetCustomFieldSuccess = {
   type: typeof fieldSetCustomFieldConst.CREATE_FIELDSETCUSTOMFIELD_SUCCESS;
+  payload: FieldSetCustomFieldPayload;
 };
 export type CreateFieldSetCustomFieldFailure = {
   type: typeof fieldSetCustomFieldConst.CREATE_FIELDSETCUSTOMFIELD_FAILURE;
@@ -73,6 +74,7 @@ export interface CreateRangeFieldSetCustomFieldRequest {
 }
 export type CreateRangeFieldSetCustomFieldSuccess = {
   type: typeof fieldSetCustomFieldConst.CREATE_RANGE_FIELDSETCUSTOMFIELD_SUCCESS;
+  payload: FieldSetCustomFieldsPayload;
 };
 export type CreateRangeFieldSetCustomFieldFailure = {
   type: typeof fieldSetCustomFieldConst.CREATE_RANGE_FIELDSETCUSTOMFIELD_FAILURE;

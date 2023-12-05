@@ -70,7 +70,7 @@ function* fetchModelFieldDataSaga(action: FetchModelFieldDataRequest) {
 function* createModelFieldDataSaga(action: CreateModelFieldDataRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       modelFieldDataRequests.create,
       action.payload.modelFieldData
     );
@@ -78,7 +78,11 @@ function* createModelFieldDataSaga(action: CreateModelFieldDataRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("ModelFieldData Created");
-      yield put(modelFieldDataActions.createSuccess());
+      yield put(
+        modelFieldDataActions.createSuccess({
+          modelFieldData: data as IModelFieldData,
+        })
+      );
     }
   } catch (e) {
     openNotificationError("ModelFieldData", (e as Error).message);
@@ -91,7 +95,7 @@ function* createRangeModelFieldDataSaga(
 ) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       modelFieldDataRequests.createRange,
       action.payload.modelFieldDatas
     );
@@ -99,7 +103,11 @@ function* createRangeModelFieldDataSaga(
       throw new Error(message);
     } else {
       openNotificationSuccess("ModelFieldDatas Created");
-      yield put(modelFieldDataActions.createRangeSuccess());
+      yield put(
+        modelFieldDataActions.createRangeSuccess({
+          modelFieldDatas: data as IModelFieldData[],
+        })
+      );
     }
   } catch (e) {
     openNotificationError("ModelFieldData", (e as Error).message);

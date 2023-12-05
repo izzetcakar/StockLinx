@@ -4,7 +4,6 @@ import { AccessoryActions, AccessoryState } from "./type";
 const initialState: AccessoryState = {
   accessory: null,
   accessories: [],
-  selectData: [],
 };
 
 export default (state = initialState, action: AccessoryActions) => {
@@ -17,10 +16,6 @@ export default (state = initialState, action: AccessoryActions) => {
       return {
         ...state,
         accessories: action.payload.accessories,
-        selectData: action.payload.accessories.map((accessory) => ({
-          value: accessory.id as string,
-          label: accessory.name,
-        })),
       };
     case accessoryConst.FETCH_ACCESSORIES_FAILURE:
       return {

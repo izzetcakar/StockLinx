@@ -43,6 +43,10 @@ export default (state = initialState, action: FieldSetCustomFieldActions) => {
     case fieldSetCustomFieldConst.CREATE_FIELDSETCUSTOMFIELD_SUCCESS:
       return {
         ...state,
+        fieldSetCustomFields: [
+          ...state.fieldSetCustomFields,
+          action.payload.fieldSetCustomField,
+        ],
       };
     case fieldSetCustomFieldConst.CREATE_FIELDSETCUSTOMFIELD_FAILURE:
       return {
@@ -55,6 +59,10 @@ export default (state = initialState, action: FieldSetCustomFieldActions) => {
     case fieldSetCustomFieldConst.CREATE_RANGE_FIELDSETCUSTOMFIELD_SUCCESS:
       return {
         ...state,
+        fieldSetCustomFields: [
+          ...state.fieldSetCustomFields,
+          ...action.payload.fieldSetCustomFields,
+        ],
       };
     case fieldSetCustomFieldConst.CREATE_RANGE_FIELDSETCUSTOMFIELD_FAILURE:
       return {

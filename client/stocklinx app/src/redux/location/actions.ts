@@ -63,20 +63,26 @@ const create = (payload: LocationPayload): CreateLocationRequest => ({
   type: locationConst.CREATE_LOCATION_REQUEST,
   payload,
 });
-const createSuccess = (): CreateLocationSuccess => ({
+const createSuccess = (payload: LocationPayload): CreateLocationSuccess => ({
   type: locationConst.CREATE_LOCATION_SUCCESS,
+  payload,
 });
 const createFailure = (): CreateLocationFailure => ({
   type: locationConst.CREATE_LOCATION_FAILURE,
 });
 
 //POST RANGE
-const createRange = (payload: LocationsPayload): CreateRangeLocationRequest => ({
+const createRange = (
+  payload: LocationsPayload
+): CreateRangeLocationRequest => ({
   type: locationConst.CREATE_RANGE_LOCATION_REQUEST,
   payload,
 });
-const createRangeSuccess = (): CreateRangeLocationSuccess => ({
+const createRangeSuccess = (
+  payload: LocationsPayload
+): CreateRangeLocationSuccess => ({
   type: locationConst.CREATE_RANGE_LOCATION_SUCCESS,
+  payload,
 });
 const createRangeFailure = (): CreateRangeLocationFailure => ({
   type: locationConst.CREATE_RANGE_LOCATION_FAILURE,

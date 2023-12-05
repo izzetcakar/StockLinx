@@ -1,10 +1,9 @@
-import { ILicense, SelectData } from "../../interfaces/interfaces";
+import { ILicense } from "../../interfaces/interfaces";
 import { licenseConst } from "./constant";
 
 export interface LicenseState {
   license: ILicense | null;
   licenses: ILicense[];
-  selectData: SelectData[];
 }
 export interface LicenseRequestPayload {
   id: string;
@@ -52,6 +51,7 @@ export interface CreateLicenseRequest {
 }
 export type CreateLicenseSuccess = {
   type: typeof licenseConst.CREATE_LICENSE_SUCCESS;
+  payload: LicensePayload;
 };
 export type CreateLicenseFailure = {
   type: typeof licenseConst.CREATE_LICENSE_FAILURE;
@@ -63,6 +63,7 @@ export interface CreateRangeLicenseRequest {
 }
 export type CreateRangeLicenseSuccess = {
   type: typeof licenseConst.CREATE_RANGE_LICENSE_SUCCESS;
+  payload: LicensesPayload;
 };
 export type CreateRangeLicenseFailure = {
   type: typeof licenseConst.CREATE_RANGE_LICENSE_FAILURE;

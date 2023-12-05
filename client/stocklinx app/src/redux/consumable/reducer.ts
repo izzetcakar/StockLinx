@@ -4,7 +4,6 @@ import { ConsumableActions, ConsumableState } from "./type";
 const initialState: ConsumableState = {
   consumable: null,
   consumables: [],
-  selectData: [],
 };
 
 export default (state = initialState, action: ConsumableActions) => {
@@ -17,10 +16,6 @@ export default (state = initialState, action: ConsumableActions) => {
       return {
         ...state,
         consumables: action.payload.consumables,
-        selectData: action.payload.consumables.map((consumable) => ({
-          value: consumable.id as string,
-          label: consumable.name,
-        })),
       };
     case consumableConst.FETCH_CONSUMABLES_FAILURE:
       return {

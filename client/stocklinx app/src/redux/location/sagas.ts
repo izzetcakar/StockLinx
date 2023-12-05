@@ -70,7 +70,7 @@ function* fetchLocationSaga(action: FetchLocationRequest) {
 function* createLocationSaga(action: CreateLocationRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       locationRequests.create,
       action.payload.location
     );
@@ -78,7 +78,7 @@ function* createLocationSaga(action: CreateLocationRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("Location Created");
-      yield put(locationActions.createSuccess());
+      yield put(locationActions.createSuccess({ location: data as ILocation }));
     }
   } catch (e) {
     openNotificationError("Location", (e as Error).message);
@@ -89,7 +89,7 @@ function* createLocationSaga(action: CreateLocationRequest) {
 function* createRangeLocationSaga(action: CreateRangeLocationRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       locationRequests.createRange,
       action.payload.locations
     );
@@ -97,7 +97,9 @@ function* createRangeLocationSaga(action: CreateRangeLocationRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("Locations Created");
-      yield put(locationActions.createRangeSuccess());
+      yield put(
+        locationActions.createRangeSuccess({ locations: data as ILocation[] })
+      );
     }
   } catch (e) {
     openNotificationError("Location", (e as Error).message);
@@ -155,7 +157,9 @@ function* removeRangeLocationSaga(action: RemoveRangeLocationRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("Locations Removed");
-      yield put(locationActions.removeRangeSuccess({ ids: action.payload.ids }));
+      yield put(
+        locationActions.removeRangeSuccess({ ids: action.payload.ids })
+      );
     }
   } catch (e) {
     openNotificationError("Location", (e as Error).message);
@@ -171,10 +175,16 @@ function* locationsaga() {
   yield takeEvery(locationConst.FETCH_LOCATIONS_REQUEST, fetchLocationsSaga);
   yield takeEvery(locationConst.FETCH_LOCATION_REQUEST, fetchLocationSaga);
   yield takeEvery(locationConst.CREATE_LOCATION_REQUEST, createLocationSaga);
-  yield takeEvery(locationConst.CREATE_RANGE_LOCATION_REQUEST, createRangeLocationSaga);
+  yield takeEvery(
+    locationConst.CREATE_RANGE_LOCATION_REQUEST,
+    createRangeLocationSaga
+  );
   yield takeEvery(locationConst.UPDATE_LOCATION_REQUEST, updateLocationSaga);
   yield takeEvery(locationConst.REMOVE_LOCATION_REQUEST, removeLocationSaga);
-  yield takeEvery(locationConst.REMOVE_RANGE_LOCATION_REQUEST, removeRangeLocationSaga);
+  yield takeEvery(
+    locationConst.REMOVE_RANGE_LOCATION_REQUEST,
+    removeRangeLocationSaga
+  );
 }
 // function* budgetItemSaga() {
 //   yield takeEvery(budgetItemConst.fetchList, listBudgetITem);

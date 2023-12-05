@@ -1,10 +1,9 @@
-import { IProductStatus, SelectData } from "../../interfaces/interfaces";
+import { IProductStatus } from "../../interfaces/interfaces";
 import { productStatusConst } from "./constant";
 
 export interface ProductStatusState {
   productStatus: IProductStatus | null;
   productStatuses: IProductStatus[];
-  selectData: SelectData[];
 }
 export interface ProductStatusRequestPayload {
   id: string;
@@ -52,6 +51,7 @@ export interface CreateProductStatusRequest {
 }
 export type CreateProductStatusSuccess = {
   type: typeof productStatusConst.CREATE_PRODUCTSTATUS_SUCCESS;
+  payload: ProductStatusPayload;
 };
 export type CreateProductStatusFailure = {
   type: typeof productStatusConst.CREATE_PRODUCTSTATUS_FAILURE;
@@ -63,6 +63,7 @@ export interface CreateRangeProductStatusRequest {
 }
 export type CreateRangeProductStatusSuccess = {
   type: typeof productStatusConst.CREATE_RANGE_PRODUCTSTATUS_SUCCESS;
+  payload: ProductStatusesPayload;
 };
 export type CreateRangeProductStatusFailure = {
   type: typeof productStatusConst.CREATE_RANGE_PRODUCTSTATUS_FAILURE;

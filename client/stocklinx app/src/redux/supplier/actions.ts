@@ -63,20 +63,26 @@ const create = (payload: SupplierPayload): CreateSupplierRequest => ({
   type: supplierConst.CREATE_SUPPLIER_REQUEST,
   payload,
 });
-const createSuccess = (): CreateSupplierSuccess => ({
+const createSuccess = (payload: SupplierPayload): CreateSupplierSuccess => ({
   type: supplierConst.CREATE_SUPPLIER_SUCCESS,
+  payload,
 });
 const createFailure = (): CreateSupplierFailure => ({
   type: supplierConst.CREATE_SUPPLIER_FAILURE,
 });
 
 //POST RANGE
-const createRange = (payload: SuppliersPayload): CreateRangeSupplierRequest => ({
+const createRange = (
+  payload: SuppliersPayload
+): CreateRangeSupplierRequest => ({
   type: supplierConst.CREATE_RANGE_SUPPLIER_REQUEST,
   payload,
 });
-const createRangeSuccess = (): CreateRangeSupplierSuccess => ({
+const createRangeSuccess = (
+  payload: SuppliersPayload
+): CreateRangeSupplierSuccess => ({
   type: supplierConst.CREATE_RANGE_SUPPLIER_SUCCESS,
+  payload,
 });
 const createRangeFailure = (): CreateRangeSupplierFailure => ({
   type: supplierConst.CREATE_RANGE_SUPPLIER_FAILURE,

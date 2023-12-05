@@ -1,10 +1,9 @@
-import { IComponent, SelectData } from "../../interfaces/interfaces";
+import { IComponent } from "../../interfaces/interfaces";
 import { componentConst } from "./constant";
 
 export interface ComponentState {
   component: IComponent | null;
   components: IComponent[];
-  selectData: SelectData[];
 }
 export interface ComponentRequestPayload {
   id: string;

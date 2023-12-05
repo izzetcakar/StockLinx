@@ -37,7 +37,9 @@ import {
 const getAll = (): FetchManufacturersRequest => ({
   type: manufacturerConst.FETCH_MANUFACTURERS_REQUEST,
 });
-const getAllSuccess = (payload: ManufacturersPayload): FetchManufacturersSuccess => ({
+const getAllSuccess = (
+  payload: ManufacturersPayload
+): FetchManufacturersSuccess => ({
   type: manufacturerConst.FETCH_MANUFACTURERS_SUCCESS,
   payload,
 });
@@ -46,11 +48,15 @@ const getAllFailure = (): FetchManufacturersFailure => ({
 });
 
 //GET:/ID
-const get = (payload: ManufacturerRequestPayload): FetchManufacturerRequest => ({
+const get = (
+  payload: ManufacturerRequestPayload
+): FetchManufacturerRequest => ({
   type: manufacturerConst.FETCH_MANUFACTURER_REQUEST,
   payload,
 });
-const getSuccess = (payload: ManufacturerPayload): FetchManufacturerSuccess => ({
+const getSuccess = (
+  payload: ManufacturerPayload
+): FetchManufacturerSuccess => ({
   type: manufacturerConst.FETCH_MANUFACTURER_SUCCESS,
   payload,
 });
@@ -63,20 +69,28 @@ const create = (payload: ManufacturerPayload): CreateManufacturerRequest => ({
   type: manufacturerConst.CREATE_MANUFACTURER_REQUEST,
   payload,
 });
-const createSuccess = (): CreateManufacturerSuccess => ({
+const createSuccess = (
+  payload: ManufacturerPayload
+): CreateManufacturerSuccess => ({
   type: manufacturerConst.CREATE_MANUFACTURER_SUCCESS,
+  payload,
 });
 const createFailure = (): CreateManufacturerFailure => ({
   type: manufacturerConst.CREATE_MANUFACTURER_FAILURE,
 });
 
 //POST RANGE
-const createRange = (payload: ManufacturersPayload): CreateRangeManufacturerRequest => ({
+const createRange = (
+  payload: ManufacturersPayload
+): CreateRangeManufacturerRequest => ({
   type: manufacturerConst.CREATE_RANGE_MANUFACTURER_REQUEST,
   payload,
 });
-const createRangeSuccess = (): CreateRangeManufacturerSuccess => ({
+const createRangeSuccess = (
+  payload: ManufacturersPayload
+): CreateRangeManufacturerSuccess => ({
   type: manufacturerConst.CREATE_RANGE_MANUFACTURER_SUCCESS,
+  payload,
 });
 const createRangeFailure = (): CreateRangeManufacturerFailure => ({
   type: manufacturerConst.CREATE_RANGE_MANUFACTURER_FAILURE,
@@ -95,7 +109,9 @@ const updateFailure = (): UpdateManufacturerFailure => ({
 });
 
 //REMOVE
-const remove = (payload: ManufacturerRemovePayload): RemoveManufacturerRequest => ({
+const remove = (
+  payload: ManufacturerRemovePayload
+): RemoveManufacturerRequest => ({
   type: manufacturerConst.REMOVE_MANUFACTURER_REQUEST,
   payload,
 });

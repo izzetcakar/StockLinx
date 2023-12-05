@@ -74,8 +74,9 @@ const create = (payload: UserPayload): CreateUserRequest => ({
   type: userConst.CREATE_USER_REQUEST,
   payload,
 });
-const createSuccess = (): CreateUsersuccess => ({
+const createSuccess = (payload: UserPayload): CreateUsersuccess => ({
   type: userConst.CREATE_USER_SUCCESS,
+  payload,
 });
 const createFailure = (): CreateUserFailure => ({
   type: userConst.CREATE_USER_FAILURE,
@@ -97,8 +98,9 @@ const createRange = (payload: UsersPayload): CreateRangeUserRequest => ({
   type: userConst.CREATE_RANGE_USER_REQUEST,
   payload,
 });
-const createRangeSuccess = (): CreateRangeUserSuccess => ({
+const createRangeSuccess = (payload: UsersPayload): CreateRangeUserSuccess => ({
   type: userConst.CREATE_RANGE_USER_SUCCESS,
+  payload,
 });
 const createRangeFailure = (): CreateRangeUserFailure => ({
   type: userConst.CREATE_RANGE_USER_FAILURE,

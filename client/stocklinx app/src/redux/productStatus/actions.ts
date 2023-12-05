@@ -37,7 +37,9 @@ import {
 const getAll = (): FetchProductStatusesRequest => ({
   type: productStatusConst.FETCH_PRODUCTSTATUSES_REQUEST,
 });
-const getAllSuccess = (payload: ProductStatusesPayload): FetchProductStatusesSuccess => ({
+const getAllSuccess = (
+  payload: ProductStatusesPayload
+): FetchProductStatusesSuccess => ({
   type: productStatusConst.FETCH_PRODUCTSTATUSES_SUCCESS,
   payload,
 });
@@ -46,11 +48,15 @@ const getAllFailure = (): FetchProductStatusesFailure => ({
 });
 
 //GET:/ID
-const get = (payload: ProductStatusRequestPayload): FetchProductStatusRequest => ({
+const get = (
+  payload: ProductStatusRequestPayload
+): FetchProductStatusRequest => ({
   type: productStatusConst.FETCH_PRODUCTSTATUS_REQUEST,
   payload,
 });
-const getSuccess = (payload: ProductStatusPayload): FetchProductStatusSuccess => ({
+const getSuccess = (
+  payload: ProductStatusPayload
+): FetchProductStatusSuccess => ({
   type: productStatusConst.FETCH_PRODUCTSTATUS_SUCCESS,
   payload,
 });
@@ -63,20 +69,28 @@ const create = (payload: ProductStatusPayload): CreateProductStatusRequest => ({
   type: productStatusConst.CREATE_PRODUCTSTATUS_REQUEST,
   payload,
 });
-const createSuccess = (): CreateProductStatusSuccess => ({
+const createSuccess = (
+  payload: ProductStatusPayload
+): CreateProductStatusSuccess => ({
   type: productStatusConst.CREATE_PRODUCTSTATUS_SUCCESS,
+  payload,
 });
 const createFailure = (): CreateProductStatusFailure => ({
   type: productStatusConst.CREATE_PRODUCTSTATUS_FAILURE,
 });
 
 //POST RANGE
-const createRange = (payload: ProductStatusesPayload): CreateRangeProductStatusRequest => ({
+const createRange = (
+  payload: ProductStatusesPayload
+): CreateRangeProductStatusRequest => ({
   type: productStatusConst.CREATE_RANGE_PRODUCTSTATUS_REQUEST,
   payload,
 });
-const createRangeSuccess = (): CreateRangeProductStatusSuccess => ({
+const createRangeSuccess = (
+  payload: ProductStatusesPayload
+): CreateRangeProductStatusSuccess => ({
   type: productStatusConst.CREATE_RANGE_PRODUCTSTATUS_SUCCESS,
+  payload,
 });
 const createRangeFailure = (): CreateRangeProductStatusFailure => ({
   type: productStatusConst.CREATE_RANGE_PRODUCTSTATUS_FAILURE,
@@ -95,7 +109,9 @@ const updateFailure = (): UpdateProductStatusFailure => ({
 });
 
 //REMOVE
-const remove = (payload: ProductStatusRemovePayload): RemoveProductStatusRequest => ({
+const remove = (
+  payload: ProductStatusRemovePayload
+): RemoveProductStatusRequest => ({
   type: productStatusConst.REMOVE_PRODUCTSTATUS_REQUEST,
   payload,
 });
@@ -127,7 +143,9 @@ const removeRangeFailure = (): RemoveRangeProductStatusFailure => ({
 });
 
 //CLIENT ACTIONS
-const setProductStatus = (payload: IProductStatus | null): SetProductStatus => ({
+const setProductStatus = (
+  payload: IProductStatus | null
+): SetProductStatus => ({
   type: productStatusConst.SET_PRODUCTSTATUS,
   payload,
 });

@@ -1,10 +1,9 @@
-import { IModel, SelectData } from "../../interfaces/interfaces";
+import { IModel } from "../../interfaces/interfaces";
 import { modelConst } from "./constant";
 
 export interface ModelState {
   model: IModel | null;
   models: IModel[];
-  selectData: SelectData[];
 }
 export interface ModelRequestPayload {
   id: string;
@@ -52,6 +51,7 @@ export interface CreateModelRequest {
 }
 export type CreateModelSuccess = {
   type: typeof modelConst.CREATE_MODEL_SUCCESS;
+  payload: ModelPayload;
 };
 export type CreateModelFailure = {
   type: typeof modelConst.CREATE_MODEL_FAILURE;
@@ -63,6 +63,7 @@ export interface CreateRangeModelRequest {
 }
 export type CreateRangeModelSuccess = {
   type: typeof modelConst.CREATE_RANGE_MODEL_SUCCESS;
+  payload: ModelsPayload;
 };
 export type CreateRangeModelFailure = {
   type: typeof modelConst.CREATE_RANGE_MODEL_FAILURE;

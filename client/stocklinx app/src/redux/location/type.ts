@@ -1,10 +1,9 @@
-import { ILocation, SelectData } from "../../interfaces/interfaces";
+import { ILocation } from "../../interfaces/interfaces";
 import { locationConst } from "./constant";
 
 export interface LocationState {
   location: ILocation | null;
   locations: ILocation[];
-  selectData: SelectData[];
 }
 export interface LocationRequestPayload {
   id: string;
@@ -52,6 +51,7 @@ export interface CreateLocationRequest {
 }
 export type CreateLocationSuccess = {
   type: typeof locationConst.CREATE_LOCATION_SUCCESS;
+  payload: LocationPayload;
 };
 export type CreateLocationFailure = {
   type: typeof locationConst.CREATE_LOCATION_FAILURE;
@@ -63,6 +63,7 @@ export interface CreateRangeLocationRequest {
 }
 export type CreateRangeLocationSuccess = {
   type: typeof locationConst.CREATE_RANGE_LOCATION_SUCCESS;
+  payload: LocationsPayload;
 };
 export type CreateRangeLocationFailure = {
   type: typeof locationConst.CREATE_RANGE_LOCATION_FAILURE;

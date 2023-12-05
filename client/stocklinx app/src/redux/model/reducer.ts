@@ -4,7 +4,6 @@ import { ModelActions, ModelState } from "./type";
 const initialState: ModelState = {
   model: null,
   models: [],
-  selectData: [],
 };
 
 export default (state = initialState, action: ModelActions) => {
@@ -17,10 +16,6 @@ export default (state = initialState, action: ModelActions) => {
       return {
         ...state,
         models: action.payload.models,
-        selectData: action.payload.models.map((model) => ({
-          value: model.id as string,
-          label: model.name,
-        })),
       };
     case modelConst.FETCH_MODELS_FAILURE:
       return {
@@ -48,6 +43,7 @@ export default (state = initialState, action: ModelActions) => {
     case modelConst.CREATE_MODEL_SUCCESS:
       return {
         ...state,
+        models: [...state.models, action.payload.model],
       };
     case modelConst.CREATE_MODEL_FAILURE:
       return {
@@ -60,6 +56,7 @@ export default (state = initialState, action: ModelActions) => {
     case modelConst.CREATE_RANGE_MODEL_SUCCESS:
       return {
         ...state,
+        models: [...state.models, ...action.payload.models],
       };
     case modelConst.CREATE_RANGE_MODEL_FAILURE:
       return {
@@ -84,9 +81,7 @@ export default (state = initialState, action: ModelActions) => {
     case modelConst.REMOVE_MODEL_SUCCESS:
       return {
         ...state,
-        models: state.models.filter(
-          (model) => model.id !== action.payload.id
-        ),
+        models: state.models.filter((model) => model.id !== action.payload.id),
       };
     case modelConst.REMOVE_MODEL_FAILURE:
       return {

@@ -4,7 +4,6 @@ import { CategoryActions, CategoryState } from "./type";
 const initialState: CategoryState = {
   category: null,
   categories: [],
-  selectData: [],
 };
 
 export default (state = initialState, action: CategoryActions) => {
@@ -17,10 +16,6 @@ export default (state = initialState, action: CategoryActions) => {
       return {
         ...state,
         categories: action.payload.categories,
-        selectData: action.payload.categories.map((category) => ({
-          value: category.id as string,
-          label: category.name,
-        })),
       };
     case categoryConst.FETCH_CATEGORIES_FAILURE:
       return {

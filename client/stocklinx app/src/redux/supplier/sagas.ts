@@ -70,7 +70,7 @@ function* fetchSupplierSaga(action: FetchSupplierRequest) {
 function* createSupplierSaga(action: CreateSupplierRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       supplierRequests.create,
       action.payload.supplier
     );
@@ -78,7 +78,7 @@ function* createSupplierSaga(action: CreateSupplierRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("Supplier Created");
-      yield put(supplierActions.createSuccess());
+      yield put(supplierActions.createSuccess({ supplier: data as ISupplier }));
     }
   } catch (e) {
     openNotificationError("Supplier", (e as Error).message);
@@ -89,7 +89,7 @@ function* createSupplierSaga(action: CreateSupplierRequest) {
 function* createRangeSupplierSaga(action: CreateRangeSupplierRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       supplierRequests.createRange,
       action.payload.suppliers
     );
@@ -97,7 +97,9 @@ function* createRangeSupplierSaga(action: CreateRangeSupplierRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("Suppliers Created");
-      yield put(supplierActions.createRangeSuccess());
+      yield put(
+        supplierActions.createRangeSuccess({ suppliers: data as ISupplier[] })
+      );
     }
   } catch (e) {
     openNotificationError("Supplier", (e as Error).message);

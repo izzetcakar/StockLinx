@@ -4,7 +4,6 @@ import { ManufacturerActions, ManufacturerState } from "./type";
 const initialState: ManufacturerState = {
   manufacturer: null,
   manufacturers: [],
-  selectData: [],
 };
 
 export default (state = initialState, action: ManufacturerActions) => {
@@ -17,10 +16,6 @@ export default (state = initialState, action: ManufacturerActions) => {
       return {
         ...state,
         manufacturers: action.payload.manufacturers,
-        selectData: action.payload.manufacturers.map((manufacturer) => ({
-          value: manufacturer.id as string,
-          label: manufacturer.name,
-        })),
       };
     case manufacturerConst.FETCH_MANUFACTURERS_FAILURE:
       return {
@@ -48,6 +43,7 @@ export default (state = initialState, action: ManufacturerActions) => {
     case manufacturerConst.CREATE_MANUFACTURER_SUCCESS:
       return {
         ...state,
+        manufacturers: [...state.manufacturers, action.payload.manufacturer],
       };
     case manufacturerConst.CREATE_MANUFACTURER_FAILURE:
       return {
@@ -60,6 +56,10 @@ export default (state = initialState, action: ManufacturerActions) => {
     case manufacturerConst.CREATE_RANGE_MANUFACTURER_SUCCESS:
       return {
         ...state,
+        manufacturers: [
+          ...state.manufacturers,
+          ...action.payload.manufacturers,
+        ],
       };
     case manufacturerConst.CREATE_RANGE_MANUFACTURER_FAILURE:
       return {

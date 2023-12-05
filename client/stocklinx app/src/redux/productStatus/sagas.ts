@@ -70,7 +70,7 @@ function* fetchProductStatusSaga(action: FetchProductStatusRequest) {
 function* createProductStatusSaga(action: CreateProductStatusRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       productStatusRequests.create,
       action.payload.productStatus
     );
@@ -78,7 +78,11 @@ function* createProductStatusSaga(action: CreateProductStatusRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("ProductStatus Created");
-      yield put(productStatusActions.createSuccess());
+      yield put(
+        productStatusActions.createSuccess({
+          productStatus: data as IProductStatus,
+        })
+      );
     }
   } catch (e) {
     openNotificationError("ProductStatus", (e as Error).message);
@@ -91,7 +95,7 @@ function* createRangeProductStatusSaga(
 ) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       productStatusRequests.createRange,
       action.payload.productStatuses
     );
@@ -99,7 +103,11 @@ function* createRangeProductStatusSaga(
       throw new Error(message);
     } else {
       openNotificationSuccess("ProductStatuses Created");
-      yield put(productStatusActions.createRangeSuccess());
+      yield put(
+        productStatusActions.createRangeSuccess({
+          productStatuses: data as IProductStatus[],
+        })
+      );
     }
   } catch (e) {
     openNotificationError("ProductStatus", (e as Error).message);

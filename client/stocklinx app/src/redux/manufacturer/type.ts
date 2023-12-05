@@ -1,10 +1,9 @@
-import { IManufacturer, SelectData } from "../../interfaces/interfaces";
+import { IManufacturer } from "../../interfaces/interfaces";
 import { manufacturerConst } from "./constant";
 
 export interface ManufacturerState {
   manufacturer: IManufacturer | null;
   manufacturers: IManufacturer[];
-  selectData: SelectData[];
 }
 export interface ManufacturerRequestPayload {
   id: string;
@@ -52,6 +51,7 @@ export interface CreateManufacturerRequest {
 }
 export type CreateManufacturerSuccess = {
   type: typeof manufacturerConst.CREATE_MANUFACTURER_SUCCESS;
+  payload: ManufacturerPayload;
 };
 export type CreateManufacturerFailure = {
   type: typeof manufacturerConst.CREATE_MANUFACTURER_FAILURE;
@@ -63,6 +63,7 @@ export interface CreateRangeManufacturerRequest {
 }
 export type CreateRangeManufacturerSuccess = {
   type: typeof manufacturerConst.CREATE_RANGE_MANUFACTURER_SUCCESS;
+  payload: ManufacturersPayload;
 };
 export type CreateRangeManufacturerFailure = {
   type: typeof manufacturerConst.CREATE_RANGE_MANUFACTURER_FAILURE;

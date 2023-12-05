@@ -4,7 +4,6 @@ import { UserActions, UserState } from "./type";
 const initialState: UserState = {
   user: null,
   users: [],
-  selectData: [],
 };
 
 export default (state = initialState, action: UserActions) => {
@@ -44,6 +43,7 @@ export default (state = initialState, action: UserActions) => {
     case userConst.CREATE_USER_SUCCESS:
       return {
         ...state,
+        users: [...state.users, action.payload.user],
       };
     case userConst.CREATE_USER_FAILURE:
       return {
@@ -56,6 +56,7 @@ export default (state = initialState, action: UserActions) => {
     case userConst.CREATE_RANGE_USER_SUCCESS:
       return {
         ...state,
+        users: [...state.users, ...action.payload.users],
       };
     case userConst.CREATE_RANGE_USER_FAILURE:
       return {

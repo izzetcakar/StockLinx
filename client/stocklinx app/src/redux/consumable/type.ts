@@ -1,10 +1,9 @@
-import { IConsumable, SelectData } from "../../interfaces/interfaces";
+import { IConsumable } from "../../interfaces/interfaces";
 import { consumableConst } from "./constant";
 
 export interface ConsumableState {
   consumable: IConsumable | null;
   consumables: IConsumable[];
-  selectData: SelectData[];
 }
 export interface ConsumableRequestPayload {
   id: string;

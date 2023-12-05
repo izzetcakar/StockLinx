@@ -1,10 +1,9 @@
-import { IAsset, SelectData } from "../../interfaces/interfaces";
+import { IAsset } from "../../interfaces/interfaces";
 import { assetConst } from "./constant";
 
 export interface AssetState {
   asset: IAsset | null;
   assets: IAsset[];
-  selectData: SelectData[];
 }
 export interface AssetRequestPayload {
   id: string;

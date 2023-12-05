@@ -1,10 +1,9 @@
-import { IDepartment, SelectData } from "../../interfaces/interfaces";
+import { IDepartment } from "../../interfaces/interfaces";
 import { departmentConst } from "./constant";
 
 export interface DepartmentState {
   department: IDepartment | null;
   departments: IDepartment[];
-  selectData: SelectData[];
 }
 export interface DepartmentRequestPayload {
   id: string;

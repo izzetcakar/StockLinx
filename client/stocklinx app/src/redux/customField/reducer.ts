@@ -4,7 +4,6 @@ import { CustomFieldActions, CustomFieldState } from "./type";
 const initialState: CustomFieldState = {
   customField: null,
   customFields: [],
-  selectData: [],
 };
 
 export default (state = initialState, action: CustomFieldActions) => {
@@ -17,10 +16,6 @@ export default (state = initialState, action: CustomFieldActions) => {
       return {
         ...state,
         customFields: action.payload.customFields,
-        selectData: action.payload.customFields.map((customField) => ({
-          value: customField.id as string,
-          label: customField.name,
-        })),
       };
     case customFieldConst.FETCH_CUSTOMFIELDS_FAILURE:
       return {

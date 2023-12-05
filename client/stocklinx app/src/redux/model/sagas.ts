@@ -70,7 +70,7 @@ function* fetchModelSaga(action: FetchModelRequest) {
 function* createModelSaga(action: CreateModelRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       modelRequests.create,
       action.payload.model
     );
@@ -78,7 +78,7 @@ function* createModelSaga(action: CreateModelRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("Model Created");
-      yield put(modelActions.createSuccess());
+      yield put(modelActions.createSuccess({ model: data as IModel }));
     }
   } catch (e) {
     openNotificationError("Model", (e as Error).message);
@@ -89,7 +89,7 @@ function* createModelSaga(action: CreateModelRequest) {
 function* createRangeModelSaga(action: CreateRangeModelRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       modelRequests.createRange,
       action.payload.models
     );
@@ -97,7 +97,7 @@ function* createRangeModelSaga(action: CreateRangeModelRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("Models Created");
-      yield put(modelActions.createRangeSuccess());
+      yield put(modelActions.createRangeSuccess({ models: data as IModel[] }));
     }
   } catch (e) {
     openNotificationError("Model", (e as Error).message);

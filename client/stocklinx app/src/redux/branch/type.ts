@@ -1,10 +1,9 @@
-import { IBranch, SelectData } from "../../interfaces/interfaces";
+import { IBranch } from "../../interfaces/interfaces";
 import { branchConst } from "./constant";
 
 export interface BranchState {
   branch: IBranch | null;
   branches: IBranch[];
-  selectData: SelectData[];
 }
 export interface BranchRequestPayload {
   id: string;

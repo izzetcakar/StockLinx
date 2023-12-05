@@ -1,10 +1,9 @@
-import { ISupplier, SelectData } from "../../interfaces/interfaces";
+import { ISupplier } from "../../interfaces/interfaces";
 import { supplierConst } from "./constant";
 
 export interface SupplierState {
   supplier: ISupplier | null;
   suppliers: ISupplier[];
-  selectData: SelectData[];
 }
 export interface SupplierRequestPayload {
   id: string;
@@ -52,6 +51,7 @@ export interface CreateSupplierRequest {
 }
 export type CreateSupplierSuccess = {
   type: typeof supplierConst.CREATE_SUPPLIER_SUCCESS;
+  payload: SupplierPayload;
 };
 export type CreateSupplierFailure = {
   type: typeof supplierConst.CREATE_SUPPLIER_FAILURE;
@@ -63,6 +63,7 @@ export interface CreateRangeSupplierRequest {
 }
 export type CreateRangeSupplierSuccess = {
   type: typeof supplierConst.CREATE_RANGE_SUPPLIER_SUCCESS;
+  payload: SuppliersPayload;
 };
 export type CreateRangeSupplierFailure = {
   type: typeof supplierConst.CREATE_RANGE_SUPPLIER_FAILURE;

@@ -4,7 +4,6 @@ import { LicenseActions, LicenseState } from "./type";
 const initialState: LicenseState = {
   license: null,
   licenses: [],
-  selectData: [],
 };
 
 export default (state = initialState, action: LicenseActions) => {
@@ -17,10 +16,6 @@ export default (state = initialState, action: LicenseActions) => {
       return {
         ...state,
         licenses: action.payload.licenses,
-        selectData: action.payload.licenses.map((license) => ({
-          value: license.id as string,
-          label: license.name,
-        })),
       };
     case licenseConst.FETCH_LICENSES_FAILURE:
       return {
@@ -48,6 +43,7 @@ export default (state = initialState, action: LicenseActions) => {
     case licenseConst.CREATE_LICENSE_SUCCESS:
       return {
         ...state,
+        licenses: [...state.licenses, action.payload.license],
       };
     case licenseConst.CREATE_LICENSE_FAILURE:
       return {
@@ -60,6 +56,7 @@ export default (state = initialState, action: LicenseActions) => {
     case licenseConst.CREATE_RANGE_LICENSE_SUCCESS:
       return {
         ...state,
+        licenses: [...state.licenses, ...action.payload.licenses],
       };
     case licenseConst.CREATE_RANGE_LICENSE_FAILURE:
       return {

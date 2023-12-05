@@ -4,7 +4,6 @@ import { FieldSetActions, FieldSetState } from "./type";
 const initialState: FieldSetState = {
   fieldSet: null,
   fieldSets: [],
-  selectData: [],
 };
 
 export default (state = initialState, action: FieldSetActions) => {
@@ -17,10 +16,6 @@ export default (state = initialState, action: FieldSetActions) => {
       return {
         ...state,
         fieldSets: action.payload.fieldSets,
-        selectData: action.payload.fieldSets.map((fieldSet) => ({
-          value: fieldSet.id as string,
-          label: fieldSet.name,
-        })),
       };
     case fieldSetConst.FETCH_FIELDSETS_FAILURE:
       return {

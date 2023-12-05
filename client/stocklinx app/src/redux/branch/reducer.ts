@@ -4,7 +4,6 @@ import { BranchActions, BranchState } from "./type";
 const initialState: BranchState = {
   branch: null,
   branches: [],
-  selectData: [],
 };
 
 export default (state = initialState, action: BranchActions) => {
@@ -17,10 +16,6 @@ export default (state = initialState, action: BranchActions) => {
       return {
         ...state,
         branches: action.payload.branches,
-        selectData: action.payload.branches.map((branch) => ({
-          value: branch.id as string,
-          label: branch.name,
-        })),
       };
     case branchConst.FETCH_BRANCHES_FAILURE:
       return {

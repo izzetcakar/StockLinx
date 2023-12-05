@@ -4,7 +4,6 @@ import { CompanyActions, CompanyState } from "./type";
 const initialState: CompanyState = {
   company: null,
   companies: [],
-  selectData: [],
 };
 
 export default (state = initialState, action: CompanyActions) => {
@@ -17,10 +16,6 @@ export default (state = initialState, action: CompanyActions) => {
       return {
         ...state,
         companies: action.payload.companies,
-        selectData: action.payload.companies.map((company) => ({
-          value: company.id as string,
-          label: company.name,
-        })),
       };
     case companyConst.FETCH_COMPANIES_FAILURE:
       return {

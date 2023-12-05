@@ -4,7 +4,6 @@ import { SupplierActions, SupplierState } from "./type";
 const initialState: SupplierState = {
   supplier: null,
   suppliers: [],
-  selectData: [],
 };
 
 export default (state = initialState, action: SupplierActions) => {
@@ -17,10 +16,6 @@ export default (state = initialState, action: SupplierActions) => {
       return {
         ...state,
         suppliers: action.payload.suppliers,
-        selectData: action.payload.suppliers.map((supplier) => ({
-          value: supplier.id as string,
-          label: supplier.name,
-        })),
       };
     case supplierConst.FETCH_SUPPLIERS_FAILURE:
       return {
@@ -48,6 +43,7 @@ export default (state = initialState, action: SupplierActions) => {
     case supplierConst.CREATE_SUPPLIER_SUCCESS:
       return {
         ...state,
+        suppliers: [...state.suppliers, action.payload.supplier],
       };
     case supplierConst.CREATE_SUPPLIER_FAILURE:
       return {
@@ -60,6 +56,7 @@ export default (state = initialState, action: SupplierActions) => {
     case supplierConst.CREATE_RANGE_SUPPLIER_SUCCESS:
       return {
         ...state,
+        suppliers: [...state.suppliers, ...action.payload.suppliers],
       };
     case supplierConst.CREATE_RANGE_SUPPLIER_FAILURE:
       return {

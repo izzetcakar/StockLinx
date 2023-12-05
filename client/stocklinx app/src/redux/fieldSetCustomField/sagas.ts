@@ -75,7 +75,7 @@ function* createFieldSetCustomFieldSaga(
 ) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       fieldSetCustomFieldRequests.create,
       action.payload.fieldSetCustomField
     );
@@ -83,7 +83,11 @@ function* createFieldSetCustomFieldSaga(
       throw new Error(message);
     } else {
       openNotificationSuccess("FieldSetCustomField Created");
-      yield put(fieldSetCustomFieldActions.createSuccess());
+      yield put(
+        fieldSetCustomFieldActions.createSuccess({
+          fieldSetCustomField: data as IFieldSetCustomField,
+        })
+      );
     }
   } catch (e) {
     openNotificationError("FieldSetCustomField", (e as Error).message);
@@ -96,7 +100,7 @@ function* createRangeFieldSetCustomFieldSaga(
 ) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       fieldSetCustomFieldRequests.createRange,
       action.payload.fieldSetCustomFields
     );
@@ -104,7 +108,11 @@ function* createRangeFieldSetCustomFieldSaga(
       throw new Error(message);
     } else {
       openNotificationSuccess("FieldSetCustomFields Created");
-      yield put(fieldSetCustomFieldActions.createRangeSuccess());
+      yield put(
+        fieldSetCustomFieldActions.createRangeSuccess({
+          fieldSetCustomFields: data as IFieldSetCustomField[],
+        })
+      );
     }
   } catch (e) {
     openNotificationError("FieldSetCustomField", (e as Error).message);

@@ -70,7 +70,7 @@ function* fetchLicenseSaga(action: FetchLicenseRequest) {
 function* createLicenseSaga(action: CreateLicenseRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       licenseRequests.create,
       action.payload.license
     );
@@ -78,7 +78,7 @@ function* createLicenseSaga(action: CreateLicenseRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("License Created");
-      yield put(licenseActions.createSuccess());
+      yield put(licenseActions.createSuccess({ license: data as ILicense }));
     }
   } catch (e) {
     openNotificationError("License", (e as Error).message);
@@ -89,7 +89,7 @@ function* createLicenseSaga(action: CreateLicenseRequest) {
 function* createRangeLicenseSaga(action: CreateRangeLicenseRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       licenseRequests.createRange,
       action.payload.licenses
     );
@@ -97,7 +97,9 @@ function* createRangeLicenseSaga(action: CreateRangeLicenseRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("Licenses Created");
-      yield put(licenseActions.createRangeSuccess());
+      yield put(
+        licenseActions.createRangeSuccess({ licenses: data as ILicense[] })
+      );
     }
   } catch (e) {
     openNotificationError("License", (e as Error).message);

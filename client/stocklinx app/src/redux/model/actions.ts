@@ -63,8 +63,9 @@ const create = (payload: ModelPayload): CreateModelRequest => ({
   type: modelConst.CREATE_MODEL_REQUEST,
   payload,
 });
-const createSuccess = (): CreateModelSuccess => ({
+const createSuccess = (payload: ModelPayload): CreateModelSuccess => ({
   type: modelConst.CREATE_MODEL_SUCCESS,
+  payload,
 });
 const createFailure = (): CreateModelFailure => ({
   type: modelConst.CREATE_MODEL_FAILURE,
@@ -75,8 +76,11 @@ const createRange = (payload: ModelsPayload): CreateRangeModelRequest => ({
   type: modelConst.CREATE_RANGE_MODEL_REQUEST,
   payload,
 });
-const createRangeSuccess = (): CreateRangeModelSuccess => ({
+const createRangeSuccess = (
+  payload: ModelsPayload
+): CreateRangeModelSuccess => ({
   type: modelConst.CREATE_RANGE_MODEL_SUCCESS,
+  payload,
 });
 const createRangeFailure = (): CreateRangeModelFailure => ({
   type: modelConst.CREATE_RANGE_MODEL_FAILURE,
@@ -99,9 +103,7 @@ const remove = (payload: ModelRemovePayload): RemoveModelRequest => ({
   type: modelConst.REMOVE_MODEL_REQUEST,
   payload,
 });
-const removeSuccess = (
-  payload: ModelRemovePayload
-): RemoveModelSuccess => ({
+const removeSuccess = (payload: ModelRemovePayload): RemoveModelSuccess => ({
   type: modelConst.REMOVE_MODEL_SUCCESS,
   payload,
 });

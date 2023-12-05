@@ -4,7 +4,6 @@ import { ModelFieldDataActions, ModelFieldDataState } from "./type";
 const initialState: ModelFieldDataState = {
   modelFieldData: null,
   modelFieldDatas: [],
-  selectData: [],
 };
 
 export default (state = initialState, action: ModelFieldDataActions) => {
@@ -17,10 +16,6 @@ export default (state = initialState, action: ModelFieldDataActions) => {
       return {
         ...state,
         modelFieldDatas: action.payload.modelFieldDatas,
-        selectData: action.payload.modelFieldDatas.map((modelFieldData) => ({
-          value: modelFieldData.id as string,
-          label: modelFieldData.name,
-        })),
       };
     case modelFieldDataConst.FETCH_MODELFIELDDATAS_FAILURE:
       return {
@@ -48,6 +43,10 @@ export default (state = initialState, action: ModelFieldDataActions) => {
     case modelFieldDataConst.CREATE_MODELFIELDDATA_SUCCESS:
       return {
         ...state,
+        modelFieldDatas: [
+          ...state.modelFieldDatas,
+          action.payload.modelFieldData,
+        ],
       };
     case modelFieldDataConst.CREATE_MODELFIELDDATA_FAILURE:
       return {
@@ -60,6 +59,10 @@ export default (state = initialState, action: ModelFieldDataActions) => {
     case modelFieldDataConst.CREATE_RANGE_MODELFIELDDATA_SUCCESS:
       return {
         ...state,
+        modelFieldDatas: [
+          ...state.modelFieldDatas,
+          ...action.payload.modelFieldDatas,
+        ],
       };
     case modelFieldDataConst.CREATE_RANGE_MODELFIELDDATA_FAILURE:
       return {

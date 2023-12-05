@@ -1,10 +1,9 @@
-import { ICompany, SelectData } from "../../interfaces/interfaces";
+import { ICompany } from "../../interfaces/interfaces";
 import { companyConst } from "./constant";
 
 export interface CompanyState {
   company: ICompany | null;
   companies: ICompany[];
-  selectData: SelectData[];
 }
 export interface CompanyRequestPayload {
   id: string;

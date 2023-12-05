@@ -1,10 +1,9 @@
-import { IUser, IUserLoginDto, SelectData } from "../../interfaces/interfaces";
+import { IUser, IUserLoginDto } from "../../interfaces/interfaces";
 import { userConst } from "./constant";
 
 export interface UserState {
   user: IUser | null;
   users: IUser[];
-  selectData: SelectData[];
 }
 
 export interface UserRequestPayload {
@@ -69,6 +68,7 @@ export interface CreateUserRequest {
 }
 export type CreateUsersuccess = {
   type: typeof userConst.CREATE_USER_SUCCESS;
+  payload: UserPayload;
 };
 export type CreateUserFailure = {
   type: typeof userConst.CREATE_USER_FAILURE;
@@ -80,6 +80,7 @@ export interface CreateRangeUserRequest {
 }
 export type CreateRangeUserSuccess = {
   type: typeof userConst.CREATE_RANGE_USER_SUCCESS;
+  payload: UsersPayload;
 };
 export type CreateRangeUserFailure = {
   type: typeof userConst.CREATE_RANGE_USER_FAILURE;

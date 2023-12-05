@@ -4,7 +4,6 @@ import { ComponentActions, ComponentState } from "./type";
 const initialState: ComponentState = {
   component: null,
   components: [],
-  selectData: [],
 };
 
 export default (state = initialState, action: ComponentActions) => {
@@ -17,10 +16,6 @@ export default (state = initialState, action: ComponentActions) => {
       return {
         ...state,
         components: action.payload.components,
-        selectData: action.payload.components.map((component) => ({
-          value: component.id as string,
-          label: component.name,
-        })),
       };
     case componentConst.FETCH_COMPONENTS_FAILURE:
       return {

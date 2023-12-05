@@ -70,7 +70,7 @@ function* fetchManufacturerSaga(action: FetchManufacturerRequest) {
 function* createManufacturerSaga(action: CreateManufacturerRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       manufacturerRequests.create,
       action.payload.manufacturer
     );
@@ -78,7 +78,11 @@ function* createManufacturerSaga(action: CreateManufacturerRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("Manufacturer Created");
-      yield put(manufacturerActions.createSuccess());
+      yield put(
+        manufacturerActions.createSuccess({
+          manufacturer: data as IManufacturer,
+        })
+      );
     }
   } catch (e) {
     openNotificationError("Manufacturer", (e as Error).message);
@@ -89,7 +93,7 @@ function* createManufacturerSaga(action: CreateManufacturerRequest) {
 function* createRangeManufacturerSaga(action: CreateRangeManufacturerRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       manufacturerRequests.createRange,
       action.payload.manufacturers
     );
@@ -97,7 +101,11 @@ function* createRangeManufacturerSaga(action: CreateRangeManufacturerRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("Manufacturers Created");
-      yield put(manufacturerActions.createRangeSuccess());
+      yield put(
+        manufacturerActions.createRangeSuccess({
+          manufacturers: data as IManufacturer[],
+        })
+      );
     }
   } catch (e) {
     openNotificationError("Manufacturer", (e as Error).message);
@@ -155,7 +163,9 @@ function* removeRangeManufacturerSaga(action: RemoveRangeManufacturerRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("Manufacturers Removed");
-      yield put(manufacturerActions.removeRangeSuccess({ ids: action.payload.ids }));
+      yield put(
+        manufacturerActions.removeRangeSuccess({ ids: action.payload.ids })
+      );
     }
   } catch (e) {
     openNotificationError("Manufacturer", (e as Error).message);
@@ -168,13 +178,34 @@ function* manufacturersaga() {
   // yield all([
   //   takeLatest(manufacturerConst.FETCH_MANUFACTURERS_REQUEST, fetchManufacturersSaga),
   // ]);
-  yield takeEvery(manufacturerConst.FETCH_MANUFACTURERS_REQUEST, fetchManufacturersSaga);
-  yield takeEvery(manufacturerConst.FETCH_MANUFACTURER_REQUEST, fetchManufacturerSaga);
-  yield takeEvery(manufacturerConst.CREATE_MANUFACTURER_REQUEST, createManufacturerSaga);
-  yield takeEvery(manufacturerConst.CREATE_RANGE_MANUFACTURER_REQUEST, createRangeManufacturerSaga);
-  yield takeEvery(manufacturerConst.UPDATE_MANUFACTURER_REQUEST, updateManufacturerSaga);
-  yield takeEvery(manufacturerConst.REMOVE_MANUFACTURER_REQUEST, removeManufacturerSaga);
-  yield takeEvery(manufacturerConst.REMOVE_RANGE_MANUFACTURER_REQUEST, removeRangeManufacturerSaga);
+  yield takeEvery(
+    manufacturerConst.FETCH_MANUFACTURERS_REQUEST,
+    fetchManufacturersSaga
+  );
+  yield takeEvery(
+    manufacturerConst.FETCH_MANUFACTURER_REQUEST,
+    fetchManufacturerSaga
+  );
+  yield takeEvery(
+    manufacturerConst.CREATE_MANUFACTURER_REQUEST,
+    createManufacturerSaga
+  );
+  yield takeEvery(
+    manufacturerConst.CREATE_RANGE_MANUFACTURER_REQUEST,
+    createRangeManufacturerSaga
+  );
+  yield takeEvery(
+    manufacturerConst.UPDATE_MANUFACTURER_REQUEST,
+    updateManufacturerSaga
+  );
+  yield takeEvery(
+    manufacturerConst.REMOVE_MANUFACTURER_REQUEST,
+    removeManufacturerSaga
+  );
+  yield takeEvery(
+    manufacturerConst.REMOVE_RANGE_MANUFACTURER_REQUEST,
+    removeRangeManufacturerSaga
+  );
 }
 // function* budgetItemSaga() {
 //   yield takeEvery(budgetItemConst.fetchList, listBudgetITem);

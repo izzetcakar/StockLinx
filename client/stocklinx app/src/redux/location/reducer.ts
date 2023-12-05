@@ -4,7 +4,6 @@ import { LocationActions, LocationState } from "./type";
 const initialState: LocationState = {
   location: null,
   locations: [],
-  selectData: [],
 };
 
 export default (state = initialState, action: LocationActions) => {
@@ -17,10 +16,6 @@ export default (state = initialState, action: LocationActions) => {
       return {
         ...state,
         locations: action.payload.locations,
-        selectData: action.payload.locations.map((location) => ({
-          value: location.id as string,
-          label: location.name,
-        })),
       };
     case locationConst.FETCH_LOCATIONS_FAILURE:
       return {
@@ -48,6 +43,7 @@ export default (state = initialState, action: LocationActions) => {
     case locationConst.CREATE_LOCATION_SUCCESS:
       return {
         ...state,
+        locations: [...state.locations, action.payload.location],
       };
     case locationConst.CREATE_LOCATION_FAILURE:
       return {
@@ -60,6 +56,7 @@ export default (state = initialState, action: LocationActions) => {
     case locationConst.CREATE_RANGE_LOCATION_SUCCESS:
       return {
         ...state,
+        locations: [...state.locations, ...action.payload.locations],
       };
     case locationConst.CREATE_RANGE_LOCATION_FAILURE:
       return {

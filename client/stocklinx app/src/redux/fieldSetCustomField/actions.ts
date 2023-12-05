@@ -74,8 +74,11 @@ const create = (
   type: fieldSetCustomFieldConst.CREATE_FIELDSETCUSTOMFIELD_REQUEST,
   payload,
 });
-const createSuccess = (): CreateFieldSetCustomFieldSuccess => ({
+const createSuccess = (
+  payload: FieldSetCustomFieldPayload
+): CreateFieldSetCustomFieldSuccess => ({
   type: fieldSetCustomFieldConst.CREATE_FIELDSETCUSTOMFIELD_SUCCESS,
+  payload,
 });
 const createFailure = (): CreateFieldSetCustomFieldFailure => ({
   type: fieldSetCustomFieldConst.CREATE_FIELDSETCUSTOMFIELD_FAILURE,
@@ -88,8 +91,11 @@ const createRange = (
   type: fieldSetCustomFieldConst.CREATE_RANGE_FIELDSETCUSTOMFIELD_REQUEST,
   payload,
 });
-const createRangeSuccess = (): CreateRangeFieldSetCustomFieldSuccess => ({
+const createRangeSuccess = (
+  payload: FieldSetCustomFieldsPayload
+): CreateRangeFieldSetCustomFieldSuccess => ({
   type: fieldSetCustomFieldConst.CREATE_RANGE_FIELDSETCUSTOMFIELD_SUCCESS,
+  payload,
 });
 const createRangeFailure = (): CreateRangeFieldSetCustomFieldFailure => ({
   type: fieldSetCustomFieldConst.CREATE_RANGE_FIELDSETCUSTOMFIELD_FAILURE,

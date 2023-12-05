@@ -1,10 +1,9 @@
-import { IAccessory, SelectData } from "../../interfaces/interfaces";
+import { IAccessory } from "../../interfaces/interfaces";
 import { accessoryConst } from "./constant";
 
 export interface AccessoryState {
   accessory: IAccessory | null;
   accessories: IAccessory[];
-  selectData: SelectData[];
 }
 export interface AccessoryRequestPayload {
   id: string;

@@ -4,7 +4,6 @@ import { DepartmentActions, DepartmentState } from "./type";
 const initialState: DepartmentState = {
   department: null,
   departments: [],
-  selectData: [],
 };
 
 export default (state = initialState, action: DepartmentActions) => {
@@ -17,10 +16,6 @@ export default (state = initialState, action: DepartmentActions) => {
       return {
         ...state,
         departments: action.payload.departments,
-        selectData: action.payload.departments.map((department) => ({
-          value: department.id as string,
-          label: department.name,
-        })),
       };
     case departmentConst.FETCH_DEPARTMENTS_FAILURE:
       return {

@@ -63,8 +63,9 @@ const create = (payload: LicensePayload): CreateLicenseRequest => ({
   type: licenseConst.CREATE_LICENSE_REQUEST,
   payload,
 });
-const createSuccess = (): CreateLicenseSuccess => ({
+const createSuccess = (payload: LicensePayload): CreateLicenseSuccess => ({
   type: licenseConst.CREATE_LICENSE_SUCCESS,
+  payload,
 });
 const createFailure = (): CreateLicenseFailure => ({
   type: licenseConst.CREATE_LICENSE_FAILURE,
@@ -75,8 +76,11 @@ const createRange = (payload: LicensesPayload): CreateRangeLicenseRequest => ({
   type: licenseConst.CREATE_RANGE_LICENSE_REQUEST,
   payload,
 });
-const createRangeSuccess = (): CreateRangeLicenseSuccess => ({
+const createRangeSuccess = (
+  payload: LicensesPayload
+): CreateRangeLicenseSuccess => ({
   type: licenseConst.CREATE_RANGE_LICENSE_SUCCESS,
+  payload,
 });
 const createRangeFailure = (): CreateRangeLicenseFailure => ({
   type: licenseConst.CREATE_RANGE_LICENSE_FAILURE,

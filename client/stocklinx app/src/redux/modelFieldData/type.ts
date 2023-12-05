@@ -1,10 +1,9 @@
-import { IModelFieldData, SelectData } from "../../interfaces/interfaces";
+import { IModelFieldData } from "../../interfaces/interfaces";
 import { modelFieldDataConst } from "./constant";
 
 export interface ModelFieldDataState {
   modelFieldData: IModelFieldData | null;
   modelFieldDatas: IModelFieldData[];
-  selectData: SelectData[];
 }
 export interface ModelFieldDataRequestPayload {
   id: string;
@@ -52,6 +51,7 @@ export interface CreateModelFieldDataRequest {
 }
 export type CreateModelFieldDataSuccess = {
   type: typeof modelFieldDataConst.CREATE_MODELFIELDDATA_SUCCESS;
+  payload: ModelFieldDataPayload;
 };
 export type CreateModelFieldDataFailure = {
   type: typeof modelFieldDataConst.CREATE_MODELFIELDDATA_FAILURE;
@@ -63,6 +63,7 @@ export interface CreateRangeModelFieldDataRequest {
 }
 export type CreateRangeModelFieldDataSuccess = {
   type: typeof modelFieldDataConst.CREATE_RANGE_MODELFIELDDATA_SUCCESS;
+  payload: ModelFieldDatasPayload;
 };
 export type CreateRangeModelFieldDataFailure = {
   type: typeof modelFieldDataConst.CREATE_RANGE_MODELFIELDDATA_FAILURE;

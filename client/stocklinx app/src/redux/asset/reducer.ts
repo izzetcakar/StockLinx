@@ -4,7 +4,6 @@ import { AssetActions, AssetState } from "./type";
 const initialState: AssetState = {
   asset: null,
   assets: [],
-  selectData: [],
 };
 
 export default (state = initialState, action: AssetActions) => {
@@ -17,10 +16,6 @@ export default (state = initialState, action: AssetActions) => {
       return {
         ...state,
         assets: action.payload.assets,
-        selectData: action.payload.assets.map((asset) => ({
-          value: asset.id as string,
-          label: asset.name,
-        })),
       };
     case assetConst.FETCH_ASSETS_FAILURE:
       return {

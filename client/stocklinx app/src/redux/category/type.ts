@@ -1,10 +1,9 @@
-import { ICategory, SelectData } from "../../interfaces/interfaces";
+import { ICategory } from "../../interfaces/interfaces";
 import { categoryConst } from "./constant";
 
 export interface CategoryState {
   category: ICategory | null;
   categories: ICategory[];
-  selectData: SelectData[];
 }
 export interface CategoryRequestPayload {
   id: string;

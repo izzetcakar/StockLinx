@@ -4,7 +4,6 @@ import { ProductStatusActions, ProductStatusState } from "./type";
 const initialState: ProductStatusState = {
   productStatus: null,
   productStatuses: [],
-  selectData: [],
 };
 
 export default (state = initialState, action: ProductStatusActions) => {
@@ -17,10 +16,6 @@ export default (state = initialState, action: ProductStatusActions) => {
       return {
         ...state,
         productStatuses: action.payload.productStatuses,
-        selectData: action.payload.productStatuses.map((productStatus) => ({
-          value: productStatus.id as string,
-          label: productStatus.name,
-        })),
       };
     case productStatusConst.FETCH_PRODUCTSTATUSES_FAILURE:
       return {
@@ -48,6 +43,10 @@ export default (state = initialState, action: ProductStatusActions) => {
     case productStatusConst.CREATE_PRODUCTSTATUS_SUCCESS:
       return {
         ...state,
+        productStatuses: [
+          ...state.productStatuses,
+          action.payload.productStatus,
+        ],
       };
     case productStatusConst.CREATE_PRODUCTSTATUS_FAILURE:
       return {
@@ -60,6 +59,10 @@ export default (state = initialState, action: ProductStatusActions) => {
     case productStatusConst.CREATE_RANGE_PRODUCTSTATUS_SUCCESS:
       return {
         ...state,
+        productStatuses: [
+          ...state.productStatuses,
+          ...action.payload.productStatuses,
+        ],
       };
     case productStatusConst.CREATE_RANGE_PRODUCTSTATUS_FAILURE:
       return {

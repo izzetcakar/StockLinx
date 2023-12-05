@@ -1,10 +1,9 @@
-import { ICustomField, SelectData } from "../../interfaces/interfaces";
+import { ICustomField } from "../../interfaces/interfaces";
 import { customFieldConst } from "./constant";
 
 export interface CustomFieldState {
   customField: ICustomField | null;
   customFields: ICustomField[];
-  selectData: SelectData[];
 }
 export interface CustomFieldRequestPayload {
   id: string;

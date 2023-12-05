@@ -1,10 +1,9 @@
-import { IFieldSet, SelectData } from "../../interfaces/interfaces";
+import { IFieldSet } from "../../interfaces/interfaces";
 import { fieldSetConst } from "./constant";
 
 export interface FieldSetState {
   fieldSet: IFieldSet | null;
   fieldSets: IFieldSet[];
-  selectData: SelectData[];
 }
 export interface FieldSetRequestPayload {
   id: string;

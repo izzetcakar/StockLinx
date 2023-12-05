@@ -37,7 +37,9 @@ import {
 const getAll = (): FetchModelFieldDatasRequest => ({
   type: modelFieldDataConst.FETCH_MODELFIELDDATAS_REQUEST,
 });
-const getAllSuccess = (payload: ModelFieldDatasPayload): FetchModelFieldDatasSuccess => ({
+const getAllSuccess = (
+  payload: ModelFieldDatasPayload
+): FetchModelFieldDatasSuccess => ({
   type: modelFieldDataConst.FETCH_MODELFIELDDATAS_SUCCESS,
   payload,
 });
@@ -46,11 +48,15 @@ const getAllFailure = (): FetchModelFieldDatasFailure => ({
 });
 
 //GET:/ID
-const get = (payload: ModelFieldDataRequestPayload): FetchModelFieldDataRequest => ({
+const get = (
+  payload: ModelFieldDataRequestPayload
+): FetchModelFieldDataRequest => ({
   type: modelFieldDataConst.FETCH_MODELFIELDDATA_REQUEST,
   payload,
 });
-const getSuccess = (payload: ModelFieldDataPayload): FetchModelFieldDataSuccess => ({
+const getSuccess = (
+  payload: ModelFieldDataPayload
+): FetchModelFieldDataSuccess => ({
   type: modelFieldDataConst.FETCH_MODELFIELDDATA_SUCCESS,
   payload,
 });
@@ -59,31 +65,43 @@ const getFailure = (): FetchModelFieldDataFailure => ({
 });
 
 //POST
-const create = (payload: ModelFieldDataPayload): CreateModelFieldDataRequest => ({
+const create = (
+  payload: ModelFieldDataPayload
+): CreateModelFieldDataRequest => ({
   type: modelFieldDataConst.CREATE_MODELFIELDDATA_REQUEST,
   payload,
 });
-const createSuccess = (): CreateModelFieldDataSuccess => ({
+const createSuccess = (
+  payload: ModelFieldDataPayload
+): CreateModelFieldDataSuccess => ({
   type: modelFieldDataConst.CREATE_MODELFIELDDATA_SUCCESS,
+  payload,
 });
 const createFailure = (): CreateModelFieldDataFailure => ({
   type: modelFieldDataConst.CREATE_MODELFIELDDATA_FAILURE,
 });
 
 //POST RANGE
-const createRange = (payload: ModelFieldDatasPayload): CreateRangeModelFieldDataRequest => ({
+const createRange = (
+  payload: ModelFieldDatasPayload
+): CreateRangeModelFieldDataRequest => ({
   type: modelFieldDataConst.CREATE_RANGE_MODELFIELDDATA_REQUEST,
   payload,
 });
-const createRangeSuccess = (): CreateRangeModelFieldDataSuccess => ({
+const createRangeSuccess = (
+  payload: ModelFieldDatasPayload
+): CreateRangeModelFieldDataSuccess => ({
   type: modelFieldDataConst.CREATE_RANGE_MODELFIELDDATA_SUCCESS,
+  payload,
 });
 const createRangeFailure = (): CreateRangeModelFieldDataFailure => ({
   type: modelFieldDataConst.CREATE_RANGE_MODELFIELDDATA_FAILURE,
 });
 
 //PUT
-const update = (payload: ModelFieldDataPayload): UpdateModelFieldDataRequest => ({
+const update = (
+  payload: ModelFieldDataPayload
+): UpdateModelFieldDataRequest => ({
   type: modelFieldDataConst.UPDATE_MODELFIELDDATA_REQUEST,
   payload,
 });
@@ -95,7 +113,9 @@ const updateFailure = (): UpdateModelFieldDataFailure => ({
 });
 
 //REMOVE
-const remove = (payload: ModelFieldDataRemovePayload): RemoveModelFieldDataRequest => ({
+const remove = (
+  payload: ModelFieldDataRemovePayload
+): RemoveModelFieldDataRequest => ({
   type: modelFieldDataConst.REMOVE_MODELFIELDDATA_REQUEST,
   payload,
 });
@@ -127,14 +147,18 @@ const removeRangeFailure = (): RemoveRangeModelFieldDataFailure => ({
 });
 
 //CLIENT ACTIONS
-const setModelFieldData = (payload: IModelFieldData | null): SetModelFieldData => ({
+const setModelFieldData = (
+  payload: IModelFieldData | null
+): SetModelFieldData => ({
   type: modelFieldDataConst.SET_MODELFIELDDATA,
   payload,
 });
 const clearModelFieldData = (): ClearModelFieldData => ({
   type: modelFieldDataConst.CLEAR_MODELFIELDDATA,
 });
-const setModelFieldDatas = (payload: IModelFieldData[]): SetModelFieldDatas => ({
+const setModelFieldDatas = (
+  payload: IModelFieldData[]
+): SetModelFieldDatas => ({
   type: modelFieldDataConst.SET_MODELFIELDDATAS,
   payload,
 });
