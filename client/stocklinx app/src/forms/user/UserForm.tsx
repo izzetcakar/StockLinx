@@ -23,9 +23,7 @@ interface UserFormProps {
 
 const UserForm: React.FC<UserFormProps> = ({ user }) => {
   const dispatch = useDispatch();
-  const companySelectData = useSelector(
-    (state: RootState) => state.company.selectData
-  );
+  const companies = useSelector((state: RootState) => state.company.companies);
   const branches = useSelector((state: RootState) => state.branch.branches);
   const departments = useSelector(
     (state: RootState) => state.department.departments
@@ -37,9 +35,13 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
     )?.id || ""
   );
   const [company, setCompany] = React.useState(
-    companySelectData.find(
-      (c) => c.value === branches.find((b) => b.id === branch)?.companyId
-    )?.value || ""
+    companies
+      .map((c) => ({
+        value: c.id,
+        label: c.name,
+      }))
+      .find((c) => c.value === branches.find((b) => b.id === branch)?.companyId)
+      ?.value || ""
   );
 
   const form = useForm<IUser>({
@@ -115,7 +117,10 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
         pt={20}
       >
         <Select
-          data={companySelectData}
+          data={companies.map((company) => ({
+            value: company.id,
+            label: company.name,
+          }))}
           label="Company"
           placeholder="Select Company"
           value={company}

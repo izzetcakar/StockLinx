@@ -22,9 +22,7 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({ department }) => {
   const dispatch = useDispatch();
   const companies = useSelector((state: RootState) => state.company.companies);
   const branches = useSelector((state: RootState) => state.branch.branches);
-  const locationSelectData = useSelector(
-    (state: RootState) => state.location.selectData
-  );
+  const locations = useSelector((state: RootState) => state.location.locations);
   const [company, setCompany] = useState(department?.companyId || "");
 
   const form = useForm<IDepartment>({
@@ -104,7 +102,10 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({ department }) => {
           withAsterisk
         />
         <Select
-          data={locationSelectData}
+          data={locations.map((location) => ({
+            value: location.id,
+            label: location.name,
+          }))}
           label="Location"
           placeholder="Select Location"
           {...form.getInputProps("locationId")}

@@ -21,9 +21,7 @@ interface SupplierFormProps {
 
 const SupplierForm: React.FC<SupplierFormProps> = ({ supplier }) => {
   const dispatch = useDispatch();
-  const locationSelectData = useSelector(
-    (state: RootState) => state.location.selectData
-  );
+  const locations = useSelector((state: RootState) => state.location.locations);
 
   const form = useForm<ISupplier>({
     initialValues: supplier
@@ -70,7 +68,10 @@ const SupplierForm: React.FC<SupplierFormProps> = ({ supplier }) => {
           withAsterisk
         />
         <Select
-          data={locationSelectData}
+          data={locations.map((location) => ({
+            value: location.id,
+            label: location.name,
+          }))}
           label="Location"
           placeholder="Select Location"
           {...form.getInputProps("locationId")}

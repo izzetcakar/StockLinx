@@ -13,9 +13,7 @@ interface BranchFormProps {
 
 const BranchForm: React.FC<BranchFormProps> = ({ branch }) => {
   const companies = useSelector((state: RootState) => state.company.companies);
-  const locationSelectData = useSelector(
-    (state: RootState) => state.location.selectData
-  );
+  const locations = useSelector((state: RootState) => state.location.locations);
   const dispatch = useDispatch();
   const form = useForm<IBranch>({
     initialValues: branch
@@ -72,7 +70,10 @@ const BranchForm: React.FC<BranchFormProps> = ({ branch }) => {
           withinPortal
         />
         <Select
-          data={locationSelectData}
+          data={locations.map((location) => ({
+            value: location.id,
+            label: location.name,
+          }))}
           label="Location"
           placeholder="Select Location"
           {...form.getInputProps("locationId")}
