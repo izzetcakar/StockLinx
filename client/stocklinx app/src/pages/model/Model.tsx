@@ -12,6 +12,7 @@ import { fieldSetActions } from "../../redux/fieldSet/actions";
 import { fieldSetCustomFieldActions } from "../../redux/fieldSetCustomField/actions";
 import { customFieldActions } from "../../redux/customField/actions";
 import { modelFieldDataActions } from "../../redux/modelFieldData/actions";
+import { manufacturerActions } from "../../redux/manufacturer/actions";
 
 const Model = () => {
   const dispatch = useDispatch();
@@ -25,6 +26,7 @@ const Model = () => {
     dispatch(fieldSetCustomFieldActions.getAll());
     dispatch(customFieldActions.getAll());
     dispatch(modelFieldDataActions.getAll());
+    dispatch(manufacturerActions.getAll());
   };
 
   return (

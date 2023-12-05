@@ -164,6 +164,7 @@ const CustomFieldForm: React.FC<CustomFieldFormProps> = ({ customField }) => {
           placeholder="Select Field Sets"
           dropdownPosition="bottom"
           nothingFound="No field sets found"
+          withinPortal
         />
         <Group position="right" mt="md">
           <Button type="submit" color="dark">

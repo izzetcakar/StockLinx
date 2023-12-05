@@ -7,6 +7,7 @@ import { companyActions } from "../../redux/company/actions";
 import Gridtable from "../../components/gridTable/GridTable";
 import { branchActions } from "../../redux/branch/actions";
 import { openBranchModal } from "../../modals/modals";
+import { locationActions } from "../../redux/location/actions";
 
 const Branch = () => {
   const dispatch = useDispatch();
@@ -15,6 +16,7 @@ const Branch = () => {
   const refreshData = () => {
     dispatch(companyActions.getAll());
     dispatch(branchActions.getAll());
+    dispatch(locationActions.getAll());
   };
 
   return (

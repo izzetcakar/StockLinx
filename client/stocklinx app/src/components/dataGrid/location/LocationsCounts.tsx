@@ -1,38 +1,29 @@
 import { useDispatch, useSelector } from "react-redux";
-import { locationActions } from "../../../redux/location/actions";
 import { useColumns } from "./columns";
-import BaseDataGrid from "../../generic/BaseDataGrid";
-import "devextreme/data/odata/store";
 import { RootState } from "../../../redux/rootReducer";
-import React, { useEffect } from "react";
+import { useLayoutEffect } from "react";
+import { productActions } from "../../../redux/product/actions";
+import Gridtable from "../../gridTable/GridTable";
 
-interface LocationCountsProps {
-  className?: string;
-  editing?: boolean;
-}
-const LocationCounts: React.FC<LocationCountsProps> = ({
-  className,
-  editing,
-}) => {
+const LocationCounts = () => {
   const dispatch = useDispatch();
-  const counts = useSelector((state: RootState) => state.location.counts);
+  const productLocationCounts = useSelector(
+    (state: RootState) => state.product.productLocationCounts
+  );
 
   const refreshData = () => {
-    dispatch(locationActions.getCounts());
+    dispatch(productActions.getProductLocationCounts());
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     refreshData();
   }, []);
+
   return (
-    <BaseDataGrid
-      title="Product Locations"
-      data={counts}
-      className={className}
-      editing={editing}
-      keyExpr="locationId"
+    <Gridtable
+      itemKey="locationId"
+      data={productLocationCounts}
       columns={useColumns()}
-      refreshData={refreshData}
     />
   );
 };

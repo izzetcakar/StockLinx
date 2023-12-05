@@ -162,7 +162,9 @@ const Gridtable: React.FC<GridtableProps> = ({
               ) : null}
               {visibleColumns.map((vColumn, vColumnIndex) => (
                 <td
-                  key={"column__header__" + vColumn.caption}
+                  key={
+                    "column__header__" + vColumn.caption + "__" + vColumnIndex
+                  }
                   className="gridtable__column__cell"
                   colSpan={getColSpan(vColumnIndex)}
                 >
@@ -251,15 +253,13 @@ const Gridtable: React.FC<GridtableProps> = ({
           </tbody>
         )}
       </table>
-      <div className="gridtable__footer">
-        <TableFooter
-          dataLength={data.length}
-          itemPerPage={itemPerPage}
-          pageNumber={pageNumber}
-          handleItemPerPage={handleItemPerPage}
-          handlePageNumber={handlePageNumber}
-        />
-      </div>
+      <TableFooter
+        dataLength={data.length}
+        itemPerPage={itemPerPage}
+        pageNumber={pageNumber}
+        handleItemPerPage={handleItemPerPage}
+        handlePageNumber={handlePageNumber}
+      />
     </div>
   );
 };

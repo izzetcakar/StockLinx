@@ -6,6 +6,11 @@
   align-items: center;
   gap: 10px;
   justify-content: flex-start;
+  border: 1px solid #ced4da;
+  border-top: none;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  user-select: none;
 
   .gridtable__footer__last {
     display: flex;

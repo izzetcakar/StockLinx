@@ -10,7 +10,11 @@ import {
   Switch,
 } from "@mantine/core";
 import { FORM_INDEX, useForm } from "@mantine/form";
-import { IModel, IModelFieldData } from "../../interfaces/interfaces";
+import {
+  CategoryType,
+  IModel,
+  IModelFieldData,
+} from "../../interfaces/interfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { modelActions } from "../../redux/model/actions";
 import uuid4 from "uuid4";
@@ -243,10 +247,12 @@ const ModelForm: React.FC<ModelFormProps> = ({ model }) => {
         pt={20}
       >
         <Select
-          data={categories.map((category) => ({
-            value: category.id,
-            label: category.name,
-          }))}
+          data={categories
+            .filter((c) => c.type === CategoryType.ASSET)
+            .map((category) => ({
+              value: category.id,
+              label: category.name,
+            }))}
           label="Category"
           placeholder="Select Category"
           {...form.getInputProps("categoryId")}

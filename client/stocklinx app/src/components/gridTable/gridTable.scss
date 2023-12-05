@@ -10,10 +10,6 @@
   flex-direction: column;
   gap: 1rem;
 }
-.gridtable__footer {
-  max-width: 100%;
-  user-select: none;
-}
 
 .gridtable {
   display: block;
@@ -101,6 +97,8 @@
   font-weight: 400;
   border: 1px solid #ced4da;
   border-radius: 4px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }
 .gridtable__row__cell {
   width: 100vw;

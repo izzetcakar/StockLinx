@@ -138,7 +138,7 @@ export const useFilter = (
       filters.forEach((filter) => {
         if (filter.isApplied) {
           const value =
-            typeof item[filter.field] === "string"
+            typeof item[filter.field] === "string" && filter.type !== "lookup"
               ? item[filter.field].toLowerCase()
               : item[filter.field];
           switch (filter.type) {

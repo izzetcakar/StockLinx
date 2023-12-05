@@ -11,6 +11,7 @@ import { assetActions } from "../../redux/asset/actions";
 import { branchActions } from "../../redux/branch/actions";
 import { productStatusActions } from "../../redux/productStatus/actions";
 import { openAssetModal } from "../../modals/modals";
+import { supplierActions } from "../../redux/supplier/actions";
 
 const Asset = () => {
   const dispatch = useDispatch();
@@ -23,6 +24,7 @@ const Asset = () => {
     dispatch(companyActions.getAll());
     dispatch(branchActions.getAll());
     dispatch(productStatusActions.getAll());
+    dispatch(supplierActions.getAll());
   };
 
   return (
