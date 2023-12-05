@@ -88,6 +88,10 @@ export interface ICategory extends BaseEntity {
   name: string;
   type: CategoryType;
 }
+export interface IProductStatus extends BaseEntity {
+  name: string;
+  type: ProductStatusType;
+}
 export interface IBaseProduct extends BaseEntity {
   companyId?: string;
   branchId: string;
