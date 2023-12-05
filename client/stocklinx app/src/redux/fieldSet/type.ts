@@ -52,6 +52,7 @@ export interface CreateFieldSetRequest {
 }
 export type CreateFieldSetSuccess = {
   type: typeof fieldSetConst.CREATE_FIELDSET_SUCCESS;
+  payload: FieldSetPayload;
 };
 export type CreateFieldSetFailure = {
   type: typeof fieldSetConst.CREATE_FIELDSET_FAILURE;
@@ -63,6 +64,7 @@ export interface CreateRangeFieldSetRequest {
 }
 export type CreateRangeFieldSetSuccess = {
   type: typeof fieldSetConst.CREATE_RANGE_FIELDSET_SUCCESS;
+  payload: FieldSetsPayload;
 };
 export type CreateRangeFieldSetFailure = {
   type: typeof fieldSetConst.CREATE_RANGE_FIELDSET_FAILURE;

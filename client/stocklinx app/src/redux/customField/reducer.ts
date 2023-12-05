@@ -48,6 +48,7 @@ export default (state = initialState, action: CustomFieldActions) => {
     case customFieldConst.CREATE_CUSTOMFIELD_SUCCESS:
       return {
         ...state,
+        customFields: [...state.customFields, action.payload.customField],
       };
     case customFieldConst.CREATE_CUSTOMFIELD_FAILURE:
       return {
@@ -60,6 +61,7 @@ export default (state = initialState, action: CustomFieldActions) => {
     case customFieldConst.CREATE_RANGE_CUSTOMFIELD_SUCCESS:
       return {
         ...state,
+        customFields: [...state.customFields, ...action.payload.customFields],
       };
     case customFieldConst.CREATE_RANGE_CUSTOMFIELD_FAILURE:
       return {

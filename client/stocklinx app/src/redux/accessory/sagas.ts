@@ -70,7 +70,7 @@ function* fetchAccessorySaga(action: FetchAccessoryRequest) {
 function* createAccessorySaga(action: CreateAccessoryRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       accessoryRequests.create,
       action.payload.accessory
     );
@@ -78,7 +78,9 @@ function* createAccessorySaga(action: CreateAccessoryRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("Accessory Created");
-      yield put(accessoryActions.createSuccess());
+      yield put(
+        accessoryActions.createSuccess({ accessory: data as IAccessory })
+      );
     }
   } catch (e) {
     openNotificationError("Accessory", (e as Error).message);
@@ -89,7 +91,7 @@ function* createAccessorySaga(action: CreateAccessoryRequest) {
 function* createRangeAccessorySaga(action: CreateRangeAccessoryRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       accessoryRequests.createRange,
       action.payload.accessories
     );
@@ -97,7 +99,11 @@ function* createRangeAccessorySaga(action: CreateRangeAccessoryRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("Accessories Created");
-      yield put(accessoryActions.createRangeSuccess());
+      yield put(
+        accessoryActions.createRangeSuccess({
+          accessories: data as IAccessory[],
+        })
+      );
     }
   } catch (e) {
     openNotificationError("Accessory", (e as Error).message);

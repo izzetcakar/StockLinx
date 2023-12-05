@@ -48,6 +48,7 @@ export default (state = initialState, action: ConsumableActions) => {
     case consumableConst.CREATE_CONSUMABLE_SUCCESS:
       return {
         ...state,
+        consumables: [...state.consumables, action.payload.consumable],
       };
     case consumableConst.CREATE_CONSUMABLE_FAILURE:
       return {
@@ -60,6 +61,7 @@ export default (state = initialState, action: ConsumableActions) => {
     case consumableConst.CREATE_RANGE_CONSUMABLE_SUCCESS:
       return {
         ...state,
+        consumables: [...state.consumables, ...action.payload.consumables],
       };
     case consumableConst.CREATE_RANGE_CONSUMABLE_FAILURE:
       return {

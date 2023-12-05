@@ -48,6 +48,7 @@ export default (state = initialState, action: AccessoryActions) => {
     case accessoryConst.CREATE_ACCESSORY_SUCCESS:
       return {
         ...state,
+        accessories: [...state.accessories, action.payload.accessory],
       };
     case accessoryConst.CREATE_ACCESSORY_FAILURE:
       return {
@@ -60,6 +61,7 @@ export default (state = initialState, action: AccessoryActions) => {
     case accessoryConst.CREATE_RANGE_ACCESSORY_SUCCESS:
       return {
         ...state,
+        accessories: [...state.accessories, ...action.payload.accessories],
       };
     case accessoryConst.CREATE_RANGE_ACCESSORY_FAILURE:
       return {

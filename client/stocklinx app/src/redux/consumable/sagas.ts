@@ -70,7 +70,7 @@ function* fetchConsumableSaga(action: FetchConsumableRequest) {
 function* createConsumableSaga(action: CreateConsumableRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       consumableRequests.create,
       action.payload.consumable
     );
@@ -78,7 +78,9 @@ function* createConsumableSaga(action: CreateConsumableRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("Consumable Created");
-      yield put(consumableActions.createSuccess());
+      yield put(
+        consumableActions.createSuccess({ consumable: data as IConsumable })
+      );
     }
   } catch (e) {
     openNotificationError("Consumable", (e as Error).message);
@@ -89,7 +91,7 @@ function* createConsumableSaga(action: CreateConsumableRequest) {
 function* createRangeConsumableSaga(action: CreateRangeConsumableRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       consumableRequests.createRange,
       action.payload.consumables
     );
@@ -97,7 +99,11 @@ function* createRangeConsumableSaga(action: CreateRangeConsumableRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("Consumables Created");
-      yield put(consumableActions.createRangeSuccess());
+      yield put(
+        consumableActions.createRangeSuccess({
+          consumables: data as IConsumable[],
+        })
+      );
     }
   } catch (e) {
     openNotificationError("Consumable", (e as Error).message);

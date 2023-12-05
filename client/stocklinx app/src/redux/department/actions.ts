@@ -37,7 +37,9 @@ import {
 const getAll = (): FetchDepartmentsRequest => ({
   type: departmentConst.FETCH_DEPARTMENTS_REQUEST,
 });
-const getAllSuccess = (payload: DepartmentsPayload): FetchDepartmentsSuccess => ({
+const getAllSuccess = (
+  payload: DepartmentsPayload
+): FetchDepartmentsSuccess => ({
   type: departmentConst.FETCH_DEPARTMENTS_SUCCESS,
   payload,
 });
@@ -63,20 +65,28 @@ const create = (payload: DepartmentPayload): CreateDepartmentRequest => ({
   type: departmentConst.CREATE_DEPARTMENT_REQUEST,
   payload,
 });
-const createSuccess = (): CreateDepartmentSuccess => ({
+const createSuccess = (
+  payload: DepartmentPayload
+): CreateDepartmentSuccess => ({
   type: departmentConst.CREATE_DEPARTMENT_SUCCESS,
+  payload,
 });
 const createFailure = (): CreateDepartmentFailure => ({
   type: departmentConst.CREATE_DEPARTMENT_FAILURE,
 });
 
 //POST RANGE
-const createRange = (payload: DepartmentsPayload): CreateRangeDepartmentRequest => ({
+const createRange = (
+  payload: DepartmentsPayload
+): CreateRangeDepartmentRequest => ({
   type: departmentConst.CREATE_RANGE_DEPARTMENT_REQUEST,
   payload,
 });
-const createRangeSuccess = (): CreateRangeDepartmentSuccess => ({
+const createRangeSuccess = (
+  payload: DepartmentsPayload
+): CreateRangeDepartmentSuccess => ({
   type: departmentConst.CREATE_RANGE_DEPARTMENT_SUCCESS,
+  payload,
 });
 const createRangeFailure = (): CreateRangeDepartmentFailure => ({
   type: departmentConst.CREATE_RANGE_DEPARTMENT_FAILURE,

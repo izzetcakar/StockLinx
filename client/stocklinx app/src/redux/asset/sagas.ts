@@ -70,7 +70,7 @@ function* fetchAssetSaga(action: FetchAssetRequest) {
 function* createAssetSaga(action: CreateAssetRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       assetRequests.create,
       action.payload.asset
     );
@@ -78,7 +78,7 @@ function* createAssetSaga(action: CreateAssetRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("Asset Created");
-      yield put(assetActions.createSuccess());
+      yield put(assetActions.createSuccess({ asset: data as IAsset }));
     }
   } catch (e) {
     openNotificationError("Asset", (e as Error).message);
@@ -89,7 +89,7 @@ function* createAssetSaga(action: CreateAssetRequest) {
 function* createRangeAssetSaga(action: CreateRangeAssetRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       assetRequests.createRange,
       action.payload.assets
     );
@@ -97,7 +97,7 @@ function* createRangeAssetSaga(action: CreateRangeAssetRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("Assets Created");
-      yield put(assetActions.createRangeSuccess());
+      yield put(assetActions.createRangeSuccess({ assets: data as IAsset[] }));
     }
   } catch (e) {
     openNotificationError("Asset", (e as Error).message);

@@ -52,6 +52,7 @@ export interface CreateConsumableRequest {
 }
 export type CreateConsumableSuccess = {
   type: typeof consumableConst.CREATE_CONSUMABLE_SUCCESS;
+  payload: ConsumablePayload;
 };
 export type CreateConsumableFailure = {
   type: typeof consumableConst.CREATE_CONSUMABLE_FAILURE;
@@ -63,6 +64,7 @@ export interface CreateRangeConsumableRequest {
 }
 export type CreateRangeConsumableSuccess = {
   type: typeof consumableConst.CREATE_RANGE_CONSUMABLE_SUCCESS;
+  payload: ConsumablesPayload;
 };
 export type CreateRangeConsumableFailure = {
   type: typeof consumableConst.CREATE_RANGE_CONSUMABLE_FAILURE;

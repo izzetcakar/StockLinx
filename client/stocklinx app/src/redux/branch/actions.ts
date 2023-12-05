@@ -63,8 +63,9 @@ const create = (payload: BranchPayload): CreateBranchRequest => ({
   type: branchConst.CREATE_BRANCH_REQUEST,
   payload,
 });
-const createSuccess = (): CreateBranchSuccess => ({
+const createSuccess = (payload: BranchPayload): CreateBranchSuccess => ({
   type: branchConst.CREATE_BRANCH_SUCCESS,
+  payload,
 });
 const createFailure = (): CreateBranchFailure => ({
   type: branchConst.CREATE_BRANCH_FAILURE,
@@ -75,8 +76,11 @@ const createRange = (payload: BranchesPayload): CreateRangeBranchRequest => ({
   type: branchConst.CREATE_RANGE_BRANCH_REQUEST,
   payload,
 });
-const createRangeSuccess = (): CreateRangeBranchSuccess => ({
+const createRangeSuccess = (
+  payload: BranchesPayload
+): CreateRangeBranchSuccess => ({
   type: branchConst.CREATE_RANGE_BRANCH_SUCCESS,
+  payload,
 });
 const createRangeFailure = (): CreateRangeBranchFailure => ({
   type: branchConst.CREATE_RANGE_BRANCH_FAILURE,
@@ -99,9 +103,7 @@ const remove = (payload: BranchRemovePayload): RemoveBranchRequest => ({
   type: branchConst.REMOVE_BRANCH_REQUEST,
   payload,
 });
-const removeSuccess = (
-  payload: BranchRemovePayload
-): RemoveBranchSuccess => ({
+const removeSuccess = (payload: BranchRemovePayload): RemoveBranchSuccess => ({
   type: branchConst.REMOVE_BRANCH_SUCCESS,
   payload,
 });

@@ -70,7 +70,7 @@ function* fetchDepartmentSaga(action: FetchDepartmentRequest) {
 function* createDepartmentSaga(action: CreateDepartmentRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       departmentRequests.create,
       action.payload.department
     );
@@ -78,7 +78,9 @@ function* createDepartmentSaga(action: CreateDepartmentRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("Department Created");
-      yield put(departmentActions.createSuccess());
+      yield put(
+        departmentActions.createSuccess({ department: data as IDepartment })
+      );
     }
   } catch (e) {
     openNotificationError("Department", (e as Error).message);
@@ -89,7 +91,7 @@ function* createDepartmentSaga(action: CreateDepartmentRequest) {
 function* createRangeDepartmentSaga(action: CreateRangeDepartmentRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       departmentRequests.createRange,
       action.payload.departments
     );
@@ -97,7 +99,11 @@ function* createRangeDepartmentSaga(action: CreateRangeDepartmentRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("Departments Created");
-      yield put(departmentActions.createRangeSuccess());
+      yield put(
+        departmentActions.createRangeSuccess({
+          departments: data as IDepartment[],
+        })
+      );
     }
   } catch (e) {
     openNotificationError("Department", (e as Error).message);
@@ -155,7 +161,9 @@ function* removeRangeDepartmentSaga(action: RemoveRangeDepartmentRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("Departments Removed");
-      yield put(departmentActions.removeRangeSuccess({ ids: action.payload.ids }));
+      yield put(
+        departmentActions.removeRangeSuccess({ ids: action.payload.ids })
+      );
     }
   } catch (e) {
     openNotificationError("Department", (e as Error).message);
@@ -168,13 +176,34 @@ function* departmentsaga() {
   // yield all([
   //   takeLatest(departmentConst.FETCH_DEPARTMENTS_REQUEST, fetchDepartmentsSaga),
   // ]);
-  yield takeEvery(departmentConst.FETCH_DEPARTMENTS_REQUEST, fetchDepartmentsSaga);
-  yield takeEvery(departmentConst.FETCH_DEPARTMENT_REQUEST, fetchDepartmentSaga);
-  yield takeEvery(departmentConst.CREATE_DEPARTMENT_REQUEST, createDepartmentSaga);
-  yield takeEvery(departmentConst.CREATE_RANGE_DEPARTMENT_REQUEST, createRangeDepartmentSaga);
-  yield takeEvery(departmentConst.UPDATE_DEPARTMENT_REQUEST, updateDepartmentSaga);
-  yield takeEvery(departmentConst.REMOVE_DEPARTMENT_REQUEST, removeDepartmentSaga);
-  yield takeEvery(departmentConst.REMOVE_RANGE_DEPARTMENT_REQUEST, removeRangeDepartmentSaga);
+  yield takeEvery(
+    departmentConst.FETCH_DEPARTMENTS_REQUEST,
+    fetchDepartmentsSaga
+  );
+  yield takeEvery(
+    departmentConst.FETCH_DEPARTMENT_REQUEST,
+    fetchDepartmentSaga
+  );
+  yield takeEvery(
+    departmentConst.CREATE_DEPARTMENT_REQUEST,
+    createDepartmentSaga
+  );
+  yield takeEvery(
+    departmentConst.CREATE_RANGE_DEPARTMENT_REQUEST,
+    createRangeDepartmentSaga
+  );
+  yield takeEvery(
+    departmentConst.UPDATE_DEPARTMENT_REQUEST,
+    updateDepartmentSaga
+  );
+  yield takeEvery(
+    departmentConst.REMOVE_DEPARTMENT_REQUEST,
+    removeDepartmentSaga
+  );
+  yield takeEvery(
+    departmentConst.REMOVE_RANGE_DEPARTMENT_REQUEST,
+    removeRangeDepartmentSaga
+  );
 }
 // function* budgetItemSaga() {
 //   yield takeEvery(budgetItemConst.fetchList, listBudgetITem);

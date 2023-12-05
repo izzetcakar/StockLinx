@@ -63,20 +63,26 @@ const create = (payload: ComponentPayload): CreateComponentRequest => ({
   type: componentConst.CREATE_COMPONENT_REQUEST,
   payload,
 });
-const createSuccess = (): CreateComponentSuccess => ({
+const createSuccess = (payload: ComponentPayload): CreateComponentSuccess => ({
   type: componentConst.CREATE_COMPONENT_SUCCESS,
+  payload,
 });
 const createFailure = (): CreateComponentFailure => ({
   type: componentConst.CREATE_COMPONENT_FAILURE,
 });
 
 //POST RANGE
-const createRange = (payload: ComponentsPayload): CreateRangeComponentRequest => ({
+const createRange = (
+  payload: ComponentsPayload
+): CreateRangeComponentRequest => ({
   type: componentConst.CREATE_RANGE_COMPONENT_REQUEST,
   payload,
 });
-const createRangeSuccess = (): CreateRangeComponentSuccess => ({
+const createRangeSuccess = (
+  payload: ComponentsPayload
+): CreateRangeComponentSuccess => ({
   type: componentConst.CREATE_RANGE_COMPONENT_SUCCESS,
+  payload,
 });
 const createRangeFailure = (): CreateRangeComponentFailure => ({
   type: componentConst.CREATE_RANGE_COMPONENT_FAILURE,

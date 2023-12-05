@@ -37,7 +37,9 @@ import {
 const getAll = (): FetchCustomFieldsRequest => ({
   type: customFieldConst.FETCH_CUSTOMFIELDS_REQUEST,
 });
-const getAllSuccess = (payload: CustomFieldsPayload): FetchCustomFieldsSuccess => ({
+const getAllSuccess = (
+  payload: CustomFieldsPayload
+): FetchCustomFieldsSuccess => ({
   type: customFieldConst.FETCH_CUSTOMFIELDS_SUCCESS,
   payload,
 });
@@ -63,20 +65,28 @@ const create = (payload: CustomFieldPayload): CreateCustomFieldRequest => ({
   type: customFieldConst.CREATE_CUSTOMFIELD_REQUEST,
   payload,
 });
-const createSuccess = (): CreateCustomFieldSuccess => ({
+const createSuccess = (
+  payload: CustomFieldPayload
+): CreateCustomFieldSuccess => ({
   type: customFieldConst.CREATE_CUSTOMFIELD_SUCCESS,
+  payload,
 });
 const createFailure = (): CreateCustomFieldFailure => ({
   type: customFieldConst.CREATE_CUSTOMFIELD_FAILURE,
 });
 
 //POST RANGE
-const createRange = (payload: CustomFieldsPayload): CreateRangeCustomFieldRequest => ({
+const createRange = (
+  payload: CustomFieldsPayload
+): CreateRangeCustomFieldRequest => ({
   type: customFieldConst.CREATE_RANGE_CUSTOMFIELD_REQUEST,
   payload,
 });
-const createRangeSuccess = (): CreateRangeCustomFieldSuccess => ({
+const createRangeSuccess = (
+  payload: CustomFieldsPayload
+): CreateRangeCustomFieldSuccess => ({
   type: customFieldConst.CREATE_RANGE_CUSTOMFIELD_SUCCESS,
+  payload,
 });
 const createRangeFailure = (): CreateRangeCustomFieldFailure => ({
   type: customFieldConst.CREATE_RANGE_CUSTOMFIELD_FAILURE,
@@ -95,7 +105,9 @@ const updateFailure = (): UpdateCustomFieldFailure => ({
 });
 
 //REMOVE
-const remove = (payload: CustomFieldRemovePayload): RemoveCustomFieldRequest => ({
+const remove = (
+  payload: CustomFieldRemovePayload
+): RemoveCustomFieldRequest => ({
   type: customFieldConst.REMOVE_CUSTOMFIELD_REQUEST,
   payload,
 });

@@ -52,6 +52,7 @@ export interface CreateCompanyRequest {
 }
 export type CreateCompanySuccess = {
   type: typeof companyConst.CREATE_COMPANY_SUCCESS;
+  payload: CompanyPayload;
 };
 export type CreateCompanyFailure = {
   type: typeof companyConst.CREATE_COMPANY_FAILURE;
@@ -63,6 +64,7 @@ export interface CreateRangeCompanyRequest {
 }
 export type CreateRangeCompanySuccess = {
   type: typeof companyConst.CREATE_RANGE_COMPANY_SUCCESS;
+  payload: CompaniesPayload;
 };
 export type CreateRangeCompanyFailure = {
   type: typeof companyConst.CREATE_RANGE_COMPANY_FAILURE;

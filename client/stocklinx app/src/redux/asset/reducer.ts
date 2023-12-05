@@ -48,6 +48,7 @@ export default (state = initialState, action: AssetActions) => {
     case assetConst.CREATE_ASSET_SUCCESS:
       return {
         ...state,
+        assets: [...state.assets, action.payload.asset],
       };
     case assetConst.CREATE_ASSET_FAILURE:
       return {
@@ -60,6 +61,7 @@ export default (state = initialState, action: AssetActions) => {
     case assetConst.CREATE_RANGE_ASSET_SUCCESS:
       return {
         ...state,
+        assets: [...state.assets, ...action.payload.assets],
       };
     case assetConst.CREATE_RANGE_ASSET_FAILURE:
       return {
@@ -84,9 +86,7 @@ export default (state = initialState, action: AssetActions) => {
     case assetConst.REMOVE_ASSET_SUCCESS:
       return {
         ...state,
-        assets: state.assets.filter(
-          (asset) => asset.id !== action.payload.id
-        ),
+        assets: state.assets.filter((asset) => asset.id !== action.payload.id),
       };
     case assetConst.REMOVE_ASSET_FAILURE:
       return {

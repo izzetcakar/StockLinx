@@ -70,7 +70,7 @@ function* fetchCustomFieldSaga(action: FetchCustomFieldRequest) {
 function* createCustomFieldSaga(action: CreateCustomFieldRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       customFieldRequests.create,
       action.payload.customField
     );
@@ -78,7 +78,9 @@ function* createCustomFieldSaga(action: CreateCustomFieldRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("CustomField Created");
-      yield put(customFieldActions.createSuccess());
+      yield put(
+        customFieldActions.createSuccess({ customField: data as ICustomField })
+      );
     }
   } catch (e) {
     openNotificationError("CustomField", (e as Error).message);
@@ -89,7 +91,7 @@ function* createCustomFieldSaga(action: CreateCustomFieldRequest) {
 function* createRangeCustomFieldSaga(action: CreateRangeCustomFieldRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       customFieldRequests.createRange,
       action.payload.customFields
     );
@@ -97,7 +99,11 @@ function* createRangeCustomFieldSaga(action: CreateRangeCustomFieldRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("CustomFields Created");
-      yield put(customFieldActions.createRangeSuccess());
+      yield put(
+        customFieldActions.createRangeSuccess({
+          customFields: data as ICustomField[],
+        })
+      );
     }
   } catch (e) {
     openNotificationError("CustomField", (e as Error).message);

@@ -48,6 +48,7 @@ export default (state = initialState, action: FieldSetActions) => {
     case fieldSetConst.CREATE_FIELDSET_SUCCESS:
       return {
         ...state,
+        fieldSets: [...state.fieldSets, action.payload.fieldSet],
       };
     case fieldSetConst.CREATE_FIELDSET_FAILURE:
       return {
@@ -60,6 +61,7 @@ export default (state = initialState, action: FieldSetActions) => {
     case fieldSetConst.CREATE_RANGE_FIELDSET_SUCCESS:
       return {
         ...state,
+        fieldSets: [...state.fieldSets, ...action.payload.fieldSets],
       };
     case fieldSetConst.CREATE_RANGE_FIELDSET_FAILURE:
       return {

@@ -70,7 +70,7 @@ function* fetchComponentSaga(action: FetchComponentRequest) {
 function* createComponentSaga(action: CreateComponentRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       componentRequests.create,
       action.payload.component
     );
@@ -78,7 +78,9 @@ function* createComponentSaga(action: CreateComponentRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("Component Created");
-      yield put(componentActions.createSuccess());
+      yield put(
+        componentActions.createSuccess({ component: data as IComponent })
+      );
     }
   } catch (e) {
     openNotificationError("Component", (e as Error).message);
@@ -89,7 +91,7 @@ function* createComponentSaga(action: CreateComponentRequest) {
 function* createRangeComponentSaga(action: CreateRangeComponentRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       componentRequests.createRange,
       action.payload.components
     );
@@ -97,7 +99,11 @@ function* createRangeComponentSaga(action: CreateRangeComponentRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("Components Created");
-      yield put(componentActions.createRangeSuccess());
+      yield put(
+        componentActions.createRangeSuccess({
+          components: data as IComponent[],
+        })
+      );
     }
   } catch (e) {
     openNotificationError("Component", (e as Error).message);

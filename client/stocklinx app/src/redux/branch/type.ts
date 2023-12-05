@@ -52,6 +52,7 @@ export interface CreateBranchRequest {
 }
 export type CreateBranchSuccess = {
   type: typeof branchConst.CREATE_BRANCH_SUCCESS;
+  payload: BranchPayload;
 };
 export type CreateBranchFailure = {
   type: typeof branchConst.CREATE_BRANCH_FAILURE;
@@ -63,6 +64,7 @@ export interface CreateRangeBranchRequest {
 }
 export type CreateRangeBranchSuccess = {
   type: typeof branchConst.CREATE_RANGE_BRANCH_SUCCESS;
+  payload: BranchesPayload;
 };
 export type CreateRangeBranchFailure = {
   type: typeof branchConst.CREATE_RANGE_BRANCH_FAILURE;

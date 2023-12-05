@@ -48,6 +48,7 @@ export default (state = initialState, action: ComponentActions) => {
     case componentConst.CREATE_COMPONENT_SUCCESS:
       return {
         ...state,
+        components: [...state.components, action.payload.component],
       };
     case componentConst.CREATE_COMPONENT_FAILURE:
       return {
@@ -60,6 +61,7 @@ export default (state = initialState, action: ComponentActions) => {
     case componentConst.CREATE_RANGE_COMPONENT_SUCCESS:
       return {
         ...state,
+        components: [...state.components, ...action.payload.components],
       };
     case componentConst.CREATE_RANGE_COMPONENT_FAILURE:
       return {

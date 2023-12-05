@@ -48,6 +48,7 @@ export default (state = initialState, action: DepartmentActions) => {
     case departmentConst.CREATE_DEPARTMENT_SUCCESS:
       return {
         ...state,
+        departments: [...state.departments, action.payload.department],
       };
     case departmentConst.CREATE_DEPARTMENT_FAILURE:
       return {
@@ -60,6 +61,7 @@ export default (state = initialState, action: DepartmentActions) => {
     case departmentConst.CREATE_RANGE_DEPARTMENT_SUCCESS:
       return {
         ...state,
+        departments: [...state.departments, ...action.payload.departments],
       };
     case departmentConst.CREATE_RANGE_DEPARTMENT_FAILURE:
       return {

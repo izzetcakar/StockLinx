@@ -52,6 +52,7 @@ export interface CreateComponentRequest {
 }
 export type CreateComponentSuccess = {
   type: typeof componentConst.CREATE_COMPONENT_SUCCESS;
+  payload: ComponentPayload;
 };
 export type CreateComponentFailure = {
   type: typeof componentConst.CREATE_COMPONENT_FAILURE;
@@ -63,6 +64,7 @@ export interface CreateRangeComponentRequest {
 }
 export type CreateRangeComponentSuccess = {
   type: typeof componentConst.CREATE_RANGE_COMPONENT_SUCCESS;
+  payload: ComponentsPayload;
 };
 export type CreateRangeComponentFailure = {
   type: typeof componentConst.CREATE_RANGE_COMPONENT_FAILURE;

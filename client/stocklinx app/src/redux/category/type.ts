@@ -1,7 +1,4 @@
-import {
-  ICategory,
-  SelectData,
-} from "../../interfaces/interfaces";
+import { ICategory, SelectData } from "../../interfaces/interfaces";
 import { categoryConst } from "./constant";
 
 export interface CategoryState {
@@ -55,6 +52,7 @@ export interface CreateCategoryRequest {
 }
 export type CreateCategorySuccess = {
   type: typeof categoryConst.CREATE_CATEGORY_SUCCESS;
+  payload: CategoryPayload;
 };
 export type CreateCategoryFailure = {
   type: typeof categoryConst.CREATE_CATEGORY_FAILURE;
@@ -66,6 +64,7 @@ export interface CreateRangeCategoryRequest {
 }
 export type CreateRangeCategorySuccess = {
   type: typeof categoryConst.CREATE_RANGE_CATEGORY_SUCCESS;
+  payload: CategoriesPayload;
 };
 export type CreateRangeCategoryFailure = {
   type: typeof categoryConst.CREATE_RANGE_CATEGORY_FAILURE;

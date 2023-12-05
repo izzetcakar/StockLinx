@@ -48,6 +48,7 @@ export default (state = initialState, action: BranchActions) => {
     case branchConst.CREATE_BRANCH_SUCCESS:
       return {
         ...state,
+        branches: [...state.branches, action.payload.branch],
       };
     case branchConst.CREATE_BRANCH_FAILURE:
       return {
@@ -60,6 +61,7 @@ export default (state = initialState, action: BranchActions) => {
     case branchConst.CREATE_RANGE_BRANCH_SUCCESS:
       return {
         ...state,
+        branches: [...state.branches, ...action.payload.branches],
       };
     case branchConst.CREATE_RANGE_BRANCH_FAILURE:
       return {

@@ -48,6 +48,7 @@ export default (state = initialState, action: CategoryActions) => {
     case categoryConst.CREATE_CATEGORY_SUCCESS:
       return {
         ...state,
+        categories: [...state.categories, action.payload.category],
       };
     case categoryConst.CREATE_CATEGORY_FAILURE:
       return {
@@ -60,6 +61,7 @@ export default (state = initialState, action: CategoryActions) => {
     case categoryConst.CREATE_RANGE_CATEGORY_SUCCESS:
       return {
         ...state,
+        categories: [...state.categories, ...action.payload.categories],
       };
     case categoryConst.CREATE_RANGE_CATEGORY_FAILURE:
       return {

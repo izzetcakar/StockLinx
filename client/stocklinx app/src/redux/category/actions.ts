@@ -63,8 +63,9 @@ const create = (payload: CategoryPayload): CreateCategoryRequest => ({
   type: categoryConst.CREATE_CATEGORY_REQUEST,
   payload,
 });
-const createSuccess = (): CreateCategorySuccess => ({
+const createSuccess = (payload: CategoryPayload): CreateCategorySuccess => ({
   type: categoryConst.CREATE_CATEGORY_SUCCESS,
+  payload,
 });
 const createFailure = (): CreateCategoryFailure => ({
   type: categoryConst.CREATE_CATEGORY_FAILURE,
@@ -77,8 +78,11 @@ const createRange = (
   type: categoryConst.CREATE_RANGE_CATEGORY_REQUEST,
   payload,
 });
-const createRangeSuccess = (): CreateRangeCategorySuccess => ({
+const createRangeSuccess = (
+  payload: CategoriesPayload
+): CreateRangeCategorySuccess => ({
   type: categoryConst.CREATE_RANGE_CATEGORY_SUCCESS,
+  payload,
 });
 const createRangeFailure = (): CreateRangeCategoryFailure => ({
   type: categoryConst.CREATE_RANGE_CATEGORY_FAILURE,

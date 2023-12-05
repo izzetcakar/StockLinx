@@ -70,7 +70,7 @@ function* fetchCompanySaga(action: FetchCompanyRequest) {
 function* createCompanySaga(action: CreateCompanyRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       companyRequests.create,
       action.payload.company
     );
@@ -78,7 +78,7 @@ function* createCompanySaga(action: CreateCompanyRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("Company Created");
-      yield put(companyActions.createSuccess());
+      yield put(companyActions.createSuccess({ company: data as ICompany }));
     }
   } catch (e) {
     openNotificationError("Company", (e as Error).message);
@@ -89,7 +89,7 @@ function* createCompanySaga(action: CreateCompanyRequest) {
 function* createRangeCompanySaga(action: CreateRangeCompanyRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       companyRequests.createRange,
       action.payload.companies
     );
@@ -97,7 +97,9 @@ function* createRangeCompanySaga(action: CreateRangeCompanyRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("Companies Created");
-      yield put(companyActions.createRangeSuccess());
+      yield put(
+        companyActions.createRangeSuccess({ companies: data as ICompany[] })
+      );
     }
   } catch (e) {
     openNotificationError("Company", (e as Error).message);

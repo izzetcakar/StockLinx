@@ -48,6 +48,7 @@ export default (state = initialState, action: CompanyActions) => {
     case companyConst.CREATE_COMPANY_SUCCESS:
       return {
         ...state,
+        companies: [...state.companies, action.payload.company],
       };
     case companyConst.CREATE_COMPANY_FAILURE:
       return {
@@ -60,6 +61,7 @@ export default (state = initialState, action: CompanyActions) => {
     case companyConst.CREATE_RANGE_COMPANY_SUCCESS:
       return {
         ...state,
+        companies: [...state.companies, ...action.payload.companies],
       };
     case companyConst.CREATE_RANGE_COMPANY_FAILURE:
       return {

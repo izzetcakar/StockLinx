@@ -37,7 +37,9 @@ import {
 const getAll = (): FetchConsumablesRequest => ({
   type: consumableConst.FETCH_CONSUMABLES_REQUEST,
 });
-const getAllSuccess = (payload: ConsumablesPayload): FetchConsumablesSuccess => ({
+const getAllSuccess = (
+  payload: ConsumablesPayload
+): FetchConsumablesSuccess => ({
   type: consumableConst.FETCH_CONSUMABLES_SUCCESS,
   payload,
 });
@@ -63,20 +65,28 @@ const create = (payload: ConsumablePayload): CreateConsumableRequest => ({
   type: consumableConst.CREATE_CONSUMABLE_REQUEST,
   payload,
 });
-const createSuccess = (): CreateConsumableSuccess => ({
+const createSuccess = (
+  payload: ConsumablePayload
+): CreateConsumableSuccess => ({
   type: consumableConst.CREATE_CONSUMABLE_SUCCESS,
+  payload,
 });
 const createFailure = (): CreateConsumableFailure => ({
   type: consumableConst.CREATE_CONSUMABLE_FAILURE,
 });
 
 //POST RANGE
-const createRange = (payload: ConsumablesPayload): CreateRangeConsumableRequest => ({
+const createRange = (
+  payload: ConsumablesPayload
+): CreateRangeConsumableRequest => ({
   type: consumableConst.CREATE_RANGE_CONSUMABLE_REQUEST,
   payload,
 });
-const createRangeSuccess = (): CreateRangeConsumableSuccess => ({
+const createRangeSuccess = (
+  payload: ConsumablesPayload
+): CreateRangeConsumableSuccess => ({
   type: consumableConst.CREATE_RANGE_CONSUMABLE_SUCCESS,
+  payload,
 });
 const createRangeFailure = (): CreateRangeConsumableFailure => ({
   type: consumableConst.CREATE_RANGE_CONSUMABLE_FAILURE,

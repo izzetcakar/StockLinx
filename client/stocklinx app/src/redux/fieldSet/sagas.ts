@@ -70,7 +70,7 @@ function* fetchFieldSetSaga(action: FetchFieldSetRequest) {
 function* createFieldSetSaga(action: CreateFieldSetRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       fieldSetRequests.create,
       action.payload.fieldSet
     );
@@ -78,7 +78,7 @@ function* createFieldSetSaga(action: CreateFieldSetRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("FieldSet Created");
-      yield put(fieldSetActions.createSuccess());
+      yield put(fieldSetActions.createSuccess({ fieldSet: data as IFieldSet }));
     }
   } catch (e) {
     openNotificationError("FieldSet", (e as Error).message);
@@ -89,7 +89,7 @@ function* createFieldSetSaga(action: CreateFieldSetRequest) {
 function* createRangeFieldSetSaga(action: CreateRangeFieldSetRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       fieldSetRequests.createRange,
       action.payload.fieldSets
     );
@@ -97,7 +97,9 @@ function* createRangeFieldSetSaga(action: CreateRangeFieldSetRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("FieldSets Created");
-      yield put(fieldSetActions.createRangeSuccess());
+      yield put(
+        fieldSetActions.createRangeSuccess({ fieldSets: data as IFieldSet[] })
+      );
     }
   } catch (e) {
     openNotificationError("FieldSet", (e as Error).message);
@@ -155,7 +157,9 @@ function* removeRangeFieldSetSaga(action: RemoveRangeFieldSetRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("FieldSets Removed");
-      yield put(fieldSetActions.removeRangeSuccess({ ids: action.payload.ids }));
+      yield put(
+        fieldSetActions.removeRangeSuccess({ ids: action.payload.ids })
+      );
     }
   } catch (e) {
     openNotificationError("FieldSet", (e as Error).message);
@@ -171,10 +175,16 @@ function* fieldSetsaga() {
   yield takeEvery(fieldSetConst.FETCH_FIELDSETS_REQUEST, fetchFieldSetsSaga);
   yield takeEvery(fieldSetConst.FETCH_FIELDSET_REQUEST, fetchFieldSetSaga);
   yield takeEvery(fieldSetConst.CREATE_FIELDSET_REQUEST, createFieldSetSaga);
-  yield takeEvery(fieldSetConst.CREATE_RANGE_FIELDSET_REQUEST, createRangeFieldSetSaga);
+  yield takeEvery(
+    fieldSetConst.CREATE_RANGE_FIELDSET_REQUEST,
+    createRangeFieldSetSaga
+  );
   yield takeEvery(fieldSetConst.UPDATE_FIELDSET_REQUEST, updateFieldSetSaga);
   yield takeEvery(fieldSetConst.REMOVE_FIELDSET_REQUEST, removeFieldSetSaga);
-  yield takeEvery(fieldSetConst.REMOVE_RANGE_FIELDSET_REQUEST, removeRangeFieldSetSaga);
+  yield takeEvery(
+    fieldSetConst.REMOVE_RANGE_FIELDSET_REQUEST,
+    removeRangeFieldSetSaga
+  );
 }
 // function* budgetItemSaga() {
 //   yield takeEvery(budgetItemConst.fetchList, listBudgetITem);

@@ -52,6 +52,7 @@ export interface CreateDepartmentRequest {
 }
 export type CreateDepartmentSuccess = {
   type: typeof departmentConst.CREATE_DEPARTMENT_SUCCESS;
+  payload: DepartmentPayload;
 };
 export type CreateDepartmentFailure = {
   type: typeof departmentConst.CREATE_DEPARTMENT_FAILURE;
@@ -63,6 +64,7 @@ export interface CreateRangeDepartmentRequest {
 }
 export type CreateRangeDepartmentSuccess = {
   type: typeof departmentConst.CREATE_RANGE_DEPARTMENT_SUCCESS;
+  payload: DepartmentsPayload;
 };
 export type CreateRangeDepartmentFailure = {
   type: typeof departmentConst.CREATE_RANGE_DEPARTMENT_FAILURE;

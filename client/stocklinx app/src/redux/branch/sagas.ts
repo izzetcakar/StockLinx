@@ -70,7 +70,7 @@ function* fetchBranchSaga(action: FetchBranchRequest) {
 function* createBranchSaga(action: CreateBranchRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       branchRequests.create,
       action.payload.branch
     );
@@ -78,7 +78,7 @@ function* createBranchSaga(action: CreateBranchRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("Branch Created");
-      yield put(branchActions.createSuccess());
+      yield put(branchActions.createSuccess({ branch: data as IBranch }));
     }
   } catch (e) {
     openNotificationError("Branch", (e as Error).message);
@@ -89,7 +89,7 @@ function* createBranchSaga(action: CreateBranchRequest) {
 function* createRangeBranchSaga(action: CreateRangeBranchRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       branchRequests.createRange,
       action.payload.branches
     );
@@ -97,7 +97,9 @@ function* createRangeBranchSaga(action: CreateRangeBranchRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("Branches Created");
-      yield put(branchActions.createRangeSuccess());
+      yield put(
+        branchActions.createRangeSuccess({ branches: data as IBranch[] })
+      );
     }
   } catch (e) {
     openNotificationError("Branch", (e as Error).message);

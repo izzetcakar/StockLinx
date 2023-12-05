@@ -65,8 +65,9 @@ const create = (payload: AccessoryPayload): CreateAccessoryRequest => ({
   type: accessoryConst.CREATE_ACCESSORY_REQUEST,
   payload,
 });
-const createSuccess = (): CreateAccessorySuccess => ({
+const createSuccess = (payload: AccessoryPayload): CreateAccessorySuccess => ({
   type: accessoryConst.CREATE_ACCESSORY_SUCCESS,
+  payload,
 });
 const createFailure = (): CreateAccessoryFailure => ({
   type: accessoryConst.CREATE_ACCESSORY_FAILURE,
@@ -79,8 +80,11 @@ const createRange = (
   type: accessoryConst.CREATE_RANGE_ACCESSORY_REQUEST,
   payload,
 });
-const createRangeSuccess = (): CreateRangeAccessorySuccess => ({
+const createRangeSuccess = (
+  payload: AccessoriesPayload
+): CreateRangeAccessorySuccess => ({
   type: accessoryConst.CREATE_RANGE_ACCESSORY_SUCCESS,
+  payload,
 });
 const createRangeFailure = (): CreateRangeAccessoryFailure => ({
   type: accessoryConst.CREATE_RANGE_ACCESSORY_FAILURE,

@@ -63,20 +63,26 @@ const create = (payload: FieldSetPayload): CreateFieldSetRequest => ({
   type: fieldSetConst.CREATE_FIELDSET_REQUEST,
   payload,
 });
-const createSuccess = (): CreateFieldSetSuccess => ({
+const createSuccess = (payload: FieldSetPayload): CreateFieldSetSuccess => ({
   type: fieldSetConst.CREATE_FIELDSET_SUCCESS,
+  payload,
 });
 const createFailure = (): CreateFieldSetFailure => ({
   type: fieldSetConst.CREATE_FIELDSET_FAILURE,
 });
 
 //POST RANGE
-const createRange = (payload: FieldSetsPayload): CreateRangeFieldSetRequest => ({
+const createRange = (
+  payload: FieldSetsPayload
+): CreateRangeFieldSetRequest => ({
   type: fieldSetConst.CREATE_RANGE_FIELDSET_REQUEST,
   payload,
 });
-const createRangeSuccess = (): CreateRangeFieldSetSuccess => ({
+const createRangeSuccess = (
+  payload: FieldSetsPayload
+): CreateRangeFieldSetSuccess => ({
   type: fieldSetConst.CREATE_RANGE_FIELDSET_SUCCESS,
+  payload,
 });
 const createRangeFailure = (): CreateRangeFieldSetFailure => ({
   type: fieldSetConst.CREATE_RANGE_FIELDSET_FAILURE,

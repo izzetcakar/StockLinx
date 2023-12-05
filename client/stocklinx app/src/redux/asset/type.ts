@@ -52,6 +52,7 @@ export interface CreateAssetRequest {
 }
 export type CreateAssetSuccess = {
   type: typeof assetConst.CREATE_ASSET_SUCCESS;
+  payload: AssetPayload;
 };
 export type CreateAssetFailure = {
   type: typeof assetConst.CREATE_ASSET_FAILURE;
@@ -63,6 +64,7 @@ export interface CreateRangeAssetRequest {
 }
 export type CreateRangeAssetSuccess = {
   type: typeof assetConst.CREATE_RANGE_ASSET_SUCCESS;
+  payload: AssetsPayload;
 };
 export type CreateRangeAssetFailure = {
   type: typeof assetConst.CREATE_RANGE_ASSET_FAILURE;

@@ -70,7 +70,7 @@ function* fetchCategorySaga(action: FetchCategoryRequest) {
 function* createCategorySaga(action: CreateCategoryRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       categoryRequests.create,
       action.payload.category
     );
@@ -78,7 +78,7 @@ function* createCategorySaga(action: CreateCategoryRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("Category Created");
-      yield put(categoryActions.createSuccess());
+      yield put(categoryActions.createSuccess({ category: data as ICategory }));
     }
   } catch (e) {
     openNotificationError("Category", (e as Error).message);
@@ -89,7 +89,7 @@ function* createCategorySaga(action: CreateCategoryRequest) {
 function* createRangeCategorySaga(action: CreateRangeCategoryRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       categoryRequests.createRange,
       action.payload.categories
     );
@@ -97,7 +97,9 @@ function* createRangeCategorySaga(action: CreateRangeCategoryRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("Categories Created");
-      yield put(categoryActions.createRangeSuccess());
+      yield put(
+        categoryActions.createRangeSuccess({ categories: data as ICategory[] })
+      );
     }
   } catch (e) {
     openNotificationError("Category", (e as Error).message);

@@ -63,8 +63,9 @@ const create = (payload: AssetPayload): CreateAssetRequest => ({
   type: assetConst.CREATE_ASSET_REQUEST,
   payload,
 });
-const createSuccess = (): CreateAssetSuccess => ({
+const createSuccess = (payload: AssetPayload): CreateAssetSuccess => ({
   type: assetConst.CREATE_ASSET_SUCCESS,
+  payload,
 });
 const createFailure = (): CreateAssetFailure => ({
   type: assetConst.CREATE_ASSET_FAILURE,
@@ -75,8 +76,11 @@ const createRange = (payload: AssetsPayload): CreateRangeAssetRequest => ({
   type: assetConst.CREATE_RANGE_ASSET_REQUEST,
   payload,
 });
-const createRangeSuccess = (): CreateRangeAssetSuccess => ({
+const createRangeSuccess = (
+  payload: AssetsPayload
+): CreateRangeAssetSuccess => ({
   type: assetConst.CREATE_RANGE_ASSET_SUCCESS,
+  payload,
 });
 const createRangeFailure = (): CreateRangeAssetFailure => ({
   type: assetConst.CREATE_RANGE_ASSET_FAILURE,
@@ -99,9 +103,7 @@ const remove = (payload: AssetRemovePayload): RemoveAssetRequest => ({
   type: assetConst.REMOVE_ASSET_REQUEST,
   payload,
 });
-const removeSuccess = (
-  payload: AssetRemovePayload
-): RemoveAssetSuccess => ({
+const removeSuccess = (payload: AssetRemovePayload): RemoveAssetSuccess => ({
   type: assetConst.REMOVE_ASSET_SUCCESS,
   payload,
 });

@@ -63,8 +63,9 @@ const create = (payload: CompanyPayload): CreateCompanyRequest => ({
   type: companyConst.CREATE_COMPANY_REQUEST,
   payload,
 });
-const createSuccess = (): CreateCompanySuccess => ({
+const createSuccess = (payload: CompanyPayload): CreateCompanySuccess => ({
   type: companyConst.CREATE_COMPANY_SUCCESS,
+  payload,
 });
 const createFailure = (): CreateCompanyFailure => ({
   type: companyConst.CREATE_COMPANY_FAILURE,
@@ -75,8 +76,11 @@ const createRange = (payload: CompaniesPayload): CreateRangeCompanyRequest => ({
   type: companyConst.CREATE_RANGE_COMPANY_REQUEST,
   payload,
 });
-const createRangeSuccess = (): CreateRangeCompanySuccess => ({
+const createRangeSuccess = (
+  payload: CompaniesPayload
+): CreateRangeCompanySuccess => ({
   type: companyConst.CREATE_RANGE_COMPANY_SUCCESS,
+  payload,
 });
 const createRangeFailure = (): CreateRangeCompanyFailure => ({
   type: companyConst.CREATE_RANGE_COMPANY_FAILURE,

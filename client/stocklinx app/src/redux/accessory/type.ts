@@ -52,6 +52,7 @@ export interface CreateAccessoryRequest {
 }
 export type CreateAccessorySuccess = {
   type: typeof accessoryConst.CREATE_ACCESSORY_SUCCESS;
+  payload: AccessoryPayload;
 };
 export type CreateAccessoryFailure = {
   type: typeof accessoryConst.CREATE_ACCESSORY_FAILURE;
@@ -63,6 +64,7 @@ export interface CreateRangeAccessoryRequest {
 }
 export type CreateRangeAccessorySuccess = {
   type: typeof accessoryConst.CREATE_RANGE_ACCESSORY_SUCCESS;
+  payload: AccessoriesPayload;
 };
 export type CreateRangeAccessoryFailure = {
   type: typeof accessoryConst.CREATE_RANGE_ACCESSORY_FAILURE;
