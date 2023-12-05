@@ -5,6 +5,7 @@ namespace StockLinx.Core.Repositories
 {
     public interface IGenericRepository : IRepository<User>
     {
+        Task CreateBaseEntities();
         IEnumerable<ProductStatusCounter> GetProductStatusCounts();
         IEnumerable<EntityCounter> GetEntityCounts();
         IEnumerable<ProductLocationCounterDto> GetProductLocationCounts();

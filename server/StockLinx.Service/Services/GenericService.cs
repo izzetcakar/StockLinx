@@ -9,19 +9,36 @@ namespace StockLinx.Service.Services
     public class GenericService : Service<User>, IGenericService
     {
         private readonly IGenericRepository _repository;
+        private readonly IUnitOfWork _unitOfWork;
         public GenericService(IRepository<User> repository, IGenericRepository genericRepository, IUnitOfWork unitOfWork) : base(repository, unitOfWork)
         {
             _repository = genericRepository;
+            _unitOfWork = unitOfWork;
+        }
+
+        public async Task CreateBaseEntities()
+        {
+            try
+            {
+                await _repository.CreateBaseEntities();
+                await _unitOfWork.CommitAsync();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public IEnumerable<EntityCounter> GetEntityCounts()
         {
             return _repository.GetEntityCounts();
         }
+
         public IEnumerable<ProductStatusCounter> GetProductStatusCounts()
         {
             return _repository.GetProductStatusCounts();
         }
+
         public IEnumerable<ProductLocationCounterDto> GetProductLocationCounts()
         {
             return _repository.GetProductLocationCounts();

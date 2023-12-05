@@ -14,6 +14,12 @@ namespace StockLinx.API.Controllers
             _service = service;
         }
 
+        [HttpGet("createBaseEntities")]
+        public async Task<IActionResult> CreateBaseEntities()
+        {
+            await _service.CreateBaseEntities();
+            return CreateActionResult(CustomResponseDto<string>.Success(200, "Base entities created successfully"));
+        }
         [HttpGet("entityCount")]
         public async Task<IActionResult> EntityCount()
         {
