@@ -1,62 +1,33 @@
-import { Column } from "devextreme/ui/data_grid";
-import { ICategoryCounts } from "../../../interfaces/interfaces";
-import {
-  alignedTemplate,
-  alignedTitleTemplate,
-  barcodeHeaderTemplate,
-  diskHeaderTemplate,
-  dropHeaderTemplate,
-  harddiskHeaderTemplate,
-  keyboardHeaderTemplate,
-} from "../location/customColumns";
+import { Column } from "../../gridTable/interfaces/interfaces";
 import "../customDatagrid.scss";
 
 export const useColumns = () => {
-  const columns: Column<ICategoryCounts>[] = [
+  const columns: Column[] = [
     {
       dataField: "categoryName",
       caption: "Name",
-      cellTemplate: alignedTitleTemplate,
+      dataType: "string",
     },
     {
-      dataField: "assetCount",
-      caption: "Asset",
-      dataType: "number",
-      alignment: "center",
-      cellTemplate: alignedTemplate,
-      headerCellTemplate: barcodeHeaderTemplate,
+      dataField: "productName",
+      caption: "Name",
+      dataType: "string",
+      lookup: {
+        dataSource: [
+          { name: "Asset" },
+          { name: "License" },
+          { name: "Accessory" },
+          { name: "Consumable" },
+          { name: "Component" },
+        ],
+        valueExpr: "name",
+        displayExpr: "name",
+      },
     },
     {
-      dataField: "accessoryCount",
-      caption: "Accessory",
+      dataField: "productCount",
+      caption: "Count",
       dataType: "number",
-      alignment: "center",
-      cellTemplate: alignedTemplate,
-      headerCellTemplate: keyboardHeaderTemplate,
-    },
-    {
-      dataField: "consumableCount",
-      caption: "Consumable",
-      dataType: "number",
-      alignment: "center",
-      cellTemplate: alignedTemplate,
-      headerCellTemplate: dropHeaderTemplate,
-    },
-    {
-      dataField: "componentCount",
-      caption: "Component",
-      dataType: "number",
-      alignment: "center",
-      cellTemplate: alignedTemplate,
-      headerCellTemplate: harddiskHeaderTemplate,
-    },
-    {
-      dataField: "licenseCount",
-      caption: "License",
-      dataType: "number",
-      alignment: "center",
-      cellTemplate: alignedTemplate,
-      headerCellTemplate: diskHeaderTemplate,
     },
   ];
 

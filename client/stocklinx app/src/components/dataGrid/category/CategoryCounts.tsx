@@ -1,39 +1,29 @@
 import { useDispatch, useSelector } from "react-redux";
-import { categoryActions } from "../../../redux/category/actions";
 import { useColumns } from "./columns";
-import BaseDataGrid from "../../generic/BaseDataGrid";
-import "devextreme/data/odata/store";
 import { RootState } from "../../../redux/rootReducer";
-import React, { useEffect } from "react";
+import { productActions } from "../../../redux/product/actions";
+import { useLayoutEffect } from "react";
+import Gridtable from "../../gridTable/GridTable";
 
-interface CategoryCountsProps {
-  className?: string;
-  editing?: boolean;
-}
-const CategoryCounts: React.FC<CategoryCountsProps> = ({
-  className,
-  editing,
-}) => {
+const CategoryCounts = () => {
   const dispatch = useDispatch();
-  const counts = useSelector((state: RootState) => state.category.counts);
+  const productCategoryCounts = useSelector(
+    (state: RootState) => state.product.productCategoryCounts
+  );
 
   const refreshData = () => {
-    dispatch(categoryActions.getCounts());
+    dispatch(productActions.getProductCategoryCounts());
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     refreshData();
   }, []);
 
   return (
-    <BaseDataGrid
-      title="Product Categories"
-      data={counts}
-      className={className}
-      editing={editing}
-      keyExpr="categoryId"
+    <Gridtable
+      data={productCategoryCounts}
+      itemKey="categoryId"
       columns={useColumns()}
-      refreshData={refreshData}
     />
   );
 };
