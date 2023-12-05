@@ -80,8 +80,8 @@ const Login = () => {
               />
               <ReCAPTCHA
                 onChange={() => setRecaptcha(true)}
-                type="image"
                 sitekey={captchaSiteKey}
+                type="image"
               />
               <Button type="submit" color="dark" disabled={!recaptcha}>
                 Login
