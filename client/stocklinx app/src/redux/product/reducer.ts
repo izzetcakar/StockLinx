@@ -2,22 +2,24 @@ import { productConst } from "./constant";
 import { ProductActions, ProductState } from "./type";
 
 const initialState: ProductState = {
-  counts: [],
-  statusCounts: [],
+  entityCounts: [],
+  productStatusCounts: [],
+  productLocationCounts: [],
+  productCategoryCounts: [],
 };
 
 export default (state = initialState, action: ProductActions) => {
   switch (action.type) {
-    case productConst.FETCH_PRODUCT_COUNTS_REQUEST:
+    case productConst.FETCH_ENTITY_COUNTS_REQUEST:
       return {
         ...state,
       };
-    case productConst.FETCH_PRODUCT_COUNTS_SUCCESS:
+    case productConst.FETCH_ENTITY_COUNTS_SUCCESS:
       return {
         ...state,
-        counts: action.payload.counts,
+        entityCounts: action.payload.entityCounts,
       };
-    case productConst.FETCH_PRODUCT_COUNTS_FAILURE:
+    case productConst.FETCH_ENTITY_COUNTS_FAILURE:
       return {
         ...state,
       };
@@ -28,9 +30,35 @@ export default (state = initialState, action: ProductActions) => {
     case productConst.FETCH_PRODUCT_STATUS_COUNTS_SUCCESS:
       return {
         ...state,
-        statusCounts: action.payload.statusCounts,
+        productStatusCounts: action.payload.productStatusCounts,
       };
     case productConst.FETCH_PRODUCT_STATUS_COUNTS_FAILURE:
+      return {
+        ...state,
+      };
+    case productConst.FETCH_PRODUCT_LOCATION_COUNTS_REQUEST:
+      return {
+        ...state,
+      };
+    case productConst.FETCH_PRODUCT_LOCATION_COUNTS_SUCCESS:
+      return {
+        ...state,
+        productLocationCounts: action.payload.productLocationCounts,
+      };
+    case productConst.FETCH_PRODUCT_LOCATION_COUNTS_FAILURE:
+      return {
+        ...state,
+      };
+    case productConst.FETCH_PRODUCT_CATEGORY_COUNTS_REQUEST:
+      return {
+        ...state,
+      };
+    case productConst.FETCH_PRODUCT_CATEGORY_COUNTS_SUCCESS:
+      return {
+        ...state,
+        productCategoryCounts: action.payload.productCategoryCounts,
+      };
+    case productConst.FETCH_PRODUCT_CATEGORY_COUNTS_FAILURE:
       return {
         ...state,
       };

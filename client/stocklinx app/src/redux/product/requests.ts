@@ -1,22 +1,41 @@
-import { IProductCount } from "../../interfaces/interfaces";
+import {
+  IEntityCount,
+  IProductCategoryCount,
+  IProductLocationCount,
+  IProductStatusCount,
+} from "../../interfaces/interfaces";
 import { request } from "../../server/api";
 
 const requestUrl = "Generic/";
 
-const getCounts = () => {
-  return request<IProductCount>({
-    requestUrl: requestUrl + "productCount",
+const getEntityCounts = () => {
+  return request<IEntityCount>({
+    requestUrl: requestUrl + "entityCount",
     apiType: "get",
   });
 };
-const getStatusCounts = () => {
-  return request<IProductCount>({
-    requestUrl: requestUrl + "productStatus",
+const getProductStatusCounts = () => {
+  return request<IProductStatusCount>({
+    requestUrl: requestUrl + "productStatusCount",
+    apiType: "get",
+  });
+};
+const getProductLocationCounts = () => {
+  return request<IProductLocationCount>({
+    requestUrl: requestUrl + "productLocationCount",
+    apiType: "get",
+  });
+};
+const getProductCategoryCounts = () => {
+  return request<IProductCategoryCount>({
+    requestUrl: requestUrl + "productCategoryCount",
     apiType: "get",
   });
 };
 
 export const productRequests = {
-  getCounts,
-  getStatusCounts,
+  getEntityCounts,
+  getProductStatusCounts,
+  getProductLocationCounts,
+  getProductCategoryCounts,
 };

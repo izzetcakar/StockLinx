@@ -1,47 +1,89 @@
 import { productConst } from "./constant";
 import {
-  FetchProductCountsFailure,
-  FetchProductCountsRequest,
-  FetchProductCountsSuccess,
+  EntityCountsSucccessPayload,
+  FetchEntityCountsFailure,
+  FetchEntityCountsRequest,
+  FetchEntityCountsSuccess,
+  FetchProductCategoryCountsFailure,
+  FetchProductCategoryCountsRequest,
+  FetchProductCategoryCountsSuccess,
+  FetchProductLocationCountsFailure,
+  FetchProductLocationCountsRequest,
+  FetchProductLocationCountsSuccess,
   FetchProductStatusCountsFailure,
   FetchProductStatusCountsRequest,
   FetchProductStatusCountsSuccess,
-  ProductCountsSucccessPayload,
+  ProductCategoryCountsSucccessPayload,
+  ProductLocationCountsSucccessPayload,
   ProductStatusCountsSucccessPayload,
 } from "./type";
 
-//GET PRODUCT COUNTS
-const getCounts = (): FetchProductCountsRequest => ({
-  type: productConst.FETCH_PRODUCT_COUNTS_REQUEST,
+//GET ENTITY COUNTS
+const getEntityCounts = (): FetchEntityCountsRequest => ({
+  type: productConst.FETCH_ENTITY_COUNTS_REQUEST,
 });
-const getCountsSuccess = (
-  payload: ProductCountsSucccessPayload
-): FetchProductCountsSuccess => ({
-  type: productConst.FETCH_PRODUCT_COUNTS_SUCCESS,
+const getEntityCountsSuccess = (
+  payload: EntityCountsSucccessPayload
+): FetchEntityCountsSuccess => ({
+  type: productConst.FETCH_ENTITY_COUNTS_SUCCESS,
   payload,
 });
-const getCountsFailure = (): FetchProductCountsFailure => ({
-  type: productConst.FETCH_PRODUCT_COUNTS_FAILURE,
+const getEntityCountsFailure = (): FetchEntityCountsFailure => ({
+  type: productConst.FETCH_ENTITY_COUNTS_FAILURE,
 });
 //GET PRODUCT STATUS COUNTS
-const getStatusCounts = (): FetchProductStatusCountsRequest => ({
+const getProductStatusCounts = (): FetchProductStatusCountsRequest => ({
   type: productConst.FETCH_PRODUCT_STATUS_COUNTS_REQUEST,
 });
-const getStatusCountsSuccess = (
+const getProductStatusCountsSuccess = (
   payload: ProductStatusCountsSucccessPayload
 ): FetchProductStatusCountsSuccess => ({
   type: productConst.FETCH_PRODUCT_STATUS_COUNTS_SUCCESS,
   payload,
 });
-const getStatusCountsFailure = (): FetchProductStatusCountsFailure => ({
+const getProductStatusCountsFailure = (): FetchProductStatusCountsFailure => ({
   type: productConst.FETCH_PRODUCT_STATUS_COUNTS_FAILURE,
 });
+//GET PRODUCT LOCATION COUNTS
+const getProductLocationCounts = (): FetchProductLocationCountsRequest => ({
+  type: productConst.FETCH_PRODUCT_LOCATION_COUNTS_REQUEST,
+});
+const getProductLocationCountsSuccess = (
+  payload: ProductLocationCountsSucccessPayload
+): FetchProductLocationCountsSuccess => ({
+  type: productConst.FETCH_PRODUCT_LOCATION_COUNTS_SUCCESS,
+  payload,
+});
+const getProductLocationCountsFailure =
+  (): FetchProductLocationCountsFailure => ({
+    type: productConst.FETCH_PRODUCT_LOCATION_COUNTS_FAILURE,
+  });
+//GET PRODUCT CATEGORY COUNTS
+const getProductCategoryCounts = (): FetchProductCategoryCountsRequest => ({
+  type: productConst.FETCH_PRODUCT_CATEGORY_COUNTS_REQUEST,
+});
+const getProductCategoryCountsSuccess = (
+  payload: ProductCategoryCountsSucccessPayload
+): FetchProductCategoryCountsSuccess => ({
+  type: productConst.FETCH_PRODUCT_CATEGORY_COUNTS_SUCCESS,
+  payload,
+});
+const getProductCategoryCountsFailure =
+  (): FetchProductCategoryCountsFailure => ({
+    type: productConst.FETCH_PRODUCT_CATEGORY_COUNTS_FAILURE,
+  });
 
 export const productActions = {
-  getCounts,
-  getCountsSuccess,
-  getCountsFailure,
-  getStatusCounts,
-  getStatusCountsSuccess,
-  getStatusCountsFailure,
+  getEntityCounts,
+  getEntityCountsSuccess,
+  getEntityCountsFailure,
+  getProductStatusCounts,
+  getProductStatusCountsSuccess,
+  getProductStatusCountsFailure,
+  getProductLocationCounts,
+  getProductLocationCountsSuccess,
+  getProductLocationCountsFailure,
+  getProductCategoryCounts,
+  getProductCategoryCountsSuccess,
+  getProductCategoryCountsFailure,
 };
