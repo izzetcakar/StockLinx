@@ -105,9 +105,6 @@ namespace StockLinx.Repository.Migrations
                     b.Property<Guid>("BranchId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("CategoryId")
-                        .HasColumnType("uuid");
-
                     b.Property<int?>("CheckinCounter")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
@@ -161,8 +158,6 @@ namespace StockLinx.Repository.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("BranchId");
-
-                    b.HasIndex("CategoryId");
 
                     b.HasIndex("ModelId");
 
@@ -1103,10 +1098,6 @@ namespace StockLinx.Repository.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("StockLinx.Core.Entities.Category", null)
-                        .WithMany("Assets")
-                        .HasForeignKey("CategoryId");
-
                     b.HasOne("StockLinx.Core.Entities.Model", "Model")
                         .WithMany("Assets")
                         .HasForeignKey("ModelId")
@@ -1326,7 +1317,7 @@ namespace StockLinx.Repository.Migrations
             modelBuilder.Entity("StockLinx.Core.Entities.Model", b =>
                 {
                     b.HasOne("StockLinx.Core.Entities.Category", "Category")
-                        .WithMany()
+                        .WithMany("Models")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1448,13 +1439,13 @@ namespace StockLinx.Repository.Migrations
                 {
                     b.Navigation("Accessories");
 
-                    b.Navigation("Assets");
-
                     b.Navigation("Components");
 
                     b.Navigation("Consumables");
 
                     b.Navigation("Licenses");
+
+                    b.Navigation("Models");
                 });
 
             modelBuilder.Entity("StockLinx.Core.Entities.Company", b =>
