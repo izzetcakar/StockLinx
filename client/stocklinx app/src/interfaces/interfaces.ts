@@ -230,32 +230,23 @@ export interface IUserLoginDto {
 export interface IToken {
   token: string;
 }
-export interface ILocationCounts {
-  locationId: string;
-  locationName: string;
-  productId: string;
-  productCount: number;
-  assignedCount: number;
-  userCount: number;
-}
-export interface ICategoryCounts {
-  categoryId: string;
-  categoryName: string;
-  assetCount: number;
-  licenseCount: number;
-  accessoryCount: number;
-  consumableCount: number;
-  componentCount: number;
-}
-export interface IProductCount {
+export interface IEntityCount {
   entityName: string;
   count: number;
 }
-export interface IProductStausCount {
+export interface IProductStatusCount {
   status: string;
   count: number;
 }
-export interface IProductStatus extends BaseEntity {
-  name: string;
-  type: ProductStatusType;
+export interface IProductLocationCount {
+  locationId: string;
+  locationName: string;
+  productCount: number;
+  assignedCount: number;
+}
+export interface IProductCategoryCount {
+  categoryId: string;
+  categoryName: string;
+  productName: string;
+  productCount: number;
 }
