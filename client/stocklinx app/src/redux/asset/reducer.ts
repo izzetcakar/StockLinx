@@ -43,7 +43,7 @@ export default (state = initialState, action: AssetActions) => {
     case assetConst.CREATE_ASSET_SUCCESS:
       return {
         ...state,
-        assets: [...state.assets, action.payload.asset],
+        assets: [...state.assets, ...action.payload.assets],
       };
     case assetConst.CREATE_ASSET_FAILURE:
       return {

@@ -63,7 +63,7 @@ const create = (payload: AssetPayload): CreateAssetRequest => ({
   type: assetConst.CREATE_ASSET_REQUEST,
   payload,
 });
-const createSuccess = (payload: AssetPayload): CreateAssetSuccess => ({
+const createSuccess = (payload: AssetsPayload): CreateAssetSuccess => ({
   type: assetConst.CREATE_ASSET_SUCCESS,
   payload,
 });

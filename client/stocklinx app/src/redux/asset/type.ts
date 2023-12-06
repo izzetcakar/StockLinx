@@ -51,7 +51,7 @@ export interface CreateAssetRequest {
 }
 export type CreateAssetSuccess = {
   type: typeof assetConst.CREATE_ASSET_SUCCESS;
-  payload: AssetPayload;
+  payload: AssetsPayload;
 };
 export type CreateAssetFailure = {
   type: typeof assetConst.CREATE_ASSET_FAILURE;

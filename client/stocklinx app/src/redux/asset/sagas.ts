@@ -78,7 +78,7 @@ function* createAssetSaga(action: CreateAssetRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("Asset Created");
-      yield put(assetActions.createSuccess({ asset: data as IAsset }));
+      yield put(assetActions.createSuccess({ assets: data as IAsset[] }));
     }
   } catch (e) {
     openNotificationError("Asset", (e as Error).message);
