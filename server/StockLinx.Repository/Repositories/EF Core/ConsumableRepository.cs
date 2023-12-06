@@ -9,8 +9,9 @@ namespace StockLinx.Repository.Repositories.EF_Core
     public class ConsumableRepository : Repository<Consumable>, IConsumableRepository
     {
         private readonly IMapper _mapper;
-        public ConsumableRepository(AppDbContext dbContext) : base(dbContext)
+        public ConsumableRepository(AppDbContext dbContext, IMapper mapper) : base(dbContext)
         {
+            _mapper = mapper;
         }
 
         public async Task<ConsumableDto> GetDto(Consumable entity)
@@ -32,7 +33,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
             var deployedProducts = await dbContext.DeployedProducts.AsNoTracking().ToListAsync();
             var dtos = new List<ConsumableDto>();
 
-            foreach (var entity in entities)
+            foreach (Consumable entity in entities)
             {
                 var companyId = await dbContext.Branches.Where(b => b.Id == entity.BranchId).Select(b => b.CompanyId).FirstOrDefaultAsync();
                 var availableQuantity = entity.Quantity - deployedProducts.Count(d => d.ConsumableId.HasValue && d.ConsumableId == entity.Id);

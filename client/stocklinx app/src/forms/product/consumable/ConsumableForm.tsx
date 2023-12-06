@@ -10,7 +10,7 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { DateInput } from "@mantine/dates";
-import { IConsumable } from "../../../interfaces/interfaces";
+import { CategoryType, IConsumable } from "../../../interfaces/interfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { consumableActions } from "../../../redux/consumable/actions";
 import { RootState } from "../../../redux/rootReducer";
@@ -133,10 +133,12 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({ consumable }) => {
           withAsterisk
         />
         <Select
-          data={categories.map((category) => ({
-            value: category.id,
-            label: category.name,
-          }))}
+          data={categories
+            .filter((category) => category.type === CategoryType.CONSUMABLE)
+            .map((category) => ({
+              value: category.id,
+              label: category.name,
+            }))}
           label="Category"
           placeholder="Select Category"
           {...form.getInputProps("categoryId")}

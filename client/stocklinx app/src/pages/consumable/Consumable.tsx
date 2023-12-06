@@ -10,6 +10,7 @@ import { productStatusActions } from "../../redux/productStatus/actions";
 import { branchActions } from "../../redux/branch/actions";
 import Gridtable from "../../components/gridTable/GridTable";
 import { openConsumableModal } from "../../modals/modals";
+import { manufacturerActions } from "../../redux/manufacturer/actions";
 
 const Consumable = () => {
   const dispatch = useDispatch();
@@ -24,6 +25,7 @@ const Consumable = () => {
     dispatch(productStatusActions.getAll());
     dispatch(companyActions.getAll());
     dispatch(branchActions.getAll());
+    dispatch(manufacturerActions.getAll());
   };
 
   return (

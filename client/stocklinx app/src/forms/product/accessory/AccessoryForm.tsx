@@ -132,7 +132,7 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory }) => {
         />
         <Select
           data={categories
-            .filter((c) => c.type === CategoryType.ACCESSORY)
+            .filter((category) => category.type === CategoryType.ACCESSORY)
             .map((category) => ({
               value: category.id,
               label: category.name,
