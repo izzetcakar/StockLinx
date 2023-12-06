@@ -79,10 +79,15 @@ const Login = () => {
                 icon={<IconKey size="1.2rem" />}
               />
               <ReCAPTCHA
-                onChange={() => setRecaptcha(true)}
                 sitekey={captchaSiteKey}
-                type="image"
-              />
+                onChange={() => setRecaptcha(true)}
+              >
+                <script
+                  src="https://www.google.com/recaptcha/api.js"
+                  async
+                  defer
+                ></script>
+              </ReCAPTCHA>
               <Button type="submit" color="dark" disabled={!recaptcha}>
                 Login
               </Button>
