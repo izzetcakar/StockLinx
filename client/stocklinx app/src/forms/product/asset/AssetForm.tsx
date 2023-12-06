@@ -65,6 +65,8 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
       },
       productStatusId: (value: string) =>
         value !== "" ? null : "Product status should not be empty",
+      branchId: (value: string) =>
+        value !== "" ? null : "Branch should not be empty",
     },
   });
   const overageAssetFields = form.values?.overageAssets?.map((_, index) => (
@@ -218,6 +220,7 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
           label="Name"
           placeholder="New Name"
           {...form.getInputProps("name")}
+          withAsterisk
         />
         <TextInput
           label="Order No"

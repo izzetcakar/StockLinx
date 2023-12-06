@@ -70,6 +70,8 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license }) => {
             : "Purchase cost must be a non-negative number";
         }
       },
+      categoryId: (value: string) =>
+        value !== "" ? null : "Please select a category",
     },
   });
   const handleSubmit = (data: ILicense) => {

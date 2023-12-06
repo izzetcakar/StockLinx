@@ -171,6 +171,7 @@ const ModelForm: React.FC<ModelFormProps> = ({ model }) => {
             error={error}
             {...form.getInputProps(`modelFieldData.${index}.value`)}
             value={form.values.modelFieldData[index].value || defaultValue}
+            withAsterisk={customField.isRequired}
           />
         );
       case "number":
@@ -186,6 +187,7 @@ const ModelForm: React.FC<ModelFormProps> = ({ model }) => {
               form.setFieldValue(`modelFieldData.${index}.value`, e.toString());
             }}
             hideControls
+            withAsterisk={customField.isRequired}
           />
         );
       case "boolean":
@@ -218,6 +220,7 @@ const ModelForm: React.FC<ModelFormProps> = ({ model }) => {
             error={error}
             {...form.getInputProps(`modelFieldData.${index}.value`)}
             value={new Date(form.values.modelFieldData[index].value)}
+            withAsterisk={customField.isRequired}
           />
         );
       default:
