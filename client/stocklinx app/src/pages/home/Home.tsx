@@ -103,8 +103,6 @@ const Home = () => {
 
   const [show, setShow] = useState<boolean>(true);
 
-  console.log(productStatusCounts);
-
   return (
     <>
       <div className="page-content-header">

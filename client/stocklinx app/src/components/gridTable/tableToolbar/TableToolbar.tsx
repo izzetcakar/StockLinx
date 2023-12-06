@@ -252,7 +252,7 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
         variant="default"
         onClick={() => removeRangeHandler()}
       >
-        Remove Selected Rows
+        Remove Selected
       </Button>
       {enableExcelActions ? (
         <div className="gridtable__toolbar__last">

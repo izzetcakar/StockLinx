@@ -17,7 +17,7 @@ const TableFooter: React.FC<TableFooterProps> = ({
   handleItemPerPage,
 }) => {
   return (
-    <div className="gridtable__footer">
+    <div className="gridtable__footer__container">
       <PaginationButtons
         pageNumber={pageNumber}
         itemPerPage={itemPerPage}
