@@ -18,7 +18,8 @@
   border-collapse: collapse;
   max-width: 100%;
   max-height: 100%;
-  border: 0;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
   border-spacing: 0;
   font-size: 12px;
   color: #333;
@@ -95,10 +96,9 @@
   max-width: 100%;
   max-height: 100%;
   font-weight: 400;
-  border: 1px solid #ced4da;
-  border-radius: 4px;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
+}
+.gridtable__footer{
+  display: flex;
 }
 .gridtable__row__cell {
   width: 100vw;
@@ -106,6 +106,7 @@
   word-wrap: none;
   white-space: nowrap;
   user-select: none;
+  overflow: hidden;
 }
 .gridtable__row__cell.selected {
   // border: 1px solid #2196f3;

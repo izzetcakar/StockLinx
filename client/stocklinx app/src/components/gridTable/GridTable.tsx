@@ -28,6 +28,7 @@ interface GridtableProps {
   enableExcelActions?: boolean;
   enableEditActions?: boolean;
   enableSelectActions?: boolean;
+  enableFooter?: boolean;
 }
 
 const Gridtable: React.FC<GridtableProps> = ({
@@ -45,6 +46,7 @@ const Gridtable: React.FC<GridtableProps> = ({
   enableExcelActions = false,
   enableEditActions = false,
   enableSelectActions = false,
+  enableFooter = false,
 }) => {
   const [keyfield, setKeyfield] = useState<keyof object>(
     itemKey as keyof object
@@ -252,14 +254,18 @@ const Gridtable: React.FC<GridtableProps> = ({
             )}
           </tbody>
         )}
+        {enableFooter ? (
+          <tfoot className="gridtable__footer">
+            <TableFooter
+              dataLength={data.length}
+              itemPerPage={itemPerPage}
+              pageNumber={pageNumber}
+              handleItemPerPage={handleItemPerPage}
+              handlePageNumber={handlePageNumber}
+            />
+          </tfoot>
+        ) : null}
       </table>
-      <TableFooter
-        dataLength={data.length}
-        itemPerPage={itemPerPage}
-        pageNumber={pageNumber}
-        handleItemPerPage={handleItemPerPage}
-        handlePageNumber={handlePageNumber}
-      />
     </div>
   );
 };
