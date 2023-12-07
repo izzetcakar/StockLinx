@@ -6,15 +6,6 @@ import icon_keyboard from "../../assets/icon_keyboard.png";
 import icon_drop from "../../assets/icon_drop.png";
 import icon_harddisk from "../../assets/icon_harddisk.png";
 import icon_group from "../../assets/icon_group.png";
-// import PieChart, {
-//   Series,
-//   Label,
-//   Connector,
-//   Size,
-//   Legend,
-// } from "devextreme-react/pie-chart";
-// import DataSource from "devextreme/data/data_source";
-import "devextreme/data/odata/store";
 import { useLayoutEffect, useState } from "react";
 import icon_minus from "../../assets/icon_minus.png";
 import LocationsCounts from "../../components/dataGrid/location/LocationsCounts";

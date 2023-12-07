@@ -1,5 +1,4 @@
 import { checkEmpty } from "./functions/checkEmpty";
-import "devextreme/dist/css/dx.light.compact.css";
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import "./app.scss";
 import Accessory from "./pages/accessory/Accessory";
@@ -15,7 +14,6 @@ import Department from "./pages/department/Department";
 import Company from "./pages/company/Company";
 import { useSelector } from "react-redux";
 import { RootState } from "./redux/rootReducer";
-import { LoadPanel } from "devextreme-react/load-panel";
 import Header from "./components/Header/Header";
 import Generic from "./pages/generic/Generic";
 import Category from "./pages/category/Category";
@@ -26,6 +24,7 @@ import ProductStatus from "./pages/productStatus/ProductStatus";
 import Branch from "./pages/branch/Branch";
 import User from "./pages/user/User";
 import CustomFields from "./pages/customFields/CustomFields";
+import { LoadingOverlay } from "@mantine/core";
 
 const Layout = () => {
   const userRedux = useSelector((state: RootState) => state.user.user);
@@ -43,13 +42,7 @@ const Layout = () => {
             <Outlet />
           </div>
         </div>
-        <LoadPanel
-          shadingColor={"rgba(0, 0, 0, 0.206)"}
-          visible={loading > 0}
-          showIndicator={true}
-          shading={true}
-          showPane={true}
-        />
+        <LoadingOverlay visible={loading > 0} zIndex={1000} />
       </div>
     );
   } else {
