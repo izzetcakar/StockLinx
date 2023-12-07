@@ -10,6 +10,7 @@ import {
   IConsumable,
   ICustomField,
   IDepartment,
+  IDeployedProduct,
   IFieldSet,
   ILicense,
   ILocation,
@@ -36,6 +37,7 @@ import SupplierForm from "../forms/supplier/SupplierForm";
 import UserForm from "../forms/user/UserForm";
 import FieldSetForm from "../forms/fieldSet/FieldSetForm";
 import CustomFieldForm from "../forms/customField/CustomFieldForm";
+import CheckInForm from "../forms/deployedProduct/CheckInForm";
 
 export const genericConfirmModal = (onConfirm: () => void) =>
   modals.openConfirmModal({
@@ -179,6 +181,15 @@ export const openCustomFieldModal = (customField?: ICustomField) => {
     modalId: "customField-modal",
     title: customField ? "Update CustomField" : "Create CustomField",
     children: <CustomFieldForm customField={customField} />,
+    xOffset: "auto",
+    size: "auto",
+  });
+};
+export const openCheckInModal = (deployedProduct: IDeployedProduct) => {
+  modals.open({
+    modalId: "checkIn-modal",
+    title: "Check In",
+    children: <CheckInForm deployedProduct={deployedProduct} />,
     xOffset: "auto",
     size: "auto",
   });
