@@ -32,6 +32,7 @@ export interface Filter {
   type: FilterType;
   value: string | number | boolean | null;
   isApplied: boolean;
+  isAction?: boolean;
 }
 export interface ExcelColumn {
   caption: string;

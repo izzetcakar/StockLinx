@@ -12,6 +12,8 @@ import { branchActions } from "../../redux/branch/actions";
 import { productStatusActions } from "../../redux/productStatus/actions";
 import { openAssetModal } from "../../modals/modals";
 import { supplierActions } from "../../redux/supplier/actions";
+import { deployedProductActions } from "../../redux/deployedProduct/actions";
+import { userActions } from "../../redux/user/actions";
 
 const Asset = () => {
   const dispatch = useDispatch();
@@ -25,6 +27,8 @@ const Asset = () => {
     dispatch(branchActions.getAll());
     dispatch(productStatusActions.getAll());
     dispatch(supplierActions.getAll());
+    dispatch(deployedProductActions.getAll());
+    dispatch(userActions.getAll());
   };
 
   return (
@@ -45,6 +49,7 @@ const Asset = () => {
         }
         excelColumns={useColumns().excelColumns}
         enableToolbar
+        enableFooter
         enableEditActions
         enableExcelActions
         enableSelectActions

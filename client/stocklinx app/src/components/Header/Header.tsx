@@ -1,14 +1,14 @@
 import "./header.scss";
 import iconSetting from "../../assets/icon_setting.png";
 import iconPower from "../../assets/icon_power.png";
-import DropDownButton from "devextreme-react/drop-down-button";
-import { ItemClickEvent } from "devextreme/ui/drop_down_button";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
+import { Button, Menu, Text, rem } from "@mantine/core";
+import filterClasses from "../../mantineModules/baseFilter.module.scss";
+import { IconChevronDown } from "@tabler/icons-react";
 
 const Header = () => {
   const user = useSelector((state: RootState) => state.user.user);
-  const buttonDropDownOptions = { width: 150 };
   const downloads = [
     "Download Trial For Visual Studio",
     "Download Trial For All Platforms",
@@ -26,42 +26,73 @@ const Header = () => {
     { id: 4, name: "Exit", icon: "runner" },
   ];
 
-  const onItemClick = (e: ItemClickEvent) => {
-    console.log(e.itemData);
-  };
-  const onItemClick2 = (e: ItemClickEvent) => {
-    console.log(e.itemData);
-  };
   return (
-    <div className="page-header">
-      <div className="page-header-title">Header</div>
-      <div className="page-header-actions">
-        <div className="page-header-action-button">
-          <DropDownButton
-            useSelectMode={false}
-            text="Create New"
-            items={profileSettings}
-            displayExpr="name"
-            keyExpr="id"
-            onItemClick={onItemClick2}
-            stylingMode="text"
-            height={40}
-          />
-        </div>
-        <div className="page-header-action-button">
-          <DropDownButton
-            text={user?.firstName + " " + user?.lastName}
-            icon={iconPower}
-            items={downloads}
-            onItemClick={onItemClick}
-            dropDownOptions={buttonDropDownOptions}
-            height={40}
-            stylingMode="text"
-          />
-        </div>
-        <div className="page-header-action">
-          <img src={iconSetting} />
-        </div>
+    <div className="page__header">
+      <div className="page__header__title">Header</div>
+      <div className="page__header__actions">
+        <Menu
+          transitionProps={{ transition: "pop-top-right" }}
+          position="bottom-end"
+          width="auto"
+          withinPortal
+          classNames={filterClasses}
+        >
+          <Menu.Target>
+            <Button
+              rightIcon={
+                <IconChevronDown
+                  style={{ width: rem(18), height: rem(18) }}
+                  stroke={1.5}
+                />
+              }
+              className="test"
+              variant="outline"
+              size="xs"
+              color="gray"
+              px={0}
+            >
+              Create New
+            </Button>
+          </Menu.Target>
+          <Menu.Dropdown>
+            {profileSettings.map((item) => (
+              <Menu.Item key={item.id}>{item.name}</Menu.Item>
+            ))}
+          </Menu.Dropdown>
+        </Menu>
+        <Menu
+          transitionProps={{ transition: "pop-top-right" }}
+          position="bottom-end"
+          width="auto"
+          withinPortal
+          classNames={filterClasses}
+        >
+          <Menu.Target>
+            <Button
+              rightIcon={
+                <IconChevronDown
+                  style={{ width: rem(18), height: rem(18) }}
+                  stroke={1.5}
+                />
+              }
+              className="test"
+              variant="outline"
+              size="xs"
+              color="gray"
+              px={0}
+            >
+              {user?.firstName + " " + user?.lastName}
+            </Button>
+          </Menu.Target>
+          <Menu.Dropdown>
+            {downloads.map((item) => (
+              <Menu.Item key={item}>{item}</Menu.Item>
+            ))}
+          </Menu.Dropdown>
+        </Menu>
+      </div>
+      <div className="page__header__action">
+        <img src={iconSetting} />
       </div>
     </div>
   );

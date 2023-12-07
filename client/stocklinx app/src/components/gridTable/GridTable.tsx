@@ -185,7 +185,10 @@ const Gridtable: React.FC<GridtableProps> = ({
                   visibleColumns.map((v) => v.dataField).includes(x.field)
                 )
                 .map((filter: Filter, filterIndex) => (
-                  <td colSpan={getColSpan(filterIndex)} key={filter.field}>
+                  <td
+                    colSpan={getColSpan(filterIndex)}
+                    key={filter.field + "__" + filterIndex}
+                  >
                     {getFilterInput(filter)}
                   </td>
                 ))}
@@ -256,13 +259,17 @@ const Gridtable: React.FC<GridtableProps> = ({
         )}
         {enableFooter ? (
           <tfoot className="gridtable__footer">
-            <TableFooter
-              dataLength={data.length}
-              itemPerPage={itemPerPage}
-              pageNumber={pageNumber}
-              handleItemPerPage={handleItemPerPage}
-              handlePageNumber={handlePageNumber}
-            />
+            <tr>
+              <td colSpan={visibleColumns.length}>
+                <TableFooter
+                  dataLength={data.length}
+                  itemPerPage={itemPerPage}
+                  pageNumber={pageNumber}
+                  handleItemPerPage={handleItemPerPage}
+                  handlePageNumber={handlePageNumber}
+                />
+              </td>
+            </tr>
           </tfoot>
         ) : null}
       </table>

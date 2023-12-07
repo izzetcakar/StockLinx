@@ -27,6 +27,7 @@ export const useFilter = (
   };
   const getFilterInput = (filter: Filter) => {
     const searchIcon = <IconSearch size={16} />;
+    if (filter.isAction) return null;
     switch (filter.type) {
       case FilterType.TEXT:
         return (
@@ -163,11 +164,12 @@ export const useFilter = (
     });
   };
   const handleFilterAll = useCallback(() => {
-    const newFilter = columns.map((column) => ({
+    const newFilter: Filter[] = columns.map((column) => ({
       field: column.dataField,
       type: getFilterType(column.dataField),
-      isApplied: false,
       value: null,
+      isApplied: false,
+      isAction: column.dataType === "action",
     }));
     setFilters(newFilter);
   }, [data]);
