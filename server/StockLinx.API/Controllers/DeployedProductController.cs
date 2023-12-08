@@ -49,8 +49,8 @@ namespace StockLinx.API.Controllers
         [HttpPut]
         public async Task<IActionResult> Update(DeployedProductUpdateDto updateDto)
         {
-            await _deployedProductService.UpdateDeployedProductAsync(updateDto);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+            var dto = await _deployedProductService.UpdateDeployedProductAsync(updateDto);
+            return CreateActionResult(CustomResponseDto<DeployedProductDto>.Success(200, dto));
         }
 
         [HttpDelete("{id}")]

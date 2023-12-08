@@ -48,8 +48,8 @@ namespace StockLinx.API.Controllers
         [HttpPut]
         public async Task<IActionResult> Update(BranchUpdateDto updateDto)
         {
-            await _branchService.UpdateBranchAsync(updateDto);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+            var dto = await _branchService.UpdateBranchAsync(updateDto);
+            return CreateActionResult(CustomResponseDto<BranchDto>.Success(200, dto));
         }
 
         [HttpDelete("{id}")]

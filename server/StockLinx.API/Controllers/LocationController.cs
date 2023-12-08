@@ -49,8 +49,8 @@ namespace StockLinx.API.Controllers
         [HttpPut]
         public async Task<IActionResult> Update(LocationUpdateDto updateDto)
         {
-            await _locationService.UpdateLocationAsync(updateDto);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+            var dto = await _locationService.UpdateLocationAsync(updateDto);
+            return CreateActionResult(CustomResponseDto<LocationDto>.Success(200, dto));
         }
 
         [HttpDelete("{id}")]
