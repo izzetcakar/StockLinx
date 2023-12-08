@@ -70,7 +70,7 @@ export default (state = initialState, action: AssetActions) => {
       return {
         ...state,
         assets: state.assets.map((asset) =>
-          asset.id === action.payload.asset.id ? action.payload : asset
+          asset.id === action.payload.asset.id ? action.payload.asset : asset
         ),
       };
     case assetConst.UPDATE_ASSET_FAILURE:

@@ -71,7 +71,7 @@ export default (state = initialState, action: BranchActions) => {
         ...state,
         branches: state.branches.map((branch) =>
           branch.id === action.payload.branch.id
-            ? { ...branch, ...action.payload.branch }
+            ? action.payload.branch
             : branch
         ),
       };

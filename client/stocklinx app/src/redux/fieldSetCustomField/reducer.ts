@@ -76,13 +76,10 @@ export default (state = initialState, action: FieldSetCustomFieldActions) => {
       return {
         ...state,
         fieldSetCustomFields: state.fieldSetCustomFields.map(
-          (fieldSetCustomField) => {
-            if (
-              fieldSetCustomField.id === action.payload.fieldSetCustomField.id
-            )
-              return action.payload.fieldSetCustomField;
-            return fieldSetCustomField;
-          }
+          (fieldSetCustomField) =>
+            fieldSetCustomField.id === action.payload.fieldSetCustomField.id
+              ? action.payload.fieldSetCustomField
+              : fieldSetCustomField
         ),
       };
     case fieldSetCustomFieldConst.UPDATE_FIELDSETCUSTOMFIELD_FAILURE:
