@@ -83,7 +83,7 @@ const Login = () => {
                 onChange={() => setRecaptcha(true)}
               >
                 <script
-                  src="https://www.google.com/recaptcha/api.js"
+                  src="https://www.google.com/recaptcha/api.js?render=explicit"
                   async
                   defer
                 ></script>
