@@ -111,7 +111,7 @@ function* createRangeCategorySaga(action: CreateRangeCategoryRequest) {
 function* updateCategorySaga(action: UpdateCategoryRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       categoryRequests.update,
       action.payload.category
     );
@@ -119,7 +119,7 @@ function* updateCategorySaga(action: UpdateCategoryRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("Category Updated");
-      yield put(categoryActions.updateSuccess());
+      yield put(categoryActions.updateSuccess({ category: data as ICategory }));
     }
   } catch (e) {
     openNotificationError("Category", (e as Error).message);

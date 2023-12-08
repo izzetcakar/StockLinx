@@ -115,7 +115,7 @@ function* createRangeCustomFieldSaga(action: CreateRangeCustomFieldRequest) {
 function* updateCustomFieldSaga(action: UpdateCustomFieldRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       customFieldRequests.update,
       action.payload.customField
     );
@@ -123,7 +123,9 @@ function* updateCustomFieldSaga(action: UpdateCustomFieldRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("CustomField Updated");
-      yield put(customFieldActions.updateSuccess());
+      yield put(
+        customFieldActions.updateSuccess({ customField: data as ICustomField })
+      );
     }
   } catch (e) {
     openNotificationError("CustomField", (e as Error).message);

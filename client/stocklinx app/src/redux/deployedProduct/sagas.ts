@@ -119,7 +119,7 @@ function* createRangeDeployedProductSaga(
 function* updateDeployedProductSaga(action: UpdateDeployedProductRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       deployedProductRequests.update,
       action.payload.deployedProduct
     );
@@ -127,7 +127,11 @@ function* updateDeployedProductSaga(action: UpdateDeployedProductRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("DeployedProduct Updated");
-      yield put(deployedProductActions.updateSuccess());
+      yield put(
+        deployedProductActions.updateSuccess({
+          deployedProduct: data as IDeployedProduct,
+        })
+      );
     }
   } catch (e) {
     openNotificationError("DeployedProduct", (e as Error).message);

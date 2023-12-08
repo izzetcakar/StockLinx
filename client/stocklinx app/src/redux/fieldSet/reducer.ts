@@ -69,6 +69,11 @@ export default (state = initialState, action: FieldSetActions) => {
     case fieldSetConst.UPDATE_FIELDSET_SUCCESS:
       return {
         ...state,
+        fieldSets: state.fieldSets.map((fieldSet) =>
+          fieldSet.id === action.payload.fieldSet.id
+            ? action.payload.fieldSet
+            : fieldSet
+        ),
       };
     case fieldSetConst.UPDATE_FIELDSET_FAILURE:
       return {

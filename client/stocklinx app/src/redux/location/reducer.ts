@@ -69,6 +69,11 @@ export default (state = initialState, action: LocationActions) => {
     case locationConst.UPDATE_LOCATION_SUCCESS:
       return {
         ...state,
+        locations: state.locations.map((location) =>
+          location.id === action.payload.location.id
+            ? action.payload.location
+            : location
+        ),
       };
     case locationConst.UPDATE_LOCATION_FAILURE:
       return {

@@ -95,8 +95,9 @@ const update = (payload: AccessoryPayload): UpdateAccessoryRequest => ({
   type: accessoryConst.UPDATE_ACCESSORY_REQUEST,
   payload,
 });
-const updateSuccess = (): UpdateAccessorySuccess => ({
+const updateSuccess = (payload: AccessoryPayload): UpdateAccessorySuccess => ({
   type: accessoryConst.UPDATE_ACCESSORY_SUCCESS,
+  payload,
 });
 const updateFailure = (): UpdateAccessoryFailure => ({
   type: accessoryConst.UPDATE_ACCESSORY_FAILURE,

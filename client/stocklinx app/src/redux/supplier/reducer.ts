@@ -69,6 +69,11 @@ export default (state = initialState, action: SupplierActions) => {
     case supplierConst.UPDATE_SUPPLIER_SUCCESS:
       return {
         ...state,
+        suppliers: state.suppliers.map((supplier) =>
+          supplier.id === action.payload.supplier.id
+            ? action.payload.supplier
+            : supplier
+        ),
       };
     case supplierConst.UPDATE_SUPPLIER_FAILURE:
       return {

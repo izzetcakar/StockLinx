@@ -75,6 +75,7 @@ export interface UpdateAccessoryRequest {
 }
 export type UpdateAccessorySuccess = {
   type: typeof accessoryConst.UPDATE_ACCESSORY_SUCCESS;
+  payload: AccessoryPayload;
 };
 export type UpdateAccessoryFailure = {
   type: typeof accessoryConst.UPDATE_ACCESSORY_FAILURE;

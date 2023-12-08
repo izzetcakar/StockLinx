@@ -86,6 +86,7 @@ export interface UpdateFieldSetCustomFieldRequest {
 }
 export type UpdateFieldSetCustomFieldSuccess = {
   type: typeof fieldSetCustomFieldConst.UPDATE_FIELDSETCUSTOMFIELD_SUCCESS;
+  payload: FieldSetCustomFieldPayload;
 };
 export type UpdateFieldSetCustomFieldFailure = {
   type: typeof fieldSetCustomFieldConst.UPDATE_FIELDSETCUSTOMFIELD_FAILURE;

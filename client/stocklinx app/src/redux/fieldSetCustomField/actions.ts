@@ -122,8 +122,11 @@ const update = (
   type: fieldSetCustomFieldConst.UPDATE_FIELDSETCUSTOMFIELD_REQUEST,
   payload,
 });
-const updateSuccess = (): UpdateFieldSetCustomFieldSuccess => ({
+const updateSuccess = (
+  payload: FieldSetCustomFieldPayload
+): UpdateFieldSetCustomFieldSuccess => ({
   type: fieldSetCustomFieldConst.UPDATE_FIELDSETCUSTOMFIELD_SUCCESS,
+  payload,
 });
 const updateFailure = (): UpdateFieldSetCustomFieldFailure => ({
   type: fieldSetCustomFieldConst.UPDATE_FIELDSETCUSTOMFIELD_FAILURE,

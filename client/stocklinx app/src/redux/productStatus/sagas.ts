@@ -119,7 +119,7 @@ function* createRangeProductStatusSaga(
 function* updateProductStatusSaga(action: UpdateProductStatusRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       productStatusRequests.update,
       action.payload.productStatus
     );
@@ -127,7 +127,11 @@ function* updateProductStatusSaga(action: UpdateProductStatusRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("ProductStatus Updated");
-      yield put(productStatusActions.updateSuccess());
+      yield put(
+        productStatusActions.updateSuccess({
+          productStatus: data as IProductStatus,
+        })
+      );
     }
   } catch (e) {
     openNotificationError("ProductStatus", (e as Error).message);

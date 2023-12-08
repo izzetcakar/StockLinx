@@ -75,6 +75,11 @@ export default (state = initialState, action: ModelFieldDataActions) => {
     case modelFieldDataConst.UPDATE_MODELFIELDDATA_SUCCESS:
       return {
         ...state,
+        modelFieldDatas: state.modelFieldDatas.map((modelFieldData) =>
+          modelFieldData.id === action.payload.modelFieldData.id
+            ? action.payload.modelFieldData
+            : modelFieldData
+        ),
       };
     case modelFieldDataConst.UPDATE_MODELFIELDDATA_FAILURE:
       return {

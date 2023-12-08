@@ -97,8 +97,11 @@ const update = (payload: CustomFieldPayload): UpdateCustomFieldRequest => ({
   type: customFieldConst.UPDATE_CUSTOMFIELD_REQUEST,
   payload,
 });
-const updateSuccess = (): UpdateCustomFieldSuccess => ({
+const updateSuccess = (
+  payload: CustomFieldPayload
+): UpdateCustomFieldSuccess => ({
   type: customFieldConst.UPDATE_CUSTOMFIELD_SUCCESS,
+  payload,
 });
 const updateFailure = (): UpdateCustomFieldFailure => ({
   type: customFieldConst.UPDATE_CUSTOMFIELD_FAILURE,

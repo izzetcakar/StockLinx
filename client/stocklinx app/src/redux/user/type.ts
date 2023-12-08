@@ -92,6 +92,7 @@ export interface UpdateUserRequest {
 }
 export type UpdateUsersuccess = {
   type: typeof userConst.UPDATE_USER_SUCCESS;
+  payload: UserPayload;
 };
 export type UpdateUserFailure = {
   type: typeof userConst.UPDATE_USER_FAILURE;

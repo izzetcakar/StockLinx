@@ -115,7 +115,7 @@ function* createRangeConsumableSaga(action: CreateRangeConsumableRequest) {
 function* updateConsumableSaga(action: UpdateConsumableRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       consumableRequests.update,
       action.payload.consumable
     );
@@ -123,7 +123,9 @@ function* updateConsumableSaga(action: UpdateConsumableRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("Consumable Updated");
-      yield put(consumableActions.updateSuccess());
+      yield put(
+        consumableActions.updateSuccess({ consumable: data as IConsumable })
+      );
     }
   } catch (e) {
     openNotificationError("Consumable", (e as Error).message);

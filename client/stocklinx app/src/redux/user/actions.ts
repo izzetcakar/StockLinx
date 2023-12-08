@@ -111,8 +111,9 @@ const update = (payload: UserPayload): UpdateUserRequest => ({
   type: userConst.UPDATE_USER_REQUEST,
   payload,
 });
-const updateSuccess = (): UpdateUsersuccess => ({
+const updateSuccess = (payload: UserPayload): UpdateUsersuccess => ({
   type: userConst.UPDATE_USER_SUCCESS,
+  payload,
 });
 const updateFailure = (): UpdateUserFailure => ({
   type: userConst.UPDATE_USER_FAILURE,

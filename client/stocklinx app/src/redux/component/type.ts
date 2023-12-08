@@ -75,6 +75,7 @@ export interface UpdateComponentRequest {
 }
 export type UpdateComponentSuccess = {
   type: typeof componentConst.UPDATE_COMPONENT_SUCCESS;
+  payload: ComponentPayload;
 };
 export type UpdateComponentFailure = {
   type: typeof componentConst.UPDATE_COMPONENT_FAILURE;

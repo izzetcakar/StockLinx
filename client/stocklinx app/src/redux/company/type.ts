@@ -75,6 +75,7 @@ export interface UpdateCompanyRequest {
 }
 export type UpdateCompanySuccess = {
   type: typeof companyConst.UPDATE_COMPANY_SUCCESS;
+  payload: CompanyPayload;
 };
 export type UpdateCompanyFailure = {
   type: typeof companyConst.UPDATE_COMPANY_FAILURE;

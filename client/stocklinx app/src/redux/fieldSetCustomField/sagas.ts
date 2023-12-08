@@ -126,7 +126,7 @@ function* updateFieldSetCustomFieldSaga(
 ) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       fieldSetCustomFieldRequests.update,
       action.payload.fieldSetCustomField
     );
@@ -134,7 +134,11 @@ function* updateFieldSetCustomFieldSaga(
       throw new Error(message);
     } else {
       openNotificationSuccess("FieldSetCustomField Updated");
-      yield put(fieldSetCustomFieldActions.updateSuccess());
+      yield put(
+        fieldSetCustomFieldActions.updateSuccess({
+          fieldSetCustomField: data as IFieldSetCustomField,
+        })
+      );
     }
   } catch (e) {
     openNotificationError("FieldSetCustomField", (e as Error).message);

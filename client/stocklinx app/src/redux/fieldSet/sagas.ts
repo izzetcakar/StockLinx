@@ -111,7 +111,7 @@ function* createRangeFieldSetSaga(action: CreateRangeFieldSetRequest) {
 function* updateFieldSetSaga(action: UpdateFieldSetRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       fieldSetRequests.update,
       action.payload.fieldSet
     );
@@ -119,7 +119,7 @@ function* updateFieldSetSaga(action: UpdateFieldSetRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("FieldSet Updated");
-      yield put(fieldSetActions.updateSuccess());
+      yield put(fieldSetActions.updateSuccess({ fieldSet: data as IFieldSet }));
     }
   } catch (e) {
     openNotificationError("FieldSet", (e as Error).message);

@@ -119,7 +119,7 @@ function* createRangeModelFieldDataSaga(
 function* updateModelFieldDataSaga(action: UpdateModelFieldDataRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       modelFieldDataRequests.update,
       action.payload.modelFieldData
     );
@@ -127,7 +127,11 @@ function* updateModelFieldDataSaga(action: UpdateModelFieldDataRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("ModelFieldData Updated");
-      yield put(modelFieldDataActions.updateSuccess());
+      yield put(
+        modelFieldDataActions.updateSuccess({
+          modelFieldData: data as IModelFieldData,
+        })
+      );
     }
   } catch (e) {
     openNotificationError("ModelFieldData", (e as Error).message);

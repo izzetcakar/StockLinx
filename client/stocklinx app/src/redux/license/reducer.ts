@@ -69,6 +69,11 @@ export default (state = initialState, action: LicenseActions) => {
     case licenseConst.UPDATE_LICENSE_SUCCESS:
       return {
         ...state,
+        licenses: state.licenses.map((license) =>
+          license.id === action.payload.license.id
+            ? action.payload.license
+            : license
+        ),
       };
     case licenseConst.UPDATE_LICENSE_FAILURE:
       return {

@@ -97,8 +97,11 @@ const update = (payload: DepartmentPayload): UpdateDepartmentRequest => ({
   type: departmentConst.UPDATE_DEPARTMENT_REQUEST,
   payload,
 });
-const updateSuccess = (): UpdateDepartmentSuccess => ({
+const updateSuccess = (
+  payload: DepartmentPayload
+): UpdateDepartmentSuccess => ({
   type: departmentConst.UPDATE_DEPARTMENT_SUCCESS,
+  payload,
 });
 const updateFailure = (): UpdateDepartmentFailure => ({
   type: departmentConst.UPDATE_DEPARTMENT_FAILURE,

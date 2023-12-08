@@ -115,7 +115,7 @@ function* createRangeComponentSaga(action: CreateRangeComponentRequest) {
 function* updateComponentSaga(action: UpdateComponentRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       componentRequests.update,
       action.payload.component
     );
@@ -123,7 +123,9 @@ function* updateComponentSaga(action: UpdateComponentRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("Component Updated");
-      yield put(componentActions.updateSuccess());
+      yield put(
+        componentActions.updateSuccess({ component: data as IComponent })
+      );
     }
   } catch (e) {
     openNotificationError("Component", (e as Error).message);

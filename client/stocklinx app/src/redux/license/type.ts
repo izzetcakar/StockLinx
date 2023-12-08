@@ -75,6 +75,7 @@ export interface UpdateLicenseRequest {
 }
 export type UpdateLicenseSuccess = {
   type: typeof licenseConst.UPDATE_LICENSE_SUCCESS;
+  payload: LicensePayload;
 };
 export type UpdateLicenseFailure = {
   type: typeof licenseConst.UPDATE_LICENSE_FAILURE;

@@ -93,8 +93,9 @@ const update = (payload: ComponentPayload): UpdateComponentRequest => ({
   type: componentConst.UPDATE_COMPONENT_REQUEST,
   payload,
 });
-const updateSuccess = (): UpdateComponentSuccess => ({
+const updateSuccess = (payload: ComponentPayload): UpdateComponentSuccess => ({
   type: componentConst.UPDATE_COMPONENT_SUCCESS,
+  payload,
 });
 const updateFailure = (): UpdateComponentFailure => ({
   type: componentConst.UPDATE_COMPONENT_FAILURE,

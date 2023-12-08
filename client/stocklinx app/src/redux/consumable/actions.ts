@@ -97,8 +97,11 @@ const update = (payload: ConsumablePayload): UpdateConsumableRequest => ({
   type: consumableConst.UPDATE_CONSUMABLE_REQUEST,
   payload,
 });
-const updateSuccess = (): UpdateConsumableSuccess => ({
+const updateSuccess = (
+  payload: ConsumablePayload
+): UpdateConsumableSuccess => ({
   type: consumableConst.UPDATE_CONSUMABLE_SUCCESS,
+  payload,
 });
 const updateFailure = (): UpdateConsumableFailure => ({
   type: consumableConst.UPDATE_CONSUMABLE_FAILURE,

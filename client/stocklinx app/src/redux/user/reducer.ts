@@ -69,6 +69,9 @@ export default (state = initialState, action: UserActions) => {
     case userConst.UPDATE_USER_SUCCESS:
       return {
         ...state,
+        users: state.users.map((user) =>
+          user.id === action.payload.user.id ? action.payload.user : user
+        ),
       };
     case userConst.UPDATE_USER_FAILURE:
       return {

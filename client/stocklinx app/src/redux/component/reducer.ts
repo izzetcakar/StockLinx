@@ -69,6 +69,11 @@ export default (state = initialState, action: ComponentActions) => {
     case componentConst.UPDATE_COMPONENT_SUCCESS:
       return {
         ...state,
+        components: state.components.map((component) =>
+          component.id === action.payload.component.id
+            ? action.payload.component
+            : component
+        ),
       };
     case componentConst.UPDATE_COMPONENT_FAILURE:
       return {

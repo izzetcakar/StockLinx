@@ -93,8 +93,9 @@ const update = (payload: SupplierPayload): UpdateSupplierRequest => ({
   type: supplierConst.UPDATE_SUPPLIER_REQUEST,
   payload,
 });
-const updateSuccess = (): UpdateSupplierSuccess => ({
+const updateSuccess = (payload: SupplierPayload): UpdateSupplierSuccess => ({
   type: supplierConst.UPDATE_SUPPLIER_SUCCESS,
+  payload,
 });
 const updateFailure = (): UpdateSupplierFailure => ({
   type: supplierConst.UPDATE_SUPPLIER_FAILURE,

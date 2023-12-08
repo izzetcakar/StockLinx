@@ -69,6 +69,11 @@ export default (state = initialState, action: ConsumableActions) => {
     case consumableConst.UPDATE_CONSUMABLE_SUCCESS:
       return {
         ...state,
+        consumables: state.consumables.map((consumable) =>
+          consumable.id === action.payload.consumable.id
+            ? action.payload.consumable
+            : consumable
+        ),
       };
     case consumableConst.UPDATE_CONSUMABLE_FAILURE:
       return {

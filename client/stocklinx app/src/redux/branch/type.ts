@@ -75,6 +75,7 @@ export interface UpdateBranchRequest {
 }
 export type UpdateBranchSuccess = {
   type: typeof branchConst.UPDATE_BRANCH_SUCCESS;
+  payload: BranchPayload;
 };
 export type UpdateBranchFailure = {
   type: typeof branchConst.UPDATE_BRANCH_FAILURE;

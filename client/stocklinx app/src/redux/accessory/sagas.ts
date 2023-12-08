@@ -115,7 +115,7 @@ function* createRangeAccessorySaga(action: CreateRangeAccessoryRequest) {
 function* updateAccessorySaga(action: UpdateAccessoryRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       accessoryRequests.update,
       action.payload.accessory
     );
@@ -123,7 +123,9 @@ function* updateAccessorySaga(action: UpdateAccessoryRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("Accessory Updated");
-      yield put(accessoryActions.updateSuccess());
+      yield put(
+        accessoryActions.updateSuccess({ accessory: data as IAccessory })
+      );
     }
   } catch (e) {
     openNotificationError("Accessory", (e as Error).message);

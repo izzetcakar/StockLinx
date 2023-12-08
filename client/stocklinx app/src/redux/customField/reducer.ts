@@ -69,6 +69,11 @@ export default (state = initialState, action: CustomFieldActions) => {
     case customFieldConst.UPDATE_CUSTOMFIELD_SUCCESS:
       return {
         ...state,
+        customFields: state.customFields.map((customField) =>
+          customField.id === action.payload.customField.id
+            ? action.payload.customField
+            : customField
+        ),
       };
     case customFieldConst.UPDATE_CUSTOMFIELD_FAILURE:
       return {

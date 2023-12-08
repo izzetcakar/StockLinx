@@ -101,8 +101,11 @@ const update = (payload: ManufacturerPayload): UpdateManufacturerRequest => ({
   type: manufacturerConst.UPDATE_MANUFACTURER_REQUEST,
   payload,
 });
-const updateSuccess = (): UpdateManufacturerSuccess => ({
+const updateSuccess = (
+  payload: ManufacturerPayload
+): UpdateManufacturerSuccess => ({
   type: manufacturerConst.UPDATE_MANUFACTURER_SUCCESS,
+  payload,
 });
 const updateFailure = (): UpdateManufacturerFailure => ({
   type: manufacturerConst.UPDATE_MANUFACTURER_FAILURE,

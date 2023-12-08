@@ -72,6 +72,11 @@ export default (state = initialState, action: ManufacturerActions) => {
     case manufacturerConst.UPDATE_MANUFACTURER_SUCCESS:
       return {
         ...state,
+        manufacturers: state.manufacturers.map((manufacturer) =>
+          manufacturer.id === action.payload.manufacturer.id
+            ? action.payload.manufacturer
+            : manufacturer
+        ),
       };
     case manufacturerConst.UPDATE_MANUFACTURER_FAILURE:
       return {

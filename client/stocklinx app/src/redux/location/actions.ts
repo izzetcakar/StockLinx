@@ -93,8 +93,9 @@ const update = (payload: LocationPayload): UpdateLocationRequest => ({
   type: locationConst.UPDATE_LOCATION_REQUEST,
   payload,
 });
-const updateSuccess = (): UpdateLocationSuccess => ({
+const updateSuccess = (payload: LocationPayload): UpdateLocationSuccess => ({
   type: locationConst.UPDATE_LOCATION_SUCCESS,
+  payload,
 });
 const updateFailure = (): UpdateLocationFailure => ({
   type: locationConst.UPDATE_LOCATION_FAILURE,

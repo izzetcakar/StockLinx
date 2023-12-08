@@ -111,7 +111,7 @@ function* createRangeBranchSaga(action: CreateRangeBranchRequest) {
 function* updateBranchSaga(action: UpdateBranchRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       branchRequests.update,
       action.payload.branch
     );
@@ -119,7 +119,7 @@ function* updateBranchSaga(action: UpdateBranchRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("Branch Updated");
-      yield put(branchActions.updateSuccess());
+      yield put(branchActions.updateSuccess({ branch: data as IBranch }));
     }
   } catch (e) {
     openNotificationError("Branch", (e as Error).message);

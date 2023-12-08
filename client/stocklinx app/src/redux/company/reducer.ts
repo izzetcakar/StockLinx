@@ -69,6 +69,11 @@ export default (state = initialState, action: CompanyActions) => {
     case companyConst.UPDATE_COMPANY_SUCCESS:
       return {
         ...state,
+        companies: state.companies.map((company) =>
+          company.id === action.payload.company.id
+            ? action.payload.company
+            : company
+        ),
       };
     case companyConst.UPDATE_COMPANY_FAILURE:
       return {

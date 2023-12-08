@@ -75,6 +75,7 @@ export interface UpdateProductStatusRequest {
 }
 export type UpdateProductStatusSuccess = {
   type: typeof productStatusConst.UPDATE_PRODUCTSTATUS_SUCCESS;
+  payload: ProductStatusPayload;
 };
 export type UpdateProductStatusFailure = {
   type: typeof productStatusConst.UPDATE_PRODUCTSTATUS_FAILURE;

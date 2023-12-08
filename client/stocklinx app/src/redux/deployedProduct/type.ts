@@ -75,6 +75,7 @@ export interface UpdateDeployedProductRequest {
 }
 export type UpdateDeployedProductSuccess = {
   type: typeof deployedProductConst.UPDATE_DEPLOYEDPRODUCT_SUCCESS;
+  payload: DeployedProductPayload;
 };
 export type UpdateDeployedProductFailure = {
   type: typeof deployedProductConst.UPDATE_DEPLOYEDPRODUCT_FAILURE;

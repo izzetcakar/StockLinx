@@ -111,7 +111,7 @@ function* createRangeSupplierSaga(action: CreateRangeSupplierRequest) {
 function* updateSupplierSaga(action: UpdateSupplierRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       supplierRequests.update,
       action.payload.supplier
     );
@@ -119,7 +119,7 @@ function* updateSupplierSaga(action: UpdateSupplierRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("Supplier Updated");
-      yield put(supplierActions.updateSuccess());
+      yield put(supplierActions.updateSuccess({ supplier: data as ISupplier }));
     }
   } catch (e) {
     openNotificationError("Supplier", (e as Error).message);

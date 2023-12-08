@@ -93,8 +93,9 @@ const update = (payload: FieldSetPayload): UpdateFieldSetRequest => ({
   type: fieldSetConst.UPDATE_FIELDSET_REQUEST,
   payload,
 });
-const updateSuccess = (): UpdateFieldSetSuccess => ({
+const updateSuccess = (payload: FieldSetPayload): UpdateFieldSetSuccess => ({
   type: fieldSetConst.UPDATE_FIELDSET_SUCCESS,
+  payload,
 });
 const updateFailure = (): UpdateFieldSetFailure => ({
   type: fieldSetConst.UPDATE_FIELDSET_FAILURE,

@@ -91,8 +91,9 @@ const update = (payload: AssetPayload): UpdateAssetRequest => ({
   type: assetConst.UPDATE_ASSET_REQUEST,
   payload,
 });
-const updateSuccess = (): UpdateAssetSuccess => ({
+const updateSuccess = (payload: AssetPayload): UpdateAssetSuccess => ({
   type: assetConst.UPDATE_ASSET_SUCCESS,
+  payload,
 });
 const updateFailure = (): UpdateAssetFailure => ({
   type: assetConst.UPDATE_ASSET_FAILURE,

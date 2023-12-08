@@ -111,7 +111,7 @@ function* createRangeCompanySaga(action: CreateRangeCompanyRequest) {
 function* updateCompanySaga(action: UpdateCompanyRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       companyRequests.update,
       action.payload.company
     );
@@ -119,7 +119,7 @@ function* updateCompanySaga(action: UpdateCompanyRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("Company Updated");
-      yield put(companyActions.updateSuccess());
+      yield put(companyActions.updateSuccess({ company: data as ICompany }));
     }
   } catch (e) {
     openNotificationError("Company", (e as Error).message);

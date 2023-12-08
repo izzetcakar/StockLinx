@@ -91,8 +91,9 @@ const update = (payload: CompanyPayload): UpdateCompanyRequest => ({
   type: companyConst.UPDATE_COMPANY_REQUEST,
   payload,
 });
-const updateSuccess = (): UpdateCompanySuccess => ({
+const updateSuccess = (payload: CompanyPayload): UpdateCompanySuccess => ({
   type: companyConst.UPDATE_COMPANY_SUCCESS,
+  payload,
 });
 const updateFailure = (): UpdateCompanyFailure => ({
   type: companyConst.UPDATE_COMPANY_FAILURE,

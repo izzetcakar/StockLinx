@@ -111,7 +111,7 @@ function* createRangeLocationSaga(action: CreateRangeLocationRequest) {
 function* updateLocationSaga(action: UpdateLocationRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       locationRequests.update,
       action.payload.location
     );
@@ -119,7 +119,7 @@ function* updateLocationSaga(action: UpdateLocationRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("Location Updated");
-      yield put(locationActions.updateSuccess());
+      yield put(locationActions.updateSuccess({ location: data as ILocation }));
     }
   } catch (e) {
     openNotificationError("Location", (e as Error).message);

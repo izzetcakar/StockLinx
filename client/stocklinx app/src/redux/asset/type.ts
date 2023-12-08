@@ -75,6 +75,7 @@ export interface UpdateAssetRequest {
 }
 export type UpdateAssetSuccess = {
   type: typeof assetConst.UPDATE_ASSET_SUCCESS;
+  payload: AssetPayload;
 };
 export type UpdateAssetFailure = {
   type: typeof assetConst.UPDATE_ASSET_FAILURE;

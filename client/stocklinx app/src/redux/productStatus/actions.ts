@@ -101,8 +101,11 @@ const update = (payload: ProductStatusPayload): UpdateProductStatusRequest => ({
   type: productStatusConst.UPDATE_PRODUCTSTATUS_REQUEST,
   payload,
 });
-const updateSuccess = (): UpdateProductStatusSuccess => ({
+const updateSuccess = (
+  payload: ProductStatusPayload
+): UpdateProductStatusSuccess => ({
   type: productStatusConst.UPDATE_PRODUCTSTATUS_SUCCESS,
+  payload,
 });
 const updateFailure = (): UpdateProductStatusFailure => ({
   type: productStatusConst.UPDATE_PRODUCTSTATUS_FAILURE,

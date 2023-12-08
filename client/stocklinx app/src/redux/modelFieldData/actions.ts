@@ -105,8 +105,11 @@ const update = (
   type: modelFieldDataConst.UPDATE_MODELFIELDDATA_REQUEST,
   payload,
 });
-const updateSuccess = (): UpdateModelFieldDataSuccess => ({
+const updateSuccess = (
+  payload: ModelFieldDataPayload
+): UpdateModelFieldDataSuccess => ({
   type: modelFieldDataConst.UPDATE_MODELFIELDDATA_SUCCESS,
+  payload,
 });
 const updateFailure = (): UpdateModelFieldDataFailure => ({
   type: modelFieldDataConst.UPDATE_MODELFIELDDATA_FAILURE,

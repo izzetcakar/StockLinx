@@ -91,8 +91,9 @@ const update = (payload: LicensePayload): UpdateLicenseRequest => ({
   type: licenseConst.UPDATE_LICENSE_REQUEST,
   payload,
 });
-const updateSuccess = (): UpdateLicenseSuccess => ({
+const updateSuccess = (payload: LicensePayload): UpdateLicenseSuccess => ({
   type: licenseConst.UPDATE_LICENSE_SUCCESS,
+  payload,
 });
 const updateFailure = (): UpdateLicenseFailure => ({
   type: licenseConst.UPDATE_LICENSE_FAILURE,

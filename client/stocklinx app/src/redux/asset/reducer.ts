@@ -69,6 +69,9 @@ export default (state = initialState, action: AssetActions) => {
     case assetConst.UPDATE_ASSET_SUCCESS:
       return {
         ...state,
+        assets: state.assets.map((asset) =>
+          asset.id === action.payload.asset.id ? action.payload : asset
+        ),
       };
     case assetConst.UPDATE_ASSET_FAILURE:
       return {

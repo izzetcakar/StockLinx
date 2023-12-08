@@ -75,6 +75,11 @@ export default (state = initialState, action: ProductStatusActions) => {
     case productStatusConst.UPDATE_PRODUCTSTATUS_SUCCESS:
       return {
         ...state,
+        productStatuses: state.productStatuses.map((productStatus) =>
+          productStatus.id === action.payload.productStatus.id
+            ? action.payload.productStatus
+            : productStatus
+        ),
       };
     case productStatusConst.UPDATE_PRODUCTSTATUS_FAILURE:
       return {

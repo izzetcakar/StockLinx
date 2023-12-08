@@ -117,7 +117,7 @@ function* createRangeManufacturerSaga(action: CreateRangeManufacturerRequest) {
 function* updateManufacturerSaga(action: UpdateManufacturerRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       manufacturerRequests.update,
       action.payload.manufacturer
     );
@@ -125,7 +125,11 @@ function* updateManufacturerSaga(action: UpdateManufacturerRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("Manufacturer Updated");
-      yield put(manufacturerActions.updateSuccess());
+      yield put(
+        manufacturerActions.updateSuccess({
+          manufacturer: data as IManufacturer,
+        })
+      );
     }
   } catch (e) {
     openNotificationError("Manufacturer", (e as Error).message);

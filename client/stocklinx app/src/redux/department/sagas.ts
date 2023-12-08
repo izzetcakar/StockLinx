@@ -115,7 +115,7 @@ function* createRangeDepartmentSaga(action: CreateRangeDepartmentRequest) {
 function* updateDepartmentSaga(action: UpdateDepartmentRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       departmentRequests.update,
       action.payload.department
     );
@@ -123,7 +123,9 @@ function* updateDepartmentSaga(action: UpdateDepartmentRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("Department Updated");
-      yield put(departmentActions.updateSuccess());
+      yield put(
+        departmentActions.updateSuccess({ department: data as IDepartment })
+      );
     }
   } catch (e) {
     openNotificationError("Department", (e as Error).message);

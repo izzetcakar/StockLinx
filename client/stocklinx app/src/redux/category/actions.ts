@@ -93,8 +93,9 @@ const update = (payload: CategoryPayload): UpdateCategoryRequest => ({
   type: categoryConst.UPDATE_CATEGORY_REQUEST,
   payload,
 });
-const updateSuccess = (): UpdateCategorySuccess => ({
+const updateSuccess = (payload: CategoryPayload): UpdateCategorySuccess => ({
   type: categoryConst.UPDATE_CATEGORY_SUCCESS,
+  payload,
 });
 const updateFailure = (): UpdateCategoryFailure => ({
   type: categoryConst.UPDATE_CATEGORY_FAILURE,

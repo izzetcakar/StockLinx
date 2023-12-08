@@ -75,6 +75,7 @@ export interface UpdateLocationRequest {
 }
 export type UpdateLocationSuccess = {
   type: typeof locationConst.UPDATE_LOCATION_SUCCESS;
+  payload: LocationPayload;
 };
 export type UpdateLocationFailure = {
   type: typeof locationConst.UPDATE_LOCATION_FAILURE;

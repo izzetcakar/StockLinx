@@ -75,6 +75,7 @@ export interface UpdateModelFieldDataRequest {
 }
 export type UpdateModelFieldDataSuccess = {
   type: typeof modelFieldDataConst.UPDATE_MODELFIELDDATA_SUCCESS;
+  payload: ModelFieldDataPayload;
 };
 export type UpdateModelFieldDataFailure = {
   type: typeof modelFieldDataConst.UPDATE_MODELFIELDDATA_FAILURE;

@@ -111,7 +111,7 @@ function* createRangeUserSaga(action: CreateRangeUserRequest) {
 function* updateUserSaga(action: UpdateUserRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       userRequests.update,
       action.payload.user
     );
@@ -119,7 +119,7 @@ function* updateUserSaga(action: UpdateUserRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("User Updated");
-      yield put(userActions.updateSuccess());
+      yield put(userActions.updateSuccess({ user: data as IUser }));
     }
   } catch (e) {
     openNotificationError("User", (e as Error).message);

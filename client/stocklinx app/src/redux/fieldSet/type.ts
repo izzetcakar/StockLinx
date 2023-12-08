@@ -75,6 +75,7 @@ export interface UpdateFieldSetRequest {
 }
 export type UpdateFieldSetSuccess = {
   type: typeof fieldSetConst.UPDATE_FIELDSET_SUCCESS;
+  payload: FieldSetPayload;
 };
 export type UpdateFieldSetFailure = {
   type: typeof fieldSetConst.UPDATE_FIELDSET_FAILURE;

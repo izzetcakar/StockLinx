@@ -75,6 +75,7 @@ export interface UpdateManufacturerRequest {
 }
 export type UpdateManufacturerSuccess = {
   type: typeof manufacturerConst.UPDATE_MANUFACTURER_SUCCESS;
+  payload: ManufacturerPayload;
 };
 export type UpdateManufacturerFailure = {
   type: typeof manufacturerConst.UPDATE_MANUFACTURER_FAILURE;

@@ -105,8 +105,11 @@ const update = (
   type: deployedProductConst.UPDATE_DEPLOYEDPRODUCT_REQUEST,
   payload,
 });
-const updateSuccess = (): UpdateDeployedProductSuccess => ({
+const updateSuccess = (
+  payload: DeployedProductPayload
+): UpdateDeployedProductSuccess => ({
   type: deployedProductConst.UPDATE_DEPLOYEDPRODUCT_SUCCESS,
+  payload,
 });
 const updateFailure = (): UpdateDeployedProductFailure => ({
   type: deployedProductConst.UPDATE_DEPLOYEDPRODUCT_FAILURE,

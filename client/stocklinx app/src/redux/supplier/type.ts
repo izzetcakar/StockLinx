@@ -75,6 +75,7 @@ export interface UpdateSupplierRequest {
 }
 export type UpdateSupplierSuccess = {
   type: typeof supplierConst.UPDATE_SUPPLIER_SUCCESS;
+  payload: SupplierPayload;
 };
 export type UpdateSupplierFailure = {
   type: typeof supplierConst.UPDATE_SUPPLIER_FAILURE;

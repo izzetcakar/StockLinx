@@ -109,7 +109,7 @@ function* createRangeAssetSaga(action: CreateRangeAssetRequest) {
 function* updateAssetSaga(action: UpdateAssetRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       assetRequests.update,
       action.payload.asset
     );
@@ -117,7 +117,7 @@ function* updateAssetSaga(action: UpdateAssetRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("Asset Updated");
-      yield put(assetActions.updateSuccess());
+      yield put(assetActions.updateSuccess({ asset: data as IAsset }));
     }
   } catch (e) {
     openNotificationError("Asset", (e as Error).message);

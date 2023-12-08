@@ -75,6 +75,7 @@ export interface UpdateConsumableRequest {
 }
 export type UpdateConsumableSuccess = {
   type: typeof consumableConst.UPDATE_CONSUMABLE_SUCCESS;
+  payload: ConsumablePayload;
 };
 export type UpdateConsumableFailure = {
   type: typeof consumableConst.UPDATE_CONSUMABLE_FAILURE;

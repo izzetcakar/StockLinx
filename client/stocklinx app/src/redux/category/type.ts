@@ -75,6 +75,7 @@ export interface UpdateCategoryRequest {
 }
 export type UpdateCategorySuccess = {
   type: typeof categoryConst.UPDATE_CATEGORY_SUCCESS;
+  payload: CategoryPayload;
 };
 export type UpdateCategoryFailure = {
   type: typeof categoryConst.UPDATE_CATEGORY_FAILURE;

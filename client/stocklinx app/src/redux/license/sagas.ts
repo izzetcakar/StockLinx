@@ -111,7 +111,7 @@ function* createRangeLicenseSaga(action: CreateRangeLicenseRequest) {
 function* updateLicenseSaga(action: UpdateLicenseRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    const { data, message, success }: IResponse = yield call(
       licenseRequests.update,
       action.payload.license
     );
@@ -119,7 +119,7 @@ function* updateLicenseSaga(action: UpdateLicenseRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("License Updated");
-      yield put(licenseActions.updateSuccess());
+      yield put(licenseActions.updateSuccess({ license: data as ILicense }));
     }
   } catch (e) {
     openNotificationError("License", (e as Error).message);

@@ -91,8 +91,9 @@ const update = (payload: BranchPayload): UpdateBranchRequest => ({
   type: branchConst.UPDATE_BRANCH_REQUEST,
   payload,
 });
-const updateSuccess = (): UpdateBranchSuccess => ({
+const updateSuccess = (payload: BranchPayload): UpdateBranchSuccess => ({
   type: branchConst.UPDATE_BRANCH_SUCCESS,
+  payload,
 });
 const updateFailure = (): UpdateBranchFailure => ({
   type: branchConst.UPDATE_BRANCH_FAILURE,

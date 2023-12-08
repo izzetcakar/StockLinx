@@ -75,6 +75,7 @@ export interface UpdateDepartmentRequest {
 }
 export type UpdateDepartmentSuccess = {
   type: typeof departmentConst.UPDATE_DEPARTMENT_SUCCESS;
+  payload: DepartmentPayload;
 };
 export type UpdateDepartmentFailure = {
   type: typeof departmentConst.UPDATE_DEPARTMENT_FAILURE;

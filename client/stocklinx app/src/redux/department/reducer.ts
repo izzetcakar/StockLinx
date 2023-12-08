@@ -69,6 +69,11 @@ export default (state = initialState, action: DepartmentActions) => {
     case departmentConst.UPDATE_DEPARTMENT_SUCCESS:
       return {
         ...state,
+        departments: state.departments.map((department) =>
+          department.id === action.payload.department.id
+            ? action.payload.department
+            : department
+        ),
       };
     case departmentConst.UPDATE_DEPARTMENT_FAILURE:
       return {

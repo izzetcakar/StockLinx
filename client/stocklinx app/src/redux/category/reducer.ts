@@ -69,6 +69,11 @@ export default (state = initialState, action: CategoryActions) => {
     case categoryConst.UPDATE_CATEGORY_SUCCESS:
       return {
         ...state,
+        categories: state.categories.map((category) =>
+          category.id === action.payload.category.id
+            ? action.payload.category
+            : category
+        ),
       };
     case categoryConst.UPDATE_CATEGORY_FAILURE:
       return {
