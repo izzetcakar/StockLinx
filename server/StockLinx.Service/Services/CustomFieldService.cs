@@ -61,7 +61,7 @@ namespace StockLinx.Service.Services
             await AddRangeAsync(newCustomFields);
         }
 
-        public async Task UpdateCustomFieldAsync(CustomFieldUpdateDto updateDto)
+        public async Task<CustomFieldDto> UpdateCustomFieldAsync(CustomFieldUpdateDto updateDto)
         {
             var customFieldInDb = await GetByIdAsync(updateDto.Id);
             if (customFieldInDb == null)
@@ -72,7 +72,7 @@ namespace StockLinx.Service.Services
             updatedCustomField.UpdatedDate = DateTime.UtcNow;
             await UpdateAsync(customFieldInDb, updatedCustomField);
             var customField = await GetByIdAsync(updateDto.Id);
-            _customFieldRepository.GetDto(customField);
+            return _customFieldRepository.GetDto(customField);
         }
 
         public async Task DeleteCustomFieldAsync(Guid customFieldId)

@@ -56,7 +56,7 @@ namespace StockLinx.Service.Services
             return await _componentRepository.GetDtos(addedComponents.ToList());
         }
 
-        public async Task UpdateComponentAsync(ComponentUpdateDto updateDto)
+        public async Task<ComponentDto> UpdateComponentAsync(ComponentUpdateDto updateDto)
         {
             var componentInDb = await GetByIdAsync(updateDto.Id);
             if (componentInDb == null)
@@ -67,7 +67,7 @@ namespace StockLinx.Service.Services
             updatedComponent.UpdatedDate = DateTime.UtcNow;
             await UpdateAsync(componentInDb, updatedComponent);
             var component = await GetByIdAsync(updateDto.Id);
-            await _componentRepository.GetDto(component);
+            return await _componentRepository.GetDto(component);
         }
 
         public async Task DeleteComponentAsync(Guid componentId)

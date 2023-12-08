@@ -55,7 +55,7 @@ namespace StockLinx.Service.Services
             return _companyRepository.GetDtos(addedCompanies.ToList());
         }
 
-        public async Task UpdateCompanyAsync(CompanyUpdateDto updateDto)
+        public async Task<CompanyDto> UpdateCompanyAsync(CompanyUpdateDto updateDto)
         {
             var companyInDb = await GetByIdAsync(updateDto.Id);
             if (companyInDb == null)
@@ -66,7 +66,7 @@ namespace StockLinx.Service.Services
             updatedCompany.UpdatedDate = DateTime.UtcNow;
             await UpdateAsync(companyInDb, updatedCompany);
             var company = await GetByIdAsync(updateDto.Id);
-            _companyRepository.GetDto(company);
+            return _companyRepository.GetDto(company);
         }
 
         public async Task DeleteCompanyAsync(Guid companyId)

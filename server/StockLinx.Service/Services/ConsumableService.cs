@@ -58,7 +58,7 @@ namespace StockLinx.Service.Services
             return await _consumableRepository.GetDtos(addedConsumables.ToList());
         }
 
-        public async Task UpdateConsumableAsync(ConsumableUpdateDto updateDto)
+        public async Task<ConsumableDto> UpdateConsumableAsync(ConsumableUpdateDto updateDto)
         {
             var consumableInDb = await GetByIdAsync(updateDto.Id);
             if (consumableInDb == null)
@@ -69,7 +69,7 @@ namespace StockLinx.Service.Services
             updatedConsumable.UpdatedDate = DateTime.UtcNow;
             await UpdateAsync(consumableInDb, updatedConsumable);
             var consumable = await GetByIdAsync(updateDto.Id);
-            await _consumableRepository.GetDto(consumable);
+            return await _consumableRepository.GetDto(consumable);
         }
 
         public async Task DeleteConsumableAsync(Guid consumableId)
