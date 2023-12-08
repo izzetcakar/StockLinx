@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 
-export const useSelectRow = (data: object[], keyfield: keyof object) => {
+export const useSelectRow = (
+  data: object[],
+  keyfield: keyof object,
+  isDrawing: boolean
+) => {
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
 
   useEffect(() => {
@@ -15,6 +19,8 @@ export const useSelectRow = (data: object[], keyfield: keyof object) => {
   const getSelectedRowClass = (id: string): string => {
     return selectedKeys.includes(id)
       ? "gridtable__row selected"
+      : isDrawing
+      ? "gridtable__row drawing"
       : "gridtable__row";
   };
   const handleselectAll = () => {

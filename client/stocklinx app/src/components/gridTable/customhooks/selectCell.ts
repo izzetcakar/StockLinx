@@ -143,7 +143,7 @@ export const useSelectCell = (data: object[], columns: Column[]) => {
     return selectedCells.find(
       (cell) => cell.rowIndex === rowIndex && cell.columnIndex === columnIndex
     ) === undefined
-      ? "gridtable__row__cell "
+      ? "gridtable__row__cell"
       : "gridtable__row__cell selected";
   };
 

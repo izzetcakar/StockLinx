@@ -51,15 +51,6 @@ const Gridtable: React.FC<GridtableProps> = ({
   const [keyfield, setKeyfield] = useState<keyof object>(
     itemKey as keyof object
   );
-  const { visibleColumns, handleVisibleColumns, addVisibleColumn } =
-    useVisibleColumns(columns);
-  const {
-    selectedKeys,
-    handleSelectRow,
-    handleselectAll,
-    getSelectedRowClass,
-  } = useSelectRow(data, keyfield);
-
   const {
     handlePageNumber,
     handleItemPerPage,
@@ -73,16 +64,12 @@ const Gridtable: React.FC<GridtableProps> = ({
       data,
       resetPageNumber
     );
-
-  const { renderColumnValue } = useCell();
-
   const filterDataByInput = useCallback(
     (inputData: object[]) => {
       return applyFilterToData(inputData);
     },
     [applyFilterToData]
   );
-
   const filterDataByPage = useCallback(
     (inputData: object[]) => {
       if (pageNumber === 0) {
@@ -95,13 +82,23 @@ const Gridtable: React.FC<GridtableProps> = ({
     },
     [itemPerPage, pageNumber]
   );
-
+  const { visibleColumns, handleVisibleColumns, addVisibleColumn } =
+    useVisibleColumns(columns);
   const {
     handleCellMouseDown,
     handleCellMouseUp,
     handleCellMouseEnter,
     getSelectedClassName,
+    isDrawing,
   } = useSelectCell(filterDataByPage(filterDataByInput(data)), columns);
+  const {
+    selectedKeys,
+    handleSelectRow,
+    handleselectAll,
+    getSelectedRowClass,
+  } = useSelectRow(data, keyfield, isDrawing);
+
+  const { renderColumnValue } = useCell();
 
   useEffect(() => {
     setKeyfield(itemKey as keyof object);
@@ -258,9 +255,9 @@ const Gridtable: React.FC<GridtableProps> = ({
           </tbody>
         )}
         {enableFooter ? (
-          <tfoot className="gridtable__footer">
-            <tr>
-              <td colSpan={visibleColumns.length}>
+          <tfoot>
+            <tr className="gridtable__footer__row">
+              <td className="gridtable__footer__row__cell">
                 <TableFooter
                   dataLength={data.length}
                   itemPerPage={itemPerPage}

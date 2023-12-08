@@ -64,6 +64,12 @@
     background-color: #e5e5e5;
   }
 }
+.gridtable__row.drawing:hover {
+  background-color: white;
+  .gridtable__edit__cell {
+    background-color: white;
+  }
+}
 .gridtable__row.selected {
   background-color: #ddd;
   .gridtable__edit__cell {
@@ -97,8 +103,21 @@
   max-height: 100%;
   font-weight: 400;
 }
-.gridtable__footer{
+.gridtable tfoot {
+  display: block;
+  overflow: auto;
+  max-width: 100%;
+}
+.gridtable__footer__row {
   display: flex;
+  width: 100%;
+}
+.gridtable__footer__row__cell {
+  width: 100%;
+  word-wrap: none;
+  white-space: nowrap;
+  user-select: none;
+  overflow: hidden;
 }
 .gridtable__row__cell {
   width: 100vw;
