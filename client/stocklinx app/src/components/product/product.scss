@@ -9,6 +9,7 @@
   background-size: cover;
   position: relative;
   opacity: 0.9;
+  padding: 1rem 0;
 
   cursor: pointer;
   .product-card-content {
@@ -60,7 +61,7 @@
     font-size: 90px;
     position: absolute;
     right: 10px;
-    top: -15px;
+    top: 0;
     transition: all 0.3s linear;
     z-index: 0;
     opacity: 0.2;
