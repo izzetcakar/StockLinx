@@ -1,17 +1,20 @@
 import React from "react";
-import { TextInput, Button, Group, Flex } from "@mantine/core";
+import { TextInput, Button, Group, Flex, Select } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { ICompany } from "../../interfaces/interfaces";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { companyActions } from "../../redux/company/actions";
+import { RootState } from "../../redux/rootReducer";
 import uuid4 from "uuid4";
-
+import filterClasses from "../../mantineModules/baseFilter.module.scss";
 interface CompanyFormProps {
   company?: ICompany;
 }
 
 const CompanyForm: React.FC<CompanyFormProps> = ({ company }) => {
   const dispatch = useDispatch();
+  const locations = useSelector((state: RootState) => state.location.locations);
+
   const form = useForm<ICompany>({
     initialValues: company
       ? { ...company }
@@ -50,6 +53,18 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ company }) => {
           placeholder="New Name"
           {...form.getInputProps("name")}
           withAsterisk
+        />
+        <Select
+          data={locations.map((l) => ({
+            value: l.id,
+            label: l.name,
+          }))}
+          label="Location"
+          placeholder="Select Location"
+          {...form.getInputProps("locationId")}
+          classNames={filterClasses}
+          dropdownPosition="bottom"
+          withinPortal
         />
         <TextInput
           label="Email"

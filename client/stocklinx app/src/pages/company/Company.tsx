@@ -6,6 +6,7 @@ import { ICompany } from "../../interfaces/interfaces";
 import { useColumns } from "./columns";
 import Gridtable from "../../components/gridTable/GridTable";
 import { openCompanyModal } from "../../modals/modals";
+import { locationActions } from "../../redux/location/actions";
 
 const Company = () => {
   const dispatch = useDispatch();
@@ -13,6 +14,7 @@ const Company = () => {
 
   const refreshData = () => {
     dispatch(companyActions.getAll());
+    dispatch(locationActions.getAll());
   };
 
   return (
