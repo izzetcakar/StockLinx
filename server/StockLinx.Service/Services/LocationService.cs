@@ -56,7 +56,7 @@ namespace StockLinx.Service.Services
             return _locationRepository.GetDtos(added.ToList());
         }
 
-        public async Task UpdateLocationAsync(LocationUpdateDto updateDto)
+        public async Task<LocationDto> UpdateLocationAsync(LocationUpdateDto updateDto)
         {
             var locationInDb = await GetByIdAsync(updateDto.Id);
             if (locationInDb == null)
@@ -66,7 +66,8 @@ namespace StockLinx.Service.Services
             var updatedLocation = _mapper.Map<Location>(updateDto);
             updatedLocation.UpdatedDate = DateTime.UtcNow;
             await UpdateAsync(locationInDb, updatedLocation);
-            await _unitOfWork.CommitAsync();
+            var location = await GetByIdAsync(updateDto.Id);
+            return _locationRepository.GetDto(location);
         }
 
         public async Task DeleteLocationAsync(Guid locationId)

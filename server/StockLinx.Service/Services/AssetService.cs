@@ -69,7 +69,7 @@ namespace StockLinx.Service.Services
             return await _assetRepository.GetDtos(addedAssets.ToList());
         }
 
-        public async Task UpdateAssetAsync(AssetUpdateDto updateDto)
+        public async Task<AssetDto> UpdateAssetAsync(AssetUpdateDto updateDto)
         {
             var assetInDb = await GetByIdAsync(updateDto.Id);
             if (assetInDb == null)
@@ -79,7 +79,8 @@ namespace StockLinx.Service.Services
             var updatedAsset = _mapper.Map<Asset>(updateDto);
             updatedAsset.UpdatedDate = DateTime.UtcNow;
             await UpdateAsync(assetInDb, updatedAsset);
-            await _unitOfWork.CommitAsync();
+            var asset = await GetByIdAsync(updateDto.Id);
+            return await _assetRepository.GetDto(asset);
         }
 
         public async Task DeleteAssetAsync(Guid assetId)

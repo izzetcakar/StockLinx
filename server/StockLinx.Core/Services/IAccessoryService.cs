@@ -11,7 +11,7 @@ namespace StockLinx.Core.Services
         Task<List<AccessoryDto>> GetAllDtos();
         Task<AccessoryDto> CreateAccessoryAsync(AccessoryCreateDto createDto);
         Task<List<AccessoryDto>> CreateRangeAccessoryAsync(List<AccessoryCreateDto> createDtos);
-        Task UpdateAccessoryAsync(AccessoryUpdateDto updateDto);
+        Task<AccessoryDto> UpdateAccessoryAsync(AccessoryUpdateDto updateDto);
         Task DeleteAccessoryAsync(Guid accessoryId);
         Task DeleteRangeAccessoryAsync(List<Guid> accessoryIds);
     }

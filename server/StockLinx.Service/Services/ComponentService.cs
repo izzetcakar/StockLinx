@@ -66,7 +66,8 @@ namespace StockLinx.Service.Services
             var updatedComponent = _mapper.Map<Component>(updateDto);
             updatedComponent.UpdatedDate = DateTime.UtcNow;
             await UpdateAsync(componentInDb, updatedComponent);
-            await _unitOfWork.CommitAsync();
+            var component = await GetByIdAsync(updateDto.Id);
+            await _componentRepository.GetDto(component);
         }
 
         public async Task DeleteComponentAsync(Guid componentId)

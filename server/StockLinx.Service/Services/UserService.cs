@@ -134,7 +134,7 @@ namespace StockLinx.Service.Services
             return _userRepository.GetDtos(added.ToList());
         }
 
-        public async Task UpdateUserAsync(UserUpdateDto updateDto)
+        public async Task<UserDto> UpdateUserAsync(UserUpdateDto updateDto)
         {
             var userInDb = await GetByIdAsync(updateDto.Id);
             if (userInDb == null)
@@ -144,7 +144,8 @@ namespace StockLinx.Service.Services
             var updatedUser = _mapper.Map<User>(updateDto);
             updatedUser.UpdatedDate = DateTime.UtcNow;
             await UpdateAsync(userInDb, updatedUser);
-            await _unitOfWork.CommitAsync();
+            var user = await GetByIdAsync(updateDto.Id);
+            return _userRepository.GetDto(user);
         }
 
         public async Task DeleteUserAsync(Guid userId)

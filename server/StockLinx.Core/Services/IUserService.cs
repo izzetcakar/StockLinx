@@ -17,7 +17,7 @@ namespace StockLinx.Core.Services
         Task<User> GetCurrentUser();
         Task<UserDto> CreateUserAsync(UserCreateDto createDto);
         Task<List<UserDto>> CreateRangeUserAsync(List<UserCreateDto> createDtos);
-        Task UpdateUserAsync(UserUpdateDto updateDto);
+        Task<UserDto> UpdateUserAsync(UserUpdateDto updateDto);
         Task DeleteUserAsync(Guid userId);
         Task DeleteRangeUserAsync(List<Guid> userIds);
     }

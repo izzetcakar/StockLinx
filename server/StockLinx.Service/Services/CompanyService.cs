@@ -65,7 +65,8 @@ namespace StockLinx.Service.Services
             var updatedCompany = _mapper.Map<Company>(updateDto);
             updatedCompany.UpdatedDate = DateTime.UtcNow;
             await UpdateAsync(companyInDb, updatedCompany);
-            await _unitOfWork.CommitAsync();
+            var company = await GetByIdAsync(updateDto.Id);
+            _companyRepository.GetDto(company);
         }
 
         public async Task DeleteCompanyAsync(Guid companyId)

@@ -56,7 +56,7 @@ namespace StockLinx.Service.Services
             return _categoryRepository.GetDtos(addedCategories.ToList());
         }
 
-        public async Task UpdateCategoryAsync(CategoryUpdateDto updateDto)
+        public async Task<CategoryDto> UpdateCategoryAsync(CategoryUpdateDto updateDto)
         {
             var categoryInDb = await GetByIdAsync(updateDto.Id);
             if (categoryInDb == null)
@@ -66,7 +66,8 @@ namespace StockLinx.Service.Services
             var updatedCategory = _mapper.Map<Category>(updateDto);
             updatedCategory.UpdatedDate = DateTime.UtcNow;
             await UpdateAsync(categoryInDb, updatedCategory);
-            await _unitOfWork.CommitAsync();
+            var category = await GetByIdAsync(updateDto.Id);
+            return _categoryRepository.GetDto(category);
         }
 
         public async Task DeleteCategoryAsync(Guid categoryId)

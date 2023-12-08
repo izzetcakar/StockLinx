@@ -55,7 +55,7 @@ namespace StockLinx.Service.Services
             return _repository.GetDtos(added.ToList());
         }
 
-        public async Task UpdateFieldSetCustomFieldAsync(FieldSetCustomFieldDto dto)
+        public async Task<FieldSetCustomFieldDto> UpdateFieldSetCustomFieldAsync(FieldSetCustomFieldDto dto)
         {
             var fieldSetCustomFieldInDb = await GetByIdAsync(dto.Id);
             if (fieldSetCustomFieldInDb == null)
@@ -65,7 +65,8 @@ namespace StockLinx.Service.Services
             var updatedFieldSetCustomField = _mapper.Map<FieldSetCustomField>(dto);
             updatedFieldSetCustomField.UpdatedDate = DateTime.UtcNow;
             await UpdateAsync(fieldSetCustomFieldInDb, updatedFieldSetCustomField);
-            await _unitOfWork.CommitAsync();
+            var fieldSetCustomField = await GetByIdAsync(dto.Id);
+            return _repository.GetDto(fieldSetCustomField);
         }
 
         public async Task DeleteFieldSetCustomFieldAsync(Guid id)

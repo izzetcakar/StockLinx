@@ -11,7 +11,7 @@ namespace StockLinx.Core.Services
         Task<List<ComponentDto>> GetAllDtos();
         Task<ComponentDto> CreateComponentAsync(ComponentCreateDto createDto);
         Task<List<ComponentDto>> CreateRangeComponentAsync(List<ComponentCreateDto> createDtos);
-        Task UpdateComponentAsync(ComponentUpdateDto updateDto);
+        Task<ComponentDto> UpdateComponentAsync(ComponentUpdateDto updateDto);
         Task DeleteComponentAsync(Guid componentId);
         Task DeleteRangeComponentAsync(List<Guid> componentIds);
     }

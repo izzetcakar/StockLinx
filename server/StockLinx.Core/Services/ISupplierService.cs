@@ -11,7 +11,7 @@ namespace StockLinx.Core.Services
         Task<List<SupplierDto>> GetAllDtos();
         Task<SupplierDto> CreateSupplierAsync(SupplierCreateDto createDto);
         Task<List<SupplierDto>> CreateRangeSupplierAsync(List<SupplierCreateDto> createDtos);
-        Task UpdateSupplierAsync(SupplierUpdateDto updateDto);
+        Task<SupplierDto> UpdateSupplierAsync(SupplierUpdateDto updateDto);
         Task DeleteSupplierAsync(Guid supplierId);
         Task DeleteRangeSupplierAsync(List<Guid> supplierIds);
     }

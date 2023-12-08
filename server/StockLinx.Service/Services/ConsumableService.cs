@@ -68,7 +68,8 @@ namespace StockLinx.Service.Services
             var updatedConsumable = _mapper.Map<Consumable>(updateDto);
             updatedConsumable.UpdatedDate = DateTime.UtcNow;
             await UpdateAsync(consumableInDb, updatedConsumable);
-            await _unitOfWork.CommitAsync();
+            var consumable = await GetByIdAsync(updateDto.Id);
+            await _consumableRepository.GetDto(consumable);
         }
 
         public async Task DeleteConsumableAsync(Guid consumableId)

@@ -55,7 +55,7 @@ namespace StockLinx.Service.Services
             return _productStatusRepository.GetDtos(added.ToList());
         }
 
-        public async Task UpdateProductStatusAsync(ProductStatusUpdateDto updateDto)
+        public async Task<ProductStatusDto> UpdateProductStatusAsync(ProductStatusUpdateDto updateDto)
         {
             var productStatusInDb = await GetByIdAsync(updateDto.Id);
             if (productStatusInDb == null)
@@ -65,7 +65,8 @@ namespace StockLinx.Service.Services
             var updatedProductStatus = _mapper.Map<ProductStatus>(updateDto);
             updatedProductStatus.UpdatedDate = DateTime.UtcNow;
             await UpdateAsync(productStatusInDb, updatedProductStatus);
-            await _unitOfWork.CommitAsync();
+            var productStatus = await GetByIdAsync(updateDto.Id);
+            return _productStatusRepository.GetDto(productStatus);
         }
 
         public async Task DeleteProductStatusAsync(Guid productStatusId)

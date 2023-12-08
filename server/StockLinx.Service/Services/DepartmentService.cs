@@ -55,7 +55,7 @@ namespace StockLinx.Service.Services
             return _departmentRepository.GetDtos(addedDepartments.ToList());
         }
 
-        public async Task UpdateDepartmentAsync(DepartmentUpdateDto updateDto)
+        public async Task<DepartmentDto> UpdateDepartmentAsync(DepartmentUpdateDto updateDto)
         {
             var departmentInDb = await GetByIdAsync(updateDto.Id);
             if (departmentInDb == null)
@@ -65,7 +65,8 @@ namespace StockLinx.Service.Services
             var updatedDepartment = _mapper.Map<Department>(updateDto);
             updatedDepartment.UpdatedDate = DateTime.UtcNow;
             await UpdateAsync(departmentInDb, updatedDepartment);
-            await _unitOfWork.CommitAsync();
+            var department = await GetByIdAsync(updateDto.Id);
+            return _departmentRepository.GetDto(department);
         }
 
         public async Task DeleteDepartmentAsync(Guid departmentId)

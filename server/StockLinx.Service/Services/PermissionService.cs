@@ -56,7 +56,7 @@ namespace StockLinx.Service.Services
             return _permissionRepository.GetDtos(added.ToList());
         }
 
-        public async Task UpdatePermissionAsync(PermissionUpdateDto updateDto)
+        public async Task<PermissionDto> UpdatePermissionAsync(PermissionUpdateDto updateDto)
         {
             var permissionInDb = await GetByIdAsync(updateDto.Id);
             if (permissionInDb == null)
@@ -66,7 +66,8 @@ namespace StockLinx.Service.Services
             var updatedPermission = _mapper.Map<Permission>(updateDto);
             updatedPermission.UpdatedDate = DateTime.UtcNow;
             await UpdateAsync(permissionInDb, updatedPermission);
-            await _unitOfWork.CommitAsync();
+            var permission = await GetByIdAsync(updateDto.Id);
+            return _permissionRepository.GetDto(permission);
         }
 
         public async Task DeletePermissionAsync(Guid permissionId)

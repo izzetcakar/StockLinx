@@ -70,7 +70,6 @@ namespace StockLinx.Service.Services
             try
             {
                 _modelRepository.UpdateModel(updateDto);
-                await _unitOfWork.CommitAsync();
             }
             catch (Exception ex)
             {

@@ -56,7 +56,7 @@ namespace StockLinx.Service.Services
             return _branchRepository.GetDtos(addedBranches.ToList());
         }
 
-        public async Task UpdateBranchAsync(BranchUpdateDto updateDto)
+        public async Task<BranchDto> UpdateBranchAsync(BranchUpdateDto updateDto)
         {
             var branchInDb = await GetByIdAsync(updateDto.Id);
             if (branchInDb == null)
@@ -66,7 +66,8 @@ namespace StockLinx.Service.Services
             var updatedBranch = _mapper.Map<Branch>(updateDto);
             updatedBranch.UpdatedDate = DateTime.UtcNow;
             await UpdateAsync(branchInDb, updatedBranch);
-            await _unitOfWork.CommitAsync();
+            var branch = await GetByIdAsync(updateDto.Id);
+            return _branchRepository.GetDto(branch);
         }
 
         public async Task DeleteBranchAsync(Guid branchId)

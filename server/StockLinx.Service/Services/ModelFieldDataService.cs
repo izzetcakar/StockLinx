@@ -54,7 +54,7 @@ namespace StockLinx.Service.Services
             return _modelFieldDataRepository.GetDtos(added.ToList());
         }
 
-        public async Task UpdateModelFieldDataAsync(ModelFieldDataDto dto)
+        public async Task<ModelFieldDataDto> UpdateModelFieldDataAsync(ModelFieldDataDto dto)
         {
             var modelFieldDataInDb = await GetByIdAsync(dto.Id);
             if (modelFieldDataInDb == null)
@@ -64,7 +64,8 @@ namespace StockLinx.Service.Services
             var updatedModelFieldData = _mapper.Map<ModelFieldData>(dto);
             updatedModelFieldData.UpdatedDate = DateTime.UtcNow;
             await UpdateAsync(modelFieldDataInDb, updatedModelFieldData);
-            await _unitOfWork.CommitAsync();
+            var modelFieldData = await GetByIdAsync(dto.Id);
+            return _modelFieldDataRepository.GetDto(modelFieldData);
         }
 
         public async Task DeleteModelFieldDataAsync(Guid id)

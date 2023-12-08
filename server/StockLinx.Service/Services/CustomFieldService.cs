@@ -71,7 +71,8 @@ namespace StockLinx.Service.Services
             var updatedCustomField = _mapper.Map<CustomField>(updateDto);
             updatedCustomField.UpdatedDate = DateTime.UtcNow;
             await UpdateAsync(customFieldInDb, updatedCustomField);
-            await _unitOfWork.CommitAsync();
+            var customField = await GetByIdAsync(updateDto.Id);
+            _customFieldRepository.GetDto(customField);
         }
 
         public async Task DeleteCustomFieldAsync(Guid customFieldId)

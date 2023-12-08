@@ -11,7 +11,7 @@ namespace StockLinx.Core.Services
         Task<List<ConsumableDto>> GetAllDtos();
         Task<ConsumableDto> CreateConsumableAsync(ConsumableCreateDto createDto);
         Task<List<ConsumableDto>> CreateRangeConsumableAsync(List<ConsumableCreateDto> createDtos);
-        Task UpdateConsumableAsync(ConsumableUpdateDto updateDto);
+        Task<ConsumableDto> UpdateConsumableAsync(ConsumableUpdateDto updateDto);
         Task DeleteConsumableAsync(Guid consumableId);
         Task DeleteRangeConsumableAsync(List<Guid> consumableIds);
     }

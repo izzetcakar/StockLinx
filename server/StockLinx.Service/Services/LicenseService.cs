@@ -56,7 +56,7 @@ namespace StockLinx.Service.Services
             return await _licenseRepository.GetDtos(added.ToList());
         }
 
-        public async Task UpdateLicenseAsync(LicenseUpdateDto updateDto)
+        public async Task<LicenseDto> UpdateLicenseAsync(LicenseUpdateDto updateDto)
         {
             var licenseInDb = await GetByIdAsync(updateDto.Id);
             if (licenseInDb == null)
@@ -66,7 +66,8 @@ namespace StockLinx.Service.Services
             var updatedLicense = _mapper.Map<License>(updateDto);
             updatedLicense.UpdatedDate = DateTime.UtcNow;
             await UpdateAsync(licenseInDb, updatedLicense);
-            await _unitOfWork.CommitAsync();
+            var license = await GetByIdAsync(updateDto.Id);
+            return await _licenseRepository.GetDto(license);
         }
 
         public async Task DeleteLicenseAsync(Guid licenseId)

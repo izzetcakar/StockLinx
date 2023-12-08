@@ -11,7 +11,7 @@ namespace StockLinx.Core.Services
         Task<List<AssetDto>> GetAllDtos();
         Task<List<AssetDto>> CreateAssetAsync(AssetCreateDto createDto);
         Task<List<AssetDto>> CreateRangeAssetAsync(List<AssetCreateDto> createDtos);
-        Task UpdateAssetAsync(AssetUpdateDto updateDto);
+        Task<AssetDto> UpdateAssetAsync(AssetUpdateDto updateDto);
         Task DeleteAssetAsync(Guid assetId);
         Task DeleteRangeAssetAsync(List<Guid> assetIds);
     }

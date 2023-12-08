@@ -11,7 +11,7 @@ namespace StockLinx.Core.Services
         Task<List<LicenseDto>> GetAllDtos();
         Task<LicenseDto> CreateLicenseAsync(LicenseCreateDto createDto);
         Task<List<LicenseDto>> CreateRangeLicenseAsync(List<LicenseCreateDto> createDtos);
-        Task UpdateLicenseAsync(LicenseUpdateDto updateDto);
+        Task<FieldSetCustomFieldDto> UpdateLicenseAsync(LicenseUpdateDto updateDto);
         Task DeleteLicenseAsync(Guid licenseId);
         Task DeleteRangeLicenseAsync(List<Guid> licenseIds);
     }

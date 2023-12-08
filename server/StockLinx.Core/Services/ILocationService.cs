@@ -11,7 +11,7 @@ namespace StockLinx.Core.Services
         Task<List<LocationDto>> GetAllDtos();
         Task<LocationDto> CreateLocationAsync(LocationCreateDto createDto);
         Task<List<LocationDto>> CreateRangeLocationAsync(List<LocationCreateDto> createDtos);
-        Task UpdateLocationAsync(LocationUpdateDto updateDto);
+        Task<LocationDto> UpdateLocationAsync(LocationUpdateDto updateDto);
         Task DeleteLocationAsync(Guid locationId);
         Task DeleteRangeLocationAsync(List<Guid> locationIds);
     }

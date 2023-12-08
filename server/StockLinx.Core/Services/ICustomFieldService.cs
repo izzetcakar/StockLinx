@@ -11,7 +11,7 @@ namespace StockLinx.Core.Services
         Task<List<CustomFieldDto>> GetAllDtos();
         Task CreateCustomFieldAsync(CustomFieldCreateDto createDto);
         Task CreateRangeCustomFieldAsync(List<CustomFieldCreateDto> createDtos);
-        Task UpdateCustomFieldAsync(CustomFieldUpdateDto updateDto);
+        Task<CustomFieldDto> UpdateCustomFieldAsync(CustomFieldUpdateDto updateDto);
         Task DeleteCustomFieldAsync(Guid customFieldId);
         Task DeleteRangeCustomFieldAsync(List<Guid> customFieldIds);
     }

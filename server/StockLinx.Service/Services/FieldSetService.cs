@@ -55,7 +55,7 @@ namespace StockLinx.Service.Services
             return _fieldSetRepository.GetDtos(added.ToList());
         }
 
-        public async Task UpdateFieldSetAsync(FieldSetUpdateDto updateDto)
+        public async Task<FieldSetDto> UpdateFieldSetAsync(FieldSetUpdateDto updateDto)
         {
             var fieldSetInDb = await GetByIdAsync(updateDto.Id);
             if (fieldSetInDb == null)
@@ -65,7 +65,8 @@ namespace StockLinx.Service.Services
             var updatedFieldSet = _mapper.Map<FieldSet>(updateDto);
             updatedFieldSet.UpdatedDate = DateTime.UtcNow;
             await UpdateAsync(fieldSetInDb, updatedFieldSet);
-            await _unitOfWork.CommitAsync();
+            var fieldSet = await GetByIdAsync(updateDto.Id);
+            return _fieldSetRepository.GetDto(fieldSet);
         }
 
         public async Task DeleteFieldSetAsync(Guid fieldSetId)

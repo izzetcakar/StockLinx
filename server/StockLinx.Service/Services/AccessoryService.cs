@@ -59,7 +59,7 @@ namespace StockLinx.Service.Services
             return await _accessoryRepository.GetDtos(addedAccessories.ToList());
         }
 
-        public async Task UpdateAccessoryAsync(AccessoryUpdateDto updateDto)
+        public async Task<AccessoryDto> UpdateAccessoryAsync(AccessoryUpdateDto updateDto)
         {
             var accessoryInDb = await GetByIdAsync(updateDto.Id);
             if (accessoryInDb == null)
@@ -69,7 +69,8 @@ namespace StockLinx.Service.Services
             var updatedAccessory = _mapper.Map<Accessory>(updateDto);
             updatedAccessory.UpdatedDate = DateTime.UtcNow;
             await UpdateAsync(accessoryInDb, updatedAccessory);
-            await _unitOfWork.CommitAsync();
+            var accessory = await GetByIdAsync(updateDto.Id);
+            return await _accessoryRepository.GetDto(accessory);
         }
 
         public async Task DeleteAccessoryAsync(Guid accessoryId)

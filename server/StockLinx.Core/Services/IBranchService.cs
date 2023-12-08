@@ -11,7 +11,7 @@ namespace StockLinx.Core.Services
         Task<List<BranchDto>> GetAllDtos();
         Task<BranchDto> CreateBranchAsync(BranchCreateDto createDto);
         Task<List<BranchDto>> CreateRangeBranchAsync(List<BranchCreateDto> createDtos);
-        Task UpdateBranchAsync(BranchUpdateDto updateDto);
+        Task<BranchDto> UpdateBranchAsync(BranchUpdateDto updateDto);
         Task DeleteBranchAsync(Guid branchId);
         Task DeleteRangeBranchAsync(List<Guid> branchIds);
     }
