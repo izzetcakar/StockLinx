@@ -2,18 +2,20 @@ import React from "react";
 import { Button, Group, Flex, Select, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IDeployedProduct } from "../../interfaces/interfaces";
-import { useDispatch, useSelector } from "react-redux";
-import { deployedProductActions } from "../../redux/deployedProduct/actions";
+import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import filterClasses from "../../mantineModules/baseFilter.module.scss";
 import uuid4 from "uuid4";
 
 interface CheckInFormProps {
   deployedProduct: IDeployedProduct;
+  onSubmit: (data: IDeployedProduct) => void;
 }
 
-const CheckInForm: React.FC<CheckInFormProps> = ({ deployedProduct }) => {
-  const dispatch = useDispatch();
+const CheckInForm: React.FC<CheckInFormProps> = ({
+  deployedProduct,
+  onSubmit,
+}) => {
   const users = useSelector((state: RootState) => state.user.users);
 
   const form = useForm<IDeployedProduct>({
@@ -34,11 +36,7 @@ const CheckInForm: React.FC<CheckInFormProps> = ({ deployedProduct }) => {
     },
   });
   const handleSubmit = (data: object) => {
-    dispatch(
-      deployedProductActions.create({
-        deployedProduct: data as IDeployedProduct,
-      })
-    );
+    onSubmit(data as IDeployedProduct);
   };
 
   return (
