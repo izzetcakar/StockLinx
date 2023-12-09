@@ -11,6 +11,7 @@ import { locationActions } from "../../redux/location/actions";
 import { branchActions } from "../../redux/branch/actions";
 import Gridtable from "../../components/gridTable/GridTable";
 import { openAccessoryModal } from "../../modals/modals";
+import { userActions } from "../../redux/user/actions";
 
 const Accessory = () => {
   const dispatch = useDispatch();
@@ -26,6 +27,7 @@ const Accessory = () => {
     dispatch(locationActions.getAll());
     dispatch(companyActions.getAll());
     dispatch(branchActions.getAll());
+    dispatch(userActions.getAll());
   };
 
   return (
