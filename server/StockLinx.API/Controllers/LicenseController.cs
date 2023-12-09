@@ -67,5 +67,19 @@ namespace StockLinx.API.Controllers
             await _licenseService.DeleteRangeLicenseAsync(licenseIds);
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
         }
+
+        [HttpPost("checkin")]
+        public async Task<IActionResult> CheckInLicense(LicenseCheckInDto checkInDto)
+        {
+            var dto = await _licenseService.CheckIn(checkInDto);
+            return CreateActionResult(CustomResponseDto<LicenseCheckInResponseDto>.Success(200, dto));
+        }
+
+        [HttpPost("checkout/{id}")]
+        public async Task<IActionResult> CheckOutLicense(Guid id)
+        {
+            var dto = await _licenseService.CheckOut(id);
+            return CreateActionResult(CustomResponseDto<LicenseDto>.Success(200, dto));
+        }
     }
 }

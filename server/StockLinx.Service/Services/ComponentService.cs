@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
+using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
@@ -12,12 +14,14 @@ namespace StockLinx.Service.Services
     public class ComponentService : Service<Component>, IComponentService
     {
         private readonly IComponentRepository _componentRepository;
+        private readonly IDeployedProductRepository _deployedProductRepository;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         public ComponentService(IRepository<Component> repository, IComponentRepository componentRepository,
-            IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork)
+            IDeployedProductRepository deployedProductRepository, IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork)
         {
             _componentRepository = componentRepository;
+            _deployedProductRepository = deployedProductRepository;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
@@ -93,6 +97,71 @@ namespace StockLinx.Service.Services
                 components.Add(component);
             }
             await RemoveRangeAsync(components);
+        }
+
+        public async Task<ComponentCheckInResponseDto> CheckIn(ComponentCheckInDto checkInDto)
+        {
+            try
+            {
+                var component = await _componentRepository.GetByIdAsync(checkInDto.ComponentId);
+                if (component == null)
+                {
+                    throw new Exception("Component is not found");
+                }
+                var deployedProducts = await _deployedProductRepository.GetAll().ToListAsync();
+                var availableQuantity = component.Quantity - deployedProducts.Count(d => d.ComponentId.HasValue && d.ComponentId == component.Id);
+                if (availableQuantity < 1)
+                {
+                    throw new Exception("Component is out of stock");
+                }
+                var deployedProduct = new DeployedProduct
+                {
+                    Id = Guid.NewGuid(),
+                    ComponentId = checkInDto.ComponentId,
+                    UserId = checkInDto.UserId,
+                    AssignDate = DateTime.UtcNow,
+                    CreatedDate = DateTime.UtcNow,
+                    Notes = checkInDto.Notes,
+                };
+                await _deployedProductRepository.AddAsync(deployedProduct);
+                var componentDto = await _componentRepository.GetDto(component);
+                var deployedProductDto = _deployedProductRepository.GetDto(deployedProduct);
+                await _unitOfWork.CommitAsync();
+                return new ComponentCheckInResponseDto
+                {
+                    Component = componentDto,
+                    DeployedProduct = deployedProductDto
+                };
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public async Task<ComponentDto> CheckOut(Guid id)
+        {
+            try
+            {
+                var deployedProduct = await _deployedProductRepository.Where(d => d.ComponentId.HasValue && d.Id == id).SingleOrDefaultAsync();
+                if (deployedProduct == null)
+                {
+                    throw new Exception("Deployed product is not found");
+                }
+                var component = await _componentRepository.GetByIdAsync(deployedProduct.ComponentId);
+                if (component == null)
+                {
+                    throw new Exception("Component is not found");
+                }
+                _deployedProductRepository.Remove(deployedProduct);
+                var componentDto = await _componentRepository.GetDto(component);
+                await _unitOfWork.CommitAsync();
+                return componentDto;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
     }
 }

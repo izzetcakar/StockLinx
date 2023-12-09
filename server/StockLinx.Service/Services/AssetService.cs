@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
+using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
@@ -12,11 +13,14 @@ namespace StockLinx.Service.Services
     public class AssetService : Service<Asset>, IAssetService
     {
         private readonly IAssetRepository _assetRepository;
+        private readonly IDeployedProductRepository _deployedProductRepository;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        public AssetService(IRepository<Asset> repository, IAssetRepository assetRepository, IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork)
+        public AssetService(IRepository<Asset> repository, IAssetRepository assetRepository, IDeployedProductRepository deployedProductRepository,
+            IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork)
         {
             _assetRepository = assetRepository;
+            _deployedProductRepository = deployedProductRepository;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
@@ -106,6 +110,70 @@ namespace StockLinx.Service.Services
                 assets.Add(asset);
             }
             await RemoveRangeAsync(assets);
+        }
+
+        public async Task<AssetCheckInResponseDto> CheckIn(AssetCheckInDto checkInDto)
+        {
+            try
+            {
+                var asset = await _assetRepository.GetByIdAsync(checkInDto.AssetId);
+                if (asset == null)
+                {
+                    throw new Exception("Asset not found");
+                }
+                Boolean isDeployed = await _deployedProductRepository.AnyAsync(d => d.AssetId == checkInDto.Id);
+                if (isDeployed)
+                {
+                    throw new Exception("Asset is already deployed");
+                }
+                var deployedProduct = new DeployedProduct
+                {
+                    Id = Guid.NewGuid(),
+                    AssetId = checkInDto.AssetId,
+                    UserId = checkInDto.UserId,
+                    AssignDate = DateTime.UtcNow,
+                    CreatedDate = DateTime.UtcNow,
+                    Notes = checkInDto.Notes,
+                };
+                await _deployedProductRepository.AddAsync(deployedProduct);
+                var assetDto = await _assetRepository.GetDto(asset);
+                var deployedProductDto = _deployedProductRepository.GetDto(deployedProduct);
+                await _unitOfWork.CommitAsync();
+                return new AssetCheckInResponseDto
+                {
+                    Asset = assetDto,
+                    DeployedProduct = deployedProductDto
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<AssetDto> CheckOut(Guid id)
+        {
+            try
+            {
+                var deployedProduct = await _deployedProductRepository.GetByIdAsync(id);
+                if (deployedProduct == null)
+                {
+                    throw new Exception("Deployed product is not found");
+                }
+                _deployedProductRepository.Remove(deployedProduct);
+                var asset = await _assetRepository.GetByIdAsync(deployedProduct.AssetId);
+                if (asset == null)
+                {
+                    throw new Exception("Asset is not found");
+                }
+                var assetDto = await _assetRepository.GetDto(asset);
+                await _unitOfWork.CommitAsync();
+                return assetDto;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

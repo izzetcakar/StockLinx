@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
+using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
@@ -13,14 +14,16 @@ namespace StockLinx.Service.Services
     public class AccessoryService : Service<Accessory>, IAccessoryService
     {
         private readonly IAccessoryRepository _accessoryRepository;
+        private readonly IDeployedProductRepository _deployedProductRepository;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<AccessoryService> _logger;
         public AccessoryService(IRepository<Accessory> repository, IAccessoryRepository accessoryRepository, IUnitOfWork unitOfWork,
-            IMapper mapper, ILogger<AccessoryService> logger) : base(repository, unitOfWork)
+            IMapper mapper, ILogger<AccessoryService> logger, IDeployedProductRepository deployedProductRepository) : base(repository, unitOfWork)
         {
-            _mapper = mapper;
             _accessoryRepository = accessoryRepository;
+            _deployedProductRepository = deployedProductRepository;
+            _mapper = mapper;
             _unitOfWork = unitOfWork;
             _logger = logger;
         }
@@ -96,6 +99,71 @@ namespace StockLinx.Service.Services
                 accessories.Add(accessory);
             }
             await RemoveRangeAsync(accessories);
+        }
+
+        public async Task<AccessoryCheckInResponseDto> CheckIn(AccessoryCheckInDto checkInDto)
+        {
+            try
+            {
+                var accessory = await _accessoryRepository.GetByIdAsync(checkInDto.AccessoryId);
+                if (accessory == null)
+                {
+                    throw new Exception("Accessory not found");
+                }
+                var deployedProducts = _deployedProductRepository.GetAll();
+                var availableQuantity = accessory.Quantity - deployedProducts.Count(d => d.AccessoryId.HasValue && d.AccessoryId == accessory.Id);
+                if (availableQuantity < 1)
+                {
+                    throw new Exception("Accessory is out of stock");
+                }
+                var deployedProduct = new DeployedProduct
+                {
+                    Id = Guid.NewGuid(),
+                    AccessoryId = accessory.Id,
+                    UserId = checkInDto.UserId,
+                    AssignDate = DateTime.UtcNow,
+                    CreatedDate = DateTime.UtcNow,
+                    Notes = checkInDto.Notes,
+                };
+                await _deployedProductRepository.AddAsync(deployedProduct);
+                var accessoryDto = await _accessoryRepository.GetDto(accessory);
+                var deployedProductDto = _deployedProductRepository.GetDto(deployedProduct);
+                await _unitOfWork.CommitAsync();
+                return new AccessoryCheckInResponseDto
+                {
+                    Accessory = accessoryDto,
+                    DeployedProduct = deployedProductDto
+                };
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<AccessoryDto> CheckOut(Guid id)
+        {
+            try
+            {
+                var deployedProduct = await _deployedProductRepository.GetByIdAsync(id);
+                if (deployedProduct == null)
+                {
+                    throw new Exception("Deployed product is not found");
+                }
+                var accessory = await _accessoryRepository.GetByIdAsync(deployedProduct.AccessoryId);
+                if (accessory == null)
+                {
+                    throw new Exception("Accessory is not found");
+                }
+                _deployedProductRepository.Remove(deployedProduct);
+                var accessoryDto = await _accessoryRepository.GetDto(accessory);
+                await _unitOfWork.CommitAsync();
+                return accessoryDto;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

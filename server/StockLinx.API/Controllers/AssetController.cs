@@ -66,5 +66,19 @@ namespace StockLinx.API.Controllers
             await _assetService.DeleteRangeAssetAsync(assetIds);
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
         }
+
+        [HttpPost("checkin")]
+        public async Task<IActionResult> CheckIn(AssetCheckInDto checkInDto)
+        {
+            var dto = await _assetService.CheckIn(checkInDto);
+            return CreateActionResult(CustomResponseDto<AssetCheckInResponseDto>.Success(200, dto));
+        }
+
+        [HttpPost("checkout/{id}")]
+        public async Task<IActionResult> CheckOut(Guid id)
+        {
+            var dto = await _assetService.CheckOut(id);
+            return CreateActionResult(CustomResponseDto<AssetDto>.Success(200, dto));
+        }
     }
 }

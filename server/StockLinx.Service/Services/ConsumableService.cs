@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
+using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
@@ -15,8 +17,8 @@ namespace StockLinx.Service.Services
         private readonly IDeployedProductRepository _deployedProductRepository;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        public ConsumableService(IRepository<Consumable> repository, IConsumableRepository consumableRepository, IDeployedProductRepository deployedProductRepository,
-            IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork)
+        public ConsumableService(IRepository<Consumable> repository, IConsumableRepository consumableRepository,
+            IUnitOfWork unitOfWork, IMapper mapper, IDeployedProductRepository deployedProductRepository) : base(repository, unitOfWork)
         {
             _consumableRepository = consumableRepository;
             _deployedProductRepository = deployedProductRepository;
@@ -95,6 +97,71 @@ namespace StockLinx.Service.Services
                 consumables.Add(consumable);
             }
             await RemoveRangeAsync(consumables);
+        }
+
+        public async Task<ConsumableCheckInResponseDto> CheckIn(ConsumableCheckInDto checkInDto)
+        {
+            try
+            {
+                var consumable = await _consumableRepository.GetByIdAsync(checkInDto.ConsumableId);
+                if (consumable == null)
+                {
+                    throw new Exception("Consumable is not found");
+                }
+                var deployedProducts = await _deployedProductRepository.GetAll().ToListAsync();
+                var availableQuantity = consumable.Quantity - deployedProducts.Count(d => d.ConsumableId.HasValue && d.ConsumableId == consumable.Id);
+                if (availableQuantity < 1)
+                {
+                    throw new Exception("Consumable is out of stock");
+                }
+                var deployedProduct = new DeployedProduct
+                {
+                    Id = Guid.NewGuid(),
+                    ConsumableId = checkInDto.ConsumableId,
+                    UserId = checkInDto.UserId,
+                    AssignDate = DateTime.UtcNow,
+                    CreatedDate = DateTime.UtcNow,
+                    Notes = checkInDto.Notes,
+                };
+                await _deployedProductRepository.AddAsync(deployedProduct);
+                var consumableDto = await _consumableRepository.GetDto(consumable);
+                var deployedProductDto = _deployedProductRepository.GetDto(deployedProduct);
+                await _unitOfWork.CommitAsync();
+                return new ConsumableCheckInResponseDto
+                {
+                    Consumable = consumableDto,
+                    DeployedProduct = deployedProductDto
+                };
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public async Task<ConsumableDto> CheckOut(Guid id)
+        {
+            try
+            {
+                var deployedProduct = await _deployedProductRepository.Where(d => d.ConsumableId.HasValue && d.Id == id).SingleOrDefaultAsync();
+                if (deployedProduct == null)
+                {
+                    throw new Exception("Deployed product is not found");
+                }
+                var consumable = await _consumableRepository.GetByIdAsync(deployedProduct.ConsumableId);
+                if (consumable == null)
+                {
+                    throw new Exception("Consumable is not found");
+                }
+                _deployedProductRepository.Remove(deployedProduct);
+                var consumableDto = await _consumableRepository.GetDto(consumable);
+                await _unitOfWork.CommitAsync();
+                return consumableDto;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
     }
 }

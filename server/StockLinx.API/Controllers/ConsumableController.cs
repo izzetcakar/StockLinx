@@ -66,5 +66,19 @@ namespace StockLinx.API.Controllers
             await _consumableService.DeleteRangeConsumableAsync(consumableIds);
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
         }
+
+        [HttpPost("checkin")]
+        public async Task<IActionResult> CheckInConsumable(ConsumableCheckInDto checkInDto)
+        {
+            var dto = await _consumableService.CheckIn(checkInDto);
+            return CreateActionResult(CustomResponseDto<ConsumableCheckInResponseDto>.Success(200, dto));
+        }
+
+        [HttpPost("checkout/{id}")]
+        public async Task<IActionResult> CheckOutConsumable(Guid id)
+        {
+            var dto = await _consumableService.CheckOut(id);
+            return CreateActionResult(CustomResponseDto<ConsumableDto>.Success(200, dto));
+        }
     }
 }

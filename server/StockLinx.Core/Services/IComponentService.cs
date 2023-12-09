@@ -1,5 +1,6 @@
 ﻿using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
+using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 
@@ -14,5 +15,7 @@ namespace StockLinx.Core.Services
         Task<ComponentDto> UpdateComponentAsync(ComponentUpdateDto updateDto);
         Task DeleteComponentAsync(Guid componentId);
         Task DeleteRangeComponentAsync(List<Guid> componentIds);
+        Task<ComponentCheckInResponseDto> CheckIn(ComponentCheckInDto checkInDto);
+        Task<ComponentDto> CheckOut(Guid id);
     }
 }

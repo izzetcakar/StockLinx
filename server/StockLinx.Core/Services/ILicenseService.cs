@@ -1,5 +1,6 @@
 ﻿using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
+using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 
@@ -14,5 +15,7 @@ namespace StockLinx.Core.Services
         Task<LicenseDto> UpdateLicenseAsync(LicenseUpdateDto updateDto);
         Task DeleteLicenseAsync(Guid licenseId);
         Task DeleteRangeLicenseAsync(List<Guid> licenseIds);
+        Task<LicenseCheckInResponseDto> CheckIn(LicenseCheckInDto checkInDto);
+        Task<LicenseDto> CheckOut(Guid id);
     }
 }

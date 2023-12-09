@@ -20,7 +20,7 @@ namespace StockLinx.Service.Services
         {
             try
             {
-                await _repository.CreateBaseEntities();
+                _repository.CreateBaseEntities();
                 await _unitOfWork.CommitAsync();
             }
             catch (Exception ex)
