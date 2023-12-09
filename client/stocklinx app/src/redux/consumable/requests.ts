@@ -1,4 +1,7 @@
-import { IConsumable } from "../../interfaces/interfaces";
+import {
+  IConsumable,
+  IConsumableCheckInDto,
+} from "../../interfaces/interfaces";
 import { request } from "../../server/api";
 const requestUrl = "Consumable/";
 
@@ -45,6 +48,19 @@ const removeRange = (ids: string[]) => {
     queryData: ids,
   });
 };
+const checkIn = (checkInDto: IConsumableCheckInDto) => {
+  return request<IConsumable>({
+    requestUrl: requestUrl + "checkin",
+    apiType: "post",
+    queryData: checkInDto,
+  });
+};
+const checkOut = (id: string) => {
+  return request<IConsumable>({
+    requestUrl: requestUrl + "checkout/" + id,
+    apiType: "post",
+  });
+};
 
 export const consumableRequests = {
   getAll,
@@ -54,4 +70,6 @@ export const consumableRequests = {
   update,
   remove,
   removeRange,
+  checkIn,
+  checkOut,
 };

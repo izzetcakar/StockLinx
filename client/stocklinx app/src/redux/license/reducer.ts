@@ -109,6 +109,40 @@ export default (state = initialState, action: LicenseActions) => {
       return {
         ...state,
       };
+    case licenseConst.CHECK_IN_LICENSE_REQUEST:
+      return {
+        ...state,
+      };
+    case licenseConst.CHECK_IN_LICENSE_SUCCESS:
+      return {
+        ...state,
+        licenses: state.licenses.map((license) =>
+          license.id === action.payload.license.id
+            ? action.payload.license
+            : license
+        ),
+      };
+    case licenseConst.CHECK_IN_LICENSE_FAILURE:
+      return {
+        ...state,
+      };
+    case licenseConst.CHECK_OUT_LICENSE_REQUEST:
+      return {
+        ...state,
+      };
+    case licenseConst.CHECK_OUT_LICENSE_SUCCESS:
+      return {
+        ...state,
+        licenses: state.licenses.map((license) =>
+          license.id === action.payload.license.id
+            ? action.payload.license
+            : license
+        ),
+      };
+    case licenseConst.CHECK_OUT_LICENSE_FAILURE:
+      return {
+        ...state,
+      };
     case licenseConst.SET_LICENSE:
       return {
         ...state,

@@ -31,6 +31,13 @@ import {
   RemoveRangeConsumableFailure,
   ConsumableRemoveRangePayload,
   ConsumableRemovePayload,
+  CheckInConsumableRequest,
+  CheckInConsumableSuccess,
+  CheckInConsumableFailure,
+  CheckOutConsumableRequest,
+  CheckOutConsumableSuccess,
+  CheckOutConsumableFailure,
+  CheckInPayload,
 } from "./type";
 
 //GET
@@ -139,6 +146,38 @@ const removeRangeFailure = (): RemoveRangeConsumableFailure => ({
   type: consumableConst.REMOVE_RANGE_CONSUMABLE_FAILURE,
 });
 
+//CHECK IN
+const checkIn = (payload: CheckInPayload): CheckInConsumableRequest => ({
+  type: consumableConst.CHECK_IN_CONSUMABLE_REQUEST,
+  payload,
+});
+const checkInSuccess = (
+  payload: ConsumablePayload
+): CheckInConsumableSuccess => ({
+  type: consumableConst.CHECK_IN_CONSUMABLE_SUCCESS,
+  payload,
+});
+const checkInFailure = (): CheckInConsumableFailure => ({
+  type: consumableConst.CHECK_IN_CONSUMABLE_FAILURE,
+});
+
+//CHECK OUT
+const checkOut = (
+  payload: ConsumableRequestPayload
+): CheckOutConsumableRequest => ({
+  type: consumableConst.CHECK_OUT_CONSUMABLE_REQUEST,
+  payload,
+});
+const checkOutSuccess = (
+  payload: ConsumablePayload
+): CheckOutConsumableSuccess => ({
+  type: consumableConst.CHECK_OUT_CONSUMABLE_SUCCESS,
+  payload,
+});
+const checkOutFailure = (): CheckOutConsumableFailure => ({
+  type: consumableConst.CHECK_OUT_CONSUMABLE_FAILURE,
+});
+
 //CLIENT ACTIONS
 const setConsumable = (payload: IConsumable | null): SetConsumable => ({
   type: consumableConst.SET_CONSUMABLE,
@@ -177,6 +216,12 @@ export const consumableActions = {
   removeRange,
   removeRangeSuccess,
   removeRangeFailure,
+  checkIn,
+  checkInSuccess,
+  checkInFailure,
+  checkOut,
+  checkOutSuccess,
+  checkOutFailure,
   setConsumable,
   clearConsumable,
   setConsumables,

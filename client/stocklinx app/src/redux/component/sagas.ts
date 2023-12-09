@@ -3,6 +3,9 @@ import { componentActions } from "./actions";
 import { IComponent } from "../../interfaces/interfaces";
 import { componentConst } from "./constant";
 import {
+  CheckInComponentRequest,
+  CheckOutComponentRequest,
+  ComponentCheckInSuccessPayload,
   CreateComponentRequest,
   CreateRangeComponentRequest,
   FetchComponentRequest,
@@ -16,9 +19,10 @@ import {
   openNotificationError,
   openNotificationSuccess,
 } from "../../notification/Notification";
+import { deployedProductActions } from "../deployedProduct/actions";
 
 interface IResponse {
-  data: IComponent[] | IComponent | null;
+  data: IComponent[] | IComponent | ComponentCheckInSuccessPayload | null;
   message: string;
   success: boolean;
   status: number;
@@ -111,7 +115,6 @@ function* createRangeComponentSaga(action: CreateRangeComponentRequest) {
   }
   yield put(genericActions.decreaseLoading());
 }
-
 function* updateComponentSaga(action: UpdateComponentRequest) {
   yield put(genericActions.increaseLoading());
   try {
@@ -173,6 +176,57 @@ function* removeRangeComponentSaga(action: RemoveRangeComponentRequest) {
   }
   yield put(genericActions.decreaseLoading());
 }
+function* checkInComponentSaga(action: CheckInComponentRequest) {
+  yield put(genericActions.increaseLoading());
+  try {
+    const { data, message, success }: IResponse = yield call(
+      componentRequests.checkIn,
+      action.payload.checkInDto
+    );
+    if (success !== undefined && !success) {
+      throw new Error(message);
+    } else {
+      openNotificationSuccess("Component Checked In");
+      yield put(
+        componentActions.checkInSuccess({ component: data as IComponent })
+      );
+      yield put(
+        deployedProductActions.createSuccess({
+          deployedProduct: (data as ComponentCheckInSuccessPayload)
+            .deployedProduct,
+        })
+      );
+    }
+  } catch (e) {
+    openNotificationError("Component", (e as Error).message);
+    yield put(componentActions.checkInFailure());
+  }
+  yield put(genericActions.decreaseLoading());
+}
+function* checkOutComponentSaga(action: CheckOutComponentRequest) {
+  yield put(genericActions.increaseLoading());
+  try {
+    const { data, message, success }: IResponse = yield call(
+      componentRequests.checkOut,
+      action.payload.id
+    );
+    if (success !== undefined && !success) {
+      throw new Error(message);
+    } else {
+      openNotificationSuccess("Component Checked Out");
+      yield put(
+        componentActions.checkOutSuccess({ component: data as IComponent })
+      );
+      yield put(
+        deployedProductActions.removeSuccess({ id: action.payload.id })
+      );
+    }
+  } catch (e) {
+    openNotificationError("Component", (e as Error).message);
+    yield put(componentActions.checkOutFailure());
+  }
+  yield put(genericActions.decreaseLoading());
+}
 
 function* componentsaga() {
   // yield all([
@@ -190,6 +244,14 @@ function* componentsaga() {
   yield takeEvery(
     componentConst.REMOVE_RANGE_COMPONENT_REQUEST,
     removeRangeComponentSaga
+  );
+  yield takeEvery(
+    componentConst.CHECK_IN_COMPONENT_REQUEST,
+    checkInComponentSaga
+  );
+  yield takeEvery(
+    componentConst.CHECK_OUT_COMPONENT_REQUEST,
+    checkOutComponentSaga
   );
 }
 // function* budgetItemSaga() {

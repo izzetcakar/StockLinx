@@ -109,6 +109,23 @@ export default (state = initialState, action: AccessoryActions) => {
       return {
         ...state,
       };
+    case accessoryConst.CHECK_IN_ACCESSORY_REQUEST:
+      return {
+        ...state,
+      };
+    case accessoryConst.CHECK_IN_ACCESSORY_SUCCESS:
+      return {
+        ...state,
+        accessories: state.accessories.map((accessory) =>
+          accessory.id === action.payload.accessory.id
+            ? action.payload.accessory
+            : accessory
+        ),
+      };
+    case accessoryConst.CHECK_IN_ACCESSORY_FAILURE:
+      return {
+        ...state,
+      };
     case accessoryConst.SET_ACCESSORY:
       return {
         ...state,

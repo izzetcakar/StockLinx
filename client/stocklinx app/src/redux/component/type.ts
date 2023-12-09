@@ -1,4 +1,4 @@
-import { IComponent } from "../../interfaces/interfaces";
+import { IComponent, IComponentCheckInDto, IDeployedProduct } from "../../interfaces/interfaces";
 import { componentConst } from "./constant";
 
 export interface ComponentState {
@@ -20,6 +20,13 @@ export interface ComponentRemoveRangePayload {
 export interface ComponentRemovePayload {
   id: string;
 }
+export interface CheckInPayload {
+  checkInDto: IComponentCheckInDto;
+}
+export interface ComponentCheckInSuccessPayload {
+  component: IComponent;
+  deployedProduct: IDeployedProduct;
+}
 
 //GET
 export interface FetchComponentsRequest {
@@ -32,6 +39,7 @@ export type FetchComponentsSuccess = {
 export type FetchComponentsFailure = {
   type: typeof componentConst.FETCH_COMPONENTS_FAILURE;
 };
+
 //GET:/ID
 export interface FetchComponentRequest {
   type: typeof componentConst.FETCH_COMPONENT_REQUEST;
@@ -44,6 +52,7 @@ export type FetchComponentSuccess = {
 export type FetchComponentFailure = {
   type: typeof componentConst.FETCH_COMPONENT_FAILURE;
 };
+
 //POST
 export interface CreateComponentRequest {
   type: typeof componentConst.CREATE_COMPONENT_REQUEST;
@@ -56,6 +65,7 @@ export type CreateComponentSuccess = {
 export type CreateComponentFailure = {
   type: typeof componentConst.CREATE_COMPONENT_FAILURE;
 };
+
 //POST RANGE
 export interface CreateRangeComponentRequest {
   type: typeof componentConst.CREATE_RANGE_COMPONENT_REQUEST;
@@ -68,6 +78,7 @@ export type CreateRangeComponentSuccess = {
 export type CreateRangeComponentFailure = {
   type: typeof componentConst.CREATE_RANGE_COMPONENT_FAILURE;
 };
+
 //PUT
 export interface UpdateComponentRequest {
   type: typeof componentConst.UPDATE_COMPONENT_REQUEST;
@@ -80,6 +91,7 @@ export type UpdateComponentSuccess = {
 export type UpdateComponentFailure = {
   type: typeof componentConst.UPDATE_COMPONENT_FAILURE;
 };
+
 //REMOVE
 export interface RemoveComponentRequest {
   type: typeof componentConst.REMOVE_COMPONENT_REQUEST;
@@ -92,6 +104,7 @@ export type RemoveComponentSuccess = {
 export type RemoveComponentFailure = {
   type: typeof componentConst.REMOVE_COMPONENT_FAILURE;
 };
+
 //REMOVE RANGE
 export interface RemoveRangeComponentRequest {
   type: typeof componentConst.REMOVE_RANGE_COMPONENT_REQUEST;
@@ -103,6 +116,32 @@ export type RemoveRangeComponentSuccess = {
 };
 export type RemoveRangeComponentFailure = {
   type: typeof componentConst.REMOVE_RANGE_COMPONENT_FAILURE;
+};
+
+//CHECK IN
+export interface CheckInComponentRequest {
+  type: typeof componentConst.CHECK_IN_COMPONENT_REQUEST;
+  payload: CheckInPayload;
+}
+export type CheckInComponentSuccess = {
+  type: typeof componentConst.CHECK_IN_COMPONENT_SUCCESS;
+  payload: ComponentPayload;
+};
+export type CheckInComponentFailure = {
+  type: typeof componentConst.CHECK_IN_COMPONENT_FAILURE;
+};
+
+//CHECK OUT
+export interface CheckOutComponentRequest {
+  type: typeof componentConst.CHECK_OUT_COMPONENT_REQUEST;
+  payload: ComponentRequestPayload;
+}
+export type CheckOutComponentSuccess = {
+  type: typeof componentConst.CHECK_OUT_COMPONENT_SUCCESS;
+  payload: ComponentPayload;
+};
+export type CheckOutComponentFailure = {
+  type: typeof componentConst.CHECK_OUT_COMPONENT_FAILURE;
 };
 
 //CLIENT ACTION TYPES
@@ -143,6 +182,12 @@ export type ComponentActions =
   | RemoveRangeComponentRequest
   | RemoveRangeComponentSuccess
   | RemoveRangeComponentFailure
+  | CheckInComponentRequest
+  | CheckInComponentSuccess
+  | CheckInComponentFailure
+  | CheckOutComponentRequest
+  | CheckOutComponentSuccess
+  | CheckOutComponentFailure
   | SetComponent
   | SetComponents
   | ClearComponent

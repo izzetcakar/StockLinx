@@ -3,9 +3,12 @@ import { licenseActions } from "./actions";
 import { ILicense } from "../../interfaces/interfaces";
 import { licenseConst } from "./constant";
 import {
+  CheckInLicenseRequest,
+  CheckOutLicenseRequest,
   CreateLicenseRequest,
   CreateRangeLicenseRequest,
   FetchLicenseRequest,
+  LicenseCheckInSuccessPayload,
   RemoveLicenseRequest,
   RemoveRangeLicenseRequest,
   UpdateLicenseRequest,
@@ -16,9 +19,10 @@ import {
   openNotificationError,
   openNotificationSuccess,
 } from "../../notification/Notification";
+import { deployedProductActions } from "../deployedProduct/actions";
 
 interface IResponse {
-  data: ILicense[] | ILicense | null;
+  data: ILicense[] | ILicense | LicenseCheckInSuccessPayload | null;
   message: string;
   success: boolean;
   status: number;
@@ -107,7 +111,6 @@ function* createRangeLicenseSaga(action: CreateRangeLicenseRequest) {
   }
   yield put(genericActions.decreaseLoading());
 }
-
 function* updateLicenseSaga(action: UpdateLicenseRequest) {
   yield put(genericActions.increaseLoading());
   try {
@@ -165,6 +168,53 @@ function* removeRangeLicenseSaga(action: RemoveRangeLicenseRequest) {
   }
   yield put(genericActions.decreaseLoading());
 }
+function* checkInLicenseSaga(action: CheckInLicenseRequest) {
+  yield put(genericActions.increaseLoading());
+  try {
+    const { data, message, success }: IResponse = yield call(
+      licenseRequests.checkIn,
+      action.payload.checkInDto
+    );
+    if (success !== undefined && !success) {
+      throw new Error(message);
+    } else {
+      openNotificationSuccess("License Checked In");
+      yield put(licenseActions.checkInSuccess({ license: data as ILicense }));
+      yield put(
+        deployedProductActions.createSuccess({
+          deployedProduct: (data as LicenseCheckInSuccessPayload)
+            .deployedProduct,
+        })
+      );
+    }
+  } catch (e) {
+    openNotificationError("License", (e as Error).message);
+    yield put(licenseActions.checkInFailure());
+  }
+  yield put(genericActions.decreaseLoading());
+}
+function* checkOutLicenseSaga(action: CheckOutLicenseRequest) {
+  yield put(genericActions.increaseLoading());
+  try {
+    const { data, message, success }: IResponse = yield call(
+      licenseRequests.checkOut,
+      action.payload.id
+    );
+    if (success !== undefined && !success) {
+      throw new Error(message);
+    } else {
+      openNotificationSuccess("License Checked Out");
+      yield put(licenseActions.checkOutSuccess({ license: data as ILicense }));
+      yield put(
+        deployedProductActions.removeSuccess({ id: action.payload.id })
+      );
+    }
+  } catch (e) {
+    openNotificationError("License", (e as Error).message);
+    yield put(licenseActions.checkOutFailure());
+  }
+  yield put(genericActions.decreaseLoading());
+}
 
 function* licensesaga() {
   // yield all([
@@ -183,6 +233,8 @@ function* licensesaga() {
     licenseConst.REMOVE_RANGE_LICENSE_REQUEST,
     removeRangeLicenseSaga
   );
+  yield takeEvery(licenseConst.CHECK_IN_LICENSE_REQUEST, checkInLicenseSaga);
+  yield takeEvery(licenseConst.CHECK_OUT_LICENSE_REQUEST, checkOutLicenseSaga);
 }
 // function* budgetItemSaga() {
 //   yield takeEvery(budgetItemConst.fetchList, listBudgetITem);

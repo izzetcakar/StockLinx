@@ -109,6 +109,40 @@ export default (state = initialState, action: ComponentActions) => {
       return {
         ...state,
       };
+    case componentConst.CHECK_IN_COMPONENT_REQUEST:
+      return {
+        ...state,
+      };
+    case componentConst.CHECK_IN_COMPONENT_SUCCESS:
+      return {
+        ...state,
+        components: state.components.map((component) =>
+          component.id === action.payload.component.id
+            ? action.payload.component
+            : component
+        ),
+      };
+    case componentConst.CHECK_IN_COMPONENT_FAILURE:
+      return {
+        ...state,
+      };
+    case componentConst.CHECK_OUT_COMPONENT_REQUEST:
+      return {
+        ...state,
+      };
+    case componentConst.CHECK_OUT_COMPONENT_SUCCESS:
+      return {
+        ...state,
+        components: state.components.map((component) =>
+          component.id === action.payload.component.id
+            ? action.payload.component
+            : component
+        ),
+      };
+    case componentConst.CHECK_OUT_COMPONENT_FAILURE:
+      return {
+        ...state,
+      };
     case componentConst.SET_COMPONENT:
       return {
         ...state,

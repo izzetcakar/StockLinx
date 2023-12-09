@@ -31,6 +31,13 @@ import {
   RemoveRangeAssetFailure,
   AssetRemoveRangePayload,
   AssetRemovePayload,
+  CheckInPayload,
+  CheckInAssetRequest,
+  CheckInAssetSuccess,
+  CheckInAssetFailure,
+  CheckOutAssetRequest,
+  CheckOutAssetSuccess,
+  CheckOutAssetFailure,
 } from "./type";
 
 //GET
@@ -129,6 +136,32 @@ const removeRangeFailure = (): RemoveRangeAssetFailure => ({
   type: assetConst.REMOVE_RANGE_ASSET_FAILURE,
 });
 
+//CHECK IN
+const checkIn = (payload: CheckInPayload): CheckInAssetRequest => ({
+  type: assetConst.CHECK_IN_ASSET_REQUEST,
+  payload,
+});
+const checkInSuccess = (payload: AssetPayload): CheckInAssetSuccess => ({
+  type: assetConst.CHECK_IN_ASSET_SUCCESS,
+  payload,
+});
+const checkInFailure = (): CheckInAssetFailure => ({
+  type: assetConst.CHECK_IN_ASSET_FAILURE,
+});
+
+//CHECK OUT
+const checkOut = (payload: AssetRequestPayload): CheckOutAssetRequest => ({
+  type: assetConst.CHECK_OUT_ASSET_REQUEST,
+  payload,
+});
+const checkOutSuccess = (payload: AssetPayload): CheckOutAssetSuccess => ({
+  type: assetConst.CHECK_OUT_ASSET_SUCCESS,
+  payload,
+});
+const checkOutFailure = (): CheckOutAssetFailure => ({
+  type: assetConst.CHECK_OUT_ASSET_FAILURE,
+});
+
 //CLIENT ACTIONS
 const setAsset = (payload: IAsset | null): SetAsset => ({
   type: assetConst.SET_ASSET,
@@ -167,6 +200,12 @@ export const assetActions = {
   removeRange,
   removeRangeSuccess,
   removeRangeFailure,
+  checkIn,
+  checkInSuccess,
+  checkInFailure,
+  checkOut,
+  checkOutSuccess,
+  checkOutFailure,
   setAsset,
   clearAsset,
   setAssets,

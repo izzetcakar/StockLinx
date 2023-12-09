@@ -1,4 +1,4 @@
-import { IAsset } from "../../interfaces/interfaces";
+import { IAsset, IAssetCheckInDto } from "../../interfaces/interfaces";
 import { request } from "../../server/api";
 const requestUrl = "Asset/";
 
@@ -45,6 +45,19 @@ const removeRange = (ids: string[]) => {
     queryData: ids,
   });
 };
+const checkIn = (checkInDto: IAssetCheckInDto) => {
+  return request<IAsset>({
+    requestUrl: requestUrl + "checkin",
+    apiType: "post",
+    queryData: checkInDto,
+  });
+};
+const checkOut = (id: string) => {
+  return request<IAsset>({
+    requestUrl: requestUrl + "checkout/" + id,
+    apiType: "post",
+  });
+};
 
 export const assetRequests = {
   getAll,
@@ -54,4 +67,6 @@ export const assetRequests = {
   update,
   remove,
   removeRange,
+  checkIn,
+  checkOut,
 };

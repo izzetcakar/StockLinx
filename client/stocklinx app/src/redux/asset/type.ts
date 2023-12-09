@@ -1,4 +1,8 @@
-import { IAsset } from "../../interfaces/interfaces";
+import {
+  IAsset,
+  IAssetCheckInDto,
+  IDeployedProduct,
+} from "../../interfaces/interfaces";
 import { assetConst } from "./constant";
 
 export interface AssetState {
@@ -20,6 +24,13 @@ export interface AssetRemoveRangePayload {
 export interface AssetRemovePayload {
   id: string;
 }
+export interface CheckInPayload {
+  checkInDto: IAssetCheckInDto;
+}
+export interface AssetCheckInSuccessPayload {
+  asset: IAsset;
+  deployedProduct: IDeployedProduct;
+}
 
 //GET
 export interface FetchAssetsRequest {
@@ -32,6 +43,7 @@ export type FetchAssetsSuccess = {
 export type FetchAssetsFailure = {
   type: typeof assetConst.FETCH_ASSETS_FAILURE;
 };
+
 //GET:/ID
 export interface FetchAssetRequest {
   type: typeof assetConst.FETCH_ASSET_REQUEST;
@@ -44,6 +56,7 @@ export type FetchAssetSuccess = {
 export type FetchAssetFailure = {
   type: typeof assetConst.FETCH_ASSET_FAILURE;
 };
+
 //POST
 export interface CreateAssetRequest {
   type: typeof assetConst.CREATE_ASSET_REQUEST;
@@ -56,6 +69,7 @@ export type CreateAssetSuccess = {
 export type CreateAssetFailure = {
   type: typeof assetConst.CREATE_ASSET_FAILURE;
 };
+
 //POST RANGE
 export interface CreateRangeAssetRequest {
   type: typeof assetConst.CREATE_RANGE_ASSET_REQUEST;
@@ -68,6 +82,7 @@ export type CreateRangeAssetSuccess = {
 export type CreateRangeAssetFailure = {
   type: typeof assetConst.CREATE_RANGE_ASSET_FAILURE;
 };
+
 //PUT
 export interface UpdateAssetRequest {
   type: typeof assetConst.UPDATE_ASSET_REQUEST;
@@ -80,6 +95,7 @@ export type UpdateAssetSuccess = {
 export type UpdateAssetFailure = {
   type: typeof assetConst.UPDATE_ASSET_FAILURE;
 };
+
 //REMOVE
 export interface RemoveAssetRequest {
   type: typeof assetConst.REMOVE_ASSET_REQUEST;
@@ -92,6 +108,7 @@ export type RemoveAssetSuccess = {
 export type RemoveAssetFailure = {
   type: typeof assetConst.REMOVE_ASSET_FAILURE;
 };
+
 //REMOVE RANGE
 export interface RemoveRangeAssetRequest {
   type: typeof assetConst.REMOVE_RANGE_ASSET_REQUEST;
@@ -103,6 +120,32 @@ export type RemoveRangeAssetSuccess = {
 };
 export type RemoveRangeAssetFailure = {
   type: typeof assetConst.REMOVE_RANGE_ASSET_FAILURE;
+};
+
+//CHECK IN
+export interface CheckInAssetRequest {
+  type: typeof assetConst.CHECK_IN_ASSET_REQUEST;
+  payload: CheckInPayload;
+}
+export type CheckInAssetSuccess = {
+  type: typeof assetConst.CHECK_IN_ASSET_SUCCESS;
+  payload: AssetPayload;
+};
+export type CheckInAssetFailure = {
+  type: typeof assetConst.CHECK_IN_ASSET_FAILURE;
+};
+
+//CHECK OUT
+export interface CheckOutAssetRequest {
+  type: typeof assetConst.CHECK_OUT_ASSET_REQUEST;
+  payload: AssetRequestPayload;
+}
+export type CheckOutAssetSuccess = {
+  type: typeof assetConst.CHECK_OUT_ASSET_SUCCESS;
+  payload: AssetPayload;
+};
+export type CheckOutAssetFailure = {
+  type: typeof assetConst.CHECK_OUT_ASSET_FAILURE;
 };
 
 //CLIENT ACTION TYPES
@@ -143,6 +186,12 @@ export type AssetActions =
   | RemoveRangeAssetRequest
   | RemoveRangeAssetSuccess
   | RemoveRangeAssetFailure
+  | CheckInAssetRequest
+  | CheckInAssetSuccess
+  | CheckInAssetFailure
+  | CheckOutAssetRequest
+  | CheckOutAssetSuccess
+  | CheckOutAssetFailure
   | SetAsset
   | SetAssets
   | ClearAsset

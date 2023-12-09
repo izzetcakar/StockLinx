@@ -3,6 +3,9 @@ import { assetActions } from "./actions";
 import { IAsset } from "../../interfaces/interfaces";
 import { assetConst } from "./constant";
 import {
+  AssetCheckInSuccessPayload,
+  CheckInAssetRequest,
+  CheckOutAssetRequest,
   CreateAssetRequest,
   CreateRangeAssetRequest,
   FetchAssetRequest,
@@ -16,9 +19,10 @@ import {
   openNotificationError,
   openNotificationSuccess,
 } from "../../notification/Notification";
+import { deployedProductActions } from "../deployedProduct/actions";
 
 interface IResponse {
-  data: IAsset[] | IAsset | null;
+  data: IAsset[] | IAsset | AssetCheckInSuccessPayload | null;
   message: string;
   success: boolean;
   status: number;
@@ -105,7 +109,6 @@ function* createRangeAssetSaga(action: CreateRangeAssetRequest) {
   }
   yield put(genericActions.decreaseLoading());
 }
-
 function* updateAssetSaga(action: UpdateAssetRequest) {
   yield put(genericActions.increaseLoading());
   try {
@@ -163,6 +166,56 @@ function* removeRangeAssetSaga(action: RemoveRangeAssetRequest) {
   }
   yield put(genericActions.decreaseLoading());
 }
+function* checkInAssetSaga(action: CheckInAssetRequest) {
+  yield put(genericActions.increaseLoading());
+  try {
+    const { data, message, success }: IResponse = yield call(
+      assetRequests.checkIn,
+      action.payload.checkInDto
+    );
+    if (success !== undefined && !success) {
+      throw new Error(message);
+    } else {
+      openNotificationSuccess("Asset Checked In");
+      yield put(
+        assetActions.checkInSuccess({
+          asset: (data as AssetCheckInSuccessPayload).asset,
+        })
+      );
+      yield put(
+        deployedProductActions.createSuccess({
+          deployedProduct: (data as AssetCheckInSuccessPayload).deployedProduct,
+        })
+      );
+    }
+  } catch (e) {
+    openNotificationError("Asset", (e as Error).message);
+    yield put(assetActions.checkInFailure());
+  }
+  yield put(genericActions.decreaseLoading());
+}
+function* checkOutAssetSaga(action: CheckOutAssetRequest) {
+  yield put(genericActions.increaseLoading());
+  try {
+    const { data, message, success }: IResponse = yield call(
+      assetRequests.checkOut,
+      action.payload.id
+    );
+    if (success !== undefined && !success) {
+      throw new Error(message);
+    } else {
+      openNotificationSuccess("Asset Checked Out");
+      yield put(assetActions.checkOutSuccess({ asset: data as IAsset }));
+      yield put(
+        deployedProductActions.removeSuccess({ id: action.payload.id })
+      );
+    }
+  } catch (e) {
+    openNotificationError("Asset", (e as Error).message);
+    yield put(assetActions.checkOutFailure());
+  }
+  yield put(genericActions.decreaseLoading());
+}
 
 function* assetsaga() {
   // yield all([
@@ -175,6 +228,8 @@ function* assetsaga() {
   yield takeEvery(assetConst.UPDATE_ASSET_REQUEST, updateAssetSaga);
   yield takeEvery(assetConst.REMOVE_ASSET_REQUEST, removeAssetSaga);
   yield takeEvery(assetConst.REMOVE_RANGE_ASSET_REQUEST, removeRangeAssetSaga);
+  yield takeEvery(assetConst.CHECK_IN_ASSET_REQUEST, checkInAssetSaga);
+  yield takeEvery(assetConst.CHECK_OUT_ASSET_REQUEST, checkOutAssetSaga);
 }
 // function* budgetItemSaga() {
 //   yield takeEvery(budgetItemConst.fetchList, listBudgetITem);

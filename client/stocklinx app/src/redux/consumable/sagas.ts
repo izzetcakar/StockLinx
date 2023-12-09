@@ -3,6 +3,9 @@ import { consumableActions } from "./actions";
 import { IConsumable } from "../../interfaces/interfaces";
 import { consumableConst } from "./constant";
 import {
+  CheckInConsumableRequest,
+  CheckOutConsumableRequest,
+  ConsumableCheckInSuccessPayload,
   CreateConsumableRequest,
   CreateRangeConsumableRequest,
   FetchConsumableRequest,
@@ -16,9 +19,10 @@ import {
   openNotificationError,
   openNotificationSuccess,
 } from "../../notification/Notification";
+import { deployedProductActions } from "../deployedProduct/actions";
 
 interface IResponse {
-  data: IConsumable[] | IConsumable | null;
+  data: IConsumable[] | IConsumable | ConsumableCheckInSuccessPayload | null;
   message: string;
   success: boolean;
   status: number;
@@ -111,7 +115,6 @@ function* createRangeConsumableSaga(action: CreateRangeConsumableRequest) {
   }
   yield put(genericActions.decreaseLoading());
 }
-
 function* updateConsumableSaga(action: UpdateConsumableRequest) {
   yield put(genericActions.increaseLoading());
   try {
@@ -173,6 +176,57 @@ function* removeRangeConsumableSaga(action: RemoveRangeConsumableRequest) {
   }
   yield put(genericActions.decreaseLoading());
 }
+function* checkInConsumableSaga(action: CheckInConsumableRequest) {
+  yield put(genericActions.increaseLoading());
+  try {
+    const { data, message, success }: IResponse = yield call(
+      consumableRequests.checkIn,
+      action.payload.checkInDto
+    );
+    if (success !== undefined && !success) {
+      throw new Error(message);
+    } else {
+      openNotificationSuccess("Consumable Checked In");
+      yield put(
+        consumableActions.checkInSuccess({ consumable: data as IConsumable })
+      );
+      yield put(
+        deployedProductActions.createSuccess({
+          deployedProduct: (data as ConsumableCheckInSuccessPayload)
+            .deployedProduct,
+        })
+      );
+    }
+  } catch (e) {
+    openNotificationError("Consumable", (e as Error).message);
+    yield put(consumableActions.checkInFailure());
+  }
+  yield put(genericActions.decreaseLoading());
+}
+function* checkOutConsumableSaga(action: CheckOutConsumableRequest) {
+  yield put(genericActions.increaseLoading());
+  try {
+    const { data, message, success }: IResponse = yield call(
+      consumableRequests.checkOut,
+      action.payload.id
+    );
+    if (success !== undefined && !success) {
+      throw new Error(message);
+    } else {
+      openNotificationSuccess("Consumable Checked Out");
+      yield put(
+        consumableActions.checkOutSuccess({ consumable: data as IConsumable })
+      );
+      yield put(
+        deployedProductActions.removeSuccess({ id: action.payload.id })
+      );
+    }
+  } catch (e) {
+    openNotificationError("Consumable", (e as Error).message);
+    yield put(consumableActions.checkOutFailure());
+  }
+  yield put(genericActions.decreaseLoading());
+}
 
 function* consumablesaga() {
   // yield all([
@@ -205,6 +259,14 @@ function* consumablesaga() {
   yield takeEvery(
     consumableConst.REMOVE_RANGE_CONSUMABLE_REQUEST,
     removeRangeConsumableSaga
+  );
+  yield takeEvery(
+    consumableConst.CHECK_IN_CONSUMABLE_REQUEST,
+    checkInConsumableSaga
+  );
+  yield takeEvery(
+    consumableConst.CHECK_OUT_CONSUMABLE_REQUEST,
+    checkOutConsumableSaga
   );
 }
 // function* budgetItemSaga() {

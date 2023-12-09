@@ -1,4 +1,4 @@
-import { ILicense } from "../../interfaces/interfaces";
+import { ILicense, ILicenseCheckInDto } from "../../interfaces/interfaces";
 import { request } from "../../server/api";
 const requestUrl = "License/";
 
@@ -45,6 +45,19 @@ const removeRange = (ids: string[]) => {
     queryData: ids,
   });
 };
+const checkIn = (checkInDto: ILicenseCheckInDto) => {
+  return request<ILicense>({
+    requestUrl: requestUrl + "checkin",
+    apiType: "post",
+    queryData: checkInDto,
+  });
+};
+const checkOut = (id: string) => {
+  return request<ILicense>({
+    requestUrl: requestUrl + "checkout/" + id,
+    apiType: "post",
+  });
+};
 
 export const licenseRequests = {
   getAll,
@@ -54,4 +67,6 @@ export const licenseRequests = {
   update,
   remove,
   removeRange,
+  checkIn,
+  checkOut,
 };

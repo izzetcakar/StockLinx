@@ -1,4 +1,4 @@
-import { IComponent } from "../../interfaces/interfaces";
+import { IComponent, IComponentCheckInDto } from "../../interfaces/interfaces";
 import { request } from "../../server/api";
 const requestUrl = "Component/";
 
@@ -45,6 +45,19 @@ const removeRange = (ids: string[]) => {
     queryData: ids,
   });
 };
+const checkIn = (checkInDto: IComponentCheckInDto) => {
+  return request<IComponent>({
+    requestUrl: requestUrl + "checkin",
+    apiType: "post",
+    queryData: checkInDto,
+  });
+};
+const checkOut = (id: string) => {
+  return request<IComponent>({
+    requestUrl: requestUrl + "checkout/" + id,
+    apiType: "post",
+  });
+};
 
 export const componentRequests = {
   getAll,
@@ -54,4 +67,6 @@ export const componentRequests = {
   update,
   remove,
   removeRange,
+  checkIn,
+  checkOut,
 };

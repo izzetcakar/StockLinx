@@ -1,4 +1,4 @@
-import { IAccessory } from "../../interfaces/interfaces";
+import { IAccessory, IAccessoryCheckInDto } from "../../interfaces/interfaces";
 import { request } from "../../server/api";
 const requestUrl = "Accessory/";
 
@@ -45,6 +45,19 @@ const removeRange = (ids: string[]) => {
     queryData: ids,
   });
 };
+const checkIn = (checkInDto: IAccessoryCheckInDto) => {
+  return request<IAccessory>({
+    requestUrl: requestUrl + "checkin",
+    apiType: "post",
+    queryData: checkInDto,
+  });
+};
+const checkOut = (id: string) => {
+  return request<IAccessory>({
+    requestUrl: requestUrl + "checkout/" + id,
+    apiType: "post",
+  });
+};
 
 export const accessoryRequests = {
   getAll,
@@ -54,4 +67,6 @@ export const accessoryRequests = {
   update,
   remove,
   removeRange,
+  checkIn,
+  checkOut,
 };

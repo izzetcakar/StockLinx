@@ -1,4 +1,8 @@
-import { IAccessory } from "../../interfaces/interfaces";
+import {
+  IAccessory,
+  IAccessoryCheckInDto,
+  IDeployedProduct,
+} from "../../interfaces/interfaces";
 import { accessoryConst } from "./constant";
 
 export interface AccessoryState {
@@ -19,6 +23,13 @@ export interface AccessoryRemoveRangePayload {
 }
 export interface AccessoryRemovePayload {
   id: string;
+}
+export interface CheckInPayload {
+  checkInDto: IAccessoryCheckInDto;
+}
+export interface AccessoryCheckInSuccessPayload {
+  accessory: IAccessory;
+  deployedProduct: IDeployedProduct;
 }
 
 //GET
@@ -104,6 +115,30 @@ export type RemoveRangeAccessorySuccess = {
 export type RemoveRangeAccessoryFailure = {
   type: typeof accessoryConst.REMOVE_RANGE_ACCESSORY_FAILURE;
 };
+//CHECKIN
+export interface CheckInAccessoryRequest {
+  type: typeof accessoryConst.CHECK_IN_ACCESSORY_REQUEST;
+  payload: CheckInPayload;
+}
+export type CheckInAccessorySuccess = {
+  type: typeof accessoryConst.CHECK_IN_ACCESSORY_SUCCESS;
+  payload: AccessoryPayload;
+};
+export type CheckInAccessoryFailure = {
+  type: typeof accessoryConst.CHECK_IN_ACCESSORY_FAILURE;
+};
+//CHECKOUT
+export interface CheckOutAccessoryRequest {
+  type: typeof accessoryConst.CHECK_OUT_ACCESSORY_REQUEST;
+  payload: AccessoryRequestPayload;
+}
+export type CheckOutAccessorySuccess = {
+  type: typeof accessoryConst.CHECK_OUT_ACCESSORY_SUCCESS;
+  payload: AccessoryPayload;
+};
+export type CheckOutAccessoryFailure = {
+  type: typeof accessoryConst.CHECK_OUT_ACCESSORY_FAILURE;
+};
 
 //CLIENT ACTION TYPES
 export interface SetAccessory {
@@ -143,6 +178,12 @@ export type AccessoryActions =
   | RemoveRangeAccessoryRequest
   | RemoveRangeAccessorySuccess
   | RemoveRangeAccessoryFailure
+  | CheckInAccessoryRequest
+  | CheckInAccessorySuccess
+  | CheckInAccessoryFailure
+  | CheckOutAccessoryRequest
+  | CheckOutAccessorySuccess
+  | CheckOutAccessoryFailure
   | SetAccessory
   | SetAccessories
   | ClearAccessory

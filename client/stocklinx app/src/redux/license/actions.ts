@@ -31,6 +31,13 @@ import {
   RemoveRangeLicenseFailure,
   LicenseRemoveRangePayload,
   LicenseRemovePayload,
+  CheckInLicenseRequest,
+  CheckInLicenseSuccess,
+  CheckInLicenseFailure,
+  CheckOutLicenseRequest,
+  CheckOutLicenseSuccess,
+  CheckOutLicenseFailure,
+  CheckInPayload,
 } from "./type";
 
 //GET
@@ -131,6 +138,32 @@ const removeRangeFailure = (): RemoveRangeLicenseFailure => ({
   type: licenseConst.REMOVE_RANGE_LICENSE_FAILURE,
 });
 
+//CHECK IN
+const checkIn = (payload: CheckInPayload): CheckInLicenseRequest => ({
+  type: licenseConst.CHECK_IN_LICENSE_REQUEST,
+  payload,
+});
+const checkInSuccess = (payload: LicensePayload): CheckInLicenseSuccess => ({
+  type: licenseConst.CHECK_IN_LICENSE_SUCCESS,
+  payload,
+});
+const checkInFailure = (): CheckInLicenseFailure => ({
+  type: licenseConst.CHECK_IN_LICENSE_FAILURE,
+});
+
+//CHECK OUT
+const checkOut = (payload: LicenseRequestPayload): CheckOutLicenseRequest => ({
+  type: licenseConst.CHECK_OUT_LICENSE_REQUEST,
+  payload,
+});
+const checkOutSuccess = (payload: LicensePayload): CheckOutLicenseSuccess => ({
+  type: licenseConst.CHECK_OUT_LICENSE_SUCCESS,
+  payload,
+});
+const checkOutFailure = (): CheckOutLicenseFailure => ({
+  type: licenseConst.CHECK_OUT_LICENSE_FAILURE,
+});
+
 //CLIENT ACTIONS
 const setLicense = (payload: ILicense | null): SetLicense => ({
   type: licenseConst.SET_LICENSE,
@@ -169,6 +202,12 @@ export const licenseActions = {
   removeRange,
   removeRangeSuccess,
   removeRangeFailure,
+  checkIn,
+  checkInSuccess,
+  checkInFailure,
+  checkOut,
+  checkOutSuccess,
+  checkOutFailure,
   setLicense,
   clearLicense,
   setLicenses,

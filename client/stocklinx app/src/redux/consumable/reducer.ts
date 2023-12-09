@@ -109,6 +109,40 @@ export default (state = initialState, action: ConsumableActions) => {
       return {
         ...state,
       };
+    case consumableConst.CHECK_IN_CONSUMABLE_REQUEST:
+      return {
+        ...state,
+      };
+    case consumableConst.CHECK_IN_CONSUMABLE_SUCCESS:
+      return {
+        ...state,
+        consumables: state.consumables.map((consumable) =>
+          consumable.id === action.payload.consumable.id
+            ? action.payload.consumable
+            : consumable
+        ),
+      };
+    case consumableConst.CHECK_IN_CONSUMABLE_FAILURE:
+      return {
+        ...state,
+      };
+    case consumableConst.CHECK_OUT_CONSUMABLE_REQUEST:
+      return {
+        ...state,
+      };
+    case consumableConst.CHECK_OUT_CONSUMABLE_SUCCESS:
+      return {
+        ...state,
+        consumables: state.consumables.map((consumable) =>
+          consumable.id === action.payload.consumable.id
+            ? action.payload.consumable
+            : consumable
+        ),
+      };
+    case consumableConst.CHECK_OUT_CONSUMABLE_FAILURE:
+      return {
+        ...state,
+      };
     case consumableConst.SET_CONSUMABLE:
       return {
         ...state,

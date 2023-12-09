@@ -1,4 +1,8 @@
-import { IConsumable } from "../../interfaces/interfaces";
+import {
+  IConsumable,
+  IConsumableCheckInDto,
+  IDeployedProduct,
+} from "../../interfaces/interfaces";
 import { consumableConst } from "./constant";
 
 export interface ConsumableState {
@@ -20,6 +24,13 @@ export interface ConsumableRemoveRangePayload {
 export interface ConsumableRemovePayload {
   id: string;
 }
+export interface CheckInPayload {
+  checkInDto: IConsumableCheckInDto;
+}
+export interface ConsumableCheckInSuccessPayload {
+  consumable: IConsumable;
+  deployedProduct: IDeployedProduct;
+}
 
 //GET
 export interface FetchConsumablesRequest {
@@ -32,6 +43,7 @@ export type FetchConsumablesSuccess = {
 export type FetchConsumablesFailure = {
   type: typeof consumableConst.FETCH_CONSUMABLES_FAILURE;
 };
+
 //GET:/ID
 export interface FetchConsumableRequest {
   type: typeof consumableConst.FETCH_CONSUMABLE_REQUEST;
@@ -44,6 +56,7 @@ export type FetchConsumableSuccess = {
 export type FetchConsumableFailure = {
   type: typeof consumableConst.FETCH_CONSUMABLE_FAILURE;
 };
+
 //POST
 export interface CreateConsumableRequest {
   type: typeof consumableConst.CREATE_CONSUMABLE_REQUEST;
@@ -56,6 +69,7 @@ export type CreateConsumableSuccess = {
 export type CreateConsumableFailure = {
   type: typeof consumableConst.CREATE_CONSUMABLE_FAILURE;
 };
+
 //POST RANGE
 export interface CreateRangeConsumableRequest {
   type: typeof consumableConst.CREATE_RANGE_CONSUMABLE_REQUEST;
@@ -68,6 +82,7 @@ export type CreateRangeConsumableSuccess = {
 export type CreateRangeConsumableFailure = {
   type: typeof consumableConst.CREATE_RANGE_CONSUMABLE_FAILURE;
 };
+
 //PUT
 export interface UpdateConsumableRequest {
   type: typeof consumableConst.UPDATE_CONSUMABLE_REQUEST;
@@ -80,6 +95,7 @@ export type UpdateConsumableSuccess = {
 export type UpdateConsumableFailure = {
   type: typeof consumableConst.UPDATE_CONSUMABLE_FAILURE;
 };
+
 //REMOVE
 export interface RemoveConsumableRequest {
   type: typeof consumableConst.REMOVE_CONSUMABLE_REQUEST;
@@ -92,6 +108,7 @@ export type RemoveConsumableSuccess = {
 export type RemoveConsumableFailure = {
   type: typeof consumableConst.REMOVE_CONSUMABLE_FAILURE;
 };
+
 //REMOVE RANGE
 export interface RemoveRangeConsumableRequest {
   type: typeof consumableConst.REMOVE_RANGE_CONSUMABLE_REQUEST;
@@ -103,6 +120,32 @@ export type RemoveRangeConsumableSuccess = {
 };
 export type RemoveRangeConsumableFailure = {
   type: typeof consumableConst.REMOVE_RANGE_CONSUMABLE_FAILURE;
+};
+
+//CHECK IN
+export interface CheckInConsumableRequest {
+  type: typeof consumableConst.CHECK_IN_CONSUMABLE_REQUEST;
+  payload: CheckInPayload;
+}
+export type CheckInConsumableSuccess = {
+  type: typeof consumableConst.CHECK_IN_CONSUMABLE_SUCCESS;
+  payload: ConsumablePayload;
+};
+export type CheckInConsumableFailure = {
+  type: typeof consumableConst.CHECK_IN_CONSUMABLE_FAILURE;
+};
+
+//CHECK OUT
+export interface CheckOutConsumableRequest {
+  type: typeof consumableConst.CHECK_OUT_CONSUMABLE_REQUEST;
+  payload: ConsumableRequestPayload;
+}
+export type CheckOutConsumableSuccess = {
+  type: typeof consumableConst.CHECK_OUT_CONSUMABLE_SUCCESS;
+  payload: ConsumablePayload;
+};
+export type CheckOutConsumableFailure = {
+  type: typeof consumableConst.CHECK_OUT_CONSUMABLE_FAILURE;
 };
 
 //CLIENT ACTION TYPES
@@ -143,6 +186,12 @@ export type ConsumableActions =
   | RemoveRangeConsumableRequest
   | RemoveRangeConsumableSuccess
   | RemoveRangeConsumableFailure
+  | CheckInConsumableRequest
+  | CheckInConsumableSuccess
+  | CheckInConsumableFailure
+  | CheckOutConsumableRequest
+  | CheckOutConsumableSuccess
+  | CheckOutConsumableFailure
   | SetConsumable
   | SetConsumables
   | ClearConsumable

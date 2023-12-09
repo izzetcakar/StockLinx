@@ -31,6 +31,13 @@ import {
   RemoveRangeComponentFailure,
   ComponentRemoveRangePayload,
   ComponentRemovePayload,
+  CheckInComponentRequest,
+  CheckInComponentSuccess,
+  CheckInComponentFailure,
+  CheckOutComponentRequest,
+  CheckOutComponentSuccess,
+  CheckOutComponentFailure,
+  CheckInPayload,
 } from "./type";
 
 //GET
@@ -133,6 +140,38 @@ const removeRangeFailure = (): RemoveRangeComponentFailure => ({
   type: componentConst.REMOVE_RANGE_COMPONENT_FAILURE,
 });
 
+//CHECK IN
+const checkIn = (payload: CheckInPayload): CheckInComponentRequest => ({
+  type: componentConst.CHECK_IN_COMPONENT_REQUEST,
+  payload,
+});
+const checkInSuccess = (
+  payload: ComponentPayload
+): CheckInComponentSuccess => ({
+  type: componentConst.CHECK_IN_COMPONENT_SUCCESS,
+  payload,
+});
+const checkInFailure = (): CheckInComponentFailure => ({
+  type: componentConst.CHECK_IN_COMPONENT_FAILURE,
+});
+
+//CHECK OUT
+const checkOut = (
+  payload: ComponentRequestPayload
+): CheckOutComponentRequest => ({
+  type: componentConst.CHECK_OUT_COMPONENT_REQUEST,
+  payload,
+});
+const checkOutSuccess = (
+  payload: ComponentPayload
+): CheckOutComponentSuccess => ({
+  type: componentConst.CHECK_OUT_COMPONENT_SUCCESS,
+  payload,
+});
+const checkOutFailure = (): CheckOutComponentFailure => ({
+  type: componentConst.CHECK_OUT_COMPONENT_FAILURE,
+});
+
 //CLIENT ACTIONS
 const setComponent = (payload: IComponent | null): SetComponent => ({
   type: componentConst.SET_COMPONENT,
@@ -171,6 +210,12 @@ export const componentActions = {
   removeRange,
   removeRangeSuccess,
   removeRangeFailure,
+  checkIn,
+  checkInSuccess,
+  checkInFailure,
+  checkOut,
+  checkOutSuccess,
+  checkOutFailure,
   setComponent,
   clearComponent,
   setComponents,

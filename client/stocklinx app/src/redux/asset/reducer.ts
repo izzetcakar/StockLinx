@@ -105,6 +105,36 @@ export default (state = initialState, action: AssetActions) => {
       return {
         ...state,
       };
+    case assetConst.CHECK_IN_ASSET_REQUEST:
+      return {
+        ...state,
+      };
+    case assetConst.CHECK_IN_ASSET_SUCCESS:
+      return {
+        ...state,
+        assets: state.assets.map((asset) =>
+          asset.id === action.payload.asset.id ? action.payload.asset : asset
+        ),
+      };
+    case assetConst.CHECK_IN_ASSET_FAILURE:
+      return {
+        ...state,
+      };
+    case assetConst.CHECK_OUT_ASSET_REQUEST:
+      return {
+        ...state,
+      };
+    case assetConst.CHECK_OUT_ASSET_SUCCESS:
+      return {
+        ...state,
+        assets: state.assets.map((asset) =>
+          asset.id === action.payload.asset.id ? action.payload.asset : asset
+        ),
+      };
+    case assetConst.CHECK_OUT_ASSET_FAILURE:
+      return {
+        ...state,
+      };
     case assetConst.SET_ASSET:
       return {
         ...state,

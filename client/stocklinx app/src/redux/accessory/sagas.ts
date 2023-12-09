@@ -3,6 +3,9 @@ import { accessoryActions } from "./actions";
 import { IAccessory } from "../../interfaces/interfaces";
 import { accessoryConst } from "./constant";
 import {
+  AccessoryCheckInSuccessPayload,
+  CheckInAccessoryRequest,
+  CheckOutAccessoryRequest,
   CreateAccessoryRequest,
   CreateRangeAccessoryRequest,
   FetchAccessoryRequest,
@@ -16,9 +19,10 @@ import {
   openNotificationError,
   openNotificationSuccess,
 } from "../../notification/Notification";
+import { deployedProductActions } from "../deployedProduct/actions";
 
 interface IResponse {
-  data: IAccessory[] | IAccessory | null;
+  data: IAccessory[] | IAccessory | AccessoryCheckInSuccessPayload | null;
   message: string;
   success: boolean;
   status: number;
@@ -111,7 +115,6 @@ function* createRangeAccessorySaga(action: CreateRangeAccessoryRequest) {
   }
   yield put(genericActions.decreaseLoading());
 }
-
 function* updateAccessorySaga(action: UpdateAccessoryRequest) {
   yield put(genericActions.increaseLoading());
   try {
@@ -173,6 +176,59 @@ function* removeRangeAccessorySaga(action: RemoveRangeAccessoryRequest) {
   }
   yield put(genericActions.decreaseLoading());
 }
+function* checkInAccessorySaga(action: CheckInAccessoryRequest) {
+  yield put(genericActions.increaseLoading());
+  try {
+    const { data, message, success }: IResponse = yield call(
+      accessoryRequests.checkIn,
+      action.payload.checkInDto
+    );
+    if (success !== undefined && !success) {
+      throw new Error(message);
+    } else {
+      openNotificationSuccess("Accessory Checked In");
+      yield put(
+        accessoryActions.checkInSuccess({
+          accessory: (data as AccessoryCheckInSuccessPayload).accessory,
+        })
+      );
+      yield put(
+        deployedProductActions.createSuccess({
+          deployedProduct: (data as AccessoryCheckInSuccessPayload)
+            .deployedProduct,
+        })
+      );
+    }
+  } catch (e) {
+    openNotificationError("Accessory", (e as Error).message);
+    yield put(accessoryActions.checkInFailure());
+  }
+  yield put(genericActions.decreaseLoading());
+}
+function* checkOutAccessorySaga(action: CheckOutAccessoryRequest) {
+  yield put(genericActions.increaseLoading());
+  try {
+    const { data, message, success }: IResponse = yield call(
+      accessoryRequests.checkOut,
+      action.payload.id
+    );
+    if (success !== undefined && !success) {
+      throw new Error(message);
+    } else {
+      openNotificationSuccess("Accessory Checked Out");
+      yield put(
+        accessoryActions.checkOutSuccess({ accessory: data as IAccessory })
+      );
+      yield put(
+        deployedProductActions.removeSuccess({ id: action.payload.id })
+      );
+    }
+  } catch (e) {
+    openNotificationError("Accessory", (e as Error).message);
+    yield put(accessoryActions.checkOutFailure());
+  }
+  yield put(genericActions.decreaseLoading());
+}
 
 function* accessorysaga() {
   // yield all([
@@ -193,6 +249,14 @@ function* accessorysaga() {
   yield takeEvery(
     accessoryConst.REMOVE_RANGE_ACCESSORY_REQUEST,
     removeRangeAccessorySaga
+  );
+  yield takeEvery(
+    accessoryConst.CHECK_IN_ACCESSORY_REQUEST,
+    checkInAccessorySaga
+  );
+  yield takeEvery(
+    accessoryConst.CHECK_OUT_ACCESSORY_REQUEST,
+    checkOutAccessorySaga
   );
 }
 // function* budgetItemSaga() {

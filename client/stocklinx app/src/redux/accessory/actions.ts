@@ -31,6 +31,13 @@ import {
   RemoveRangeAccessoryFailure,
   AccessoryRemoveRangePayload,
   AccessoryRemovePayload,
+  CheckInPayload,
+  CheckInAccessoryRequest,
+  CheckInAccessorySuccess,
+  CheckInAccessoryFailure,
+  CheckOutAccessoryRequest,
+  CheckOutAccessorySuccess,
+  CheckOutAccessoryFailure,
 } from "./type";
 
 //GET
@@ -135,6 +142,38 @@ const removeRangeFailure = (): RemoveRangeAccessoryFailure => ({
   type: accessoryConst.REMOVE_RANGE_ACCESSORY_FAILURE,
 });
 
+//CHECK IN
+const checkIn = (payload: CheckInPayload): CheckInAccessoryRequest => ({
+  type: accessoryConst.CHECK_IN_ACCESSORY_REQUEST,
+  payload,
+});
+const checkInSuccess = (
+  payload: AccessoryPayload
+): CheckInAccessorySuccess => ({
+  type: accessoryConst.CHECK_IN_ACCESSORY_SUCCESS,
+  payload,
+});
+const checkInFailure = (): CheckInAccessoryFailure => ({
+  type: accessoryConst.CHECK_IN_ACCESSORY_FAILURE,
+});
+
+//CHECK OUT
+const checkOut = (
+  payload: AccessoryRequestPayload
+): CheckOutAccessoryRequest => ({
+  type: accessoryConst.CHECK_OUT_ACCESSORY_REQUEST,
+  payload,
+});
+const checkOutSuccess = (
+  payload: AccessoryPayload
+): CheckOutAccessorySuccess => ({
+  type: accessoryConst.CHECK_OUT_ACCESSORY_SUCCESS,
+  payload,
+});
+const checkOutFailure = (): CheckOutAccessoryFailure => ({
+  type: accessoryConst.CHECK_OUT_ACCESSORY_FAILURE,
+});
+
 //CLIENT ACTIONS
 const setAccessory = (payload: IAccessory | null): SetAccessory => ({
   type: accessoryConst.SET_ACCESSORY,
@@ -173,6 +212,12 @@ export const accessoryActions = {
   removeRange,
   removeRangeSuccess,
   removeRangeFailure,
+  checkIn,
+  checkInSuccess,
+  checkInFailure,
+  checkOut,
+  checkOutSuccess,
+  checkOutFailure,
   setAccessory,
   clearAccessory,
   setAccessories,
