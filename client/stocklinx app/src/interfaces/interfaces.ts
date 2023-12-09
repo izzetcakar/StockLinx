@@ -110,6 +110,7 @@ export interface IAccessory extends IBaseProduct {
   categoryId: string;
   modelNo: string;
   quantity: number;
+  availableQuantity?: number;
 }
 export interface IAsset extends IBaseProduct {
   modelId: string | null;
@@ -127,6 +128,7 @@ export interface IComponent extends IBaseProduct {
   supplierId: string | null;
   serialNo: string | null;
   quantity: number;
+  availableQuantity?: number;
 }
 export interface ILicense extends IBaseProduct {
   categoryId: string;
@@ -140,6 +142,7 @@ export interface ILicense extends IBaseProduct {
   expirationDate: Date | null;
   terminationDate: Date | null;
   quantity: number;
+  availableQuantity?: number;
 }
 export interface IConsumable extends IBaseProduct {
   categoryId: string;
@@ -148,6 +151,7 @@ export interface IConsumable extends IBaseProduct {
   modelNo: string | null;
   itemNo: string | null;
   quantity: number;
+  availableQuantity?: number;
 }
 export interface IModel extends BaseEntity {
   categoryId: string;
@@ -253,4 +257,34 @@ export interface IProductCategoryCount {
   categoryName: string;
   productName: string;
   productCount: number;
+}
+export interface IAccessoryCheckInDto {
+  userId: string;
+  accessoryId: string;
+  assaignDate: Date;
+  notes: string | null;
+}
+export interface IAssetCheckInDto {
+  userId: string;
+  assetId: string;
+  assaignDate: Date;
+  notes: string | null;
+}
+export interface IComponentCheckInDto {
+  userId: string;
+  componentId: string;
+  assaignDate: Date;
+  notes: string | null;
+}
+export interface ILicenseCheckInDto {
+  userId: string;
+  licenseId: string;
+  assaignDate: Date;
+  notes: string | null;
+}
+export interface IConsumableCheckInDto {
+  userId: string;
+  consumableId: string;
+  assaignDate: Date;
+  notes: string | null;
 }
