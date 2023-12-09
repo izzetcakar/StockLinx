@@ -35,9 +35,13 @@ namespace StockLinx.Repository.Repositories.EF_Core
             return dbSet.AsQueryable().AsNoTracking();
         }
 
-        public async Task<T> GetByIdAsync(Guid id)
+        public async Task<T> GetByIdAsync(Guid? id)
         {
-            return await dbSet.FindAsync(id);
+            if (id.HasValue)
+            {
+                return await dbSet.FindAsync(id.Value);
+            }
+            return null;
         }
 
         public void Remove(T entity)
