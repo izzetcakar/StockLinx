@@ -30,7 +30,8 @@ export const request = async <T>({
 }: {
   requestUrl: string;
   apiType: "get" | "delete" | "put" | "post";
-  queryData?: T | T[] | string[] | null;
+  // queryData?: T | T[] | string[] | null;
+  queryData?: any;
 }): Promise<ApiResponse<T>> => {
   let data: T | T[] | null;
   let status: number;
