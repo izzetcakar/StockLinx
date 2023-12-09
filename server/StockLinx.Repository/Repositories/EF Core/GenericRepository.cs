@@ -10,7 +10,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
         {
         }
 
-        public async Task CreateBaseEntities()
+        public void CreateBaseEntities()
         {
             var newLocations = new List<Location>
             {
