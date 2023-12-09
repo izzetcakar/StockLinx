@@ -185,11 +185,16 @@ export const openCustomFieldModal = (customField?: ICustomField) => {
     size: "auto",
   });
 };
-export const openCheckInModal = (deployedProduct: IDeployedProduct) => {
+export const openCheckInModal = (
+  deployedProduct: IDeployedProduct,
+  handleCheckIn: (data: IDeployedProduct) => void
+) => {
   modals.open({
     modalId: "checkIn-modal",
     title: "Check In",
-    children: <CheckInForm deployedProduct={deployedProduct} />,
+    children: (
+      <CheckInForm deployedProduct={deployedProduct} onSubmit={handleCheckIn} />
+    ),
     xOffset: "auto",
     size: "auto",
   });
