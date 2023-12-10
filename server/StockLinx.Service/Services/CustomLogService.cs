@@ -32,5 +32,11 @@ namespace StockLinx.Service.Services
             };
             await _customLogRepository.AddAsync(customLog);
         }
+
+        public object GetObjById(string entityName, Guid id)
+        {
+            var obj = _customLogRepository.GetObjById(entityName, id);
+            return obj;
+        }
     }
 }
