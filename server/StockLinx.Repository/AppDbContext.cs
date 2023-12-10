@@ -31,6 +31,7 @@ namespace StockLinx.Repository
         public DbSet<Branch> Branches { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Permission> Permissions { get; set; }
+        public DbSet<CustomLog> CustomLogs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
