@@ -17,8 +17,8 @@ namespace StockLinx.Service.Services
             IMapper mapper, IUnitOfWork unitOfWork) : base(repository, unitOfWork)
         {
             _repository = fieldSetCustomFieldRepository;
-            _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<FieldSetCustomFieldDto> GetDto(Guid id)
@@ -37,8 +37,9 @@ namespace StockLinx.Service.Services
             var newFieldSetCustomField = _mapper.Map<FieldSetCustomField>(dto);
             newFieldSetCustomField.Id = Guid.NewGuid();
             newFieldSetCustomField.CreatedDate = DateTime.UtcNow;
-            var added = await AddAsync(newFieldSetCustomField);
-            return _repository.GetDto(added);
+            await _repository.AddAsync(newFieldSetCustomField);
+            await _unitOfWork.CommitAsync();
+            return _repository.GetDto(newFieldSetCustomField);
         }
 
         public async Task<List<FieldSetCustomFieldDto>> CreateRangeFieldSetCustomFieldAsync(List<FieldSetCustomFieldDto> dtos)
@@ -51,36 +52,17 @@ namespace StockLinx.Service.Services
                 newFieldSetCustomField.CreatedDate = DateTime.UtcNow;
                 newEntities.Add(newFieldSetCustomField);
             }
-            var added = await AddRangeAsync(newEntities);
-            return _repository.GetDtos(added.ToList());
-        }
-
-        public async Task<FieldSetCustomFieldDto> UpdateFieldSetCustomFieldAsync(FieldSetCustomFieldDto dto)
-        {
-            var fieldSetCustomFieldInDb = await GetByIdAsync(dto.Id);
-            if (fieldSetCustomFieldInDb == null)
-            {
-                throw new ArgumentNullException(nameof(dto.Id), "The ID of the fieldSetCustomField to update is null.");
-            }
-            var updatedFieldSetCustomField = _mapper.Map<FieldSetCustomField>(dto);
-            updatedFieldSetCustomField.UpdatedDate = DateTime.UtcNow;
-            await UpdateAsync(fieldSetCustomFieldInDb, updatedFieldSetCustomField);
-            var fieldSetCustomField = await GetByIdAsync(dto.Id);
-            return _repository.GetDto(fieldSetCustomField);
+            await _repository.AddRangeAsync(newEntities);
+            await _unitOfWork.CommitAsync();
+            return _repository.GetDtos(newEntities.ToList());
         }
 
         public async Task DeleteFieldSetCustomFieldAsync(Guid id)
         {
-            if (id == Guid.Empty)
-            {
-                throw new ArgumentNullException(nameof(id), "The ID of the fieldSetCustomField to delete is null.");
-            }
             var fieldSetCustomField = await GetByIdAsync(id);
-            if (fieldSetCustomField == null)
-            {
-                throw new ArgumentNullException(nameof(fieldSetCustomField), "The fieldSetCustomField to delete is null.");
-            }
-            await RemoveAsync(fieldSetCustomField);
+            fieldSetCustomField.DeletedDate = DateTime.UtcNow;
+            _repository.Update(fieldSetCustomField, fieldSetCustomField);
+            await _unitOfWork.CommitAsync();
         }
 
         public async Task DeleteRangeFieldSetCustomFieldAsync(List<Guid> ids)
@@ -88,7 +70,7 @@ namespace StockLinx.Service.Services
             var fieldSetCustomFields = new List<FieldSetCustomField>();
             foreach (var id in ids)
             {
-                var fieldSetCustomField = GetByIdAsync(id).Result;
+                var fieldSetCustomField = await GetByIdAsync(id);
                 fieldSetCustomFields.Add(fieldSetCustomField);
             }
             await RemoveRangeAsync(fieldSetCustomFields);
@@ -119,8 +101,9 @@ namespace StockLinx.Service.Services
                     newItem.CreatedDate = DateTime.UtcNow;
                     return newItem;
                 }));
-            await AddRangeAsync(itemsToAdd);
-            await RemoveRangeAsync(itemsToDelete);
+            await _repository.AddRangeAsync(itemsToAdd);
+            _repository.RemoveRange(itemsToDelete);
+            await _unitOfWork.CommitAsync();
         }
 
     }

@@ -12,14 +12,16 @@ namespace StockLinx.Service.Services
     public class BranchService : Service<Branch>, IBranchService
     {
         private readonly IBranchRepository _branchRepository;
+        private readonly ICustomLogService _customLogService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         public BranchService(IRepository<Branch> repository, IBranchRepository branchRepository,
-            IMapper mapper, IUnitOfWork unitOfWork) : base(repository, unitOfWork)
+            IMapper mapper, IUnitOfWork unitOfWork, ICustomLogService customLogService) : base(repository, unitOfWork)
         {
             _branchRepository = branchRepository;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _customLogService = customLogService;
         }
 
         public async Task<BranchDto> GetDto(Guid id)
@@ -38,8 +40,10 @@ namespace StockLinx.Service.Services
             var newBranch = _mapper.Map<Branch>(createDto);
             newBranch.Id = Guid.NewGuid();
             newBranch.CreatedDate = DateTime.UtcNow;
-            var addedBranch = await AddAsync(newBranch);
-            return _branchRepository.GetDto(addedBranch);
+            await _branchRepository.AddAsync(newBranch);
+            await _customLogService.CreateCustomLog("Create", newBranch.Id, newBranch.CompanyId, "Branch", "Company");
+            await _unitOfWork.CommitAsync();
+            return _branchRepository.GetDto(newBranch);
         }
 
         public async Task<List<BranchDto>> CreateRangeBranchAsync(List<BranchCreateDto> createDtos)
@@ -51,9 +55,11 @@ namespace StockLinx.Service.Services
                 newBranch.Id = Guid.NewGuid();
                 newBranch.CreatedDate = DateTime.UtcNow;
                 newBranches.Add(newBranch);
+                await _customLogService.CreateCustomLog("Create", newBranch.Id, newBranch.CompanyId, "Branch", "Company");
             }
-            var addedBranches = await AddRangeAsync(newBranches);
-            return _branchRepository.GetDtos(addedBranches.ToList());
+            await _branchRepository.AddRangeAsync(newBranches);
+            await _unitOfWork.CommitAsync();
+            return _branchRepository.GetDtos(newBranches.ToList());
         }
 
         public async Task<BranchDto> UpdateBranchAsync(BranchUpdateDto updateDto)
@@ -61,27 +67,28 @@ namespace StockLinx.Service.Services
             var branchInDb = await GetByIdAsync(updateDto.Id);
             if (branchInDb == null)
             {
-                throw new ArgumentNullException(nameof(updateDto.Id), $"The ID of the branch to update is null.");
+                throw new ArgumentNullException("Branch is not found");
             }
             var updatedBranch = _mapper.Map<Branch>(updateDto);
             updatedBranch.UpdatedDate = DateTime.UtcNow;
-            await UpdateAsync(branchInDb, updatedBranch);
+            _branchRepository.Update(branchInDb, updatedBranch);
+            await _customLogService.CreateCustomLog("Update", updatedBranch.Id, updatedBranch.CompanyId, "Branch", "Company");
             var branch = await GetByIdAsync(updateDto.Id);
+            await _unitOfWork.CommitAsync();
             return _branchRepository.GetDto(branch);
         }
 
         public async Task DeleteBranchAsync(Guid branchId)
         {
-            if (branchId == Guid.Empty)
-            {
-                throw new ArgumentNullException(nameof(branchId), $"The ID of the branch to delete is null.");
-            }
             var branch = await GetByIdAsync(branchId);
             if (branch == null)
             {
-                throw new ArgumentNullException(nameof(branch), $"The branch to delete is null.");
+                throw new ArgumentNullException("Branch is not found");
             }
-            await RemoveAsync(branch);
+            branch.DeletedDate = DateTime.UtcNow;
+            _branchRepository.Update(branch, branch);
+            await _customLogService.CreateCustomLog("Delete", branch.Id, branch.CompanyId, "Branch", "Company");
+            await _unitOfWork.CommitAsync();
         }
 
         public async Task DeleteRangeBranchAsync(List<Guid> branchIds)
@@ -89,10 +96,13 @@ namespace StockLinx.Service.Services
             var branches = new List<Branch>();
             foreach (var branchId in branchIds)
             {
-                var branch = GetByIdAsync(branchId).Result;
+                var branch = await GetByIdAsync(branchId);
+                branch.DeletedDate = DateTime.UtcNow;
                 branches.Add(branch);
+                await _customLogService.CreateCustomLog("Delete", branch.Id, branch.CompanyId, "Branch", "Company");
             }
-            await RemoveRangeAsync(branches);
+            _branchRepository.UpdateRange(branches);
+            await _unitOfWork.CommitAsync();
         }
     }
 }

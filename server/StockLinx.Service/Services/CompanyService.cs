@@ -12,13 +12,16 @@ namespace StockLinx.Service.Services
     public class CompanyService : Service<Company>, ICompanyService
     {
         private readonly ICompanyRepository _companyRepository;
+        private readonly ICustomLogService _customLogService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        public CompanyService(IRepository<Company> repository, ICompanyRepository companyRepository, IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork)
+        public CompanyService(IRepository<Company> repository, ICompanyRepository companyRepository, IUnitOfWork unitOfWork,
+            IMapper mapper, ICustomLogService customLogService) : base(repository, unitOfWork)
         {
             _companyRepository = companyRepository;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _customLogService = customLogService;
         }
 
         public async Task<CompanyDto> GetDto(Guid id)
@@ -37,8 +40,10 @@ namespace StockLinx.Service.Services
             var newCompany = _mapper.Map<Company>(createDto);
             newCompany.Id = Guid.NewGuid();
             newCompany.CreatedDate = DateTime.UtcNow;
-            var addedCompany = await AddAsync(newCompany);
-            return _companyRepository.GetDto(addedCompany);
+            await _companyRepository.AddAsync(newCompany);
+            await _customLogService.CreateCustomLog("Create", newCompany.Id, null, "Company", null);
+            await _unitOfWork.CommitAsync();
+            return _companyRepository.GetDto(newCompany);
         }
 
         public async Task<List<CompanyDto>> CreateRangeCompanyAsync(List<CompanyCreateDto> createDtos)
@@ -50,9 +55,11 @@ namespace StockLinx.Service.Services
                 newCompany.Id = Guid.NewGuid();
                 newCompany.CreatedDate = DateTime.UtcNow;
                 newCompanies.Add(newCompany);
+                await _customLogService.CreateCustomLog("Create", newCompany.Id, null, "Company", null);
             }
-            var addedCompanies = await AddRangeAsync(newCompanies);
-            return _companyRepository.GetDtos(addedCompanies.ToList());
+            await _companyRepository.AddRangeAsync(newCompanies);
+            await _unitOfWork.CommitAsync();
+            return _companyRepository.GetDtos(newCompanies.ToList());
         }
 
         public async Task<CompanyDto> UpdateCompanyAsync(CompanyUpdateDto updateDto)
@@ -60,27 +67,27 @@ namespace StockLinx.Service.Services
             var companyInDb = await GetByIdAsync(updateDto.Id);
             if (companyInDb == null)
             {
-                throw new ArgumentNullException(nameof(updateDto.Id), $"The ID of the company to update is null.");
+                throw new ArgumentNullException("Company is not found");
             }
             var updatedCompany = _mapper.Map<Company>(updateDto);
             updatedCompany.UpdatedDate = DateTime.UtcNow;
-            await UpdateAsync(companyInDb, updatedCompany);
-            var company = await GetByIdAsync(updateDto.Id);
-            return _companyRepository.GetDto(company);
+            _companyRepository.Update(companyInDb, updatedCompany);
+            await _customLogService.CreateCustomLog("Update", updatedCompany.Id, null, "Company", null);
+            await _unitOfWork.CommitAsync();
+            return _companyRepository.GetDto(updatedCompany);
         }
 
         public async Task DeleteCompanyAsync(Guid companyId)
         {
-            if (companyId == Guid.Empty)
-            {
-                throw new ArgumentNullException(nameof(companyId), $"The ID of the company to delete is null.");
-            }
             var company = await GetByIdAsync(companyId);
             if (company == null)
             {
-                throw new ArgumentNullException(nameof(company), $"The company to delete is null.");
+                throw new ArgumentNullException("Company is not found");
             }
-            await RemoveAsync(company);
+            company.UpdatedDate = DateTime.UtcNow;
+            _companyRepository.Update(company, company);
+            await _customLogService.CreateCustomLog("Delete", company.Id, null, "Company", null);
+            await _unitOfWork.CommitAsync();
         }
 
         public async Task DeleteRangeCompanyAsync(List<Guid> companyIds)
@@ -88,10 +95,13 @@ namespace StockLinx.Service.Services
             var companies = new List<Company>();
             foreach (var companyId in companyIds)
             {
-                var company = GetByIdAsync(companyId).Result;
+                var company = await GetByIdAsync(companyId);
+                company.DeletedDate = DateTime.UtcNow;
                 companies.Add(company);
+                await _customLogService.CreateCustomLog("Delete", company.Id, null, "Company", null);
             }
-            await RemoveRangeAsync(companies);
+            _companyRepository.UpdateRange(companies);
+            await _unitOfWork.CommitAsync();
         }
     }
 }

@@ -12,16 +12,16 @@ namespace StockLinx.Service.Services
     public class CustomFieldService : Service<CustomField>, ICustomFieldService
     {
         private readonly ICustomFieldRepository _customFieldRepository;
-        private readonly IRepository<CustomField> _repository;
+        private readonly IFieldSetCustomFieldRepository _fieldSetCustomFieldRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public CustomFieldService(IRepository<CustomField> repository, ICustomFieldRepository customFieldRepository,
-              IMapper mapper, IUnitOfWork unitOfWork) : base(repository, unitOfWork)
+        public CustomFieldService(IRepository<CustomField> repository, ICustomFieldRepository customFieldRepository, IMapper mapper,
+               IUnitOfWork unitOfWork, IFieldSetCustomFieldRepository fieldSetCustomFieldRepository) : base(repository, unitOfWork)
         {
-            _repository = repository;
             _customFieldRepository = customFieldRepository;
-            _unitOfWork = unitOfWork;
+            _fieldSetCustomFieldRepository = fieldSetCustomFieldRepository;
             _mapper = mapper;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<CustomFieldDto> GetDto(Guid id)
@@ -37,15 +37,26 @@ namespace StockLinx.Service.Services
 
         public async Task CreateCustomFieldAsync(CustomFieldCreateDto createDto)
         {
-            try
+            var newCustomField = _mapper.Map<CustomField>(createDto);
+            var fcToAdd = new List<FieldSetCustomField>();
+            newCustomField.Id = Guid.NewGuid();
+            newCustomField.CreatedDate = DateTime.UtcNow;
+
+            if (createDto.FieldSetCustomFields != null && createDto.FieldSetCustomFields.Any())
             {
-                await _customFieldRepository.CreateCustomField(createDto);
-                await _unitOfWork.CommitAsync();
+                foreach (var fieldSetCustomFieldDto in createDto.FieldSetCustomFields)
+                {
+                    var newFieldSetCustomField = _mapper.Map<FieldSetCustomField>(fieldSetCustomFieldDto);
+                    newFieldSetCustomField.Id = Guid.NewGuid();
+                    newFieldSetCustomField.CreatedDate = DateTime.UtcNow;
+                    newFieldSetCustomField.CustomFieldId = newCustomField.Id;
+                    fcToAdd.Add(newFieldSetCustomField);
+                }
+                await _fieldSetCustomFieldRepository.AddRangeAsync(fcToAdd);
             }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            newCustomField.FieldSetCustomFields = null;
+            await _customFieldRepository.AddAsync(newCustomField);
+            await _unitOfWork.CommitAsync();
         }
 
         public async Task CreateRangeCustomFieldAsync(List<CustomFieldCreateDto> createDtos)
@@ -58,7 +69,8 @@ namespace StockLinx.Service.Services
                 newCustomField.CreatedDate = DateTime.UtcNow;
                 newCustomFields.Add(newCustomField);
             }
-            await AddRangeAsync(newCustomFields);
+            await _customFieldRepository.AddRangeAsync(newCustomFields);
+            await _unitOfWork.CommitAsync();
         }
 
         public async Task<CustomFieldDto> UpdateCustomFieldAsync(CustomFieldUpdateDto updateDto)
@@ -66,27 +78,25 @@ namespace StockLinx.Service.Services
             var customFieldInDb = await GetByIdAsync(updateDto.Id);
             if (customFieldInDb == null)
             {
-                throw new ArgumentNullException(nameof(updateDto.Id), $"The ID of the customField to update is null.");
+                throw new ArgumentNullException("CustomField is not found");
             }
             var updatedCustomField = _mapper.Map<CustomField>(updateDto);
             updatedCustomField.UpdatedDate = DateTime.UtcNow;
-            await UpdateAsync(customFieldInDb, updatedCustomField);
-            var customField = await GetByIdAsync(updateDto.Id);
-            return _customFieldRepository.GetDto(customField);
+            _customFieldRepository.Update(customFieldInDb, updatedCustomField);
+            await _unitOfWork.CommitAsync();
+            return _customFieldRepository.GetDto(updatedCustomField);
         }
 
         public async Task DeleteCustomFieldAsync(Guid customFieldId)
         {
-            if (customFieldId == Guid.Empty)
-            {
-                throw new ArgumentNullException(nameof(customFieldId), $"The ID of the customField to delete is null.");
-            }
             var customField = await GetByIdAsync(customFieldId);
             if (customField == null)
             {
-                throw new ArgumentNullException(nameof(customField), $"The customField to delete is null.");
+                throw new ArgumentNullException("CustomField is not found");
             }
-            await RemoveAsync(customField);
+            customField.DeletedDate = DateTime.UtcNow;
+            _customFieldRepository.Update(customField, customField);
+            await _unitOfWork.CommitAsync();
         }
 
         public async Task DeleteRangeCustomFieldAsync(List<Guid> customFieldIds)
@@ -94,10 +104,12 @@ namespace StockLinx.Service.Services
             var customFields = new List<CustomField>();
             foreach (var customFieldId in customFieldIds)
             {
-                var customField = GetByIdAsync(customFieldId).Result;
+                var customField = await GetByIdAsync(customFieldId);
+                customField.DeletedDate = DateTime.UtcNow;
                 customFields.Add(customField);
             }
-            await RemoveRangeAsync(customFields);
+            _customFieldRepository.UpdateRange(customFields);
+            await _unitOfWork.CommitAsync();
         }
     }
 }

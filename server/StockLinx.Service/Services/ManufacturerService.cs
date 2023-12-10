@@ -12,11 +12,14 @@ namespace StockLinx.Service.Services
     public class ManufacturerService : Service<Manufacturer>, IManufacturerService
     {
         private readonly IManufacturerRepository _manufacturerRepository;
+        private readonly ICustomLogService _customLogService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        public ManufacturerService(IRepository<Manufacturer> repository, IManufacturerRepository manufacturerRepository, IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork)
+        public ManufacturerService(IRepository<Manufacturer> repository, IManufacturerRepository manufacturerRepository,
+            IUnitOfWork unitOfWork, IMapper mapper, ICustomLogService customLogService) : base(repository, unitOfWork)
         {
             _manufacturerRepository = manufacturerRepository;
+            _customLogService = customLogService;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
@@ -36,8 +39,10 @@ namespace StockLinx.Service.Services
             var newManufacturer = _mapper.Map<Manufacturer>(createDto);
             newManufacturer.Id = Guid.NewGuid();
             newManufacturer.CreatedDate = DateTime.UtcNow;
-            var added = await AddAsync(newManufacturer);
-            return _manufacturerRepository.GetDto(added);
+            await _manufacturerRepository.AddAsync(newManufacturer);
+            await _customLogService.CreateCustomLog("Create", newManufacturer.Id, null, "Manufacturer", null);
+            await _unitOfWork.CommitAsync();
+            return _manufacturerRepository.GetDto(newManufacturer);
         }
 
         public async Task<List<ManufacturerDto>> CreateRangeManufacturerAsync(List<ManufacturerCreateDto> createDtos)
@@ -49,9 +54,10 @@ namespace StockLinx.Service.Services
                 newManufacturer.Id = Guid.NewGuid();
                 newManufacturer.CreatedDate = DateTime.UtcNow;
                 newManufacturers.Add(newManufacturer);
+                await _customLogService.CreateCustomLog("Create", newManufacturer.Id, null, "Manufacturer", null);
             }
-            var added = await AddRangeAsync(newManufacturers);
-            return _manufacturerRepository.GetDtos(added.ToList());
+            await _manufacturerRepository.AddRangeAsync(newManufacturers);
+            return _manufacturerRepository.GetDtos(newManufacturers.ToList());
         }
 
         public async Task<ManufacturerDto> UpdateManufacturerAsync(ManufacturerUpdateDto updateDto)
@@ -59,27 +65,27 @@ namespace StockLinx.Service.Services
             var manufacturerInDb = await GetByIdAsync(updateDto.Id);
             if (manufacturerInDb == null)
             {
-                throw new ArgumentNullException(nameof(updateDto.Id), $"The ID of the manufacturer to update is null.");
+                throw new ArgumentNullException("Manufacturer is not found");
             }
             var updatedManufacturer = _mapper.Map<Manufacturer>(updateDto);
             updatedManufacturer.UpdatedDate = DateTime.UtcNow;
-            await UpdateAsync(manufacturerInDb, updatedManufacturer);
-            var manufacturer = await GetByIdAsync(updateDto.Id);
-            return _manufacturerRepository.GetDto(manufacturer);
+            _manufacturerRepository.Update(manufacturerInDb, updatedManufacturer);
+            await _customLogService.CreateCustomLog("Update", updatedManufacturer.Id, null, "Manufacturer", null);
+            await _unitOfWork.CommitAsync();
+            return _manufacturerRepository.GetDto(updatedManufacturer);
         }
 
         public async Task DeleteManufacturerAsync(Guid manufacturerId)
         {
-            if (manufacturerId == Guid.Empty)
-            {
-                throw new ArgumentNullException(nameof(manufacturerId), $"The ID of the manufacturer to delete is null.");
-            }
             var manufacturer = await GetByIdAsync(manufacturerId);
             if (manufacturer == null)
             {
-                throw new ArgumentNullException(nameof(manufacturer), $"The manufacturer to delete is null.");
+                throw new ArgumentNullException("Manufacturer is not found");
             }
-            await RemoveAsync(manufacturer);
+            manufacturer.DeletedDate = DateTime.UtcNow;
+            _manufacturerRepository.Update(manufacturer, manufacturer);
+            await _customLogService.CreateCustomLog("Delete", manufacturer.Id, null, "Manufacturer", null);
+            await _unitOfWork.CommitAsync();
         }
 
         public async Task DeleteRangeManufacturerAsync(List<Guid> manufacturerIds)
@@ -87,10 +93,13 @@ namespace StockLinx.Service.Services
             var manufacturers = new List<Manufacturer>();
             foreach (var manufacturerId in manufacturerIds)
             {
-                var manufacturer = GetByIdAsync(manufacturerId).Result;
+                var manufacturer = await GetByIdAsync(manufacturerId);
+                manufacturer.DeletedDate = DateTime.UtcNow;
                 manufacturers.Add(manufacturer);
+                await _customLogService.CreateCustomLog("Delete", manufacturer.Id, null, "Manufacturer", null);
             }
-            await RemoveRangeAsync(manufacturers);
+            _manufacturerRepository.UpdateRange(manufacturers);
+            await _unitOfWork.CommitAsync();
         }
     }
 }

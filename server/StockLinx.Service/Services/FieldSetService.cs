@@ -18,8 +18,8 @@ namespace StockLinx.Service.Services
             IMapper mapper, IUnitOfWork unitOfWork) : base(repository, unitOfWork)
         {
             _fieldSetRepository = fieldSetRepository;
-            _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<FieldSetDto> GetDto(Guid id)
@@ -37,8 +37,9 @@ namespace StockLinx.Service.Services
             var newFieldSet = _mapper.Map<FieldSet>(createDto);
             newFieldSet.Id = Guid.NewGuid();
             newFieldSet.CreatedDate = DateTime.UtcNow;
-            var added = await AddAsync(newFieldSet);
-            return _fieldSetRepository.GetDto(added);
+            await _fieldSetRepository.AddAsync(newFieldSet);
+            await _unitOfWork.CommitAsync();
+            return _fieldSetRepository.GetDto(newFieldSet);
         }
 
         public async Task<List<FieldSetDto>> CreateRangeFieldSetAsync(List<FieldSetCreateDto> createDtos)
@@ -51,8 +52,8 @@ namespace StockLinx.Service.Services
                 newFieldSet.CreatedDate = DateTime.UtcNow;
                 newEntities.Add(newFieldSet);
             }
-            var added = await AddRangeAsync(newEntities);
-            return _fieldSetRepository.GetDtos(added.ToList());
+            await _fieldSetRepository.AddRangeAsync(newEntities);
+            return _fieldSetRepository.GetDtos(newEntities.ToList());
         }
 
         public async Task<FieldSetDto> UpdateFieldSetAsync(FieldSetUpdateDto updateDto)
@@ -60,27 +61,24 @@ namespace StockLinx.Service.Services
             var fieldSetInDb = await GetByIdAsync(updateDto.Id);
             if (fieldSetInDb == null)
             {
-                throw new ArgumentNullException(nameof(updateDto.Id), "The ID of the fieldSet to update is null.");
+                throw new ArgumentNullException("FieldSet is not found");
             }
             var updatedFieldSet = _mapper.Map<FieldSet>(updateDto);
             updatedFieldSet.UpdatedDate = DateTime.UtcNow;
-            await UpdateAsync(fieldSetInDb, updatedFieldSet);
-            var fieldSet = await GetByIdAsync(updateDto.Id);
-            return _fieldSetRepository.GetDto(fieldSet);
+            _fieldSetRepository.Update(fieldSetInDb, updatedFieldSet);
+            return _fieldSetRepository.GetDto(updatedFieldSet);
         }
 
         public async Task DeleteFieldSetAsync(Guid fieldSetId)
         {
-            if (fieldSetId == Guid.Empty)
-            {
-                throw new ArgumentNullException(nameof(fieldSetId), "The ID of the fieldSet to delete is null.");
-            }
             var fieldSet = await GetByIdAsync(fieldSetId);
             if (fieldSet == null)
             {
-                throw new ArgumentNullException(nameof(fieldSet), "The fieldSet to delete is null.");
+                throw new ArgumentNullException("FieldSet is not found");
             }
-            await RemoveAsync(fieldSet);
+            fieldSet.DeletedDate = DateTime.UtcNow;
+            _fieldSetRepository.Update(fieldSet, fieldSet);
+            await _unitOfWork.CommitAsync();
         }
 
         public async Task DeleteRangeFieldSetAsync(List<Guid> fieldSetIds)
@@ -88,10 +86,12 @@ namespace StockLinx.Service.Services
             var fieldSets = new List<FieldSet>();
             foreach (var fieldSetId in fieldSetIds)
             {
-                var fieldSet = GetByIdAsync(fieldSetId).Result;
+                var fieldSet = await GetByIdAsync(fieldSetId);
+                fieldSet.DeletedDate = DateTime.UtcNow;
                 fieldSets.Add(fieldSet);
             }
-            await RemoveRangeAsync(fieldSets);
+            _fieldSetRepository.UpdateRange(fieldSets);
+            await _unitOfWork.CommitAsync();
         }
     }
 }

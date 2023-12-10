@@ -12,14 +12,16 @@ namespace StockLinx.Service.Services
     public class CategoryService : Service<Category>, ICategoryService
     {
         private readonly ICategoryRepository _categoryRepository;
+        private readonly ICustomLogService _customLogService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         public CategoryService(IRepository<Category> repository, ICategoryRepository categoryRepository,
-            IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork)
+            IUnitOfWork unitOfWork, IMapper mapper, ICustomLogService customLogService) : base(repository, unitOfWork)
         {
+            _categoryRepository = categoryRepository;
+            _customLogService = customLogService;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
-            _categoryRepository = categoryRepository;
         }
 
         public async Task<CategoryDto> GetDto(Guid id)
@@ -38,8 +40,10 @@ namespace StockLinx.Service.Services
             var newCategory = _mapper.Map<Category>(createDto);
             newCategory.Id = Guid.NewGuid();
             newCategory.CreatedDate = DateTime.UtcNow;
-            var addedCategory = await AddAsync(newCategory);
-            return _categoryRepository.GetDto(addedCategory);
+            await _categoryRepository.AddAsync(newCategory);
+            await _customLogService.CreateCustomLog("Create", newCategory.Id, null, "Category", null);
+            await _unitOfWork.CommitAsync();
+            return _categoryRepository.GetDto(newCategory);
         }
 
         public async Task<List<CategoryDto>> CreateRangeCategoryAsync(List<CategoryCreateDto> createDtos)
@@ -51,9 +55,11 @@ namespace StockLinx.Service.Services
                 newCategory.Id = Guid.NewGuid();
                 newCategory.CreatedDate = DateTime.UtcNow;
                 newCategories.Add(newCategory);
+                await _customLogService.CreateCustomLog("Create", newCategory.Id, null, "Category", null);
             }
-            var addedCategories = await AddRangeAsync(newCategories);
-            return _categoryRepository.GetDtos(addedCategories.ToList());
+            await _categoryRepository.AddRangeAsync(newCategories);
+            await _unitOfWork.CommitAsync();
+            return _categoryRepository.GetDtos(newCategories.ToList());
         }
 
         public async Task<CategoryDto> UpdateCategoryAsync(CategoryUpdateDto updateDto)
@@ -61,27 +67,27 @@ namespace StockLinx.Service.Services
             var categoryInDb = await GetByIdAsync(updateDto.Id);
             if (categoryInDb == null)
             {
-                throw new ArgumentNullException(nameof(updateDto.Id), "The ID of the category to update is null.");
+                throw new ArgumentNullException("Category is not found");
             }
             var updatedCategory = _mapper.Map<Category>(updateDto);
             updatedCategory.UpdatedDate = DateTime.UtcNow;
-            await UpdateAsync(categoryInDb, updatedCategory);
-            var category = await GetByIdAsync(updateDto.Id);
-            return _categoryRepository.GetDto(category);
+            _categoryRepository.Update(categoryInDb, updatedCategory);
+            await _customLogService.CreateCustomLog("Update", updatedCategory.Id, null, "Category", null);
+            await _unitOfWork.CommitAsync();
+            return _categoryRepository.GetDto(updatedCategory);
         }
 
         public async Task DeleteCategoryAsync(Guid categoryId)
         {
-            if (categoryId == Guid.Empty)
-            {
-                throw new ArgumentNullException(nameof(categoryId), "The ID of the category to delete is null.");
-            }
             var category = await GetByIdAsync(categoryId);
             if (category == null)
             {
-                throw new ArgumentNullException(nameof(category), "The category to delete is null.");
+                throw new ArgumentNullException("Category is not found");
             }
-            await RemoveAsync(category);
+            category.DeletedDate = DateTime.UtcNow;
+            _categoryRepository.Update(category, category);
+            await _customLogService.CreateCustomLog("Delete", categoryId, null, "Category", null);
+            await _unitOfWork.CommitAsync();
         }
 
         public async Task DeleteRangeCategoryAsync(List<Guid> categoryIds)
@@ -89,10 +95,13 @@ namespace StockLinx.Service.Services
             var categories = new List<Category>();
             foreach (var categoryId in categoryIds)
             {
-                var category = GetByIdAsync(categoryId).Result;
+                var category = await GetByIdAsync(categoryId);
+                category.DeletedDate = DateTime.UtcNow;
                 categories.Add(category);
+                await _customLogService.CreateCustomLog("Delete", categoryId, null, "Category", null);
             }
-            await RemoveRangeAsync(categories);
+            _categoryRepository.UpdateRange(categories);
+            await _unitOfWork.CommitAsync();
         }
     }
 }

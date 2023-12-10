@@ -20,13 +20,13 @@ namespace StockLinx.Service.Services
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
-        public UserService(IRepository<User> repository, IUnitOfWork unitOfWork,
-            IUserRepository userRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor) : base(repository, unitOfWork)
+        public UserService(IRepository<User> repository, IUnitOfWork unitOfWork, IUserRepository userRepository,
+             IMapper mapper, IHttpContextAccessor httpContextAccessor) : base(repository, unitOfWork)
         {
-            _userRepository = userRepository;
             _httpContextAccessor = httpContextAccessor;
-            _unitOfWork = unitOfWork;
+            _userRepository = userRepository;
             _mapper = mapper;
+            _unitOfWork = unitOfWork;
         }
         public async Task<UserDto> GetDto(Guid id)
         {
@@ -116,8 +116,9 @@ namespace StockLinx.Service.Services
             var newUser = _mapper.Map<User>(createDto);
             newUser.Id = Guid.NewGuid();
             newUser.CreatedDate = DateTime.UtcNow;
-            var added = await AddAsync(newUser);
-            return _userRepository.GetDto(added);
+            await _userRepository.AddAsync(newUser);
+            await _unitOfWork.CommitAsync();
+            return _userRepository.GetDto(newUser);
         }
 
         public async Task<List<UserDto>> CreateRangeUserAsync(List<UserCreateDto> createDtos)
@@ -130,8 +131,8 @@ namespace StockLinx.Service.Services
                 newUser.CreatedDate = DateTime.UtcNow;
                 newUsers.Add(newUser);
             }
-            var added = await AddRangeAsync(newUsers);
-            return _userRepository.GetDtos(added.ToList());
+            await _userRepository.AddRangeAsync(newUsers);
+            return _userRepository.GetDtos(newUsers.ToList());
         }
 
         public async Task<UserDto> UpdateUserAsync(UserUpdateDto updateDto)
@@ -139,27 +140,25 @@ namespace StockLinx.Service.Services
             var userInDb = await GetByIdAsync(updateDto.Id);
             if (userInDb == null)
             {
-                throw new ArgumentNullException(nameof(updateDto.Id), $"The ID of the user to update is null.");
+                throw new ArgumentNullException("User is not found");
             }
             var updatedUser = _mapper.Map<User>(updateDto);
             updatedUser.UpdatedDate = DateTime.UtcNow;
-            await UpdateAsync(userInDb, updatedUser);
-            var user = await GetByIdAsync(updateDto.Id);
-            return _userRepository.GetDto(user);
+            _userRepository.Update(userInDb, updatedUser);
+            await _unitOfWork.CommitAsync();
+            return _userRepository.GetDto(updatedUser);
         }
 
         public async Task DeleteUserAsync(Guid userId)
         {
-            if (userId == Guid.Empty)
-            {
-                throw new ArgumentNullException(nameof(userId), $"The ID of the user to delete is null.");
-            }
             var user = await GetByIdAsync(userId);
             if (user == null)
             {
-                throw new ArgumentNullException(nameof(user), $"The user to delete is null.");
+                throw new ArgumentNullException("User is not found");
             }
-            await RemoveAsync(user);
+            user.DeletedDate = DateTime.UtcNow;
+            _userRepository.Update(user, user);
+            await _unitOfWork.CommitAsync();
         }
 
         public async Task DeleteRangeUserAsync(List<Guid> userIds)
@@ -167,10 +166,12 @@ namespace StockLinx.Service.Services
             var users = new List<User>();
             foreach (var userId in userIds)
             {
-                var user = GetByIdAsync(userId).Result;
+                var user = await GetByIdAsync(userId);
+                user.DeletedDate = DateTime.UtcNow;
                 users.Add(user);
             }
-            await RemoveRangeAsync(users);
+            _userRepository.UpdateRange(users);
+            await _unitOfWork.CommitAsync();
         }
     }
 }

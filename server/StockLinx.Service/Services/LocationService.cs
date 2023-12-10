@@ -12,12 +12,14 @@ namespace StockLinx.Service.Services
     public class LocationService : Service<Location>, ILocationService
     {
         private readonly ILocationRepository _locationRepository;
+        private readonly ICustomLogService _customLogService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         public LocationService(IRepository<Location> repository, ILocationRepository locationRepository,
-            IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork)
+            IUnitOfWork unitOfWork, IMapper mapper, ICustomLogService customLogService) : base(repository, unitOfWork)
         {
             _locationRepository = locationRepository;
+            _customLogService = customLogService;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
@@ -38,8 +40,10 @@ namespace StockLinx.Service.Services
             var newLocation = _mapper.Map<Location>(createDto);
             newLocation.Id = Guid.NewGuid();
             newLocation.CreatedDate = DateTime.UtcNow;
-            var added = await AddAsync(newLocation);
-            return _locationRepository.GetDto(added);
+            await _locationRepository.AddAsync(newLocation);
+            await _customLogService.CreateCustomLog("Create", newLocation.Id, null, "Location", null);
+            await _unitOfWork.CommitAsync();
+            return _locationRepository.GetDto(newLocation);
         }
 
         public async Task<List<LocationDto>> CreateRangeLocationAsync(List<LocationCreateDto> createDtos)
@@ -51,9 +55,11 @@ namespace StockLinx.Service.Services
                 newLocation.Id = Guid.NewGuid();
                 newLocation.CreatedDate = DateTime.UtcNow;
                 newLocations.Add(newLocation);
+                await _customLogService.CreateCustomLog("Create", newLocation.Id, null, "Location", null);
             }
-            var added = await AddRangeAsync(newLocations);
-            return _locationRepository.GetDtos(added.ToList());
+            await _locationRepository.AddRangeAsync(newLocations);
+            await _unitOfWork.CommitAsync();
+            return _locationRepository.GetDtos(newLocations.ToList());
         }
 
         public async Task<LocationDto> UpdateLocationAsync(LocationUpdateDto updateDto)
@@ -61,27 +67,27 @@ namespace StockLinx.Service.Services
             var locationInDb = await GetByIdAsync(updateDto.Id);
             if (locationInDb == null)
             {
-                throw new ArgumentNullException(nameof(updateDto.Id), $"The ID of the location to update is null.");
+                throw new ArgumentNullException("Location is not found");
             }
             var updatedLocation = _mapper.Map<Location>(updateDto);
             updatedLocation.UpdatedDate = DateTime.UtcNow;
-            await UpdateAsync(locationInDb, updatedLocation);
-            var location = await GetByIdAsync(updateDto.Id);
-            return _locationRepository.GetDto(location);
+            _locationRepository.Update(locationInDb, updatedLocation);
+            await _customLogService.CreateCustomLog("Update", updatedLocation.Id, null, "Location", null);
+            await _unitOfWork.CommitAsync();
+            return _locationRepository.GetDto(updatedLocation);
         }
 
         public async Task DeleteLocationAsync(Guid locationId)
         {
-            if (locationId == Guid.Empty)
-            {
-                throw new ArgumentNullException(nameof(locationId), $"The ID of the location to delete is null.");
-            }
             var location = await GetByIdAsync(locationId);
             if (location == null)
             {
-                throw new ArgumentNullException(nameof(location), $"The location to delete is null.");
+                throw new ArgumentNullException("Location is not found");
             }
-            await RemoveAsync(location);
+            location.DeletedDate = DateTime.UtcNow;
+            _locationRepository.Update(location, location);
+            await _customLogService.CreateCustomLog("Delete", location.Id, null, "Location", null);
+            await _unitOfWork.CommitAsync();
         }
 
         public async Task DeleteRangeLocationAsync(List<Guid> locationIds)
@@ -89,10 +95,12 @@ namespace StockLinx.Service.Services
             var locations = new List<Location>();
             foreach (var locationId in locationIds)
             {
-                var location = GetByIdAsync(locationId).Result;
+                var location = await GetByIdAsync(locationId);
+                location.DeletedDate = DateTime.UtcNow;
                 locations.Add(location);
+                await _customLogService.CreateCustomLog("Delete", location.Id, null, "Location", null);
             }
-            await RemoveRangeAsync(locations);
+            _locationRepository.RemoveRange(locations);
         }
     }
 }

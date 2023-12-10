@@ -14,7 +14,8 @@ namespace StockLinx.Service.Services
         private readonly IModelRepository _modelRepository;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        public ModelService(IRepository<Model> repository, IModelRepository modelRepository, IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork)
+        public ModelService(IRepository<Model> repository, IModelRepository modelRepository,
+            IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork)
         {
             _modelRepository = modelRepository;
             _mapper = mapper;
@@ -34,16 +35,9 @@ namespace StockLinx.Service.Services
 
         public async Task<ModelDto> CreateModelAsync(ModelCreateDto createDto)
         {
-            try
-            {
-                var added = _modelRepository.CreateModel(createDto);
-                await _unitOfWork.CommitAsync();
-                return added;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            var added = _modelRepository.CreateModel(createDto);
+            await _unitOfWork.CommitAsync();
+            return added;
         }
 
         public async Task<List<ModelDto>> CreateRangeModelAsync(List<ModelCreateDto> createDtos)

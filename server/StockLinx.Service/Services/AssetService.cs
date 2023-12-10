@@ -14,13 +14,15 @@ namespace StockLinx.Service.Services
     {
         private readonly IAssetRepository _assetRepository;
         private readonly IDeployedProductRepository _deployedProductRepository;
+        private readonly ICustomLogService _customLogService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         public AssetService(IRepository<Asset> repository, IAssetRepository assetRepository, IDeployedProductRepository deployedProductRepository,
-            IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork)
+            IUnitOfWork unitOfWork, IMapper mapper, ICustomLogService customLogService) : base(repository, unitOfWork)
         {
             _assetRepository = assetRepository;
             _deployedProductRepository = deployedProductRepository;
+            _customLogService = customLogService;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
@@ -38,12 +40,12 @@ namespace StockLinx.Service.Services
 
         public async Task<List<AssetDto>> CreateAssetAsync(AssetCreateDto createDto)
         {
-            var assets = new List<Asset>();
+            var newAssets = new List<Asset>();
             var newAsset = _mapper.Map<Asset>(createDto);
             newAsset.Id = Guid.NewGuid();
             newAsset.CreatedDate = DateTime.UtcNow;
-            assets.Add(newAsset);
-
+            newAssets.Add(newAsset);
+            await _customLogService.CreateCustomLog("Create", newAsset.Id, newAsset.BranchId, "Asset", "Branch");
             if (createDto.OverageAssets != null && createDto.OverageAssets.Count > 0)
             {
                 foreach (var overageAsset in createDto.OverageAssets)
@@ -52,11 +54,13 @@ namespace StockLinx.Service.Services
                     extraAsset.Id = Guid.NewGuid();
                     extraAsset.SerialNo = overageAsset.SerialNo;
                     extraAsset.TagNo = overageAsset.TagNo;
-                    assets.Add(extraAsset);
+                    newAssets.Add(extraAsset);
+                    await _customLogService.CreateCustomLog("Create", extraAsset.Id, extraAsset.BranchId, "Asset", "Branch");
                 }
             }
-            var addedAssets = await AddRangeAsync(assets);
-            return await _assetRepository.GetDtos(addedAssets.ToList());
+            await _assetRepository.AddRangeAsync(newAssets);
+            await _unitOfWork.CommitAsync();
+            return await _assetRepository.GetDtos(newAssets.ToList());
         }
 
         public async Task<List<AssetDto>> CreateRangeAssetAsync(List<AssetCreateDto> createDtos)
@@ -68,9 +72,11 @@ namespace StockLinx.Service.Services
                 newAsset.Id = Guid.NewGuid();
                 newAsset.CreatedDate = DateTime.UtcNow;
                 newAssets.Add(newAsset);
+                await _customLogService.CreateCustomLog("Create", newAsset.Id, newAsset.BranchId, "Asset", "Branch");
             }
-            var addedAssets = await AddRangeAsync(newAssets);
-            return await _assetRepository.GetDtos(addedAssets.ToList());
+            await _assetRepository.AddRangeAsync(newAssets);
+            await _unitOfWork.CommitAsync();
+            return await _assetRepository.GetDtos(newAssets.ToList());
         }
 
         public async Task<AssetDto> UpdateAssetAsync(AssetUpdateDto updateDto)
@@ -78,27 +84,26 @@ namespace StockLinx.Service.Services
             var assetInDb = await GetByIdAsync(updateDto.Id);
             if (assetInDb == null)
             {
-                throw new ArgumentNullException(nameof(updateDto.Id), $"The ID of the asset to update is null.");
+                throw new ArgumentNullException("Asset is not found");
             }
             var updatedAsset = _mapper.Map<Asset>(updateDto);
             updatedAsset.UpdatedDate = DateTime.UtcNow;
-            await UpdateAsync(assetInDb, updatedAsset);
-            var asset = await GetByIdAsync(updateDto.Id);
-            return await _assetRepository.GetDto(asset);
+            _assetRepository.Update(assetInDb, updatedAsset);
+            await _customLogService.CreateCustomLog("Update", updatedAsset.Id, updatedAsset.BranchId, "Asset", "Branch");
+            return await _assetRepository.GetDto(updatedAsset);
         }
 
         public async Task DeleteAssetAsync(Guid assetId)
         {
-            if (assetId == Guid.Empty)
-            {
-                throw new ArgumentNullException(nameof(assetId), $"The ID of the asset to delete is null.");
-            }
             var asset = await GetByIdAsync(assetId);
             if (asset == null)
             {
-                throw new ArgumentNullException(nameof(asset), $"The asset to delete is null.");
+                throw new ArgumentNullException("Asset is not found");
             }
-            await RemoveAsync(asset);
+            asset.DeletedDate = DateTime.UtcNow;
+            _assetRepository.Update(asset, asset);
+            await _customLogService.CreateCustomLog("Delete", asset.Id, asset.BranchId, "Asset", "Branch");
+            await _unitOfWork.CommitAsync();
         }
 
         public async Task DeleteRangeAssetAsync(List<Guid> assetIds)
@@ -106,74 +111,66 @@ namespace StockLinx.Service.Services
             var assets = new List<Asset>();
             foreach (var assetId in assetIds)
             {
-                var asset = GetByIdAsync(assetId).Result;
+                var asset = await GetByIdAsync(assetId);
+                asset.DeletedDate = DateTime.UtcNow;
                 assets.Add(asset);
+                await _customLogService.CreateCustomLog("Delete", asset.Id, asset.BranchId, "Asset", "Branch");
             }
-            await RemoveRangeAsync(assets);
+            _assetRepository.UpdateRange(assets);
+            await _unitOfWork.CommitAsync();
         }
 
         public async Task<AssetCheckInResponseDto> CheckIn(AssetCheckInDto checkInDto)
         {
-            try
+            var asset = await _assetRepository.GetByIdAsync(checkInDto.AssetId);
+            if (asset == null)
             {
-                var asset = await _assetRepository.GetByIdAsync(checkInDto.AssetId);
-                if (asset == null)
-                {
-                    throw new Exception("Asset not found");
-                }
-                Boolean isDeployed = await _deployedProductRepository.AnyAsync(d => d.AssetId == checkInDto.Id);
-                if (isDeployed)
-                {
-                    throw new Exception("Asset is already deployed");
-                }
-                var deployedProduct = new DeployedProduct
-                {
-                    Id = Guid.NewGuid(),
-                    AssetId = checkInDto.AssetId,
-                    UserId = checkInDto.UserId,
-                    AssignDate = DateTime.UtcNow,
-                    CreatedDate = DateTime.UtcNow,
-                    Notes = checkInDto.Notes,
-                };
-                await _deployedProductRepository.AddAsync(deployedProduct);
-                var assetDto = await _assetRepository.GetDto(asset);
-                var deployedProductDto = _deployedProductRepository.GetDto(deployedProduct);
-                await _unitOfWork.CommitAsync();
-                return new AssetCheckInResponseDto
-                {
-                    Asset = assetDto,
-                    DeployedProduct = deployedProductDto
-                };
+                throw new Exception("Asset not found");
             }
-            catch (Exception ex)
+            Boolean isDeployed = await _deployedProductRepository.AnyAsync(d => d.AssetId == checkInDto.Id);
+            if (isDeployed)
             {
-                throw new Exception(ex.Message);
+                throw new Exception("Asset is already deployed");
             }
+            var deployedProduct = new DeployedProduct
+            {
+                Id = Guid.NewGuid(),
+                AssetId = checkInDto.AssetId,
+                UserId = checkInDto.UserId,
+                AssignDate = DateTime.UtcNow,
+                CreatedDate = DateTime.UtcNow,
+                Notes = checkInDto.Notes,
+            };
+            await _deployedProductRepository.AddAsync(deployedProduct);
+            await _customLogService.CreateCustomLog("Delete", asset.Id, asset.BranchId, "Asset", "Branch");
+            var assetDto = await _assetRepository.GetDto(asset);
+            var deployedProductDto = _deployedProductRepository.GetDto(deployedProduct);
+            await _unitOfWork.CommitAsync();
+            return new AssetCheckInResponseDto
+            {
+                Asset = assetDto,
+                DeployedProduct = deployedProductDto
+            };
         }
 
         public async Task<AssetDto> CheckOut(Guid id)
         {
-            try
+            var deployedProduct = await _deployedProductRepository.GetByIdAsync(id);
+            if (deployedProduct == null)
             {
-                var deployedProduct = await _deployedProductRepository.GetByIdAsync(id);
-                if (deployedProduct == null)
-                {
-                    throw new Exception("Deployed product is not found");
-                }
-                _deployedProductRepository.Remove(deployedProduct);
-                var asset = await _assetRepository.GetByIdAsync(deployedProduct.AssetId);
-                if (asset == null)
-                {
-                    throw new Exception("Asset is not found");
-                }
-                var assetDto = await _assetRepository.GetDto(asset);
-                await _unitOfWork.CommitAsync();
-                return assetDto;
+                throw new Exception("Deployed product is not found");
             }
-            catch (Exception ex)
+            var asset = await _assetRepository.GetByIdAsync(deployedProduct.AssetId);
+            if (asset == null)
             {
-                throw new Exception(ex.Message);
+                throw new Exception("Asset is not found");
             }
+            deployedProduct.DeletedDate = DateTime.UtcNow;
+            _deployedProductRepository.Update(deployedProduct, deployedProduct);
+            await _customLogService.CreateCustomLog("Delete", asset.Id, null, "Asset", null);
+            var assetDto = await _assetRepository.GetDto(asset);
+            await _unitOfWork.CommitAsync();
+            return assetDto;
         }
     }
 }

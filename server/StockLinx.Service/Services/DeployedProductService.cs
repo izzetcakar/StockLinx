@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
-using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 using StockLinx.Core.Services;
@@ -54,20 +53,6 @@ namespace StockLinx.Service.Services
             var added = await AddRangeAsync(newDeployedProducts);
             return _deployedProductRepository.GetDtos(added.ToList());
         }
-        public async Task<DeployedProductDto> UpdateDeployedProductAsync(DeployedProductUpdateDto updateDto)
-        {
-            var deployedProductInDb = await GetByIdAsync(updateDto.Id);
-            if (deployedProductInDb == null)
-            {
-                throw new ArgumentNullException(nameof(updateDto.Id), "The ID of the DeployedProduct to update is null.");
-            }
-            var updatedDeployedProduct = _mapper.Map<DeployedProduct>(updateDto);
-            updatedDeployedProduct.UpdatedDate = DateTime.UtcNow;
-            await UpdateAsync(deployedProductInDb, updatedDeployedProduct);
-            var deployedProduct = await GetByIdAsync(updateDto.Id);
-            return _deployedProductRepository.GetDto(deployedProduct);
-        }
-
         public async Task DeleteDeployedProductAsync(Guid deployedProductId)
         {
             if (deployedProductId == Guid.Empty)

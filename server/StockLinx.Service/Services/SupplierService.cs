@@ -12,12 +12,14 @@ namespace StockLinx.Service.Services
     public class SupplierService : Service<Supplier>, ISupplierService
     {
         private readonly ISupplierRepository _supplierRepository;
+        private readonly ICustomLogService _customLogService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         public SupplierService(IRepository<Supplier> repository, ISupplierRepository supplierRepository,
-            IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork)
+            IUnitOfWork unitOfWork, IMapper mapper, ICustomLogService customLogService) : base(repository, unitOfWork)
         {
             _supplierRepository = supplierRepository;
+            _customLogService = customLogService;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
@@ -37,8 +39,10 @@ namespace StockLinx.Service.Services
             var newSupplier = _mapper.Map<Supplier>(createDto);
             newSupplier.Id = Guid.NewGuid();
             newSupplier.CreatedDate = DateTime.UtcNow;
-            var added = await AddAsync(newSupplier);
-            return _supplierRepository.GetDto(added);
+            await _supplierRepository.AddAsync(newSupplier);
+            await _customLogService.CreateCustomLog("Create", newSupplier.Id, null, "Supplier", null);
+            await _unitOfWork.CommitAsync();
+            return _supplierRepository.GetDto(newSupplier);
         }
 
         public async Task<List<SupplierDto>> CreateRangeSupplierAsync(List<SupplierCreateDto> createDtos)
@@ -50,9 +54,10 @@ namespace StockLinx.Service.Services
                 newSupplier.Id = Guid.NewGuid();
                 newSupplier.CreatedDate = DateTime.UtcNow;
                 newSuppliers.Add(newSupplier);
+                await _customLogService.CreateCustomLog("Create", newSupplier.Id, null, "Supplier", null);
             }
-            var added = await AddRangeAsync(newSuppliers);
-            return _supplierRepository.GetDtos(added.ToList());
+            await _supplierRepository.AddRangeAsync(newSuppliers);
+            return _supplierRepository.GetDtos(newSuppliers.ToList());
         }
 
         public async Task<SupplierDto> UpdateSupplierAsync(SupplierUpdateDto updateDto)
@@ -60,27 +65,27 @@ namespace StockLinx.Service.Services
             var supplierInDb = await GetByIdAsync(updateDto.Id);
             if (supplierInDb == null)
             {
-                throw new ArgumentNullException(nameof(updateDto.Id), $"The ID of the supplier to update is null.");
+                throw new ArgumentNullException("Supplier is not found");
             }
             var updatedSupplier = _mapper.Map<Supplier>(updateDto);
             updatedSupplier.UpdatedDate = DateTime.UtcNow;
-            await UpdateAsync(supplierInDb, updatedSupplier);
-            var supplier = await GetByIdAsync(updateDto.Id);
-            return _supplierRepository.GetDto(supplier);
+            _supplierRepository.Update(supplierInDb, updatedSupplier);
+            await _customLogService.CreateCustomLog("Update", updatedSupplier.Id, null, "Supplier", null);
+            await _unitOfWork.CommitAsync();
+            return _supplierRepository.GetDto(updatedSupplier);
         }
 
         public async Task DeleteSupplierAsync(Guid supplierId)
         {
-            if (supplierId == Guid.Empty)
-            {
-                throw new ArgumentNullException(nameof(supplierId), $"The ID of the supplier to delete is null.");
-            }
             var supplier = await GetByIdAsync(supplierId);
             if (supplier == null)
             {
-                throw new ArgumentNullException(nameof(supplier), $"The supplier to delete is null.");
+                throw new ArgumentNullException("Supplier is not found");
             }
-            await RemoveAsync(supplier);
+            supplier.DeletedDate = DateTime.UtcNow;
+            _supplierRepository.Update(supplier, supplier);
+            await _customLogService.CreateCustomLog("Delete", supplier.Id, null, "Supplier", null);
+            await _unitOfWork.CommitAsync();
         }
 
         public async Task DeleteRangeSupplierAsync(List<Guid> supplierIds)
@@ -88,10 +93,13 @@ namespace StockLinx.Service.Services
             var suppliers = new List<Supplier>();
             foreach (var supplierId in supplierIds)
             {
-                var supplier = GetByIdAsync(supplierId).Result;
+                var supplier = await GetByIdAsync(supplierId);
+                supplier.DeletedDate = DateTime.UtcNow;
                 suppliers.Add(supplier);
+                await _customLogService.CreateCustomLog("Delete", supplier.Id, null, "Supplier", null);
             }
-            await RemoveRangeAsync(suppliers);
+            _supplierRepository.UpdateRange(suppliers);
+            await _unitOfWork.CommitAsync();
         }
     }
 }
