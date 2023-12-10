@@ -43,13 +43,6 @@ namespace StockLinx.API.Controllers
             return CreateActionResult(CustomResponseDto<List<FieldSetCustomFieldDto>>.Success(201, added));
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Update(FieldSetCustomFieldDto updateDto)
-        {
-            var dto = await _fieldSetCustomFieldService.UpdateFieldSetCustomFieldAsync(updateDto);
-            return CreateActionResult(CustomResponseDto<FieldSetCustomFieldDto>.Success(200, dto));
-        }
-
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {

@@ -2,7 +2,6 @@
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
-using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Services;
 
 namespace StockLinx.API.Controllers
@@ -44,13 +43,6 @@ namespace StockLinx.API.Controllers
         {
             var added = await _deployedProductService.CreateRangeDeployedProductAsync(createRangeDto);
             return CreateActionResult(CustomResponseDto<List<DeployedProductDto>>.Success(201, added));
-        }
-
-        [HttpPut]
-        public async Task<IActionResult> Update(DeployedProductUpdateDto updateDto)
-        {
-            var dto = await _deployedProductService.UpdateDeployedProductAsync(updateDto);
-            return CreateActionResult(CustomResponseDto<DeployedProductDto>.Success(200, dto));
         }
 
         [HttpDelete("{id}")]

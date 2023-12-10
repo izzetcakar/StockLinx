@@ -1,6 +1,5 @@
 ﻿using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
-using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 
 namespace StockLinx.Core.Services
@@ -11,7 +10,6 @@ namespace StockLinx.Core.Services
         Task<List<DeployedProductDto>> GetAllDtos();
         Task<DeployedProductDto> CreateDeployedProductAsync(DeployedProductCreateDto createDto);
         Task<List<DeployedProductDto>> CreateRangeDeployedProductAsync(List<DeployedProductCreateDto> createDtos);
-        Task<DeployedProductDto> UpdateDeployedProductAsync(DeployedProductUpdateDto updateDto);
         Task DeleteDeployedProductAsync(Guid deployedProductId);
     }
 }

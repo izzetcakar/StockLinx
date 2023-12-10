@@ -42,9 +42,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped(typeof(IService<>), typeof(Service<>));
+builder.Services.AddScoped<ICustomLogRepository, CustomLogRepository>();
+builder.Services.AddScoped<ICustomLogService, CustomLogService>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAccessoryRepository, AccessoryRepository>();
 builder.Services.AddScoped<IAccessoryService, AccessoryService>();
 builder.Services.AddScoped<IAssetRepository, AssetRepository>();
@@ -87,8 +89,6 @@ builder.Services.AddScoped<IFieldSetCustomFieldRepository, FieldSetCustomFieldRe
 builder.Services.AddScoped<IFieldSetCustomFieldService, FieldSetCustomFieldService>();
 builder.Services.AddScoped<IGenericRepository, GenericRepository>();
 builder.Services.AddScoped<IGenericService, GenericService>();
-builder.Services.AddScoped<ICustomLogRepository, CustomLogRepository>();
-builder.Services.AddScoped<ICustomLogService, CustomLogService>();
 builder.Services.AddAutoMapper(typeof(MapProfile));
 builder.Services.AddHttpContextAccessor();
 
