@@ -57,8 +57,7 @@ namespace StockLinx.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var supplier = await _supplierService.GetByIdAsync(id);
-            await _supplierService.RemoveAsync(supplier);
+            await _supplierService.DeleteSupplierAsync(id);
             return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
         }
 
