@@ -26,7 +26,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
         }
         public async Task<List<LocationDto>> GetAllDtos()
         {
-            var entities = await dbContext.Locations.AsNoTracking().ToListAsync();
+            var entities = await dbContext.Locations.Where(l => l.DeletedDate == null).AsNoTracking().ToListAsync();
             return GetDtos(entities);
         }
     }

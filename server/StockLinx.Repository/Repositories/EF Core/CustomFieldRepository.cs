@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
@@ -15,29 +14,6 @@ namespace StockLinx.Repository.Repositories.EF_Core
             _mapper = mapper;
         }
 
-        public async Task CreateCustomField(CustomFieldCreateDto dto)
-        {
-            var newCustomField = _mapper.Map<CustomField>(dto);
-            var fcToAdd = new List<FieldSetCustomField>();
-            newCustomField.Id = Guid.NewGuid();
-            newCustomField.CreatedDate = DateTime.UtcNow;
-
-            if (dto.FieldSetCustomFields != null && dto.FieldSetCustomFields.Any())
-            {
-                foreach (var fieldSetCustomFieldDto in dto.FieldSetCustomFields)
-                {
-                    var newFieldSetCustomField = _mapper.Map<FieldSetCustomField>(fieldSetCustomFieldDto);
-                    newFieldSetCustomField.Id = Guid.NewGuid();
-                    newFieldSetCustomField.CreatedDate = DateTime.UtcNow;
-                    newFieldSetCustomField.CustomFieldId = newCustomField.Id;
-                    fcToAdd.Add(newFieldSetCustomField);
-                }
-                dbContext.AddRange(fcToAdd);
-            }
-            newCustomField.FieldSetCustomFields = null;
-            dbContext.Add(newCustomField);
-        }
-
         public CustomFieldDto GetDto(CustomField entity)
         {
             return _mapper.Map<CustomFieldDto>(entity);
@@ -50,7 +26,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
         }
         public async Task<List<CustomFieldDto>> GetAllDtos()
         {
-            var entities = await dbContext.CustomFields.AsNoTracking().ToListAsync();
+            var entities = await dbContext.CustomFields.Where(c => c.DeletedDate == null).AsNoTracking().ToListAsync();
             return GetDtos(entities);
         }
     }

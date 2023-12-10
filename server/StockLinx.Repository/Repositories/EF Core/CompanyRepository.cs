@@ -28,7 +28,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
 
         public async Task<List<CompanyDto>> GetAllDtos()
         {
-            var entities = await dbContext.Companies.AsNoTracking().ToListAsync();
+            var entities = await dbContext.Companies.Where(c => c.DeletedDate == null).AsNoTracking().ToListAsync();
             return GetDtos(entities);
         }
     }

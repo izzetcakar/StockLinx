@@ -28,7 +28,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
         }
         public async Task<List<FieldSetCustomFieldDto>> GetAllDtos()
         {
-            var items = await dbContext.FieldSetCustomFields.AsNoTracking().ToListAsync();
+            var items = await dbContext.FieldSetCustomFields.Where(f => f.DeletedDate == null).AsNoTracking().ToListAsync();
             return GetDtos(items);
         }
     }

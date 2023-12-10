@@ -19,7 +19,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
         public ModelDto GetDto(Model entity)
         {
             var modelFieldData = new List<ModelFieldDataDto>();
-            modelFieldData = dbContext.ModelFieldDatas.Where(x => x.ModelId == entity.Id).Select(x => new ModelFieldDataDto
+            modelFieldData = dbContext.ModelFieldDatas.Where(x => x.ModelId == entity.Id && x.DeletedDate == null).Select(x => new ModelFieldDataDto
             {
                 Id = x.Id,
                 ModelId = x.ModelId,
@@ -44,13 +44,13 @@ namespace StockLinx.Repository.Repositories.EF_Core
         }
         public async Task<List<ModelDto>> GetAllDtos()
         {
-            var entities = await dbContext.Models.AsNoTracking().ToListAsync();
+            var entities = await dbContext.Models.Where(m => m.DeletedDate == null).AsNoTracking().ToListAsync();
             return GetDtos(entities);
         }
 
         public void UpdateModel(ModelUpdateDto dto)
         {
-            var entity = dbContext.Models.SingleOrDefault(x => x.Id == dto.Id);
+            var entity = dbContext.Models.Where(m => m.DeletedDate == null).SingleOrDefault(x => x.Id == dto.Id);
             if (entity == null)
             {
                 throw new Exception("Model not found");
@@ -60,7 +60,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
             Update(entity, updatedEntity);
             var itemsToAdd = new List<ModelFieldData>();
             var itemsToDelete = new List<ModelFieldData>();
-            var itemsInDb = dbContext.ModelFieldDatas.Where(x => x.ModelId == dto.Id).ToList();
+            var itemsInDb = dbContext.ModelFieldDatas.Where(x => x.ModelId == dto.Id && x.DeletedDate == null).ToList();
             foreach (var item in itemsInDb)
             {
                 var itemDto = dto.ModelFieldData.SingleOrDefault(x => x.Id == item.Id);

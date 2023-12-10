@@ -16,8 +16,8 @@ namespace StockLinx.Repository.Repositories.EF_Core
 
         public async Task<LicenseDto> GetDto(License entity)
         {
-            var deployedProducts = await dbContext.DeployedProducts.AsNoTracking().ToListAsync();
-            var companyId = await dbContext.Branches.Where(b => b.Id == entity.BranchId).Select(b => b.CompanyId).FirstOrDefaultAsync();
+            var deployedProducts = await dbContext.DeployedProducts.Where(d => d.DeletedDate == null).AsNoTracking().ToListAsync();
+            var companyId = await dbContext.Branches.Where(b => b.Id == entity.BranchId && b.DeletedDate == null).Select(b => b.CompanyId).FirstOrDefaultAsync();
             var availableQuantity = entity.Quantity - deployedProducts.Count(d => d.LicenseId.HasValue && d.LicenseId == entity.Id);
             if (companyId == null)
             {
@@ -30,12 +30,12 @@ namespace StockLinx.Repository.Repositories.EF_Core
         }
         public async Task<List<LicenseDto>> GetDtos(List<License> entities)
         {
-            var deployedProducts = await dbContext.DeployedProducts.AsNoTracking().ToListAsync();
+            var deployedProducts = await dbContext.DeployedProducts.Where(d => d.DeletedDate == null).AsNoTracking().ToListAsync();
             var dtos = new List<LicenseDto>();
 
             foreach (var license in entities)
             {
-                var companyId = await dbContext.Branches.Where(b => b.Id == license.BranchId).Select(b => b.CompanyId).FirstOrDefaultAsync();
+                var companyId = await dbContext.Branches.Where(b => b.Id == license.BranchId && b.DeletedDate == null).Select(b => b.CompanyId).FirstOrDefaultAsync();
                 var availableQuantity = license.Quantity - deployedProducts.Count(d => d.LicenseId.HasValue && d.LicenseId == license.Id);
                 if (companyId == null)
                 {
@@ -50,7 +50,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
         }
         public async Task<List<LicenseDto>> GetAllDtos()
         {
-            var entities = await dbContext.Licenses.AsNoTracking().ToListAsync();
+            var entities = await dbContext.Licenses.Where(l => l.DeletedDate == null).AsNoTracking().ToListAsync();
             return await GetDtos(entities);
         }
     }

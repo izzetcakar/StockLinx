@@ -16,8 +16,8 @@ namespace StockLinx.Repository.Repositories.EF_Core
 
         public async Task<ConsumableDto> GetDto(Consumable entity)
         {
-            var deployedProducts = await dbContext.DeployedProducts.AsNoTracking().ToListAsync();
-            var companyId = await dbContext.Branches.Where(b => b.Id == entity.BranchId).Select(b => b.CompanyId).FirstOrDefaultAsync();
+            var deployedProducts = await dbContext.DeployedProducts.Where(c => c.DeletedDate == null).AsNoTracking().ToListAsync();
+            var companyId = await dbContext.Branches.Where(b => b.Id == entity.BranchId && b.DeletedDate == null).Select(b => b.CompanyId).FirstOrDefaultAsync();
             var availableQuantity = entity.Quantity - deployedProducts.Count(d => d.ConsumableId.HasValue && d.ConsumableId == entity.Id);
             if (companyId == null)
             {
@@ -30,12 +30,12 @@ namespace StockLinx.Repository.Repositories.EF_Core
         }
         public async Task<List<ConsumableDto>> GetDtos(List<Consumable> entities)
         {
-            var deployedProducts = await dbContext.DeployedProducts.AsNoTracking().ToListAsync();
+            var deployedProducts = await dbContext.DeployedProducts.Where(c => c.DeletedDate == null).AsNoTracking().ToListAsync();
             var dtos = new List<ConsumableDto>();
 
             foreach (Consumable entity in entities)
             {
-                var companyId = await dbContext.Branches.Where(b => b.Id == entity.BranchId).Select(b => b.CompanyId).FirstOrDefaultAsync();
+                var companyId = await dbContext.Branches.Where(b => b.Id == entity.BranchId && b.DeletedDate == null).Select(b => b.CompanyId).FirstOrDefaultAsync();
                 var availableQuantity = entity.Quantity - deployedProducts.Count(d => d.ConsumableId.HasValue && d.ConsumableId == entity.Id);
                 if (companyId == null)
                 {
@@ -50,7 +50,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
         }
         public async Task<List<ConsumableDto>> GetAllDtos()
         {
-            var entities = await dbContext.Consumables.AsNoTracking().ToListAsync();
+            var entities = await dbContext.Consumables.Where(c => c.DeletedDate == null).AsNoTracking().ToListAsync();
             return await GetDtos(entities);
         }
     }

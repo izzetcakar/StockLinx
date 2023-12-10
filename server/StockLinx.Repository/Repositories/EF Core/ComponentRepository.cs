@@ -16,8 +16,8 @@ namespace StockLinx.Repository.Repositories.EF_Core
 
         public async Task<ComponentDto> GetDto(Component entity)
         {
-            var deployedProducts = await dbContext.DeployedProducts.AsNoTracking().ToListAsync();
-            var companyId = await dbContext.Branches.Where(b => b.Id == entity.BranchId).Select(b => b.CompanyId).FirstOrDefaultAsync();
+            var deployedProducts = await dbContext.DeployedProducts.Where(c => c.DeletedDate == null).AsNoTracking().ToListAsync();
+            var companyId = await dbContext.Branches.Where(b => b.Id == entity.BranchId && b.DeletedDate == null).Select(b => b.CompanyId).FirstOrDefaultAsync();
             var availableQuantity = entity.Quantity - deployedProducts.Count(d => d.ComponentId.HasValue && d.ComponentId == entity.Id);
             if (companyId == null)
             {
@@ -30,12 +30,12 @@ namespace StockLinx.Repository.Repositories.EF_Core
         }
         public async Task<List<ComponentDto>> GetDtos(List<Component> entities)
         {
-            var deployedProducts = await dbContext.DeployedProducts.AsNoTracking().ToListAsync();
+            var deployedProducts = await dbContext.DeployedProducts.Where(c => c.DeletedDate == null).AsNoTracking().ToListAsync();
             var dtos = new List<ComponentDto>();
 
             foreach (var entity in entities)
             {
-                var companyId = await dbContext.Branches.Where(b => b.Id == entity.BranchId).Select(b => b.CompanyId).FirstOrDefaultAsync();
+                var companyId = await dbContext.Branches.Where(b => b.Id == entity.BranchId && b.DeletedDate == null).Select(b => b.CompanyId).FirstOrDefaultAsync();
                 var availableQuantity = entity.Quantity - deployedProducts.Count(d => d.ComponentId.HasValue && d.ComponentId == entity.Id);
                 if (companyId == null)
                 {
@@ -50,7 +50,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
         }
         public async Task<List<ComponentDto>> GetAllDtos()
         {
-            var entities = await dbContext.Components.AsNoTracking().ToListAsync();
+            var entities = await dbContext.Components.Where(c => c.DeletedDate == null).AsNoTracking().ToListAsync();
             return await GetDtos(entities);
         }
     }

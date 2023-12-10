@@ -459,12 +459,12 @@ namespace StockLinx.Repository.Repositories.EF_Core
         public IEnumerable<EntityCounter> GetEntityCounts()
         {
             var entityCounts = new List<EntityCounter>();
-            var accessoryCount = dbContext.Accessories.Count();
-            var licenseCount = dbContext.Licenses.Count();
-            var consumableCount = dbContext.Consumables.Count();
-            var assetCount = dbContext.Assets.Count();
-            var componentCount = dbContext.Components.Count();
-            var userCount = dbContext.Users.Count();
+            var accessoryCount = dbContext.Accessories.Where(x => x.DeletedDate == null).Count();
+            var licenseCount = dbContext.Licenses.Where(x => x.DeletedDate == null).Count();
+            var consumableCount = dbContext.Consumables.Where(x => x.DeletedDate == null).Count();
+            var assetCount = dbContext.Assets.Where(x => x.DeletedDate == null).Count();
+            var componentCount = dbContext.Components.Where(x => x.DeletedDate == null).Count();
+            var userCount = dbContext.Users.Where(x => x.DeletedDate == null).Count();
             entityCounts.Add(new EntityCounter { EntityName = "Accessory", Count = accessoryCount });
             entityCounts.Add(new EntityCounter { EntityName = "License", Count = licenseCount });
             entityCounts.Add(new EntityCounter { EntityName = "Consumable", Count = consumableCount });
@@ -477,8 +477,8 @@ namespace StockLinx.Repository.Repositories.EF_Core
         public IEnumerable<ProductStatusCounter> GetProductStatusCounts()
         {
             var productStatusCounts = new List<ProductStatusCounter>();
-            var assets = dbContext.Assets;
-            var productStatuses = dbContext.ProductStatuses;
+            var assets = dbContext.Assets.Where(x => x.DeletedDate == null);
+            var productStatuses = dbContext.ProductStatuses.Where(x => x.DeletedDate == null);
 
             productStatusCounts = productStatuses.Select(status => new ProductStatusCounter
             {
@@ -490,9 +490,9 @@ namespace StockLinx.Repository.Repositories.EF_Core
         public IEnumerable<ProductLocationCounterDto> GetProductLocationCounts()
         {
             var productLocationCounts = new List<ProductLocationCounterDto>();
-            var locations = dbContext.Locations;
-            var assets = dbContext.Assets;
-            var deployedAssets = dbContext.DeployedProducts;
+            var locations = dbContext.Locations.Where(x => x.DeletedDate == null);
+            var assets = dbContext.Assets.Where(x => x.DeletedDate == null);
+            var deployedAssets = dbContext.DeployedProducts.Where(x => x.DeletedDate == null);
             productLocationCounts = locations.Select(l => new ProductLocationCounterDto
             {
                 LocationId = l.Id,
@@ -507,41 +507,41 @@ namespace StockLinx.Repository.Repositories.EF_Core
         {
             var productCategoryCounts = new List<ProductCategoryCounterDto>();
 
-            var assetCount = dbContext.Models.Where(m => m.Category.Type == CategoryType.Asset).Count();
-            var accessoryCount = dbContext.Accessories.Where(m => m.Category.Type == CategoryType.Accessory).Count();
-            var componentCount = dbContext.Components.Where(m => m.Category.Type == CategoryType.Component).Count();
-            var consumableCount = dbContext.Consumables.Where(m => m.Category.Type == CategoryType.Consumable).Count();
-            var licenseCount = dbContext.Licenses.Where(m => m.Category.Type == CategoryType.License).Count();
+            var assetCount = dbContext.Models.Where(m => m.Category.Type == CategoryType.Asset && m.DeletedDate == null).Count();
+            var accessoryCount = dbContext.Accessories.Where(m => m.Category.Type == CategoryType.Accessory && m.DeletedDate == null).Count();
+            var componentCount = dbContext.Components.Where(m => m.Category.Type == CategoryType.Component && m.DeletedDate == null).Count();
+            var consumableCount = dbContext.Consumables.Where(m => m.Category.Type == CategoryType.Consumable && m.DeletedDate == null).Count();
+            var licenseCount = dbContext.Licenses.Where(m => m.Category.Type == CategoryType.License && m.DeletedDate == null).Count();
 
-            var assets = dbContext.Models.Where(m => m.Category.Type == CategoryType.Asset).Select(m => new ProductCategoryCounterDto
+            var assets = dbContext.Models.Where(m => m.Category.Type == CategoryType.Asset && m.DeletedDate == null).Select(m => new ProductCategoryCounterDto
             {
                 CategoryId = m.CategoryId,
                 CategoryName = m.Category.Name,
                 ProductName = "Asset",
                 ProductCount = assetCount,
             }).ToList();
-            var accessories = dbContext.Accessories.Where(a => a.CategoryId != null).Select(a => new ProductCategoryCounterDto
+            var accessories = dbContext.Accessories.Where(a => a.CategoryId != null && a.DeletedDate == null).Select(a => new ProductCategoryCounterDto
             {
                 CategoryId = a.CategoryId,
                 CategoryName = a.Category.Name,
                 ProductName = "Accessory",
                 ProductCount = accessoryCount,
             }).ToList();
-            var components = dbContext.Components.Where(c => c.CategoryId != null).Select(c => new ProductCategoryCounterDto
+            var components = dbContext.Components.Where(c => c.CategoryId != null && c.DeletedDate == null).Select(c => new ProductCategoryCounterDto
             {
                 CategoryId = c.CategoryId,
                 CategoryName = c.Category.Name,
                 ProductName = "Component",
                 ProductCount = componentCount,
             }).ToList();
-            var consumables = dbContext.Consumables.Where(c => c.CategoryId != null).Select(c => new ProductCategoryCounterDto
+            var consumables = dbContext.Consumables.Where(c => c.CategoryId != null && c.DeletedDate == null).Select(c => new ProductCategoryCounterDto
             {
                 CategoryId = c.CategoryId,
                 CategoryName = c.Category.Name,
                 ProductName = "Consumable",
                 ProductCount = consumableCount,
             }).ToList();
-            var licenses = dbContext.Licenses.Where(l => l.CategoryId != null).Select(l => new ProductCategoryCounterDto
+            var licenses = dbContext.Licenses.Where(l => l.CategoryId != null && l.DeletedDate == null).Select(l => new ProductCategoryCounterDto
             {
                 CategoryId = l.CategoryId,
                 CategoryName = l.Category.Name,

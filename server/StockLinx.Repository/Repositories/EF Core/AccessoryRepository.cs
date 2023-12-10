@@ -16,8 +16,8 @@ namespace StockLinx.Repository.Repositories.EF_Core
 
         public async Task<AccessoryDto> GetDto(Accessory entity)
         {
-            var deployedProducts = await dbContext.DeployedProducts.AsNoTracking().ToListAsync();
-            var companyId = await dbContext.Branches.Where(b => b.Id == entity.BranchId).Select(b => b.CompanyId).FirstOrDefaultAsync();
+            var deployedProducts = await dbContext.DeployedProducts.Where(d => d.DeletedDate == null).AsNoTracking().ToListAsync();
+            var companyId = await dbContext.Branches.Where(b => b.Id == entity.BranchId && b.DeletedDate == null).Select(b => b.CompanyId).FirstOrDefaultAsync();
             if (companyId == null)
             {
                 return null;
@@ -30,12 +30,12 @@ namespace StockLinx.Repository.Repositories.EF_Core
         }
         public async Task<List<AccessoryDto>> GetDtos(List<Accessory> entities)
         {
-            var deployedProducts = await dbContext.DeployedProducts.AsNoTracking().ToListAsync();
+            var deployedProducts = await dbContext.DeployedProducts.Where(d => d.DeletedDate == null).AsNoTracking().ToListAsync();
             var dtos = new List<AccessoryDto>();
 
             foreach (var entity in entities)
             {
-                var companyId = await dbContext.Branches.Where(b => b.Id == entity.BranchId).Select(b => b.CompanyId).FirstOrDefaultAsync();
+                var companyId = await dbContext.Branches.Where(b => b.Id == entity.BranchId && b.DeletedDate == null).Select(b => b.CompanyId).FirstOrDefaultAsync();
                 if (companyId == null)
                 {
                     continue;
@@ -51,7 +51,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
         }
         public async Task<List<AccessoryDto>> GetAllDtos()
         {
-            var entities = await dbContext.Accessories.AsNoTracking().ToListAsync();
+            var entities = await dbContext.Accessories.Where(a => a.DeletedDate == null).AsNoTracking().ToListAsync();
             return await GetDtos(entities);
         }
     }
