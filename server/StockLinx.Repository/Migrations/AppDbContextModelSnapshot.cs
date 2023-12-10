@@ -452,6 +452,40 @@ namespace StockLinx.Repository.Migrations
                     b.ToTable("CustomFields");
                 });
 
+            modelBuilder.Entity("StockLinx.Core.Entities.CustomLog", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ItemController")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("ItemId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("TargetController")
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("TargetId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CustomLogs");
+                });
+
             modelBuilder.Entity("StockLinx.Core.Entities.Department", b =>
                 {
                     b.Property<Guid>("Id")
