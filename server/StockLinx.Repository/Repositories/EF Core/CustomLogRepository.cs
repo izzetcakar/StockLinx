@@ -1,4 +1,5 @@
-﻿using StockLinx.Core.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 
 namespace StockLinx.Repository.Repositories.EF_Core
@@ -8,7 +9,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
         public CustomLogRepository(AppDbContext dbContext) : base(dbContext)
         {
         }
-        public IQueryable<object> GetAllEntities(string entityName)
+        public async Task<IQueryable<object>> GetAllEntitiesAsync(string entityName)
         {
             var inputEntityName = "StockLinx.Core.Entities." + entityName;
             var entityType = dbContext.Model.FindEntityType(inputEntityName);
@@ -18,19 +19,22 @@ namespace StockLinx.Repository.Repositories.EF_Core
                 var setMethod = dbContext.GetType().GetMethod("Set", Type.EmptyTypes).MakeGenericMethod(entityType.ClrType);
                 var set = setMethod.Invoke(dbContext, null);
 
-                return set as IQueryable<object>;
+                // Assuming DbSet<T> has an asynchronous version of ToList, use it.
+                var resultList = ((dynamic)set);
+
+                return resultList.AsQueryable();
             }
             throw new InvalidOperationException($"The entity type '{entityName}' is not found.(GetAll)");
         }
 
-        public object GetObjById(string entityName, Guid id)
+        public async Task<string> GetObjByIdAsync(string entityName, Guid id)
         {
             var inputEntityName = "StockLinx.Core.Entities." + entityName;
             var entityType = dbContext.Model.FindEntityType(inputEntityName);
 
             if (entityType != null)
             {
-                var allEntities = GetAllEntities(entityName).ToList();
+                var allEntities = await GetAllEntitiesAsync(entityName).Result.ToListAsync();
                 var keyName = "Id";
                 var entity = allEntities.SingleOrDefault(e => (Guid)e.GetType().GetProperty(keyName).GetValue(e) == id);
 
@@ -38,9 +42,11 @@ namespace StockLinx.Repository.Repositories.EF_Core
                 {
                     throw new InvalidOperationException($"Entity with '{keyName}' = '{id}' not found in '{inputEntityName}'.");
                 }
-                return entity;
+
+                return entity.GetType().GetProperty("Name").GetValue(entity).ToString();
             }
             throw new InvalidOperationException($"The entity type '{entityName}' is not found.");
         }
+
     }
 }

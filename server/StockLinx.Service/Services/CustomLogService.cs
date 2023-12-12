@@ -1,4 +1,6 @@
-﻿using StockLinx.Core.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using StockLinx.Core.DTOs.Generic;
+using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 using StockLinx.Core.Services;
 using StockLinx.Core.UnitOfWork;
@@ -33,10 +35,29 @@ namespace StockLinx.Service.Services
             await _customLogRepository.AddAsync(customLog);
         }
 
-        public object GetObjById(string entityName, Guid id)
+        public async Task<IEnumerable<CustomLogDto>> GetAllDtosAsync()
         {
-            var obj = _customLogRepository.GetObjById(entityName, id);
-            return obj;
+            var allLogs = await _customLogRepository
+                .GetAll()
+                .ToListAsync();
+
+            var logDtos = allLogs.Select(async x => new CustomLogDto
+            {
+                Id = x.Id,
+                UserId = x.UserId,
+                Date = x.Date,
+                Action = x.Action,
+                ItemRoute = $"{x.ItemController.ToLower()}/{x.ItemId}",
+                TargetRoute = x.TargetController != null ? $"{x.TargetController.ToLower()}/{x.TargetId}" : null,
+                ItemController = x.ItemController,
+                TargetController = x.TargetController,
+                ItemName = await _customLogRepository.GetObjByIdAsync(x.ItemController, x.ItemId),
+                TargetName = (x.TargetController != null && x.TargetId != null)
+                    ? await _customLogRepository.GetObjByIdAsync(x.TargetController, (Guid)x.TargetId)
+                    : null,
+            }).Select(x => x.Result).ToList();
+
+            return logDtos;
         }
     }
 }
