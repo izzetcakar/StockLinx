@@ -13,12 +13,15 @@ import Gridtable from "../../components/gridTable/GridTable";
 import { openAccessoryModal } from "../../modals/modals";
 import { userActions } from "../../redux/user/actions";
 import { categoryActions } from "../../redux/category/actions";
+import { useContext } from "react";
+import GenericContext from "../../context/GenericContext";
 
 const Accessory = () => {
   const dispatch = useDispatch();
   const accessories = useSelector(
     (state: RootState) => state.accessory.accessories
   );
+  const { drawerBadge } = useContext(GenericContext);
 
   const refreshData = () => {
     dispatch(accessoryActions.getAll());
@@ -36,6 +39,7 @@ const Accessory = () => {
     <>
       <div className="page-content-header">
         <div className="page-content-header-title">Accessories</div>
+        {drawerBadge()}
       </div>
       <Gridtable
         data={accessories}
