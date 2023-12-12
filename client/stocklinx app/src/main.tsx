@@ -7,6 +7,7 @@ import store from "./redux/store";
 import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
 import { MantineProvider } from "@mantine/core";
+import { GenericProvider } from "./context/GenericContext.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <MantineProvider
@@ -30,10 +31,12 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     }}
   >
     <Provider store={store}>
-      <ModalsProvider>
-        <Notifications w={"fit-content"} position="top-right" />
-        <App />
-      </ModalsProvider>
+      <GenericProvider>
+        <ModalsProvider>
+          <Notifications w={"fit-content"} position="top-right" />
+          <App />
+        </ModalsProvider>
+      </GenericProvider>
     </Provider>
   </MantineProvider>
 );
