@@ -12,7 +12,5 @@ namespace StockLinx.Core.Repositories
         Task AddRangeAsync(IEnumerable<T> entities);
         void Update(T oldEntity, T newEntity);
         void UpdateRange(IEnumerable<T> entities);
-        void Remove(T entity);
-        void RemoveRange(IEnumerable<T> entities);
     }
 }

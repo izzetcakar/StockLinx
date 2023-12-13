@@ -11,7 +11,5 @@ namespace StockLinx.Core.Services
         Task<T> AddAsync(T entity);
         Task<IEnumerable<T>> AddRangeAsync(IEnumerable<T> entities);
         Task UpdateAsync(T oldEntity, T newEntity);
-        Task RemoveRangeAsync(IEnumerable<T> entities);
-        Task RemoveAsync(T entity);
     }
 }
