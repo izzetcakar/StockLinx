@@ -1,20 +1,23 @@
-import React, { ReactNode } from "react";
-import { Badge, Drawer, Select } from "@mantine/core";
+import React, { ReactNode, useEffect } from "react";
+import { Badge, Drawer, LoadingOverlay, Select } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { createContext } from "react";
 import { RootState } from "../redux/rootReducer";
 import { useDispatch, useSelector } from "react-redux";
-import filterClasses from "../mantineModules/baseFilter.module.scss";
 import { branchActions } from "../redux/branch/actions";
+import { companyActions } from "../redux/company/actions";
+import filterClasses from "../mantineModules/baseFilter.module.scss";
 
 interface GenericProviderProps {
   children: ReactNode;
 }
 interface GenericContextValues {
   drawerBadge: () => React.ReactNode;
+  drawerOpened: boolean;
 }
 
 const GenericContext = createContext<GenericContextValues>({
+  drawerOpened: false,
   drawerBadge: () => (
     <Drawer
       position="right"
@@ -33,7 +36,28 @@ export const GenericProvider: React.FC<GenericProviderProps> = ({
   const branches = useSelector((state: RootState) => state.branch.branches);
   const branch = useSelector((state: RootState) => state.branch.branch);
   const [company, setCompany] = React.useState<string | null>(null);
-  const [opened, { open, close }] = useDisclosure(false);
+  const [drawerOpened, { open, close }] = useDisclosure(false);
+
+  const refreshData = () => {
+    dispatch(companyActions.getAll());
+    dispatch(branchActions.getAll());
+  };
+  useEffect(() => {
+    if (drawerOpened) {
+      refreshData();
+    }
+  }, [drawerOpened]);
+
+  const getCompanyAndBranch = () => {
+    if (branch) {
+      const company = companies.find(
+        (company) => company.id === branch.companyId
+      );
+      if (company) {
+        return company.name + "-" + branch.name;
+      }
+    }
+  };
 
   const drawerBadge = () => {
     const findBranchById = (id: string) => {
@@ -43,12 +67,12 @@ export const GenericProvider: React.FC<GenericProviderProps> = ({
       }
       return branch;
     };
-    if (loading > 0) return null;
     return (
       <>
         <Drawer
+          id="company_drawer"
           position="right"
-          opened={opened}
+          opened={drawerOpened}
           onClose={close}
           title="Company - Branch"
         >
@@ -82,10 +106,11 @@ export const GenericProvider: React.FC<GenericProviderProps> = ({
             }
             classNames={filterClasses}
             dropdownPosition="bottom"
-            nothingFound="No company found"
+            nothingFound="No branch found"
             withAsterisk
             withinPortal
           />
+          <LoadingOverlay visible={loading > 0} zIndex={1000} />
         </Drawer>
         <Badge
           onClick={open}
@@ -94,13 +119,14 @@ export const GenericProvider: React.FC<GenericProviderProps> = ({
           color="blue"
           radius={10}
         >
-          Login
+          {getCompanyAndBranch() || "Select Branch"}
         </Badge>
       </>
     );
   };
 
   const values = {
+    drawerOpened,
     drawerBadge,
   };
 

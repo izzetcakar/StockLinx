@@ -25,10 +25,13 @@ import Branch from "./pages/branch/Branch";
 import User from "./pages/user/User";
 import CustomFields from "./pages/customFields/CustomFields";
 import { LoadingOverlay } from "@mantine/core";
+import { useContext } from "react";
+import GenericContext from "./context/GenericContext";
 
 const Layout = () => {
   const userRedux = useSelector((state: RootState) => state.user.user);
   const loading = useSelector((state: RootState) => state.generic.loading);
+  const { drawerOpened } = useContext(GenericContext);
 
   if (checkEmpty(userRedux)) {
     return (
@@ -42,7 +45,7 @@ const Layout = () => {
             <Outlet />
           </div>
         </div>
-        <LoadingOverlay visible={loading > 0} zIndex={1000} />
+        <LoadingOverlay visible={loading > 0 && !drawerOpened} zIndex={1000} />
       </div>
     );
   } else {
