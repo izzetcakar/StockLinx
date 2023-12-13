@@ -19,11 +19,13 @@ import { RootState } from "../../redux/rootReducer";
 import { userActions } from "../../redux/user/actions";
 import ReCAPTCHA from "react-google-recaptcha";
 import "./user.scss";
+import { useInstanceLoader } from "../../functions/instanceLoader";
 
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const captchaSiteKey = import.meta.env.VITE_CAPTCHA_SITE_KEY;
+  const instance = useInstanceLoader(captchaSiteKey);
   const [recaptcha, setRecaptcha] = useState(false);
   const user = useSelector((state: RootState) => state.user.user);
   const loading = useSelector((state: RootState) => state.generic.loading);
@@ -81,6 +83,7 @@ const Login = () => {
               <ReCAPTCHA
                 sitekey={captchaSiteKey}
                 onChange={() => setRecaptcha(true)}
+                grecaptcha={instance}
               >
                 <script
                   src="https://www.google.com/recaptcha/api.js?render=explicit"
@@ -88,6 +91,7 @@ const Login = () => {
                   defer
                 ></script>
               </ReCAPTCHA>
+
               <Button type="submit" color="dark" disabled={!recaptcha}>
                 Login
               </Button>
