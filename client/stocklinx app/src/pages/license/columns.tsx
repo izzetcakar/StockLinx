@@ -1,12 +1,22 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import {
   Column,
   ExcelColumn,
 } from "../../components/gridTable/interfaces/interfaces";
-import { CategoryType } from "../../interfaces/interfaces";
+import {
+  CategoryType,
+  IDeployedProduct,
+  ILicense,
+  ILicenseCheckInDto,
+} from "../../interfaces/interfaces";
+import { openCheckInModal } from "../../modals/modals";
+import { licenseActions } from "../../redux/license/actions";
+import uuid4 from "uuid4";
+import { Button } from "@mantine/core";
 
 export const useColumns = () => {
+  const dispatch = useDispatch();
   const branches = useSelector((state: RootState) => state.branch.branches);
   const manufacturers = useSelector(
     (state: RootState) => state.manufacturer.manufacturers
@@ -15,6 +25,33 @@ export const useColumns = () => {
   const categories = useSelector(
     (state: RootState) => state.category.categories
   );
+
+  const handleCheckIn = (data: IDeployedProduct) => {
+    dispatch(
+      licenseActions.checkIn({
+        checkInDto: {
+          licenseId: data.licenseId,
+          userId: data.userId,
+          notes: data.notes,
+          assaignDate: data.assignDate,
+        } as ILicenseCheckInDto,
+      })
+    );
+  };
+  const checkIn = (id: string) => {
+    const newDeployedProduct: IDeployedProduct = {
+      id: uuid4(),
+      userId: "",
+      assetId: null,
+      licenseId: id,
+      accessoryId: null,
+      componentId: null,
+      consumableId: null,
+      assignDate: new Date(),
+      notes: null,
+    };
+    openCheckInModal(newDeployedProduct, handleCheckIn);
+  };
 
   const columns: Column[] = [
     {
@@ -61,6 +98,26 @@ export const useColumns = () => {
       caption: "Avail",
       dataField: "availableQuantity",
       dataType: "number",
+    },
+    {
+      dataField: "id",
+      caption: "Checkin/Checkout",
+      dataType: "action",
+      renderComponent(e) {
+        return (
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <Button
+              color={"green"}
+              variant="filled"
+              size="xs"
+              onClick={() => checkIn((e as ILicense).id)}
+              disabled={(e as ILicense).availableQuantity === 0}
+            >
+              Check In
+            </Button>
+          </div>
+        );
+      },
     },
     // INVISIBLE COLUMNS
     {

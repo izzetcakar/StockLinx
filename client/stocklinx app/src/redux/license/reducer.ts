@@ -114,13 +114,16 @@ export default (state = initialState, action: LicenseActions) => {
         ...state,
       };
     case licenseConst.CHECK_IN_LICENSE_SUCCESS:
+      console.log("action.payload:", action.payload);
       return {
         ...state,
-        licenses: state.licenses.map((license) =>
-          license.id === action.payload.license.id
-            ? action.payload.license
-            : license
-        ),
+        licenses: state.licenses.map((license) => {
+          if (license.id === action.payload.license.id) {
+            return action.payload.license;
+          } else {
+            return license;
+          }
+        }),
       };
     case licenseConst.CHECK_IN_LICENSE_FAILURE:
       return {

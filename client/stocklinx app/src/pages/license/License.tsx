@@ -12,6 +12,7 @@ import { branchActions } from "../../redux/branch/actions";
 import Gridtable from "../../components/gridTable/GridTable";
 import { openLicenseModal } from "../../modals/modals";
 import { manufacturerActions } from "../../redux/manufacturer/actions";
+import { userActions } from "../../redux/user/actions";
 
 const License = () => {
   const dispatch = useDispatch();
@@ -25,6 +26,7 @@ const License = () => {
     dispatch(companyActions.getAll());
     dispatch(branchActions.getAll());
     dispatch(manufacturerActions.getAll());
+    dispatch(userActions.getAll());
   };
 
   return (

@@ -38,6 +38,7 @@ import {
   CheckOutLicenseSuccess,
   CheckOutLicenseFailure,
   CheckInPayload,
+  LicenseCheckInSuccessPayload,
 } from "./type";
 
 //GET
@@ -143,7 +144,9 @@ const checkIn = (payload: CheckInPayload): CheckInLicenseRequest => ({
   type: licenseConst.CHECK_IN_LICENSE_REQUEST,
   payload,
 });
-const checkInSuccess = (payload: LicensePayload): CheckInLicenseSuccess => ({
+const checkInSuccess = (
+  payload: LicenseCheckInSuccessPayload
+): CheckInLicenseSuccess => ({
   type: licenseConst.CHECK_IN_LICENSE_SUCCESS,
   payload,
 });

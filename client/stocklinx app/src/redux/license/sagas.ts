@@ -179,7 +179,13 @@ function* checkInLicenseSaga(action: CheckInLicenseRequest) {
       throw new Error(message);
     } else {
       openNotificationSuccess("License Checked In");
-      yield put(licenseActions.checkInSuccess({ license: data as ILicense }));
+      yield put(
+        licenseActions.checkInSuccess({
+          license: (data as LicenseCheckInSuccessPayload).license,
+          deployedProduct: (data as LicenseCheckInSuccessPayload)
+            .deployedProduct,
+        })
+      );
       yield put(
         deployedProductActions.createSuccess({
           deployedProduct: (data as LicenseCheckInSuccessPayload)

@@ -129,7 +129,7 @@ export interface CheckInLicenseRequest {
 }
 export type CheckInLicenseSuccess = {
   type: typeof licenseConst.CHECK_IN_LICENSE_SUCCESS;
-  payload: LicensePayload;
+  payload: LicenseCheckInSuccessPayload;
 };
 export type CheckInLicenseFailure = {
   type: typeof licenseConst.CHECK_IN_LICENSE_FAILURE;
