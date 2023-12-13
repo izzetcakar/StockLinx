@@ -61,7 +61,8 @@ namespace StockLinx.Service.Services
                 await _customLogService.CreateCustomLog("Create", newLicense.Id, newLicense.BranchId, "License", "Branch");
             }
             await _licenseRepository.AddRangeAsync(newLicenses);
-            return await _licenseRepository.GetDtos(newLicenses.ToList());
+            await _unitOfWork.CommitAsync();
+            return await _licenseRepository.GetDtos(newLicenses);
         }
 
         public async Task<LicenseDto> UpdateLicenseAsync(LicenseUpdateDto updateDto)
@@ -130,9 +131,9 @@ namespace StockLinx.Service.Services
             };
             await _deployedProductRepository.AddAsync(deployedProduct);
             await _customLogService.CreateCustomLog("CheckIn", deployedProduct.Id, deployedProduct.UserId, "DeployedProduct", "User");
+            await _unitOfWork.CommitAsync();
             var licenseDto = await _licenseRepository.GetDto(license);
             var deployedProductDto = _deployedProductRepository.GetDto(deployedProduct);
-            await _unitOfWork.CommitAsync();
             return new LicenseCheckInResponseDto
             {
                 License = licenseDto,
@@ -152,11 +153,11 @@ namespace StockLinx.Service.Services
             {
                 throw new Exception("License is not found");
             }
-            _deployedProductRepository.Remove(deployedProduct);
+            deployedProduct.DeletedDate = DateTime.UtcNow;
+            _deployedProductRepository.Update(deployedProduct, deployedProduct);
             await _customLogService.CreateCustomLog("CheckOut", license.Id, null, "License", null);
-            var licenseDto = await _licenseRepository.GetDto(license);
             await _unitOfWork.CommitAsync();
-            return licenseDto;
+            return await _licenseRepository.GetDto(license);
         }
     }
 }

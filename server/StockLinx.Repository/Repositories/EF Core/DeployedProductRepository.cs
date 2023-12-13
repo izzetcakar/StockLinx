@@ -16,12 +16,53 @@ namespace StockLinx.Repository.Repositories.EF_Core
 
         public DeployedProductDto GetDto(DeployedProduct entity)
         {
-            return _mapper.Map<DeployedProductDto>(entity);
+            var dto = _mapper.Map<DeployedProductDto>(entity);
+            if (entity.AccessoryId != null)
+            {
+                var accessory = dbContext.Accessories.Include(a => a.Manufacturer).FirstOrDefault(a => a.Id == entity.AccessoryId);
+                dto.ProductName = accessory.Name;
+                dto.ProductDescription = Generic.AddHyphenIfNotEmpty(accessory.Name) + accessory.ModelNo;
+                return dto;
+            }
+            else if (entity.AssetId != null)
+            {
+                var asset = dbContext.Assets.Include(a => a.Model).ThenInclude(m => m.Manufacturer).FirstOrDefault(a => a.Id == entity.AssetId);
+                var model = asset.Model;
+                var description = Generic.AddHyphenIfNotEmpty(model.Manufacturer.Name) + model.ModelNo;
+                dto.ProductName = asset.Name;
+                dto.ProductDescription = description;
+                return dto;
+            }
+            else if (entity.ComponentId != null)
+            {
+                var component = dbContext.Components.FirstOrDefault(c => c.Id == entity.ComponentId);
+                dto.ProductName = component.Name;
+                dto.ProductDescription = component.SerialNo;
+                return dto;
+            }
+            else if (entity.ConsumableId != null)
+            {
+                var consumable = dbContext.Consumables.Include(c => c.Manufacturer).FirstOrDefault(c => c.Id == entity.ConsumableId);
+                var description = Generic.AddHyphenIfNotEmpty(consumable.Manufacturer?.Name) + consumable.ModelNo;
+                dto.ProductName = consumable.Name;
+                dto.ProductDescription = description;
+                return dto;
+            }
+            else if (entity.LicenseId != null)
+            {
+                var license = dbContext.Licenses.Include(l => l.Manufacturer).FirstOrDefault(l => l.Id == entity.LicenseId);
+                dto.ProductName = license.Name;
+                dto.ProductDescription = Generic.AddHyphenIfNotEmpty(license.Manufacturer.Name) + license.LicenseKey;
+            }
+            return dto;
         }
         public List<DeployedProductDto> GetDtos(List<DeployedProduct> entities)
         {
             var dtos = new List<DeployedProductDto>();
-            dtos = _mapper.Map<List<DeployedProductDto>>(entities);
+            foreach (var entity in entities)
+            {
+                dtos.Add(GetDto(entity));
+            }
             return dtos;
         }
         public async Task<List<DeployedProductDto>> GetAllDtos()

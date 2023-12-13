@@ -59,7 +59,7 @@ namespace StockLinx.Service.Services
             }
             await _branchRepository.AddRangeAsync(newBranches);
             await _unitOfWork.CommitAsync();
-            return _branchRepository.GetDtos(newBranches.ToList());
+            return _branchRepository.GetDtos(newBranches);
         }
 
         public async Task<BranchDto> UpdateBranchAsync(BranchUpdateDto updateDto)
@@ -73,9 +73,8 @@ namespace StockLinx.Service.Services
             updatedBranch.UpdatedDate = DateTime.UtcNow;
             _branchRepository.Update(branchInDb, updatedBranch);
             await _customLogService.CreateCustomLog("Update", updatedBranch.Id, updatedBranch.CompanyId, "Branch", "Company");
-            var branch = await GetByIdAsync(updateDto.Id);
             await _unitOfWork.CommitAsync();
-            return _branchRepository.GetDto(branch);
+            return _branchRepository.GetDto(updatedBranch);
         }
 
         public async Task DeleteBranchAsync(Guid branchId)

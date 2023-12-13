@@ -35,16 +35,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
 
             foreach (var entity in entities)
             {
-                var companyId = await dbContext.Branches.Where(b => b.Id == entity.BranchId && b.DeletedDate == null).Select(b => b.CompanyId).FirstOrDefaultAsync();
-                if (companyId == null)
-                {
-                    continue;
-                }
-                var availableQuantity = entity.Quantity - deployedProducts
-                    .Count(d => d.AccessoryId.HasValue && d.AccessoryId == entity.Id);
-                var dto = _mapper.Map<AccessoryDto>(entity);
-                dto.CompanyId = companyId;
-                dto.AvailableQuantity = availableQuantity;
+                var dto = await GetDto(entity);
                 dtos.Add(dto);
             }
             return dtos;

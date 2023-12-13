@@ -36,8 +36,9 @@ namespace StockLinx.Service.Services
             var newModelFieldData = _mapper.Map<ModelFieldData>(dto);
             newModelFieldData.Id = Guid.NewGuid();
             newModelFieldData.CreatedDate = DateTime.UtcNow;
-            var added = await AddAsync(newModelFieldData);
-            return _modelFieldDataRepository.GetDto(added);
+            await _modelFieldDataRepository.AddAsync(newModelFieldData);
+            await _unitOfWork.CommitAsync();
+            return _modelFieldDataRepository.GetDto(newModelFieldData);
         }
 
         public async Task<List<ModelFieldDataDto>> CreateRangeModelFieldDataAsync(List<ModelFieldDataDto> dtos)
@@ -50,8 +51,9 @@ namespace StockLinx.Service.Services
                 newModelFieldData.CreatedDate = DateTime.UtcNow;
                 newModelFieldDatas.Add(newModelFieldData);
             }
-            var added = await AddRangeAsync(newModelFieldDatas);
-            return _modelFieldDataRepository.GetDtos(added.ToList());
+            await _modelFieldDataRepository.AddRangeAsync(newModelFieldDatas);
+            await _unitOfWork.CommitAsync();
+            return _modelFieldDataRepository.GetDtos(newModelFieldDatas);
         }
 
         public async Task<ModelFieldDataDto> UpdateModelFieldDataAsync(ModelFieldDataDto dto)
@@ -59,27 +61,25 @@ namespace StockLinx.Service.Services
             var modelFieldDataInDb = await GetByIdAsync(dto.Id);
             if (modelFieldDataInDb == null)
             {
-                throw new ArgumentNullException(nameof(dto.Id), $"The ID of the modelFieldData to update is null.");
+                throw new ArgumentNullException("ModelFieldData is not found");
             }
             var updatedModelFieldData = _mapper.Map<ModelFieldData>(dto);
             updatedModelFieldData.UpdatedDate = DateTime.UtcNow;
-            await UpdateAsync(modelFieldDataInDb, updatedModelFieldData);
-            var modelFieldData = await GetByIdAsync(dto.Id);
-            return _modelFieldDataRepository.GetDto(modelFieldData);
+            _modelFieldDataRepository.Update(modelFieldDataInDb, updatedModelFieldData);
+            await _unitOfWork.CommitAsync();
+            return _modelFieldDataRepository.GetDto(updatedModelFieldData);
         }
 
         public async Task DeleteModelFieldDataAsync(Guid id)
         {
-            if (id == Guid.Empty)
-            {
-                throw new ArgumentNullException(nameof(id), $"The ID of the modelFieldData to delete is null.");
-            }
             var modelFieldData = await GetByIdAsync(id);
             if (modelFieldData == null)
             {
-                throw new ArgumentNullException(nameof(modelFieldData), $"The modelFieldData to delete is null.");
+                throw new ArgumentNullException("ModelFieldData is not found");
             }
-            await RemoveAsync(modelFieldData);
+            modelFieldData.DeletedDate = DateTime.UtcNow;
+            _modelFieldDataRepository.Update(modelFieldData, modelFieldData);
+            await _unitOfWork.CommitAsync();
         }
 
         public async Task DeleteRangeModelFieldDataAsync(List<Guid> ids)
@@ -87,10 +87,12 @@ namespace StockLinx.Service.Services
             var modelFieldDatas = new List<ModelFieldData>();
             foreach (var id in ids)
             {
-                var modelFieldData = GetByIdAsync(id).Result;
+                var modelFieldData = await _modelFieldDataRepository.GetByIdAsync(id);
+                modelFieldData.DeletedDate = DateTime.UtcNow;
                 modelFieldDatas.Add(modelFieldData);
             }
-            await RemoveRangeAsync(modelFieldDatas);
+            _modelFieldDataRepository.UpdateRange(modelFieldDatas);
+            await _unitOfWork.CommitAsync();
         }
     }
 }

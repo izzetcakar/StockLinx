@@ -58,7 +58,7 @@ namespace StockLinx.Service.Services
             }
             await _productStatusRepository.AddRangeAsync(newProductStatuses);
             await _unitOfWork.CommitAsync();
-            return _productStatusRepository.GetDtos(newProductStatuses.ToList());
+            return _productStatusRepository.GetDtos(newProductStatuses);
         }
 
         public async Task<ProductStatusDto> UpdateProductStatusAsync(ProductStatusUpdateDto updateDto)
@@ -72,6 +72,7 @@ namespace StockLinx.Service.Services
             updatedProductStatus.UpdatedDate = DateTime.UtcNow;
             _productStatusRepository.Update(productStatusInDb, updatedProductStatus);
             await _customLogService.CreateCustomLog("Update", updatedProductStatus.Id, null, "ProductStatus", null);
+            await _unitOfWork.CommitAsync();
             return _productStatusRepository.GetDto(updatedProductStatus);
         }
 

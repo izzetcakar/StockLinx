@@ -37,6 +37,7 @@ namespace StockLinx.Service.Services
             newDeployedProduct.Id = Guid.NewGuid();
             newDeployedProduct.CreatedDate = DateTime.UtcNow;
             var added = await AddAsync(newDeployedProduct);
+            await _unitOfWork.CommitAsync();
             return _deployedProductRepository.GetDto(added);
         }
 
@@ -50,21 +51,20 @@ namespace StockLinx.Service.Services
                 newDeployedProduct.CreatedDate = DateTime.UtcNow;
                 newDeployedProducts.Add(newDeployedProduct);
             }
-            var added = await AddRangeAsync(newDeployedProducts);
-            return _deployedProductRepository.GetDtos(added.ToList());
+            await _deployedProductRepository.AddRangeAsync(newDeployedProducts);
+            await _unitOfWork.CommitAsync();
+            return _deployedProductRepository.GetDtos(newDeployedProducts);
         }
-        public async Task DeleteDeployedProductAsync(Guid deployedProductId)
+        public async Task DeleteDeployedProductAsync(Guid id)
         {
-            if (deployedProductId == Guid.Empty)
+            var deployedProduct = await GetByIdAsync(id);
+            if (deployedProduct == null)
             {
-                throw new ArgumentNullException(nameof(deployedProductId), "The ID of the DeployedProduct to delete is null.");
+                throw new ArgumentNullException("DeployedProduct is not found.");
             }
-            var DeployedProduct = await GetByIdAsync(deployedProductId);
-            if (DeployedProduct == null)
-            {
-                throw new ArgumentNullException(nameof(DeployedProduct), "The DeployedProduct to delete is null.");
-            }
-            await RemoveAsync(DeployedProduct);
+            deployedProduct.DeletedDate = DateTime.UtcNow;
+            _deployedProductRepository.Update(deployedProduct, deployedProduct);
+            await _unitOfWork.CommitAsync();
         }
     }
 }

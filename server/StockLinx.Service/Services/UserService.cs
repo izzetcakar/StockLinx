@@ -132,7 +132,8 @@ namespace StockLinx.Service.Services
                 newUsers.Add(newUser);
             }
             await _userRepository.AddRangeAsync(newUsers);
-            return _userRepository.GetDtos(newUsers.ToList());
+            await _unitOfWork.CommitAsync();
+            return _userRepository.GetDtos(newUsers);
         }
 
         public async Task<UserDto> UpdateUserAsync(UserUpdateDto updateDto)

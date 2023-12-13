@@ -49,9 +49,8 @@ namespace StockLinx.Service.Services
             newAccessory.CreatedDate = DateTime.UtcNow;
             await _accessoryRepository.AddAsync(newAccessory);
             await _customLogService.CreateCustomLog("Create", newAccessory.Id, newAccessory.BranchId, "Accessory", "Branch");
-            var addedAccessory = await GetByIdAsync(newAccessory.Id);
             await _unitOfWork.CommitAsync();
-            return await _accessoryRepository.GetDto(addedAccessory);
+            return await _accessoryRepository.GetDto(newAccessory);
         }
 
         public async Task<List<AccessoryDto>> CreateRangeAccessoryAsync(List<AccessoryCreateDto> createDtos)
@@ -67,7 +66,7 @@ namespace StockLinx.Service.Services
             }
             await _accessoryRepository.AddRangeAsync(newAccessories);
             await _unitOfWork.CommitAsync();
-            return await _accessoryRepository.GetDtos(newAccessories.ToList());
+            return await _accessoryRepository.GetDtos(newAccessories);
         }
 
         public async Task<AccessoryDto> UpdateAccessoryAsync(AccessoryUpdateDto updateDto)
@@ -81,8 +80,8 @@ namespace StockLinx.Service.Services
             updatedAccessory.UpdatedDate = DateTime.UtcNow;
             _accessoryRepository.Update(accessoryInDb, updatedAccessory);
             await _customLogService.CreateCustomLog("Update", updatedAccessory.Id, null, "Accessory", null);
-            var accessory = await GetByIdAsync(updateDto.Id);
-            return await _accessoryRepository.GetDto(accessory);
+            await _unitOfWork.CommitAsync();
+            return await _accessoryRepository.GetDto(updatedAccessory);
         }
 
         public async Task DeleteAccessoryAsync(Guid accessoryId)
@@ -139,9 +138,9 @@ namespace StockLinx.Service.Services
             };
             await _deployedProductRepository.AddAsync(deployedProduct);
             await _customLogService.CreateCustomLog("CheckIn", accessory.Id, deployedProduct.UserId, "Accessory", "User");
+            await _unitOfWork.CommitAsync();
             var accessoryDto = await _accessoryRepository.GetDto(accessory);
             var deployedProductDto = _deployedProductRepository.GetDto(deployedProduct);
-            await _unitOfWork.CommitAsync();
             return new AccessoryCheckInResponseDto
             {
                 Accessory = accessoryDto,
@@ -164,8 +163,8 @@ namespace StockLinx.Service.Services
             deployedProduct.DeletedDate = DateTime.UtcNow;
             _deployedProductRepository.Update(deployedProduct, deployedProduct);
             await _customLogService.CreateCustomLog("CheckOut", accessory.Id, null, "Accessory", null);
-            var accessoryDto = await _accessoryRepository.GetDto(accessory);
             await _unitOfWork.CommitAsync();
+            var accessoryDto = await _accessoryRepository.GetDto(accessory);
             return accessoryDto;
         }
     }

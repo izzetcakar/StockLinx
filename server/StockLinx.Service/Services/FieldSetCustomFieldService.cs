@@ -54,7 +54,7 @@ namespace StockLinx.Service.Services
             }
             await _repository.AddRangeAsync(newEntities);
             await _unitOfWork.CommitAsync();
-            return _repository.GetDtos(newEntities.ToList());
+            return _repository.GetDtos(newEntities);
         }
 
         public async Task DeleteFieldSetCustomFieldAsync(Guid id)
@@ -70,10 +70,12 @@ namespace StockLinx.Service.Services
             var fieldSetCustomFields = new List<FieldSetCustomField>();
             foreach (var id in ids)
             {
-                var fieldSetCustomField = await GetByIdAsync(id);
-                fieldSetCustomFields.Add(fieldSetCustomField);
+                var entity = await GetByIdAsync(id);
+                entity.DeletedDate = DateTime.UtcNow;
+                fieldSetCustomFields.Add(entity);
             }
-            await RemoveRangeAsync(fieldSetCustomFields);
+            _repository.UpdateRange(fieldSetCustomFields);
+            await _unitOfWork.CommitAsync();
         }
 
         public async Task SynchronizeFieldSetCustomFieldsAsync(List<FieldSetCustomFieldDto> dtos)
@@ -88,6 +90,7 @@ namespace StockLinx.Service.Services
 
                 if (!isItemExist)
                 {
+                    itemInDb.DeletedDate = DateTime.UtcNow;
                     itemsToDelete.Add(itemInDb);
                 }
             }
@@ -102,7 +105,7 @@ namespace StockLinx.Service.Services
                     return newItem;
                 }));
             await _repository.AddRangeAsync(itemsToAdd);
-            _repository.RemoveRange(itemsToDelete);
+            _repository.UpdateRange(itemsToDelete);
             await _unitOfWork.CommitAsync();
         }
 

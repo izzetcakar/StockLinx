@@ -53,7 +53,8 @@ namespace StockLinx.Service.Services
                 newEntities.Add(newFieldSet);
             }
             await _fieldSetRepository.AddRangeAsync(newEntities);
-            return _fieldSetRepository.GetDtos(newEntities.ToList());
+            await _unitOfWork.CommitAsync();
+            return _fieldSetRepository.GetDtos(newEntities);
         }
 
         public async Task<FieldSetDto> UpdateFieldSetAsync(FieldSetUpdateDto updateDto)
@@ -66,6 +67,7 @@ namespace StockLinx.Service.Services
             var updatedFieldSet = _mapper.Map<FieldSet>(updateDto);
             updatedFieldSet.UpdatedDate = DateTime.UtcNow;
             _fieldSetRepository.Update(fieldSetInDb, updatedFieldSet);
+            await _unitOfWork.CommitAsync();
             return _fieldSetRepository.GetDto(updatedFieldSet);
         }
 

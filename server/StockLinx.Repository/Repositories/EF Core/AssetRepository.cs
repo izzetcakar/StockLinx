@@ -31,15 +31,9 @@ namespace StockLinx.Repository.Repositories.EF_Core
             var deployedProducts = await dbContext.DeployedProducts.Where(d => d.DeletedDate == null).AsNoTracking().ToListAsync();
             var dtos = new List<AssetDto>();
 
-            foreach (var asset in entities)
+            foreach (var entity in entities)
             {
-                var companyId = await dbContext.Branches.Where(b => b.Id == asset.BranchId && b.DeletedDate == null).Select(b => b.CompanyId).FirstOrDefaultAsync();
-                if (companyId == null)
-                {
-                    continue;
-                }
-                var dto = _mapper.Map<AssetDto>(asset);
-                dto.CompanyId = companyId;
+                var dto = await GetDto(entity);
                 dtos.Add(dto);
             }
             return dtos;

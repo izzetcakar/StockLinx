@@ -12,12 +12,14 @@ namespace StockLinx.Service.Services
     public class ModelService : Service<Model>, IModelService
     {
         private readonly IModelRepository _modelRepository;
+        private readonly ICustomLogService _customLogService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         public ModelService(IRepository<Model> repository, IModelRepository modelRepository,
-            IUnitOfWork unitOfWork, IMapper mapper) : base(repository, unitOfWork)
+            IUnitOfWork unitOfWork, IMapper mapper, ICustomLogService customLogService) : base(repository, unitOfWork)
         {
             _modelRepository = modelRepository;
+            _customLogService = customLogService;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
@@ -37,6 +39,7 @@ namespace StockLinx.Service.Services
         {
             var added = _modelRepository.CreateModel(createDto);
             await _unitOfWork.CommitAsync();
+            await _customLogService.CreateCustomLog("Create", added.Id, null, "Model", null);
             return added;
         }
 
@@ -49,9 +52,11 @@ namespace StockLinx.Service.Services
                 newModel.Id = Guid.NewGuid();
                 newModel.CreatedDate = DateTime.UtcNow;
                 newModels.Add(newModel);
+                await _customLogService.CreateCustomLog("Create", newModel.Id, null, "Model", null);
             }
-            var added = await AddRangeAsync(newModels);
-            return _modelRepository.GetDtos(added.ToList());
+            await _modelRepository.AddRangeAsync(newModels);
+            await _unitOfWork.CommitAsync();
+            return _modelRepository.GetDtos(newModels);
         }
 
         public async Task UpdateModelAsync(ModelUpdateDto updateDto)
@@ -59,11 +64,12 @@ namespace StockLinx.Service.Services
             var modelInDb = await GetByIdAsync(updateDto.Id);
             if (modelInDb == null)
             {
-                throw new ArgumentNullException(nameof(updateDto.Id), $"The ID of the model to update is null.");
+                throw new ArgumentNullException("Model is not found");
             }
             try
             {
                 _modelRepository.UpdateModel(updateDto);
+                await _customLogService.CreateCustomLog("Update", updateDto.Id, null, "Model", null);
             }
             catch (Exception ex)
             {
@@ -74,16 +80,15 @@ namespace StockLinx.Service.Services
 
         public async Task DeleteModelAsync(Guid modelId)
         {
-            if (modelId == Guid.Empty)
-            {
-                throw new ArgumentNullException(nameof(modelId), $"The ID of the model to delete is null.");
-            }
             var model = await GetByIdAsync(modelId);
             if (model == null)
             {
-                throw new ArgumentNullException(nameof(model), $"The model to delete is null.");
+                throw new ArgumentNullException("Model is not found");
             }
-            await RemoveAsync(model);
+            model.DeletedDate = DateTime.UtcNow;
+            _modelRepository.Update(model, model);
+            await _customLogService.CreateCustomLog("Delete", model.Id, null, "Model", null);
+            await _unitOfWork.CommitAsync();
         }
 
         public async Task DeleteRangeModelAsync(List<Guid> modelIds)
@@ -91,10 +96,12 @@ namespace StockLinx.Service.Services
             var models = new List<Model>();
             foreach (var modelId in modelIds)
             {
-                var model = GetByIdAsync(modelId).Result;
+                var model = await GetByIdAsync(modelId);
+                model.DeletedDate = DateTime.UtcNow;
                 models.Add(model);
+                await _customLogService.CreateCustomLog("Delete", model.Id, null, "Model", null);
             }
-            await RemoveRangeAsync(models);
+            _modelRepository.UpdateRange(models);
         }
     }
 }

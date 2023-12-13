@@ -2,7 +2,6 @@
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
-using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Services;
 
 namespace StockLinx.API.Controllers
@@ -43,13 +42,6 @@ namespace StockLinx.API.Controllers
         {
             var added = await _permissionService.CreateRangePermissionAsync(createDtos);
             return CreateActionResult(CustomResponseDto<List<PermissionDto>>.Success(201, added));
-        }
-
-        [HttpPut]
-        public async Task<IActionResult> Update(PermissionUpdateDto updateDto)
-        {
-            var dto = await _permissionService.UpdatePermissionAsync(updateDto);
-            return CreateActionResult(CustomResponseDto<PermissionDto>.Success(200, dto));
         }
 
         [HttpDelete("{id}")]

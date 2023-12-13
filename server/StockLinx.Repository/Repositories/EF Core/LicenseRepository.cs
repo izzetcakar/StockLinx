@@ -30,20 +30,10 @@ namespace StockLinx.Repository.Repositories.EF_Core
         }
         public async Task<List<LicenseDto>> GetDtos(List<License> entities)
         {
-            var deployedProducts = await dbContext.DeployedProducts.Where(d => d.DeletedDate == null).AsNoTracking().ToListAsync();
             var dtos = new List<LicenseDto>();
-
-            foreach (var license in entities)
+            foreach (var entity in entities)
             {
-                var companyId = await dbContext.Branches.Where(b => b.Id == license.BranchId && b.DeletedDate == null).Select(b => b.CompanyId).FirstOrDefaultAsync();
-                var availableQuantity = license.Quantity - deployedProducts.Count(d => d.LicenseId.HasValue && d.LicenseId == license.Id);
-                if (companyId == null)
-                {
-                    continue;
-                }
-                var dto = _mapper.Map<LicenseDto>(license);
-                dto.CompanyId = companyId;
-                dto.AvailableQuantity = availableQuantity;
+                var dto = await GetDto(entity);
                 dtos.Add(dto);
             }
             return dtos;

@@ -59,7 +59,7 @@ namespace StockLinx.Service.Services
             }
             await _locationRepository.AddRangeAsync(newLocations);
             await _unitOfWork.CommitAsync();
-            return _locationRepository.GetDtos(newLocations.ToList());
+            return _locationRepository.GetDtos(newLocations);
         }
 
         public async Task<LocationDto> UpdateLocationAsync(LocationUpdateDto updateDto)
@@ -100,7 +100,8 @@ namespace StockLinx.Service.Services
                 locations.Add(location);
                 await _customLogService.CreateCustomLog("Delete", location.Id, null, "Location", null);
             }
-            _locationRepository.RemoveRange(locations);
+            _locationRepository.UpdateRange(locations);
+            await _unitOfWork.CommitAsync();
         }
     }
 }

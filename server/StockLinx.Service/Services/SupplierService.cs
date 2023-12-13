@@ -57,7 +57,7 @@ namespace StockLinx.Service.Services
                 await _customLogService.CreateCustomLog("Create", newSupplier.Id, null, "Supplier", null);
             }
             await _supplierRepository.AddRangeAsync(newSuppliers);
-            return _supplierRepository.GetDtos(newSuppliers.ToList());
+            return _supplierRepository.GetDtos(newSuppliers);
         }
 
         public async Task<SupplierDto> UpdateSupplierAsync(SupplierUpdateDto updateDto)

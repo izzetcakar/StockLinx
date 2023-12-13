@@ -46,18 +46,6 @@ namespace StockLinx.Service.Services
             return await _repository.GetByIdAsync(id);
         }
 
-        public async Task RemoveAsync(T entity)
-        {
-            _repository.Remove(entity);
-            await _unitOfWork.CommitAsync();
-        }
-
-        public async Task RemoveRangeAsync(IEnumerable<T> entities)
-        {
-            _repository.RemoveRange(entities);
-            await _unitOfWork.CommitAsync();
-        }
-
         public async Task UpdateAsync(T oldEntity, T newEntity)
         {
             _repository.Update(oldEntity, newEntity);

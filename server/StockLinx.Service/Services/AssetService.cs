@@ -60,7 +60,7 @@ namespace StockLinx.Service.Services
             }
             await _assetRepository.AddRangeAsync(newAssets);
             await _unitOfWork.CommitAsync();
-            return await _assetRepository.GetDtos(newAssets.ToList());
+            return await _assetRepository.GetDtos(newAssets);
         }
 
         public async Task<List<AssetDto>> CreateRangeAssetAsync(List<AssetCreateDto> createDtos)
@@ -76,7 +76,7 @@ namespace StockLinx.Service.Services
             }
             await _assetRepository.AddRangeAsync(newAssets);
             await _unitOfWork.CommitAsync();
-            return await _assetRepository.GetDtos(newAssets.ToList());
+            return await _assetRepository.GetDtos(newAssets);
         }
 
         public async Task<AssetDto> UpdateAssetAsync(AssetUpdateDto updateDto)
@@ -90,6 +90,7 @@ namespace StockLinx.Service.Services
             updatedAsset.UpdatedDate = DateTime.UtcNow;
             _assetRepository.Update(assetInDb, updatedAsset);
             await _customLogService.CreateCustomLog("Update", updatedAsset.Id, updatedAsset.BranchId, "Asset", "Branch");
+            await _unitOfWork.CommitAsync();
             return await _assetRepository.GetDto(updatedAsset);
         }
 
@@ -143,9 +144,9 @@ namespace StockLinx.Service.Services
             };
             await _deployedProductRepository.AddAsync(deployedProduct);
             await _customLogService.CreateCustomLog("Delete", asset.Id, asset.BranchId, "Asset", "Branch");
+            await _unitOfWork.CommitAsync();
             var assetDto = await _assetRepository.GetDto(asset);
             var deployedProductDto = _deployedProductRepository.GetDto(deployedProduct);
-            await _unitOfWork.CommitAsync();
             return new AssetCheckInResponseDto
             {
                 Asset = assetDto,
@@ -168,9 +169,8 @@ namespace StockLinx.Service.Services
             deployedProduct.DeletedDate = DateTime.UtcNow;
             _deployedProductRepository.Update(deployedProduct, deployedProduct);
             await _customLogService.CreateCustomLog("Delete", asset.Id, null, "Asset", null);
-            var assetDto = await _assetRepository.GetDto(asset);
             await _unitOfWork.CommitAsync();
-            return assetDto;
+            return await _assetRepository.GetDto(asset);
         }
     }
 }

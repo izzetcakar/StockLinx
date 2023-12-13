@@ -57,7 +57,8 @@ namespace StockLinx.Service.Services
                 await _customLogService.CreateCustomLog("Create", newManufacturer.Id, null, "Manufacturer", null);
             }
             await _manufacturerRepository.AddRangeAsync(newManufacturers);
-            return _manufacturerRepository.GetDtos(newManufacturers.ToList());
+            await _unitOfWork.CommitAsync();
+            return _manufacturerRepository.GetDtos(newManufacturers);
         }
 
         public async Task<ManufacturerDto> UpdateManufacturerAsync(ManufacturerUpdateDto updateDto)

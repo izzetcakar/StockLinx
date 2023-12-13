@@ -63,7 +63,7 @@ namespace StockLinx.Service.Services
             }
             await _consumableRepository.AddRangeAsync(newConsumables);
             await _unitOfWork.CommitAsync();
-            return await _consumableRepository.GetDtos(newConsumables.ToList());
+            return await _consumableRepository.GetDtos(newConsumables);
         }
 
         public async Task<ConsumableDto> UpdateConsumableAsync(ConsumableUpdateDto updateDto)
@@ -132,9 +132,9 @@ namespace StockLinx.Service.Services
             };
             await _deployedProductRepository.AddAsync(deployedProduct);
             await _customLogService.CreateCustomLog("CheckIn", consumable.Id, deployedProduct.UserId, "Consumable", "User");
+            await _unitOfWork.CommitAsync();
             var consumableDto = await _consumableRepository.GetDto(consumable);
             var deployedProductDto = _deployedProductRepository.GetDto(deployedProduct);
-            await _unitOfWork.CommitAsync();
             return new ConsumableCheckInResponseDto
             {
                 Consumable = consumableDto,
@@ -157,9 +157,8 @@ namespace StockLinx.Service.Services
             deployedProduct.DeletedDate = DateTime.UtcNow;
             _deployedProductRepository.Update(deployedProduct, deployedProduct);
             await _customLogService.CreateCustomLog("CheckOut", consumable.Id, deployedProduct.UserId, "Consumable", "User");
-            var consumableDto = await _consumableRepository.GetDto(consumable);
             await _unitOfWork.CommitAsync();
-            return consumableDto;
+            return await _consumableRepository.GetDto(consumable);
         }
     }
 }

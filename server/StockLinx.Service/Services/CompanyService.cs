@@ -59,7 +59,7 @@ namespace StockLinx.Service.Services
             }
             await _companyRepository.AddRangeAsync(newCompanies);
             await _unitOfWork.CommitAsync();
-            return _companyRepository.GetDtos(newCompanies.ToList());
+            return _companyRepository.GetDtos(newCompanies);
         }
 
         public async Task<CompanyDto> UpdateCompanyAsync(CompanyUpdateDto updateDto)

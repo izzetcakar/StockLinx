@@ -59,7 +59,7 @@ namespace StockLinx.Service.Services
             }
             await _categoryRepository.AddRangeAsync(newCategories);
             await _unitOfWork.CommitAsync();
-            return _categoryRepository.GetDtos(newCategories.ToList());
+            return _categoryRepository.GetDtos(newCategories);
         }
 
         public async Task<CategoryDto> UpdateCategoryAsync(CategoryUpdateDto updateDto)
