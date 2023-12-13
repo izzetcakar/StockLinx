@@ -20,7 +20,7 @@ export const useCell = () => {
     )[column.dataField];
 
     if (column.renderComponent) {
-      return column.renderComponent(value);
+      return column.renderComponent(obj);
     }
     if (column.lookup) {
       return getLookupValue(value, column.lookup);
