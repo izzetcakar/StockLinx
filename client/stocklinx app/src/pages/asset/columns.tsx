@@ -8,6 +8,7 @@ import { Button } from "@mantine/core";
 import { openConfirmModal } from "../../components/gridTable/modals/modals";
 import { openCheckInModal } from "../../modals/modals";
 import {
+  IAsset,
   IAssetCheckInDto,
   IDeployedProduct,
 } from "../../interfaces/interfaces";
@@ -95,9 +96,9 @@ export const useColumns = () => {
       dataField: "id",
       caption: "Checked Out To",
       dataType: "string",
-      renderComponent(value) {
+      renderComponent(e) {
         const deployedProduct = deployedProducts.find(
-          (deployedProduct) => deployedProduct?.assetId === value
+          (deployedProduct) => deployedProduct?.assetId === (e as IAsset).id
         );
         if (deployedProduct) {
           const user = users.find((user) => user.id === deployedProduct.userId);
@@ -115,9 +116,9 @@ export const useColumns = () => {
       dataField: "id",
       caption: "Checkin/Checkout",
       dataType: "action",
-      renderComponent(value) {
+      renderComponent(e) {
         const deployedProduct = deployedProducts.find(
-          (deployedProduct) => deployedProduct.assetId === value
+          (deployedProduct) => deployedProduct.assetId === (e as IAsset).id
         );
         return (
           <div style={{ display: "flex", justifyContent: "center" }}>
@@ -132,7 +133,7 @@ export const useColumns = () => {
                       "Are you sure you want to check out this asset",
                       () => checkOut(deployedProduct.id)
                     )
-                  : checkIn(value)
+                  : checkIn((e as IAsset).id)
               }
             >
               {deployedProduct ? "Check Out" : "Check In"}

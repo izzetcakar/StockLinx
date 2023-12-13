@@ -106,7 +106,7 @@ export const GenericProvider: React.FC<GenericProviderProps> = ({
             }
             classNames={filterClasses}
             dropdownPosition="bottom"
-            nothingFound="No branch found"
+            nothingFound={company ? "No branch found" : "Select company first"}
             withAsterisk
             withinPortal
           />
