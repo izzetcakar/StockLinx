@@ -1,7 +1,7 @@
 export interface Column {
   dataField: string;
   caption: string;
-  renderComponent?: (value: any) => any;
+  renderComponent?: (e: object) => any;
   renderHeader?: () => React.ReactNode | string | number | null;
   lookup?: Lookup;
   dataType: "string" | "number" | "boolean" | "date" | "action";
