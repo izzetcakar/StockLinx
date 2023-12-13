@@ -10,5 +10,7 @@
         public Guid? LicenseId { get; set; }
         public string? Notes { get; set; }
         public DateTime AssignDate { get; set; }
+        public string? ProductName { get; set; }
+        public string? ProductDescription { get; set; }
     }
 }
