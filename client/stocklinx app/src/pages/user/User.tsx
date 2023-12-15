@@ -39,7 +39,6 @@ const User = () => {
         onRowRemoveRange={(ids) =>
           dispatch(userActions.removeRange({ ids: ids }))
         }
-        excelColumns={useColumns().excelColumns}
         enableToolbar
         enableEditActions
         enableExcelActions
