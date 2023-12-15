@@ -288,3 +288,15 @@ export interface IConsumableCheckInDto {
   assaignDate: Date;
   notes: string | null;
 }
+export interface ICustomLog {
+  id: string;
+  userId: string;
+  date: Date;
+  action: string;
+  itemRoute: string;
+  itemName: string;
+  targetName?: string | null;
+  targetRoute?: string | null;
+  itemController: string;
+  targetController?: string | null;
+}
