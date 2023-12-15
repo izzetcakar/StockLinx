@@ -12,7 +12,7 @@ export const getToken = (): string => {
 
 export interface BackendResponse<T> {
   data: T | T[] | null;
-  errors: string[] | null;
+  error: string | null;
   successMessage: string | null;
   statusCode: number | null;
 }
@@ -107,7 +107,7 @@ export const request = async <T>({
     };
   } catch (error: any) {
     const message: string =
-      (error.response?.data.errors?.[0] as string) ?? "Network Error";
+      (error.response?.data.error as string) ?? "Network Error";
     status = error.response?.status ?? 500;
 
     switch (status) {
