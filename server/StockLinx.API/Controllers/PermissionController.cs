@@ -19,43 +19,85 @@ namespace StockLinx.API.Controllers
         [HttpGet]
         public async Task<IActionResult> All()
         {
-            var accessories = await _permissionService.GetAllDtos();
-            return CreateActionResult(CustomResponseDto<List<PermissionDto>>.Success(200, accessories));
+            try
+            {
+                var accessories = await _permissionService.GetAllDtos();
+                return CreateActionResult(CustomResponseDto<List<PermissionDto>>.Success(200, accessories));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var permissionDto = await _permissionService.GetDto(id);
-            return CreateActionResult(CustomResponseDto<PermissionDto>.Success(200, permissionDto));
+            try
+            {
+                var permissionDto = await _permissionService.GetDto(id);
+                return CreateActionResult(CustomResponseDto<PermissionDto>.Success(200, permissionDto));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> Add(PermissionCreateDto createDto)
         {
-            var added = await _permissionService.CreatePermissionAsync(createDto);
-            return CreateActionResult(CustomResponseDto<PermissionDto>.Success(201, added));
+            try
+            {
+                var added = await _permissionService.CreatePermissionAsync(createDto);
+                return CreateActionResult(CustomResponseDto<PermissionDto>.Success(201, added));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
 
         [HttpPost("range")]
         public async Task<IActionResult> AddRangePermissions(List<PermissionCreateDto> createDtos)
         {
-            var added = await _permissionService.CreateRangePermissionAsync(createDtos);
-            return CreateActionResult(CustomResponseDto<List<PermissionDto>>.Success(201, added));
+            try
+            {
+                var added = await _permissionService.CreateRangePermissionAsync(createDtos);
+                return CreateActionResult(CustomResponseDto<List<PermissionDto>>.Success(201, added));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            await _permissionService.DeletePermissionAsync(id);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+            try
+            {
+                await _permissionService.DeletePermissionAsync(id);
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
 
         [HttpDelete("range")]
         public async Task<IActionResult> DeleteRangePermissions(List<Guid> permissionIds)
         {
-            await _permissionService.DeleteRangePermissionAsync(permissionIds);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+            try
+            {
+                await _permissionService.DeleteRangePermissionAsync(permissionIds);
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
     }
 }

@@ -20,64 +20,127 @@ namespace StockLinx.API.Controllers
         [HttpGet]
         public async Task<IActionResult> All()
         {
-            var components = await _componentService.GetAllDtos();
-            return CreateActionResult(CustomResponseDto<List<ComponentDto>>.Success(200, components));
+            try
+            {
+                var components = await _componentService.GetAllDtos();
+                return CreateActionResult(CustomResponseDto<List<ComponentDto>>.Success(200, components));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var componentDto = await _componentService.GetDto(id);
-            return CreateActionResult(CustomResponseDto<ComponentDto>.Success(200, componentDto));
+            try
+            {
+                var componentDto = await _componentService.GetDto(id);
+                return CreateActionResult(CustomResponseDto<ComponentDto>.Success(200, componentDto));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> Add(ComponentCreateDto createDto)
         {
-            var added = await _componentService.CreateComponentAsync(createDto);
-            return CreateActionResult(CustomResponseDto<ComponentDto>.Success(201, added));
+            try
+            {
+                var added = await _componentService.CreateComponentAsync(createDto);
+                return CreateActionResult(CustomResponseDto<ComponentDto>.Success(201, added));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
 
         [HttpPost("range")]
         public async Task<IActionResult> AddRangeComponents(List<ComponentCreateDto> createDtos)
         {
-            var added = await _componentService.CreateRangeComponentAsync(createDtos);
-            return CreateActionResult(CustomResponseDto<List<ComponentDto>>.Success(201, added));
+            try
+            {
+                var added = await _componentService.CreateRangeComponentAsync(createDtos);
+                return CreateActionResult(CustomResponseDto<List<ComponentDto>>.Success(201, added));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
 
         [HttpPut]
         public async Task<IActionResult> Update(ComponentUpdateDto updateDto)
         {
-            var dto = await _componentService.UpdateComponentAsync(updateDto);
-            return CreateActionResult(CustomResponseDto<ComponentDto>.Success(200, dto));
+            try
+            {
+                var dto = await _componentService.UpdateComponentAsync(updateDto);
+                return CreateActionResult(CustomResponseDto<ComponentDto>.Success(200, dto));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            await _componentService.DeleteComponentAsync(id);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+            try
+            {
+                await _componentService.DeleteComponentAsync(id);
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
 
         [HttpDelete("range")]
         public async Task<IActionResult> DeleteRangeComponents(List<Guid> componentIds)
         {
-            await _componentService.DeleteRangeComponentAsync(componentIds);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+            try
+            {
+                await _componentService.DeleteRangeComponentAsync(componentIds);
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
 
         [HttpPost("checkin")]
         public async Task<IActionResult> CheckInComponent(ComponentCheckInDto checkInDto)
         {
-            var dto = await _componentService.CheckIn(checkInDto);
-            return CreateActionResult(CustomResponseDto<ComponentCheckInResponseDto>.Success(200, dto));
+            try
+            {
+                var dto = await _componentService.CheckIn(checkInDto);
+                return CreateActionResult(CustomResponseDto<ComponentCheckInResponseDto>.Success(200, dto));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
 
         [HttpPost("checkout/{id}")]
         public async Task<IActionResult> CheckOutComponent(Guid id)
         {
-            var dto = await _componentService.CheckOut(id);
-            return CreateActionResult(CustomResponseDto<ComponentDto>.Success(200, dto));
+            try
+            {
+                var dto = await _componentService.CheckOut(id);
+                return CreateActionResult(CustomResponseDto<ComponentDto>.Success(200, dto));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
     }
 }

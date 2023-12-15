@@ -18,50 +18,99 @@ namespace StockLinx.API.Controllers
         [HttpGet]
         public async Task<IActionResult> All()
         {
-            var modelFieldDatas = await _modelFieldDataService.GetAllDtos();
-            return CreateActionResult(CustomResponseDto<List<ModelFieldDataDto>>.Success(200, modelFieldDatas));
+            try
+            {
+                var modelFieldDatas = await _modelFieldDataService.GetAllDtos();
+                return CreateActionResult(CustomResponseDto<List<ModelFieldDataDto>>.Success(200, modelFieldDatas));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var modelFieldDataDto = await _modelFieldDataService.GetDto(id);
-            return CreateActionResult(CustomResponseDto<ModelFieldDataDto>.Success(200, modelFieldDataDto));
+            try
+            {
+                var modelFieldDataDto = await _modelFieldDataService.GetDto(id);
+                return CreateActionResult(CustomResponseDto<ModelFieldDataDto>.Success(200, modelFieldDataDto));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> Add(ModelFieldDataDto dto)
         {
-            var added = await _modelFieldDataService.CreateModelFieldDataAsync(dto);
-            return CreateActionResult(CustomResponseDto<ModelFieldDataDto>.Success(201, added));
+            try
+            {
+                var added = await _modelFieldDataService.CreateModelFieldDataAsync(dto);
+                return CreateActionResult(CustomResponseDto<ModelFieldDataDto>.Success(201, added));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
 
         [HttpPost("range")]
         public async Task<IActionResult> AddRangeModelFieldDatas(List<ModelFieldDataDto> dtos)
         {
-            var added = await _modelFieldDataService.CreateRangeModelFieldDataAsync(dtos);
-            return CreateActionResult(CustomResponseDto<List<ModelFieldDataDto>>.Success(201, added));
+            try
+            {
+                var added = await _modelFieldDataService.CreateRangeModelFieldDataAsync(dtos);
+                return CreateActionResult(CustomResponseDto<List<ModelFieldDataDto>>.Success(201, added));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
 
         [HttpPut]
         public async Task<IActionResult> Update(ModelFieldDataDto updateDto)
         {
-            var dto = await _modelFieldDataService.UpdateModelFieldDataAsync(updateDto);
-            return CreateActionResult(CustomResponseDto<ModelFieldDataDto>.Success(200, dto));
+            try
+            {
+                var dto = await _modelFieldDataService.UpdateModelFieldDataAsync(updateDto);
+                return CreateActionResult(CustomResponseDto<ModelFieldDataDto>.Success(200, dto));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            await _modelFieldDataService.DeleteModelFieldDataAsync(id);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+            try
+            {
+                await _modelFieldDataService.DeleteModelFieldDataAsync(id);
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
 
         [HttpDelete("range")]
         public async Task<IActionResult> DeleteRangeModelFieldDatas(List<Guid> ids)
         {
-            await _modelFieldDataService.DeleteRangeModelFieldDataAsync(ids);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+            try
+            {
+                await _modelFieldDataService.DeleteRangeModelFieldDataAsync(ids);
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
     }
 }

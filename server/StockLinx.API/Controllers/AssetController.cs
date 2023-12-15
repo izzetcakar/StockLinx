@@ -20,64 +20,127 @@ namespace StockLinx.API.Controllers
         [HttpGet]
         public async Task<IActionResult> All()
         {
-            var assets = await _assetService.GetAllDtos();
-            return CreateActionResult(CustomResponseDto<List<AssetDto>>.Success(200, assets));
+            try
+            {
+                var assets = await _assetService.GetAllDtos();
+                return CreateActionResult(CustomResponseDto<List<AssetDto>>.Success(200, assets));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var assetDto = await _assetService.GetDto(id);
-            return CreateActionResult(CustomResponseDto<AssetDto>.Success(200, assetDto));
+            try
+            {
+                var assetDto = await _assetService.GetDto(id);
+                return CreateActionResult(CustomResponseDto<AssetDto>.Success(200, assetDto));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> Add(AssetCreateDto createDto)
         {
-            var added = await _assetService.CreateAssetAsync(createDto);
-            return CreateActionResult(CustomResponseDto<List<AssetDto>>.Success(201, added));
+            try
+            {
+                var added = await _assetService.CreateAssetAsync(createDto);
+                return CreateActionResult(CustomResponseDto<List<AssetDto>>.Success(201, added));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
 
         [HttpPost("range")]
         public async Task<IActionResult> AddRangeAssets(List<AssetCreateDto> createDtos)
         {
-            var added = await _assetService.CreateRangeAssetAsync(createDtos);
-            return CreateActionResult(CustomResponseDto<List<AssetDto>>.Success(201, added));
+            try
+            {
+                var added = await _assetService.CreateRangeAssetAsync(createDtos);
+                return CreateActionResult(CustomResponseDto<List<AssetDto>>.Success(201, added));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
 
         [HttpPut]
         public async Task<IActionResult> Update(AssetUpdateDto updateDto)
         {
-            var dto = await _assetService.UpdateAssetAsync(updateDto);
-            return CreateActionResult(CustomResponseDto<AssetDto>.Success(200, dto));
+            try
+            {
+                var dto = await _assetService.UpdateAssetAsync(updateDto);
+                return CreateActionResult(CustomResponseDto<AssetDto>.Success(200, dto));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            await _assetService.DeleteAssetAsync(id);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+            try
+            {
+                await _assetService.DeleteAssetAsync(id);
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
 
         [HttpDelete("range")]
         public async Task<IActionResult> DeleteRangeAssets(List<Guid> assetIds)
         {
-            await _assetService.DeleteRangeAssetAsync(assetIds);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+            try
+            {
+                await _assetService.DeleteRangeAssetAsync(assetIds);
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
 
         [HttpPost("checkin")]
         public async Task<IActionResult> CheckIn(AssetCheckInDto checkInDto)
         {
-            var dto = await _assetService.CheckIn(checkInDto);
-            return CreateActionResult(CustomResponseDto<AssetCheckInResponseDto>.Success(200, dto));
+            try
+            {
+                var dto = await _assetService.CheckIn(checkInDto);
+                return CreateActionResult(CustomResponseDto<AssetCheckInResponseDto>.Success(200, dto));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
 
         [HttpPost("checkout/{id}")]
         public async Task<IActionResult> CheckOut(Guid id)
         {
-            var dto = await _assetService.CheckOut(id);
-            return CreateActionResult(CustomResponseDto<AssetDto>.Success(200, dto));
+            try
+            {
+                var dto = await _assetService.CheckOut(id);
+                return CreateActionResult(CustomResponseDto<AssetDto>.Success(200, dto));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
     }
 }

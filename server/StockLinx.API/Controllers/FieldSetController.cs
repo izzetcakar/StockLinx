@@ -20,50 +20,99 @@ namespace StockLinx.API.Controllers
         [HttpGet]
         public async Task<IActionResult> All()
         {
-            var fieldSets = await _fieldSetService.GetAllDtos();
-            return CreateActionResult(CustomResponseDto<List<FieldSetDto>>.Success(200, fieldSets));
+            try
+            {
+                var fieldSets = await _fieldSetService.GetAllDtos();
+                return CreateActionResult(CustomResponseDto<List<FieldSetDto>>.Success(200, fieldSets));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var fieldSetDto = await _fieldSetService.GetDto(id);
-            return CreateActionResult(CustomResponseDto<FieldSetDto>.Success(200, fieldSetDto));
+            try
+            {
+                var fieldSetDto = await _fieldSetService.GetDto(id);
+                return CreateActionResult(CustomResponseDto<FieldSetDto>.Success(200, fieldSetDto));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> Add(FieldSetCreateDto createDto)
         {
-            await _fieldSetService.CreateFieldSetAsync(createDto);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+            try
+            {
+                await _fieldSetService.CreateFieldSetAsync(createDto);
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
 
         [HttpPost("range")]
         public async Task<IActionResult> AddRangeFieldSets(List<FieldSetCreateDto> createDtos)
         {
-            await _fieldSetService.CreateRangeFieldSetAsync(createDtos);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+            try
+            {
+                await _fieldSetService.CreateRangeFieldSetAsync(createDtos);
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
 
         [HttpPut]
         public async Task<IActionResult> Update(FieldSetUpdateDto updateDto)
         {
-            var dto = await _fieldSetService.UpdateFieldSetAsync(updateDto);
-            return CreateActionResult(CustomResponseDto<FieldSetDto>.Success(200, dto));
+            try
+            {
+                var dto = await _fieldSetService.UpdateFieldSetAsync(updateDto);
+                return CreateActionResult(CustomResponseDto<FieldSetDto>.Success(200, dto));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            await _fieldSetService.DeleteFieldSetAsync(id);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+            try
+            {
+                await _fieldSetService.DeleteFieldSetAsync(id);
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
 
         [HttpDelete("range")]
         public async Task<IActionResult> DeleteRangeFieldSets(List<Guid> fieldSetIds)
         {
-            await _fieldSetService.DeleteRangeFieldSetAsync(fieldSetIds);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+            try
+            {
+                await _fieldSetService.DeleteRangeFieldSetAsync(fieldSetIds);
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
     }
 }

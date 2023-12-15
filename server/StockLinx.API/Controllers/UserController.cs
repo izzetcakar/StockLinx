@@ -31,26 +31,54 @@ namespace StockLinx.API.Controllers
         [HttpGet]
         public async Task<IActionResult> All()
         {
-            var userDtos = await _userService.GetAllDtos();
-            return CreateActionResult(CustomResponseDto<List<UserDto>>.Success(200, userDtos));
+            try
+            {
+                var userDtos = await _userService.GetAllDtos();
+                return CreateActionResult(CustomResponseDto<List<UserDto>>.Success(200, userDtos));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var userDto = await _userService.GetDto(id);
-            return CreateActionResult(CustomResponseDto<UserDto>.Success(200, userDto));
+            try
+            {
+                var userDto = await _userService.GetDto(id);
+                return CreateActionResult(CustomResponseDto<UserDto>.Success(200, userDto));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
         [HttpPut]
         public async Task<IActionResult> Update(UserUpdateDto updateDto)
         {
-            var dto = await _userService.UpdateUserAsync(updateDto);
-            return CreateActionResult(CustomResponseDto<UserDto>.Success(200, dto));
+            try
+            {
+                var dto = await _userService.UpdateUserAsync(updateDto);
+                return CreateActionResult(CustomResponseDto<UserDto>.Success(200, dto));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            await _userService.DeleteUserAsync(id);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+            try
+            {
+                await _userService.DeleteUserAsync(id);
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserLoginDto userLoginDto)
@@ -65,28 +93,6 @@ namespace StockLinx.API.Controllers
                     return CreateActionResult(CustomResponseDto<TokenDto>.Success(200, token));
                 }
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, "User is not found"));
-            }
-            catch (Exception ex)
-            {
-                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
-            }
-        }
-        [HttpPost("register")]
-        public async Task<IActionResult> Register(UserCreateDto userDto)
-        {
-            try
-            {
-                var user = await _userService.Register(userDto);
-                if (user != null)
-                {
-                    TokenDto token = new TokenDto();
-                    token.Token = CreateToken(user);
-                    return CreateActionResult(CustomResponseDto<TokenDto>.Success(200, token));
-                }
-                else
-                {
-                    return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, "User is not valid"));
-                }
             }
             catch (Exception ex)
             {
@@ -138,21 +144,42 @@ namespace StockLinx.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(UserCreateDto createDto)
         {
-            var added = await _userService.CreateUserAsync(createDto);
-            return CreateActionResult(CustomResponseDto<UserDto>.Success(201, added));
+            try
+            {
+                var added = await _userService.CreateUserAsync(createDto);
+                return CreateActionResult(CustomResponseDto<UserDto>.Success(201, added));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
         [HttpPost("range")]
         public async Task<IActionResult> AddRangeUsers(List<UserCreateDto> createDtos)
         {
-            var added = await _userService.CreateRangeUserAsync(createDtos);
-            return CreateActionResult(CustomResponseDto<List<UserDto>>.Success(201, added));
+            try
+            {
+                var added = await _userService.CreateRangeUserAsync(createDtos);
+                return CreateActionResult(CustomResponseDto<List<UserDto>>.Success(201, added));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
 
         [HttpDelete("range")]
         public async Task<IActionResult> DeleteRangeUsers(List<Guid> userIds)
         {
-            await _userService.DeleteRangeUserAsync(userIds);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+            try
+            {
+                await _userService.DeleteRangeUserAsync(userIds);
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
     }
 }

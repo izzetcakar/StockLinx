@@ -20,50 +20,99 @@ namespace StockLinx.API.Controllers
         [HttpGet]
         public async Task<IActionResult> All()
         {
-            var departments = await _departmentService.GetAllDtos();
-            return CreateActionResult(CustomResponseDto<List<DepartmentDto>>.Success(200, departments));
+            try
+            {
+                var departments = await _departmentService.GetAllDtos();
+                return CreateActionResult(CustomResponseDto<List<DepartmentDto>>.Success(200, departments));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var departmentDto = await _departmentService.GetDto(id);
-            return CreateActionResult(CustomResponseDto<DepartmentDto>.Success(200, departmentDto));
+            try
+            {
+                var departmentDto = await _departmentService.GetDto(id);
+                return CreateActionResult(CustomResponseDto<DepartmentDto>.Success(200, departmentDto));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> Add(DepartmentCreateDto createDto)
         {
-            var added = await _departmentService.CreateDepartmentAsync(createDto);
-            return CreateActionResult(CustomResponseDto<DepartmentDto>.Success(201, added));
+            try
+            {
+                var added = await _departmentService.CreateDepartmentAsync(createDto);
+                return CreateActionResult(CustomResponseDto<DepartmentDto>.Success(201, added));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
 
         [HttpPost("range")]
         public async Task<IActionResult> AddRangeDepartments(List<DepartmentCreateDto> createDtos)
         {
-            var added = await _departmentService.CreateRangeDepartmentAsync(createDtos);
-            return CreateActionResult(CustomResponseDto<List<DepartmentDto>>.Success(201, added));
+            try
+            {
+                var added = await _departmentService.CreateRangeDepartmentAsync(createDtos);
+                return CreateActionResult(CustomResponseDto<List<DepartmentDto>>.Success(201, added));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
 
         [HttpPut]
         public async Task<IActionResult> Update(DepartmentUpdateDto updateDto)
         {
-            var dto = await _departmentService.UpdateDepartmentAsync(updateDto);
-            return CreateActionResult(CustomResponseDto<DepartmentDto>.Success(200, dto));
+            try
+            {
+                var dto = await _departmentService.UpdateDepartmentAsync(updateDto);
+                return CreateActionResult(CustomResponseDto<DepartmentDto>.Success(200, dto));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            await _departmentService.DeleteDepartmentAsync(id);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+            try
+            {
+                await _departmentService.DeleteDepartmentAsync(id);
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
 
         [HttpDelete("range")]
         public async Task<IActionResult> DeleteRangeDepartments(List<Guid> departmentIds)
         {
-            await _departmentService.DeleteRangeDepartmentAsync(departmentIds);
-            return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+            try
+            {
+                await _departmentService.DeleteRangeDepartmentAsync(departmentIds);
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
     }
 }

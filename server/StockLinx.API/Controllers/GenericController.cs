@@ -23,29 +23,57 @@ namespace StockLinx.API.Controllers
         [HttpGet("entityCount")]
         public async Task<IActionResult> EntityCount()
         {
-            var entityCounts = _service.GetEntityCounts();
-            return CreateActionResult(CustomResponseDto<IEnumerable<EntityCounter>>.Success(200, entityCounts));
+            try
+            {
+                var entityCounts = _service.GetEntityCounts();
+                return CreateActionResult(CustomResponseDto<IEnumerable<EntityCounter>>.Success(200, entityCounts));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
 
         [HttpGet("productStatusCount")]
         public async Task<IActionResult> ProductStatusCount()
         {
-            var productStatusCounts = _service.GetProductStatusCounts();
-            return CreateActionResult(CustomResponseDto<IEnumerable<ProductStatusCounter>>.Success(200, productStatusCounts));
+            try
+            {
+                var productStatusCounts = _service.GetProductStatusCounts();
+                return CreateActionResult(CustomResponseDto<IEnumerable<ProductStatusCounter>>.Success(200, productStatusCounts));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
 
         [HttpGet("productLocationCount")]
         public async Task<IActionResult> ProductLocationCount()
         {
-            var productLocationCounts = _service.GetProductLocationCounts();
-            return CreateActionResult(CustomResponseDto<IEnumerable<ProductLocationCounterDto>>.Success(200, productLocationCounts));
+            try
+            {
+                var productLocationCounts = _service.GetProductLocationCounts();
+                return CreateActionResult(CustomResponseDto<IEnumerable<ProductLocationCounterDto>>.Success(200, productLocationCounts));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
 
         [HttpGet("productCategoryCount")]
         public async Task<IActionResult> ProductCategoryCount()
         {
-            var productCategoryCounts = _service.GetProductCategoryCounts();
-            return CreateActionResult(CustomResponseDto<IEnumerable<ProductCategoryCounterDto>>.Success(200, productCategoryCounts));
+            try
+            {
+                var productCategoryCounts = _service.GetProductCategoryCounts();
+                return CreateActionResult(CustomResponseDto<IEnumerable<ProductCategoryCounterDto>>.Success(200, productCategoryCounts));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
         }
     }
 }
