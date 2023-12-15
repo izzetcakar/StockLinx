@@ -1,6 +1,7 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { productActions } from "./actions";
 import {
+  ICustomLog,
   IEntityCount,
   IProductCategoryCount,
   IProductLocationCount,
@@ -39,6 +40,7 @@ function* fetchEntityCountsSaga() {
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* fetchProductStatusCountsSaga() {
   yield put(genericActions.increaseLoading());
   try {
@@ -60,6 +62,7 @@ function* fetchProductStatusCountsSaga() {
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* fetchProductLocationCountsSaga() {
   yield put(genericActions.increaseLoading());
   try {
@@ -81,6 +84,7 @@ function* fetchProductLocationCountsSaga() {
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* fetchProductCategoryCountsSaga() {
   yield put(genericActions.increaseLoading());
   try {
@@ -103,6 +107,28 @@ function* fetchProductCategoryCountsSaga() {
   yield put(genericActions.decreaseLoading());
 }
 
+function* fetchCustomLogsSaga() {
+  yield put(genericActions.increaseLoading());
+  try {
+    const { data, message, success }: IResponse = yield call(
+      productRequests.getCustomLogs
+    );
+    if (success !== undefined && !success) {
+      throw new Error(message);
+    } else {
+      yield put(
+        productActions.getCustomLogsSuccess({
+          customLogs: data as ICustomLog[],
+        })
+      );
+    }
+  } catch (e) {
+    openNotificationError("Custom Logs", (e as Error).message);
+    yield put(productActions.getCustomLogsFailure());
+  }
+  yield put(genericActions.decreaseLoading());
+}
+
 function* productSaga() {
   yield takeEvery(
     productConst.FETCH_ENTITY_COUNTS_REQUEST,
@@ -120,6 +146,7 @@ function* productSaga() {
     productConst.FETCH_PRODUCT_CATEGORY_COUNTS_REQUEST,
     fetchProductCategoryCountsSaga
   );
+  yield takeEvery(productConst.FETCH_CUSTOM_LOGS_REQUEST, fetchCustomLogsSaga);
 }
 
 export default productSaga;

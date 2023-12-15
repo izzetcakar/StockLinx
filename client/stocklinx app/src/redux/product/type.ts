@@ -1,4 +1,5 @@
 import {
+  ICustomLog,
   IEntityCount,
   IProductCategoryCount,
   IProductLocationCount,
@@ -7,6 +8,7 @@ import {
 import { productConst } from "./constant";
 
 export interface ProductState {
+  customLogs: ICustomLog[];
   entityCounts: IEntityCount[];
   productStatusCounts: IProductStatusCount[];
   productLocationCounts: IProductLocationCount[];
@@ -25,6 +27,9 @@ export interface ProductLocationCountsSucccessPayload {
 export interface ProductCategoryCountsSucccessPayload {
   productCategoryCounts: IProductCategoryCount[];
 }
+export interface CustomLogsSucccessPayload {
+  customLogs: ICustomLog[];
+}
 
 //GET ENTITY COUNTS
 export interface FetchEntityCountsRequest {
@@ -37,6 +42,7 @@ export type FetchEntityCountsSuccess = {
 export type FetchEntityCountsFailure = {
   type: typeof productConst.FETCH_ENTITY_COUNTS_FAILURE;
 };
+
 //GET PRODUCT STATUS COUNTS
 export interface FetchProductStatusCountsRequest {
   type: typeof productConst.FETCH_PRODUCT_STATUS_COUNTS_REQUEST;
@@ -48,6 +54,7 @@ export type FetchProductStatusCountsSuccess = {
 export type FetchProductStatusCountsFailure = {
   type: typeof productConst.FETCH_PRODUCT_STATUS_COUNTS_FAILURE;
 };
+
 //GET PRODUCT LOCATION COUNTS
 export interface FetchProductLocationCountsRequest {
   type: typeof productConst.FETCH_PRODUCT_LOCATION_COUNTS_REQUEST;
@@ -59,6 +66,7 @@ export type FetchProductLocationCountsSuccess = {
 export type FetchProductLocationCountsFailure = {
   type: typeof productConst.FETCH_PRODUCT_LOCATION_COUNTS_FAILURE;
 };
+
 //GET PRODUCT CATEGORY COUNTS
 export interface FetchProductCategoryCountsRequest {
   type: typeof productConst.FETCH_PRODUCT_CATEGORY_COUNTS_REQUEST;
@@ -69,6 +77,18 @@ export type FetchProductCategoryCountsSuccess = {
 };
 export type FetchProductCategoryCountsFailure = {
   type: typeof productConst.FETCH_PRODUCT_CATEGORY_COUNTS_FAILURE;
+};
+
+//GET CUSTOM LOGS
+export interface FetchCustomLogsRequest {
+  type: typeof productConst.FETCH_CUSTOM_LOGS_REQUEST;
+}
+export type FetchCustomLogsSuccess = {
+  type: typeof productConst.FETCH_CUSTOM_LOGS_SUCCESS;
+  payload: CustomLogsSucccessPayload;
+};
+export type FetchCustomLogsFailure = {
+  type: typeof productConst.FETCH_CUSTOM_LOGS_FAILURE;
 };
 
 export type ProductActions =
@@ -83,4 +103,7 @@ export type ProductActions =
   | FetchProductLocationCountsFailure
   | FetchProductCategoryCountsRequest
   | FetchProductCategoryCountsSuccess
-  | FetchProductCategoryCountsFailure;
+  | FetchProductCategoryCountsFailure
+  | FetchCustomLogsRequest
+  | FetchCustomLogsSuccess
+  | FetchCustomLogsFailure;

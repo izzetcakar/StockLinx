@@ -32,10 +32,17 @@ const getProductCategoryCounts = () => {
     apiType: "get",
   });
 };
+const getCustomLogs = () => {
+  return request<IProductCategoryCount>({
+    requestUrl: "CustomLog/",
+    apiType: "get",
+  });
+};
 
 export const productRequests = {
   getEntityCounts,
   getProductStatusCounts,
   getProductLocationCounts,
   getProductCategoryCounts,
+  getCustomLogs,
 };

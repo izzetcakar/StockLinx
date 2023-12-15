@@ -6,6 +6,7 @@ const initialState: ProductState = {
   productStatusCounts: [],
   productLocationCounts: [],
   productCategoryCounts: [],
+  customLogs: [],
 };
 
 export default (state = initialState, action: ProductActions) => {
@@ -59,6 +60,19 @@ export default (state = initialState, action: ProductActions) => {
         productCategoryCounts: action.payload.productCategoryCounts,
       };
     case productConst.FETCH_PRODUCT_CATEGORY_COUNTS_FAILURE:
+      return {
+        ...state,
+      };
+    case productConst.FETCH_CUSTOM_LOGS_REQUEST:
+      return {
+        ...state,
+      };
+    case productConst.FETCH_CUSTOM_LOGS_SUCCESS:
+      return {
+        ...state,
+        customLogs: action.payload.customLogs,
+      };
+    case productConst.FETCH_CUSTOM_LOGS_FAILURE:
       return {
         ...state,
       };
