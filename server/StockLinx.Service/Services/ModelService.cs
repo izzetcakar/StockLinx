@@ -97,6 +97,10 @@ namespace StockLinx.Service.Services
             foreach (var modelId in modelIds)
             {
                 var model = await GetByIdAsync(modelId);
+                if (model == null)
+                {
+                    throw new ArgumentNullException($"{modelId} - Model is not found");
+                }
                 model.DeletedDate = DateTime.UtcNow;
                 models.Add(model);
                 await _customLogService.CreateCustomLog("Delete", model.Id, null, "Model", null);

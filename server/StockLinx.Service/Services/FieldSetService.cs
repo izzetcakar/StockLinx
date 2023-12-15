@@ -89,6 +89,10 @@ namespace StockLinx.Service.Services
             foreach (var fieldSetId in fieldSetIds)
             {
                 var fieldSet = await GetByIdAsync(fieldSetId);
+                if (fieldSet == null)
+                {
+                    throw new ArgumentNullException($"{fieldSetId} - FieldSet is not found");
+                }
                 fieldSet.DeletedDate = DateTime.UtcNow;
                 fieldSets.Add(fieldSet);
             }

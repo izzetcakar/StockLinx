@@ -71,6 +71,10 @@ namespace StockLinx.Service.Services
             foreach (var id in ids)
             {
                 var entity = await GetByIdAsync(id);
+                if (entity == null)
+                {
+                    throw new ArgumentNullException($"{id} - FieldSetCustomField is not found");
+                }
                 entity.DeletedDate = DateTime.UtcNow;
                 fieldSetCustomFields.Add(entity);
             }

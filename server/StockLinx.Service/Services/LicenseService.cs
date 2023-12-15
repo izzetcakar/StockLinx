@@ -89,7 +89,7 @@ namespace StockLinx.Service.Services
             }
             license.DeletedDate = DateTime.UtcNow;
             _licenseRepository.Update(license, license);
-            await _customLogService.CreateCustomLog("Delete", license.Id, null, "License", null);
+            await _customLogService.CreateCustomLog("Delete", license.Id, license.BranchId, "License", "Branch");
             await _unitOfWork.CommitAsync();
         }
 
@@ -99,9 +99,13 @@ namespace StockLinx.Service.Services
             foreach (var licenseId in licenseIds)
             {
                 var license = await GetByIdAsync(licenseId);
+                if (license == null)
+                {
+                    throw new ArgumentNullException($"{licenseId} - License is not found");
+                }
                 license.DeletedDate = DateTime.UtcNow;
                 licenses.Add(license);
-                await _customLogService.CreateCustomLog("Delete", license.Id, null, "License", null);
+                await _customLogService.CreateCustomLog("Delete", license.Id, license.BranchId, "License", "Branch");
             }
             _licenseRepository.UpdateRange(licenses);
             await _unitOfWork.CommitAsync();
@@ -155,7 +159,7 @@ namespace StockLinx.Service.Services
             }
             deployedProduct.DeletedDate = DateTime.UtcNow;
             _deployedProductRepository.Update(deployedProduct, deployedProduct);
-            await _customLogService.CreateCustomLog("CheckOut", license.Id, null, "License", null);
+            await _customLogService.CreateCustomLog("CheckOut", license.Id, license.BranchId, "License", "Branch");
             await _unitOfWork.CommitAsync();
             return await _licenseRepository.GetDto(license);
         }

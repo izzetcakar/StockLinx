@@ -168,6 +168,10 @@ namespace StockLinx.Service.Services
             foreach (var userId in userIds)
             {
                 var user = await GetByIdAsync(userId);
+                if (user == null)
+                {
+                    throw new ArgumentNullException($"{userId} - User is not found");
+                }
                 user.DeletedDate = DateTime.UtcNow;
                 users.Add(user);
             }

@@ -80,6 +80,10 @@ namespace StockLinx.Service.Services
             foreach (var permissionId in permissionIds)
             {
                 var permission = await GetByIdAsync(permissionId);
+                if (permission == null)
+                {
+                    throw new ArgumentNullException($"{permissionId} - Permission is not found");
+                }
                 permission.DeletedDate = DateTime.UtcNow;
                 permissions.Add(permission);
                 await _customLogService.CreateCustomLog("Delete", permission.UserId, permission.BranchId, "User", "Branch");

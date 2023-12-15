@@ -96,6 +96,10 @@ namespace StockLinx.Service.Services
             foreach (var companyId in companyIds)
             {
                 var company = await GetByIdAsync(companyId);
+                if (company == null)
+                {
+                    throw new ArgumentNullException($"{companyId} - Company is not found");
+                }
                 company.DeletedDate = DateTime.UtcNow;
                 companies.Add(company);
                 await _customLogService.CreateCustomLog("Delete", company.Id, null, "Company", null);

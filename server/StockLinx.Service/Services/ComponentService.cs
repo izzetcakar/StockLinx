@@ -86,7 +86,7 @@ namespace StockLinx.Service.Services
             var component = await GetByIdAsync(componentId);
             if (component == null)
             {
-                throw new ArgumentNullException(nameof(component), $"The component to delete is null.");
+                throw new ArgumentNullException("Component is not found");
             }
             component.DeletedDate = DateTime.UtcNow;
             _componentRepository.Update(component, component);
@@ -100,6 +100,10 @@ namespace StockLinx.Service.Services
             foreach (var componentId in componentIds)
             {
                 var component = await GetByIdAsync(componentId);
+                if (component == null)
+                {
+                    throw new ArgumentNullException($"{componentId} - Component is not found");
+                }
                 component.DeletedDate = DateTime.UtcNow;
                 components.Add(component);
                 await _customLogService.CreateCustomLog("Delete", component.Id, component.BranchId, "Component", "Branch");

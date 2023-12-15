@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.Extensions.Logging;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
@@ -18,17 +17,14 @@ namespace StockLinx.Service.Services
         private readonly ICustomLogService _customLogService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly ILogger<AccessoryService> _logger;
         public AccessoryService(IRepository<Accessory> repository, IAccessoryRepository accessoryRepository, IUnitOfWork unitOfWork,
-            IMapper mapper, ILogger<AccessoryService> logger, IDeployedProductRepository deployedProductRepository,
-            ICustomLogService customLogService) : base(repository, unitOfWork)
+            IMapper mapper, IDeployedProductRepository deployedProductRepository, ICustomLogService customLogService) : base(repository, unitOfWork)
         {
             _accessoryRepository = accessoryRepository;
             _deployedProductRepository = deployedProductRepository;
             _customLogService = customLogService;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
-            _logger = logger;
         }
 
         public async Task<AccessoryDto> GetDto(Guid id)
@@ -74,12 +70,12 @@ namespace StockLinx.Service.Services
             var accessoryInDb = await GetByIdAsync(updateDto.Id);
             if (accessoryInDb == null)
             {
-                throw new ArgumentNullException(nameof(updateDto.Id), "The ID of the accessory to update is null.");
+                throw new ArgumentNullException("Accessory is not found");
             }
             var updatedAccessory = _mapper.Map<Accessory>(updateDto);
             updatedAccessory.UpdatedDate = DateTime.UtcNow;
             _accessoryRepository.Update(accessoryInDb, updatedAccessory);
-            await _customLogService.CreateCustomLog("Update", updatedAccessory.Id, null, "Accessory", null);
+            await _customLogService.CreateCustomLog("Update", updatedAccessory.Id, updatedAccessory.BranchId, "Accessory", "Branch");
             await _unitOfWork.CommitAsync();
             return await _accessoryRepository.GetDto(updatedAccessory);
         }
@@ -89,11 +85,11 @@ namespace StockLinx.Service.Services
             var accessory = await GetByIdAsync(accessoryId);
             if (accessory == null)
             {
-                throw new ArgumentNullException(nameof(accessory), "Accessory is not found");
+                throw new ArgumentNullException("Accessory is not found");
             }
             accessory.DeletedDate = DateTime.UtcNow;
             _accessoryRepository.Update(accessory, accessory);
-            await _customLogService.CreateCustomLog("Delete", accessory.Id, null, "Accessory", null);
+            await _customLogService.CreateCustomLog("Delete", accessory.Id, accessory.BranchId, "Accessory", "Branch");
             await _unitOfWork.CommitAsync();
         }
 
@@ -103,13 +99,17 @@ namespace StockLinx.Service.Services
             foreach (var accessoryId in accessoryIds)
             {
                 var accessory = await GetByIdAsync(accessoryId);
+                if (accessory == null)
+                {
+                    throw new ArgumentNullException($"{accessoryId} - Accessory is not found");
+                }
                 accessories.Add(accessory);
             }
             foreach (var accessory in accessories)
             {
                 accessory.DeletedDate = DateTime.UtcNow;
                 _accessoryRepository.Update(accessory, accessory);
-                await _customLogService.CreateCustomLog("Delete", accessory.Id, null, "Accessory", null);
+                await _customLogService.CreateCustomLog("Delete", accessory.Id, accessory.BranchId, "Accessory", "Branch");
             }
             await _unitOfWork.CommitAsync();
         }

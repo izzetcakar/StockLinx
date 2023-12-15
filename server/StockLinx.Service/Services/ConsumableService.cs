@@ -100,6 +100,10 @@ namespace StockLinx.Service.Services
             foreach (var consumableId in consumableIds)
             {
                 var consumable = await GetByIdAsync(consumableId);
+                if (consumable == null)
+                {
+                    throw new ArgumentNullException($"{consumableId} - Consumable is not found");
+                }
                 consumable.DeletedDate = DateTime.UtcNow;
                 consumables.Add(consumable);
                 await _customLogService.CreateCustomLog("Delete", consumable.Id, consumable.BranchId, "Consumable", "Branch");

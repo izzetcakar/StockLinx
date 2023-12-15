@@ -105,6 +105,10 @@ namespace StockLinx.Service.Services
             foreach (var customFieldId in customFieldIds)
             {
                 var customField = await GetByIdAsync(customFieldId);
+                if (customField == null)
+                {
+                    throw new ArgumentNullException($"{customFieldId} - CustomField is not found");
+                }
                 customField.DeletedDate = DateTime.UtcNow;
                 customFields.Add(customField);
             }

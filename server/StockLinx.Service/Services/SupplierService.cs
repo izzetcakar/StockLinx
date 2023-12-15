@@ -94,6 +94,10 @@ namespace StockLinx.Service.Services
             foreach (var supplierId in supplierIds)
             {
                 var supplier = await GetByIdAsync(supplierId);
+                if (supplier == null)
+                {
+                    throw new ArgumentNullException($"{supplierId} - Supplier is not found");
+                }
                 supplier.DeletedDate = DateTime.UtcNow;
                 suppliers.Add(supplier);
                 await _customLogService.CreateCustomLog("Delete", supplier.Id, null, "Supplier", null);

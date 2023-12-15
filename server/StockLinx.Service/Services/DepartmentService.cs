@@ -82,7 +82,7 @@ namespace StockLinx.Service.Services
             }
             department.DeletedDate = DateTime.UtcNow;
             _departmentRepository.Update(department, department);
-            await _customLogService.CreateCustomLog("Delete", department.Id, null, "Department", null);
+            await _customLogService.CreateCustomLog("Delete", department.Id, department.BranchId, "Department", "Branch");
             await _unitOfWork.CommitAsync();
         }
 
@@ -92,9 +92,13 @@ namespace StockLinx.Service.Services
             foreach (var departmentId in departmentIds)
             {
                 var department = await GetByIdAsync(departmentId);
+                if (department == null)
+                {
+                    throw new ArgumentNullException($"{departmentId} - Department is not found");
+                }
                 department.DeletedDate = DateTime.UtcNow;
                 departments.Add(department);
-                await _customLogService.CreateCustomLog("Delete", department.Id, null, "Department", null);
+                await _customLogService.CreateCustomLog("Delete", department.Id, department.BranchId, "Department", "Branch");
             }
             _departmentRepository.UpdateRange(departments);
             await _unitOfWork.CommitAsync();

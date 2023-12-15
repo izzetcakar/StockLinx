@@ -88,6 +88,10 @@ namespace StockLinx.Service.Services
             foreach (var id in ids)
             {
                 var modelFieldData = await _modelFieldDataRepository.GetByIdAsync(id);
+                if (modelFieldData == null)
+                {
+                    throw new ArgumentNullException($"{id} - ModelFieldData is not found");
+                }
                 modelFieldData.DeletedDate = DateTime.UtcNow;
                 modelFieldDatas.Add(modelFieldData);
             }

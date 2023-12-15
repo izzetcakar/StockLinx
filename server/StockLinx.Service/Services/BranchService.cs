@@ -96,6 +96,10 @@ namespace StockLinx.Service.Services
             foreach (var branchId in branchIds)
             {
                 var branch = await GetByIdAsync(branchId);
+                if (branch == null)
+                {
+                    throw new ArgumentNullException($"{branchId} - Branch is not found");
+                }
                 branch.DeletedDate = DateTime.UtcNow;
                 branches.Add(branch);
                 await _customLogService.CreateCustomLog("Delete", branch.Id, branch.CompanyId, "Branch", "Company");

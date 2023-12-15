@@ -95,6 +95,10 @@ namespace StockLinx.Service.Services
             foreach (var productStatusId in productStatusIds)
             {
                 var productStatus = await GetByIdAsync(productStatusId);
+                if (productStatus == null)
+                {
+                    throw new ArgumentNullException($"{productStatusId} - ProductStatus is not found");
+                }
                 productStatus.DeletedDate = DateTime.UtcNow;
                 productStatuses.Add(productStatus);
                 await _customLogService.CreateCustomLog("Delete", productStatus.Id, null, "ProductStatus", null);

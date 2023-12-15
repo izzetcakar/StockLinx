@@ -113,6 +113,10 @@ namespace StockLinx.Service.Services
             foreach (var assetId in assetIds)
             {
                 var asset = await GetByIdAsync(assetId);
+                if (asset == null)
+                {
+                    throw new ArgumentNullException($"{assetId} - Asset is not found");
+                }
                 asset.DeletedDate = DateTime.UtcNow;
                 assets.Add(asset);
                 await _customLogService.CreateCustomLog("Delete", asset.Id, asset.BranchId, "Asset", "Branch");
@@ -131,7 +135,7 @@ namespace StockLinx.Service.Services
             Boolean isDeployed = await _deployedProductRepository.AnyAsync(d => d.AssetId == checkInDto.Id);
             if (isDeployed)
             {
-                throw new Exception("Asset is already deployed");
+                throw new Exception("Asset is already checked in");
             }
             var deployedProduct = new DeployedProduct
             {

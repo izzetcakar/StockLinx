@@ -96,6 +96,10 @@ namespace StockLinx.Service.Services
             foreach (var locationId in locationIds)
             {
                 var location = await GetByIdAsync(locationId);
+                if (location == null)
+                {
+                    throw new ArgumentNullException($"{locationId} - Location is not found");
+                }
                 location.DeletedDate = DateTime.UtcNow;
                 locations.Add(location);
                 await _customLogService.CreateCustomLog("Delete", location.Id, null, "Location", null);

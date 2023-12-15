@@ -96,6 +96,10 @@ namespace StockLinx.Service.Services
             foreach (var categoryId in categoryIds)
             {
                 var category = await GetByIdAsync(categoryId);
+                if (category == null)
+                {
+                    throw new ArgumentNullException($"{categoryId} - Category is not found");
+                }
                 category.DeletedDate = DateTime.UtcNow;
                 categories.Add(category);
                 await _customLogService.CreateCustomLog("Delete", categoryId, null, "Category", null);
