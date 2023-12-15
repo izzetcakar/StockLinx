@@ -15,6 +15,7 @@ import { RootState } from "../../redux/rootReducer";
 import { productActions } from "../../redux/product/actions";
 import { Pie } from "react-chartjs-2";
 import "chart.js/auto";
+import CustomLogs from "../../components/dataGrid/customLog/CustomLogs";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -114,6 +115,24 @@ const Home = () => {
         })}
       </div>
       <div className="home">
+        <div className="home-item">
+          <div className="home-item-header">
+            <div className="home-item-header-title">Recent Activity</div>
+            <img
+              className="home-item-header-icon"
+              src={icon_minus}
+              onClick={() => setShow((prev) => !prev)}
+            />
+          </div>
+          <hr className="home-item-wrapper" />
+          <div
+            className={
+              show ? "home-item-content" : "home-item-content-collapsed"
+            }
+          >
+            <CustomLogs />
+          </div>
+        </div>
         <div className="home-item">
           <div className="home-item-header">
             <div className="home-item-header-title">Assets by Status</div>
