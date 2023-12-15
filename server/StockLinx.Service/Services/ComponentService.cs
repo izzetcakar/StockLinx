@@ -160,7 +160,7 @@ namespace StockLinx.Service.Services
             }
             deployedProduct.DeletedDate = DateTime.UtcNow;
             _deployedProductRepository.Update(deployedProduct, deployedProduct);
-            await _customLogService.CreateCustomLog("CheckOut", component.Id, null, "Component", null);
+            await _customLogService.CreateCustomLog("CheckOut", component.Id, component.BranchId, "Component", "Branch");
             await _unitOfWork.CommitAsync();
             return await _componentRepository.GetDto(component);
         }

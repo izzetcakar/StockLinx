@@ -134,7 +134,7 @@ namespace StockLinx.Service.Services
                 Notes = checkInDto.Notes,
             };
             await _deployedProductRepository.AddAsync(deployedProduct);
-            await _customLogService.CreateCustomLog("CheckIn", deployedProduct.Id, deployedProduct.UserId, "DeployedProduct", "User");
+            await _customLogService.CreateCustomLog("CheckIn", license.Id, deployedProduct.UserId, "License", "User");
             await _unitOfWork.CommitAsync();
             var licenseDto = await _licenseRepository.GetDto(license);
             var deployedProductDto = _deployedProductRepository.GetDto(deployedProduct);

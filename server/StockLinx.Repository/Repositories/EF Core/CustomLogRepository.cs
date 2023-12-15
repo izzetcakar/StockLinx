@@ -18,13 +18,11 @@ namespace StockLinx.Repository.Repositories.EF_Core
             {
                 var setMethod = dbContext.GetType().GetMethod("Set", Type.EmptyTypes).MakeGenericMethod(entityType.ClrType);
                 var set = setMethod.Invoke(dbContext, null);
-
-                // Assuming DbSet<T> has an asynchronous version of ToList, use it.
                 var resultList = ((dynamic)set);
 
                 return resultList.AsQueryable();
             }
-            throw new InvalidOperationException($"The entity type '{entityName}' is not found.(GetAll)");
+            throw new InvalidOperationException($"The entity type '{entityName}' is not found in GET_ALL");
         }
 
         public async Task<string> GetObjByIdAsync(string entityName, Guid id)
@@ -37,16 +35,31 @@ namespace StockLinx.Repository.Repositories.EF_Core
                 var allEntities = await GetAllEntitiesAsync(entityName).Result.ToListAsync();
                 var keyName = "Id";
                 var entity = allEntities.SingleOrDefault(e => (Guid)e.GetType().GetProperty(keyName).GetValue(e) == id);
-
-                if (entity == null)
+                if (entity != null)
                 {
-                    throw new InvalidOperationException($"Entity with '{keyName}' = '{id}' not found in '{inputEntityName}'.");
+                    if (entityName == "User")
+                    {
+                        var firstName = entity?.GetType().GetProperty("FirstName").GetValue(entity);
+                        var lastName = entity?.GetType().GetProperty("LastName").GetValue(entity);
+                        return $"{firstName} {lastName}";
+                    }
+                    var nameProperty = entity?.GetType().GetProperty("Name");
+                    if (nameProperty != null)
+                    {
+                        var name = nameProperty.GetValue(entity);
+                        if (name != null)
+                        {
+                            return name.ToString();
+                        }
+                    }
+                    return "ENTITY__NAME__NOT__FOUND";
                 }
-
-                return entity.GetType().GetProperty("Name").GetValue(entity).ToString();
+                else
+                {
+                    return "ENTITY__NOT__FOUND";
+                }
             }
             throw new InvalidOperationException($"The entity type '{entityName}' is not found.");
         }
-
     }
 }

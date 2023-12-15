@@ -147,7 +147,7 @@ namespace StockLinx.Service.Services
                 Notes = checkInDto.Notes,
             };
             await _deployedProductRepository.AddAsync(deployedProduct);
-            await _customLogService.CreateCustomLog("Delete", asset.Id, asset.BranchId, "Asset", "Branch");
+            await _customLogService.CreateCustomLog("Delete", asset.Id, deployedProduct.UserId, "Asset", "User");
             await _unitOfWork.CommitAsync();
             var assetDto = await _assetRepository.GetDto(asset);
             var deployedProductDto = _deployedProductRepository.GetDto(deployedProduct);
@@ -172,7 +172,7 @@ namespace StockLinx.Service.Services
             }
             deployedProduct.DeletedDate = DateTime.UtcNow;
             _deployedProductRepository.Update(deployedProduct, deployedProduct);
-            await _customLogService.CreateCustomLog("Delete", asset.Id, null, "Asset", null);
+            await _customLogService.CreateCustomLog("Delete", asset.Id, asset.BranchId, "Asset", "Branch");
             await _unitOfWork.CommitAsync();
             return await _assetRepository.GetDto(asset);
         }

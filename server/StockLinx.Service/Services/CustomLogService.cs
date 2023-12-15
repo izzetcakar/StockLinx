@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
@@ -10,17 +11,18 @@ namespace StockLinx.Service.Services
     public class CustomLogService : Service<CustomLog>, ICustomLogService
     {
         private readonly ICustomLogRepository _customLogRepository;
-        private readonly IUserService _userService;
+        private readonly IServiceProvider _serviceProvider;
         public CustomLogService(IRepository<CustomLog> repository, IUnitOfWork unitOfWork,
-            ICustomLogRepository customLogRepository, IUserService userService) : base(repository, unitOfWork)
+            ICustomLogRepository customLogRepository, IServiceProvider serviceProvider) : base(repository, unitOfWork)
         {
             _customLogRepository = customLogRepository;
-            _userService = userService;
+            _serviceProvider = serviceProvider;
         }
 
         public async Task CreateCustomLog(string action, Guid itemId, Guid? targetId, string itemController, string? targetController)
         {
-            var user = await _userService.GetCurrentUser();
+            var userService = _serviceProvider.GetRequiredService<IUserService>();
+            var user = await userService.GetCurrentUser();
             var customLog = new CustomLog
             {
                 Id = Guid.NewGuid(),
