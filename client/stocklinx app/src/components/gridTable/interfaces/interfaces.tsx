@@ -6,6 +6,7 @@ export interface Column {
   lookup?: Lookup;
   dataType: "string" | "number" | "boolean" | "date" | "action";
   visible?: boolean;
+  selectable?: boolean;
 }
 export interface VisibleColumn {
   caption: string;

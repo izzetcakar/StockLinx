@@ -52,15 +52,23 @@ export const useSelectCell = (data: object[], columns: Column[]) => {
   ) => {
     if (!isDrawing) {
       setSelectedCells([]);
-
       const isSelected = selectedCells.find(
         (cell) =>
           cell.rowIndex === rowIndex &&
           cell.columnIndex === columnIndex &&
           cell.column === column.dataField
       );
-
-      if (isSelected) {
+      if (!isSelected && column.selectable !== false) {
+        setSelectedCells((prevSelected) => [
+          ...prevSelected,
+          {
+            rowIndex,
+            columnIndex,
+            column: column.dataField,
+            value: getCellValue(value, column.lookup),
+          },
+        ]);
+      } else {
         setSelectedCells((prevSelected) =>
           prevSelected.filter(
             (cell) =>
@@ -71,16 +79,6 @@ export const useSelectCell = (data: object[], columns: Column[]) => {
               )
           )
         );
-      } else {
-        setSelectedCells((prevSelected) => [
-          ...prevSelected,
-          {
-            rowIndex,
-            columnIndex,
-            column: column.dataField,
-            value: getCellValue(value, column.lookup),
-          },
-        ]);
       }
     } else {
       const startRow =
@@ -107,6 +105,7 @@ export const useSelectCell = (data: object[], columns: Column[]) => {
           const newValue = (data[i] as { [key: string]: any })[
             columns[j].dataField
           ];
+          const currentColumn = columns[j];
           const lookup = columns[j]?.lookup;
           const cell = {
             rowIndex: i,
@@ -114,7 +113,9 @@ export const useSelectCell = (data: object[], columns: Column[]) => {
             column: columns[j].dataField,
             value: getCellValue(newValue, lookup),
           };
-          cellsInRectangle.push(cell);
+          if (currentColumn.selectable !== false) {
+            cellsInRectangle.push(cell);
+          }
         }
       }
 

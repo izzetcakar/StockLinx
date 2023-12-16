@@ -141,6 +141,7 @@ export const useColumns = () => {
           </div>
         );
       },
+      selectable: false,
     },
     // INVISIBLE COLUMNS
     {
