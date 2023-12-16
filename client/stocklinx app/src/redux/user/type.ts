@@ -53,6 +53,7 @@ export type GetWithTokenFailure = {
 //GET:/ID
 export interface FetchUserRequest {
   type: typeof userConst.FETCH_USER_REQUEST;
+  payload: UserRequestPayload;
 }
 export type FetchUsersuccess = {
   type: typeof userConst.FETCH_USER_SUCCESS;

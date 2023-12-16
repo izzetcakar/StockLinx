@@ -33,6 +33,7 @@ import {
   RemoveRangeUserRequest,
   RemoveRangeUserSuccess,
   RemoveRangeUserFailure,
+  UserRequestPayload,
 } from "./type";
 
 //GET
@@ -58,8 +59,9 @@ const getWithTokenFailure = (): GetWithTokenFailure => ({
 });
 
 //GET:/ID
-const get = (): FetchUserRequest => ({
+const get = (payload: UserRequestPayload): FetchUserRequest => ({
   type: userConst.FETCH_USER_REQUEST,
+  payload,
 });
 const getSuccess = (payload: UserPayload): FetchUsersuccess => ({
   type: userConst.FETCH_USER_SUCCESS,

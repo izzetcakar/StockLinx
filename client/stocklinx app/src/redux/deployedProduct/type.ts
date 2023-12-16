@@ -1,9 +1,12 @@
-import { IDeployedProduct } from "../../interfaces/interfaces";
+import {
+  IDeployedProduct,
+  IDeployedProductDto,
+} from "../../interfaces/interfaces";
 import { deployedProductConst } from "./constant";
 
 export interface DeployedProductState {
-  deployedProduct: IDeployedProduct | null;
-  deployedProducts: IDeployedProduct[];
+  deployedProduct: IDeployedProductDto | null;
+  deployedProducts: IDeployedProductDto[];
 }
 export interface DeployedProductRequestPayload {
   id: string;
@@ -20,6 +23,12 @@ export interface DeployedProductRemoveRangePayload {
 export interface DeployedProductRemovePayload {
   id: string;
 }
+export interface DeployedProductDtoPayload {
+  deployedProduct: IDeployedProductDto;
+}
+export interface DeployedProductDtosPayload {
+  deployedProducts: IDeployedProductDto[];
+}
 
 //GET
 export interface FetchDeployedProductsRequest {
@@ -27,7 +36,7 @@ export interface FetchDeployedProductsRequest {
 }
 export type FetchDeployedProductsSuccess = {
   type: typeof deployedProductConst.FETCH_DEPLOYEDPRODUCTS_SUCCESS;
-  payload: DeployedProductsPayload;
+  payload: DeployedProductDtosPayload;
 };
 export type FetchDeployedProductsFailure = {
   type: typeof deployedProductConst.FETCH_DEPLOYEDPRODUCTS_FAILURE;
@@ -39,7 +48,7 @@ export interface FetchDeployedProductRequest {
 }
 export type FetchDeployedProductSuccess = {
   type: typeof deployedProductConst.FETCH_DEPLOYEDPRODUCT_SUCCESS;
-  payload: DeployedProductPayload;
+  payload: DeployedProductDtoPayload;
 };
 export type FetchDeployedProductFailure = {
   type: typeof deployedProductConst.FETCH_DEPLOYEDPRODUCT_FAILURE;
@@ -51,7 +60,7 @@ export interface CreateDeployedProductRequest {
 }
 export type CreateDeployedProductSuccess = {
   type: typeof deployedProductConst.CREATE_DEPLOYEDPRODUCT_SUCCESS;
-  payload: DeployedProductPayload;
+  payload: DeployedProductDtoPayload;
 };
 export type CreateDeployedProductFailure = {
   type: typeof deployedProductConst.CREATE_DEPLOYEDPRODUCT_FAILURE;
@@ -63,7 +72,7 @@ export interface CreateRangeDeployedProductRequest {
 }
 export type CreateRangeDeployedProductSuccess = {
   type: typeof deployedProductConst.CREATE_RANGE_DEPLOYEDPRODUCT_SUCCESS;
-  payload: DeployedProductsPayload;
+  payload: DeployedProductDtosPayload;
 };
 export type CreateRangeDeployedProductFailure = {
   type: typeof deployedProductConst.CREATE_RANGE_DEPLOYEDPRODUCT_FAILURE;
@@ -75,7 +84,7 @@ export interface UpdateDeployedProductRequest {
 }
 export type UpdateDeployedProductSuccess = {
   type: typeof deployedProductConst.UPDATE_DEPLOYEDPRODUCT_SUCCESS;
-  payload: DeployedProductPayload;
+  payload: DeployedProductDtoPayload;
 };
 export type UpdateDeployedProductFailure = {
   type: typeof deployedProductConst.UPDATE_DEPLOYEDPRODUCT_FAILURE;

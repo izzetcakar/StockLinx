@@ -1,32 +1,38 @@
-import { IDeployedProduct } from "../../interfaces/interfaces";
+import {
+  IDeployedProduct,
+  IDeployedProductDto,
+} from "../../interfaces/interfaces";
 import { request } from "../../server/api";
 const requestUrl = "DeployedProduct/";
 
 const getAll = () => {
-  return request<IDeployedProduct>({ requestUrl: requestUrl, apiType: "get" });
+  return request<IDeployedProductDto>({
+    requestUrl: requestUrl,
+    apiType: "get",
+  });
 };
 const get = (id: string) => {
-  return request<IDeployedProduct>({
+  return request<IDeployedProductDto>({
     requestUrl: requestUrl + id,
     apiType: "get",
   });
 };
 const create = (deployedProduct: IDeployedProduct) => {
-  return request<IDeployedProduct>({
+  return request<IDeployedProductDto>({
     requestUrl: requestUrl,
     apiType: "post",
     queryData: deployedProduct,
   });
 };
 const createRange = (deployedProducts: IDeployedProduct[]) => {
-  return request<IDeployedProduct>({
+  return request<IDeployedProductDto>({
     requestUrl: requestUrl + "range",
     apiType: "post",
     queryData: deployedProducts,
   });
 };
 const update = (deployedProduct: IDeployedProduct) => {
-  return request<IDeployedProduct>({
+  return request<IDeployedProductDto>({
     requestUrl: requestUrl,
     apiType: "put",
     queryData: deployedProduct,

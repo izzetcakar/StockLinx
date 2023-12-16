@@ -4,6 +4,7 @@ import { userConst } from "./constant";
 import {
   CreateRangeUserRequest,
   CreateUserRequest,
+  FetchUserRequest,
   RemoveRangeUserRequest,
   RemoveUserRequest,
   SignInRequest,
@@ -30,10 +31,13 @@ interface ISignInResponse {
   status: number;
 }
 
-function* fetchUsersaga() {
+function* fetchUsersaga(action: FetchUserRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(userRequests.get);
+    const { data, message, success }: IResponse = yield call(
+      userRequests.get,
+      action.payload.id
+    );
     if (success !== undefined && !success) {
       throw new Error(message);
     } else {

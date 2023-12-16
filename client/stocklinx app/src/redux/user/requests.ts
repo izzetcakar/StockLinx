@@ -6,9 +6,9 @@ const requestUrl = "User/";
 const getAll = () => {
   return request<IUser>({ requestUrl: requestUrl, apiType: "get" });
 };
-const get = () => {
+const get = (id: string) => {
   return request<IUser>({
-    requestUrl: requestUrl,
+    requestUrl: requestUrl + id,
     apiType: "get",
   });
 };
