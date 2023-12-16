@@ -4,8 +4,12 @@ import {
   Column,
   ExcelColumn,
 } from "../../components/gridTable/interfaces/interfaces";
+import { useNavigate } from "react-router-dom";
+import { Anchor } from "@mantine/core";
+import { ISupplier } from "../../interfaces/interfaces";
 
 export const useColumns = () => {
+  const navigate = useNavigate();
   const locations = useSelector((state: RootState) => state.location.locations);
 
   const columns: Column[] = [
@@ -13,16 +17,44 @@ export const useColumns = () => {
       dataField: "name",
       caption: "Name",
       dataType: "string",
+      renderComponent(e) {
+        return (
+          <Anchor
+            onClick={() => navigate(`/supplier/${(e as ISupplier)?.id}`)}
+            target="_blank"
+            underline={true}
+          >
+            {(e as ISupplier).name}
+          </Anchor>
+        );
+      },
     },
     {
       dataField: "locationId",
       caption: "Location",
+      dataType: "string",
       lookup: {
         dataSource: locations,
         valueExpr: "id",
         displayExpr: "name",
       },
-      dataType: "string",
+      renderComponent(e) {
+        return (
+          <Anchor
+            onClick={() =>
+              navigate(`/location/${(e as ISupplier)?.locationId}`)
+            }
+            target="_blank"
+            underline={true}
+          >
+            {
+              locations.find(
+                (location) => location.id === (e as ISupplier)?.locationId
+              )?.name
+            }
+          </Anchor>
+        );
+      },
     },
     {
       dataField: "contactName",

@@ -4,7 +4,7 @@ import {
   ExcelColumn,
   Column,
 } from "../../components/gridTable/interfaces/interfaces";
-import { Button } from "@mantine/core";
+import { Anchor, Button } from "@mantine/core";
 import { openConfirmModal } from "../../components/gridTable/modals/modals";
 import { openCheckInModal } from "../../modals/modals";
 import {
@@ -14,9 +14,11 @@ import {
 } from "../../interfaces/interfaces";
 import uuid4 from "uuid4";
 import { assetActions } from "../../redux/asset/actions";
+import { useNavigate } from "react-router-dom";
 
 export const useColumns = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const branches = useSelector((state: RootState) => state.branch.branches);
   const models = useSelector((state: RootState) => state.model.models);
   const productStatuses = useSelector(
@@ -61,16 +63,49 @@ export const useColumns = () => {
       dataField: "name",
       caption: "Name",
       dataType: "string",
+      renderComponent(e) {
+        return (
+          <Anchor
+            onClick={() => navigate(`/asset/${(e as IAsset)?.id}`)}
+            target="_blank"
+            underline={true}
+          >
+            {(e as IAsset).name}
+          </Anchor>
+        );
+      },
     },
     {
       dataField: "tagNo",
       caption: "Asset Tag",
       dataType: "string",
+      renderComponent(e) {
+        return (
+          <Anchor
+            onClick={() => navigate(`/asset/${(e as IAsset)?.id}`)}
+            target="_blank"
+            underline={true}
+          >
+            {(e as IAsset).tagNo}
+          </Anchor>
+        );
+      },
     },
     {
       dataField: "serialNo",
       caption: "Serial",
       dataType: "string",
+      renderComponent(e) {
+        return (
+          <Anchor
+            onClick={() => navigate(`/asset/${(e as IAsset)?.id}`)}
+            target="_blank"
+            underline={true}
+          >
+            {(e as IAsset).serialNo}
+          </Anchor>
+        );
+      },
     },
     {
       dataField: "modelId",

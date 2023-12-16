@@ -1,14 +1,32 @@
+import { useNavigate } from "react-router-dom";
 import {
   Column,
   ExcelColumn,
 } from "../../components/gridTable/interfaces/interfaces";
+import { IManufacturer } from "../../interfaces/interfaces";
+import { Anchor } from "@mantine/core";
 
 export const useColumns = () => {
+  const navigate = useNavigate();
+
   const columns: Column[] = [
     {
       dataField: "name",
       caption: "Name",
       dataType: "string",
+      renderComponent(e) {
+        return (
+          <Anchor
+            onClick={() =>
+              navigate(`/manufacturer/${(e as IManufacturer)?.id}`)
+            }
+            target="_blank"
+            underline={true}
+          >
+            {(e as IManufacturer).name}
+          </Anchor>
+        );
+      },
     },
     {
       dataField: "url",

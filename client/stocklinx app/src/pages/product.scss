@@ -1,0 +1,25 @@
+.product__container {
+  .product__container__title {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .product__content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    max-width: 400px;
+    border-bottom: 1px solid #ced4da;
+  }
+
+  .product__content__title {
+    font-weight: bold;
+    color: #333;
+  }
+
+  .product__content__value {
+    color: #555;
+  }
+}

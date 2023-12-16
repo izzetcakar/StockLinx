@@ -2,52 +2,133 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { Column } from "../../components/gridTable/interfaces/interfaces";
 import { IUser } from "../../interfaces/interfaces";
+import { useNavigate } from "react-router-dom";
+import { Anchor } from "@mantine/core";
 
 export const useColumns = () => {
+  const navigate = useNavigate();
   const companies = useSelector((state: RootState) => state.company.companies);
   const branches = useSelector((state: RootState) => state.branch.branches);
   const departments = useSelector(
     (state: RootState) => state.department.departments
   );
+
   const columns: Column[] = [
     {
       caption: "Company",
       dataField: "companyId",
+      dataType: "string",
       lookup: {
         dataSource: companies,
         valueExpr: "id",
         displayExpr: "name",
       },
-      dataType: "string",
+      renderComponent(e) {
+        return (
+          <Anchor
+            onClick={() => navigate(`/company/${(e as IUser)?.companyId}`)}
+            target="_blank"
+            underline={true}
+          >
+            {
+              companies.find(
+                (company) => company.id === (e as IUser)?.companyId
+              )?.name
+            }
+          </Anchor>
+        );
+      },
     },
     {
       dataField: "branchId",
       caption: "Branch",
+      dataType: "string",
       lookup: {
         dataSource: branches,
         valueExpr: "id",
         displayExpr: "name",
       },
-      dataType: "string",
+      renderComponent(e) {
+        return (
+          <Anchor
+            onClick={() =>
+              navigate(
+                `/branch/${
+                  branches.find(
+                    (branch) =>
+                      branch.id ===
+                      departments.find(
+                        (department) =>
+                          department.id === (e as IUser).departmentId
+                      )?.branchId
+                  )?.id
+                }`
+              )
+            }
+            target="_blank"
+            underline={true}
+          >
+            {
+              branches.find(
+                (branch) =>
+                  branch.id ===
+                  departments.find(
+                    (department) => department.id === (e as IUser).departmentId
+                  )?.branchId
+              )?.name
+            }
+          </Anchor>
+        );
+      },
     },
     {
       dataField: "departmentId",
       caption: "Department",
+      dataType: "string",
       lookup: {
         dataSource: departments,
         valueExpr: "id",
         displayExpr: "name",
       },
-      dataType: "string",
+      renderComponent(e) {
+        return (
+          <Anchor
+            onClick={() =>
+              navigate(
+                `/department/${
+                  departments.find(
+                    (department) => department.id === (e as IUser).departmentId
+                  )?.id
+                }`
+              )
+            }
+            target="_blank"
+            underline={true}
+          >
+            {
+              departments.find(
+                (department) => department.id === (e as IUser).departmentId
+              )?.name
+            }
+          </Anchor>
+        );
+      },
     },
     {
-      dataField: "name",
+      dataField: "firstName",
+      dataType: "action",
       caption: "Name",
       renderComponent(e) {
-        const value = (e as IUser).firstName + " " + (e as IUser).lastName;
-        return <div>{value}</div>;
+        return (
+          <Anchor
+            onClick={() => navigate(`/user/${(e as IUser)?.id}`)}
+            target="_blank"
+            underline={true}
+          >
+            {(e as IUser)?.firstName} {(e as IUser)?.lastName}
+          </Anchor>
+        );
       },
-      dataType: "action",
     },
     {
       caption: "Title",

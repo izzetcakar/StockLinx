@@ -13,10 +13,12 @@ import {
 import { openCheckInModal } from "../../modals/modals";
 import { licenseActions } from "../../redux/license/actions";
 import uuid4 from "uuid4";
-import { Button } from "@mantine/core";
+import { Anchor, Button } from "@mantine/core";
+import { useNavigate } from "react-router-dom";
 
 export const useColumns = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const branches = useSelector((state: RootState) => state.branch.branches);
   const manufacturers = useSelector(
     (state: RootState) => state.manufacturer.manufacturers
@@ -58,11 +60,33 @@ export const useColumns = () => {
       caption: "Name",
       dataField: "name",
       dataType: "string",
+      renderComponent(e) {
+        return (
+          <Anchor
+            onClick={() => navigate(`/license/${(e as ILicense)?.id}`)}
+            target="_blank"
+            underline={true}
+          >
+            {(e as ILicense).name}
+          </Anchor>
+        );
+      },
     },
     {
       caption: "License Key",
       dataField: "licenseKey",
       dataType: "string",
+      renderComponent(e) {
+        return (
+          <Anchor
+            onClick={() => navigate(`/license/${(e as ILicense)?.id}`)}
+            target="_blank"
+            underline={true}
+          >
+            {(e as ILicense).licenseKey}
+          </Anchor>
+        );
+      },
     },
     {
       caption: "Expiration Date",

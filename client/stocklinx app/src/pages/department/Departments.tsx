@@ -3,7 +3,6 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { useColumns } from "./columns";
-import { companyActions } from "../../redux/company/actions";
 import Gridtable from "../../components/gridTable/GridTable";
 import { branchActions } from "../../redux/branch/actions";
 import { departmentActions } from "../../redux/department/actions";
@@ -17,9 +16,8 @@ const Department = () => {
   );
 
   const refreshData = () => {
-    dispatch(companyActions.getAll());
-    dispatch(branchActions.getAll());
     dispatch(departmentActions.getAll());
+    dispatch(branchActions.getAll());
     dispatch(locationActions.getAll());
   };
 

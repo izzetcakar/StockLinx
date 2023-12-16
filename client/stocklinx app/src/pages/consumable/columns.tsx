@@ -4,9 +4,12 @@ import {
   Column,
   ExcelColumn,
 } from "../../components/gridTable/interfaces/interfaces";
-import { CategoryType } from "../../interfaces/interfaces";
+import { CategoryType, IConsumable } from "../../interfaces/interfaces";
+import { Anchor } from "@mantine/core";
+import { useNavigate } from "react-router-dom";
 
 export const useColumns = () => {
+  const navigate = useNavigate();
   const branches = useSelector((state: RootState) => state.branch.branches);
   const suppliers = useSelector((state: RootState) => state.supplier.suppliers);
   const manufacturers = useSelector(
@@ -21,6 +24,17 @@ export const useColumns = () => {
       caption: "Name",
       dataField: "name",
       dataType: "string",
+      renderComponent(e) {
+        return (
+          <Anchor
+            onClick={() => navigate(`/consumable/${(e as IConsumable)?.id}`)}
+            target="_blank"
+            underline={true}
+          >
+            {(e as IConsumable).name}
+          </Anchor>
+        );
+      },
     },
     {
       caption: "Category",
@@ -38,11 +52,33 @@ export const useColumns = () => {
       caption: "Model No",
       dataField: "modelNo",
       dataType: "string",
+      renderComponent(e) {
+        return (
+          <Anchor
+            onClick={() => navigate(`/consumable/${(e as IConsumable)?.id}`)}
+            target="_blank"
+            underline={true}
+          >
+            {(e as IConsumable).modelNo}
+          </Anchor>
+        );
+      },
     },
     {
       caption: "Item No",
       dataField: "itemNo",
       dataType: "string",
+      renderComponent(e) {
+        return (
+          <Anchor
+            onClick={() => navigate(`/consumable/${(e as IConsumable)?.id}`)}
+            target="_blank"
+            underline={true}
+          >
+            {(e as IConsumable).itemNo}
+          </Anchor>
+        );
+      },
     },
     {
       caption: "Total",

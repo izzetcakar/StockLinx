@@ -10,13 +10,15 @@ import {
   IAccessoryCheckInDto,
   IDeployedProduct,
 } from "../../interfaces/interfaces";
-import { Button } from "@mantine/core";
+import { Anchor, Button } from "@mantine/core";
 import { accessoryActions } from "../../redux/accessory/actions";
 import uuid4 from "uuid4";
 import { openCheckInModal } from "../../modals/modals";
+import { useNavigate } from "react-router-dom";
 
 export const useColumns = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const branches = useSelector((state: RootState) => state.branch.branches);
   const locations = useSelector((state: RootState) => state.location.locations);
   const manufacturers = useSelector(
@@ -62,6 +64,17 @@ export const useColumns = () => {
       caption: "Name",
       dataField: "name",
       dataType: "string",
+      renderComponent(e) {
+        return (
+          <Anchor
+            onClick={() => navigate(`/accessory/${(e as IAccessory)?.id}`)}
+            target="_blank"
+            underline={true}
+          >
+            {(e as IAccessory).name}
+          </Anchor>
+        );
+      },
     },
     {
       caption: "Category",
@@ -78,7 +91,18 @@ export const useColumns = () => {
     {
       caption: "Model",
       dataField: "modelNo",
-      dataType: "string",
+      dataType: "action",
+      renderComponent(e) {
+        return (
+          <Anchor
+            onClick={() => navigate(`/accessory/${(e as IAccessory)?.id}`)}
+            target="_blank"
+            underline={true}
+          >
+            {(e as IAccessory).modelNo}
+          </Anchor>
+        );
+      },
     },
     {
       caption: "Location",

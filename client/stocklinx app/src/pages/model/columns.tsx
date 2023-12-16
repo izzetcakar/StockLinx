@@ -4,8 +4,12 @@ import {
   Column,
   ExcelColumn,
 } from "../../components/gridTable/interfaces/interfaces";
+import { useNavigate } from "react-router-dom";
+import { Anchor } from "@mantine/core";
+import { IModel } from "../../interfaces/interfaces";
 
 export const useColumns = () => {
+  const navigate = useNavigate();
   const cateogries = useSelector(
     (state: RootState) => state.category.categories
   );
@@ -19,26 +23,70 @@ export const useColumns = () => {
       dataField: "name",
       caption: "Name",
       dataType: "string",
+      renderComponent(e) {
+        return (
+          <Anchor
+            onClick={() => navigate(`/model/${(e as IModel)?.id}`)}
+            target="_blank"
+            underline={true}
+          >
+            {(e as IModel).name}
+          </Anchor>
+        );
+      },
     },
     {
       dataField: "categoryId",
       caption: "Category",
+      dataType: "string",
       lookup: {
         dataSource: cateogries,
         valueExpr: "id",
         displayExpr: "name",
       },
-      dataType: "string",
+      renderComponent(e) {
+        return (
+          <Anchor
+            onClick={() => navigate(`/category/${(e as IModel)?.categoryId}`)}
+            target="_blank"
+            underline={true}
+          >
+            {
+              cateogries.find(
+                (category) => category.id === (e as IModel)?.categoryId
+              )?.name
+            }
+          </Anchor>
+        );
+      },
     },
     {
       dataField: "manufacturerId",
       caption: "Manufacturer",
+      dataType: "string",
       lookup: {
         dataSource: manufacturers,
         valueExpr: "id",
         displayExpr: "name",
       },
-      dataType: "string",
+      renderComponent(e) {
+        return (
+          <Anchor
+            onClick={() =>
+              navigate(`/manufacturer/${(e as IModel)?.manufacturerId}`)
+            }
+            target="_blank"
+            underline={true}
+          >
+            {
+              manufacturers.find(
+                (manufacturer) =>
+                  manufacturer.id === (e as IModel)?.manufacturerId
+              )?.name
+            }
+          </Anchor>
+        );
+      },
     },
     {
       dataField: "modelNo",

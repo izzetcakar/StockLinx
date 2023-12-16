@@ -6,7 +6,6 @@ import { useColumns } from "./columns";
 import { categoryActions } from "../../redux/category/actions";
 import { branchActions } from "../../redux/branch/actions";
 import { companyActions } from "../../redux/company/actions";
-import { useEffect } from "react";
 import Gridtable from "../../components/gridTable/GridTable";
 import { openCategoryModal } from "../../modals/modals";
 
@@ -15,9 +14,6 @@ const Category = () => {
   const categories = useSelector(
     (state: RootState) => state.category.categories
   );
-  useEffect(() => {
-    refreshData();
-  }, []);
 
   const refreshData = () => {
     dispatch(categoryActions.getAll());
