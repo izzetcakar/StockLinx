@@ -16,12 +16,20 @@ namespace StockLinx.Repository.Repositories.EF_Core
 
         public UserDto GetDto(User entity)
         {
-            return _mapper.Map<UserDto>(entity);
+            var dto = _mapper.Map<UserDto>(entity);
+            var department = dbContext.Departments.Where(d => d.Id == entity.DepartmentId && d.DeletedDate == null).FirstOrDefault();
+            var branch = dbContext.Branches.Where(b => b.Id == department.BranchId && b.DeletedDate == null).FirstOrDefault();
+            dto.CompanyId = dbContext.Branches.Where(b => b.Id == branch.Id && b.DeletedDate == null).Select(b => b.CompanyId).FirstOrDefault();
+            return dto;
         }
         public List<UserDto> GetDtos(List<User> entities)
         {
             var dtos = new List<UserDto>();
-            dtos = _mapper.Map<List<UserDto>>(entities);
+            foreach (var entity in entities)
+            {
+                var dto = GetDto(entity);
+                dtos.Add(dto);
+            }
             return dtos;
         }
         public async Task<List<UserDto>> GetAllDtos()

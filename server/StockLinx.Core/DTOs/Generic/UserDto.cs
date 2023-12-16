@@ -2,6 +2,7 @@
 {
     public class UserDto : BaseDto
     {
+        public Guid CompanyId { get; set; }
         public Guid DepartmentId { get; set; }
         public string? ImagePath { get; set; }
         public string FirstName { get; set; }
