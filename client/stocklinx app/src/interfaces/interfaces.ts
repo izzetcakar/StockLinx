@@ -216,6 +216,7 @@ export interface ISupplier extends BaseEntity {
   notes: string | null;
 }
 export interface IUser extends BaseEntity {
+  companyId?: string;
   imagePath: string | null;
   departmentId: string;
   employeeNo: string;
@@ -293,10 +294,21 @@ export interface ICustomLog {
   userId: string;
   date: Date;
   action: string;
+  itemId: string;
   itemRoute: string;
   itemName: string;
+  targetId?: string | null;
   targetName?: string | null;
   targetRoute?: string | null;
   itemController: string;
   targetController?: string | null;
+}
+export interface IDeployedProductDto extends BaseEntity {
+  userId: string;
+  productId?: string | null;
+  productType?: string | null;
+  productName?: string | null;
+  productRoute?: string | null;
+  assignDate: Date | null;
+  notes: string | null;
 }
