@@ -34,7 +34,6 @@ import Category from "./pages/category/Category";
 import Company from "./pages/company/Company";
 import Component from "./pages/component/Component";
 import Consumable from "./pages/consumable/Consumable";
-import CustomField from "./pages/customFields/CustomField";
 import Department from "./pages/department/Department";
 import License from "./pages/license/License";
 import Location from "./pages/location/Location";
@@ -169,10 +168,6 @@ const router = createBrowserRouter([
       {
         path: "/consumable/:id",
         element: <Consumable />,
-      },
-      {
-        path: "/customfield/:id",
-        element: <CustomField />,
       },
       {
         path: "/department/:id",
