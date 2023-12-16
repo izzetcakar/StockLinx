@@ -143,6 +143,12 @@ const Sidebar: React.FC = () => {
           color: "#737373",
           target: "/locations",
         },
+        {
+          title: "Users",
+          icon: icon_harddisk,
+          color: "#737373",
+          target: "/users",
+        },
       ],
       isExpanded: false,
       target: "/*",
