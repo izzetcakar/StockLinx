@@ -7,7 +7,8 @@ import icon_checkOut from "../../../assets/customLog/CheckOut.png";
 import { ICustomLog } from "../../../interfaces/interfaces";
 import { RootState } from "../../../redux/rootReducer";
 import { useSelector } from "react-redux";
-import { Tooltip } from "@mantine/core";
+import { Anchor, Tooltip } from "@mantine/core";
+import { useNavigate } from "react-router-dom";
 
 const getActionIcon = (action: string) => {
   switch (action) {
@@ -26,6 +27,7 @@ const getActionIcon = (action: string) => {
   }
 };
 export const useColumns = () => {
+  const navigate = useNavigate();
   const users = useSelector((state: RootState) => state.user.users);
   const columns: Column[] = [
     {
@@ -43,6 +45,11 @@ export const useColumns = () => {
       },
     },
     {
+      dataField: "action",
+      caption: "Action",
+      dataType: "string",
+    },
+    {
       dataField: "userId",
       caption: "User",
       dataType: "string",
@@ -51,7 +58,15 @@ export const useColumns = () => {
         if (!user) {
           return "Unknown";
         }
-        return user.firstName + " " + user.lastName;
+        return (
+          <Anchor
+            onClick={() => navigate(`/user/${user.id}`)}
+            target="_blank"
+            underline={true}
+          >
+            {user.firstName} {user.lastName}
+          </Anchor>
+        );
       },
     },
     {
@@ -60,37 +75,36 @@ export const useColumns = () => {
       dataType: "date",
     },
     {
-      dataField: "action",
-      caption: "Action",
-      dataType: "string",
-    },
-    {
       dataField: "itemName",
       caption: "Item",
       dataType: "action",
       renderComponent(e) {
+        const route = (e as ICustomLog).itemRoute;
         return (
           <Tooltip label={(e as ICustomLog).itemController}>
-            <a href={(e as ICustomLog).itemRoute}>
+            <Anchor onClick={() => navigate(`/${route}`)}>
               {(e as ICustomLog).itemName}
-            </a>
+            </Anchor>
           </Tooltip>
         );
       },
+      selectable: false,
     },
     {
       dataField: "targetName",
       caption: "Target",
       dataType: "action",
       renderComponent(e) {
+        const route = (e as ICustomLog).targetRoute;
         return (
           <Tooltip label={(e as ICustomLog).targetController}>
-            <a href={(e as ICustomLog)?.targetRoute?.toString()}>
+            <Anchor onClick={() => navigate(route ? `/${route}` : "")}>
               {(e as ICustomLog).targetName}
-            </a>
+            </Anchor>
           </Tooltip>
         );
       },
+      selectable: false,
     },
   ];
 
