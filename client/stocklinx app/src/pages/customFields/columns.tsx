@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { Column } from "../../components/gridTable/interfaces/interfaces";
+import { ICustomField } from "../../interfaces/interfaces";
 
 export const useColumns = () => {
   const fieldSets = useSelector((state: RootState) => state.fieldSet.fieldSets);
@@ -21,10 +22,10 @@ export const useColumns = () => {
       caption: "FieldSets",
       dataField: "id",
       dataType: "action",
-      renderComponent(value) {
+      renderComponent(e) {
         return fieldSets.map((f) => {
           const foundFc = fieldSetCustomFields.find(
-            (fc) => fc.fieldSetId === value
+            (fc) => fc.fieldSetId === (e as ICustomField).id
           );
           if (foundFc !== undefined) {
             return <div key={f.id}>{f.name}</div>;

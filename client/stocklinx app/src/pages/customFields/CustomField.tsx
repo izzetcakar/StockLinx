@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Consumable = () => {
+const CustomField = () => {
   return (
     <div>
       
@@ -8,4 +8,4 @@ const Consumable = () => {
   )
 }
 
-export default Consumable
+export default CustomField

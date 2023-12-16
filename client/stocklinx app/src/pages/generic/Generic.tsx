@@ -1,6 +1,6 @@
-import Location from "../location/Location";
-import Company from "../company/Company";
-import Category from "../category/Category";
+import Location from "../location/Locations";
+import Company from "../company/Companies";
+import Category from "../category/Categories";
 
 const Generic = () => {
   return (

@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { Column } from "../../components/gridTable/interfaces/interfaces";
+import { IUser } from "../../interfaces/interfaces";
 
 export const useColumns = () => {
   const companies = useSelector((state: RootState) => state.company.companies);
@@ -42,12 +43,9 @@ export const useColumns = () => {
     {
       dataField: "name",
       caption: "Name",
-      renderComponent(value) {
-        return (
-          <div>
-            {value.firstName} {value.lastName}
-          </div>
-        );
+      renderComponent(e) {
+        const value = (e as IUser).firstName + " " + (e as IUser).lastName;
+        return <div>{value}</div>;
       },
       dataType: "action",
     },

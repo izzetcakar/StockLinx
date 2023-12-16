@@ -1,32 +1,48 @@
 import { checkEmpty } from "./functions/checkEmpty";
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
+import Accessories from "./pages/accessory/Accessories";
+import Assets from "./pages/asset/Assets";
+import Components from "./pages/component/Components";
+import Consumables from "./pages/consumable/Consumables";
+import Licenses from "./pages/license/Licenses";
+import Models from "./pages/model/Models";
+import Departments from "./pages/department/Departments";
+import Companies from "./pages/company/Companies";
+import Categories from "./pages/category/Categories";
+import Manufacturers from "./pages/manufacturer/Manufacturers";
+import Suppliers from "./pages/supplier/Suppliers";
+import Locations from "./pages/location/Locations";
+import ProductStatuses from "./pages/productStatus/ProductStatuses";
+import Branches from "./pages/branch/Branches";
+import Users from "./pages/user/Users";
+import CustomFields from "./pages/customFields/CustomFields";
+import Home from "./pages/home/Home";
+import Login from "./pages/user/Login";
+import Header from "./components/Header/Header";
+import Sidebar from "./components/sidebar/Sidebar";
+import Generic from "./pages/generic/Generic";
+import GenericContext from "./context/GenericContext";
+import { useSelector } from "react-redux";
+import { RootState } from "./redux/rootReducer";
+import { LoadingOverlay } from "@mantine/core";
+import { useContext } from "react";
 import "./app.scss";
 import Accessory from "./pages/accessory/Accessory";
 import Asset from "./pages/asset/Asset";
+import Branch from "./pages/branch/Branch";
+import Category from "./pages/category/Category";
+import Company from "./pages/company/Company";
 import Component from "./pages/component/Component";
 import Consumable from "./pages/consumable/Consumable";
-import Home from "./pages/home/Home";
-import License from "./pages/license/License";
-import Model from "./pages/model/Model";
-import Sidebar from "./components/sidebar/Sidebar";
-import Login from "./pages/user/Login";
+import CustomField from "./pages/customFields/CustomField";
 import Department from "./pages/department/Department";
-import Company from "./pages/company/Company";
-import { useSelector } from "react-redux";
-import { RootState } from "./redux/rootReducer";
-import Header from "./components/Header/Header";
-import Generic from "./pages/generic/Generic";
-import Category from "./pages/category/Category";
-import Manufacturer from "./pages/manufacturer/Manufacturer";
-import Supplier from "./pages/supplier/Supplier";
+import License from "./pages/license/License";
 import Location from "./pages/location/Location";
+import Manufacturer from "./pages/manufacturer/Manufacturer";
+import Model from "./pages/model/Model";
 import ProductStatus from "./pages/productStatus/ProductStatus";
-import Branch from "./pages/branch/Branch";
+import Supplier from "./pages/supplier/Supplier";
 import User from "./pages/user/User";
-import CustomFields from "./pages/customFields/CustomFields";
-import { LoadingOverlay } from "@mantine/core";
-import { useContext } from "react";
-import GenericContext from "./context/GenericContext";
 
 const Layout = () => {
   const userRedux = useSelector((state: RootState) => state.user.user);
@@ -63,68 +79,132 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "/accessory",
-        element: <Accessory />,
+        path: "/accessories",
+        element: <Accessories />,
       },
       {
-        path: "/asset",
-        element: <Asset />,
+        path: "/assets",
+        element: <Assets />,
       },
       {
-        path: "/component",
-        element: <Component />,
+        path: "/components",
+        element: <Components />,
       },
       {
-        path: "/consumable",
-        element: <Consumable />,
+        path: "/consumables",
+        element: <Consumables />,
       },
       {
-        path: "/license",
-        element: <License />,
+        path: "/licenses",
+        element: <Licenses />,
       },
       {
-        path: "/model",
-        element: <Model />,
+        path: "/models",
+        element: <Models />,
       },
       {
-        path: "/category",
-        element: <Category />,
+        path: "/categories",
+        element: <Categories />,
       },
       {
-        path: "/manufacturer",
-        element: <Manufacturer />,
+        path: "/manufacturers",
+        element: <Manufacturers />,
       },
       {
-        path: "/supplier",
-        element: <Supplier />,
+        path: "/suppliers",
+        element: <Suppliers />,
       },
       {
-        path: "/company",
-        element: <Company />,
+        path: "/companies",
+        element: <Companies />,
       },
       {
-        path: "/branch",
-        element: <Branch />,
+        path: "/branches",
+        element: <Branches />,
       },
       {
-        path: "/department",
-        element: <Department />,
+        path: "/departments",
+        element: <Departments />,
       },
       {
-        path: "/location",
-        element: <Location />,
+        path: "/locations",
+        element: <Locations />,
       },
       {
-        path: "/productstatus",
-        element: <ProductStatus />,
+        path: "/productstatuses",
+        element: <ProductStatuses />,
       },
       {
-        path: "/user",
-        element: <User />,
+        path: "/users",
+        element: <Users />,
       },
       {
         path: "/customfields",
         element: <CustomFields />,
+      },
+      {
+        path: "/accessory/:id",
+        element: <Accessory />,
+      },
+      {
+        path: "/asset/:id",
+        element: <Asset />,
+      },
+      {
+        path: "/branch/:id",
+        element: <Branch />,
+      },
+      {
+        path: "/category/:id",
+        element: <Category />,
+      },
+      {
+        path: "/company/:id",
+        element: <Company />,
+      },
+      {
+        path: "/component/:id",
+        element: <Component />,
+      },
+      {
+        path: "/consumable/:id",
+        element: <Consumable />,
+      },
+      {
+        path: "/customfield/:id",
+        element: <CustomField />,
+      },
+      {
+        path: "/department/:id",
+        element: <Department />,
+      },
+      {
+        path: "/license/:id",
+        element: <License />,
+      },
+      {
+        path: "/location/:id",
+        element: <Location />,
+      },
+      {
+        path: "/manufacturer/:id",
+        element: <Manufacturer />,
+      },
+      {
+        path: "/model/:id",
+        element: <Model />,
+      },
+      {
+        path: "/productstatus/:id",
+        element: <ProductStatus />,
+      },
+      {
+        path: "/supplier/:id",
+        element: <Supplier />,
+      },
+      {
+        path: "/user/:id",
+        element: <User />,
       },
       {
         path: "/generic",

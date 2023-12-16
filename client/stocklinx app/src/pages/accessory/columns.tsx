@@ -6,6 +6,7 @@ import {
 } from "../../components/gridTable/interfaces/interfaces";
 import {
   CategoryType,
+  IAccessory,
   IAccessoryCheckInDto,
   IDeployedProduct,
 } from "../../interfaces/interfaces";
@@ -108,10 +109,9 @@ export const useColumns = () => {
       dataField: "id",
       caption: "Checkin/Checkout",
       dataType: "action",
-      renderComponent(value) {
-        const accessory = accessories.find(
-          (accessory) => accessory.id === value
-        );
+      renderComponent(e) {
+        const id = (e as IAccessory).id;
+        const accessory = accessories.find((accessory) => accessory.id === id);
         return (
           <div style={{ display: "flex", justifyContent: "center" }}>
             <Button
@@ -122,7 +122,7 @@ export const useColumns = () => {
                 accessory?.availableQuantity !== undefined &&
                 accessory?.availableQuantity < 1
               }
-              onClick={() => checkIn(value)}
+              onClick={() => checkIn(id)}
             >
               Check In
             </Button>

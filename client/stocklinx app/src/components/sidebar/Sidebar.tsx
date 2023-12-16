@@ -43,52 +43,40 @@ const Sidebar: React.FC = () => {
       target: "/",
     },
     {
-      title: "Asset",
+      title: "Assets",
       icon: icon_barcode,
       color: "#737373",
-      target: "/asset",
+      target: "/assets",
     },
     {
-      title: "License",
+      title: "Licenses",
       icon: icon_disk,
       color: "#737373",
-      target: "/license",
+      target: "/licenses",
     },
     {
-      title: "Accessory",
+      title: "Accessories",
       icon: icon_keybord,
       color: "#737373",
-      target: "/accessory",
+      target: "/accessories",
     },
     {
-      title: "Consumable",
+      title: "Consumables",
       icon: icon_drop,
       color: "#737373",
-      target: "/consumable",
+      target: "/consumables",
     },
     {
-      title: "Component",
+      title: "Components",
       icon: icon_harddisk,
       color: "#737373",
-      target: "/component",
+      target: "/components",
     },
     {
-      title: "User",
+      title: "Users",
       icon: icon_group,
       color: "#737373",
-      target: "/user",
-    },
-    {
-      title: "Test",
-      icon: icon_harddisk,
-      color: "#737373",
-      target: "/test",
-    },
-    {
-      title: "Generic",
-      icon: icon_harddisk,
-      color: "#737373",
-      target: "/generic",
+      target: "/users",
     },
     {
       title: "Settings",
@@ -105,55 +93,55 @@ const Sidebar: React.FC = () => {
           title: "Status Labels",
           icon: icon_harddisk,
           color: "#737373",
-          target: "/productstatus",
+          target: "/productstatuses",
         },
         {
           title: "Asset Models",
           icon: icon_harddisk,
           color: "#737373",
-          target: "/model",
+          target: "/models",
         },
         {
           title: "Categories",
           icon: icon_harddisk,
           color: "#737373",
-          target: "/category",
+          target: "/categories",
         },
         {
           title: "Manufacturers",
           icon: icon_harddisk,
           color: "#737373",
-          target: "/manufacturer",
+          target: "/manufacturers",
         },
         {
           title: "Suppliers",
           icon: icon_harddisk,
           color: "#737373",
-          target: "/supplier",
+          target: "/suppliers",
         },
         {
           title: "Companies",
           icon: icon_harddisk,
           color: "#737373",
-          target: "/company",
+          target: "/companies",
         },
         {
           title: "Branches",
           icon: icon_harddisk,
           color: "#737373",
-          target: "/branch",
+          target: "/branches",
         },
         {
           title: "Departments",
           icon: icon_harddisk,
           color: "#737373",
-          target: "/department",
+          target: "/departments",
         },
         {
           title: "Locations",
           icon: icon_harddisk,
           color: "#737373",
-          target: "/location",
+          target: "/locations",
         },
       ],
       isExpanded: false,
@@ -211,9 +199,9 @@ const Sidebar: React.FC = () => {
 
   return (
     <div
-      className={`sidebar-container ${isSidebarCollapsed ? "collapsed" : ""}`}
+      className={`sidebar__container ${isSidebarCollapsed ? "collapsed" : ""}`}
     >
-      <div className="navigation-item" onClick={() => handleLogoClick()}>
+      <div className="navigation__item" onClick={() => handleLogoClick()}>
         <div className="icon">
           <img src={logo} className="logo" alt="Logo" />
         </div>
@@ -224,8 +212,8 @@ const Sidebar: React.FC = () => {
           <div
             className={
               checkIfSelected(item)
-                ? "navigation-item selected"
-                : "navigation-item"
+                ? "navigation__item selected"
+                : "navigation__item"
             }
             onClick={
               item.onClick ? item.onClick : () => navigateUser(item, index)
@@ -241,26 +229,14 @@ const Sidebar: React.FC = () => {
               />
             </div>
             <div className="title">{item.title}</div>
-            {checkEmpty(item?.subItems) ? (
-              <div
-                className={
-                  item?.isExpanded ? "arrow-down arrow-down-open" : "arrow-down"
-                }
-              >
-                <i
-                  className="bx bx-chevron-down"
-                  style={{ fontSize: "1.4rem", color: "#737373" }}
-                />
-              </div>
-            ) : null}
           </div>
           {item?.isExpanded && item.subItems
             ? item.subItems.map((subItem, nestedIndex) => (
                 <div
                   className={
                     checkIfSelected(subItem)
-                      ? "navigation-element selected"
-                      : "navigation-element"
+                      ? "navigation__element selected"
+                      : "navigation__element"
                   }
                   key={`${index}-${nestedIndex}`}
                   onClick={() => navigate(subItem.target)}
