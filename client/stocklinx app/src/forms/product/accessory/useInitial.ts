@@ -1,0 +1,35 @@
+import uuid4 from "uuid4";
+import { IAccessory } from "../../../interfaces/interfaces";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../redux/rootReducer";
+
+export const useInitial = (accessory?: IAccessory, create?: boolean) => {
+  const branch = useSelector((state: RootState) => state.branch.branch);
+  let isCreate = create || false;
+
+  let initialValues: IAccessory = {
+    id: uuid4(),
+    branchId: branch?.id || "",
+    name: "",
+    manufacturerId: null,
+    supplierId: null,
+    categoryId: "",
+    modelNo: "",
+    quantity: 1,
+    orderNo: null,
+    purchaseCost: null,
+    purchaseDate: null,
+    notes: null,
+    imagePath: null,
+  };
+
+  if (accessory) {
+    initialValues = { ...accessory };
+    isCreate = false;
+  }
+  if (accessory && create) {
+    initialValues.id = uuid4();
+    isCreate = true;
+  }
+  return { initialValues, isCreate };
+};

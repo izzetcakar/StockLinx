@@ -5,36 +5,29 @@ import { ICompany } from "../../interfaces/interfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { companyActions } from "../../redux/company/actions";
 import { RootState } from "../../redux/rootReducer";
-import uuid4 from "uuid4";
 import filterClasses from "../../mantineModules/baseFilter.module.scss";
+import { useInitial } from "./useInitial";
 interface CompanyFormProps {
   company?: ICompany;
+  create?: boolean;
 }
 
-const CompanyForm: React.FC<CompanyFormProps> = ({ company }) => {
+const CompanyForm: React.FC<CompanyFormProps> = ({ company, create }) => {
   const dispatch = useDispatch();
   const locations = useSelector((state: RootState) => state.location.locations);
+  const { initialValues, isCreate } = useInitial(company, create);
 
   const form = useForm<ICompany>({
-    initialValues: company
-      ? { ...company }
-      : {
-          id: uuid4(),
-          name: "",
-          email: null,
-          locationId: null,
-          imagePath: null,
-        },
+    initialValues: initialValues,
     validate: {
       name: (value: string) =>
         /(?!^$)([^\s])/.test(value) ? null : "Name should not be empty",
     },
   });
-  const handleSubmit = (data: object) => {
-    company
-      ? dispatch(companyActions.update({ company: data as ICompany }))
-      : dispatch(companyActions.create({ company: data as ICompany }));
-    dispatch(companyActions.getAll());
+  const handleSubmit = (data: ICompany) => {
+    isCreate
+      ? dispatch(companyActions.create({ company: data }))
+      : dispatch(companyActions.update({ company: data }));
   };
 
   return (

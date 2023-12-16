@@ -35,8 +35,8 @@ const CheckInForm: React.FC<CheckInFormProps> = ({
         value !== "" ? null : "User must be selected",
     },
   });
-  const handleSubmit = (data: object) => {
-    onSubmit(data as IDeployedProduct);
+  const handleSubmit = (data: IDeployedProduct) => {
+    onSubmit(data);
   };
 
   return (

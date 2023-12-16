@@ -4,37 +4,32 @@ import { useForm } from "@mantine/form";
 import { ProductStatusType, IProductStatus } from "../../interfaces/interfaces";
 import { useDispatch } from "react-redux";
 import { productStatusActions } from "../../redux/productStatus/actions";
-import uuid4 from "uuid4";
 import filterClasses from "../../mantineModules/baseFilter.module.scss";
+import { useInitial } from "./useInitial";
 interface ProductStatusFormProps {
   productStatus?: IProductStatus;
+  create?: boolean;
 }
 
 const ProductStatusForm: React.FC<ProductStatusFormProps> = ({
   productStatus,
+  create,
 }) => {
   const dispatch = useDispatch();
+  const { initialValues, isCreate } = useInitial(productStatus, create);
+
   const form = useForm<IProductStatus>({
-    initialValues: productStatus
-      ? { ...productStatus }
-      : {
-          id: uuid4(),
-          type: ProductStatusType.AVAILABLE,
-          name: "",
-        },
+    initialValues: initialValues,
     validate: {
       name: (value: string) =>
         /(?!^$)([^\s])/.test(value) ? null : "Name should not be empty",
     },
   });
-  const handleSubmit = (data: object) => {
-    productStatus
-      ? dispatch(
-          productStatusActions.update({ productStatus: data as IProductStatus })
-        )
-      : dispatch(
-          productStatusActions.create({ productStatus: data as IProductStatus })
-        );
+
+  const handleSubmit = (data: IProductStatus) => {
+    isCreate
+      ? dispatch(productStatusActions.create({ productStatus: data }))
+      : dispatch(productStatusActions.update({ productStatus: data }));
   };
 
   return (

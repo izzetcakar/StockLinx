@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import {
   TextInput,
   Button,
@@ -11,47 +11,39 @@ import { useForm } from "@mantine/form";
 import { IDepartment } from "../../interfaces/interfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { departmentActions } from "../../redux/department/actions";
-import uuid4 from "uuid4";
 import { RootState } from "../../redux/rootReducer";
 import filterClasses from "../../mantineModules/baseFilter.module.scss";
+import { useInitial } from "./useInitial";
 interface DepartmentFormProps {
   department?: IDepartment;
+  create?: boolean;
 }
 
-const DepartmentForm: React.FC<DepartmentFormProps> = ({ department }) => {
+const DepartmentForm: React.FC<DepartmentFormProps> = ({
+  department,
+  create,
+}) => {
   const dispatch = useDispatch();
-  const companies = useSelector((state: RootState) => state.company.companies);
-  const branches = useSelector((state: RootState) => state.branch.branches);
+  const branch = useSelector((state: RootState) => state.branch.branch);
   const locations = useSelector((state: RootState) => state.location.locations);
-  const [company, setCompany] = useState(department?.companyId || "");
+  const { initialValues, isCreate } = useInitial(department, create);
 
   const form = useForm<IDepartment>({
-    initialValues: department
-      ? { ...department }
-      : {
-          id: uuid4(),
-          branchId: "",
-          locationId: null,
-          managerId: null,
-          name: "",
-          notes: null,
-        },
+    initialValues: initialValues,
     validate: {
       name: (value: string) =>
         /(?!^$)([^\s])/.test(value) ? null : "Name should not be empty",
-      branchId: (value: string) =>
-        /(?!^$)([^\s])/.test(value) ? null : "Branch should not be empty",
     },
   });
-  const handleSubmit = (data: object) => {
-    department
-      ? dispatch(departmentActions.update({ department: data as IDepartment }))
-      : dispatch(departmentActions.create({ department: data as IDepartment }));
+  const handleSubmit = (data: IDepartment) => {
+    isCreate
+      ? dispatch(departmentActions.create({ department: data }))
+      : dispatch(departmentActions.update({ department: data }));
   };
-  const handleCompanyChange = (value: string) => {
-    setCompany(value);
-    form.setFieldValue("branchId", "");
-  };
+
+  useEffect(() => {
+    form.setFieldValue("branchId", branch?.id || "");
+  }, [branch]);
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
@@ -64,37 +56,6 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({ department }) => {
         px={40}
         pt={20}
       >
-        <Select
-          data={companies.map((company) => ({
-            value: company.id,
-            label: company.name,
-          }))}
-          label="Company"
-          placeholder="Select Company"
-          value={company}
-          onChange={(value) => handleCompanyChange(value as string)}
-          classNames={filterClasses}
-          dropdownPosition="bottom"
-          nothingFound="No company found"
-          withAsterisk
-          withinPortal
-        />
-        <Select
-          data={branches
-            .filter((branch) => branch.companyId === company)
-            .map((branch) => ({
-              value: branch.id,
-              label: branch.name,
-            }))}
-          label="Branch"
-          placeholder="Select Branch"
-          {...form.getInputProps("branchId")}
-          classNames={filterClasses}
-          dropdownPosition="bottom"
-          nothingFound="No branch found"
-          withAsterisk
-          withinPortal
-        />
         <TextInput
           label="Name"
           placeholder="New Name"

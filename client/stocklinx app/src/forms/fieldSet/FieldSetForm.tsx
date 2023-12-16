@@ -24,10 +24,10 @@ const FieldSetForm: React.FC<FieldSetFormProps> = ({ fieldSet }) => {
         /(?!^$)([^\s])/.test(value) ? null : "Name should not be empty",
     },
   });
-  const handleSubmit = (data: object) => {
+  const handleSubmit = (data: IFieldSet) => {
     fieldSet
-      ? dispatch(fieldSetActions.update({ fieldSet: data as IFieldSet }))
-      : dispatch(fieldSetActions.create({ fieldSet: data as IFieldSet }));
+      ? dispatch(fieldSetActions.update({ fieldSet: data }))
+      : dispatch(fieldSetActions.create({ fieldSet: data }));
   };
 
   return (

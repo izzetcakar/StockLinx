@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import {
   TextInput,
   Button,
@@ -15,44 +15,28 @@ import { DateInput } from "@mantine/dates";
 import { IconPlus, IconTrash } from "@tabler/icons-react";
 import { IAsset } from "../../../interfaces/interfaces";
 import { useDispatch, useSelector } from "react-redux";
-import uuid4 from "uuid4";
 import { RootState } from "../../../redux/rootReducer";
 import filterClasses from "../../../mantineModules/baseFilter.module.scss";
 import { assetActions } from "../../../redux/asset/actions";
+import { useInitial } from "./useInitial";
 
 interface AssetFormProps {
   asset?: IAsset;
+  create?: boolean;
 }
 
-const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
+const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
   const dispatch = useDispatch();
-  const companies = useSelector((state: RootState) => state.company.companies);
-  const branches = useSelector((state: RootState) => state.branch.branches);
+  const branch = useSelector((state: RootState) => state.branch.branch);
   const models = useSelector((state: RootState) => state.model.models);
   const productStatuses = useSelector(
     (state: RootState) => state.productStatus.productStatuses
   );
   const suppliers = useSelector((state: RootState) => state.supplier.suppliers);
-  const [company, setCompany] = useState(asset?.companyId || "");
+  const { initialValues, isCreate } = useInitial(asset, create);
 
   const form = useForm<IAsset>({
-    initialValues: asset
-      ? { ...asset }
-      : {
-          id: uuid4(),
-          branchId: "",
-          name: "",
-          imagePath: null,
-          serialNo: null,
-          orderNo: null,
-          purchaseCost: null,
-          purchaseDate: null,
-          notes: null,
-          modelId: null,
-          productStatusId: "",
-          tagNo: null,
-          overageAssets: [],
-        },
+    initialValues: initialValues,
     validate: {
       name: (value: string) =>
         /(?!^$)([^\s])/.test(value) ? null : "Name should not be empty",
@@ -65,8 +49,6 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
       },
       productStatusId: (value: string) =>
         value !== "" ? null : "Product status should not be empty",
-      branchId: (value: string) =>
-        value !== "" ? null : "Branch should not be empty",
     },
   });
   const overageAssetFields = form.values?.overageAssets?.map((_, index) => (
@@ -101,14 +83,14 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
     </Group>
   ));
 
+  useEffect(() => {
+    form.setFieldValue("branchId", branch?.id || "");
+  }, [branch]);
+
   const handleSubmit = (data: IAsset) => {
-    asset
-      ? dispatch(assetActions.update({ asset: data }))
-      : dispatch(assetActions.create({ asset: data }));
-  };
-  const handleCompanyChange = (value: string) => {
-    setCompany(value);
-    form.setFieldValue("branchId", "");
+    isCreate
+      ? dispatch(assetActions.create({ asset: data }))
+      : dispatch(assetActions.update({ asset: data }));
   };
 
   return (
@@ -122,37 +104,6 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
         px={40}
         pt={20}
       >
-        <Select
-          data={companies.map((company) => ({
-            value: company.id,
-            label: company.name,
-          }))}
-          label="Company"
-          placeholder="Select Company"
-          value={company}
-          onChange={(value) => handleCompanyChange(value as string)}
-          classNames={filterClasses}
-          dropdownPosition="bottom"
-          nothingFound="No company found"
-          withAsterisk
-          withinPortal
-        />
-        <Select
-          data={branches
-            .filter((branch) => branch.companyId === company)
-            .map((branch) => ({
-              value: branch.id,
-              label: branch.name,
-            }))}
-          label="Branch"
-          placeholder="Select Branch"
-          {...form.getInputProps("branchId")}
-          classNames={filterClasses}
-          dropdownPosition="bottom"
-          nothingFound="No branch found"
-          withAsterisk
-          withinPortal
-        />
         <Flex w="100%" gap={10} align={"center"}>
           <TextInput
             label="Tag No"

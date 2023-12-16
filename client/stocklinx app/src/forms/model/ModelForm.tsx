@@ -22,11 +22,13 @@ import filterClasses from "../../mantineModules/baseFilter.module.scss";
 import { RootState } from "../../redux/rootReducer";
 import { DateInput } from "@mantine/dates";
 import { modelFieldDataActions } from "../../redux/modelFieldData/actions";
+import { useInitial } from "./useInitial";
 interface ModelFormProps {
   model?: IModel;
+  create?: boolean;
 }
 
-const ModelForm: React.FC<ModelFormProps> = ({ model }) => {
+const ModelForm: React.FC<ModelFormProps> = ({ model, create }) => {
   const dispatch = useDispatch();
   const categories = useSelector(
     (state: RootState) => state.category.categories
@@ -44,24 +46,11 @@ const ModelForm: React.FC<ModelFormProps> = ({ model }) => {
   const modelFieldDatas = useSelector(
     (state: RootState) => state.modelFieldData.modelFieldDatas
   );
+  const { initialValues, isCreate } = useInitial(model, create);
 
   const form = useForm<IModel>({
     validateInputOnChange: ["name", `modelFieldData.${FORM_INDEX}.value`],
-    initialValues: model
-      ? {
-          ...model,
-        }
-      : {
-          id: uuid4(),
-          name: "",
-          categoryId: "",
-          fieldSetId: null,
-          manufacturerId: null,
-          modelNo: null,
-          imagePath: null,
-          modelFieldData: [],
-          notes: null,
-        },
+    initialValues: initialValues,
     validate: {
       name: (value: string) =>
         /(?!^$)([^\s])/.test(value) ? null : "Name should not be empty",
@@ -128,18 +117,17 @@ const ModelForm: React.FC<ModelFormProps> = ({ model }) => {
   };
   const handleSubmit = (data: IModel) => {
     const newModelFieldData = convertValuesToString();
-    model
+    isCreate
       ? dispatch(
-          modelActions.update({
+          modelActions.create({
             model: { ...data, modelFieldData: newModelFieldData },
           })
         )
       : dispatch(
-          modelActions.create({
+          modelActions.update({
             model: { ...data, modelFieldData: newModelFieldData },
           })
         );
-    dispatch(modelActions.getAll());
     dispatch(modelFieldDataActions.getAll());
   };
   const getCustomField = (id: string) => {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import {
   TextInput,
   Button,
@@ -14,16 +14,16 @@ import { CategoryType, IAccessory } from "../../../interfaces/interfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { accessoryActions } from "../../../redux/accessory/actions";
 import { RootState } from "../../../redux/rootReducer";
-import uuid4 from "uuid4";
 import filterClasses from "../../../mantineModules/baseFilter.module.scss";
+import { useInitial } from "./useInitial";
 
 interface AccessoryFormProps {
-  accessory?: IAccessory | null;
+  accessory?: IAccessory;
+  create?: boolean;
 }
-const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory }) => {
+const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory, create }) => {
   const dispatch = useDispatch();
-  const companies = useSelector((state: RootState) => state.company.companies);
-  const branches = useSelector((state: RootState) => state.branch.branches);
+  const branch = useSelector((state: RootState) => state.branch.branch);
   const suppliers = useSelector((state: RootState) => state.supplier.suppliers);
   const manufacturers = useSelector(
     (state: RootState) => state.manufacturer.manufacturers
@@ -31,26 +31,10 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory }) => {
   const categories = useSelector(
     (state: RootState) => state.category.categories
   );
-  const [company, setCompany] = useState(accessory?.companyId || "");
+  const { initialValues, isCreate } = useInitial(accessory, create);
 
   const form = useForm<IAccessory>({
-    initialValues: accessory
-      ? { ...accessory }
-      : {
-          id: uuid4(),
-          branchId: "",
-          name: "",
-          manufacturerId: null,
-          supplierId: null,
-          categoryId: "",
-          modelNo: "",
-          quantity: 1,
-          orderNo: null,
-          purchaseCost: null,
-          purchaseDate: null,
-          notes: null,
-          imagePath: null,
-        },
+    initialValues: initialValues,
     validate: {
       name: (value: string) =>
         /(?!^$)([^\s])/.test(value) ? null : "Name should not be empty",
@@ -59,8 +43,6 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory }) => {
       },
       modelNo: (value: string) =>
         /(?!^$)([^\s])/.test(value) ? null : "Model No should not be empty",
-      branchId: (value: string) =>
-        value !== "" ? null : "Branch should not be empty",
       purchaseCost: (value: number | null) => {
         if (value !== null || undefined) {
           return value && value >= 0
@@ -72,14 +54,15 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory }) => {
         value !== "" ? null : "Category should not be empty",
     },
   });
-  const handleSubmit = (data: object) => {
-    accessory
-      ? dispatch(accessoryActions.update({ accessory: data as IAccessory }))
-      : dispatch(accessoryActions.create({ accessory: data as IAccessory }));
-  };
-  const handleCompanyChange = (value: string) => {
-    setCompany(value);
-    form.setFieldValue("branchId", "");
+
+  useEffect(() => {
+    form.setFieldValue("branchId", branch?.id || "");
+  }, [branch]);
+
+  const handleSubmit = (data: IAccessory) => {
+    isCreate
+      ? dispatch(accessoryActions.create({ accessory: data }))
+      : dispatch(accessoryActions.update({ accessory: data }));
   };
 
   return (
@@ -93,37 +76,6 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory }) => {
         px={40}
         pt={20}
       >
-        <Select
-          data={companies.map((company) => ({
-            value: company.id,
-            label: company.name,
-          }))}
-          label="Company"
-          placeholder="Select Company"
-          value={company}
-          onChange={(value) => handleCompanyChange(value as string)}
-          classNames={filterClasses}
-          dropdownPosition="bottom"
-          nothingFound="No company found"
-          withAsterisk
-          withinPortal
-        />
-        <Select
-          data={branches
-            .filter((branch) => branch.companyId === company)
-            .map((branch) => ({
-              value: branch.id,
-              label: branch.name,
-            }))}
-          label="Branch"
-          placeholder="Select Branch"
-          {...form.getInputProps("branchId")}
-          classNames={filterClasses}
-          dropdownPosition="bottom"
-          nothingFound="No branch found"
-          withAsterisk
-          withinPortal
-        />
         <TextInput
           label="Name"
           placeholder="New Name"

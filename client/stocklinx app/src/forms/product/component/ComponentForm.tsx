@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import {
   TextInput,
   Button,
@@ -13,41 +13,26 @@ import { DateInput } from "@mantine/dates";
 import { CategoryType, IComponent } from "../../../interfaces/interfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { componentActions } from "../../../redux/component/actions";
-import uuid4 from "uuid4";
 import { RootState } from "../../../redux/rootReducer";
 import filterClasses from "../../../mantineModules/baseFilter.module.scss";
+import { useInitial } from "./useInitial";
 
 interface ComponentFormProps {
   component?: IComponent;
+  create?: boolean;
 }
 
-const ComponentForm: React.FC<ComponentFormProps> = ({ component }) => {
+const ComponentForm: React.FC<ComponentFormProps> = ({ component, create }) => {
   const dispatch = useDispatch();
-  const companies = useSelector((state: RootState) => state.company.companies);
-  const branches = useSelector((state: RootState) => state.branch.branches);
+  const branch = useSelector((state: RootState) => state.branch.branch);
   const categories = useSelector(
     (state: RootState) => state.category.categories
   );
   const suppliers = useSelector((state: RootState) => state.supplier.suppliers);
-  const [company, setCompany] = useState(component?.companyId || "");
+  const { initialValues, isCreate } = useInitial(component, create);
 
   const form = useForm<IComponent>({
-    initialValues: component
-      ? { ...component }
-      : {
-          id: uuid4(),
-          name: "",
-          imagePath: null,
-          serialNo: null,
-          orderNo: null,
-          purchaseCost: null,
-          purchaseDate: null,
-          quantity: 1,
-          branchId: "",
-          categoryId: "",
-          supplierId: null,
-          notes: null,
-        },
+    initialValues: initialValues,
     validate: {
       name: (value: string) =>
         /(?!^$)([^\s])/.test(value) ? null : "Name should not be empty",
@@ -63,20 +48,17 @@ const ComponentForm: React.FC<ComponentFormProps> = ({ component }) => {
       },
       categoryId: (value: string) =>
         value !== "" ? null : "Please select a category",
-      branchId: (value: string) =>
-        value !== "" ? null : "Please select a branch",
     },
   });
   const handleSubmit = (data: object) => {
-    component
-      ? dispatch(componentActions.update({ component: data as IComponent }))
-      : dispatch(componentActions.create({ component: data as IComponent }));
+    isCreate
+      ? dispatch(componentActions.create({ component: data as IComponent }))
+      : dispatch(componentActions.update({ component: data as IComponent }));
   };
 
-  const handleCompanyChange = (value: string) => {
-    setCompany(value);
-    form.setFieldValue("branchId", "");
-  };
+  useEffect(() => {
+    form.setFieldValue("branchId", branch?.id || "");
+  }, [branch]);
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
@@ -89,37 +71,6 @@ const ComponentForm: React.FC<ComponentFormProps> = ({ component }) => {
         px={40}
         pt={20}
       >
-        <Select
-          data={companies.map((company) => ({
-            value: company.id,
-            label: company.name,
-          }))}
-          label="Company"
-          placeholder="Select Company"
-          value={company}
-          onChange={(value) => handleCompanyChange(value as string)}
-          classNames={filterClasses}
-          dropdownPosition="bottom"
-          nothingFound="No company found"
-          withAsterisk
-          withinPortal
-        />
-        <Select
-          data={branches
-            .filter((branch) => branch.companyId === company)
-            .map((branch) => ({
-              value: branch.id,
-              label: branch.name,
-            }))}
-          label="Branch"
-          placeholder="Select Branch"
-          {...form.getInputProps("branchId")}
-          classNames={filterClasses}
-          dropdownPosition="bottom"
-          nothingFound="No branch found"
-          withAsterisk
-          withinPortal
-        />
         <TextInput
           label="Name"
           placeholder="New Name"

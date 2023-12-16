@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   TextInput,
   Button,
@@ -14,17 +14,20 @@ import { CategoryType, IConsumable } from "../../../interfaces/interfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { consumableActions } from "../../../redux/consumable/actions";
 import { RootState } from "../../../redux/rootReducer";
-import uuid4 from "uuid4";
 import filterClasses from "../../../mantineModules/baseFilter.module.scss";
+import { useInitial } from "./useInitial";
 
 interface ConsumableFormProps {
   consumable?: IConsumable;
+  create?: boolean;
 }
 
-const ConsumableForm: React.FC<ConsumableFormProps> = ({ consumable }) => {
+const ConsumableForm: React.FC<ConsumableFormProps> = ({
+  consumable,
+  create,
+}) => {
   const dispatch = useDispatch();
-  const companies = useSelector((state: RootState) => state.company.companies);
-  const branches = useSelector((state: RootState) => state.branch.branches);
+  const branch = useSelector((state: RootState) => state.branch.branch);
   const categories = useSelector(
     (state: RootState) => state.category.categories
   );
@@ -32,27 +35,10 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({ consumable }) => {
   const manufacturers = useSelector(
     (state: RootState) => state.manufacturer.manufacturers
   );
-  const [company, setCompany] = React.useState(consumable?.companyId || "");
+  const { initialValues, isCreate } = useInitial(consumable, create);
 
   const form = useForm<IConsumable>({
-    initialValues: consumable
-      ? { ...consumable }
-      : {
-          id: uuid4(),
-          branchId: "",
-          name: "",
-          imagePath: null,
-          categoryId: "",
-          manufacturerId: null,
-          supplierId: null,
-          itemNo: null,
-          modelNo: null,
-          orderNo: null,
-          purchaseCost: null,
-          purchaseDate: null,
-          quantity: 1,
-          notes: null,
-        },
+    initialValues: initialValues,
     validate: {
       name: (value: string) =>
         /(?!^$)([^\s])/.test(value) ? null : "Name should not be empty",
@@ -68,21 +54,17 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({ consumable }) => {
       },
       categoryId: (value: string) =>
         value !== "" ? null : "Please select a category",
-      branchId: (value: string) =>
-        value !== "" ? null : "Please select a branch",
     },
   });
   const handleSubmit = (data: object) => {
-    consumable
-      ? dispatch(consumableActions.update({ consumable: data as IConsumable }))
-      : dispatch(consumableActions.create({ consumable: data as IConsumable }));
-    dispatch(consumableActions.getAll());
+    isCreate
+      ? dispatch(consumableActions.create({ consumable: data as IConsumable }))
+      : dispatch(consumableActions.update({ consumable: data as IConsumable }));
   };
 
-  const handleCompanyChange = (value: string) => {
-    setCompany(value);
-    form.setFieldValue("branchId", "");
-  };
+  useEffect(() => {
+    form.setFieldValue("branchId", branch?.id || "");
+  }, [branch]);
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
@@ -95,37 +77,6 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({ consumable }) => {
         px={40}
         pt={20}
       >
-        <Select
-          data={companies.map((company) => ({
-            value: company.id,
-            label: company.name,
-          }))}
-          label="Company"
-          placeholder="Select Company"
-          value={company}
-          onChange={(value) => handleCompanyChange(value as string)}
-          classNames={filterClasses}
-          dropdownPosition="bottom"
-          nothingFound="No company found"
-          withAsterisk
-          withinPortal
-        />
-        <Select
-          data={branches
-            .filter((branch) => branch.companyId === company)
-            .map((branch) => ({
-              value: branch.id,
-              label: branch.name,
-            }))}
-          label="Branch"
-          placeholder="Select Branch"
-          {...form.getInputProps("branchId")}
-          classNames={filterClasses}
-          dropdownPosition="bottom"
-          nothingFound="No branch found"
-          withAsterisk
-          withinPortal
-        />
         <TextInput
           label="Name"
           placeholder="New Name"

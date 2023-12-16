@@ -4,42 +4,32 @@ import { useForm } from "@mantine/form";
 import { IManufacturer } from "../../interfaces/interfaces";
 import { useDispatch } from "react-redux";
 import { manufacturerActions } from "../../redux/manufacturer/actions";
-import uuid4 from "uuid4";
+import { useInitial } from "./useInitial";
 
 interface ManufacturerFormProps {
   manufacturer?: IManufacturer;
+  create?: boolean;
 }
 
 const ManufacturerForm: React.FC<ManufacturerFormProps> = ({
   manufacturer,
+  create,
 }) => {
   const dispatch = useDispatch();
+  const { initialValues, isCreate } = useInitial(manufacturer, create);
+
   const form = useForm<IManufacturer>({
-    initialValues: manufacturer
-      ? { ...manufacturer }
-      : {
-          id: uuid4(),
-          name: "",
-          url: null,
-          imagePath: null,
-          supportURL: null,
-          supportEmail: null,
-          supportPhone: null,
-          notes: null,
-        },
+    initialValues: initialValues,
     validate: {
       name: (value: string) =>
         /(?!^$)([^\s])/.test(value) ? null : "Name should not be empty",
     },
   });
-  const handleSubmit = (data: object) => {
-    manufacturer
-      ? dispatch(
-          manufacturerActions.update({ manufacturer: data as IManufacturer })
-        )
-      : dispatch(
-          manufacturerActions.create({ manufacturer: data as IManufacturer })
-        );
+
+  const handleSubmit = (data: IManufacturer) => {
+    isCreate
+      ? dispatch(manufacturerActions.create({ manufacturer: data }))
+      : dispatch(manufacturerActions.update({ manufacturer: data }));
   };
 
   return (

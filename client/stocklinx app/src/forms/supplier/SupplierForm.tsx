@@ -13,41 +13,29 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { useDispatch } from "react-redux";
 import { supplierActions } from "../../redux/supplier/actions";
-import uuid4 from "uuid4";
+import { useInitial } from "./useInitial";
 
 interface SupplierFormProps {
   supplier?: ISupplier;
+  create?: boolean;
 }
 
-const SupplierForm: React.FC<SupplierFormProps> = ({ supplier }) => {
+const SupplierForm: React.FC<SupplierFormProps> = ({ supplier, create }) => {
   const dispatch = useDispatch();
   const locations = useSelector((state: RootState) => state.location.locations);
+  const { initialValues, isCreate } = useInitial(supplier, create);
 
   const form = useForm<ISupplier>({
-    initialValues: supplier
-      ? { ...supplier }
-      : {
-          id: uuid4(),
-          locationId: null,
-          name: "",
-          imagePath: null,
-          contactName: null,
-          contactPhone: null,
-          contactEmail: null,
-          website: null,
-          fax: null,
-          notes: null,
-        },
+    initialValues: initialValues,
     validate: {
       name: (value: string) =>
         /(?!^$)([^\s])/.test(value) ? null : "Name should not be empty",
     },
   });
-  const handleSubmit = (data: object) => {
-    supplier
-      ? dispatch(supplierActions.update({ supplier: data as ISupplier }))
-      : dispatch(supplierActions.create({ supplier: data as ISupplier }));
-    dispatch(supplierActions.getAll());
+  const handleSubmit = (data: ISupplier) => {
+    isCreate
+      ? dispatch(supplierActions.create({ supplier: data }))
+      : dispatch(supplierActions.update({ supplier: data }));
   };
 
   return (

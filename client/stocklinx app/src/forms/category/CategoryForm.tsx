@@ -4,31 +4,29 @@ import { useForm } from "@mantine/form";
 import { CategoryType, ICategory } from "../../interfaces/interfaces";
 import { useDispatch } from "react-redux";
 import { categoryActions } from "../../redux/category/actions";
-import uuid4 from "uuid4";
 import filterClasses from "../../mantineModules/baseFilter.module.scss";
+import { useInitial } from "./useInitial";
 interface CategoryFormProps {
   category?: ICategory;
+  create?: boolean;
 }
 
-const CategoryForm: React.FC<CategoryFormProps> = ({ category }) => {
+const CategoryForm: React.FC<CategoryFormProps> = ({ category, create }) => {
   const dispatch = useDispatch();
+  const { initialValues, isCreate } = useInitial(category, create);
+
   const form = useForm<ICategory>({
-    initialValues: category
-      ? { ...category }
-      : {
-          id: uuid4(),
-          type: CategoryType.ASSET,
-          name: "",
-        },
+    initialValues: initialValues,
     validate: {
       name: (value: string) =>
         /(?!^$)([^\s])/.test(value) ? null : "Name should not be empty",
     },
   });
-  const handleSubmit = (data: object) => {
-    category
-      ? dispatch(categoryActions.update({ category: data as ICategory }))
-      : dispatch(categoryActions.create({ category: data as ICategory }));
+
+  const handleSubmit = (data: ICategory) => {
+    isCreate
+      ? dispatch(categoryActions.create({ category: data }))
+      : dispatch(categoryActions.update({ category: data }));
   };
 
   return (

@@ -4,26 +4,22 @@ import { useForm } from "@mantine/form";
 import { IBranch } from "../../interfaces/interfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { branchActions } from "../../redux/branch/actions";
-import uuid4 from "uuid4";
 import { RootState } from "../../redux/rootReducer";
 import filterClasses from "../../mantineModules/baseFilter.module.scss";
+import { useInitial } from "./useInitial";
 interface BranchFormProps {
   branch?: IBranch;
+  create?: boolean;
 }
 
-const BranchForm: React.FC<BranchFormProps> = ({ branch }) => {
+const BranchForm: React.FC<BranchFormProps> = ({ branch, create }) => {
   const companies = useSelector((state: RootState) => state.company.companies);
   const locations = useSelector((state: RootState) => state.location.locations);
   const dispatch = useDispatch();
+  const { initialValues, isCreate } = useInitial(branch, create);
+
   const form = useForm<IBranch>({
-    initialValues: branch
-      ? { ...branch }
-      : {
-          id: uuid4(),
-          companyId: "",
-          name: "",
-          locationId: null,
-        },
+    initialValues: initialValues,
     validate: {
       name: (value: string) =>
         /(?!^$)([^\s])/.test(value) ? null : "Name should not be empty",
@@ -31,11 +27,11 @@ const BranchForm: React.FC<BranchFormProps> = ({ branch }) => {
         value !== "" ? null : "Branch should not be empty",
     },
   });
-  const handleSubmit = (data: object) => {
-    branch
-      ? dispatch(branchActions.update({ branch: data as IBranch }))
-      : dispatch(branchActions.create({ branch: data as IBranch }));
-    dispatch(branchActions.getAll());
+
+  const handleSubmit = (data: IBranch) => {
+    isCreate
+      ? dispatch(branchActions.create({ branch: data }))
+      : dispatch(branchActions.update({ branch: data }));
   };
 
   return (

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import {
   TextInput,
   Button,
@@ -16,48 +16,27 @@ import { useDispatch, useSelector } from "react-redux";
 import { licenseActions } from "../../../redux/license/actions";
 import { RootState } from "../../../redux/rootReducer";
 import filterClasses from "../../../mantineModules/baseFilter.module.scss";
-import uuid4 from "uuid4";
+import { useInitial } from "./useInitial";
 
 interface LicenseFormProps {
   license?: ILicense;
+  create?: boolean;
 }
 
-const LicenseForm: React.FC<LicenseFormProps> = ({ license }) => {
+const LicenseForm: React.FC<LicenseFormProps> = ({ license, create }) => {
   const dispatch = useDispatch();
   const manufacturers = useSelector(
     (state: RootState) => state.manufacturer.manufacturers
   );
   const suppliers = useSelector((state: RootState) => state.supplier.suppliers);
-  const companies = useSelector((state: RootState) => state.company.companies);
-  const branches = useSelector((state: RootState) => state.branch.branches);
+  const branch = useSelector((state: RootState) => state.branch.branch);
   const categories = useSelector(
     (state: RootState) => state.category.categories
   );
-  const [company, setCompany] = useState(license?.companyId || "");
+  const { initialValues, isCreate } = useInitial(license, create);
+
   const form = useForm<ILicense>({
-    initialValues: license
-      ? { ...license }
-      : {
-          id: uuid4(),
-          branchId: "",
-          categoryId: "",
-          name: "",
-          imagePath: null,
-          orderNo: null,
-          purchaseCost: null,
-          purchaseDate: null,
-          notes: null,
-          manufacturerId: null,
-          supplierId: null,
-          licenseKey: "",
-          licenseEmail: null,
-          licensedTo: null,
-          maintained: false,
-          reassignable: false,
-          expirationDate: null,
-          terminationDate: null,
-          quantity: 1,
-        },
+    initialValues: initialValues,
     validate: {
       name: (value: string) =>
         /(?!^$)([^\s])/.test(value) ? null : "Name should not be empty",
@@ -70,21 +49,17 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license }) => {
             : "Purchase cost must be a non-negative number";
         }
       },
-      categoryId: (value: string) =>
-        value !== "" ? null : "Please select a category",
     },
   });
   const handleSubmit = (data: ILicense) => {
-    license
-      ? dispatch(licenseActions.update({ license: data }))
-      : dispatch(licenseActions.create({ license: data }));
-    dispatch(licenseActions.getAll());
+    isCreate
+      ? dispatch(licenseActions.create({ license: data }))
+      : dispatch(licenseActions.update({ license: data }));
   };
 
-  const handleCompanyChange = (value: string) => {
-    setCompany(value);
-    form.setFieldValue("branchId", "");
-  };
+  useEffect(() => {
+    form.setFieldValue("branchId", branch?.id || "");
+  }, [branch]);
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
@@ -97,37 +72,6 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license }) => {
         px={40}
         pt={20}
       >
-        <Select
-          data={companies.map((company) => ({
-            value: company.id,
-            label: company.name,
-          }))}
-          label="Company"
-          placeholder="Select Company"
-          value={company}
-          onChange={(value) => handleCompanyChange(value as string)}
-          classNames={filterClasses}
-          dropdownPosition="bottom"
-          nothingFound="No company found"
-          withAsterisk
-          withinPortal
-        />
-        <Select
-          data={branches
-            .filter((branch) => branch.companyId === company)
-            .map((branch) => ({
-              value: branch.id,
-              label: branch.name,
-            }))}
-          label="Branch"
-          placeholder="Select Branch"
-          {...form.getInputProps("branchId")}
-          classNames={filterClasses}
-          dropdownPosition="bottom"
-          nothingFound="No branch found"
-          withAsterisk
-          withinPortal
-        />
         <TextInput
           label="Name"
           placeholder="New Name"

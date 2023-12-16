@@ -4,38 +4,27 @@ import { useForm } from "@mantine/form";
 import { ILocation } from "../../interfaces/interfaces";
 import { locationActions } from "../../redux/location/actions";
 import { useDispatch } from "react-redux";
+import { useInitial } from "./useInitial";
 interface LocationFormProps {
   location?: ILocation;
+  create?: boolean;
 }
 
-const LocationForm: React.FC<LocationFormProps> = ({ location }) => {
+const LocationForm: React.FC<LocationFormProps> = ({ location, create }) => {
   const dispatch = useDispatch();
+  const { initialValues, isCreate } = useInitial(location, create);
+
   const form = useForm<ILocation>({
-    initialValues: location
-      ? { ...location }
-      : {
-          id: "",
-          name: "",
-          imagePath: null,
-          country: null,
-          state: null,
-          city: null,
-          address: null,
-          address2: null,
-          currency: null,
-          zipCode: null,
-          notes: null,
-        },
+    initialValues: initialValues,
     validate: {
       name: (value: string) =>
         /(?!^$)([^\s])/.test(value) ? null : "Name should not be empty",
     },
   });
-  const handleSubmit = (data: object) => {
-    location
-      ? dispatch(locationActions.update({ location: data as ILocation }))
-      : dispatch(locationActions.create({ location: data as ILocation }));
-    dispatch(locationActions.getAll());
+  const handleSubmit = (data: ILocation) => {
+    isCreate
+      ? dispatch(locationActions.create({ location: data }))
+      : dispatch(locationActions.update({ location: data }));
   };
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>

@@ -14,14 +14,15 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { useDispatch } from "react-redux";
 import { userActions } from "../../redux/user/actions";
-import uuid4 from "uuid4";
 import { DateInput } from "@mantine/dates";
+import { useInitial } from "./useInitial";
 
 interface UserFormProps {
   user?: IUser;
+  create?: boolean;
 }
 
-const UserForm: React.FC<UserFormProps> = ({ user }) => {
+const UserForm: React.FC<UserFormProps> = ({ user, create }) => {
   const dispatch = useDispatch();
   const companies = useSelector((state: RootState) => state.company.companies);
   const branches = useSelector((state: RootState) => state.branch.branches);
@@ -43,30 +44,10 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
       .find((c) => c.value === branches.find((b) => b.id === branch)?.companyId)
       ?.value || ""
   );
+  const { initialValues, isCreate } = useInitial(user, create);
 
   const form = useForm<IUser>({
-    initialValues: user
-      ? {
-          ...user,
-          startDate: new Date(user.startDate),
-        }
-      : {
-          id: uuid4(),
-          employeeNo: "",
-          firstName: "",
-          lastName: "",
-          departmentId: "",
-          imagePath: null,
-          email: "",
-          password: "",
-          phoneNo: null,
-          language: null,
-          website: null,
-          startDate: new Date("2023-01-01"),
-          endDate: null,
-          jobTitle: null,
-          notes: null,
-        },
+    initialValues: initialValues,
     validate: {
       firstName: (value: string) =>
         /(?!^$)([^\s])/.test(value) ? null : "First Name should not be empty",
@@ -88,11 +69,10 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
           : "Employee No should be exactly 8 characters.",
     },
   });
-  const handleSubmit = (data: object) => {
-    user
-      ? dispatch(userActions.update({ user: data as IUser }))
-      : dispatch(userActions.create({ user: data as IUser }));
-    dispatch(userActions.getAll());
+  const handleSubmit = (data: IUser) => {
+    isCreate
+      ? dispatch(userActions.create({ user: data }))
+      : dispatch(userActions.update({ user: data }));
   };
 
   const handleCompanyChange = (value: string) => {
