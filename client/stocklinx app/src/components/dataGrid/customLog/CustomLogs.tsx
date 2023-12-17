@@ -21,7 +21,14 @@ const CustomLogs = () => {
     refreshData();
   }, []);
 
-  return <Gridtable itemKey="id" data={customLogs} columns={useColumns()} />;
+  return (
+    <Gridtable
+      itemKey="id"
+      data={customLogs}
+      columns={useColumns()}
+      enableFooter
+    />
+  );
 };
 
 export default CustomLogs;
