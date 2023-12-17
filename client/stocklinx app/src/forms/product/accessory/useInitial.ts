@@ -2,6 +2,7 @@ import uuid4 from "uuid4";
 import { IAccessory } from "../../../interfaces/interfaces";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/rootReducer";
+import { getImage } from "../../../functions/Image";
 
 export const useInitial = (accessory?: IAccessory, create?: boolean) => {
   const branch = useSelector((state: RootState) => state.branch.branch);
@@ -25,6 +26,7 @@ export const useInitial = (accessory?: IAccessory, create?: boolean) => {
 
   if (accessory) {
     initialValues = { ...accessory };
+    initialValues.imagePath = getImage(accessory.imagePath);
     isCreate = false;
   }
   if (accessory && create) {

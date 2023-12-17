@@ -6,6 +6,8 @@ import {
   Flex,
   Textarea,
   Select,
+  Image,
+  FileInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { ISupplier } from "../../interfaces/interfaces";
@@ -14,6 +16,7 @@ import { RootState } from "../../redux/rootReducer";
 import { useDispatch } from "react-redux";
 import { supplierActions } from "../../redux/supplier/actions";
 import { useInitial } from "./useInitial";
+import { toBase64 } from "../../functions/Image";
 
 interface SupplierFormProps {
   supplier?: ISupplier;
@@ -32,6 +35,13 @@ const SupplierForm: React.FC<SupplierFormProps> = ({ supplier, create }) => {
         /(?!^$)([^\s])/.test(value) ? null : "Name should not be empty",
     },
   });
+
+  const handleImageChange = async (e: File | null) => {
+    if (!e) return;
+    const base64 = await toBase64(e);
+    form.setFieldValue("imagePath", base64 as string);
+  };
+
   const handleSubmit = (data: ISupplier) => {
     isCreate
       ? dispatch(supplierActions.create({ supplier: data }))
@@ -49,6 +59,19 @@ const SupplierForm: React.FC<SupplierFormProps> = ({ supplier, create }) => {
         px={40}
         pt={20}
       >
+        <Image
+          src={form.values.imagePath}
+          height={200}
+          radius="md"
+          width="fit-content"
+          fit="contain"
+        />
+        <FileInput
+          accept="image/png,image/jpeg"
+          label="Upload image"
+          placeholder="Upload image"
+          onChange={(e) => handleImageChange(e)}
+        />
         <TextInput
           label="Name"
           placeholder="New Name"

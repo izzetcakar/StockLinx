@@ -7,6 +7,8 @@ import {
   Flex,
   Textarea,
   Select,
+  Image,
+  FileInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { DateInput } from "@mantine/dates";
@@ -16,6 +18,8 @@ import { accessoryActions } from "../../../redux/accessory/actions";
 import { RootState } from "../../../redux/rootReducer";
 import filterClasses from "../../../mantineModules/baseFilter.module.scss";
 import { useInitial } from "./useInitial";
+import { toBase64 } from "../../../functions/Image";
+import base_accessory from "../../../assets/baseProductImages/base_accessory.png";
 
 interface AccessoryFormProps {
   accessory?: IAccessory;
@@ -59,6 +63,12 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory, create }) => {
     form.setFieldValue("branchId", branch?.id || "");
   }, [branch]);
 
+  const handleImageChange = async (e: File | null) => {
+    if (!e) return;
+    const base64 = await toBase64(e);
+    form.setFieldValue("imagePath", base64 as string);
+  };
+
   const handleSubmit = (data: IAccessory) => {
     isCreate
       ? dispatch(accessoryActions.create({ accessory: data }))
@@ -76,6 +86,19 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory, create }) => {
         px={40}
         pt={20}
       >
+        <Image
+          src={form.values.imagePath || base_accessory}
+          height={200}
+          radius="md"
+          width="fit-content"
+          fit="contain"
+        />
+        <FileInput
+          accept="image/png,image/jpeg"
+          label="Upload image"
+          placeholder="Upload image"
+          onChange={(e) => handleImageChange(e)}
+        />
         <TextInput
           label="Name"
           placeholder="New Name"

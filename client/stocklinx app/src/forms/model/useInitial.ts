@@ -1,5 +1,6 @@
 import uuid4 from "uuid4";
 import { IModel } from "../../interfaces/interfaces";
+import { getImage } from "../../functions/Image";
 
 export const useInitial = (model?: IModel, create?: boolean) => {
   let isCreate = create || false;
@@ -18,6 +19,7 @@ export const useInitial = (model?: IModel, create?: boolean) => {
 
   if (model) {
     initialValues = { ...model };
+    initialValues.imagePath = getImage(model.imagePath);
     isCreate = false;
   }
   if (model && create) {

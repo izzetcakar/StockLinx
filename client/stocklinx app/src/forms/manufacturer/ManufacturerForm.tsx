@@ -1,10 +1,19 @@
 import React from "react";
-import { TextInput, Button, Group, Flex, Textarea } from "@mantine/core";
+import {
+  TextInput,
+  Button,
+  Group,
+  Flex,
+  Textarea,
+  Image,
+  FileInput,
+} from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IManufacturer } from "../../interfaces/interfaces";
 import { useDispatch } from "react-redux";
 import { manufacturerActions } from "../../redux/manufacturer/actions";
 import { useInitial } from "./useInitial";
+import { toBase64 } from "../../functions/Image";
 
 interface ManufacturerFormProps {
   manufacturer?: IManufacturer;
@@ -26,6 +35,12 @@ const ManufacturerForm: React.FC<ManufacturerFormProps> = ({
     },
   });
 
+  const handleImageChange = async (e: File | null) => {
+    if (!e) return;
+    const base64 = await toBase64(e);
+    form.setFieldValue("imagePath", base64 as string);
+  };
+
   const handleSubmit = (data: IManufacturer) => {
     isCreate
       ? dispatch(manufacturerActions.create({ manufacturer: data }))
@@ -43,6 +58,19 @@ const ManufacturerForm: React.FC<ManufacturerFormProps> = ({
         px={40}
         pt={20}
       >
+        <Image
+          src={form.values.imagePath}
+          height={200}
+          radius="md"
+          width="fit-content"
+          fit="contain"
+        />
+        <FileInput
+          accept="image/png,image/jpeg"
+          label="Upload image"
+          placeholder="Upload image"
+          onChange={(e) => handleImageChange(e)}
+        />
         <TextInput
           label="Name"
           placeholder="New Name"

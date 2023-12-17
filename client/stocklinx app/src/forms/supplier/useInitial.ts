@@ -1,5 +1,6 @@
 import uuid4 from "uuid4";
 import { ISupplier } from "../../interfaces/interfaces";
+import { getImage } from "../../functions/Image";
 
 export const useInitial = (supplier?: ISupplier, create?: boolean) => {
   let isCreate = create || false;
@@ -19,6 +20,7 @@ export const useInitial = (supplier?: ISupplier, create?: boolean) => {
 
   if (supplier) {
     initialValues = { ...supplier };
+    initialValues.imagePath = getImage(supplier.imagePath);
     isCreate = false;
   }
   if (supplier && create) {

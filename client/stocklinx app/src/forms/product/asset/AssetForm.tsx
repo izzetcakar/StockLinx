@@ -9,6 +9,8 @@ import {
   Textarea,
   Text,
   Select,
+  Image,
+  FileInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { DateInput } from "@mantine/dates";
@@ -19,6 +21,8 @@ import { RootState } from "../../../redux/rootReducer";
 import filterClasses from "../../../mantineModules/baseFilter.module.scss";
 import { assetActions } from "../../../redux/asset/actions";
 import { useInitial } from "./useInitial";
+import { toBase64 } from "../../../functions/Image";
+import base_asset from "../../../assets/baseProductImages/base_asset.jpg";
 
 interface AssetFormProps {
   asset?: IAsset;
@@ -87,6 +91,12 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
     form.setFieldValue("branchId", branch?.id || "");
   }, [branch]);
 
+  const handleImageChange = async (e: File | null) => {
+    if (!e) return;
+    const base64 = await toBase64(e);
+    form.setFieldValue("imagePath", base64 as string);
+  };
+
   const handleSubmit = (data: IAsset) => {
     isCreate
       ? dispatch(assetActions.create({ asset: data }))
@@ -104,6 +114,19 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
         px={40}
         pt={20}
       >
+        <Image
+          src={form.values.imagePath || base_asset}
+          height={200}
+          radius="md"
+          width="fit-content"
+          fit="contain"
+        />
+        <FileInput
+          accept="image/png,image/jpeg"
+          label="Upload image"
+          placeholder="Upload image"
+          onChange={(e) => handleImageChange(e)}
+        />
         <Flex w="100%" gap={10} align={"center"}>
           <TextInput
             label="Tag No"

@@ -1,5 +1,6 @@
 import uuid4 from "uuid4";
 import { ICompany } from "../../interfaces/interfaces";
+import { getImage } from "../../functions/Image";
 
 export const useInitial = (company?: ICompany, create?: boolean) => {
   let isCreate = create || false;
@@ -14,6 +15,7 @@ export const useInitial = (company?: ICompany, create?: boolean) => {
 
   if (company) {
     initialValues = { ...company };
+    initialValues.imagePath = getImage(company.imagePath);
     isCreate = false;
   }
   if (company && create) {

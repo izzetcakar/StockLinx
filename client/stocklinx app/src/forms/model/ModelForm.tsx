@@ -8,6 +8,8 @@ import {
   Select,
   NumberInput,
   Switch,
+  Image,
+  FileInput,
 } from "@mantine/core";
 import { FORM_INDEX, useForm } from "@mantine/form";
 import {
@@ -23,6 +25,7 @@ import { RootState } from "../../redux/rootReducer";
 import { DateInput } from "@mantine/dates";
 import { modelFieldDataActions } from "../../redux/modelFieldData/actions";
 import { useInitial } from "./useInitial";
+import { toBase64 } from "../../functions/Image";
 interface ModelFormProps {
   model?: IModel;
   create?: boolean;
@@ -109,32 +112,20 @@ const ModelForm: React.FC<ModelFormProps> = ({ model, create }) => {
     });
     return newArray;
   };
+
   const convertValuesToString = () => {
     const newModelFieldData = form.values.modelFieldData.map((m) => {
       return { ...m, value: m.value.toString() };
     });
     return newModelFieldData;
   };
-  const handleSubmit = (data: IModel) => {
-    const newModelFieldData = convertValuesToString();
-    isCreate
-      ? dispatch(
-          modelActions.create({
-            model: { ...data, modelFieldData: newModelFieldData },
-          })
-        )
-      : dispatch(
-          modelActions.update({
-            model: { ...data, modelFieldData: newModelFieldData },
-          })
-        );
-    dispatch(modelFieldDataActions.getAll());
-  };
+
   const getCustomField = (id: string) => {
     const customField = customFields.find((c) => c.id === id);
     if (!customField) return;
     return customField;
   };
+
   const getBooleanValue = (value: string) => {
     if (value.toLowerCase() === "true") return true;
     else return false;
@@ -215,16 +206,41 @@ const ModelForm: React.FC<ModelFormProps> = ({ model, create }) => {
         return null;
     }
   };
+
   const onFieldIdChange = (e: string) => {
     form.setFieldValue("fieldSetId", e);
     const newModelFieldData = handleModelFieldData(form.values.id, e as string);
     form.setFieldValue("modelFieldData", newModelFieldData);
   };
+
   useLayoutEffect(() => {
     if (model && model.fieldSetId) {
       onFieldIdChange(model.fieldSetId);
     }
   }, [model]);
+
+  const handleImageChange = async (e: File | null) => {
+    if (!e) return;
+    const base64 = await toBase64(e);
+    console.log(base64);
+    form.setFieldValue("imagePath", base64 as string);
+  };
+
+  const handleSubmit = (data: IModel) => {
+    const newModelFieldData = convertValuesToString();
+    isCreate
+      ? dispatch(
+          modelActions.create({
+            model: { ...data, modelFieldData: newModelFieldData },
+          })
+        )
+      : dispatch(
+          modelActions.update({
+            model: { ...data, modelFieldData: newModelFieldData },
+          })
+        );
+    dispatch(modelFieldDataActions.getAll());
+  };
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
@@ -237,6 +253,19 @@ const ModelForm: React.FC<ModelFormProps> = ({ model, create }) => {
         px={40}
         pt={20}
       >
+        <Image
+          src={form.values.imagePath}
+          height={200}
+          radius="md"
+          width="auto"
+          fit="contain"
+        />
+        <FileInput
+          accept="image/png,image/jpeg"
+          label="Upload image"
+          placeholder="Upload image"
+          onChange={(e) => handleImageChange(e)}
+        />
         <Select
           data={categories
             .filter((c) => c.type === CategoryType.ASSET)
