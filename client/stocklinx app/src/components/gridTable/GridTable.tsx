@@ -117,145 +117,144 @@ const Gridtable: React.FC<GridtableProps> = ({
   };
 
   return (
-    <div>
-      {enableToolbar ? (
-        <TableToolbar
-          data={data}
-          columns={columns}
-          excelColumns={excelColumns}
-          visibleColumns={visibleColumns}
-          enableExcelActions={enableExcelActions}
-          selectedKeys={selectedKeys}
-          addVisibleColumn={addVisibleColumn}
-          onRowInsert={onRowInsert}
-          onRowRemoveRange={onRowRemoveRange}
-          refreshData={refreshData}
-        />
-      ) : null}
-      <table className="gridtable">
-        {visibleColumns.length === 0 ? (
-          <tbody>
+    <table className="gridtable">
+      <thead>
+        {enableToolbar ? (
+          <tr className="gridtable__header__row">
+            <td className="gridtable__header__row__cell">
+              <TableToolbar
+                data={data}
+                columns={columns}
+                excelColumns={excelColumns}
+                visibleColumns={visibleColumns}
+                enableExcelActions={enableExcelActions}
+                selectedKeys={selectedKeys}
+                addVisibleColumn={addVisibleColumn}
+                onRowInsert={onRowInsert}
+                onRowRemoveRange={onRowRemoveRange}
+                refreshData={refreshData}
+              />
+            </td>
+          </tr>
+        ) : null}
+      </thead>
+      {visibleColumns.length === 0 ? (
+        <tbody>
+          <tr className="gridtable__nodata__row">
+            <td>{noDataText}</td>
+          </tr>
+        </tbody>
+      ) : (
+        <tbody>
+          <tr className="gridtable__column__row">
+            {enableSelectActions ? (
+              <td className="gridtable__checkbox__cell border__bottom">
+                <Checkbox
+                  checked={
+                    selectedKeys.length === data.length &&
+                    selectedKeys.length > 0
+                  }
+                  onChange={() => handleselectAll()}
+                  indeterminate={
+                    selectedKeys.length > 0 && selectedKeys.length < data.length
+                  }
+                  radius={2}
+                  size={18}
+                />
+              </td>
+            ) : null}
+            {visibleColumns.map((vColumn, vColumnIndex) => (
+              <td
+                key={"column__header__" + vColumn.caption + "__" + vColumnIndex}
+                className="gridtable__column__cell"
+                colSpan={getColSpan(vColumnIndex)}
+              >
+                {vColumn.renderHeader
+                  ? vColumn.renderHeader()
+                  : vColumn.caption}
+              </td>
+            ))}
+          </tr>
+          <tr className="gridtable__filter__row">
+            {enableSelectActions ? (
+              <td className="gridtable__filter__cell"></td>
+            ) : null}
+            {filters
+              .filter((x) =>
+                visibleColumns.map((v) => v.dataField).includes(x.field)
+              )
+              .map((filter: Filter, filterIndex) => (
+                <td
+                  colSpan={getColSpan(filterIndex)}
+                  key={filter.field + "__" + filterIndex}
+                >
+                  {getFilterInput(filter)}
+                </td>
+              ))}
+          </tr>
+          {filterDataByPage(filterDataByInput(data)).length > 0 ? (
+            filterDataByPage(filterDataByInput(data)).map((obj, rowIndex) => (
+              <tr
+                key={"gridtable__row__" + rowIndex}
+                className={getSelectedRowClass(obj[keyfield])}
+              >
+                {enableSelectActions ? (
+                  <td className="gridtable__checkbox__cell">
+                    <Checkbox
+                      checked={selectedKeys.includes(obj[keyfield])}
+                      onChange={() => handleSelectRow(obj[keyfield])}
+                      radius={2}
+                      size={18}
+                    />
+                  </td>
+                ) : null}
+                {columns.map((column, columnIndex) =>
+                  visibleColumns
+                    .map((x) => x.caption)
+                    .includes(column.caption) ? (
+                    <td
+                      key={`gridtable__row__cell__${columnIndex}__${column.dataField}`}
+                      className={getSelectedClassName(rowIndex, columnIndex)}
+                      onMouseDown={() =>
+                        handleCellMouseDown(
+                          rowIndex,
+                          columnIndex,
+                          column,
+                          (obj as { [key: string]: any })[column.dataField]
+                        )
+                      }
+                      onMouseEnter={() =>
+                        handleCellMouseEnter(
+                          rowIndex,
+                          columnIndex,
+                          column,
+                          (obj as { [key: string]: any })[column.dataField]
+                        )
+                      }
+                      onMouseUp={handleCellMouseUp}
+                    >
+                      {renderColumnValue(obj, column)}
+                    </td>
+                  ) : null
+                )}
+                {enableEditActions ? (
+                  <td className="gridtable__edit__cell">
+                    <EditComponent
+                      obj={obj}
+                      id={obj[keyfield]}
+                      onRowUpdate={onRowUpdate}
+                      onRowRemove={onRowRemove}
+                    />
+                  </td>
+                ) : null}
+              </tr>
+            ))
+          ) : (
             <tr className="gridtable__nodata__row">
               <td>{noDataText}</td>
             </tr>
-          </tbody>
-        ) : (
-          <tbody>
-            <tr className="gridtable__column__row">
-              {enableSelectActions ? (
-                <td className="gridtable__checkbox__cell border__bottom">
-                  <Checkbox
-                    checked={
-                      selectedKeys.length === data.length &&
-                      selectedKeys.length > 0
-                    }
-                    onChange={() => handleselectAll()}
-                    indeterminate={
-                      selectedKeys.length > 0 &&
-                      selectedKeys.length < data.length
-                    }
-                    radius={2}
-                    size={18}
-                  />
-                </td>
-              ) : null}
-              {visibleColumns.map((vColumn, vColumnIndex) => (
-                <td
-                  key={
-                    "column__header__" + vColumn.caption + "__" + vColumnIndex
-                  }
-                  className="gridtable__column__cell"
-                  colSpan={getColSpan(vColumnIndex)}
-                >
-                  {vColumn.renderHeader
-                    ? vColumn.renderHeader()
-                    : vColumn.caption}
-                </td>
-              ))}
-            </tr>
-            <tr className="gridtable__filter__row">
-              {enableSelectActions ? (
-                <td className="gridtable__filter__cell"></td>
-              ) : null}
-              {filters
-                .filter((x) =>
-                  visibleColumns.map((v) => v.dataField).includes(x.field)
-                )
-                .map((filter: Filter, filterIndex) => (
-                  <td
-                    colSpan={getColSpan(filterIndex)}
-                    key={filter.field + "__" + filterIndex}
-                  >
-                    {getFilterInput(filter)}
-                  </td>
-                ))}
-            </tr>
-            {filterDataByPage(filterDataByInput(data)).length > 0 ? (
-              filterDataByPage(filterDataByInput(data)).map((obj, rowIndex) => (
-                <tr
-                  key={"gridtable__row__" + rowIndex}
-                  className={getSelectedRowClass(obj[keyfield])}
-                >
-                  {enableSelectActions ? (
-                    <td className="gridtable__checkbox__cell">
-                      <Checkbox
-                        checked={selectedKeys.includes(obj[keyfield])}
-                        onChange={() => handleSelectRow(obj[keyfield])}
-                        radius={2}
-                        size={18}
-                      />
-                    </td>
-                  ) : null}
-                  {columns.map((column, columnIndex) =>
-                    visibleColumns
-                      .map((x) => x.caption)
-                      .includes(column.caption) ? (
-                      <td
-                        key={`gridtable__row__cell__${columnIndex}__${column.dataField}`}
-                        className={getSelectedClassName(rowIndex, columnIndex)}
-                        onMouseDown={() =>
-                          handleCellMouseDown(
-                            rowIndex,
-                            columnIndex,
-                            column,
-                            (obj as { [key: string]: any })[column.dataField]
-                          )
-                        }
-                        onMouseEnter={() =>
-                          handleCellMouseEnter(
-                            rowIndex,
-                            columnIndex,
-                            column,
-                            (obj as { [key: string]: any })[column.dataField]
-                          )
-                        }
-                        onMouseUp={handleCellMouseUp}
-                      >
-                        {renderColumnValue(obj, column)}
-                      </td>
-                    ) : null
-                  )}
-                  {enableEditActions ? (
-                    <td className="gridtable__edit__cell">
-                      <EditComponent
-                        obj={obj}
-                        id={obj[keyfield]}
-                        onRowUpdate={onRowUpdate}
-                        onRowRemove={onRowRemove}
-                      />
-                    </td>
-                  ) : null}
-                </tr>
-              ))
-            ) : (
-              <tr className="gridtable__nodata__row">
-                <td>{noDataText}</td>
-              </tr>
-            )}
-          </tbody>
-        )}
-        {enableFooter ? (
-          <tfoot>
+          )}
+          {enableFooter ? (
             <tr className="gridtable__footer__row">
               <td className="gridtable__footer__row__cell">
                 <TableFooter
@@ -267,10 +266,10 @@ const Gridtable: React.FC<GridtableProps> = ({
                 />
               </td>
             </tr>
-          </tfoot>
-        ) : null}
-      </table>
-    </div>
+          ) : null}
+        </tbody>
+      )}
+    </table>
   );
 };
 
