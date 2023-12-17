@@ -74,7 +74,6 @@ export interface IDepartment extends BaseEntity {
 }
 export interface ILocation extends BaseEntity {
   name: string;
-  imagePath: string | null;
   country: string | null;
   state: string | null;
   city: string | null;
@@ -96,7 +95,6 @@ export interface IBaseProduct extends BaseEntity {
   companyId?: string;
   branchId: string;
   name: string;
-  imagePath: string | null;
   orderNo: string | null;
   notes: string | null;
   purchaseCost: number | null;
@@ -108,6 +106,7 @@ export interface IAccessory extends IBaseProduct {
   manufacturerId: string | null;
   supplierId: string | null;
   categoryId: string;
+  imagePath: string | null;
   modelNo: string;
   quantity: number;
   availableQuantity?: number;
@@ -115,6 +114,7 @@ export interface IAccessory extends IBaseProduct {
 export interface IAsset extends IBaseProduct {
   modelId: string | null;
   productStatusId: string;
+  imagePath: string | null;
   tagNo: string | null;
   serialNo: string | null;
   overageAssets?: OverageAsset[];
@@ -217,7 +217,6 @@ export interface ISupplier extends BaseEntity {
 }
 export interface IUser extends BaseEntity {
   companyId?: string;
-  imagePath: string | null;
   departmentId: string;
   employeeNo: string;
   firstName: string;
@@ -311,4 +310,9 @@ export interface IDeployedProductDto extends BaseEntity {
   productRoute?: string | null;
   assignDate: Date | null;
   notes: string | null;
+}
+export interface IPermission extends BaseEntity {
+  companyId?: string;
+  branchId: string;
+  userId: string;
 }
