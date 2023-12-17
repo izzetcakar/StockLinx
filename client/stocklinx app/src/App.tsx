@@ -42,6 +42,7 @@ import Model from "./pages/model/Model";
 import ProductStatus from "./pages/productStatus/ProductStatus";
 import Supplier from "./pages/supplier/Supplier";
 import User from "./pages/user/User";
+import Permissions from "./pages/permission/Permissions";
 
 const Layout = () => {
   const userRedux = useSelector((state: RootState) => state.user.user);
@@ -204,6 +205,10 @@ const router = createBrowserRouter([
       {
         path: "/generic",
         element: <Generic />,
+      },
+      {
+        path: "/permissions",
+        element: <Permissions />,
       },
     ],
   },
