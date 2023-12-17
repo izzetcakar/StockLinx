@@ -15,11 +15,16 @@ import icon_group from "../../assets/icon_group.png";
 import { useDispatch } from "react-redux";
 import { userActions } from "../../redux/user/actions";
 
+interface NavigationSubItem {
+  title: string;
+  color: string;
+  target: string;
+}
 interface NavigationItem {
   title: string;
   icon: string;
   color: string;
-  subItems?: NavigationItem[];
+  subItems?: NavigationSubItem[];
   isExpanded?: boolean;
   target: string;
   onClick?: () => void;
@@ -85,69 +90,63 @@ const Sidebar: React.FC = () => {
       subItems: [
         {
           title: "Custom Fields",
-          icon: icon_harddisk,
           color: "#737373",
           target: "/customfields",
         },
         {
           title: "Status Labels",
-          icon: icon_harddisk,
           color: "#737373",
           target: "/productstatuses",
         },
         {
           title: "Asset Models",
-          icon: icon_harddisk,
           color: "#737373",
           target: "/models",
         },
         {
           title: "Categories",
-          icon: icon_harddisk,
           color: "#737373",
           target: "/categories",
         },
         {
           title: "Manufacturers",
-          icon: icon_harddisk,
           color: "#737373",
           target: "/manufacturers",
         },
         {
           title: "Suppliers",
-          icon: icon_harddisk,
           color: "#737373",
           target: "/suppliers",
         },
         {
           title: "Companies",
-          icon: icon_harddisk,
           color: "#737373",
           target: "/companies",
         },
         {
           title: "Branches",
-          icon: icon_harddisk,
           color: "#737373",
           target: "/branches",
         },
         {
           title: "Departments",
-          icon: icon_harddisk,
           color: "#737373",
           target: "/departments",
         },
         {
           title: "Locations",
-          icon: icon_harddisk,
           color: "#737373",
           target: "/locations",
         },
         {
           title: "Users",
-          icon: icon_harddisk,
           color: "#737373",
           target: "/users",
+        },
+        {
+          title: "Permissions",
+          color: "#737373",
+          target: "/permissions",
         },
       ],
       isExpanded: false,
@@ -199,7 +198,7 @@ const Sidebar: React.FC = () => {
       })
     );
   };
-  const checkIfSelected = (item: NavigationItem) => {
+  const checkIfSelected = (item: NavigationItem | NavigationSubItem) => {
     return item.target === location.pathname;
   };
 
@@ -247,17 +246,6 @@ const Sidebar: React.FC = () => {
                   key={`${index}-${nestedIndex}`}
                   onClick={() => navigate(subItem.target)}
                 >
-                  <div className="icon">
-                    <i
-                      className={`bx bx-${subItem.icon}`}
-                      style={{
-                        fontSize: "1.4rem",
-                        color: checkIfSelected(subItem)
-                          ? "white"
-                          : subItem.color,
-                      }}
-                    />
-                  </div>
                   <div className="title">{subItem.title}</div>
                 </div>
               ))
