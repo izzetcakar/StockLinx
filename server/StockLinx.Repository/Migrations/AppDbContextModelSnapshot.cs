@@ -287,9 +287,6 @@ namespace StockLinx.Repository.Migrations
                     b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("ImagePath")
-                        .HasColumnType("text");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -354,9 +351,6 @@ namespace StockLinx.Repository.Migrations
 
                     b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("ImagePath")
-                        .HasColumnType("text");
 
                     b.Property<string>("ItemNo")
                         .HasColumnType("text");
@@ -662,9 +656,6 @@ namespace StockLinx.Repository.Migrations
 
                     b.Property<DateTime?>("ExpirationDate")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("ImagePath")
-                        .HasColumnType("text");
 
                     b.Property<string>("LicenseEmail")
                         .HasColumnType("text");
@@ -1040,9 +1031,6 @@ namespace StockLinx.Repository.Migrations
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("ImagePath")
                         .HasColumnType("text");
 
                     b.Property<bool?>("IsAdmin")

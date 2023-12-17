@@ -12,16 +12,18 @@ namespace StockLinx.Service.Services
     public class CompanyService : Service<Company>, ICompanyService
     {
         private readonly ICompanyRepository _companyRepository;
+        private readonly IUserService _userService;
         private readonly ICustomLogService _customLogService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         public CompanyService(IRepository<Company> repository, ICompanyRepository companyRepository, IUnitOfWork unitOfWork,
-            IMapper mapper, ICustomLogService customLogService) : base(repository, unitOfWork)
+            IMapper mapper, ICustomLogService customLogService, IUserService userService) : base(repository, unitOfWork)
         {
             _companyRepository = companyRepository;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _customLogService = customLogService;
+            _userService = userService;
         }
 
         public async Task<CompanyDto> GetDto(Guid id)
@@ -37,9 +39,24 @@ namespace StockLinx.Service.Services
 
         public async Task<CompanyDto> CreateCompanyAsync(CompanyCreateDto createDto)
         {
+            var user = await _userService.GetCurrentUser();
+            if ((bool)!user.IsAdmin)
+            {
+                throw new ArgumentNullException("User is not admin");
+            }
             var newCompany = _mapper.Map<Company>(createDto);
             newCompany.Id = Guid.NewGuid();
             newCompany.CreatedDate = DateTime.UtcNow;
+
+            if (newCompany.ImagePath != null)
+            {
+                if (newCompany.ImagePath.Contains("data:image/jpeg;base64,"))
+                {
+                    ImageHandler.UploadBase64AsJpg(newCompany.ImagePath, $"{newCompany.Id}", "companies");
+                    newCompany.ImagePath = $"Companies\\{newCompany.Id}.jpg";
+                }
+            }
+
             await _companyRepository.AddAsync(newCompany);
             await _customLogService.CreateCustomLog("Create", newCompany.Id, null, "Company", null);
             await _unitOfWork.CommitAsync();
@@ -48,6 +65,11 @@ namespace StockLinx.Service.Services
 
         public async Task<List<CompanyDto>> CreateRangeCompanyAsync(List<CompanyCreateDto> createDtos)
         {
+            var user = await _userService.GetCurrentUser();
+            if ((bool)!user.IsAdmin)
+            {
+                throw new ArgumentNullException("User is not admin");
+            }
             var newCompanies = new List<Company>();
             foreach (var createDto in createDtos)
             {
@@ -64,6 +86,11 @@ namespace StockLinx.Service.Services
 
         public async Task<CompanyDto> UpdateCompanyAsync(CompanyUpdateDto updateDto)
         {
+            var user = await _userService.GetCurrentUser();
+            if ((bool)!user.IsAdmin)
+            {
+                throw new ArgumentNullException("User is not admin");
+            }
             var companyInDb = await GetByIdAsync(updateDto.Id);
             if (companyInDb == null)
             {
@@ -71,6 +98,16 @@ namespace StockLinx.Service.Services
             }
             var updatedCompany = _mapper.Map<Company>(updateDto);
             updatedCompany.UpdatedDate = DateTime.UtcNow;
+
+            if (updatedCompany.ImagePath != null)
+            {
+                if (updatedCompany.ImagePath.Contains("data:image/jpeg;base64,"))
+                {
+                    ImageHandler.UploadBase64AsJpg(updatedCompany.ImagePath, $"{updatedCompany.Id}", "companies");
+                    updatedCompany.ImagePath = $"Companies\\{updatedCompany.Id}.jpg";
+                }
+            }
+
             _companyRepository.Update(companyInDb, updatedCompany);
             await _customLogService.CreateCustomLog("Update", updatedCompany.Id, null, "Company", null);
             await _unitOfWork.CommitAsync();
@@ -79,6 +116,11 @@ namespace StockLinx.Service.Services
 
         public async Task DeleteCompanyAsync(Guid companyId)
         {
+            var user = await _userService.GetCurrentUser();
+            if ((bool)!user.IsAdmin)
+            {
+                throw new ArgumentNullException("User is not admin");
+            }
             var company = await GetByIdAsync(companyId);
             if (company == null)
             {
@@ -92,6 +134,11 @@ namespace StockLinx.Service.Services
 
         public async Task DeleteRangeCompanyAsync(List<Guid> companyIds)
         {
+            var user = await _userService.GetCurrentUser();
+            if ((bool)!user.IsAdmin)
+            {
+                throw new ArgumentNullException("User is not admin");
+            }
             var companies = new List<Company>();
             foreach (var companyId in companyIds)
             {

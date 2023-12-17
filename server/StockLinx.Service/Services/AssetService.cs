@@ -46,6 +46,16 @@ namespace StockLinx.Service.Services
             newAsset.CreatedDate = DateTime.UtcNow;
             newAssets.Add(newAsset);
             await _customLogService.CreateCustomLog("Create", newAsset.Id, newAsset.BranchId, "Asset", "Branch");
+
+            if (newAsset.ImagePath != null)
+            {
+                if (newAsset.ImagePath.Contains("data:image/jpeg;base64,"))
+                {
+                    ImageHandler.UploadBase64AsJpg(newAsset.ImagePath, $"{newAsset.Id}", "assets");
+                    newAsset.ImagePath = $"Assets\\{newAsset.Id}.jpg";
+                }
+            }
+
             if (createDto.OverageAssets != null && createDto.OverageAssets.Count > 0)
             {
                 foreach (var overageAsset in createDto.OverageAssets)
@@ -54,6 +64,8 @@ namespace StockLinx.Service.Services
                     extraAsset.Id = Guid.NewGuid();
                     extraAsset.SerialNo = overageAsset.SerialNo;
                     extraAsset.TagNo = overageAsset.TagNo;
+                    extraAsset.CreatedDate = DateTime.UtcNow;
+                    extraAsset.ImagePath = newAsset.ImagePath;
                     newAssets.Add(extraAsset);
                     await _customLogService.CreateCustomLog("Create", extraAsset.Id, extraAsset.BranchId, "Asset", "Branch");
                 }
@@ -88,6 +100,16 @@ namespace StockLinx.Service.Services
             }
             var updatedAsset = _mapper.Map<Asset>(updateDto);
             updatedAsset.UpdatedDate = DateTime.UtcNow;
+
+            if (updatedAsset.ImagePath != null)
+            {
+                if (updatedAsset.ImagePath.Contains("data:image/jpeg;base64,"))
+                {
+                    ImageHandler.UploadBase64AsJpg(updatedAsset.ImagePath, $"{updatedAsset.Id}", "assets");
+                    updatedAsset.ImagePath = $"Assets\\{updatedAsset.Id}.jpg";
+                }
+            }
+
             _assetRepository.Update(assetInDb, updatedAsset);
             await _customLogService.CreateCustomLog("Update", updatedAsset.Id, updatedAsset.BranchId, "Asset", "Branch");
             await _unitOfWork.CommitAsync();

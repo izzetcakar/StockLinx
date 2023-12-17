@@ -39,6 +39,16 @@ namespace StockLinx.Service.Services
             var newManufacturer = _mapper.Map<Manufacturer>(createDto);
             newManufacturer.Id = Guid.NewGuid();
             newManufacturer.CreatedDate = DateTime.UtcNow;
+
+            if (newManufacturer.ImagePath != null)
+            {
+                if (newManufacturer.ImagePath.Contains("data:image/jpeg;base64,"))
+                {
+                    ImageHandler.UploadBase64AsJpg(newManufacturer.ImagePath, $"{newManufacturer.Id}", "Manufacturers");
+                    newManufacturer.ImagePath = $"Manufacturers/{newManufacturer.Id}.jpg";
+                }
+            }
+
             await _manufacturerRepository.AddAsync(newManufacturer);
             await _customLogService.CreateCustomLog("Create", newManufacturer.Id, null, "Manufacturer", null);
             await _unitOfWork.CommitAsync();
@@ -70,6 +80,16 @@ namespace StockLinx.Service.Services
             }
             var updatedManufacturer = _mapper.Map<Manufacturer>(updateDto);
             updatedManufacturer.UpdatedDate = DateTime.UtcNow;
+
+            if (updatedManufacturer.ImagePath != null)
+            {
+                if (updatedManufacturer.ImagePath.Contains("data:image/jpeg;base64,"))
+                {
+                    ImageHandler.UploadBase64AsJpg(updatedManufacturer.ImagePath, $"{updatedManufacturer.Id}", "Manufacturers");
+                    updatedManufacturer.ImagePath = $"Manufacturers/{updatedManufacturer.Id}.jpg";
+                }
+            }
+
             _manufacturerRepository.Update(manufacturerInDb, updatedManufacturer);
             await _customLogService.CreateCustomLog("Update", updatedManufacturer.Id, null, "Manufacturer", null);
             await _unitOfWork.CommitAsync();

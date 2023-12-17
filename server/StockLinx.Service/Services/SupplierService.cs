@@ -39,6 +39,16 @@ namespace StockLinx.Service.Services
             var newSupplier = _mapper.Map<Supplier>(createDto);
             newSupplier.Id = Guid.NewGuid();
             newSupplier.CreatedDate = DateTime.UtcNow;
+
+            if (newSupplier.ImagePath != null)
+            {
+                if (newSupplier.ImagePath.Contains("data:image/jpeg;base64,"))
+                {
+                    ImageHandler.UploadBase64AsJpg(newSupplier.ImagePath, $"{newSupplier.Id}", "suppliers");
+                    newSupplier.ImagePath = $"Suppliers\\{newSupplier.Id}.jpg";
+                }
+            }
+
             await _supplierRepository.AddAsync(newSupplier);
             await _customLogService.CreateCustomLog("Create", newSupplier.Id, null, "Supplier", null);
             await _unitOfWork.CommitAsync();
@@ -69,6 +79,16 @@ namespace StockLinx.Service.Services
             }
             var updatedSupplier = _mapper.Map<Supplier>(updateDto);
             updatedSupplier.UpdatedDate = DateTime.UtcNow;
+
+            if (updatedSupplier.ImagePath != null)
+            {
+                if (updatedSupplier.ImagePath.Contains("data:image/jpeg;base64,"))
+                {
+                    ImageHandler.UploadBase64AsJpg(updatedSupplier.ImagePath, $"{updatedSupplier.Id}", "suppliers");
+                    updatedSupplier.ImagePath = $"Suppliers\\{updatedSupplier.Id}.jpg";
+                }
+            }
+
             _supplierRepository.Update(supplierInDb, updatedSupplier);
             await _customLogService.CreateCustomLog("Update", updatedSupplier.Id, null, "Supplier", null);
             await _unitOfWork.CommitAsync();

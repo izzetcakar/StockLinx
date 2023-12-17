@@ -43,6 +43,16 @@ namespace StockLinx.Service.Services
             var newAccessory = _mapper.Map<Accessory>(createDto);
             newAccessory.Id = Guid.NewGuid();
             newAccessory.CreatedDate = DateTime.UtcNow;
+
+            if (newAccessory.ImagePath != null)
+            {
+                if (newAccessory.ImagePath.Contains("data:image/jpeg;base64,"))
+                {
+                    ImageHandler.UploadBase64AsJpg(newAccessory.ImagePath, $"{newAccessory.Id}", "accessories");
+                    newAccessory.ImagePath = $"Accessories\\{newAccessory.Id}.jpg";
+                }
+            }
+
             await _accessoryRepository.AddAsync(newAccessory);
             await _customLogService.CreateCustomLog("Create", newAccessory.Id, newAccessory.BranchId, "Accessory", "Branch");
             await _unitOfWork.CommitAsync();
@@ -74,6 +84,16 @@ namespace StockLinx.Service.Services
             }
             var updatedAccessory = _mapper.Map<Accessory>(updateDto);
             updatedAccessory.UpdatedDate = DateTime.UtcNow;
+
+            if (updatedAccessory.ImagePath != null)
+            {
+                if (updatedAccessory.ImagePath.Contains("data:image/jpeg;base64,"))
+                {
+                    ImageHandler.UploadBase64AsJpg(updatedAccessory.ImagePath, $"{updatedAccessory.Id}", "accessories");
+                    updatedAccessory.ImagePath = $"Accessories\\{updatedAccessory.Id}.jpg";
+                }
+            }
+
             _accessoryRepository.Update(accessoryInDb, updatedAccessory);
             await _customLogService.CreateCustomLog("Update", updatedAccessory.Id, updatedAccessory.BranchId, "Accessory", "Branch");
             await _unitOfWork.CommitAsync();
