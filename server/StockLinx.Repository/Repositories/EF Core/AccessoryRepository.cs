@@ -22,7 +22,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
             {
                 return null;
             }
-            var availableQuantity = entity.Quantity - deployedProducts.Count(d => d.AccessoryId.HasValue && d.AccessoryId == entity.Id);
+            var availableQuantity = entity.Quantity - deployedProducts.Where(d => d.DeletedDate == null).Count(d => d.AccessoryId.HasValue && d.AccessoryId == entity.Id);
             var dto = _mapper.Map<AccessoryDto>(entity);
             dto.CompanyId = companyId;
             dto.AvailableQuantity = availableQuantity;

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
@@ -141,7 +142,7 @@ namespace StockLinx.Service.Services
             {
                 throw new Exception("Accessory not found");
             }
-            var deployedProducts = _deployedProductRepository.GetAll();
+            var deployedProducts = await _deployedProductRepository.GetAll().Where(d => d.DeletedDate == null).ToListAsync();
             var availableQuantity = accessory.Quantity - deployedProducts.Count(d => d.AccessoryId.HasValue && d.AccessoryId == accessory.Id);
             if (availableQuantity < 1)
             {

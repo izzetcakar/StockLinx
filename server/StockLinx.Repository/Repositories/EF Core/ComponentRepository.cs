@@ -18,7 +18,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
         {
             var deployedProducts = await dbContext.DeployedProducts.Where(c => c.DeletedDate == null).AsNoTracking().ToListAsync();
             var companyId = await dbContext.Branches.Where(b => b.Id == entity.BranchId && b.DeletedDate == null).Select(b => b.CompanyId).FirstOrDefaultAsync();
-            var availableQuantity = entity.Quantity - deployedProducts.Count(d => d.ComponentId.HasValue && d.ComponentId == entity.Id);
+            var availableQuantity = entity.Quantity - deployedProducts.Where(d => d.DeletedDate == null).Count(d => d.ComponentId.HasValue && d.ComponentId == entity.Id);
             if (companyId == null)
             {
                 return null;

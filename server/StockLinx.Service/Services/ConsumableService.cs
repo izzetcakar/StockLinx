@@ -119,7 +119,7 @@ namespace StockLinx.Service.Services
             {
                 throw new Exception("Consumable is not found");
             }
-            var deployedProducts = await _deployedProductRepository.GetAll().ToListAsync();
+            var deployedProducts = await _deployedProductRepository.GetAll().Where(d => d.DeletedDate == null).ToListAsync();
             var availableQuantity = consumable.Quantity - deployedProducts.Count(d => d.ConsumableId.HasValue && d.ConsumableId == consumable.Id);
             if (availableQuantity < 1)
             {

@@ -19,8 +19,8 @@ namespace StockLinx.Repository.Repositories.EF_Core
             var dto = _mapper.Map<DeployedProductDto>(entity);
             if (entity.AccessoryId != null)
             {
-                var accessory = dbContext.Accessories.Include(a => a.Manufacturer).FirstOrDefault(a => a.Id == entity.AccessoryId);
-                var category = dbContext.Categories.FirstOrDefault(c => c.Id == accessory.CategoryId);
+                var accessory = dbContext.Accessories.Where(d => d.DeletedDate == null).Include(a => a.Manufacturer).FirstOrDefault(a => a.Id == entity.AccessoryId);
+                var category = dbContext.Categories.Where(d => d.DeletedDate == null).FirstOrDefault(c => c.Id == accessory.CategoryId);
                 dto.ProductId = accessory.Id;
                 dto.ProductType = "Accessory";
                 dto.ProductRoute = $"/accessory/{accessory.Id}";
@@ -31,9 +31,9 @@ namespace StockLinx.Repository.Repositories.EF_Core
             }
             else if (entity.AssetId != null)
             {
-                var asset = dbContext.Assets.Include(a => a.Model).ThenInclude(m => m.Manufacturer).FirstOrDefault(a => a.Id == entity.AssetId);
+                var asset = dbContext.Assets.Where(d => d.DeletedDate == null).Include(a => a.Model).ThenInclude(m => m.Manufacturer).FirstOrDefault(a => a.Id == entity.AssetId);
                 var model = asset.Model;
-                var category = dbContext.Categories.FirstOrDefault(c => c.Id == model.CategoryId);
+                var category = dbContext.Categories.Where(d => d.DeletedDate == null).FirstOrDefault(c => c.Id == model.CategoryId);
                 var description = Generic.AddHyphenIfNotEmpty(model.Manufacturer.Name) + model.ModelNo;
                 dto.ProductId = asset.Id;
                 dto.ProductType = "Asset";
@@ -45,8 +45,8 @@ namespace StockLinx.Repository.Repositories.EF_Core
             }
             else if (entity.ComponentId != null)
             {
-                var component = dbContext.Components.FirstOrDefault(c => c.Id == entity.ComponentId);
-                var category = dbContext.Categories.FirstOrDefault(c => c.Id == component.CategoryId);
+                var component = dbContext.Components.Where(d => d.DeletedDate == null).FirstOrDefault(c => c.Id == entity.ComponentId);
+                var category = dbContext.Categories.Where(d => d.DeletedDate == null).FirstOrDefault(c => c.Id == component.CategoryId);
                 dto.ProductId = component.Id;
                 dto.ProductType = "Component";
                 dto.ProductRoute = $"/component/{component.Id}";
@@ -57,8 +57,8 @@ namespace StockLinx.Repository.Repositories.EF_Core
             }
             else if (entity.ConsumableId != null)
             {
-                var consumable = dbContext.Consumables.Include(c => c.Manufacturer).FirstOrDefault(c => c.Id == entity.ConsumableId);
-                var category = dbContext.Categories.FirstOrDefault(c => c.Id == consumable.CategoryId);
+                var consumable = dbContext.Consumables.Where(d => d.DeletedDate == null).Include(c => c.Manufacturer).FirstOrDefault(c => c.Id == entity.ConsumableId);
+                var category = dbContext.Categories.Where(d => d.DeletedDate == null).FirstOrDefault(c => c.Id == consumable.CategoryId);
                 var description = Generic.AddHyphenIfNotEmpty(consumable.Manufacturer?.Name) + consumable.ModelNo;
                 dto.ProductId = consumable.Id;
                 dto.ProductType = "Consumable";
@@ -70,8 +70,8 @@ namespace StockLinx.Repository.Repositories.EF_Core
             }
             else if (entity.LicenseId != null)
             {
-                var license = dbContext.Licenses.Include(l => l.Manufacturer).FirstOrDefault(l => l.Id == entity.LicenseId);
-                var category = dbContext.Categories.FirstOrDefault(c => c.Id == license.CategoryId);
+                var license = dbContext.Licenses.Where(d => d.DeletedDate == null).Include(l => l.Manufacturer).FirstOrDefault(l => l.Id == entity.LicenseId);
+                var category = dbContext.Categories.Where(d => d.DeletedDate == null).FirstOrDefault(c => c.Id == license.CategoryId);
                 dto.ProductId = license.Id;
                 dto.ProductType = "License";
                 dto.ProductRoute = $"/license/{license.Id}";

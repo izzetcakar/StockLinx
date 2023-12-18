@@ -118,7 +118,7 @@ namespace StockLinx.Service.Services
             {
                 throw new Exception("License is not found");
             }
-            var deployedProducts = await _deployedProductRepository.GetAll().ToListAsync();
+            var deployedProducts = await _deployedProductRepository.GetAll().Where(d => d.DeletedDate == null).ToListAsync();
             var availableQuantity = license.Quantity - deployedProducts.Count(d => d.LicenseId.HasValue && d.LicenseId == license.Id);
             if (availableQuantity < 1)
             {

@@ -119,7 +119,7 @@ namespace StockLinx.Service.Services
             {
                 throw new Exception("Component is not found");
             }
-            var deployedProducts = await _deployedProductRepository.GetAll().ToListAsync();
+            var deployedProducts = await _deployedProductRepository.GetAll().Where(d => d.DeletedDate == null).ToListAsync();
             var availableQuantity = component.Quantity - deployedProducts.Count(d => d.ComponentId.HasValue && d.ComponentId == component.Id);
             if (availableQuantity < 1)
             {
