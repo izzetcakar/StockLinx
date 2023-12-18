@@ -49,10 +49,10 @@ namespace StockLinx.Service.Services
 
             if (newAsset.ImagePath != null)
             {
-                if (newAsset.ImagePath.Contains("data:image/jpeg;base64,"))
+                if (newAsset.ImagePath.Contains("base64,"))
                 {
-                    ImageHandler.UploadBase64AsJpg(newAsset.ImagePath, $"{newAsset.Id}", "assets");
-                    newAsset.ImagePath = $"Assets\\{newAsset.Id}.jpg";
+                    ImageHandler.UploadBase64AsJpg(newAsset.ImagePath, $"{newAsset.Id}", "Assets");
+                    newAsset.ImagePath = $"Assets/{newAsset.Id}.jpg";
                 }
             }
 
@@ -103,10 +103,10 @@ namespace StockLinx.Service.Services
 
             if (updatedAsset.ImagePath != null)
             {
-                if (updatedAsset.ImagePath.Contains("data:image/jpeg;base64,"))
+                if (updatedAsset.ImagePath.Contains("base64,"))
                 {
-                    ImageHandler.UploadBase64AsJpg(updatedAsset.ImagePath, $"{updatedAsset.Id}", "assets");
-                    updatedAsset.ImagePath = $"Assets\\{updatedAsset.Id}.jpg";
+                    ImageHandler.UploadBase64AsJpg(updatedAsset.ImagePath, $"{updatedAsset.Id}", "Assets");
+                    updatedAsset.ImagePath = $"Assets/{updatedAsset.Id}.jpg";
                 }
             }
 
@@ -169,7 +169,7 @@ namespace StockLinx.Service.Services
                 Notes = checkInDto.Notes,
             };
             await _deployedProductRepository.AddAsync(deployedProduct);
-            await _customLogService.CreateCustomLog("Delete", asset.Id, deployedProduct.UserId, "Asset", "User");
+            await _customLogService.CreateCustomLog("Check In", asset.Id, deployedProduct.UserId, "Asset", "User");
             await _unitOfWork.CommitAsync();
             var assetDto = await _assetRepository.GetDto(asset);
             var deployedProductDto = _deployedProductRepository.GetDto(deployedProduct);
@@ -194,7 +194,7 @@ namespace StockLinx.Service.Services
             }
             deployedProduct.DeletedDate = DateTime.UtcNow;
             _deployedProductRepository.Update(deployedProduct, deployedProduct);
-            await _customLogService.CreateCustomLog("Delete", asset.Id, asset.BranchId, "Asset", "Branch");
+            await _customLogService.CreateCustomLog("Check Out", asset.Id, asset.BranchId, "Asset", "Branch");
             await _unitOfWork.CommitAsync();
             return await _assetRepository.GetDto(asset);
         }

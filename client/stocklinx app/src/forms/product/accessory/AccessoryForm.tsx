@@ -20,6 +20,7 @@ import filterClasses from "../../../mantineModules/baseFilter.module.scss";
 import { useInitial } from "./useInitial";
 import { toBase64 } from "../../../functions/Image";
 import base_accessory from "../../../assets/baseProductImages/base_accessory.png";
+import { openNotificationError } from "../../../notification/Notification";
 
 interface AccessoryFormProps {
   accessory?: IAccessory;
@@ -60,7 +61,9 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory, create }) => {
   });
 
   useEffect(() => {
-    form.setFieldValue("branchId", branch?.id || "");
+    if (isCreate) {
+      form.setFieldValue("branchId", branch?.id || "");
+    }
   }, [branch]);
 
   const handleImageChange = async (e: File | null) => {
@@ -70,6 +73,10 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory, create }) => {
   };
 
   const handleSubmit = (data: IAccessory) => {
+    if (form.values.branchId === "") {
+      openNotificationError("Error", "Please select a branch first");
+      return;
+    }
     isCreate
       ? dispatch(accessoryActions.create({ accessory: data }))
       : dispatch(accessoryActions.update({ accessory: data }));

@@ -16,6 +16,7 @@ import { consumableActions } from "../../../redux/consumable/actions";
 import { RootState } from "../../../redux/rootReducer";
 import filterClasses from "../../../mantineModules/baseFilter.module.scss";
 import { useInitial } from "./useInitial";
+import { openNotificationError } from "../../../notification/Notification";
 
 interface ConsumableFormProps {
   consumable?: IConsumable;
@@ -56,15 +57,20 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
         value !== "" ? null : "Please select a category",
     },
   });
+
+  useEffect(() => {
+    if (isCreate) form.setFieldValue("branchId", branch?.id || "");
+  }, [branch]);
+
   const handleSubmit = (data: object) => {
+    if (form.values.branchId === "") {
+      openNotificationError("Error", "Please select a branch first");
+      return;
+    }
     isCreate
       ? dispatch(consumableActions.create({ consumable: data as IConsumable }))
       : dispatch(consumableActions.update({ consumable: data as IConsumable }));
   };
-
-  useEffect(() => {
-    form.setFieldValue("branchId", branch?.id || "");
-  }, [branch]);
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>

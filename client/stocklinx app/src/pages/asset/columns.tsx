@@ -4,28 +4,30 @@ import {
   ExcelColumn,
   Column,
 } from "../../components/gridTable/interfaces/interfaces";
-import { Anchor, Button } from "@mantine/core";
+import { Anchor, Button, Image } from "@mantine/core";
 import { openConfirmModal } from "../../components/gridTable/modals/modals";
 import { openCheckInModal } from "../../modals/modals";
 import {
   IAsset,
   IAssetCheckInDto,
   IDeployedProduct,
+  IDeployedProductDto,
 } from "../../interfaces/interfaces";
 import uuid4 from "uuid4";
 import { assetActions } from "../../redux/asset/actions";
 import { useNavigate } from "react-router-dom";
+import base_asset from "../../assets/baseProductImages/base_asset.jpg";
+import { getImage } from "../../functions/Image";
 
 export const useColumns = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const branches = useSelector((state: RootState) => state.branch.branches);
   const models = useSelector((state: RootState) => state.model.models);
   const productStatuses = useSelector(
     (state: RootState) => state.productStatus.productStatuses
   );
   const users = useSelector((state: RootState) => state.user.users);
-  const deployedProducts = useSelector(
+  const deployedProducts: IDeployedProductDto[] = useSelector(
     (state: RootState) => state.deployedProduct.deployedProducts
   );
   const handleCheckIn = (data: IDeployedProduct) => {
@@ -72,6 +74,23 @@ export const useColumns = () => {
           >
             {(e as IAsset).name}
           </Anchor>
+        );
+      },
+    },
+    {
+      caption: "Image",
+      dataField: "imagePath",
+      dataType: "action",
+      renderComponent(e) {
+        const image = getImage((e as IAsset).imagePath);
+        return (
+          <Image
+            src={image ? image : base_asset}
+            height={50}
+            radius="md"
+            width="fit-content"
+            fit="contain"
+          />
         );
       },
     },
@@ -133,7 +152,7 @@ export const useColumns = () => {
       dataType: "string",
       renderComponent(e) {
         const deployedProduct = deployedProducts.find(
-          (deployedProduct) => deployedProduct?.assetId === (e as IAsset).id
+          (deployedProduct) => deployedProduct?.productId === (e as IAsset).id
         );
         if (deployedProduct) {
           const user = users.find((user) => user.id === deployedProduct.userId);
@@ -153,7 +172,7 @@ export const useColumns = () => {
       dataType: "action",
       renderComponent(e) {
         const deployedProduct = deployedProducts.find(
-          (deployedProduct) => deployedProduct.assetId === (e as IAsset).id
+          (deployedProduct) => deployedProduct?.productId === (e as IAsset).id
         );
         return (
           <div style={{ display: "flex", justifyContent: "center" }}>
@@ -179,35 +198,6 @@ export const useColumns = () => {
       selectable: false,
     },
     // INVISIBLE COLUMNS
-    {
-      dataField: "branchId",
-      caption: "Branch",
-      lookup: {
-        dataSource: branches,
-        valueExpr: "id",
-        displayExpr: "name",
-      },
-      dataType: "string",
-      visible: false,
-    },
-    {
-      dataField: "orderNo",
-      caption: "Order No",
-      dataType: "string",
-      visible: false,
-    },
-    {
-      dataField: "purchaseDate",
-      caption: "Purchase Date",
-      dataType: "date",
-      visible: false,
-    },
-    {
-      dataField: "imagePath",
-      caption: "Image",
-      dataType: "string",
-      visible: false,
-    },
     {
       dataField: "notes",
       caption: "Notes",

@@ -17,6 +17,7 @@ import { licenseActions } from "../../../redux/license/actions";
 import { RootState } from "../../../redux/rootReducer";
 import filterClasses from "../../../mantineModules/baseFilter.module.scss";
 import { useInitial } from "./useInitial";
+import { openNotificationError } from "../../../notification/Notification";
 
 interface LicenseFormProps {
   license?: ILicense;
@@ -51,15 +52,20 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license, create }) => {
       },
     },
   });
+
+  useEffect(() => {
+    if (isCreate) form.setFieldValue("branchId", branch?.id || "");
+  }, [branch]);
+
   const handleSubmit = (data: ILicense) => {
+    if (form.values.branchId === "") {
+      openNotificationError("Error", "Please select a branch first");
+      return;
+    }
     isCreate
       ? dispatch(licenseActions.create({ license: data }))
       : dispatch(licenseActions.update({ license: data }));
   };
-
-  useEffect(() => {
-    form.setFieldValue("branchId", branch?.id || "");
-  }, [branch]);
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>

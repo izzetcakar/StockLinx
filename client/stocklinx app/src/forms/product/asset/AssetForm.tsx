@@ -23,6 +23,7 @@ import { assetActions } from "../../../redux/asset/actions";
 import { useInitial } from "./useInitial";
 import { toBase64 } from "../../../functions/Image";
 import base_asset from "../../../assets/baseProductImages/base_asset.jpg";
+import { openNotificationError } from "../../../notification/Notification";
 
 interface AssetFormProps {
   asset?: IAsset;
@@ -88,7 +89,7 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
   ));
 
   useEffect(() => {
-    form.setFieldValue("branchId", branch?.id || "");
+    if (isCreate) form.setFieldValue("branchId", branch?.id || "");
   }, [branch]);
 
   const handleImageChange = async (e: File | null) => {
@@ -98,6 +99,10 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
   };
 
   const handleSubmit = (data: IAsset) => {
+    if (form.values.branchId === "") {
+      openNotificationError("Error", "Please select a branch first");
+      return;
+    }
     isCreate
       ? dispatch(assetActions.create({ asset: data }))
       : dispatch(assetActions.update({ asset: data }));

@@ -50,10 +50,10 @@ namespace StockLinx.Service.Services
 
             if (newCompany.ImagePath != null)
             {
-                if (newCompany.ImagePath.Contains("data:image/jpeg;base64,"))
+                if (newCompany.ImagePath.Contains("base64,"))
                 {
-                    ImageHandler.UploadBase64AsJpg(newCompany.ImagePath, $"{newCompany.Id}", "companies");
-                    newCompany.ImagePath = $"Companies\\{newCompany.Id}.jpg";
+                    ImageHandler.UploadBase64AsJpg(newCompany.ImagePath, $"{newCompany.Id}", "Companies");
+                    newCompany.ImagePath = $"Companies/{newCompany.Id}.jpg";
                 }
             }
 
@@ -101,10 +101,10 @@ namespace StockLinx.Service.Services
 
             if (updatedCompany.ImagePath != null)
             {
-                if (updatedCompany.ImagePath.Contains("data:image/jpeg;base64,"))
+                if (updatedCompany.ImagePath.Contains("base64,"))
                 {
-                    ImageHandler.UploadBase64AsJpg(updatedCompany.ImagePath, $"{updatedCompany.Id}", "companies");
-                    updatedCompany.ImagePath = $"Companies\\{updatedCompany.Id}.jpg";
+                    ImageHandler.UploadBase64AsJpg(updatedCompany.ImagePath, $"{updatedCompany.Id}", "Companies");
+                    updatedCompany.ImagePath = $"Companies/{updatedCompany.Id}.jpg";
                 }
             }
 

@@ -59,7 +59,7 @@ namespace StockLinx.Service.Services
                 TargetName = (x.TargetController != null && x.TargetId != null)
                     ? await _customLogRepository.GetObjByIdAsync(x.TargetController, (Guid)x.TargetId)
                     : null,
-            }).Select(x => x.Result).ToList();
+            }).Select(x => x.Result).OrderByDescending(x => x.Date).ToList();
 
             return logDtos;
         }

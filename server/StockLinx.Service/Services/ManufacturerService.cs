@@ -42,7 +42,7 @@ namespace StockLinx.Service.Services
 
             if (newManufacturer.ImagePath != null)
             {
-                if (newManufacturer.ImagePath.Contains("data:image/jpeg;base64,"))
+                if (newManufacturer.ImagePath.Contains("base64,"))
                 {
                     ImageHandler.UploadBase64AsJpg(newManufacturer.ImagePath, $"{newManufacturer.Id}", "Manufacturers");
                     newManufacturer.ImagePath = $"Manufacturers/{newManufacturer.Id}.jpg";
@@ -83,7 +83,7 @@ namespace StockLinx.Service.Services
 
             if (updatedManufacturer.ImagePath != null)
             {
-                if (updatedManufacturer.ImagePath.Contains("data:image/jpeg;base64,"))
+                if (updatedManufacturer.ImagePath.Contains("base64,"))
                 {
                     ImageHandler.UploadBase64AsJpg(updatedManufacturer.ImagePath, $"{updatedManufacturer.Id}", "Manufacturers");
                     updatedManufacturer.ImagePath = $"Manufacturers/{updatedManufacturer.Id}.jpg";

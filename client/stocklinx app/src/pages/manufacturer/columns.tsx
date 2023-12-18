@@ -4,7 +4,8 @@ import {
   ExcelColumn,
 } from "../../components/gridTable/interfaces/interfaces";
 import { IManufacturer } from "../../interfaces/interfaces";
-import { Anchor } from "@mantine/core";
+import { Anchor, Image } from "@mantine/core";
+import { getImage } from "../../functions/Image";
 
 export const useColumns = () => {
   const navigate = useNavigate();
@@ -29,6 +30,24 @@ export const useColumns = () => {
       },
     },
     {
+      caption: "Image",
+      dataField: "imagePath",
+      dataType: "action",
+      renderComponent(e) {
+        const image = getImage((e as IManufacturer).imagePath);
+        if (!image) return null;
+        return (
+          <Image
+            src={image}
+            height={50}
+            radius="md"
+            width="fit-content"
+            fit="contain"
+          />
+        );
+      },
+    },
+    {
       dataField: "url",
       caption: "URL",
       dataType: "string",
@@ -49,12 +68,6 @@ export const useColumns = () => {
       dataType: "string",
     },
     // INVISIBLE COLUMNS
-    {
-      dataField: "imagePath",
-      caption: "Image",
-      dataType: "string",
-      visible: false,
-    },
     {
       dataField: "notes",
       caption: "Notes",

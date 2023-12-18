@@ -7,6 +7,6 @@ export const toBase64 = (file: File): Promise<string | ArrayBuffer | null> => {
   });
 };
 export const getImage = (path?: string | null) => {
-  const imageUrl = import.meta.env.BASE_URL + "Image/";
+  const imageUrl = import.meta.env.VITE_REACT_APP_BASE_URL + "Image/";
   return path ? imageUrl + path.replace("/", "%5C") : null;
 };

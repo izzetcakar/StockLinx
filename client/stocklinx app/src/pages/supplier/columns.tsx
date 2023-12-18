@@ -5,8 +5,9 @@ import {
   ExcelColumn,
 } from "../../components/gridTable/interfaces/interfaces";
 import { useNavigate } from "react-router-dom";
-import { Anchor } from "@mantine/core";
+import { Anchor, Image } from "@mantine/core";
 import { ISupplier } from "../../interfaces/interfaces";
+import { getImage } from "../../functions/Image";
 
 export const useColumns = () => {
   const navigate = useNavigate();
@@ -26,6 +27,24 @@ export const useColumns = () => {
           >
             {(e as ISupplier).name}
           </Anchor>
+        );
+      },
+    },
+    {
+      caption: "Image",
+      dataField: "imagePath",
+      dataType: "action",
+      renderComponent(e) {
+        const image = getImage((e as ISupplier).imagePath);
+        if (!image) return null;
+        return (
+          <Image
+            src={image}
+            height={50}
+            radius="md"
+            width="fit-content"
+            fit="contain"
+          />
         );
       },
     },

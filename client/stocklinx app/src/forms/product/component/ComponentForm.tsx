@@ -16,6 +16,7 @@ import { componentActions } from "../../../redux/component/actions";
 import { RootState } from "../../../redux/rootReducer";
 import filterClasses from "../../../mantineModules/baseFilter.module.scss";
 import { useInitial } from "./useInitial";
+import { openNotificationError } from "../../../notification/Notification";
 
 interface ComponentFormProps {
   component?: IComponent;
@@ -51,13 +52,17 @@ const ComponentForm: React.FC<ComponentFormProps> = ({ component, create }) => {
     },
   });
   const handleSubmit = (data: object) => {
+    if (form.values.branchId === "") {
+      openNotificationError("Error", "Please select a branch first");
+      return;
+    }
     isCreate
       ? dispatch(componentActions.create({ component: data as IComponent }))
       : dispatch(componentActions.update({ component: data as IComponent }));
   };
 
   useEffect(() => {
-    form.setFieldValue("branchId", branch?.id || "");
+    if (isCreate) form.setFieldValue("branchId", branch?.id || "");
   }, [branch]);
 
   return (

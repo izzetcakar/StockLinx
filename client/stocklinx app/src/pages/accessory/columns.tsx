@@ -10,21 +10,18 @@ import {
   IAccessoryCheckInDto,
   IDeployedProduct,
 } from "../../interfaces/interfaces";
-import { Anchor, Button } from "@mantine/core";
+import { Anchor, Button, Image } from "@mantine/core";
 import { accessoryActions } from "../../redux/accessory/actions";
-import uuid4 from "uuid4";
 import { openCheckInModal } from "../../modals/modals";
 import { useNavigate } from "react-router-dom";
+import { getImage } from "../../functions/Image";
+import base_accessory from "../../assets/baseProductImages/base_accessory.png";
+import uuid4 from "uuid4";
 
 export const useColumns = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const branches = useSelector((state: RootState) => state.branch.branches);
   const locations = useSelector((state: RootState) => state.location.locations);
-  const manufacturers = useSelector(
-    (state: RootState) => state.manufacturer.manufacturers
-  );
-  const suppliers = useSelector((state: RootState) => state.supplier.suppliers);
   const categories = useSelector(
     (state: RootState) => state.category.categories
   );
@@ -73,6 +70,23 @@ export const useColumns = () => {
           >
             {(e as IAccessory).name}
           </Anchor>
+        );
+      },
+    },
+    {
+      caption: "Image",
+      dataField: "imagePath",
+      dataType: "action",
+      renderComponent(e) {
+        const image = getImage((e as IAccessory).imagePath);
+        return (
+          <Image
+            src={image ? image : base_accessory}
+            height={50}
+            radius="md"
+            width="fit-content"
+            fit="contain"
+          />
         );
       },
     },
@@ -156,71 +170,8 @@ export const useColumns = () => {
     },
     // INVISIBLE COLUMNS
     {
-      caption: "Branch",
-      dataField: "branchId",
-      lookup: {
-        dataSource: branches,
-        valueExpr: "id",
-        displayExpr: "name",
-      },
-      dataType: "string",
-      visible: false,
-    },
-    {
-      caption: "Order No",
-      dataField: "orderNo",
-      dataType: "string",
-      visible: false,
-    },
-    {
-      caption: "Purchase Date",
-      dataField: "purchaseDate",
-      dataType: "date",
-      visible: false,
-    },
-    {
       caption: "Notes",
       dataField: "notes",
-      dataType: "string",
-      visible: false,
-    },
-    {
-      caption: "Manufacturer",
-      dataField: "manufacturerId",
-      lookup: {
-        dataSource: manufacturers,
-        valueExpr: "id",
-        displayExpr: "name",
-      },
-      dataType: "string",
-      visible: false,
-    },
-    {
-      caption: "Supplier",
-      dataField: "supplierId",
-      lookup: {
-        dataSource: suppliers,
-        valueExpr: "id",
-        displayExpr: "name",
-      },
-      dataType: "string",
-      visible: false,
-    },
-    {
-      caption: "Warranty",
-      dataField: "warrantyDate",
-      dataType: "date",
-      visible: false,
-    },
-    {
-      caption: "Serial No",
-      dataField: "serialNo",
-      dataType: "string",
-      visible: false,
-    },
-    {
-      caption: "Image",
-      dataField: "imagePath",
       dataType: "string",
       visible: false,
     },

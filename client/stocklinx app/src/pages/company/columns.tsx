@@ -4,9 +4,10 @@ import {
   ExcelColumn,
 } from "../../components/gridTable/interfaces/interfaces";
 import { RootState } from "../../redux/rootReducer";
-import { Anchor } from "@mantine/core";
+import { Anchor, Image } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import { ICompany } from "../../interfaces/interfaces";
+import { getImage } from "../../functions/Image";
 
 export const useColumns = () => {
   const navigate = useNavigate();
@@ -26,6 +27,24 @@ export const useColumns = () => {
           >
             {(e as ICompany).name}
           </Anchor>
+        );
+      },
+    },
+    {
+      caption: "Image",
+      dataField: "imagePath",
+      dataType: "action",
+      renderComponent(e) {
+        const image = getImage((e as ICompany).imagePath);
+        if (!image) return null;
+        return (
+          <Image
+            src={image}
+            height={50}
+            radius="md"
+            width="fit-content"
+            fit="contain"
+          />
         );
       },
     },
@@ -58,12 +77,6 @@ export const useColumns = () => {
       dataField: "email",
       caption: "Email",
       dataType: "string",
-    },
-    {
-      dataField: "imagePath",
-      caption: "Image",
-      dataType: "string",
-      visible: false,
     },
   ];
   const excelColumns: ExcelColumn[] = [
