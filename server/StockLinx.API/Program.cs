@@ -129,7 +129,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddCors(options => options.AddPolicy(name: "NgOrigins",
     policy =>
     {
-        policy.WithOrigins("http://localhost:5173").AllowAnyMethod().AllowAnyHeader();
+        policy.WithOrigins("http://localhost:5173", "http://192.168.1.104:5173")
+              .AllowAnyMethod()
+              .AllowAnyHeader();
     }));
 
 var app = builder.Build();
