@@ -77,6 +77,10 @@ namespace StockLinx.Service.Mapping
             CreateMap<FieldSet, FieldSetDto>().ReverseMap();
             CreateMap<FieldSet, FieldSetCreateDto>().ReverseMap();
             CreateMap<FieldSet, FieldSetUpdateDto>().ReverseMap();
+            CreateMap<Permission, PermissionDto>().ReverseMap();
+            CreateMap<Permission, PermissionCreateDto>().ReverseMap();
+            CreateMap<Permission, PermissionUpdateDto>().ReverseMap();
+            CreateMap<Permission, PermissionSyncDto>().ReverseMap();
         }
     }
 }

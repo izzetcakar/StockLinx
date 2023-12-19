@@ -38,6 +38,7 @@ import UserForm from "../forms/user/UserForm";
 import FieldSetForm from "../forms/fieldSet/FieldSetForm";
 import CustomFieldForm from "../forms/customField/CustomFieldForm";
 import CheckInForm from "../forms/deployedProduct/CheckInForm";
+import PermissionForm from "../forms/permission/PermissionForm";
 
 export const genericConfirmModal = (onConfirm: () => void) =>
   modals.openConfirmModal({
@@ -195,6 +196,15 @@ export const openCheckInModal = (
     children: (
       <CheckInForm deployedProduct={deployedProduct} onSubmit={handleCheckIn} />
     ),
+    xOffset: "auto",
+    size: "auto",
+  });
+};
+export const openPermissionModal = (branch: IBranch) => {
+  modals.open({
+    modalId: "permission-modal",
+    title: "Permission",
+    children: <PermissionForm branch={branch} />,
     xOffset: "auto",
     size: "auto",
   });

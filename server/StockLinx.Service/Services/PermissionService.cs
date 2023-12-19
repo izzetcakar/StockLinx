@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
+using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 using StockLinx.Core.Services;
@@ -28,7 +30,8 @@ namespace StockLinx.Service.Services
         public async Task<PermissionDto> GetDto(Guid id)
         {
             var user = await _userService.GetCurrentUser();
-            if ((bool)!user.IsAdmin)
+            bool isAdmin = (bool)user.IsAdmin;
+            if (!isAdmin)
             {
                 throw new ArgumentNullException("User is not admin");
             }
@@ -39,7 +42,8 @@ namespace StockLinx.Service.Services
         public async Task<List<PermissionDto>> GetAllDtos()
         {
             var user = await _userService.GetCurrentUser();
-            if ((bool)!user.IsAdmin)
+            bool isAdmin = (bool)user.IsAdmin;
+            if (!isAdmin)
             {
                 return new List<PermissionDto>();
             }
@@ -117,6 +121,39 @@ namespace StockLinx.Service.Services
             }
             _permissionRepository.UpdateRange(permissions);
             await _unitOfWork.CommitAsync();
+        }
+
+        public async Task<List<PermissionDto>> Scyncronaize(List<PermissionSyncDto> createDtos)
+        {
+            var entities = _mapper.Map<List<Permission>>(createDtos);
+            var toAdd = new List<Permission>();
+            var entitiesInDb = await _permissionRepository.GetAll().Where(p => p.DeletedDate == null).AsNoTracking().ToListAsync();
+            foreach (var entityInDb in entitiesInDb)
+            {
+                var entity = entities.FirstOrDefault(p => p.UserId == entityInDb.UserId && p.BranchId == entityInDb.BranchId);
+                if (entity == null)
+                {
+                    var toDelete = await GetByIdAsync(entityInDb.Id);
+                    toDelete.DeletedDate = DateTime.UtcNow;
+                    _permissionRepository.Update(entityInDb, toDelete);
+                    await _customLogService.CreateCustomLog("Permission taken", entityInDb.UserId, entityInDb.BranchId, "User", "Branch");
+                }
+            }
+            foreach (var entity in entities)
+            {
+                var entityInDb = entitiesInDb.FirstOrDefault(p => p.UserId == entity.UserId && p.BranchId == entity.BranchId);
+                if (entityInDb == null)
+                {
+                    entity.Id = Guid.NewGuid();
+                    entity.CreatedDate = DateTime.UtcNow;
+                    toAdd.Add(entity);
+                    await _customLogService.CreateCustomLog("Permission Given", entity.UserId, entity.BranchId, "User", "Branch");
+                }
+            }
+            await _permissionRepository.AddRangeAsync(toAdd);
+            await _unitOfWork.CommitAsync();
+            var dtos = await _permissionRepository.GetAllDtos();
+            return dtos;
         }
     }
 }

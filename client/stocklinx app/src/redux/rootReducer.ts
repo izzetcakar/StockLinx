@@ -21,6 +21,7 @@ import customFieldReducer from "./customField/reducer";
 import fieldSetCustomFieldReducer from "./fieldSetCustomField/reducer";
 import modelFieldDataReducer from "./modelFieldData/reducer";
 import deployedProductReducer from "./deployedProduct/reducer";
+import permissionReducer from "./permission/reducer";
 
 const rootReducer = combineReducers({
   accessory: accessoryReducer,
@@ -45,6 +46,7 @@ const rootReducer = combineReducers({
   user: userReducer,
   generic: genericReducer,
   deployedProduct: deployedProductReducer,
+  permission: permissionReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

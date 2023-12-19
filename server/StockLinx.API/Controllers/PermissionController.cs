@@ -21,8 +21,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var accessories = await _permissionService.GetAllDtos();
-                return CreateActionResult(CustomResponseDto<List<PermissionDto>>.Success(200, accessories));
+                var permissions = await _permissionService.GetAllDtos();
+                return CreateActionResult(CustomResponseDto<List<PermissionDto>>.Success(200, permissions));
             }
             catch (Exception ex)
             {
@@ -93,6 +93,20 @@ namespace StockLinx.API.Controllers
             {
                 await _permissionService.DeleteRangePermissionAsync(permissionIds);
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
+        }
+
+        [HttpPost("sync")]
+        public async Task<IActionResult> Sync(List<PermissionSyncDto> syncDtos)
+        {
+            try
+            {
+                var dtos = await _permissionService.Scyncronaize(syncDtos);
+                return CreateActionResult(CustomResponseDto<List<PermissionDto>>.Success(200, dtos));
             }
             catch (Exception ex)
             {

@@ -28,6 +28,9 @@ import {
   RemoveRangePermissionFailure,
   PermissionRemoveRangePayload,
   PermissionRemovePayload,
+  SyncPermissionRequest,
+  SyncPermissionSuccess,
+  SyncPermissionFailure,
 } from "./type";
 
 //GET
@@ -121,6 +124,19 @@ const removeRangeFailure = (): RemoveRangePermissionFailure => ({
   type: permissionConst.REMOVE_RANGE_PERMISSION_FAILURE,
 });
 
+//SYNC
+const sync = (payload: PermissionsPayload): SyncPermissionRequest => ({
+  type: permissionConst.SYNC_PERMISSION_REQUEST,
+  payload,
+});
+const syncSuccess = (payload: PermissionsPayload): SyncPermissionSuccess => ({
+  type: permissionConst.SYNC_PERMISSION_SUCCESS,
+  payload,
+});
+const syncFailure = (): SyncPermissionFailure => ({
+  type: permissionConst.SYNC_PERMISSION_FAILURE,
+});
+
 //CLIENT ACTIONS
 const setPermission = (payload: IPermission | null): SetPermission => ({
   type: permissionConst.SET_PERMISSION,
@@ -156,6 +172,9 @@ export const permissionActions = {
   removeRange,
   removeRangeSuccess,
   removeRangeFailure,
+  sync,
+  syncSuccess,
+  syncFailure,
   setPermission,
   clearPermission,
   setPermissions,

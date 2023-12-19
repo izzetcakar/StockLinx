@@ -1,0 +1,69 @@
+/* Add this CSS to your stylesheets or use a CSS-in-JS solution */
+
+.company__cards__container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.company__card,
+.branch__card {
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.2s ease-in-out;
+  width: 300px;
+  color: #333;
+  cursor: pointer;
+  user-select: none;
+}
+
+// .company__card:hover,
+// .branch__card:hover {
+//   transform: scale(1.02);
+// }
+
+.company__card:active,
+.branch__card:active {
+  transform: scale(0.98);
+  transition: transform 0.1s ease-in-out;
+}
+
+.company__card__header,
+.branch__card__header {
+  background-color: #222;
+  padding: 20px;
+  text-align: center;
+}
+
+.company__card h3,
+.branch__card h3 {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+.company__card__content,
+.branch__card__content {
+  padding: 20px;
+  border: 1px solid #333;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  border-top: none;
+}
+
+.company__card__info,
+.branch__card__info {
+  margin: 0;
+  color: #555;
+  line-height: 1.6;
+}
+
+/* Add space for h2 and h3 titles */
+h2 {
+  margin-bottom: 20px;
+}
+
+h3 {
+  margin-bottom: 15px;
+}

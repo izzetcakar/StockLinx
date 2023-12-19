@@ -13,7 +13,7 @@
         public string? PhoneNo { get; set; }
         public string? Website { get; set; }
         public string? Notes { get; set; }
-        public bool? IsAdmin { get; set; }
+        public bool IsAdmin { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime? EndDate { get; set; }
 

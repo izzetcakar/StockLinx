@@ -98,6 +98,19 @@ export type RemoveRangePermissionFailure = {
   type: typeof permissionConst.REMOVE_RANGE_PERMISSION_FAILURE;
 };
 
+//SYNC
+export interface SyncPermissionRequest {
+  type: typeof permissionConst.SYNC_PERMISSION_REQUEST;
+  payload: PermissionsPayload;
+}
+export type SyncPermissionSuccess = {
+  type: typeof permissionConst.SYNC_PERMISSION_SUCCESS;
+  payload: PermissionsPayload;
+};
+export type SyncPermissionFailure = {
+  type: typeof permissionConst.SYNC_PERMISSION_FAILURE;
+};
+
 //CLIENT ACTION TYPES
 export interface SetPermission {
   type: typeof permissionConst.SET_PERMISSION;
@@ -133,6 +146,9 @@ export type PermissionActions =
   | RemoveRangePermissionRequest
   | RemoveRangePermissionSuccess
   | RemoveRangePermissionFailure
+  | SyncPermissionRequest
+  | SyncPermissionSuccess
+  | SyncPermissionFailure
   | SetPermission
   | SetPermissions
   | ClearPermission

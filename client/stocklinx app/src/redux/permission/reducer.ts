@@ -92,6 +92,19 @@ export default (state = initialState, action: PermissionActions) => {
       return {
         ...state,
       };
+    case permissionConst.SYNC_PERMISSION_REQUEST:
+      return {
+        ...state,
+      };
+    case permissionConst.SYNC_PERMISSION_SUCCESS:
+      return {
+        ...state,
+        permissions: action.payload.permissions,
+      };
+    case permissionConst.SYNC_PERMISSION_FAILURE:
+      return {
+        ...state,
+      };
     case permissionConst.SET_PERMISSION:
       return {
         ...state,

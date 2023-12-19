@@ -20,6 +20,7 @@ import customFieldSaga from "./customField/sagas";
 import fieldSetCustomFieldSaga from "./fieldSetCustomField/sagas";
 import modelFieldDataSaga from "./modelFieldData/sagas";
 import deployedProductSaga from "./deployedProduct/sagas";
+import permissionSaga from "./permission/sagas";
 
 export function* rootSaga() {
   yield all([
@@ -44,5 +45,6 @@ export function* rootSaga() {
     fork(productStatusSaga),
     fork(branchSaga),
     fork(deployedProductSaga),
+    fork(permissionSaga),
   ]);
 }

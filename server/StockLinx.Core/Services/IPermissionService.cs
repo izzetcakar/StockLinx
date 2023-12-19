@@ -1,5 +1,6 @@
 ﻿using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
+using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.Entities;
 
 namespace StockLinx.Core.Services
@@ -12,5 +13,6 @@ namespace StockLinx.Core.Services
         Task<List<PermissionDto>> CreateRangePermissionAsync(List<PermissionCreateDto> createDtos);
         Task DeletePermissionAsync(Guid permissionId);
         Task DeleteRangePermissionAsync(List<Guid> permissionIds);
+        Task<List<PermissionDto>> Scyncronaize(List<PermissionSyncDto> createDtos);
     }
 }

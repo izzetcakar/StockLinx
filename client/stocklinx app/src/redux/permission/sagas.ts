@@ -8,6 +8,7 @@ import {
   FetchPermissionRequest,
   RemovePermissionRequest,
   RemoveRangePermissionRequest,
+  SyncPermissionRequest,
 } from "./type";
 import { permissionRequests } from "./requests";
 import { genericActions } from "../generic/actions";
@@ -156,7 +157,31 @@ function* removeRangePermissionSaga(action: RemoveRangePermissionRequest) {
   yield put(genericActions.decreaseLoading());
 }
 
-function* permissionsaga() {
+function* syncPermissionSaga(action: SyncPermissionRequest) {
+  yield put(genericActions.increaseLoading());
+  try {
+    const { message, success }: IResponse = yield call(
+      permissionRequests.sync,
+      action.payload.permissions
+    );
+    if (success !== undefined && !success) {
+      throw new Error(message);
+    } else {
+      openNotificationSuccess("Permissions Synced");
+      yield put(
+        permissionActions.syncSuccess({
+          permissions: action.payload.permissions,
+        })
+      );
+    }
+  } catch (e) {
+    openNotificationError("Permission", (e as Error).message);
+    yield put(permissionActions.syncFailure());
+  }
+  yield put(genericActions.decreaseLoading());
+}
+
+function* permissionSaga() {
   // yield all([
   //   takeLatest(permissionConst.FETCH_PERMISSIONS_REQUEST, fetchPermissionsSaga),
   // ]);
@@ -184,6 +209,7 @@ function* permissionsaga() {
     permissionConst.REMOVE_RANGE_PERMISSION_REQUEST,
     removeRangePermissionSaga
   );
+  yield takeEvery(permissionConst.SYNC_PERMISSION_REQUEST, syncPermissionSaga);
 }
 // function* budgetItemSaga() {
 //   yield takeEvery(budgetItemConst.fetchList, listBudgetITem);
@@ -191,4 +217,4 @@ function* permissionsaga() {
 //   yield takeEvery(budgetItemConst.fetchUpdate,updateBudgetITem);
 // }
 
-export default permissionsaga;
+export default permissionSaga;

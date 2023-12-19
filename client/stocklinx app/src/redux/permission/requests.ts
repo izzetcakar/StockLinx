@@ -38,6 +38,13 @@ const removeRange = (ids: string[]) => {
     queryData: ids,
   });
 };
+const sync = (permissions: IPermission[]) => {
+  return request<IPermission>({
+    requestUrl: requestUrl + "sync",
+    apiType: "post",
+    queryData: permissions,
+  });
+};
 
 export const permissionRequests = {
   getAll,
@@ -46,4 +53,5 @@ export const permissionRequests = {
   createRange,
   remove,
   removeRange,
+  sync,
 };
