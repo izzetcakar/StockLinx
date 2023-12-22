@@ -10,7 +10,7 @@ namespace StockLinx.Repository.Configurations
         {
             builder.HasKey(x => x.Id);
             builder.HasOne(x => x.Branch).WithMany(x => x.Permissions).HasForeignKey(x => x.BranchId);
-            builder.HasOne(x => x.User).WithMany(x => x.Permissions).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(x => x.User).WithMany(x => x.Permissions).HasForeignKey(x => x.UserId);
         }
     }
 }

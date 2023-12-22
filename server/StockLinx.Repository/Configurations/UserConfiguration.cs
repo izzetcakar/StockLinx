@@ -16,7 +16,7 @@ namespace StockLinx.Repository.Configurations
             builder.Property(x => x.EmployeeNo).IsUnicode(true);
             builder.Property(x => x.IsAdmin).HasDefaultValue(false);
 
-            builder.HasOne(x => x.Department).WithMany(x => x.Users).HasForeignKey(x => x.DepartmentId).OnDelete(DeleteBehavior.NoAction);
+            builder.HasOne(x => x.Department).WithMany(x => x.Users).HasForeignKey(x => x.DepartmentId).OnDelete(DeleteBehavior.SetNull);
         }
     }
 }
