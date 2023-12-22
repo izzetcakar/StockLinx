@@ -98,7 +98,7 @@ builder.Services.AddControllersWithViews().AddJsonOptions(x => x.JsonSerializerO
 
 builder.Services.AddDbContext<AppDbContext>(x =>
 {
-    x.UseNpgsql(builder.Configuration.GetConnectionString("SqlConnection"), option =>
+    x.UseSqlServer(builder.Configuration.GetConnectionString("SqlConnection"), option =>
     {
         option.MigrationsAssembly(Assembly.GetAssembly(typeof(AppDbContext)).GetName().Name);
     });

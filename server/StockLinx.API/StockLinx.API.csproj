@@ -21,16 +21,12 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.27.0" />
-		<PackageReference Include="NPOI" Version="2.6.0" />
+		<PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.0.3" />
+		<PackageReference Include="NPOI" Version="2.6.2" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-		<PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="7.0.6" />
-		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.27.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="7.0.12" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.3" />
 		<PackageReference Include="System.IO.FileSystem" Version="4.3.0" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Resources\Images\Manufacturers\" />
 	</ItemGroup>
 
 </Project>

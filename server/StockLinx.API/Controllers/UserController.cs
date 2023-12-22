@@ -10,6 +10,7 @@ using StockLinx.Core.Entities;
 using StockLinx.Core.Services;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text;
 
 namespace StockLinx.API.Controllers
 {
@@ -122,25 +123,25 @@ namespace StockLinx.API.Controllers
         }
         private string CreateToken(User user)
         {
-            List<Claim> claims = new List<Claim>
-            {
-                new Claim("UserId", user.Id.ToString()),
-            };
+            var claims = new List<Claim>
+    {
+        new Claim("UserId", user.Id.ToString())
+    };
 
-            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
-                _configuration.GetSection("AppSettings:Token").Value));
-
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["AppSettings:Token"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
 
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddDays(14),
-                signingCredentials: creds);
+                expires: DateTime.UtcNow.AddDays(14),
+                signingCredentials: creds
+            );
 
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
             return jwt;
         }
+
         [HttpPost]
         public async Task<IActionResult> Add(UserCreateDto createDto)
         {
