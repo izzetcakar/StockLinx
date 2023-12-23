@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { useColumns } from "./columns";
 import { companyActions } from "../../redux/company/actions";
-import Gridtable from "../../components/gridTable/GridTable";
+import Gridtable from "../../components/gridTable/Gridtable";
 import { manufacturerActions } from "../../redux/manufacturer/actions";
 import { branchActions } from "../../redux/branch/actions";
 import { openManufacturerModal } from "../../modals/modals";
@@ -23,8 +23,8 @@ const Manufacturer = () => {
 
   return (
     <>
-      <div className="page-content-header">
-        <div className="page-content-header-title">Manufacturers</div>
+      <div className="page__content__header">
+        <div className="page__content__header__title">Manufacturers</div>
       </div>
       <Gridtable
         data={manufacturers}

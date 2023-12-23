@@ -4,7 +4,7 @@ import { RootState } from "../../redux/rootReducer";
 import { companyActions } from "../../redux/company/actions";
 import { ICompany } from "../../interfaces/interfaces";
 import { useColumns } from "./columns";
-import Gridtable from "../../components/gridTable/GridTable";
+import Gridtable from "../../components/gridTable/Gridtable";
 import { openCompanyModal } from "../../modals/modals";
 import { locationActions } from "../../redux/location/actions";
 
@@ -19,8 +19,8 @@ const Company = () => {
 
   return (
     <>
-      <div className="page-content-header">
-        <div className="page-content-header-title">Companies</div>
+      <div className="page__content__header">
+        <div className="page__content__header__title">Companies</div>
       </div>
       <Gridtable
         data={companies}

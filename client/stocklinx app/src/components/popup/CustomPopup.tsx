@@ -101,8 +101,8 @@ const CustomPopup: React.FC<CustomPopupProps> = ({
         <div className={`popup-container ${visible ? 'visible' : ''}`} ref={containerRef}>
             <div className="popup-content-container" ref={popupRef}>
                 {showTitle ? (
-                    <div className="popup-header">
-                        <div className="popup-title">{title}</div>
+                    <div className="popup__header">
+                        <div className="popup__title">{title}</div>
                         <div className="popup-close">
                             <PopupCloseButton onClick={handleClose} />
                         </div>

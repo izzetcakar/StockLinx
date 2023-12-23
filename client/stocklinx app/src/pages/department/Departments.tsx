@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { useColumns } from "./columns";
-import Gridtable from "../../components/gridTable/GridTable";
+import Gridtable from "../../components/gridTable/Gridtable";
 import { branchActions } from "../../redux/branch/actions";
 import { departmentActions } from "../../redux/department/actions";
 import { locationActions } from "../../redux/location/actions";
@@ -23,8 +23,8 @@ const Department = () => {
 
   return (
     <>
-      <div className="page-content-header">
-        <div className="page-content-header-title">Departments</div>
+      <div className="page__content__header">
+        <div className="page__content__header__title">Departments</div>
       </div>
       <Gridtable
         data={departments}

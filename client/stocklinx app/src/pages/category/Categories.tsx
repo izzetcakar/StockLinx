@@ -6,7 +6,7 @@ import { useColumns } from "./columns";
 import { categoryActions } from "../../redux/category/actions";
 import { branchActions } from "../../redux/branch/actions";
 import { companyActions } from "../../redux/company/actions";
-import Gridtable from "../../components/gridTable/GridTable";
+import Gridtable from "../../components/gridTable/Gridtable";
 import { openCategoryModal } from "../../modals/modals";
 
 const Category = () => {
@@ -23,8 +23,8 @@ const Category = () => {
 
   return (
     <>
-      <div className="page-content-header">
-        <div className="page-content-header-title">Categories</div>
+      <div className="page__content__header">
+        <div className="page__content__header__title">Categories</div>
       </div>
       <Gridtable
         data={categories}

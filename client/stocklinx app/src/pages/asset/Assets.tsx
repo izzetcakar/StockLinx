@@ -6,7 +6,7 @@ import { companyActions } from "../../redux/company/actions";
 import { categoryActions } from "../../redux/category/actions";
 import { modelActions } from "../../redux/model/actions";
 import { useColumns } from "./columns";
-import Gridtable from "../../components/gridTable/GridTable";
+import Gridtable from "../../components/gridTable/Gridtable";
 import { assetActions } from "../../redux/asset/actions";
 import { branchActions } from "../../redux/branch/actions";
 import { productStatusActions } from "../../redux/productStatus/actions";
@@ -36,10 +36,10 @@ const Asset = () => {
 
   return (
     <>
-      <div className="page-content-header">
-        <div className="page-content-header-title">Assets</div>
+      <div className="page__content__header">
+        <div className="page__content__header__title">Assets</div>
+        {drawerBadge()}
       </div>
-      {drawerBadge()}
       <Gridtable
         data={assets}
         itemKey="id"

@@ -53,7 +53,7 @@
   overflow-x: auto;
 }
 
-.popup-header {
+.popup__header {
   display: flex;
   max-width: 100%;
   height: fit-content;
@@ -63,7 +63,7 @@
   padding-bottom: 0.5rem;
   border-bottom: 1px solid #ccc;
 
-  .popup-title {
+  .popup__title {
     font-size: 1.5rem;
     font-weight: 600;
     margin-right: auto;

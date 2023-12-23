@@ -9,7 +9,7 @@ import { licenseActions } from "../../redux/license/actions";
 import { supplierActions } from "../../redux/supplier/actions";
 import { locationActions } from "../../redux/location/actions";
 import { branchActions } from "../../redux/branch/actions";
-import Gridtable from "../../components/gridTable/GridTable";
+import Gridtable from "../../components/gridTable/Gridtable";
 import { openLicenseModal } from "../../modals/modals";
 import { manufacturerActions } from "../../redux/manufacturer/actions";
 import { userActions } from "../../redux/user/actions";
@@ -34,10 +34,10 @@ const License = () => {
 
   return (
     <>
-      <div className="page-content-header">
-        <div className="page-content-header-title">Licenses</div>
+      <div className="page__content__header">
+        <div className="page__content__header__title">Licenses</div>
+        {drawerBadge()}
       </div>
-      {drawerBadge()}
       <Gridtable
         data={licenses}
         itemKey="id"

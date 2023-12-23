@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { useColumns } from "./columns";
-import Gridtable from "../../components/gridTable/GridTable";
+import Gridtable from "../../components/gridTable/Gridtable";
 import { userActions } from "../../redux/user/actions";
 import { companyActions } from "../../redux/company/actions";
 import { locationActions } from "../../redux/location/actions";
@@ -28,10 +28,10 @@ const User = () => {
 
   return (
     <>
-      <div className="page-content-header">
-        <div className="page-content-header-title">Users</div>
+      <div className="page__content__header">
+        <div className="page__content__header__title">Users</div>
+        {drawerBadge()}
       </div>
-      {drawerBadge()}
       <Gridtable
         data={users}
         itemKey="id"

@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import { IAccessory } from "../../interfaces/interfaces";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
@@ -9,11 +10,10 @@ import { manufacturerActions } from "../../redux/manufacturer/actions";
 import { supplierActions } from "../../redux/supplier/actions";
 import { locationActions } from "../../redux/location/actions";
 import { branchActions } from "../../redux/branch/actions";
-import Gridtable from "../../components/gridTable/GridTable";
+import Gridtable from "../../components/gridTable/Gridtable";
 import { openAccessoryModal } from "../../modals/modals";
 import { userActions } from "../../redux/user/actions";
 import { categoryActions } from "../../redux/category/actions";
-import { useContext } from "react";
 import GenericContext from "../../context/GenericContext";
 
 const Accessory = () => {
@@ -37,8 +37,8 @@ const Accessory = () => {
 
   return (
     <>
-      <div className="page-content-header">
-        <div className="page-content-header-title">Accessories</div>
+      <div className="page__content__header">
+        <div className="page__content__header__title">Accessories</div>
         {drawerBadge()}
       </div>
       <Gridtable
@@ -54,6 +54,7 @@ const Accessory = () => {
         }
         excelColumns={useColumns().excelColumns}
         enableToolbar
+        enableFooter
         enableEditActions
         enableExcelActions
         enableSelectActions

@@ -26,10 +26,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
     >
       <div className="product-card-content">
         <div className="product-card-content-count">{count}</div>
-        <div className="product-card-content-title">{title}</div>
+        <div className="product-card-content__title">{title}</div>
       </div>
       {/* <div className="product-card-action">
-        <div className="product-card-action-title">view all</div>
+        <div className="product-card-action__title">view all</div>
         <img className="product-card-action-icon" src={icon_next} />
       </div> */}
       <div className="product-card-image">

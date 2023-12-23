@@ -118,6 +118,7 @@ export const GenericProvider: React.FC<GenericProviderProps> = ({
           variant="outline"
           color="blue"
           radius={10}
+          w="fit-content"
         >
           {getCompanyAndBranch() || "Select Branch"}
         </Badge>

@@ -57,7 +57,7 @@ const Layout = () => {
         </div>
         <div className="page">
           <Header />
-          <div className="page-content">
+          <div className="page__content">
             <Outlet />
           </div>
         </div>

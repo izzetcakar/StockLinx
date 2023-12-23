@@ -97,8 +97,8 @@ const Home = () => {
 
   return (
     <>
-      <div className="page-content-header">
-        <div className="page-content-header-title">Home</div>
+      <div className="page__content__header">
+        <div className="page__content__header__title">Home</div>
       </div>
       <div className="product-card-container" style={{ marginBottom: "1rem" }}>
         {handleProductCardData().map((item, index) => {
@@ -116,10 +116,10 @@ const Home = () => {
       </div>
       <div className="home">
         <div className="home-item">
-          <div className="home-item-header">
-            <div className="home-item-header-title">Recent Activity</div>
+          <div className="home-item__header">
+            <div className="home-item__header__title">Recent Activity</div>
             <img
-              className="home-item-header-icon"
+              className="home-item__header-icon"
               src={icon_minus}
               onClick={() => setShow((prev) => !prev)}
             />
@@ -134,10 +134,10 @@ const Home = () => {
           </div>
         </div>
         <div className="home-item">
-          <div className="home-item-header">
-            <div className="home-item-header-title">Assets by Status</div>
+          <div className="home-item__header">
+            <div className="home-item__header__title">Assets by Status</div>
             <img
-              className="home-item-header-icon"
+              className="home-item__header-icon"
               src={icon_minus}
               onClick={() => setShow((prev) => !prev)}
             />
@@ -171,10 +171,10 @@ const Home = () => {
           </div>
         </div>
         <div className="home-item">
-          <div className="home-item-header">
-            <div className="home-item-header-title">Asset Locations</div>
+          <div className="home-item__header">
+            <div className="home-item__header__title">Asset Locations</div>
             <img
-              className="home-item-header-icon"
+              className="home-item__header-icon"
               src={icon_minus}
               onClick={() => setShow((prev) => !prev)}
             />
@@ -189,10 +189,10 @@ const Home = () => {
           </div>
         </div>
         <div className="home-item">
-          <div className="home-item-header">
-            <div className="home-item-header-title">Asset Categories</div>
+          <div className="home-item__header">
+            <div className="home-item__header__title">Asset Categories</div>
             <img
-              className="home-item-header-icon"
+              className="home-item__header-icon"
               src={icon_minus}
               onClick={() => setShow((prev) => !prev)}
             />

@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { useColumns } from "./columns";
-import Gridtable from "../../components/gridTable/GridTable";
+import Gridtable from "../../components/gridTable/Gridtable";
 import { modelActions } from "../../redux/model/actions";
 import { branchActions } from "../../redux/branch/actions";
 import { openModelModal } from "../../modals/modals";
@@ -31,8 +31,8 @@ const Model = () => {
 
   return (
     <>
-      <div className="page-content-header">
-        <div className="page-content-header-title">Models</div>
+      <div className="page__content__header">
+        <div className="page__content__header__title">Models</div>
       </div>
       <Gridtable
         data={models}

@@ -1,5 +1,5 @@
 import React from "react";
-import Gridtable from "../GridTable";
+import Gridtable from "../Gridtable";
 import { Column, RowError } from "../interfaces/interfaces";
 
 interface ExcelTableProps {

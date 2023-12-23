@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
-import Gridtable from "../../components/gridTable/GridTable";
+import Gridtable from "../../components/gridTable/Gridtable";
 import { useColumns } from "./columns";
 import { customFieldActions } from "../../redux/customField/actions";
 import { fieldSetActions } from "../../redux/fieldSet/actions";
@@ -23,8 +23,8 @@ const CustomFields = () => {
 
   return (
     <div>
-      <div className="page-content-header">
-        <div className="page-content-header-title">Field Sets</div>
+      <div className="page__content__header">
+        <div className="page__content__header__title">Field Sets</div>
       </div>
       <Gridtable
         itemKey="id"
@@ -37,8 +37,8 @@ const CustomFields = () => {
         enableToolbar
         noDataText="No Field Sets Found"
       />
-      <div className="page-content-header">
-        <div className="page-content-header-title">Custom Fields</div>
+      <div className="page__content__header">
+        <div className="page__content__header__title">Custom Fields</div>
       </div>
       <Gridtable
         itemKey="id"

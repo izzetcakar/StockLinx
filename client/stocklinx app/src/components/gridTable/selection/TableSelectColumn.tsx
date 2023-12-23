@@ -35,7 +35,7 @@ const TableSelectColumn: React.FC<TableSelectColumnProps> = ({
 
   return (
     <div className="table-column">
-      <div className="table-column-title">
+      <div className="table-column__title">
         <TableCheckbox
           isChecked={hasAllElements(
             getIndexesFromArray(filterData()),

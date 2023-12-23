@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { useColumns } from "./columns";
-import Gridtable from "../../components/gridTable/GridTable";
+import Gridtable from "../../components/gridTable/Gridtable";
 import { locationActions } from "../../redux/location/actions";
 import { openLocationModal } from "../../modals/modals";
 
@@ -17,8 +17,8 @@ const Location = () => {
 
   return (
     <>
-      <div className="page-content-header">
-        <div className="page-content-header-title">Locations</div>
+      <div className="page__content__header">
+        <div className="page__content__header__title">Locations</div>
       </div>
       <Gridtable
         data={locations}

@@ -8,7 +8,7 @@ import { consumableActions } from "../../redux/consumable/actions";
 import { locationActions } from "../../redux/location/actions";
 import { productStatusActions } from "../../redux/productStatus/actions";
 import { branchActions } from "../../redux/branch/actions";
-import Gridtable from "../../components/gridTable/GridTable";
+import Gridtable from "../../components/gridTable/Gridtable";
 import { openConsumableModal } from "../../modals/modals";
 import { manufacturerActions } from "../../redux/manufacturer/actions";
 import { useContext } from "react";
@@ -33,10 +33,10 @@ const Consumable = () => {
 
   return (
     <>
-      <div className="page-content-header">
-        <div className="page-content-header-title">Consumables</div>
+      <div className="page__content__header">
+        <div className="page__content__header__title">Consumables</div>
+        {drawerBadge()}
       </div>
-      {drawerBadge()}
       <Gridtable
         data={consumables}
         itemKey="id"

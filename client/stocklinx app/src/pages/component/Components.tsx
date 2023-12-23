@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { companyActions } from "../../redux/company/actions";
 import { useColumns } from "./columns";
-import Gridtable from "../../components/gridTable/GridTable";
+import Gridtable from "../../components/gridTable/Gridtable";
 import { categoryActions } from "../../redux/category/actions";
 import { componentActions } from "../../redux/component/actions";
 import { locationActions } from "../../redux/location/actions";
@@ -30,10 +30,10 @@ const Component = () => {
 
   return (
     <>
-      <div className="page-content-header">
-        <div className="page-content-header-title">Components</div>
+      <div className="page__content__header">
+        <div className="page__content__header__title">Components</div>
+        {drawerBadge()}
       </div>
-      {drawerBadge()}
       <Gridtable
         data={components}
         itemKey="id"

@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { useDispatch } from "react-redux";
 import { useColumns } from "./columns";
-import Gridtable from "../../components/gridTable/GridTable";
+import Gridtable from "../../components/gridTable/Gridtable";
 import { productStatusActions } from "../../redux/productStatus/actions";
 import { companyActions } from "../../redux/company/actions";
 import { branchActions } from "../../redux/branch/actions";
@@ -23,8 +23,8 @@ const ProductStatus = () => {
 
   return (
     <>
-      <div className="page-content-header">
-        <div className="page-content-header-title">ProductStatuses</div>
+      <div className="page__content__header">
+        <div className="page__content__header__title">ProductStatuses</div>
       </div>
       <Gridtable
         data={productStatuses}
