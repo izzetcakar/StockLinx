@@ -65,3 +65,25 @@ export interface SelectedCell {
   column: string;
   value: any;
 }
+export interface GridtableProps {
+  itemKey: string;
+  data: object[];
+  columns: Column[];
+  noDataText?: string;
+  pageSizes?: number[];
+  refreshData?: () => void;
+  onRowInsert?: () => void;
+  onRowUpdate?: (row: object) => void;
+  onRowRemove?: (id: string) => void;
+  onRowRemoveRange?: (ids: string[]) => void;
+  excelColumns?: ExcelColumn[];
+  enableToolbar?: boolean;
+  enableExcelActions?: boolean;
+  enableEditActions?: boolean;
+  enableSelectActions?: boolean;
+  enableFooter?: boolean;
+  ref?: any;
+}
+export interface GridtableRef {
+  selectedRowKeys: string[];
+}
