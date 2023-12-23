@@ -16,5 +16,7 @@
         public Location? Location { get; set; }
         public ICollection<Accessory>? Accessories { get; set; }
         public ICollection<License>? Licenses { get; set; }
+        public ICollection<Component>? Components { get; set; }
+        public ICollection<Consumable>? Consumables { get; set; }
     }
 }

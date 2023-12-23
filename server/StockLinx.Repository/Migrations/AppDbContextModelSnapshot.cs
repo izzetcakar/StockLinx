@@ -1033,8 +1033,10 @@ namespace StockLinx.Repository.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool?>("IsAdmin")
-                        .HasColumnType("boolean");
+                    b.Property<bool>("IsAdmin")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("JobTitle")
                         .HasColumnType("text");
@@ -1090,7 +1092,7 @@ namespace StockLinx.Repository.Migrations
                     b.HasOne("StockLinx.Core.Entities.Category", "Category")
                         .WithMany("Accessories")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.SetNull)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("StockLinx.Core.Entities.Manufacturer", "Manufacturer")
@@ -1148,7 +1150,8 @@ namespace StockLinx.Repository.Migrations
 
                     b.HasOne("StockLinx.Core.Entities.Location", "Location")
                         .WithMany("Branches")
-                        .HasForeignKey("LocationId");
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Company");
 
@@ -1176,12 +1179,13 @@ namespace StockLinx.Repository.Migrations
                     b.HasOne("StockLinx.Core.Entities.Category", "Category")
                         .WithMany("Components")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.SetNull)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("StockLinx.Core.Entities.Supplier", "Supplier")
-                        .WithMany()
-                        .HasForeignKey("SupplierId");
+                        .WithMany("Components")
+                        .HasForeignKey("SupplierId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Branch");
 
@@ -1201,16 +1205,18 @@ namespace StockLinx.Repository.Migrations
                     b.HasOne("StockLinx.Core.Entities.Category", "Category")
                         .WithMany("Consumables")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.SetNull)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("StockLinx.Core.Entities.Manufacturer", "Manufacturer")
-                        .WithMany()
-                        .HasForeignKey("ManufacturerId");
+                        .WithMany("Consumables")
+                        .HasForeignKey("ManufacturerId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("StockLinx.Core.Entities.Supplier", "Supplier")
-                        .WithMany()
-                        .HasForeignKey("SupplierId");
+                        .WithMany("Consumables")
+                        .HasForeignKey("SupplierId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Branch");
 
@@ -1315,12 +1321,13 @@ namespace StockLinx.Repository.Migrations
                     b.HasOne("StockLinx.Core.Entities.Category", "Category")
                         .WithMany("Licenses")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.SetNull)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("StockLinx.Core.Entities.Manufacturer", "Manufacturer")
-                        .WithMany()
-                        .HasForeignKey("ManufacturerId");
+                        .WithMany("Licenses")
+                        .HasForeignKey("ManufacturerId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("StockLinx.Core.Entities.Supplier", "Supplier")
                         .WithMany("Licenses")
@@ -1526,6 +1533,10 @@ namespace StockLinx.Repository.Migrations
                 {
                     b.Navigation("Accessories");
 
+                    b.Navigation("Consumables");
+
+                    b.Navigation("Licenses");
+
                     b.Navigation("Models");
                 });
 
@@ -1544,6 +1555,10 @@ namespace StockLinx.Repository.Migrations
             modelBuilder.Entity("StockLinx.Core.Entities.Supplier", b =>
                 {
                     b.Navigation("Accessories");
+
+                    b.Navigation("Components");
+
+                    b.Navigation("Consumables");
 
                     b.Navigation("Licenses");
                 });

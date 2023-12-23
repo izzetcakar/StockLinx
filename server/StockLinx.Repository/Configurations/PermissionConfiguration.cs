@@ -9,8 +9,8 @@ namespace StockLinx.Repository.Configurations
         public void Configure(EntityTypeBuilder<Permission> builder)
         {
             builder.HasKey(x => x.Id);
-            builder.HasOne(x => x.Branch).WithMany(x => x.Permissions).HasForeignKey(x => x.BranchId);
-            builder.HasOne(x => x.User).WithMany(x => x.Permissions).HasForeignKey(x => x.UserId);
+            builder.HasOne(x => x.Branch).WithMany(x => x.Permissions).HasForeignKey(x => x.BranchId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(x => x.User).WithMany(x => x.Permissions).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

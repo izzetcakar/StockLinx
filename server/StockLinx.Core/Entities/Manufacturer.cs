@@ -13,5 +13,7 @@
         //Relates
         public ICollection<Accessory>? Accessories { get; set; }
         public ICollection<Model>? Models { get; set; }
+        public ICollection<Consumable>? Consumables { get; set; }
+        public ICollection<License>? Licenses { get; set; }
     }
 }
