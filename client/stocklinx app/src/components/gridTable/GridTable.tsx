@@ -1,7 +1,13 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useImperativeHandle,
+  forwardRef,
+} from "react";
 import EditComponent from "./edit/EditComponent";
 import TableToolbar from "./tableToolbar/TableToolbar";
-import { Column, ExcelColumn, Filter } from "./interfaces/interfaces";
+import { Filter, GridtableProps, GridtableRef } from "./interfaces/interfaces";
 import { Checkbox } from "@mantine/core";
 import { useFilter } from "./customhooks/filter";
 import { useSelectRow } from "./customhooks/selectRow";
@@ -12,42 +18,29 @@ import { usePaging } from "./customhooks/paging";
 import TableFooter from "./tableFooter/TableFooter";
 import "./gridtable.scss";
 
-interface GridtableProps {
-  itemKey: string;
-  data: object[];
-  columns: Column[];
-  noDataText?: string;
-  pageSizes?: number[];
-  refreshData?: () => void;
-  onRowInsert?: () => void;
-  onRowUpdate?: (row: object) => void;
-  onRowRemove?: (id: string) => void;
-  onRowRemoveRange?: (ids: string[]) => void;
-  excelColumns?: ExcelColumn[];
-  enableToolbar?: boolean;
-  enableExcelActions?: boolean;
-  enableEditActions?: boolean;
-  enableSelectActions?: boolean;
-  enableFooter?: boolean;
-}
-
-const Gridtable: React.FC<GridtableProps> = ({
-  data = [],
-  columns = [],
-  noDataText = "No Data Found",
-  refreshData,
-  onRowInsert = () => console.log("Row insert"),
-  onRowUpdate = (row: object) => console.log(row),
-  onRowRemove = (id: string) => console.log(id),
-  onRowRemoveRange = (ids: string[]) => console.log(ids),
-  itemKey,
-  excelColumns,
-  enableToolbar = false,
-  enableExcelActions = false,
-  enableEditActions = false,
-  enableSelectActions = false,
-  enableFooter = false,
-}) => {
+const Gridtable: React.ForwardRefRenderFunction<
+  GridtableRef,
+  GridtableProps
+> = (
+  {
+    data = [],
+    columns = [],
+    noDataText = "No Data Found",
+    refreshData,
+    onRowInsert = () => console.log("Row insert"),
+    onRowUpdate = (row: object) => console.log(row),
+    onRowRemove = (id: string) => console.log(id),
+    onRowRemoveRange = (ids: string[]) => console.log(ids),
+    itemKey,
+    excelColumns,
+    enableToolbar = false,
+    enableExcelActions = false,
+    enableEditActions = false,
+    enableSelectActions = false,
+    enableFooter = false,
+  },
+  ref
+) => {
   const [keyfield, setKeyfield] = useState<keyof object>(
     itemKey as keyof object
   );
@@ -108,6 +101,14 @@ const Gridtable: React.FC<GridtableProps> = ({
     handleVisibleColumns();
     handleFilterAll();
   }, [data]);
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      selectedRowKeys: selectedKeys,
+    }),
+    [selectedKeys]
+  );
 
   const getColSpan = (index: number) => {
     if (index === visibleColumns.length - 1 && data.length > 0) {
@@ -273,4 +274,4 @@ const Gridtable: React.FC<GridtableProps> = ({
   );
 };
 
-export default Gridtable;
+export default forwardRef(Gridtable);
