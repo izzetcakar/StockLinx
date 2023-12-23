@@ -10,7 +10,6 @@ export const useInitial = (user?: IUser, create?: boolean) => {
     firstName: "",
     lastName: "",
     departmentId: "",
-    imagePath: null,
     email: "",
     password: "",
     phoneNo: null,
@@ -26,7 +25,7 @@ export const useInitial = (user?: IUser, create?: boolean) => {
     initialValues = { ...user };
     isCreate = false;
   }
-  if (user && create) {
+  if (!user || create) {
     initialValues.id = uuid4();
     isCreate = true;
   }

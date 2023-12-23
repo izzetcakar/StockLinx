@@ -15,7 +15,7 @@ export const useInitial = (branch?: IBranch, create?: boolean) => {
     initialValues = { ...branch };
     isCreate = false;
   }
-  if (branch && create) {
+  if (!branch || create) {
     initialValues.id = uuid4();
     isCreate = true;
   }

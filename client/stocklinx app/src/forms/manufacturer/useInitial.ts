@@ -21,7 +21,7 @@ export const useInitial = (manufacturer?: IManufacturer, create?: boolean) => {
     initialValues.imagePath = getImage(manufacturer.imagePath);
     isCreate = false;
   }
-  if (manufacturer && create) {
+  if (!manufacturer || create) {
     initialValues.id = uuid4();
     isCreate = true;
   }

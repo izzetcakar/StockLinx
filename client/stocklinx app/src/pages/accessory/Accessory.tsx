@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect } from "react";
+import { useContext, useEffect, useLayoutEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { accessoryActions } from "../../redux/accessory/actions";
@@ -11,11 +11,13 @@ import { categoryActions } from "../../redux/category/actions";
 import { Anchor, Tabs } from "@mantine/core";
 import HistoryLogs from "../../components/dataGrid/customLog/HistoryLogs";
 import "../product.scss";
+import GenericContext from "../../context/GenericContext";
 
 const Accessory = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { drawerBadge } = useContext(GenericContext);
   const accessory = useSelector(
     (state: RootState) => state.accessory.accessory
   );
@@ -46,6 +48,7 @@ const Accessory = () => {
       <div className="product__container__title">
         Accessory - {accessory?.name}
       </div>
+      {drawerBadge()}
       <Tabs defaultValue="info">
         <Tabs.List grow>
           <Tabs.Tab value="info">Info</Tabs.Tab>

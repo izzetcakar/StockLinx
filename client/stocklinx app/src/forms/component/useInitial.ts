@@ -1,7 +1,7 @@
 import uuid4 from "uuid4";
-import { IComponent } from "../../../interfaces/interfaces";
+import { IComponent } from "../../interfaces/interfaces";
 import { useSelector } from "react-redux";
-import { RootState } from "../../../redux/rootReducer";
+import { RootState } from "../../redux/rootReducer";
 
 export const useInitial = (component?: IComponent, create?: boolean) => {
   const branch = useSelector((state: RootState) => state.branch.branch);
@@ -11,7 +11,6 @@ export const useInitial = (component?: IComponent, create?: boolean) => {
     id: uuid4(),
     branchId: branch?.id || "",
     name: "",
-    imagePath: null,
     serialNo: null,
     orderNo: null,
     purchaseCost: null,
@@ -26,7 +25,7 @@ export const useInitial = (component?: IComponent, create?: boolean) => {
     initialValues = { ...component };
     isCreate = false;
   }
-  if (component && create) {
+  if (!component || create) {
     initialValues.id = uuid4();
     isCreate = true;
   }

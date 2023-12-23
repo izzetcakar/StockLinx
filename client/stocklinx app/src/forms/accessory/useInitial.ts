@@ -1,34 +1,35 @@
 import uuid4 from "uuid4";
-import { IConsumable } from "../../../interfaces/interfaces";
+import { IAccessory } from "../../interfaces/interfaces";
 import { useSelector } from "react-redux";
-import { RootState } from "../../../redux/rootReducer";
+import { RootState } from "../../redux/rootReducer";
+import { getImage } from "../../functions/Image";
 
-export const useInitial = (consumable?: IConsumable, create?: boolean) => {
+export const useInitial = (accessory?: IAccessory, create?: boolean) => {
   const branch = useSelector((state: RootState) => state.branch.branch);
   let isCreate = create || false;
 
-  let initialValues: IConsumable = {
+  let initialValues: IAccessory = {
     id: uuid4(),
     branchId: branch?.id || "",
     name: "",
-    imagePath: null,
-    categoryId: "",
     manufacturerId: null,
     supplierId: null,
-    itemNo: null,
-    modelNo: null,
+    categoryId: "",
+    modelNo: "",
+    quantity: 1,
     orderNo: null,
     purchaseCost: null,
     purchaseDate: null,
-    quantity: 1,
     notes: null,
+    imagePath: null,
   };
 
-  if (consumable) {
-    initialValues = { ...consumable };
+  if (accessory) {
+    initialValues = { ...accessory };
+    initialValues.imagePath = getImage(accessory.imagePath);
     isCreate = false;
   }
-  if (consumable && create) {
+  if (!accessory || create) {
     initialValues.id = uuid4();
     isCreate = true;
   }

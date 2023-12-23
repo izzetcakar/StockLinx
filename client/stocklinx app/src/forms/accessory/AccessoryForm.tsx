@@ -12,15 +12,15 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { DateInput } from "@mantine/dates";
-import { CategoryType, IAccessory } from "../../../interfaces/interfaces";
+import { CategoryType, IAccessory } from "../../interfaces/interfaces";
 import { useDispatch, useSelector } from "react-redux";
-import { accessoryActions } from "../../../redux/accessory/actions";
-import { RootState } from "../../../redux/rootReducer";
-import filterClasses from "../../../mantineModules/baseFilter.module.scss";
+import { accessoryActions } from "../../redux/accessory/actions";
+import { RootState } from "../../redux/rootReducer";
+import filterClasses from "../../mantineModules/baseFilter.module.scss";
 import { useInitial } from "./useInitial";
-import { toBase64 } from "../../../functions/Image";
-import base_accessory from "../../../assets/baseProductImages/base_accessory.png";
-import { openNotificationError } from "../../../notification/Notification";
+import { toBase64 } from "../../functions/Image";
+import base_accessory from "../../assets/baseProductImages/base_accessory.png";
+import { openNotificationError } from "../../notification/Notification";
 
 interface AccessoryFormProps {
   accessory?: IAccessory;

@@ -9,11 +9,11 @@ import {
 import Dropdown from "./Dropdown";
 import icon_plus from "../../.././assets/icon_plus.png";
 import icon_refresh from "../../.././assets/icon_refresh.png";
+import icon_trash from "../../.././assets/icon_trash.png";
 import ActionIconBtn from "../../generic/ActionIconBtn";
 import { utils, read } from "xlsx";
 import ExcelJS from "exceljs";
-import { Button, FileInput } from "@mantine/core";
-import { IconTrashFilled } from "@tabler/icons-react";
+import { FileInput } from "@mantine/core";
 import { openConfirmModal, openExcelModal } from "../modals/modals";
 import uuid4 from "uuid4";
 import "./tableToolbar.scss";
@@ -220,8 +220,11 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
     });
   };
   const removeRangeHandler = () => {
-    openConfirmModal("Remove Range", "Are you sure?", () =>
-      onRowRemoveRange(selectedKeys)
+    if (selectedKeys.length === 0) return;
+    openConfirmModal(
+      "Remove Range",
+      "Are you sure want to remove selected items?",
+      () => onRowRemoveRange(selectedKeys)
     );
   };
 
@@ -246,14 +249,11 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
           iconSize={16}
         />
       ) : null}
-      <Button
-        size="xs"
-        leftIcon={<IconTrashFilled size={16} />}
-        variant="default"
-        onClick={() => removeRangeHandler()}
-      >
-        Remove Selected
-      </Button>
+      <ActionIconBtn
+        submitFunc={() => removeRangeHandler()}
+        icon={icon_trash}
+        iconSize={16}
+      />
       {enableExcelActions ? (
         <div className="gridtable__toolbar__last">
           <FileInput

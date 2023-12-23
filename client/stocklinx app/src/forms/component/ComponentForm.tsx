@@ -10,44 +10,38 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { DateInput } from "@mantine/dates";
-import { CategoryType, IConsumable } from "../../../interfaces/interfaces";
+import { CategoryType, IComponent } from "../../interfaces/interfaces";
 import { useDispatch, useSelector } from "react-redux";
-import { consumableActions } from "../../../redux/consumable/actions";
-import { RootState } from "../../../redux/rootReducer";
-import filterClasses from "../../../mantineModules/baseFilter.module.scss";
+import { componentActions } from "../../redux/component/actions";
+import { RootState } from "../../redux/rootReducer";
+import filterClasses from "../../mantineModules/baseFilter.module.scss";
 import { useInitial } from "./useInitial";
-import { openNotificationError } from "../../../notification/Notification";
+import { openNotificationError } from "../../notification/Notification";
 
-interface ConsumableFormProps {
-  consumable?: IConsumable;
+interface ComponentFormProps {
+  component?: IComponent;
   create?: boolean;
 }
 
-const ConsumableForm: React.FC<ConsumableFormProps> = ({
-  consumable,
-  create,
-}) => {
+const ComponentForm: React.FC<ComponentFormProps> = ({ component, create }) => {
   const dispatch = useDispatch();
   const branch = useSelector((state: RootState) => state.branch.branch);
   const categories = useSelector(
     (state: RootState) => state.category.categories
   );
   const suppliers = useSelector((state: RootState) => state.supplier.suppliers);
-  const manufacturers = useSelector(
-    (state: RootState) => state.manufacturer.manufacturers
-  );
-  const { initialValues, isCreate } = useInitial(consumable, create);
+  const { initialValues, isCreate } = useInitial(component, create);
 
-  const form = useForm<IConsumable>({
+  const form = useForm<IComponent>({
     initialValues: initialValues,
     validate: {
       name: (value: string) =>
         /(?!^$)([^\s])/.test(value) ? null : "Name should not be empty",
       quantity: (value: number) => {
-        return value >= 1 ? null : "Quantity must be greater than 0";
+        return value >= 1 ? null : "Quantity must be a non-negative number";
       },
       purchaseCost: (value: number | null) => {
-        if (value !== null) {
+        if (value !== null || undefined) {
           return value && value >= 0
             ? null
             : "Purchase cost must be a non-negative number";
@@ -57,20 +51,19 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
         value !== "" ? null : "Please select a category",
     },
   });
-
-  useEffect(() => {
-    if (isCreate) form.setFieldValue("branchId", branch?.id || "");
-  }, [branch]);
-
   const handleSubmit = (data: object) => {
     if (form.values.branchId === "") {
       openNotificationError("Error", "Please select a branch first");
       return;
     }
     isCreate
-      ? dispatch(consumableActions.create({ consumable: data as IConsumable }))
-      : dispatch(consumableActions.update({ consumable: data as IConsumable }));
+      ? dispatch(componentActions.create({ component: data as IComponent }))
+      : dispatch(componentActions.update({ component: data as IComponent }));
   };
+
+  useEffect(() => {
+    if (isCreate) form.setFieldValue("branchId", branch?.id || "");
+  }, [branch]);
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
@@ -87,11 +80,10 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
           label="Name"
           placeholder="New Name"
           {...form.getInputProps("name")}
-          withAsterisk
         />
         <Select
           data={categories
-            .filter((category) => category.type === CategoryType.CONSUMABLE)
+            .filter((category) => category.type === CategoryType.COMPONENT)
             .map((category) => ({
               value: category.id,
               label: category.name,
@@ -105,6 +97,20 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
           withAsterisk
           withinPortal
         />
+        <NumberInput
+          defaultValue={1}
+          min={1}
+          placeholder="Quantity"
+          label="Quantity"
+          {...form.getInputProps("quantity")}
+          hideControls
+        />
+        <TextInput
+          label="Serial No"
+          placeholder="Serial No"
+          {...form.getInputProps("serialNo")}
+          value={form.values.serialNo || ""}
+        />
         <Select
           data={suppliers.map((supplier) => ({
             value: supplier.id,
@@ -113,41 +119,16 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
           label="Supplier"
           placeholder="Select Supplier"
           {...form.getInputProps("supplierId")}
+          value={form.values.supplierId || ""}
           classNames={filterClasses}
           dropdownPosition="bottom"
           nothingFound="No supplier found"
           clearable
           withinPortal
         />
-        <Select
-          data={manufacturers.map((manufacturer) => ({
-            value: manufacturer.id,
-            label: manufacturer.name,
-          }))}
-          label="Manufacturer"
-          placeholder="Select Manufacturer"
-          {...form.getInputProps("manufacturerId")}
-          classNames={filterClasses}
-          dropdownPosition="bottom"
-          nothingFound="No manufacturer found"
-          clearable
-          withinPortal
-        />
-        <TextInput
-          label="Model No"
-          placeholder="Model No"
-          {...form.getInputProps("modelNo")}
-          value={form.values.modelNo || ""}
-        />
-        <TextInput
-          label="Item No"
-          placeholder="Item No"
-          {...form.getInputProps("itemNo")}
-          value={form.values.itemNo || ""}
-        />
         <TextInput
           label="Order No"
-          placeholder="Order No"
+          placeholder="New Order No"
           {...form.getInputProps("orderNo")}
           value={form.values.orderNo || ""}
         />
@@ -157,6 +138,9 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
           placeholder="Purchase Date"
           valueFormat="DD/MM/YYYY"
           {...form.getInputProps("purchaseDate")}
+          value={
+            form.values.purchaseDate ? new Date(form.values.purchaseDate) : null
+          }
         />
         <NumberInput
           placeholder="Purchase Cost"
@@ -164,14 +148,6 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
           {...form.getInputProps("purchaseCost")}
           value={form.values.purchaseCost || ""}
           precision={2}
-          hideControls
-        />
-        <NumberInput
-          defaultValue={1}
-          min={1}
-          placeholder="Quantity"
-          label="Quantity"
-          {...form.getInputProps("quantity")}
           hideControls
         />
         <Textarea
@@ -190,4 +166,4 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
   );
 };
 
-export default ConsumableForm;
+export default ComponentForm;

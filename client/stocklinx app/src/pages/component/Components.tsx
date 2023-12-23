@@ -10,12 +10,15 @@ import { componentActions } from "../../redux/component/actions";
 import { locationActions } from "../../redux/location/actions";
 import { branchActions } from "../../redux/branch/actions";
 import { openComponentModal } from "../../modals/modals";
+import { useContext } from "react";
+import GenericContext from "../../context/GenericContext";
 
 const Component = () => {
   const dispatch = useDispatch();
   const components = useSelector(
     (state: RootState) => state.component.components
   );
+  const { drawerBadge } = useContext(GenericContext);
 
   const refreshData = () => {
     dispatch(componentActions.getAll());
@@ -30,6 +33,7 @@ const Component = () => {
       <div className="page-content-header">
         <div className="page-content-header-title">Components</div>
       </div>
+      {drawerBadge()}
       <Gridtable
         data={components}
         itemKey="id"

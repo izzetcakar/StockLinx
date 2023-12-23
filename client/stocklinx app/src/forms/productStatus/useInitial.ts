@@ -17,7 +17,7 @@ export const useInitial = (
     initialValues = { ...productStatus };
     isCreate = false;
   }
-  if (productStatus && create) {
+  if (!productStatus || create) {
     initialValues.id = uuid4();
     isCreate = true;
   }

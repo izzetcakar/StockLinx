@@ -15,15 +15,15 @@ import {
 import { useForm } from "@mantine/form";
 import { DateInput } from "@mantine/dates";
 import { IconPlus, IconTrash } from "@tabler/icons-react";
-import { IAsset } from "../../../interfaces/interfaces";
+import { IAsset } from "../../interfaces/interfaces";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../redux/rootReducer";
-import filterClasses from "../../../mantineModules/baseFilter.module.scss";
-import { assetActions } from "../../../redux/asset/actions";
+import { RootState } from "../../redux/rootReducer";
+import filterClasses from "../../mantineModules/baseFilter.module.scss";
+import { assetActions } from "../../redux/asset/actions";
 import { useInitial } from "./useInitial";
-import { toBase64 } from "../../../functions/Image";
-import base_asset from "../../../assets/baseProductImages/base_asset.jpg";
-import { openNotificationError } from "../../../notification/Notification";
+import { toBase64 } from "../../functions/Image";
+import base_asset from "../../assets/baseProductImages/base_asset.jpg";
+import { openNotificationError } from "../../notification/Notification";
 
 interface AssetFormProps {
   asset?: IAsset;

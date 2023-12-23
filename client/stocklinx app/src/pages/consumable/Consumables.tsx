@@ -11,12 +11,15 @@ import { branchActions } from "../../redux/branch/actions";
 import Gridtable from "../../components/gridTable/GridTable";
 import { openConsumableModal } from "../../modals/modals";
 import { manufacturerActions } from "../../redux/manufacturer/actions";
+import { useContext } from "react";
+import GenericContext from "../../context/GenericContext";
 
 const Consumable = () => {
   const dispatch = useDispatch();
   const consumables = useSelector(
     (state: RootState) => state.consumable.consumables
   );
+  const { drawerBadge } = useContext(GenericContext);
 
   const refreshData = () => {
     dispatch(consumableActions.getAll());
@@ -33,6 +36,7 @@ const Consumable = () => {
       <div className="page-content-header">
         <div className="page-content-header-title">Consumables</div>
       </div>
+      {drawerBadge()}
       <Gridtable
         data={consumables}
         itemKey="id"

@@ -14,10 +14,13 @@ import { openAssetModal } from "../../modals/modals";
 import { supplierActions } from "../../redux/supplier/actions";
 import { deployedProductActions } from "../../redux/deployedProduct/actions";
 import { userActions } from "../../redux/user/actions";
+import { useContext } from "react";
+import GenericContext from "../../context/GenericContext";
 
 const Asset = () => {
   const dispatch = useDispatch();
   const assets = useSelector((state: RootState) => state.asset.assets);
+  const { drawerBadge } = useContext(GenericContext);
 
   const refreshData = () => {
     dispatch(assetActions.getAll());
@@ -36,6 +39,7 @@ const Asset = () => {
       <div className="page-content-header">
         <div className="page-content-header-title">Assets</div>
       </div>
+      {drawerBadge()}
       <Gridtable
         data={assets}
         itemKey="id"

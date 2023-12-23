@@ -13,10 +13,13 @@ import Gridtable from "../../components/gridTable/GridTable";
 import { openLicenseModal } from "../../modals/modals";
 import { manufacturerActions } from "../../redux/manufacturer/actions";
 import { userActions } from "../../redux/user/actions";
+import GenericContext from "../../context/GenericContext";
+import { useContext } from "react";
 
 const License = () => {
   const dispatch = useDispatch();
   const licenses = useSelector((state: RootState) => state.license.licenses);
+  const { drawerBadge } = useContext(GenericContext);
 
   const refreshData = () => {
     dispatch(supplierActions.getAll());
@@ -34,6 +37,7 @@ const License = () => {
       <div className="page-content-header">
         <div className="page-content-header-title">Licenses</div>
       </div>
+      {drawerBadge()}
       <Gridtable
         data={licenses}
         itemKey="id"

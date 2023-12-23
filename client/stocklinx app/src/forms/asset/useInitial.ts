@@ -1,8 +1,8 @@
 import uuid4 from "uuid4";
-import { IAsset } from "../../../interfaces/interfaces";
+import { IAsset } from "../../interfaces/interfaces";
 import { useSelector } from "react-redux";
-import { RootState } from "../../../redux/rootReducer";
-import { getImage } from "../../../functions/Image";
+import { RootState } from "../../redux/rootReducer";
+import { getImage } from "../../functions/Image";
 
 export const useInitial = (asset?: IAsset, create?: boolean) => {
   const branch = useSelector((state: RootState) => state.branch.branch);
@@ -29,7 +29,7 @@ export const useInitial = (asset?: IAsset, create?: boolean) => {
     initialValues.imagePath = getImage(asset.imagePath);
     isCreate = false;
   }
-  if (asset && create) {
+  if (!asset || create) {
     initialValues.id = uuid4();
     isCreate = true;
   }

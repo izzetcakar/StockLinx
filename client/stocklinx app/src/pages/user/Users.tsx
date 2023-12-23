@@ -10,10 +10,13 @@ import { locationActions } from "../../redux/location/actions";
 import { branchActions } from "../../redux/branch/actions";
 import { departmentActions } from "../../redux/department/actions";
 import { openUserModal } from "../../modals/modals";
+import GenericContext from "../../context/GenericContext";
+import { useContext } from "react";
 
 const User = () => {
   const dispatch = useDispatch();
   const users = useSelector((state: RootState) => state.user.users);
+  const { drawerBadge } = useContext(GenericContext);
 
   const refreshData = () => {
     dispatch(userActions.getAll());
@@ -28,6 +31,7 @@ const User = () => {
       <div className="page-content-header">
         <div className="page-content-header-title">Users</div>
       </div>
+      {drawerBadge()}
       <Gridtable
         data={users}
         itemKey="id"

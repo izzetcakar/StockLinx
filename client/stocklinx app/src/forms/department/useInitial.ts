@@ -20,7 +20,7 @@ export const useInitial = (department?: IDepartment, create?: boolean) => {
     initialValues = { ...department };
     isCreate = false;
   }
-  if (department && create) {
+  if (!department || create) {
     initialValues.id = uuid4();
     isCreate = true;
   }

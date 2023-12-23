@@ -14,7 +14,7 @@ export const useInitial = (category?: ICategory, create?: boolean) => {
     initialValues = { ...category };
     isCreate = false;
   }
-  if (category && create) {
+  if (!category || create) {
     initialValues.id = uuid4();
     isCreate = true;
   }

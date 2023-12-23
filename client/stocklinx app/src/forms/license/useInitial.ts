@@ -1,7 +1,7 @@
 import uuid4 from "uuid4";
-import { ILicense } from "../../../interfaces/interfaces";
+import { ILicense } from "../../interfaces/interfaces";
 import { useSelector } from "react-redux";
-import { RootState } from "../../../redux/rootReducer";
+import { RootState } from "../../redux/rootReducer";
 
 export const useInitial = (license?: ILicense, create?: boolean) => {
   const branch = useSelector((state: RootState) => state.branch.branch);
@@ -12,7 +12,6 @@ export const useInitial = (license?: ILicense, create?: boolean) => {
     branchId: branch?.id || "",
     categoryId: "",
     name: "",
-    imagePath: null,
     orderNo: null,
     purchaseCost: null,
     purchaseDate: null,
@@ -33,7 +32,7 @@ export const useInitial = (license?: ILicense, create?: boolean) => {
     initialValues = { ...license };
     isCreate = false;
   }
-  if (license && create) {
+  if (!license || create) {
     initialValues.id = uuid4();
     isCreate = true;
   }

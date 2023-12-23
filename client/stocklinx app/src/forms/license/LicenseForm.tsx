@@ -11,13 +11,13 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { DateInput } from "@mantine/dates";
-import { CategoryType, ILicense } from "../../../interfaces/interfaces";
+import { CategoryType, ILicense } from "../../interfaces/interfaces";
 import { useDispatch, useSelector } from "react-redux";
-import { licenseActions } from "../../../redux/license/actions";
-import { RootState } from "../../../redux/rootReducer";
-import filterClasses from "../../../mantineModules/baseFilter.module.scss";
+import { licenseActions } from "../../redux/license/actions";
+import { RootState } from "../../redux/rootReducer";
+import filterClasses from "../../mantineModules/baseFilter.module.scss";
 import { useInitial } from "./useInitial";
-import { openNotificationError } from "../../../notification/Notification";
+import { openNotificationError } from "../../notification/Notification";
 
 interface LicenseFormProps {
   license?: ILicense;

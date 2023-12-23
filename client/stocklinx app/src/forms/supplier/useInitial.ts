@@ -23,7 +23,7 @@ export const useInitial = (supplier?: ISupplier, create?: boolean) => {
     initialValues.imagePath = getImage(supplier.imagePath);
     isCreate = false;
   }
-  if (supplier && create) {
+  if (!supplier || create) {
     initialValues.id = uuid4();
     isCreate = true;
   }

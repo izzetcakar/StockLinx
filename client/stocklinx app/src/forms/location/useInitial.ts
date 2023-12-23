@@ -7,7 +7,6 @@ export const useInitial = (location?: ILocation, create?: boolean) => {
   let initialValues: ILocation = {
     id: "",
     name: "",
-    imagePath: null,
     country: null,
     state: null,
     city: null,
@@ -22,7 +21,7 @@ export const useInitial = (location?: ILocation, create?: boolean) => {
     initialValues = { ...location };
     isCreate = false;
   }
-  if (location && create) {
+  if (!location || create) {
     initialValues.id = uuid4();
     isCreate = true;
   }

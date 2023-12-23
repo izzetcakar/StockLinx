@@ -22,7 +22,7 @@ export const useInitial = (model?: IModel, create?: boolean) => {
     initialValues.imagePath = getImage(model.imagePath);
     isCreate = false;
   }
-  if (model && create) {
+  if (!model || create) {
     initialValues.id = uuid4();
     isCreate = true;
   }
