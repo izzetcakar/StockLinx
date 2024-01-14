@@ -5,11 +5,13 @@ import filterClasses from "../../../mantineModules/baseFilter.module.scss";
 interface ExcelButtonProps {
   onDownloadTemplate: () => void;
   onExportAll: () => void;
+  onExportSelected: () => void;
 }
 
 const ExcelButton: React.FC<ExcelButtonProps> = ({
   onDownloadTemplate,
   onExportAll,
+  onExportSelected,
 }) => {
   return (
     <Menu
@@ -40,7 +42,7 @@ const ExcelButton: React.FC<ExcelButtonProps> = ({
           Base Excel Sheet
         </Menu.Item>
         <Menu.Item onClick={() => onExportAll()}>Export All</Menu.Item>
-        <Menu.Item onClick={() => console.log("Export Selected Items")}>
+        <Menu.Item onClick={() => onExportSelected()}>
           Export Selected Items
         </Menu.Item>
       </Menu.Dropdown>

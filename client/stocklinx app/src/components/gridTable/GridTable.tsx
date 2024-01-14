@@ -15,7 +15,6 @@ import { useVisibleColumns } from "./customhooks/visibleColumns";
 import { useCell } from "./customhooks/cell";
 import { useSelectCell } from "./customhooks/selectCell";
 import { usePaging } from "./customhooks/paging";
-import TableFooter from "./tableFooter/TableFooter";
 import "./gridtable.scss";
 
 const Gridtable: React.ForwardRefRenderFunction<
@@ -37,7 +36,6 @@ const Gridtable: React.ForwardRefRenderFunction<
     enableExcelActions = false,
     enableEditActions = false,
     enableSelectActions = false,
-    enableFooter = false,
   },
   ref
 ) => {
@@ -130,6 +128,10 @@ const Gridtable: React.ForwardRefRenderFunction<
                 visibleColumns={visibleColumns}
                 enableExcelActions={enableExcelActions}
                 selectedKeys={selectedKeys}
+                itemPerPage={itemPerPage}
+                pageNumber={pageNumber}
+                handleItemPerPage={handleItemPerPage}
+                handlePageNumber={handlePageNumber}
                 addVisibleColumn={addVisibleColumn}
                 onRowInsert={onRowInsert}
                 onRowRemoveRange={onRowRemoveRange}
@@ -255,19 +257,6 @@ const Gridtable: React.ForwardRefRenderFunction<
               <td>{noDataText}</td>
             </tr>
           )}
-          {enableFooter ? (
-            <tr className="gridtable__footer__row">
-              <td className="gridtable__footer__row__cell">
-                <TableFooter
-                  dataLength={data.length}
-                  itemPerPage={itemPerPage}
-                  pageNumber={pageNumber}
-                  handleItemPerPage={handleItemPerPage}
-                  handlePageNumber={handlePageNumber}
-                />
-              </td>
-            </tr>
-          ) : null}
         </tbody>
       )}
     </table>

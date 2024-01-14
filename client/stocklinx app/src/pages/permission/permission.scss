@@ -1,5 +1,12 @@
 /* Add this CSS to your stylesheets or use a CSS-in-JS solution */
-
+@keyframes slideInFromLeft {
+  0% {
+    transform: translateY(10%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
 .company__cards__container {
   display: flex;
   flex-wrap: wrap;
@@ -7,11 +14,14 @@
   margin-bottom: 20px;
 }
 
+.branch__cards__container {
+  animation: 0.2s ease-out 0s 1 slideInFromLeft;
+}
+
 .company__card,
 .branch__card {
   border-radius: 12px;
   overflow: hidden;
-  transition: transform 0.2s ease-in-out;
   width: 300px;
   color: #333;
   cursor: pointer;

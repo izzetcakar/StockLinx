@@ -12,12 +12,14 @@ import icon_refresh from "../../.././assets/icon_refresh.png";
 import icon_trash from "../../.././assets/icon_trash.png";
 import ActionIconBtn from "../../generic/ActionIconBtn";
 import { utils, read } from "xlsx";
+import uuid4 from "uuid4";
 import ExcelJS from "exceljs";
 import { FileInput } from "@mantine/core";
 import { openConfirmModal, openExcelModal } from "../modals/modals";
-import uuid4 from "uuid4";
-import "./tableToolbar.scss";
 import ExcelButton from "./ExcelButton";
+import PaginationButtons from "../tableFooter/PaginationButtons";
+import PerPageSelector from "../tableFooter/PerPageSelector";
+import "./tableToolbar.scss";
 interface TableToolbarProps {
   data: object[];
   columns: Column[];
@@ -25,6 +27,10 @@ interface TableToolbarProps {
   visibleColumns: VisibleColumn[];
   enableExcelActions: boolean;
   selectedKeys: string[];
+  itemPerPage: number;
+  pageNumber: number;
+  handleItemPerPage: (value: number) => void;
+  handlePageNumber: (value: boolean) => void;
   addVisibleColumn: (column: string) => void;
   onRowInsert?: () => void;
   onRowRemoveRange: (ids: string[]) => void;
@@ -41,6 +47,10 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
   onRowInsert,
   onRowRemoveRange,
   refreshData,
+  itemPerPage,
+  pageNumber,
+  handleItemPerPage,
+  handlePageNumber,
 }) => {
   const handleFileInputChange = async (file: File | null) => {
     if (file) {
@@ -162,7 +172,7 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
       );
     }
   };
-  const exportToExcel = (isBaseSheet: boolean) => {
+  const exportToExcel = (isBaseSheet: boolean, excelData: any[]) => {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Sheet1");
     worksheet.columns =
@@ -172,7 +182,7 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
       })) || [];
 
     !isBaseSheet &&
-      (data as { [key: string]: any }[]).map((item) => {
+      (excelData as { [key: string]: any }[]).map((item) => {
         let newRow = {} as { [key: string]: any };
         excelColumns?.map((excelColumn) => {
           const column = columns.find((c) => c.caption === excelColumn.caption);
@@ -227,6 +237,11 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
       () => onRowRemoveRange(selectedKeys)
     );
   };
+  const getSelectedData = () => {
+    return (data as { [key: string]: any }[]).filter((x) =>
+      selectedKeys.includes(x["id"])
+    );
+  };
 
   return (
     <div className="gridtable__toolbar">
@@ -264,8 +279,19 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
             clearable
           />
           <ExcelButton
-            onDownloadTemplate={() => exportToExcel(true)}
-            onExportAll={() => exportToExcel(false)}
+            onDownloadTemplate={() => exportToExcel(true, data)}
+            onExportAll={() => exportToExcel(false, data)}
+            onExportSelected={() => exportToExcel(false, getSelectedData())}
+          />
+          <PaginationButtons
+            pageNumber={pageNumber}
+            itemPerPage={itemPerPage}
+            dataLength={data.length}
+            handlePageNumber={handlePageNumber}
+          />
+          <PerPageSelector
+            itemPerPage={itemPerPage}
+            handleItemPerPage={handleItemPerPage}
           />
         </div>
       ) : null}
