@@ -4,6 +4,7 @@ import React, {
   useCallback,
   useImperativeHandle,
   forwardRef,
+  useContext,
 } from "react";
 import EditComponent from "./edit/EditComponent";
 import TableToolbar from "./tableToolbar/TableToolbar";
@@ -11,11 +12,11 @@ import { Filter, GridtableProps, GridtableRef } from "./interfaces/interfaces";
 import { Checkbox } from "@mantine/core";
 import { useFilter } from "./customhooks/filter";
 import { useSelectRow } from "./customhooks/selectRow";
-import { useVisibleColumns } from "./customhooks/visibleColumns";
 import { useCell } from "./customhooks/cell";
 import { useSelectCell } from "./customhooks/selectCell";
 import { usePaging } from "./customhooks/paging";
 import "./gridtable.scss";
+import GenericStateContext from "./context/GenericStateContext";
 
 const Gridtable: React.ForwardRefRenderFunction<
   GridtableRef,
@@ -43,18 +44,18 @@ const Gridtable: React.ForwardRefRenderFunction<
     itemKey as keyof object
   );
   const {
-    handlePageNumber,
-    handleItemPerPage,
-    resetPageNumber,
-    itemPerPage,
+    filters,
+    selectedKeys,
     pageNumber,
-  } = usePaging(data);
-  const { filters, getFilterInput, applyFilterToData, handleFilterAll } =
-    useFilter(
-      columns.filter((c) => c.visible !== false),
-      data,
-      resetPageNumber
-    );
+    itemPerPage,
+    setPageNumber,
+    visibleColumns,
+  } = useContext(GenericStateContext);
+
+  const { handlePageNumber } = usePaging(data);
+  const { getFilterInput, applyFilterToData } = useFilter(
+    columns.filter((c) => c.visible !== false)
+  );
   const filterDataByInput = useCallback(
     (inputData: object[]) => {
       return applyFilterToData(inputData);
@@ -73,8 +74,7 @@ const Gridtable: React.ForwardRefRenderFunction<
     },
     [itemPerPage, pageNumber]
   );
-  const { visibleColumns, handleVisibleColumns, addVisibleColumn } =
-    useVisibleColumns(columns);
+
   const {
     handleCellMouseDown,
     handleCellMouseUp,
@@ -82,23 +82,15 @@ const Gridtable: React.ForwardRefRenderFunction<
     getSelectedClassName,
     isDrawing,
   } = useSelectCell(filterDataByPage(filterDataByInput(data)), columns);
-  const {
-    selectedKeys,
-    handleSelectRow,
-    handleselectAll,
-    getSelectedRowClass,
-  } = useSelectRow(data, keyfield, isDrawing);
+
+  const { handleSelectRow, handleselectAll, getSelectedRowClass } =
+    useSelectRow(data, keyfield, isDrawing);
 
   const { renderColumnValue } = useCell();
 
   useEffect(() => {
     setKeyfield(itemKey as keyof object);
   }, [itemKey]);
-
-  useEffect(() => {
-    handleVisibleColumns();
-    handleFilterAll();
-  }, [data]);
 
   useImperativeHandle(
     ref,
@@ -125,14 +117,9 @@ const Gridtable: React.ForwardRefRenderFunction<
                 data={data}
                 columns={columns}
                 excelColumns={excelColumns}
-                visibleColumns={visibleColumns}
                 enableExcelActions={enableExcelActions}
-                selectedKeys={selectedKeys}
-                itemPerPage={itemPerPage}
-                pageNumber={pageNumber}
-                handleItemPerPage={handleItemPerPage}
+                handleItemPerPage={setPageNumber}
                 handlePageNumber={handlePageNumber}
-                addVisibleColumn={addVisibleColumn}
                 onRowInsert={onRowInsert}
                 onRowRemoveRange={onRowRemoveRange}
                 refreshData={refreshData}
@@ -151,7 +138,7 @@ const Gridtable: React.ForwardRefRenderFunction<
         <tbody>
           <tr className="gridtable__column__row">
             {enableSelectActions ? (
-              <td className="gridtable__checkbox__cell border__bottom">
+              <td className="gridtable__checkbox__cell">
                 <Checkbox
                   checked={
                     selectedKeys.length === data.length &&

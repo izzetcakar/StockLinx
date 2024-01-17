@@ -1,12 +1,18 @@
-import { useRef, useState } from "react";
-import { Column, Lookup, SelectedCell } from "../interfaces/interfaces";
+import { useContext } from "react";
+import { Column, Lookup } from "../interfaces/interfaces";
 import { useCell } from "./cell";
+import { useGenericStates } from "./genericStates";
+import GenericStateContext from "../context/GenericStateContext";
 
 export const useSelectCell = (data: object[], columns: Column[]) => {
   const { getLookupValue } = useCell();
-  const [selectedCells, setSelectedCells] = useState<SelectedCell[]>([]);
-  const [isDrawing, setIsDrawing] = useState(false);
-  const startCellRef = useRef<SelectedCell | null>();
+  const {
+    selectedCells,
+    setSelectedCells,
+    isDrawing,
+    setIsDrawing,
+    startCellRef,
+  } = useContext(GenericStateContext);
 
   const getCellValue = (value: any, lookup: Lookup | undefined) => {
     if (value === null || value === undefined) {

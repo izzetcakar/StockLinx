@@ -1,14 +1,17 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
+import { useGenericStates } from "./genericStates";
+import GenericStateContext from "../context/GenericStateContext";
 
 export const useSelectRow = (
   data: object[],
   keyfield: keyof object,
   isDrawing: boolean
 ) => {
-  const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+  const { selectedKeys, setSelectedKeys, clearRowSelection } =
+    useContext(GenericStateContext);
 
   useEffect(() => {
-    handleDataChange();
+    clearRowSelection();
   }, [data.length]);
 
   const handleSelectRow = (id: string) => {
@@ -30,25 +33,10 @@ export const useSelectRow = (
       setSelectedKeys(data.map((item) => item[keyfield]));
     }
   };
-  const clearSelectedKeys = () => {
-    setSelectedKeys([]);
-  };
-  const handleDataChange = () => {
-    if (data.length === 0) {
-      setSelectedKeys([]);
-    } else {
-      const newSelectedKeys = selectedKeys.filter((item) =>
-        data.some((d) => d[keyfield] === item)
-      );
-      setSelectedKeys(newSelectedKeys);
-    }
-  };
 
   return {
     handleSelectRow,
     getSelectedRowClass,
     handleselectAll,
-    clearSelectedKeys,
-    selectedKeys,
   };
 };

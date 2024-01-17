@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useContext } from "react";
+import GenericStateContext from "../context/GenericStateContext";
 
 export const usePaging = (data: object[]) => {
-  const [pageNumber, setPageNumber] = useState<number>(0);
-  const [itemPerPage, setItemPerPage] = useState<number>(10);
+  const { pageNumber, setPageNumber, itemPerPage } =
+    useContext(GenericStateContext);
 
   const handlePageNumber = (forward: boolean) => {
     if (forward) {
@@ -15,18 +16,7 @@ export const usePaging = (data: object[]) => {
       }
     }
   };
-  const handleItemPerPage = (e: any) => {
-    setItemPerPage(e);
-  };
-  const resetPageNumber = () => {
-    if (pageNumber !== 0) setPageNumber(0);
-  };
-
   return {
     handlePageNumber,
-    handleItemPerPage,
-    resetPageNumber,
-    pageNumber,
-    itemPerPage,
   };
 };

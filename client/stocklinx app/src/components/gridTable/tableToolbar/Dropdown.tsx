@@ -1,19 +1,17 @@
 import React from "react";
-import { Column, VisibleColumn } from "../interfaces/interfaces";
-import "./tableToolbar.scss";
+import { Column } from "../interfaces/interfaces";
 import { Menu, Button } from "@mantine/core";
 import { IconChevronDown } from "@tabler/icons-react";
+import { useGenericStates } from "../customhooks/genericStates";
+import "./tableToolbar.scss";
 interface DropDownProps {
   columns: Column[];
-  visibleColumns: VisibleColumn[];
   onChange: (caption: string) => void;
 }
 
-const DropDown: React.FC<DropDownProps> = ({
-  columns,
-  visibleColumns,
-  onChange,
-}) => {
+const DropDown: React.FC<DropDownProps> = ({ columns, onChange }) => {
+  const { visibleColumns } = useGenericStates();
+
   return (
     <Menu withArrow closeOnItemClick={false}>
       <Menu.Target>

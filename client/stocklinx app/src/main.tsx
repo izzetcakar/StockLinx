@@ -1,4 +1,3 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
@@ -8,6 +7,7 @@ import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
 import { MantineProvider } from "@mantine/core";
 import { GenericProvider } from "./context/GenericContext.tsx";
+import { GenericStateProvider } from "./components/gridTable/context/GenericStateContext.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <MantineProvider
@@ -32,10 +32,12 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   >
     <Provider store={store}>
       <GenericProvider>
-        <ModalsProvider>
-          <Notifications w={"fit-content"} position="top-right" />
-          <App />
-        </ModalsProvider>
+        <GenericStateProvider>
+          <ModalsProvider>
+            <Notifications w={"fit-content"} position="top-right" />
+            <App />
+          </ModalsProvider>
+        </GenericStateProvider>
       </GenericProvider>
     </Provider>
   </MantineProvider>

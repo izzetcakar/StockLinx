@@ -4,7 +4,6 @@ import {
   ExcelColumn,
   ImportedExcelData,
   RowError,
-  VisibleColumn,
 } from "../interfaces/interfaces";
 import Dropdown from "./Dropdown";
 import icon_plus from "../../.././assets/icon_plus.png";
@@ -19,19 +18,16 @@ import { openConfirmModal, openExcelModal } from "../modals/modals";
 import ExcelButton from "./ExcelButton";
 import PaginationButtons from "../tableFooter/PaginationButtons";
 import PerPageSelector from "../tableFooter/PerPageSelector";
+import { useVisibleColumns } from "../customhooks/visibleColumnsHook";
+import { useGenericStates } from "../customhooks/genericStates";
 import "./tableToolbar.scss";
 interface TableToolbarProps {
   data: object[];
   columns: Column[];
   excelColumns?: ExcelColumn[];
-  visibleColumns: VisibleColumn[];
   enableExcelActions: boolean;
-  selectedKeys: string[];
-  itemPerPage: number;
-  pageNumber: number;
   handleItemPerPage: (value: number) => void;
   handlePageNumber: (value: boolean) => void;
-  addVisibleColumn: (column: string) => void;
   onRowInsert?: () => void;
   onRowRemoveRange: (ids: string[]) => void;
   refreshData?: () => Promise<void> | void;
@@ -39,19 +35,17 @@ interface TableToolbarProps {
 const TableToolbar: React.FC<TableToolbarProps> = ({
   data,
   columns,
-  visibleColumns,
   excelColumns,
   enableExcelActions,
-  selectedKeys,
-  addVisibleColumn,
   onRowInsert,
   onRowRemoveRange,
   refreshData,
-  itemPerPage,
-  pageNumber,
   handleItemPerPage,
   handlePageNumber,
 }) => {
+  const { addVisibleColumn } = useVisibleColumns(columns);
+  const { pageNumber, itemPerPage, selectedKeys } = useGenericStates();
+
   const handleFileInputChange = async (file: File | null) => {
     if (file) {
       const reader = new FileReader();
@@ -245,11 +239,7 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
 
   return (
     <div className="gridtable__toolbar">
-      <Dropdown
-        columns={columns}
-        onChange={addVisibleColumn}
-        visibleColumns={visibleColumns}
-      />
+      <Dropdown columns={columns} onChange={addVisibleColumn} />
       {onRowInsert ? (
         <ActionIconBtn
           submitFunc={onRowInsert}

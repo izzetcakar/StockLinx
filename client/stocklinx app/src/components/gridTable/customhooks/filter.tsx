@@ -1,16 +1,19 @@
-import { useCallback, useState } from "react";
+import { useCallback, useContext, useEffect } from "react";
 import { Column, Filter, FilterType } from "../interfaces/interfaces";
 import { NumberInput, Select, TextInput } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 import filterClasses from "./filter.module.scss";
 import textInputClasses from "./textInput.module.scss";
+import GenericStateContext from "../context/GenericStateContext";
 
-export const useFilter = (
-  columns: Column[],
-  data: object[],
-  resetPageNumber: () => void
-) => {
-  const [filters, setFilters] = useState<Filter[]>([]);
+export const useFilter = (columns: Column[]) => {
+  const {
+    filters,
+    setFilters,
+    clearPagination,
+    clearRowSelection,
+    clearCellSelection,
+  } = useContext(GenericStateContext);
 
   const getFilterType = (field: string): FilterType => {
     const column = columns.find((column) => column.dataField === field);
@@ -121,7 +124,9 @@ export const useFilter = (
     return newValue;
   };
   const handleFilterChange = (e: any, filter: Filter) => {
-    resetPageNumber();
+    clearCellSelection();
+    clearRowSelection();
+    clearPagination();
     const newValue = getFilterChangedValue(e, filter);
     const newIsApplied = newValue === null || newValue === "" ? false : true;
     setFilters((prev) =>
@@ -172,12 +177,15 @@ export const useFilter = (
       isAction: column.dataType === "action",
     }));
     setFilters(newFilter);
-  }, [data]);
+  }, [columns]);
+
+  useEffect(() => {
+    handleFilterAll();
+  }, []);
+
   return {
-    filters,
     getFilterType,
     getFilterInput,
     applyFilterToData,
-    handleFilterAll,
   };
 };

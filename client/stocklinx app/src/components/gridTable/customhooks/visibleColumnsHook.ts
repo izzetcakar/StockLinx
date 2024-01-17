@@ -1,8 +1,10 @@
-import { useCallback, useState } from "react";
-import { Column, VisibleColumn } from "../interfaces/interfaces";
+import { useContext, useEffect } from "react";
+import { Column } from "../interfaces/interfaces";
+import { useGenericStates } from "./genericStates";
+import GenericStateContext from "../context/GenericStateContext";
 
 export const useVisibleColumns = (columns: Column[]) => {
-  const [visibleColumns, setVisibleColumns] = useState<VisibleColumn[]>([]);
+  const { setVisibleColumns } = useContext(GenericStateContext);
 
   const addVisibleColumn = (columnCaption: string): void => {
     setVisibleColumns((prev) =>
@@ -11,7 +13,8 @@ export const useVisibleColumns = (columns: Column[]) => {
         : [...prev, columns.find((x) => x.caption === columnCaption)!]
     );
   };
-  const handleVisibleColumns = useCallback(() => {
+
+  const handleVisibleColumns = () => {
     setVisibleColumns(
       columns
         .filter((c) => c.visible !== false)
@@ -23,11 +26,14 @@ export const useVisibleColumns = (columns: Column[]) => {
           };
         })
     );
+  };
+
+  useEffect(() => {
+    handleVisibleColumns();
   }, [columns]);
 
   return {
     addVisibleColumn,
-    visibleColumns,
     handleVisibleColumns,
   };
 };

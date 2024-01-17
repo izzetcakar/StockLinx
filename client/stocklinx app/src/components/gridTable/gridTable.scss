@@ -57,6 +57,9 @@
   }
 }
 
+.gridtable__row{
+  border-bottom: 1px solid #ced4da;
+}
 .gridtable__row:hover {
   background-color: #e5e5e5;
   .gridtable__edit__cell {
