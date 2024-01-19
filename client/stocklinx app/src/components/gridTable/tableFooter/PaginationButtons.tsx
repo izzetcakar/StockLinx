@@ -2,20 +2,19 @@ import React from "react";
 import icon_left from "../../../assets/icon_left.png";
 import icon_right from "../../../assets/icon_right.png";
 import ActionIconBtn from "../../generic/ActionIconBtn";
+import { useGridTableContext } from "../context/GenericStateContext";
 import "./footer.scss";
 
 interface PaginationButtonsProps {
-  pageNumber: number;
-  itemPerPage: number;
   dataLength: number;
   handlePageNumber: (forward: boolean) => void;
 }
 const PaginationButtons: React.FC<PaginationButtonsProps> = ({
-  pageNumber,
-  itemPerPage,
   dataLength,
   handlePageNumber,
 }) => {
+  const { pageNumber, itemPerPage } = useGridTableContext();
+
   return (
     <div className="page-number">
       <ActionIconBtn

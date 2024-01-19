@@ -1,10 +1,10 @@
-import { useCallback, useContext, useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { Column, Filter, FilterType } from "../interfaces/interfaces";
 import { NumberInput, Select, TextInput } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 import filterClasses from "./filter.module.scss";
 import textInputClasses from "./textInput.module.scss";
-import GenericStateContext from "../context/GenericStateContext";
+import { useGridTableContext } from "../context/GenericStateContext";
 
 export const useFilter = (columns: Column[]) => {
   const {
@@ -13,7 +13,7 @@ export const useFilter = (columns: Column[]) => {
     clearPagination,
     clearRowSelection,
     clearCellSelection,
-  } = useContext(GenericStateContext);
+  } = useGridTableContext();
 
   const getFilterType = (field: string): FilterType => {
     const column = columns.find((column) => column.dataField === field);

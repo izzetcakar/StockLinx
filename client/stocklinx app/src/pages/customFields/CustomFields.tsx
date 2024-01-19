@@ -1,12 +1,12 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
-import Gridtable from "../../components/gridTable/Gridtable";
 import { useColumns } from "./columns";
 import { customFieldActions } from "../../redux/customField/actions";
 import { fieldSetActions } from "../../redux/fieldSet/actions";
 import { openFieldSetModal, openCustomFieldModal } from "../../modals/modals";
 import { fieldSetCustomFieldActions } from "../../redux/fieldSetCustomField/actions";
 import { ICustomField } from "../../interfaces/interfaces";
+import GridTable from "../../components/gridTable/GridTable";
 
 const CustomFields = () => {
   const dispatch = useDispatch();
@@ -26,7 +26,7 @@ const CustomFields = () => {
       <div className="page__content__header">
         <div className="page__content__header__title">Field Sets</div>
       </div>
-      <Gridtable
+      <GridTable
         itemKey="id"
         data={fieldSets}
         columns={useColumns().fieldSetColumns}
@@ -40,7 +40,7 @@ const CustomFields = () => {
       <div className="page__content__header">
         <div className="page__content__header__title">Custom Fields</div>
       </div>
-      <Gridtable
+      <GridTable
         itemKey="id"
         data={customFields}
         columns={useColumns().customFieldColumns}

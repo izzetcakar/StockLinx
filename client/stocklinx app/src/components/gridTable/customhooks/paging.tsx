@@ -1,9 +1,7 @@
-import { useContext } from "react";
-import GenericStateContext from "../context/GenericStateContext";
+import { useGridTableContext } from "../context/GenericStateContext";
 
 export const usePaging = (data: object[]) => {
-  const { pageNumber, setPageNumber, itemPerPage } =
-    useContext(GenericStateContext);
+  const { pageNumber, setPageNumber, itemPerPage } = useGridTableContext();
 
   const handlePageNumber = (forward: boolean) => {
     if (forward) {

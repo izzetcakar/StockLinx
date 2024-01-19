@@ -10,16 +10,15 @@ import icon_plus from "../../.././assets/icon_plus.png";
 import icon_refresh from "../../.././assets/icon_refresh.png";
 import icon_trash from "../../.././assets/icon_trash.png";
 import ActionIconBtn from "../../generic/ActionIconBtn";
-import { utils, read } from "xlsx";
 import uuid4 from "uuid4";
 import ExcelJS from "exceljs";
-import { FileInput } from "@mantine/core";
-import { openConfirmModal, openExcelModal } from "../modals/modals";
 import ExcelButton from "./ExcelButton";
 import PaginationButtons from "../tableFooter/PaginationButtons";
 import PerPageSelector from "../tableFooter/PerPageSelector";
+import { utils, read } from "xlsx";
+import { FileInput } from "@mantine/core";
+import { openConfirmModal, openExcelModal } from "../modals/modals";
 import { useVisibleColumns } from "../customhooks/visibleColumnsHook";
-import { useGenericStates } from "../customhooks/genericStates";
 import "./tableToolbar.scss";
 interface TableToolbarProps {
   data: object[];
@@ -44,7 +43,6 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
   handlePageNumber,
 }) => {
   const { addVisibleColumn } = useVisibleColumns(columns);
-  const { pageNumber, itemPerPage, selectedKeys } = useGenericStates();
 
   const handleFileInputChange = async (file: File | null) => {
     if (file) {
@@ -274,15 +272,10 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
             onExportSelected={() => exportToExcel(false, getSelectedData())}
           />
           <PaginationButtons
-            pageNumber={pageNumber}
-            itemPerPage={itemPerPage}
             dataLength={data.length}
             handlePageNumber={handlePageNumber}
           />
-          <PerPageSelector
-            itemPerPage={itemPerPage}
-            handleItemPerPage={handleItemPerPage}
-          />
+          <PerPageSelector handleItemPerPage={handleItemPerPage} />
         </div>
       ) : null}
     </div>

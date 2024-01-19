@@ -1,6 +1,5 @@
-import { useContext, useEffect } from "react";
-import { useGenericStates } from "./genericStates";
-import GenericStateContext from "../context/GenericStateContext";
+import { useEffect } from "react";
+import { useGridTableContext } from "../context/GenericStateContext";
 
 export const useSelectRow = (
   data: object[],
@@ -8,7 +7,7 @@ export const useSelectRow = (
   isDrawing: boolean
 ) => {
   const { selectedKeys, setSelectedKeys, clearRowSelection } =
-    useContext(GenericStateContext);
+    useGridTableContext();
 
   useEffect(() => {
     clearRowSelection();

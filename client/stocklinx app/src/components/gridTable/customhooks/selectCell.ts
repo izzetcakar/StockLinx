@@ -1,8 +1,6 @@
-import { useContext } from "react";
 import { Column, Lookup } from "../interfaces/interfaces";
 import { useCell } from "./cell";
-import { useGenericStates } from "./genericStates";
-import GenericStateContext from "../context/GenericStateContext";
+import { useGridTableContext } from "../context/GenericStateContext";
 
 export const useSelectCell = (data: object[], columns: Column[]) => {
   const { getLookupValue } = useCell();
@@ -12,7 +10,7 @@ export const useSelectCell = (data: object[], columns: Column[]) => {
     isDrawing,
     setIsDrawing,
     startCellRef,
-  } = useContext(GenericStateContext);
+  } = useGridTableContext();
 
   const getCellValue = (value: any, lookup: Lookup | undefined) => {
     if (value === null || value === undefined) {

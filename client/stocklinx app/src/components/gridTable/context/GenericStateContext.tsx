@@ -1,11 +1,8 @@
-import React, { MutableRefObject, ReactNode, useRef, useState } from "react";
+import React, { MutableRefObject, useContext, useRef, useState } from "react";
 import { createContext } from "react";
 import { Filter, SelectedCell, VisibleColumn } from "../interfaces/interfaces";
 
-interface GenericStateProviderProps {
-  children: ReactNode;
-}
-interface GenericStateContextValues {
+interface GridTableContextProps {
   filters: Filter[];
   pageNumber: number;
   itemPerPage: number;
@@ -14,13 +11,16 @@ interface GenericStateContextValues {
   startCellRef: MutableRefObject<SelectedCell | null>;
   visibleColumns: VisibleColumn[];
   selectedKeys: string[];
-  setFilters: (filters: Filter[]) => void;
-  setPageNumber: (pageNumber: number) => void;
-  setItemPerPage: (itemPerPage: number) => void;
-  setSelectedCells: (selectedCells: SelectedCell[]) => void;
-  setIsDrawing: (isDrawing: boolean) => void;
-  setSelectedKeys: (selectedKeys: string[]) => void;
-  setVisibleColumns: (visibleColumns: VisibleColumn[]) => void;
+  setFilters: React.Dispatch<React.SetStateAction<Filter[]>>;
+  setPageNumber: React.Dispatch<React.SetStateAction<number>>;
+  setItemPerPage: React.Dispatch<React.SetStateAction<number>>;
+  setSelectedCells: React.Dispatch<React.SetStateAction<SelectedCell[]>>;
+  setIsDrawing: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelectedKeys: React.Dispatch<React.SetStateAction<string[]>>;
+  setVisibleColumns: React.Dispatch<React.SetStateAction<VisibleColumn[]>>;
+  setStartCellRef: (
+    newRef: React.MutableRefObject<SelectedCell | null>
+  ) => void;
   clearFilters: () => void;
   clearPagination: () => void;
   clearCellSelection: () => void;
@@ -29,7 +29,7 @@ interface GenericStateContextValues {
   clearAll: () => void;
 }
 
-export const GenericStateContext = createContext<GenericStateContextValues>({
+const GridTableContext = createContext<GridTableContextProps>({
   filters: [],
   pageNumber: 0,
   itemPerPage: 10,
@@ -51,8 +51,9 @@ export const GenericStateContext = createContext<GenericStateContextValues>({
   clearRowSelection: () => {},
   clearColumnVisibility: () => {},
   clearAll: () => {},
+  setStartCellRef: () => {},
 });
-export const GenericStateProvider: React.FC<GenericStateProviderProps> = ({
+export const GenericStateProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   //Filters
@@ -68,6 +69,12 @@ export const GenericStateProvider: React.FC<GenericStateProviderProps> = ({
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   //Column Visibility
   const [visibleColumns, setVisibleColumns] = useState<VisibleColumn[]>([]);
+
+  const setStartCellRef = (
+    newRef: React.MutableRefObject<SelectedCell | null>
+  ) => {
+    startCellRef.current = newRef.current;
+  };
 
   const clearFilters = () => {
     if (filters.length > 0) setFilters([]);
@@ -114,6 +121,7 @@ export const GenericStateProvider: React.FC<GenericStateProviderProps> = ({
     setIsDrawing,
     setSelectedKeys,
     setVisibleColumns,
+    setStartCellRef,
     clearFilters,
     clearPagination,
     clearCellSelection,
@@ -123,9 +131,16 @@ export const GenericStateProvider: React.FC<GenericStateProviderProps> = ({
   };
 
   return (
-    <GenericStateContext.Provider value={values}>
+    <GridTableContext.Provider value={values}>
       {children}
-    </GenericStateContext.Provider>
+    </GridTableContext.Provider>
   );
 };
-export default GenericStateContext;
+export const useGridTableContext = () => {
+  const context = useContext(GridTableContext);
+  if (!context) {
+    throw new Error("useGridContext must be used within a GridProvider");
+  }
+  return context;
+};
+export default GridTableContext;

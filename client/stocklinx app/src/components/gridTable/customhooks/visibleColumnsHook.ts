@@ -1,10 +1,9 @@
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { Column } from "../interfaces/interfaces";
-import { useGenericStates } from "./genericStates";
-import GenericStateContext from "../context/GenericStateContext";
+import { useGridTableContext } from "../context/GenericStateContext";
 
 export const useVisibleColumns = (columns: Column[]) => {
-  const { setVisibleColumns } = useContext(GenericStateContext);
+  const { setVisibleColumns } = useGridTableContext();
 
   const addVisibleColumn = (columnCaption: string): void => {
     setVisibleColumns((prev) =>

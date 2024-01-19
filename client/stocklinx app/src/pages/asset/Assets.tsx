@@ -6,7 +6,7 @@ import { companyActions } from "../../redux/company/actions";
 import { categoryActions } from "../../redux/category/actions";
 import { modelActions } from "../../redux/model/actions";
 import { useColumns } from "./columns";
-import Gridtable from "../../components/gridTable/Gridtable";
+import Gridtable from "../../components/gridTable/GridTable";
 import { assetActions } from "../../redux/asset/actions";
 import { branchActions } from "../../redux/branch/actions";
 import { productStatusActions } from "../../redux/productStatus/actions";

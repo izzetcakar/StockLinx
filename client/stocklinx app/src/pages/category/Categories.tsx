@@ -6,7 +6,7 @@ import { useColumns } from "./columns";
 import { categoryActions } from "../../redux/category/actions";
 import { branchActions } from "../../redux/branch/actions";
 import { companyActions } from "../../redux/company/actions";
-import Gridtable from "../../components/gridTable/Gridtable";
+import Gridtable from "../../components/gridTable/GridTable";
 import { openCategoryModal } from "../../modals/modals";
 
 const Category = () => {

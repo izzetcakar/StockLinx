@@ -19,6 +19,8 @@ export const useCell = () => {
       }
     )[column.dataField];
 
+    if (value === undefined) return null;
+
     if (column.renderComponent) {
       return column.renderComponent(obj);
     }

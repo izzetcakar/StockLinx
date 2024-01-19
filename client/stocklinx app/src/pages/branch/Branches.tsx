@@ -4,7 +4,7 @@ import { RootState } from "../../redux/rootReducer";
 import { IBranch } from "../../interfaces/interfaces";
 import { useColumns } from "./columns";
 import { companyActions } from "../../redux/company/actions";
-import Gridtable from "../../components/gridTable/Gridtable";
+import Gridtable from "../../components/gridTable/GridTable";
 import { branchActions } from "../../redux/branch/actions";
 import { openBranchModal } from "../../modals/modals";
 import { locationActions } from "../../redux/location/actions";

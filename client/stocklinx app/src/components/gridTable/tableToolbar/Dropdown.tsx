@@ -2,7 +2,7 @@ import React from "react";
 import { Column } from "../interfaces/interfaces";
 import { Menu, Button } from "@mantine/core";
 import { IconChevronDown } from "@tabler/icons-react";
-import { useGenericStates } from "../customhooks/genericStates";
+import { useGridTableContext } from "../context/GenericStateContext";
 import "./tableToolbar.scss";
 interface DropDownProps {
   columns: Column[];
@@ -10,7 +10,7 @@ interface DropDownProps {
 }
 
 const DropDown: React.FC<DropDownProps> = ({ columns, onChange }) => {
-  const { visibleColumns } = useGenericStates();
+  const { visibleColumns } = useGridTableContext();
 
   return (
     <Menu withArrow closeOnItemClick={false}>

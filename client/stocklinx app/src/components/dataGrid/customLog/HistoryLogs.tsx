@@ -3,7 +3,7 @@ import { useColumns } from "./columns";
 import { RootState } from "../../../redux/rootReducer";
 import { useEffect } from "react";
 import { productActions } from "../../../redux/product/actions";
-import Gridtable from "../../gridTable/Gridtable";
+import Gridtable from "../../gridTable/GridTableContent";
 import { userActions } from "../../../redux/user/actions";
 
 interface HistoryLogsProps {
