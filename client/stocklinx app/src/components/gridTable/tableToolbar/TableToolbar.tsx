@@ -19,12 +19,14 @@ import { utils, read } from "xlsx";
 import { FileInput } from "@mantine/core";
 import { openConfirmModal, openExcelModal } from "../modals/modals";
 import { useVisibleColumns } from "../customhooks/visibleColumnsHook";
+import { useGridTableContext } from "../context/GenericStateContext";
 import "./tableToolbar.scss";
 interface TableToolbarProps {
   data: object[];
   columns: Column[];
   excelColumns?: ExcelColumn[];
   enableExcelActions: boolean;
+  itemKey: string;
   handleItemPerPage: (value: number) => void;
   handlePageNumber: (value: boolean) => void;
   onRowInsert?: () => void;
@@ -36,13 +38,15 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
   columns,
   excelColumns,
   enableExcelActions,
+  itemKey,
   onRowInsert,
   onRowRemoveRange,
   refreshData,
   handleItemPerPage,
   handlePageNumber,
 }) => {
-  const { addVisibleColumn } = useVisibleColumns(columns);
+  const { onVisibleColumnsChange } = useVisibleColumns(columns);
+  const { selectedKeys } = useGridTableContext();
 
   const handleFileInputChange = async (file: File | null) => {
     if (file) {
@@ -231,13 +235,13 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
   };
   const getSelectedData = () => {
     return (data as { [key: string]: any }[]).filter((x) =>
-      selectedKeys.includes(x["id"])
+      selectedKeys.includes(x[itemKey])
     );
   };
 
   return (
     <div className="gridtable__toolbar">
-      <Dropdown columns={columns} onChange={addVisibleColumn} />
+      <Dropdown columns={columns} onChange={onVisibleColumnsChange} />
       {onRowInsert ? (
         <ActionIconBtn
           submitFunc={onRowInsert}

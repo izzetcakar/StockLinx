@@ -81,7 +81,6 @@ export interface GridtableProps {
   enableExcelActions?: boolean;
   enableEditActions?: boolean;
   enableSelectActions?: boolean;
-  enableFooter?: boolean;
   ref?: any;
 }
 export interface GridtableRef {

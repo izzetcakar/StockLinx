@@ -10,6 +10,7 @@ import { useSelectCell } from "./customhooks/selectCell";
 import { usePaging } from "./customhooks/paging";
 import { useGridTableContext } from "./context/GenericStateContext";
 import "./gridtable.scss";
+import { useVisibleColumns } from "./customhooks/visibleColumnsHook";
 
 const GridtableContent: React.FC<GridtableProps> = ({
   data = [],
@@ -38,6 +39,8 @@ const GridtableContent: React.FC<GridtableProps> = ({
     setPageNumber,
     visibleColumns,
   } = useGridTableContext();
+
+  const { createVisibleColumns } = useVisibleColumns(columns);
 
   const { handlePageNumber } = usePaging(data);
   const { getFilterInput, applyFilterToData } = useFilter(
@@ -79,6 +82,10 @@ const GridtableContent: React.FC<GridtableProps> = ({
     setKeyfield(itemKey as keyof object);
   }, [itemKey]);
 
+  useEffect(() => {
+    createVisibleColumns();
+  }, [columns]);
+
   const getColSpan = (index: number) => {
     if (index === visibleColumns.length - 1 && data.length > 0) {
       return 2;
@@ -97,6 +104,7 @@ const GridtableContent: React.FC<GridtableProps> = ({
                 columns={columns}
                 excelColumns={excelColumns}
                 enableExcelActions={enableExcelActions}
+                itemKey={keyfield}
                 handleItemPerPage={setPageNumber}
                 handlePageNumber={handlePageNumber}
                 onRowInsert={onRowInsert}
@@ -177,10 +185,9 @@ const GridtableContent: React.FC<GridtableProps> = ({
                     />
                   </td>
                 ) : null}
-                {columns.map((column, columnIndex) =>
-                  visibleColumns
-                    .map((x) => x.caption)
-                    .includes(column.caption) ? (
+                {columns
+                  .filter((column) => column.visible !== false)
+                  .map((column, columnIndex) => (
                     <td
                       key={`gridtable__row__cell__${columnIndex}__${column.dataField}`}
                       className={getSelectedClassName(rowIndex, columnIndex)}
@@ -204,12 +211,7 @@ const GridtableContent: React.FC<GridtableProps> = ({
                     >
                       {renderColumnValue(obj, column)}
                     </td>
-                  ) : (
-                    <td
-                      key={`gridtable__row__cell__${columnIndex}__${column.dataField}`}
-                    ></td>
-                  )
-                )}
+                  ))}
                 {enableEditActions ? (
                   <td className="gridtable__edit__cell">
                     <EditComponent

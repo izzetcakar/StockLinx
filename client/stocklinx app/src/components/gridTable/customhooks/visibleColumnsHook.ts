@@ -1,11 +1,10 @@
-import { useEffect } from "react";
 import { Column } from "../interfaces/interfaces";
 import { useGridTableContext } from "../context/GenericStateContext";
 
 export const useVisibleColumns = (columns: Column[]) => {
   const { setVisibleColumns } = useGridTableContext();
 
-  const addVisibleColumn = (columnCaption: string): void => {
+  const onVisibleColumnsChange = (columnCaption: string): void => {
     setVisibleColumns((prev) =>
       prev.map((x) => x.caption).includes(columnCaption)
         ? prev.filter((item) => item.caption !== columnCaption)
@@ -13,7 +12,7 @@ export const useVisibleColumns = (columns: Column[]) => {
     );
   };
 
-  const handleVisibleColumns = () => {
+  const createVisibleColumns = () => {
     setVisibleColumns(
       columns
         .filter((c) => c.visible !== false)
@@ -27,12 +26,8 @@ export const useVisibleColumns = (columns: Column[]) => {
     );
   };
 
-  useEffect(() => {
-    handleVisibleColumns();
-  }, [columns]);
-
   return {
-    addVisibleColumn,
-    handleVisibleColumns,
+    onVisibleColumnsChange,
+    createVisibleColumns,
   };
 };

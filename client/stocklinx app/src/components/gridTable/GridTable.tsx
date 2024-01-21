@@ -1,5 +1,8 @@
 import React, { forwardRef, useImperativeHandle } from "react";
-import { useGridTableContext } from "./context/GenericStateContext";
+import {
+  GenericStateProvider,
+  useGridTableContext,
+} from "./context/GenericStateContext";
 import { GridtableProps, GridtableRef } from "./interfaces/interfaces";
 import GridTableContent from "./GridTableContent";
 
@@ -36,22 +39,24 @@ const GridTable: React.ForwardRefRenderFunction<
   );
 
   return (
-    <GridTableContent
-      data={data}
-      columns={columns}
-      noDataText={noDataText}
-      refreshData={refreshData}
-      onRowInsert={onRowInsert}
-      onRowUpdate={onRowUpdate}
-      onRowRemove={onRowRemove}
-      onRowRemoveRange={onRowRemoveRange}
-      itemKey={itemKey}
-      excelColumns={excelColumns}
-      enableToolbar={enableToolbar}
-      enableExcelActions={enableExcelActions}
-      enableEditActions={enableEditActions}
-      enableSelectActions={enableSelectActions}
-    />
+    <GenericStateProvider>
+      <GridTableContent
+        data={data}
+        columns={columns}
+        noDataText={noDataText}
+        refreshData={refreshData}
+        onRowInsert={onRowInsert}
+        onRowUpdate={onRowUpdate}
+        onRowRemove={onRowRemove}
+        onRowRemoveRange={onRowRemoveRange}
+        itemKey={itemKey}
+        excelColumns={excelColumns}
+        enableToolbar={enableToolbar}
+        enableExcelActions={enableExcelActions}
+        enableEditActions={enableEditActions}
+        enableSelectActions={enableSelectActions}
+      />
+    </GenericStateProvider>
   );
 };
 
