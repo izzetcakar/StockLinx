@@ -3,7 +3,7 @@ import { useColumns } from "./columns";
 import { RootState } from "../../../redux/rootReducer";
 import { productActions } from "../../../redux/product/actions";
 import { useLayoutEffect } from "react";
-import Gridtable from "../../gridTable/GridTableContent";
+import Gridtable from "../../gridTable/GridTable";
 
 const CategoryCounts = () => {
   const dispatch = useDispatch();

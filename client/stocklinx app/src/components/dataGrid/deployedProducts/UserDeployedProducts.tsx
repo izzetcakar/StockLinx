@@ -3,7 +3,7 @@ import { useColumns } from "./columns";
 import { RootState } from "../../../redux/rootReducer";
 import { useEffect, useRef } from "react";
 import { deployedProductActions } from "../../../redux/deployedProduct/actions";
-import Gridtable from "../../gridTable/GridTableContent";
+import Gridtable from "../../gridTable/GridTable";
 import { openSubmissionModal } from "../../../functions/exportSubmissionForm";
 
 interface UserDeployedProductsProps {
