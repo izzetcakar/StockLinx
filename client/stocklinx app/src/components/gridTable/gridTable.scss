@@ -57,7 +57,7 @@
   }
 }
 
-.gridtable__row{
+.gridtable__row {
   border-bottom: 1px solid #ced4da;
 }
 .gridtable__row:hover {
@@ -183,4 +183,34 @@
   width: 44.75px;
   min-width: 44.75px;
   user-select: none;
+}
+.gridtable__expand__data__row {
+  display: flex;
+  width: 100%;
+  height: fit-content;
+}
+.gridtable__expand__data__btn {
+  all: initial;
+  width: 100%;
+  height: fit-content;
+  border: none;
+  overflow: auto;
+  cursor: pointer;
+  text-align: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #ced4da;
+  transition: 0.3s;
+
+  &:hover {
+    background-color: blue;
+    color: white;
+  }
+
+  &:active {
+    background-color: darkblue;
+    color: white;
+  }
+}
+.gridtable__filter__cell {
+  border-right: 1px solid #ced4da;
 }

@@ -86,13 +86,6 @@ const GridtableContent: React.FC<GridtableProps> = ({
     createVisibleColumns();
   }, [columns]);
 
-  const getColSpan = (index: number) => {
-    if (index === visibleColumns.length - 1 && data.length > 0) {
-      return 2;
-    }
-    return 1;
-  };
-
   return (
     <table className="gridtable">
       <thead>
@@ -144,13 +137,15 @@ const GridtableContent: React.FC<GridtableProps> = ({
               <td
                 key={"column__header__" + vColumn.caption + "__" + vColumnIndex}
                 className="gridtable__column__cell"
-                colSpan={getColSpan(vColumnIndex)}
               >
                 {vColumn.renderHeader
                   ? vColumn.renderHeader()
                   : vColumn.caption}
               </td>
             ))}
+            {enableEditActions ? (
+              <td className="gridtable__edit__cell"></td>
+            ) : null}
           </tr>
           <tr className="gridtable__filter__row">
             {enableSelectActions ? (
@@ -162,8 +157,8 @@ const GridtableContent: React.FC<GridtableProps> = ({
               )
               .map((filter: Filter, filterIndex) => (
                 <td
-                  colSpan={getColSpan(filterIndex)}
                   key={filter.field + "__" + filterIndex}
+                  className="gridtable__filter__cell"
                 >
                   {getFilterInput(filter)}
                 </td>
@@ -229,6 +224,9 @@ const GridtableContent: React.FC<GridtableProps> = ({
               <td>{noDataText}</td>
             </tr>
           )}
+          <tr className="gridtable__expand__data__row">
+            <button className="gridtable__expand__data__btn">Load More</button>
+          </tr>
         </tbody>
       )}
     </table>
