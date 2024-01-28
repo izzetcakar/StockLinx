@@ -16,7 +16,6 @@
 .gridtable {
   display: block;
   table-layout: fixed;
-  font-family: Arial, Helvetica, sans-serif;
   border-collapse: collapse;
   max-width: 100%;
   height: 100%;
@@ -44,16 +43,6 @@
     position: sticky;
     top: 39.5px;
     z-index: 3;
-  }
-  .gridtable__edit__cell {
-    padding: 0;
-    position: sticky;
-    right: 0;
-    z-index: 2;
-    width: fit-content;
-    background-color: white;
-    // box-shadow: inset 1px 0 0 0 #ced4da;
-    user-select: none;
   }
 }
 
@@ -107,7 +96,7 @@
   display: block;
   overflow: auto;
   max-width: 100%;
-  height: 100%;
+  height: calc(100% - 46.8px);
   font-weight: 400;
 
   &::-webkit-scrollbar {
@@ -154,7 +143,7 @@
 }
 .gridtable__row__cell {
   width: 100vw;
-  padding: 12px;
+  padding: 4px;
   word-wrap: none;
   white-space: nowrap;
   user-select: none;
@@ -167,6 +156,18 @@
 .gridtable__checkbox__cell {
   width: fit-content;
   padding: 8px;
+  border-right: 1px solid #ced4da;
+}
+.gridtable__edit__cell {
+  padding: 0;
+  width: fit-content;
+  background-color: white;
+  user-select: none;
+  border-right: 1px solid #ced4da;
+  // position: sticky;
+  // right: 0;
+  // z-index: 2;
+  // box-shadow: inset 1px 0 0 0 #ced4da;
 }
 .gridtable__nodata__row {
   display: flex;
@@ -189,17 +190,22 @@
   width: 100%;
   height: fit-content;
 }
+.gridtable__expand__data__cell {
+  display: flex;
+  width: 100%;
+  height: fit-content;
+}
 .gridtable__expand__data__btn {
   all: initial;
   width: 100%;
   height: fit-content;
   border: none;
-  overflow: auto;
   cursor: pointer;
   text-align: center;
-  padding: 0.5rem 0;
+  padding: 8px 0;
   border-bottom: 1px solid #ced4da;
   transition: 0.3s;
+  font-size: 12px;
 
   &:hover {
     background-color: blue;

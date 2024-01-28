@@ -13,7 +13,6 @@ import ActionIconBtn from "../../generic/ActionIconBtn";
 import uuid4 from "uuid4";
 import ExcelJS from "exceljs";
 import ExcelButton from "./ExcelButton";
-import PaginationButtons from "../tableFooter/PaginationButtons";
 import PerPageSelector from "../tableFooter/PerPageSelector";
 import { utils, read } from "xlsx";
 import { FileInput } from "@mantine/core";
@@ -27,8 +26,6 @@ interface TableToolbarProps {
   excelColumns?: ExcelColumn[];
   enableExcelActions: boolean;
   itemKey: string;
-  handleItemPerPage: (value: number) => void;
-  handlePageNumber: (value: boolean) => void;
   onRowInsert?: () => void;
   onRowRemoveRange: (ids: string[]) => void;
   refreshData?: () => Promise<void> | void;
@@ -42,8 +39,6 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
   onRowInsert,
   onRowRemoveRange,
   refreshData,
-  handleItemPerPage,
-  handlePageNumber,
 }) => {
   const { onVisibleColumnsChange } = useVisibleColumns(columns);
   const { selectedKeys } = useGridTableContext();
@@ -275,11 +270,7 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
             onExportAll={() => exportToExcel(false, data)}
             onExportSelected={() => exportToExcel(false, getSelectedData())}
           />
-          <PaginationButtons
-            dataLength={data.length}
-            handlePageNumber={handlePageNumber}
-          />
-          <PerPageSelector handleItemPerPage={handleItemPerPage} />
+          <PerPageSelector />
         </div>
       ) : null}
     </div>

@@ -60,7 +60,7 @@ export const GenericStateProvider: React.FC<{ children: React.ReactNode }> = ({
   const [filters, setFilters] = useState<Filter[]>([]);
   //Pagination
   const [pageNumber, setPageNumber] = useState<number>(0);
-  const [itemPerPage, setItemPerPage] = useState<number>(10);
+  const [itemPerPage, setItemPerPage] = useState<number>(24);
   //Cell Selection
   const [selectedCells, setSelectedCells] = useState<SelectedCell[]>([]);
   const [isDrawing, setIsDrawing] = useState(false);

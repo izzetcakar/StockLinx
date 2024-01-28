@@ -7,7 +7,6 @@ import { useFilter } from "./customhooks/filter";
 import { useSelectRow } from "./customhooks/selectRow";
 import { useCell } from "./customhooks/cell";
 import { useSelectCell } from "./customhooks/selectCell";
-import { usePaging } from "./customhooks/paging";
 import { useGridTableContext } from "./context/GenericStateContext";
 import "./gridtable.scss";
 import { useVisibleColumns } from "./customhooks/visibleColumnsHook";
@@ -31,18 +30,10 @@ const GridtableContent: React.FC<GridtableProps> = ({
   const [keyfield, setKeyfield] = useState<keyof object>(
     itemKey as keyof object
   );
-  const {
-    filters,
-    selectedKeys,
-    pageNumber,
-    itemPerPage,
-    setPageNumber,
-    visibleColumns,
-  } = useGridTableContext();
+  const { filters, selectedKeys, visibleColumns } = useGridTableContext();
 
   const { createVisibleColumns } = useVisibleColumns(columns);
 
-  const { handlePageNumber } = usePaging(data);
   const { getFilterInput, applyFilterToData } = useFilter(
     columns.filter((c) => c.visible !== false)
   );
@@ -52,18 +43,6 @@ const GridtableContent: React.FC<GridtableProps> = ({
     },
     [applyFilterToData]
   );
-  const filterDataByPage = useCallback(
-    (inputData: object[]) => {
-      if (pageNumber === 0) {
-        return inputData.slice(0, itemPerPage);
-      }
-      return inputData.slice(
-        pageNumber * itemPerPage,
-        (pageNumber + 1) * itemPerPage
-      );
-    },
-    [itemPerPage, pageNumber]
-  );
 
   const {
     handleCellMouseDown,
@@ -71,7 +50,7 @@ const GridtableContent: React.FC<GridtableProps> = ({
     handleCellMouseEnter,
     getSelectedClassName,
     isDrawing,
-  } = useSelectCell(filterDataByPage(filterDataByInput(data)), columns);
+  } = useSelectCell(filterDataByInput(data), columns);
 
   const { handleSelectRow, handleselectAll, getSelectedRowClass } =
     useSelectRow(data, keyfield, isDrawing);
@@ -98,8 +77,6 @@ const GridtableContent: React.FC<GridtableProps> = ({
                 excelColumns={excelColumns}
                 enableExcelActions={enableExcelActions}
                 itemKey={keyfield}
-                handleItemPerPage={setPageNumber}
-                handlePageNumber={handlePageNumber}
                 onRowInsert={onRowInsert}
                 onRowRemoveRange={onRowRemoveRange}
                 refreshData={refreshData}
@@ -133,6 +110,9 @@ const GridtableContent: React.FC<GridtableProps> = ({
                 />
               </td>
             ) : null}
+            {enableEditActions ? (
+              <td className="gridtable__edit__cell"></td>
+            ) : null}
             {visibleColumns.map((vColumn, vColumnIndex) => (
               <td
                 key={"column__header__" + vColumn.caption + "__" + vColumnIndex}
@@ -143,12 +123,12 @@ const GridtableContent: React.FC<GridtableProps> = ({
                   : vColumn.caption}
               </td>
             ))}
-            {enableEditActions ? (
-              <td className="gridtable__edit__cell"></td>
-            ) : null}
           </tr>
           <tr className="gridtable__filter__row">
             {enableSelectActions ? (
+              <td className="gridtable__filter__cell"></td>
+            ) : null}
+            {enableEditActions ? (
               <td className="gridtable__filter__cell"></td>
             ) : null}
             {filters
@@ -164,8 +144,8 @@ const GridtableContent: React.FC<GridtableProps> = ({
                 </td>
               ))}
           </tr>
-          {filterDataByPage(filterDataByInput(data)).length > 0 ? (
-            filterDataByPage(filterDataByInput(data)).map((obj, rowIndex) => (
+          {filterDataByInput(data).length > 0 ? (
+            filterDataByInput(data).map((obj, rowIndex) => (
               <tr
                 key={"gridtable__row__" + rowIndex}
                 className={getSelectedRowClass(obj[keyfield])}
@@ -177,6 +157,16 @@ const GridtableContent: React.FC<GridtableProps> = ({
                       onChange={() => handleSelectRow(obj[keyfield])}
                       radius={2}
                       size={18}
+                    />
+                  </td>
+                ) : null}
+                {enableEditActions ? (
+                  <td className="gridtable__edit__cell">
+                    <EditComponent
+                      obj={obj}
+                      id={obj[keyfield]}
+                      onRowUpdate={onRowUpdate}
+                      onRowRemove={onRowRemove}
                     />
                   </td>
                 ) : null}
@@ -207,16 +197,6 @@ const GridtableContent: React.FC<GridtableProps> = ({
                       {renderColumnValue(obj, column)}
                     </td>
                   ))}
-                {enableEditActions ? (
-                  <td className="gridtable__edit__cell">
-                    <EditComponent
-                      obj={obj}
-                      id={obj[keyfield]}
-                      onRowUpdate={onRowUpdate}
-                      onRowRemove={onRowRemove}
-                    />
-                  </td>
-                ) : null}
               </tr>
             ))
           ) : (
@@ -225,7 +205,11 @@ const GridtableContent: React.FC<GridtableProps> = ({
             </tr>
           )}
           <tr className="gridtable__expand__data__row">
-            <button className="gridtable__expand__data__btn">Load More</button>
+            <td className="gridtable__expand__data__cell">
+              <button className="gridtable__expand__data__btn">
+                Load More
+              </button>
+            </td>
           </tr>
         </tbody>
       )}
