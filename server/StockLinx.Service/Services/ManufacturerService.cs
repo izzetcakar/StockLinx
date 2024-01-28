@@ -126,5 +126,12 @@ namespace StockLinx.Service.Services
             _manufacturerRepository.UpdateRange(manufacturers);
             await _unitOfWork.CommitAsync();
         }
+
+        public async Task<List<ManufacturerDto>> GetManufacturersPagedAsync(int skip, int top)
+        {
+            var dtos = new List<ManufacturerDto>();
+            dtos = await _manufacturerRepository.GetManufacturersPagedAsync(skip, top);
+            return dtos;
+        }
     }
 }

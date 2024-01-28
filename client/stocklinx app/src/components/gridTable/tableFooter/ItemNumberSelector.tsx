@@ -1,14 +1,16 @@
 import { Select } from "@mantine/core";
 import { useGridTableContext } from "../context/GenericStateContext";
 
-interface PerPageSelectorProps {}
+interface ItemNumberSelectorProps {}
 
-const PerPageSelector: React.FC<PerPageSelectorProps> = () => {
+const ItemNumberSelector: React.FC<ItemNumberSelectorProps> = () => {
   const { itemPerPage, setItemPerPage } = useGridTableContext();
   return (
     <Select
       data={
         [
+          { value: 2, label: "2" },
+          { value: 4, label: "4" },
           { value: 24, label: "24" },
           { value: 60, label: "60" },
           { value: 120, label: "120" },
@@ -36,4 +38,4 @@ const PerPageSelector: React.FC<PerPageSelectorProps> = () => {
   );
 };
 
-export default PerPageSelector;
+export default ItemNumberSelector;

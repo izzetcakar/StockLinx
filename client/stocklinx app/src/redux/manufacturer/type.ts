@@ -20,6 +20,10 @@ export interface ManufacturerRemoveRangePayload {
 export interface ManufacturerRemovePayload {
   id: string;
 }
+export interface ManufacturerPagedRequestPayload {
+  skip: number;
+  take: number;
+}
 
 //GET
 export interface FetchManufacturersRequest {
@@ -32,6 +36,20 @@ export type FetchManufacturersSuccess = {
 export type FetchManufacturersFailure = {
   type: typeof manufacturerConst.FETCH_MANUFACTURERS_FAILURE;
 };
+
+//PAGED
+export interface FetchManufacturersPagedRequest {
+  type: typeof manufacturerConst.FETCH_MANUFACTURERS_PAGED_REQUEST;
+  payload: ManufacturerPagedRequestPayload;
+}
+export type FetchManufacturersPagedSuccess = {
+  type: typeof manufacturerConst.FETCH_MANUFACTURERS_PAGED_SUCCESS;
+  payload: ManufacturersPayload;
+};
+export type FetchManufacturersPagedFailure = {
+  type: typeof manufacturerConst.FETCH_MANUFACTURERS_PAGED_FAILURE;
+};
+
 //GET:/ID
 export interface FetchManufacturerRequest {
   type: typeof manufacturerConst.FETCH_MANUFACTURER_REQUEST;
@@ -125,6 +143,9 @@ export type ManufacturerActions =
   | FetchManufacturersRequest
   | FetchManufacturersSuccess
   | FetchManufacturersFailure
+  | FetchManufacturersPagedRequest
+  | FetchManufacturersPagedSuccess
+  | FetchManufacturersPagedFailure
   | FetchManufacturerRequest
   | FetchManufacturerSuccess
   | FetchManufacturerFailure

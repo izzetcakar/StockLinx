@@ -7,6 +7,7 @@ namespace StockLinx.Core.Repositories
     {
         ManufacturerDto GetDto(Manufacturer entity);
         List<ManufacturerDto> GetDtos(List<Manufacturer> entities);
+        Task<List<ManufacturerDto>> GetManufacturersPagedAsync(int skip, int top);
         Task<List<ManufacturerDto>> GetAllDtos();
     }
 }

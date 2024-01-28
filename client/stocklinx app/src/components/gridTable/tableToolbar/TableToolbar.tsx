@@ -13,12 +13,12 @@ import ActionIconBtn from "../../generic/ActionIconBtn";
 import uuid4 from "uuid4";
 import ExcelJS from "exceljs";
 import ExcelButton from "./ExcelButton";
-import PerPageSelector from "../tableFooter/PerPageSelector";
 import { utils, read } from "xlsx";
 import { FileInput } from "@mantine/core";
 import { openConfirmModal, openExcelModal } from "../modals/modals";
 import { useVisibleColumns } from "../customhooks/visibleColumnsHook";
 import { useGridTableContext } from "../context/GenericStateContext";
+import ItemNumberSelector from "../tableFooter/ItemNumberSelector";
 import "./tableToolbar.scss";
 interface TableToolbarProps {
   data: object[];
@@ -270,7 +270,7 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
             onExportAll={() => exportToExcel(false, data)}
             onExportSelected={() => exportToExcel(false, getSelectedData())}
           />
-          <PerPageSelector />
+          <ItemNumberSelector />
         </div>
       ) : null}
     </div>

@@ -11,6 +11,12 @@ const get = (id: string) => {
     apiType: "get",
   });
 };
+const getPaged = (skip: number, take: number) => {
+  return request<IManufacturer>({
+    requestUrl: requestUrl + `paged?skip=${skip}&top=${take}`,
+    apiType: "get",
+  });
+};
 const create = (manufacturer: IManufacturer) => {
   return request<IManufacturer>({
     requestUrl: requestUrl,
@@ -48,6 +54,7 @@ const removeRange = (ids: string[]) => {
 
 export const manufacturerRequests = {
   getAll,
+  getPaged,
   get,
   create,
   createRange,

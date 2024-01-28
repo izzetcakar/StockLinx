@@ -4,25 +4,24 @@ import { Filter, SelectedCell, VisibleColumn } from "../interfaces/interfaces";
 
 interface GridTableContextProps {
   filters: Filter[];
-  pageNumber: number;
   itemPerPage: number;
   selectedCells: SelectedCell[];
   isDrawing: boolean;
   startCellRef: MutableRefObject<SelectedCell | null>;
   visibleColumns: VisibleColumn[];
   selectedKeys: string[];
+  loading: boolean;
   setFilters: React.Dispatch<React.SetStateAction<Filter[]>>;
-  setPageNumber: React.Dispatch<React.SetStateAction<number>>;
   setItemPerPage: React.Dispatch<React.SetStateAction<number>>;
   setSelectedCells: React.Dispatch<React.SetStateAction<SelectedCell[]>>;
   setIsDrawing: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedKeys: React.Dispatch<React.SetStateAction<string[]>>;
   setVisibleColumns: React.Dispatch<React.SetStateAction<VisibleColumn[]>>;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setStartCellRef: (
     newRef: React.MutableRefObject<SelectedCell | null>
   ) => void;
   clearFilters: () => void;
-  clearPagination: () => void;
   clearCellSelection: () => void;
   clearRowSelection: () => void;
   clearColumnVisibility: () => void;
@@ -31,22 +30,21 @@ interface GridTableContextProps {
 
 const GridTableContext = createContext<GridTableContextProps>({
   filters: [],
-  pageNumber: 0,
   itemPerPage: 10,
   selectedCells: [],
   isDrawing: false,
   startCellRef: { current: null },
   visibleColumns: [],
   selectedKeys: [],
+  loading: false,
   setFilters: () => {},
-  setPageNumber: () => {},
   setItemPerPage: () => {},
   setSelectedCells: () => {},
   setIsDrawing: () => {},
   setSelectedKeys: () => {},
   setVisibleColumns: () => {},
+  setLoading: () => {},
   clearFilters: () => {},
-  clearPagination: () => {},
   clearCellSelection: () => {},
   clearRowSelection: () => {},
   clearColumnVisibility: () => {},
@@ -59,7 +57,6 @@ export const GenericStateProvider: React.FC<{ children: React.ReactNode }> = ({
   //Filters
   const [filters, setFilters] = useState<Filter[]>([]);
   //Pagination
-  const [pageNumber, setPageNumber] = useState<number>(0);
   const [itemPerPage, setItemPerPage] = useState<number>(24);
   //Cell Selection
   const [selectedCells, setSelectedCells] = useState<SelectedCell[]>([]);
@@ -69,6 +66,8 @@ export const GenericStateProvider: React.FC<{ children: React.ReactNode }> = ({
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   //Column Visibility
   const [visibleColumns, setVisibleColumns] = useState<VisibleColumn[]>([]);
+  //Generic
+  const [loading, setLoading] = useState<boolean>(false);
 
   const setStartCellRef = (
     newRef: React.MutableRefObject<SelectedCell | null>
@@ -78,11 +77,6 @@ export const GenericStateProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const clearFilters = () => {
     if (filters.length > 0) setFilters([]);
-  };
-
-  const clearPagination = () => {
-    if (pageNumber !== 0) setPageNumber(0);
-    if (itemPerPage !== 10) setItemPerPage(10);
   };
 
   const clearCellSelection = () => {
@@ -99,7 +93,6 @@ export const GenericStateProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const clearAll = () => {
     clearFilters();
-    clearPagination();
     clearCellSelection();
     clearRowSelection();
     clearColumnVisibility();
@@ -107,23 +100,22 @@ export const GenericStateProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const values = {
     filters,
-    pageNumber,
     itemPerPage,
     selectedCells,
     isDrawing,
     startCellRef,
     selectedKeys,
     visibleColumns,
+    loading,
     setFilters,
-    setPageNumber,
     setItemPerPage,
     setSelectedCells,
     setIsDrawing,
     setSelectedKeys,
     setVisibleColumns,
     setStartCellRef,
+    setLoading,
     clearFilters,
-    clearPagination,
     clearCellSelection,
     clearRowSelection,
     clearColumnVisibility,

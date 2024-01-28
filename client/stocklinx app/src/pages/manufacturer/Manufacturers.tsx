@@ -31,11 +31,16 @@ const Manufacturer = () => {
         itemKey="id"
         columns={useColumns().columns}
         refreshData={refreshData}
-        onRowUpdate={(manufacturer) => openManufacturerModal(manufacturer as IManufacturer)}
+        onRowUpdate={(manufacturer) =>
+          openManufacturerModal(manufacturer as IManufacturer)
+        }
         onRowInsert={() => openManufacturerModal()}
         onRowRemove={(id) => dispatch(manufacturerActions.remove({ id: id }))}
         onRowRemoveRange={(ids) =>
           dispatch(manufacturerActions.removeRange({ ids: ids }))
+        }
+        onExpandData={(skip, take) =>
+          dispatch(manufacturerActions.getPaged({ skip, take }))
         }
         excelColumns={useColumns().excelColumns}
         enableToolbar

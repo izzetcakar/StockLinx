@@ -31,6 +31,10 @@ import {
   RemoveRangeManufacturerFailure,
   ManufacturerRemoveRangePayload,
   ManufacturerRemovePayload,
+  ManufacturerPagedRequestPayload,
+  FetchManufacturersPagedRequest,
+  FetchManufacturersPagedSuccess,
+  FetchManufacturersPagedFailure,
 } from "./type";
 
 //GET
@@ -45,6 +49,23 @@ const getAllSuccess = (
 });
 const getAllFailure = (): FetchManufacturersFailure => ({
   type: manufacturerConst.FETCH_MANUFACTURERS_FAILURE,
+});
+
+//GET:/PAGED
+const getPaged = (
+  payload: ManufacturerPagedRequestPayload
+): FetchManufacturersPagedRequest => ({
+  type: manufacturerConst.FETCH_MANUFACTURERS_PAGED_REQUEST,
+  payload,
+});
+const getPagedSuccess = (
+  payload: ManufacturersPayload
+): FetchManufacturersPagedSuccess => ({
+  type: manufacturerConst.FETCH_MANUFACTURERS_PAGED_SUCCESS,
+  payload,
+});
+const getPagedFailure = (): FetchManufacturersPagedFailure => ({
+  type: manufacturerConst.FETCH_MANUFACTURERS_PAGED_FAILURE,
 });
 
 //GET:/ID
@@ -165,6 +186,9 @@ export const manufacturerActions = {
   getAll,
   getAllSuccess,
   getAllFailure,
+  getPaged,
+  getPagedSuccess,
+  getPagedFailure,
   get,
   getSuccess,
   getFailure,

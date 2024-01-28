@@ -13,6 +13,14 @@ namespace StockLinx.Repository.Repositories.EF_Core
         {
             _mapper = mapper;
         }
+        public async Task<List<ManufacturerDto>> GetManufacturersPagedAsync(int skip, int top)
+        {
+            var manufacturers = await dbContext.Manufacturers
+                .Skip(skip)
+                .Take(top)
+                .ToListAsync();
+            return GetDtos(manufacturers.ToList());
+        }
 
         public ManufacturerDto GetDto(Manufacturer entity)
         {

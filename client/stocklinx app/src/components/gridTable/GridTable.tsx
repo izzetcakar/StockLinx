@@ -19,6 +19,7 @@ const GridTable: React.ForwardRefRenderFunction<
     onRowUpdate = (row: object) => console.log(row),
     onRowRemove = (id: string) => console.log(id),
     onRowRemoveRange = (ids: string[]) => console.log(ids),
+    onExpandData,
     itemKey,
     excelColumns,
     enableToolbar = false,
@@ -49,6 +50,7 @@ const GridTable: React.ForwardRefRenderFunction<
         onRowUpdate={onRowUpdate}
         onRowRemove={onRowRemove}
         onRowRemoveRange={onRowRemoveRange}
+        onExpandData={onExpandData}
         itemKey={itemKey}
         excelColumns={excelColumns}
         enableToolbar={enableToolbar}

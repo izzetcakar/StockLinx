@@ -8,18 +8,20 @@ import { useSelectRow } from "./customhooks/selectRow";
 import { useCell } from "./customhooks/cell";
 import { useSelectCell } from "./customhooks/selectCell";
 import { useGridTableContext } from "./context/GenericStateContext";
-import "./gridtable.scss";
 import { useVisibleColumns } from "./customhooks/visibleColumnsHook";
+import { usePaging } from "./customhooks/paging";
+import "./gridtable.scss";
 
 const GridtableContent: React.FC<GridtableProps> = ({
   data = [],
   columns = [],
   noDataText = "No Data Found",
   refreshData,
-  onRowInsert = () => console.log("Row insert"),
+  onRowInsert,
   onRowUpdate = (row: object) => console.log(row),
   onRowRemove = (id: string) => console.log(id),
   onRowRemoveRange = (ids: string[]) => console.log(ids),
+  onExpandData,
   itemKey,
   excelColumns,
   enableToolbar = false,
@@ -33,6 +35,8 @@ const GridtableContent: React.FC<GridtableProps> = ({
   const { filters, selectedKeys, visibleColumns } = useGridTableContext();
 
   const { createVisibleColumns } = useVisibleColumns(columns);
+
+  const { expandData } = usePaging(data.length, onExpandData);
 
   const { getFilterInput, applyFilterToData } = useFilter(
     columns.filter((c) => c.visible !== false)
@@ -204,13 +208,18 @@ const GridtableContent: React.FC<GridtableProps> = ({
               <td>{noDataText}</td>
             </tr>
           )}
-          <tr className="gridtable__expand__data__row">
-            <td className="gridtable__expand__data__cell">
-              <button className="gridtable__expand__data__btn">
-                Load More
-              </button>
-            </td>
-          </tr>
+          {onExpandData ? (
+            <tr className="gridtable__expand__data__row">
+              <td className="gridtable__expand__data__cell">
+                <button
+                  className="gridtable__expand__data__btn"
+                  onClick={() => expandData()}
+                >
+                  Load More
+                </button>
+              </td>
+            </tr>
+          ) : null}
         </tbody>
       )}
     </table>

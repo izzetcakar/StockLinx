@@ -6,6 +6,7 @@ import {
   CreateManufacturerRequest,
   CreateRangeManufacturerRequest,
   FetchManufacturerRequest,
+  FetchManufacturersPagedRequest,
   RemoveManufacturerRequest,
   RemoveRangeManufacturerRequest,
   UpdateManufacturerRequest,
@@ -45,6 +46,30 @@ function* fetchManufacturersSaga() {
   }
   yield put(genericActions.decreaseLoading());
 }
+function* fetchManufacturersPagedSaga(action: FetchManufacturersPagedRequest) {
+  yield put(genericActions.increaseLoading());
+  try {
+    const { data, message, success }: IResponse = yield call(
+      manufacturerRequests.getPaged,
+      action.payload.skip,
+      action.payload.take
+    );
+    if (success !== undefined && !success) {
+      throw new Error(message);
+    } else {
+      yield put(
+        manufacturerActions.getPagedSuccess({
+          manufacturers: data as IManufacturer[],
+        })
+      );
+    }
+  } catch (e) {
+    openNotificationError("Manufacturer", (e as Error).message);
+    yield put(manufacturerActions.getPagedFailure());
+  }
+  yield put(genericActions.decreaseLoading());
+}
+
 function* fetchManufacturerSaga(action: FetchManufacturerRequest) {
   yield put(genericActions.increaseLoading());
   try {
@@ -113,7 +138,6 @@ function* createRangeManufacturerSaga(action: CreateRangeManufacturerRequest) {
   }
   yield put(genericActions.decreaseLoading());
 }
-
 function* updateManufacturerSaga(action: UpdateManufacturerRequest) {
   yield put(genericActions.increaseLoading());
   try {
@@ -185,6 +209,10 @@ function* manufacturersaga() {
   yield takeEvery(
     manufacturerConst.FETCH_MANUFACTURERS_REQUEST,
     fetchManufacturersSaga
+  );
+  yield takeEvery(
+    manufacturerConst.FETCH_MANUFACTURERS_PAGED_REQUEST,
+    fetchManufacturersPagedSaga
   );
   yield takeEvery(
     manufacturerConst.FETCH_MANUFACTURER_REQUEST,

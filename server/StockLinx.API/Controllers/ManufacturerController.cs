@@ -32,6 +32,20 @@ namespace StockLinx.API.Controllers
             }
         }
 
+        [HttpGet("paged")]
+        public async Task<IActionResult> GetManufacturersPaged([FromQuery] int skip, [FromQuery] int top)
+        {
+            try
+            {
+                var manufacturers = await _manufacturerService.GetManufacturersPagedAsync(skip, top);
+                return CreateActionResult(CustomResponseDto<List<ManufacturerDto>>.Success(200, manufacturers));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {

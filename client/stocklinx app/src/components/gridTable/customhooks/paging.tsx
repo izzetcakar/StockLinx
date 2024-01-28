@@ -1,20 +1,14 @@
 import { useGridTableContext } from "../context/GenericStateContext";
 
-export const usePaging = (data: object[]) => {
-  const { pageNumber, setPageNumber, itemPerPage } = useGridTableContext();
+export const usePaging = (
+  dataLength: number,
+  onExpandData?: (skip: number, top: number) => any
+) => {
+  const { itemPerPage } = useGridTableContext();
 
-  const handlePageNumber = (forward: boolean) => {
-    if (forward) {
-      if (pageNumber + 1 < data.length / itemPerPage) {
-        setPageNumber((prev) => prev + 1);
-      }
-    } else {
-      if (pageNumber - 1 >= 0) {
-        setPageNumber((prev) => prev - 1);
-      }
-    }
+  const expandData = () => {
+    if (!onExpandData) return;
+    onExpandData(dataLength, itemPerPage);
   };
-  return {
-    handlePageNumber,
-  };
+  return { expandData };
 };
