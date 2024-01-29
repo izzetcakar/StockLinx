@@ -71,7 +71,7 @@ const GridtableContent: React.FC<GridtableProps> = ({
 
   return (
     <table className="gridtable">
-      <thead>
+      <tbody>
         {enableToolbar ? (
           <tr className="gridtable__header__row">
             <td className="gridtable__header__row__cell">
@@ -89,8 +89,6 @@ const GridtableContent: React.FC<GridtableProps> = ({
             </td>
           </tr>
         ) : null}
-      </thead>
-      <tbody>
         <tr className="gridtable__column__row">
           {enableSelectActions ? (
             <td className="gridtable__checkbox__cell">
