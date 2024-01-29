@@ -7,13 +7,8 @@ import textInputClasses from "./textInput.module.scss";
 import { useGridTableContext } from "../context/GenericStateContext";
 
 export const useFilter = (columns: Column[]) => {
-  const {
-    filters,
-    setFilters,
-    clearPagination,
-    clearRowSelection,
-    clearCellSelection,
-  } = useGridTableContext();
+  const { filters, setFilters, clearRowSelection, clearCellSelection } =
+    useGridTableContext();
 
   const getFilterType = (field: string): FilterType => {
     const column = columns.find((column) => column.dataField === field);
@@ -126,7 +121,6 @@ export const useFilter = (columns: Column[]) => {
   const handleFilterChange = (e: any, filter: Filter) => {
     clearCellSelection();
     clearRowSelection();
-    clearPagination();
     const newValue = getFilterChangedValue(e, filter);
     const newIsApplied = newValue === null || newValue === "" ? false : true;
     setFilters((prev) =>

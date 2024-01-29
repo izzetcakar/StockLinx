@@ -69,6 +69,44 @@ const GridtableContent: React.FC<GridtableProps> = ({
     createVisibleColumns();
   }, [columns]);
 
+  const noDataBody = () => {
+    return (
+      <tbody>
+        <tr className="gridtable__column__row">
+          {visibleColumns.map((vColumn, vColumnIndex) => (
+            <td
+              key={"column__header__" + vColumn.caption + "__" + vColumnIndex}
+              className="gridtable__column__cell"
+            >
+              {vColumn.renderHeader ? vColumn.renderHeader() : vColumn.caption}
+            </td>
+          ))}
+        </tr>
+        <tr className="gridtable__filter__row">
+          {enableSelectActions ? (
+            <td className="gridtable__filter__cell"></td>
+          ) : null}
+          {enableEditActions ? (
+            <td className="gridtable__filter__cell"></td>
+          ) : null}
+          {filters
+            .filter((x) =>
+              visibleColumns.map((v) => v.dataField).includes(x.field)
+            )
+            .map((filter: Filter, filterIndex) => (
+              <td
+                key={filter.field + "__" + filterIndex}
+                className="gridtable__filter__cell"
+              ></td>
+            ))}
+        </tr>
+        <tr className="gridtable__nodata__row">
+          <td>{noDataText}</td>
+        </tr>
+      </tbody>
+    );
+  };
+
   return (
     <table className="gridtable">
       <thead>
@@ -89,12 +127,8 @@ const GridtableContent: React.FC<GridtableProps> = ({
           </tr>
         ) : null}
       </thead>
-      {visibleColumns.length === 0 ? (
-        <tbody>
-          <tr className="gridtable__nodata__row">
-            <td>{noDataText}</td>
-          </tr>
-        </tbody>
+      {data.length < 1 ? (
+        noDataBody()
       ) : (
         <tbody>
           <tr className="gridtable__column__row">
@@ -148,66 +182,60 @@ const GridtableContent: React.FC<GridtableProps> = ({
                 </td>
               ))}
           </tr>
-          {filterDataByInput(data).length > 0 ? (
-            filterDataByInput(data).map((obj, rowIndex) => (
-              <tr
-                key={"gridtable__row__" + rowIndex}
-                className={getSelectedRowClass(obj[keyfield])}
-              >
-                {enableSelectActions ? (
-                  <td className="gridtable__checkbox__cell">
-                    <Checkbox
-                      checked={selectedKeys.includes(obj[keyfield])}
-                      onChange={() => handleSelectRow(obj[keyfield])}
-                      radius={2}
-                      size={18}
-                    />
+          {filterDataByInput(data).map((obj, rowIndex) => (
+            <tr
+              key={"gridtable__row__" + rowIndex}
+              className={getSelectedRowClass(obj[keyfield])}
+            >
+              {enableSelectActions ? (
+                <td className="gridtable__checkbox__cell">
+                  <Checkbox
+                    checked={selectedKeys.includes(obj[keyfield])}
+                    onChange={() => handleSelectRow(obj[keyfield])}
+                    radius={2}
+                    size={18}
+                  />
+                </td>
+              ) : null}
+              {enableEditActions ? (
+                <td className="gridtable__edit__cell">
+                  <EditComponent
+                    obj={obj}
+                    id={obj[keyfield]}
+                    onRowUpdate={onRowUpdate}
+                    onRowRemove={onRowRemove}
+                  />
+                </td>
+              ) : null}
+              {columns
+                .filter((column) => column.visible !== false)
+                .map((column, columnIndex) => (
+                  <td
+                    key={`gridtable__row__cell__${columnIndex}__${column.dataField}`}
+                    className={getSelectedClassName(rowIndex, columnIndex)}
+                    onMouseDown={() =>
+                      handleCellMouseDown(
+                        rowIndex,
+                        columnIndex,
+                        column,
+                        (obj as { [key: string]: any })[column.dataField]
+                      )
+                    }
+                    onMouseEnter={() =>
+                      handleCellMouseEnter(
+                        rowIndex,
+                        columnIndex,
+                        column,
+                        (obj as { [key: string]: any })[column.dataField]
+                      )
+                    }
+                    onMouseUp={handleCellMouseUp}
+                  >
+                    {renderColumnValue(obj, column)}
                   </td>
-                ) : null}
-                {enableEditActions ? (
-                  <td className="gridtable__edit__cell">
-                    <EditComponent
-                      obj={obj}
-                      id={obj[keyfield]}
-                      onRowUpdate={onRowUpdate}
-                      onRowRemove={onRowRemove}
-                    />
-                  </td>
-                ) : null}
-                {columns
-                  .filter((column) => column.visible !== false)
-                  .map((column, columnIndex) => (
-                    <td
-                      key={`gridtable__row__cell__${columnIndex}__${column.dataField}`}
-                      className={getSelectedClassName(rowIndex, columnIndex)}
-                      onMouseDown={() =>
-                        handleCellMouseDown(
-                          rowIndex,
-                          columnIndex,
-                          column,
-                          (obj as { [key: string]: any })[column.dataField]
-                        )
-                      }
-                      onMouseEnter={() =>
-                        handleCellMouseEnter(
-                          rowIndex,
-                          columnIndex,
-                          column,
-                          (obj as { [key: string]: any })[column.dataField]
-                        )
-                      }
-                      onMouseUp={handleCellMouseUp}
-                    >
-                      {renderColumnValue(obj, column)}
-                    </td>
-                  ))}
-              </tr>
-            ))
-          ) : (
-            <tr className="gridtable__nodata__row">
-              <td>{noDataText}</td>
+                ))}
             </tr>
-          )}
+          ))}
           {onExpandData ? (
             <tr className="gridtable__expand__data__row">
               <td className="gridtable__expand__data__cell">

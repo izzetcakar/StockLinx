@@ -236,7 +236,7 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
 
   return (
     <div className="gridtable__toolbar">
-      <Dropdown columns={columns} onChange={onVisibleColumnsChange} />
+      {/* <Dropdown columns={columns} onChange={onVisibleColumnsChange} /> */}
       {onRowInsert ? (
         <ActionIconBtn
           submitFunc={onRowInsert}

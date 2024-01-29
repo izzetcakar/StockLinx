@@ -49,6 +49,9 @@
 .gridtable__row {
   border-bottom: 1px solid #ced4da;
 }
+.gridtable__row:last-child {
+  border-bottom: none;
+}
 .gridtable__row:hover {
   background-color: #e5e5e5;
   .gridtable__edit__cell {
@@ -68,21 +71,15 @@
   }
 }
 .gridtable__column__row {
-  // background-color: #37304b;
-  // border-top: none !important;
-  // border-bottom: none !important;
-  // box-shadow: inset 0 0 0 #ced4da, inset 0 -1px 0 #ced4da;
   border-bottom: 1px solid #ced4da;
   position: sticky;
   top: 0;
   z-index: 3;
 }
 .gridtable__column__cell {
-  padding-top: 12px;
-  padding-bottom: 12px;
+  padding: 12px 0 12px 4px;
   width: 100vw;
   word-wrap: none;
-  padding-left: 12px;
   overflow: hidden;
   white-space: nowrap;
   text-align: left;
@@ -150,7 +147,6 @@
   overflow: hidden;
 }
 .gridtable__row__cell.selected {
-  // border: 1px solid #2196f3;
   background-color: #2195f339;
 }
 .gridtable__checkbox__cell {
@@ -160,14 +156,11 @@
 }
 .gridtable__edit__cell {
   padding: 0;
-  width: fit-content;
+  min-width: 45.75px;
+  width: 45.75px;
   background-color: white;
   user-select: none;
   border-right: 1px solid #ced4da;
-  // position: sticky;
-  // right: 0;
-  // z-index: 2;
-  // box-shadow: inset 1px 0 0 0 #ced4da;
 }
 .gridtable__nodata__row {
   display: flex;
@@ -175,15 +168,6 @@
   align-items: center;
   width: 100%;
   padding: 2rem 0;
-}
-.gridtable__empty__edit__cell {
-  padding: 0;
-  position: sticky;
-  right: 0;
-  z-index: 2;
-  width: 44.75px;
-  min-width: 44.75px;
-  user-select: none;
 }
 .gridtable__expand__data__row {
   display: flex;
@@ -219,4 +203,7 @@
 }
 .gridtable__filter__cell {
   border-right: 1px solid #ced4da;
+}
+.gridtable__filter__cell:last-child {
+  border-right: none;
 }
