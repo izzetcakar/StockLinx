@@ -69,10 +69,48 @@ const GridtableContent: React.FC<GridtableProps> = ({
     createVisibleColumns();
   }, [columns]);
 
-  const noDataBody = () => {
-    return (
+  return (
+    <table className="gridtable">
+      <thead>
+        {enableToolbar ? (
+          <tr className="gridtable__header__row">
+            <td className="gridtable__header__row__cell">
+              <TableToolbar
+                data={data}
+                columns={columns}
+                excelColumns={excelColumns}
+                enableExcelActions={enableExcelActions}
+                itemKey={keyfield}
+                onRowInsert={onRowInsert}
+                onRowRemoveRange={onRowRemoveRange}
+                refreshData={refreshData}
+                onExpandData={onExpandData}
+              />
+            </td>
+          </tr>
+        ) : null}
+      </thead>
       <tbody>
         <tr className="gridtable__column__row">
+          {enableSelectActions ? (
+            <td className="gridtable__checkbox__cell">
+              <Checkbox
+                checked={
+                  selectedKeys.length === data.length && selectedKeys.length > 0
+                }
+                disabled={filterDataByInput(data).length < 1}
+                onChange={() => handleselectAll()}
+                indeterminate={
+                  selectedKeys.length > 0 && selectedKeys.length < data.length
+                }
+                radius={2}
+                size={18}
+              />
+            </td>
+          ) : null}
+          {enableEditActions ? (
+            <td className="gridtable__edit__cell"></td>
+          ) : null}
           {visibleColumns.map((vColumn, vColumnIndex) => (
             <td
               key={"column__header__" + vColumn.caption + "__" + vColumnIndex}
@@ -97,92 +135,13 @@ const GridtableContent: React.FC<GridtableProps> = ({
               <td
                 key={filter.field + "__" + filterIndex}
                 className="gridtable__filter__cell"
-              ></td>
-            ))}
-        </tr>
-        <tr className="gridtable__nodata__row">
-          <td>{noDataText}</td>
-        </tr>
-      </tbody>
-    );
-  };
-
-  return (
-    <table className="gridtable">
-      <thead>
-        {enableToolbar ? (
-          <tr className="gridtable__header__row">
-            <td className="gridtable__header__row__cell">
-              <TableToolbar
-                data={data}
-                columns={columns}
-                excelColumns={excelColumns}
-                enableExcelActions={enableExcelActions}
-                itemKey={keyfield}
-                onRowInsert={onRowInsert}
-                onRowRemoveRange={onRowRemoveRange}
-                refreshData={refreshData}
-              />
-            </td>
-          </tr>
-        ) : null}
-      </thead>
-      {data.length < 1 ? (
-        noDataBody()
-      ) : (
-        <tbody>
-          <tr className="gridtable__column__row">
-            {enableSelectActions ? (
-              <td className="gridtable__checkbox__cell">
-                <Checkbox
-                  checked={
-                    selectedKeys.length === data.length &&
-                    selectedKeys.length > 0
-                  }
-                  onChange={() => handleselectAll()}
-                  indeterminate={
-                    selectedKeys.length > 0 && selectedKeys.length < data.length
-                  }
-                  radius={2}
-                  size={18}
-                />
-              </td>
-            ) : null}
-            {enableEditActions ? (
-              <td className="gridtable__edit__cell"></td>
-            ) : null}
-            {visibleColumns.map((vColumn, vColumnIndex) => (
-              <td
-                key={"column__header__" + vColumn.caption + "__" + vColumnIndex}
-                className="gridtable__column__cell"
               >
-                {vColumn.renderHeader
-                  ? vColumn.renderHeader()
-                  : vColumn.caption}
+                {getFilterInput(filter)}
               </td>
             ))}
-          </tr>
-          <tr className="gridtable__filter__row">
-            {enableSelectActions ? (
-              <td className="gridtable__filter__cell"></td>
-            ) : null}
-            {enableEditActions ? (
-              <td className="gridtable__filter__cell"></td>
-            ) : null}
-            {filters
-              .filter((x) =>
-                visibleColumns.map((v) => v.dataField).includes(x.field)
-              )
-              .map((filter: Filter, filterIndex) => (
-                <td
-                  key={filter.field + "__" + filterIndex}
-                  className="gridtable__filter__cell"
-                >
-                  {getFilterInput(filter)}
-                </td>
-              ))}
-          </tr>
-          {filterDataByInput(data).map((obj, rowIndex) => (
+        </tr>
+        {filterDataByInput(data).length > 0 ? (
+          filterDataByInput(data).map((obj, rowIndex) => (
             <tr
               key={"gridtable__row__" + rowIndex}
               className={getSelectedRowClass(obj[keyfield])}
@@ -235,21 +194,25 @@ const GridtableContent: React.FC<GridtableProps> = ({
                   </td>
                 ))}
             </tr>
-          ))}
-          {onExpandData ? (
-            <tr className="gridtable__expand__data__row">
-              <td className="gridtable__expand__data__cell">
-                <button
-                  className="gridtable__expand__data__btn"
-                  onClick={() => expandData()}
-                >
-                  Load More
-                </button>
-              </td>
-            </tr>
-          ) : null}
-        </tbody>
-      )}
+          ))
+        ) : (
+          <tr className="gridtable__nodata__row">
+            <td>{noDataText}</td>
+          </tr>
+        )}
+        {onExpandData ? (
+          <tr className="gridtable__expand__data__row">
+            <td className="gridtable__expand__data__cell">
+              <button
+                className="gridtable__expand__data__btn"
+                onClick={() => expandData()}
+              >
+                Load More
+              </button>
+            </td>
+          </tr>
+        ) : null}
+      </tbody>
     </table>
   );
 };

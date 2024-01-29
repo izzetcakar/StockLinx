@@ -137,10 +137,15 @@ export const useFilter = (columns: Column[]) => {
       let isMatch = true;
       filters.forEach((filter) => {
         if (filter.isApplied) {
+          const itemValue = item[filter.field];
+          if (itemValue === null || itemValue === undefined) {
+            isMatch = false;
+            return;
+          }
           const value =
-            typeof item[filter.field] === "string" && filter.type !== "lookup"
-              ? item[filter.field].toLowerCase()
-              : item[filter.field];
+            typeof itemValue === "string" && filter.type !== "lookup"
+              ? itemValue.toString().toLowerCase()
+              : itemValue.toString();
           switch (filter.type) {
             case FilterType.TEXT:
               isMatch =

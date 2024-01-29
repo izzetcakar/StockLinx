@@ -50,7 +50,7 @@
   border-bottom: 1px solid #ced4da;
 }
 .gridtable__row:last-child {
-  border-bottom: none;
+  height: 100px;
 }
 .gridtable__row:hover {
   background-color: #e5e5e5;
@@ -71,7 +71,10 @@
   }
 }
 .gridtable__column__row {
-  border-bottom: 1px solid #ced4da;
+  background-color: white;
+  border-top: none !important;
+  border-bottom: none !important;
+  box-shadow: inset 0 0 0 #ced4da, inset 0 -1px 0 #ced4da;
   position: sticky;
   top: 0;
   z-index: 3;
@@ -79,10 +82,16 @@
 .gridtable__column__cell {
   padding: 12px 0 12px 4px;
   width: 100vw;
+  border-left: none !important;
+  border-right: none !important;
+  box-shadow: inset -1px 0 0 #ced4da, inset 0 -1px 0 #ced4da;
   word-wrap: none;
   overflow: hidden;
   white-space: nowrap;
   text-align: left;
+}
+.gridtable__column__cell:last-child {
+  box-shadow: none;
 }
 .gridtable thead {
   display: block;
@@ -152,7 +161,9 @@
 .gridtable__checkbox__cell {
   width: fit-content;
   padding: 8px;
-  border-right: 1px solid #ced4da;
+  background-color: white;
+  border: none !important;
+  box-shadow: inset -1px 0 0 #ced4da, inset 0 0 0 #ced4da;
 }
 .gridtable__edit__cell {
   padding: 0;
@@ -160,7 +171,8 @@
   width: 45.75px;
   background-color: white;
   user-select: none;
-  border-right: 1px solid #ced4da;
+  border: none !important;
+  box-shadow: inset -1px 0 0 #ced4da, inset 0 0 0 #ced4da;
 }
 .gridtable__nodata__row {
   display: flex;
@@ -173,6 +185,7 @@
   display: flex;
   width: 100%;
   height: fit-content;
+  // border-top: 1px solid #ced4da;
 }
 .gridtable__expand__data__cell {
   display: flex;
@@ -187,7 +200,6 @@
   cursor: pointer;
   text-align: center;
   padding: 8px 0;
-  border-bottom: 1px solid #ced4da;
   transition: 0.3s;
   font-size: 12px;
 
@@ -202,8 +214,10 @@
   }
 }
 .gridtable__filter__cell {
-  border-right: 1px solid #ced4da;
+  border-left: none !important;
+  border-right: none !important;
+  box-shadow: inset -1px 0 0 #ced4da, inset 0 -1px 0 #ced4da;
 }
 .gridtable__filter__cell:last-child {
-  border-right: none;
+  box-shadow: none;
 }

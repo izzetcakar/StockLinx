@@ -5,7 +5,6 @@ import {
   ImportedExcelData,
   RowError,
 } from "../interfaces/interfaces";
-import Dropdown from "./Dropdown";
 import icon_plus from "../../.././assets/icon_plus.png";
 import icon_refresh from "../../.././assets/icon_refresh.png";
 import icon_trash from "../../.././assets/icon_trash.png";
@@ -16,7 +15,6 @@ import ExcelButton from "./ExcelButton";
 import { utils, read } from "xlsx";
 import { FileInput } from "@mantine/core";
 import { openConfirmModal, openExcelModal } from "../modals/modals";
-import { useVisibleColumns } from "../customhooks/visibleColumnsHook";
 import { useGridTableContext } from "../context/GenericStateContext";
 import ItemNumberSelector from "../tableFooter/ItemNumberSelector";
 import "./tableToolbar.scss";
@@ -29,6 +27,7 @@ interface TableToolbarProps {
   onRowInsert?: () => void;
   onRowRemoveRange: (ids: string[]) => void;
   refreshData?: () => Promise<void> | void;
+  onExpandData?: (skip: number, top: number) => void;
 }
 const TableToolbar: React.FC<TableToolbarProps> = ({
   data,
@@ -39,8 +38,8 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
   onRowInsert,
   onRowRemoveRange,
   refreshData,
+  onExpandData,
 }) => {
-  const { onVisibleColumnsChange } = useVisibleColumns(columns);
   const { selectedKeys } = useGridTableContext();
 
   const handleFileInputChange = async (file: File | null) => {
@@ -270,7 +269,7 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
             onExportAll={() => exportToExcel(false, data)}
             onExportSelected={() => exportToExcel(false, getSelectedData())}
           />
-          <ItemNumberSelector />
+          {onExpandData ? <ItemNumberSelector /> : null}
         </div>
       ) : null}
     </div>
