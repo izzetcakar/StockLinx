@@ -14,12 +14,14 @@
   display: none;
 }
 .gridtable {
+  --global-border-color: #dce0e5bc;
+
   display: block;
   table-layout: fixed;
   border-collapse: collapse;
   max-width: 100%;
   height: 100%;
-  border: 1px solid #ced4da;
+  border: 1px solid var(--global-border-color);
   border-radius: 4px;
   border-spacing: 0;
   font-size: 12px;
@@ -31,23 +33,18 @@
   // empty-cells: show;
   .gridtable__toolbar {
     padding: 8px;
-    border-bottom: 1px solid #ced4da;
+    border-bottom: 1px solid var(--global-border-color);
     max-width: 100%;
     user-select: none;
   }
   .gridtable__filter__row {
     background-color: white;
-    border-top: none !important;
-    border-bottom: none !important;
-    box-shadow: inset 0 0 0 #ced4da, inset 0 -1px 0 #ced4da;
-    position: sticky;
-    top: 40.66px;
-    z-index: 3;
+    border-bottom: 1px solid var(--global-border-color);
   }
 }
 
 .gridtable__row {
-  border-bottom: 1px solid #ced4da;
+  border-bottom: 1px solid var(--global-border-color);
 }
 .gridtable__row:hover {
   background-color: #e5e5e5;
@@ -71,20 +68,22 @@
   background-color: white;
   border-top: none !important;
   border-bottom: none !important;
-  box-shadow: inset 0 0 0 #ced4da, inset 0 -1px 0 #ced4da;
+  box-shadow: inset 0 0 0 var(--global-border-color),
+    inset 0 -1px 0 var(--global-border-color);
   position: sticky;
   top: 0;
   z-index: 3;
 }
 .gridtable__column__cell {
-  padding: 12px 0 12px 4px;
+  padding: 12px 0 4px 4px;
   width: 100vw;
   border-left: none !important;
   border-right: none !important;
-  box-shadow: inset -1px 0 0 #ced4da, inset 0 -1px 0 #ced4da;
-  word-wrap: none;
+  box-shadow: inset -1px 0 0 var(--global-border-color),
+    inset 0 -1px 0 var(--global-border-color);
+  // word-wrap: none;
+  // white-space: nowrap;
   overflow: hidden;
-  white-space: nowrap;
   text-align: left;
 }
 .gridtable__column__cell:last-child {
@@ -160,7 +159,8 @@
   padding: 8px;
   background-color: white;
   border: none !important;
-  box-shadow: inset -1px 0 0 #ced4da, inset 0 0 0 #ced4da;
+  box-shadow: inset -1px 0 0 var(--global-border-color),
+    inset 0 0 0 var(--global-border-color);
 }
 .gridtable__edit__cell {
   padding: 0;
@@ -169,7 +169,8 @@
   background-color: white;
   user-select: none;
   border: none !important;
-  box-shadow: inset -1px 0 0 #ced4da, inset 0 0 0 #ced4da;
+  box-shadow: inset -1px 0 0 var(--global-border-color),
+    inset 0 0 0 var(--global-border-color);
 }
 .gridtable__nodata__row {
   display: flex;
@@ -208,12 +209,4 @@
     background-color: darkblue;
     color: white;
   }
-}
-.gridtable__filter__cell {
-  border-left: none !important;
-  border-right: none !important;
-  box-shadow: inset -1px 0 0 #ced4da, inset 0 -1px 0 #ced4da;
-}
-.gridtable__filter__cell:last-child {
-  box-shadow: none;
 }

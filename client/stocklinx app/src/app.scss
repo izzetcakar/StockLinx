@@ -34,17 +34,22 @@
     overflow: scroll;
     background-color: white;
     border-radius: 1rem;
-    margin: 0.5rem;
+    margin-top: 0.5rem;
+    padding: 1rem;
     .page__content__header {
       display: flex;
       max-width: 100%;
       height: fit-content;
       align-items: center;
       justify-content: space-between;
-      padding: 1rem;
+      padding-bottom: 0.5rem;
       .page__content__header__title {
-        font-size: 1.5rem;
-        font-weight: 500;
+        font-family: "Helvetica Neue", "Segoe UI", helvetica, verdana,
+          sans-serif;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-weight: 700;
+        font-size: 26px;
       }
     }
   }
@@ -209,6 +214,6 @@
 // .dx-datagrid-content .dx-datagrid-table .dx-row > tr > td {
 //   vertical-align: middle;
 // }
-.mantine-plqg5f{
+.mantine-plqg5f {
   background-color: transparent;
 }
