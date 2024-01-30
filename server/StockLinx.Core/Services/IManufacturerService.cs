@@ -9,7 +9,7 @@ namespace StockLinx.Core.Services
     {
         Task<ManufacturerDto> GetDto(Guid id);
         Task<List<ManufacturerDto>> GetAllDtos();
-        Task<List<ManufacturerDto>> GetManufacturersPagedAsync(int skip, int top);
+        Task<List<ManufacturerDto>> GetManufacturersPagedAsync(int skip, int take, Dictionary<string, string> filters = null);
         Task<ManufacturerDto> CreateManufacturerAsync(ManufacturerCreateDto createDto);
         Task<List<ManufacturerDto>> CreateRangeManufacturerAsync(List<ManufacturerCreateDto> createDtos);
         Task<ManufacturerDto> UpdateManufacturerAsync(ManufacturerUpdateDto updateDto);

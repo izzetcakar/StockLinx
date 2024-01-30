@@ -3,6 +3,7 @@ using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
+using StockLinx.Core.Entities;
 using StockLinx.Core.Services;
 
 namespace StockLinx.API.Controllers
@@ -33,11 +34,17 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpGet("paged")]
-        public async Task<IActionResult> GetManufacturersPaged([FromQuery] int skip, [FromQuery] int top)
+        public async Task<IActionResult> GetManufacturersPaged(
+            [FromQuery(Name = "$skip")] int? skip,
+            [FromQuery(Name = "$take")] int? take,
+            [FromQuery(Name = "$filter")] string filterExpression)
         {
             try
             {
-                var manufacturers = await _manufacturerService.GetManufacturersPagedAsync(skip, top);
+                var filters = FilterExpression.ParseFilterExpression(filterExpression);
+
+                var manufacturers = await _manufacturerService.GetManufacturersPagedAsync(skip ?? 0, take ?? 24, filters);
+
                 return CreateActionResult(CustomResponseDto<List<ManufacturerDto>>.Success(200, manufacturers));
             }
             catch (Exception ex)

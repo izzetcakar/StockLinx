@@ -127,10 +127,10 @@ namespace StockLinx.Service.Services
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task<List<ManufacturerDto>> GetManufacturersPagedAsync(int skip, int top)
+        public async Task<List<ManufacturerDto>> GetManufacturersPagedAsync(int skip, int take, Dictionary<string, string> filters = null)
         {
             var dtos = new List<ManufacturerDto>();
-            dtos = await _manufacturerRepository.GetManufacturersPagedAsync(skip, top);
+            dtos = await _manufacturerRepository.GetManufacturersPagedAsync(skip, take, filters);
             return dtos;
         }
     }
