@@ -21,7 +21,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
                 .ToListAsync();
             return GetDtos(manufacturers.ToList());
         }
-        public async Task<List<ManufacturerDto>> GetManufacturersPagedAsync(int skip, int take, Dictionary<string, string> filters = null)
+        public async Task<List<ManufacturerDto>> GetManufacturersPagedAsync(int skip, int take, Dictionary<string, string> filters)
         {
             var query = dbContext.Manufacturers.AsQueryable();
 
@@ -48,21 +48,29 @@ namespace StockLinx.Repository.Repositories.EF_Core
                 if (parts.Length == 2)
                 {
                     var filterOperator = parts[0];
-                    var value = parts[1];
+                    var value = parts[1].ToString().ToLower();
+                    Type propType = typeof(Manufacturer).GetProperty(propertyName).PropertyType;
 
                     switch (filterOperator)
                     {
                         case "contains":
-                            query = query.Where(m => EF.Property<string>(m, propertyName) != null && EF.Property<string>(m, propertyName).Contains(value));
+                            //EF.Property<string>(m, propertyName)
+                            query = query.Where(m => propType.GetProperty(propertyName).GetValue(m).ToString().ToLower().Contains(value));
                             break;
                         case "startswith":
-                            query = query.Where(m => EF.Property<string>(m, propertyName) != null && EF.Property<string>(m, propertyName).StartsWith(value));
+                            query = query.Where(m => propType.GetProperty(propertyName).GetValue(m).ToString().StartsWith(value));
                             break;
                         case "endswith":
-                            query = query.Where(m => EF.Property<string>(m, propertyName) != null && EF.Property<string>(m, propertyName).EndsWith(value));
+                            query = query.Where(m => propType.GetProperty(propertyName).GetValue(m).ToString().EndsWith(value));
                             break;
                         case "equals":
-                            query = query.Where(m => EF.Property<string>(m, propertyName) != null && EF.Property<string>(m, propertyName) == value);
+                            query = query.Where(m => propType.GetProperty(propertyName).GetValue(m).ToString() == value);
+                            break;
+                        case "startsdate":
+                            query = query.Where(m => DateTime.Parse(propType.GetProperty(propertyName).GetValue(m).ToString()) >= DateTime.Parse(value));
+                            break;
+                        case "endsdate":
+                            query = query.Where(m => DateTime.Parse(propType.GetProperty(propertyName).GetValue(m).ToString()) <= DateTime.Parse(value));
                             break;
                         default:
                             break;

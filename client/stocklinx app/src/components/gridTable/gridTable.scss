@@ -75,7 +75,7 @@
   z-index: 3;
 }
 .gridtable__column__cell {
-  padding: 12px 0 4px 4px;
+  padding: 12px 4px 4px 4px;
   width: 100vw;
   border-left: none !important;
   border-right: none !important;
@@ -157,7 +157,6 @@
 .gridtable__checkbox__cell {
   width: fit-content;
   padding: 8px;
-  background-color: white;
   border: none !important;
   box-shadow: inset -1px 0 0 var(--global-border-color),
     inset 0 0 0 var(--global-border-color);
@@ -166,7 +165,6 @@
   padding: 0;
   min-width: 45.75px;
   width: 45.75px;
-  background-color: white;
   user-select: none;
   border: none !important;
   box-shadow: inset -1px 0 0 var(--global-border-color),

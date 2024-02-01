@@ -35,15 +35,15 @@ namespace StockLinx.API.Controllers
 
         [HttpGet("paged")]
         public async Task<IActionResult> GetManufacturersPaged(
-            [FromQuery(Name = "$skip")] int? skip,
-            [FromQuery(Name = "$take")] int? take,
-            [FromQuery(Name = "$filter")] string filterExpression)
+            [FromQuery(Name = "skip")] int? skip,
+            [FromQuery(Name = "take")] int? take,
+            [FromQuery(Name = "filter")] string? filterExpression)
         {
             try
             {
                 var filters = FilterExpression.ParseFilterExpression(filterExpression);
 
-                var manufacturers = await _manufacturerService.GetManufacturersPagedAsync(skip ?? 0, take ?? 24, filters);
+                var manufacturers = await _manufacturerService.GetManufacturersPagedAsync(skip ?? 0, take ?? 24, filters ?? new Dictionary<string, string>());
 
                 return CreateActionResult(CustomResponseDto<List<ManufacturerDto>>.Success(200, manufacturers));
             }

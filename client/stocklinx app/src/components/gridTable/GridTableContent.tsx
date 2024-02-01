@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import EditComponent from "./edit/EditComponent";
 import TableToolbar from "./tableToolbar/TableToolbar";
-import { Filter, GridtableProps } from "./interfaces/interfaces";
+import { GridtableProps } from "./interfaces/interfaces";
 import { Checkbox } from "@mantine/core";
 import { useFilter } from "./customhooks/filter";
 import { useSelectRow } from "./customhooks/selectRow";
@@ -32,13 +32,13 @@ const GridtableContent: React.FC<GridtableProps> = ({
   const [keyfield, setKeyfield] = useState<keyof object>(
     itemKey as keyof object
   );
-  const { filters, selectedKeys, visibleColumns } = useGridTableContext();
+  const { selectedKeys, visibleColumns } = useGridTableContext();
 
   const { createVisibleColumns } = useVisibleColumns(columns);
 
   const { expandData } = usePaging(data.length, onExpandData);
 
-  const { getFilterInput, applyFilterToData } = useFilter(
+  const { applyFilterToData } = useFilter(
     columns.filter((c) => c.visible !== false)
   );
   const filterDataByInput = useCallback(
@@ -118,7 +118,7 @@ const GridtableContent: React.FC<GridtableProps> = ({
             </td>
           ))}
         </tr>
-        <tr className="gridtable__filter__row">
+        {/* <tr className="gridtable__filter__row">
           {enableSelectActions ? (
             <td className="gridtable__filter__cell"></td>
           ) : null}
@@ -137,7 +137,7 @@ const GridtableContent: React.FC<GridtableProps> = ({
                 {getFilterInput(filter)}
               </td>
             ))}
-        </tr>
+        </tr> */}
         {filterDataByInput(data).length > 0 ? (
           filterDataByInput(data).map((obj, rowIndex) => (
             <tr

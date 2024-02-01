@@ -13,7 +13,7 @@ const get = (id: string) => {
 };
 const getPaged = (skip: number, take: number) => {
   return request<IManufacturer>({
-    requestUrl: requestUrl + `paged?skip=${skip}&top=${take}`,
+    requestUrl: requestUrl + `paged?skip=${skip}&take=${take}`,
     apiType: "get",
   });
 };
