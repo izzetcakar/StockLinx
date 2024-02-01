@@ -13,11 +13,12 @@ import uuid4 from "uuid4";
 import ExcelJS from "exceljs";
 import ExcelButton from "./ExcelButton";
 import { utils, read } from "xlsx";
-import { FileInput } from "@mantine/core";
+import { FileInput, Loader, Select } from "@mantine/core";
 import { openConfirmModal, openExcelModal } from "../modals/modals";
 import { useGridTableContext } from "../context/GenericStateContext";
 import ItemNumberSelector from "../tableFooter/ItemNumberSelector";
 import "./tableToolbar.scss";
+import axios from "axios";
 interface TableToolbarProps {
   data: object[];
   columns: Column[];
@@ -233,6 +234,19 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
     );
   };
 
+  //generte custom request data and return data
+  const [isload, setIsload] = React.useState(false);
+  const [customdata, setCustomdata] = React.useState<any>([]);
+  const [selected, setSelected] = React.useState<any>(null);
+  const getdata = async () => {
+    setIsload(true);
+    //fetch data from a pokemon api
+    const res = await axios.get("https://pokeapi.co/api/v2/pokemon");
+    const data = res.data.results;
+    setCustomdata(data.map((x: any) => ({ label: x.name, value: x.name })));
+    setIsload(false);
+  };
+
   return (
     <div className="gridtable__toolbar">
       {/* <Dropdown columns={columns} onChange={onVisibleColumnsChange} /> */}
@@ -254,6 +268,14 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
         submitFunc={() => removeRangeHandler()}
         icon={icon_trash}
         iconSize={16}
+      />
+      <Select
+        onDropdownOpen={() => getdata()}
+        placeholder="Pick one"
+        rightSection={isload ? <Loader size={16} /> : null}
+        data={isload ? [] : customdata}
+        value={selected}
+        onChange={(value) => setSelected(value)}
       />
       {enableExcelActions ? (
         <div className="gridtable__toolbar__last">
