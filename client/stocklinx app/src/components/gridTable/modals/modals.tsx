@@ -1,11 +1,11 @@
 import { modals } from "@mantine/modals";
-import { Column, RowError } from "../interfaces/interfaces";
+import { BaseColumn, RowError } from "../interfaces/interfaces";
 import ExcelTable from "../excel/ExcelTable";
 import { Text } from "@mantine/core";
 
 export const openExcelModal = (
   data: object[],
-  columns: Column[],
+  columns: BaseColumn[],
   errors: RowError[]
 ) =>
   modals.open({

@@ -1,6 +1,6 @@
 import { CategoryType, ICategory } from "../../interfaces/interfaces";
 import {
-  Column,
+  BaseColumn,
   ExcelColumn,
 } from "../../components/gridTable/interfaces/interfaces";
 import { Anchor } from "@mantine/core";
@@ -16,7 +16,7 @@ export const useColumns = () => {
     { id: CategoryType.COMPONENT, name: "Component" },
   ];
 
-  const columns: Column[] = [
+  const columns: BaseColumn[] = [
     {
       dataField: "name",
       caption: "Name",

@@ -2,7 +2,7 @@ import { Column, Lookup } from "../interfaces/interfaces";
 import { useCell } from "./cell";
 import { useGridTableContext } from "../context/GenericStateContext";
 
-export const useSelectCell = (data: object[], columns: Column[]) => {
+export const useSelectCell = (data: object[]) => {
   const { getLookupValue } = useCell();
   const {
     selectedCells,
@@ -10,6 +10,7 @@ export const useSelectCell = (data: object[], columns: Column[]) => {
     isDrawing,
     setIsDrawing,
     startCellRef,
+    gridColumns,
   } = useGridTableContext();
 
   const getCellValue = (value: any, lookup: Lookup | undefined) => {
@@ -107,14 +108,14 @@ export const useSelectCell = (data: object[], columns: Column[]) => {
       for (let i = startRow; i <= endRow; i++) {
         for (let j = startColumn; j <= endColumn; j++) {
           const newValue = (data[i] as { [key: string]: any })[
-            columns[j].dataField
+            gridColumns[j].dataField
           ];
-          const currentColumn = columns[j];
-          const lookup = columns[j]?.lookup;
+          const currentColumn = gridColumns[j];
+          const lookup = gridColumns[j]?.lookup;
           const cell = {
             rowIndex: i,
             columnIndex: j,
-            column: columns[j].dataField,
+            column: gridColumns[j].dataField,
             value: getCellValue(newValue, lookup),
           };
           if (currentColumn.selectable !== false) {

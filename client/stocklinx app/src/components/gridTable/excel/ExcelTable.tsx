@@ -1,14 +1,14 @@
 import React from "react";
 import Gridtable from "../GridTableContent";
-import { Column, RowError } from "../interfaces/interfaces";
+import { BaseColumn, RowError } from "../interfaces/interfaces";
 
 interface ExcelTableProps {
   data: object[];
-  columns: Column[];
+  columns: BaseColumn[];
   errors: RowError[];
 }
 const ExcelTable: React.FC<ExcelTableProps> = ({ data, columns, errors }) => {
-  const errorColumns: Column[] = [
+  const errorColumns: BaseColumn[] = [
     {
       dataField: "row",
       caption: "Row",

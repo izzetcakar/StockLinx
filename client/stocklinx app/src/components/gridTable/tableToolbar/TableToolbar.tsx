@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  Column,
   ExcelColumn,
   ImportedExcelData,
   RowError,
@@ -21,7 +20,6 @@ import "./tableToolbar.scss";
 import axios from "axios";
 interface TableToolbarProps {
   data: object[];
-  columns: Column[];
   excelColumns?: ExcelColumn[];
   enableExcelActions: boolean;
   itemKey: string;
@@ -32,7 +30,6 @@ interface TableToolbarProps {
 }
 const TableToolbar: React.FC<TableToolbarProps> = ({
   data,
-  columns,
   excelColumns,
   enableExcelActions,
   itemKey,
@@ -41,7 +38,7 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
   refreshData,
   onExpandData,
 }) => {
-  const { selectedKeys } = useGridTableContext();
+  const { gridColumns, selectedKeys } = useGridTableContext();
 
   const handleFileInputChange = async (file: File | null) => {
     if (file) {
@@ -65,7 +62,7 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
 
               excelColumns?.forEach((excelColumn) => {
                 importedData.forEach((row, rowIndex) => {
-                  const column = columns.find(
+                  const column = gridColumns.find(
                     (x) => x.caption === excelColumn.caption
                   );
                   if (!column) return;
@@ -158,7 +155,7 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
       const result = await readFile();
       openExcelModal(
         result.test,
-        columns.map((c) => ({ ...c, visible: true })),
+        gridColumns.map((c) => ({ ...c, visible: true })),
         result.errors
       );
     }
@@ -176,7 +173,9 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
       (excelData as { [key: string]: any }[]).map((item) => {
         let newRow = {} as { [key: string]: any };
         excelColumns?.map((excelColumn) => {
-          const column = columns.find((c) => c.caption === excelColumn.caption);
+          const column = gridColumns.find(
+            (c) => c.caption === excelColumn.caption
+          );
           let datafield = column?.dataField as string;
           let value = item[datafield as string];
 
@@ -249,7 +248,7 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
 
   return (
     <div className="gridtable__toolbar">
-      {/* <Dropdown columns={columns} onChange={onVisibleColumnsChange} /> */}
+      {/* <Dropdown onChange={onVisibleColumnsChange} /> */}
       {onRowInsert ? (
         <ActionIconBtn
           submitFunc={onRowInsert}

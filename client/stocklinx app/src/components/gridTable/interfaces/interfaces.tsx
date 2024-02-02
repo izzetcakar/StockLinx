@@ -1,4 +1,7 @@
-export interface Column {
+export interface Column extends BaseColumn {
+  id: string;
+}
+export interface BaseColumn {
   dataField: string;
   caption: string;
   renderComponent?: (e: object) => any;
@@ -7,11 +10,6 @@ export interface Column {
   dataType: "string" | "number" | "boolean" | "date" | "action";
   visible?: boolean;
   selectable?: boolean;
-}
-export interface VisibleColumn {
-  caption: string;
-  dataField: string;
-  renderHeader?: () => React.ReactNode | string | number | null;
 }
 export interface Lookup {
   dataSource: object[];
@@ -34,6 +32,13 @@ export interface Filter {
   value: string | number | boolean | null;
   isApplied: boolean;
   isAction?: boolean;
+}
+export interface NewFilter {
+  field: string;
+  value: string | number | boolean | null;
+  type: FilterType;
+  isApplied: boolean;
+  getData?: () => any[];
 }
 export interface ExcelColumn {
   caption: string;
@@ -68,7 +73,7 @@ export interface SelectedCell {
 export interface GridtableProps {
   itemKey: string;
   data: object[];
-  columns: Column[];
+  columns: BaseColumn[];
   noDataText?: string;
   pageSizes?: number[];
   refreshData?: () => void;

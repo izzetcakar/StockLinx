@@ -1,14 +1,13 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import EditComponent from "./edit/EditComponent";
 import TableToolbar from "./tableToolbar/TableToolbar";
 import { GridtableProps } from "./interfaces/interfaces";
 import { Checkbox } from "@mantine/core";
-import { useFilter } from "./customhooks/filter";
 import { useSelectRow } from "./customhooks/selectRow";
 import { useCell } from "./customhooks/cell";
 import { useSelectCell } from "./customhooks/selectCell";
 import { useGridTableContext } from "./context/GenericStateContext";
-import { useVisibleColumns } from "./customhooks/visibleColumnsHook";
+import { useColumns } from "./customhooks/columns";
 import { usePaging } from "./customhooks/paging";
 import "./gridtable.scss";
 
@@ -32,21 +31,20 @@ const GridtableContent: React.FC<GridtableProps> = ({
   const [keyfield, setKeyfield] = useState<keyof object>(
     itemKey as keyof object
   );
-  const { selectedKeys, visibleColumns } = useGridTableContext();
+  const { gridColumns, selectedKeys } = useGridTableContext();
 
-  const { createVisibleColumns } = useVisibleColumns(columns);
+  const { handleBaseColumnsChange } = useColumns(columns);
 
   const { expandData } = usePaging(data.length, onExpandData);
 
-  const { applyFilterToData } = useFilter(
-    columns.filter((c) => c.visible !== false)
-  );
-  const filterDataByInput = useCallback(
-    (inputData: object[]) => {
-      return applyFilterToData(inputData);
-    },
-    [applyFilterToData]
-  );
+  // const { applyFilterToData } = useFilter();
+
+  // const filterDataByInput = useCallback(
+  //   (inputData: object[]) => {
+  //     return applyFilterToData(inputData);
+  //   },
+  //   [applyFilterToData]
+  // );
 
   const {
     handleCellMouseDown,
@@ -54,7 +52,7 @@ const GridtableContent: React.FC<GridtableProps> = ({
     handleCellMouseEnter,
     getSelectedClassName,
     isDrawing,
-  } = useSelectCell(filterDataByInput(data), columns);
+  } = useSelectCell(data);
 
   const { handleSelectRow, handleselectAll, getSelectedRowClass } =
     useSelectRow(data, keyfield, isDrawing);
@@ -66,7 +64,7 @@ const GridtableContent: React.FC<GridtableProps> = ({
   }, [itemKey]);
 
   useEffect(() => {
-    createVisibleColumns();
+    handleBaseColumnsChange();
   }, [columns]);
 
   return (
@@ -77,7 +75,6 @@ const GridtableContent: React.FC<GridtableProps> = ({
             <td className="gridtable__header__row__cell">
               <TableToolbar
                 data={data}
-                columns={columns}
                 excelColumns={excelColumns}
                 enableExcelActions={enableExcelActions}
                 itemKey={keyfield}
@@ -96,7 +93,7 @@ const GridtableContent: React.FC<GridtableProps> = ({
                 checked={
                   selectedKeys.length === data.length && selectedKeys.length > 0
                 }
-                disabled={filterDataByInput(data).length < 1}
+                disabled={data.length < 1}
                 onChange={() => handleselectAll()}
                 indeterminate={
                   selectedKeys.length > 0 && selectedKeys.length < data.length
@@ -109,9 +106,9 @@ const GridtableContent: React.FC<GridtableProps> = ({
           {enableEditActions ? (
             <td className="gridtable__edit__cell"></td>
           ) : null}
-          {visibleColumns.map((vColumn, vColumnIndex) => (
+          {gridColumns.map((vColumn) => (
             <td
-              key={"column__header__" + vColumn.caption + "__" + vColumnIndex}
+              key={"$column__cell__" + vColumn.id}
               className="gridtable__column__cell"
             >
               {vColumn.renderHeader ? vColumn.renderHeader() : vColumn.caption}
@@ -138,10 +135,10 @@ const GridtableContent: React.FC<GridtableProps> = ({
               </td>
             ))}
         </tr> */}
-        {filterDataByInput(data).length > 0 ? (
-          filterDataByInput(data).map((obj, rowIndex) => (
+        {data.length > 0 ? (
+          data.map((obj, rowIndex) => (
             <tr
-              key={"gridtable__row__" + rowIndex}
+              key={"$row__" + rowIndex}
               className={getSelectedRowClass(obj[keyfield])}
             >
               {enableSelectActions ? (
@@ -164,11 +161,11 @@ const GridtableContent: React.FC<GridtableProps> = ({
                   />
                 </td>
               ) : null}
-              {columns
+              {gridColumns
                 .filter((column) => column.visible !== false)
                 .map((column, columnIndex) => (
                   <td
-                    key={`gridtable__row__cell__${columnIndex}__${column.dataField}`}
+                    key={`$row__cell__${column.id}__${rowIndex}`}
                     className={getSelectedClassName(rowIndex, columnIndex)}
                     onMouseDown={() =>
                       handleCellMouseDown(

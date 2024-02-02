@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import {
   ExcelColumn,
-  Column,
+  BaseColumn,
 } from "../../components/gridTable/interfaces/interfaces";
 import { Anchor, Button, Image } from "@mantine/core";
 import { openConfirmModal } from "../../components/gridTable/modals/modals";
@@ -60,7 +60,7 @@ export const useColumns = () => {
     dispatch(assetActions.checkOut({ id: id }));
   };
 
-  const columns: Column[] = [
+  const columns: BaseColumn[] = [
     {
       dataField: "name",
       caption: "Name",

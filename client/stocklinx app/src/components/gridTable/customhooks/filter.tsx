@@ -1,17 +1,22 @@
 import { useCallback, useEffect } from "react";
-import { Column, Filter, FilterType } from "../interfaces/interfaces";
+import { Filter, FilterType } from "../interfaces/interfaces";
 import { NumberInput, Select, TextInput } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 import filterClasses from "./filter.module.scss";
 import textInputClasses from "./textInput.module.scss";
 import { useGridTableContext } from "../context/GenericStateContext";
 
-export const useFilter = (columns: Column[]) => {
-  const { filters, setFilters, clearRowSelection, clearCellSelection } =
-    useGridTableContext();
+export const useFilter = () => {
+  const {
+    filters,
+    setFilters,
+    clearRowSelection,
+    clearCellSelection,
+    gridColumns,
+  } = useGridTableContext();
 
   const getFilterType = (field: string): FilterType => {
-    const column = columns.find((column) => column.dataField === field);
+    const column = gridColumns.find((column) => column.dataField === field);
     if (!column) return FilterType.TEXT;
     if (column.lookup) return FilterType.LOOKUP;
     switch (column.dataType) {
@@ -81,7 +86,7 @@ export const useFilter = (columns: Column[]) => {
     }
   };
   const filterLookupData = (field: string) => {
-    const column = columns.find((column) => column.dataField === field);
+    const column = gridColumns.find((column) => column.dataField === field);
     if (!column || !column.lookup) return [];
 
     return (column.lookup.dataSource as { [key: string]: any }[]).map(
@@ -168,7 +173,7 @@ export const useFilter = (columns: Column[]) => {
     });
   };
   const handleFilterAll = useCallback(() => {
-    const newFilter: Filter[] = columns.map((column) => ({
+    const newFilter: Filter[] = gridColumns.map((column) => ({
       field: column.dataField,
       type: getFilterType(column.dataField),
       value: null,
@@ -176,7 +181,7 @@ export const useFilter = (columns: Column[]) => {
       isAction: column.dataType === "action",
     }));
     setFilters(newFilter);
-  }, [columns]);
+  }, [gridColumns]);
 
   useEffect(() => {
     handleFilterAll();

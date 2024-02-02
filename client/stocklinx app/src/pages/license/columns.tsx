@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import {
-  Column,
+  BaseColumn,
   ExcelColumn,
 } from "../../components/gridTable/interfaces/interfaces";
 import {
@@ -55,7 +55,7 @@ export const useColumns = () => {
     openCheckInModal(newDeployedProduct, handleCheckIn);
   };
 
-  const columns: Column[] = [
+  const columns: BaseColumn[] = [
     {
       caption: "Name",
       dataField: "name",

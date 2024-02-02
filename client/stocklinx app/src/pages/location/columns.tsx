@@ -1,6 +1,6 @@
 import { Anchor } from "@mantine/core";
 import {
-  Column,
+  BaseColumn,
   ExcelColumn,
 } from "../../components/gridTable/interfaces/interfaces";
 import { useNavigate } from "react-router-dom";
@@ -9,7 +9,7 @@ import { ILocation } from "../../interfaces/interfaces";
 export const useColumns = () => {
   const navigate = useNavigate();
 
-  const columns: Column[] = [
+  const columns: BaseColumn[] = [
     {
       dataField: "name",
       caption: "Name",

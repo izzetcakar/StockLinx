@@ -1,6 +1,6 @@
 import React, { MutableRefObject, useContext, useRef, useState } from "react";
 import { createContext } from "react";
-import { Filter, SelectedCell, VisibleColumn } from "../interfaces/interfaces";
+import { Column, Filter, SelectedCell } from "../interfaces/interfaces";
 
 interface GridTableContextProps {
   filters: Filter[];
@@ -8,7 +8,7 @@ interface GridTableContextProps {
   selectedCells: SelectedCell[];
   isDrawing: boolean;
   startCellRef: MutableRefObject<SelectedCell | null>;
-  visibleColumns: VisibleColumn[];
+  gridColumns: Column[];
   selectedKeys: string[];
   loading: boolean;
   setFilters: React.Dispatch<React.SetStateAction<Filter[]>>;
@@ -16,7 +16,7 @@ interface GridTableContextProps {
   setSelectedCells: React.Dispatch<React.SetStateAction<SelectedCell[]>>;
   setIsDrawing: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedKeys: React.Dispatch<React.SetStateAction<string[]>>;
-  setVisibleColumns: React.Dispatch<React.SetStateAction<VisibleColumn[]>>;
+  setGridColumns: React.Dispatch<React.SetStateAction<Column[]>>;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setStartCellRef: (
     newRef: React.MutableRefObject<SelectedCell | null>
@@ -34,7 +34,7 @@ const GridTableContext = createContext<GridTableContextProps>({
   selectedCells: [],
   isDrawing: false,
   startCellRef: { current: null },
-  visibleColumns: [],
+  gridColumns: [],
   selectedKeys: [],
   loading: false,
   setFilters: () => {},
@@ -42,7 +42,7 @@ const GridTableContext = createContext<GridTableContextProps>({
   setSelectedCells: () => {},
   setIsDrawing: () => {},
   setSelectedKeys: () => {},
-  setVisibleColumns: () => {},
+  setGridColumns: () => {},
   setLoading: () => {},
   clearFilters: () => {},
   clearCellSelection: () => {},
@@ -65,7 +65,7 @@ export const GenericStateProvider: React.FC<{ children: React.ReactNode }> = ({
   //Row Selection
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   //Column Visibility
-  const [visibleColumns, setVisibleColumns] = useState<VisibleColumn[]>([]);
+  const [gridColumns, setGridColumns] = useState<Column[]>([]);
   //Generic
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -88,7 +88,7 @@ export const GenericStateProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const clearColumnVisibility = () => {
-    if (visibleColumns.length > 0) setVisibleColumns([]);
+    if (gridColumns.length > 0) setGridColumns([]);
   };
 
   const clearAll = () => {
@@ -105,14 +105,14 @@ export const GenericStateProvider: React.FC<{ children: React.ReactNode }> = ({
     isDrawing,
     startCellRef,
     selectedKeys,
-    visibleColumns,
+    gridColumns,
     loading,
     setFilters,
     setItemPerPage,
     setSelectedCells,
     setIsDrawing,
     setSelectedKeys,
-    setVisibleColumns,
+    setGridColumns,
     setStartCellRef,
     setLoading,
     clearFilters,

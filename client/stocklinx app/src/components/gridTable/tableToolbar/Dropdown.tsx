@@ -1,16 +1,14 @@
 import React from "react";
-import { Column } from "../interfaces/interfaces";
 import { Menu, Button } from "@mantine/core";
 import { IconChevronDown } from "@tabler/icons-react";
 import { useGridTableContext } from "../context/GenericStateContext";
 import "./tableToolbar.scss";
 interface DropDownProps {
-  columns: Column[];
   onChange: (caption: string) => void;
 }
 
-const DropDown: React.FC<DropDownProps> = ({ columns, onChange }) => {
-  const { visibleColumns } = useGridTableContext();
+const DropDown: React.FC<DropDownProps> = ({ onChange }) => {
+  const { gridColumns } = useGridTableContext();
 
   return (
     <Menu withArrow closeOnItemClick={false}>
@@ -26,15 +24,11 @@ const DropDown: React.FC<DropDownProps> = ({ columns, onChange }) => {
       </Menu.Target>
 
       <Menu.Dropdown>
-        {columns.map((column) => (
+        {gridColumns.map((column) => (
           <Menu.Item
-            key={"column__visible__dropdown__" + column.caption}
+            key={"column__visible__" + column.id}
             onClick={() => onChange(column.caption)}
-            bg={
-              visibleColumns.map((x) => x.caption).includes(column.caption)
-                ? "#eaeaea"
-                : "transparent"
-            }
+            bg={column.visible ? "#eaeaea" : "transparent"}
             mb={4}
             py={4}
           >

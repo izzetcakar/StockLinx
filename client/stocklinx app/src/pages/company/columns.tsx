@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import {
-  Column,
+  BaseColumn,
   ExcelColumn,
 } from "../../components/gridTable/interfaces/interfaces";
 import { RootState } from "../../redux/rootReducer";
@@ -13,7 +13,7 @@ export const useColumns = () => {
   const navigate = useNavigate();
   const locations = useSelector((state: RootState) => state.location.locations);
 
-  const columns: Column[] = [
+  const columns: BaseColumn[] = [
     {
       dataField: "name",
       caption: "Name",
