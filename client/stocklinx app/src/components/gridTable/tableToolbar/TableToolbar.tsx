@@ -7,6 +7,7 @@ import {
 import icon_plus from "../../.././assets/icon_plus.png";
 import icon_refresh from "../../.././assets/icon_refresh.png";
 import icon_trash from "../../.././assets/icon_trash.png";
+import icon_filter from "../../.././assets/icon_filter.png";
 import ActionIconBtn from "../../generic/ActionIconBtn";
 import uuid4 from "uuid4";
 import ExcelJS from "exceljs";
@@ -39,6 +40,7 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
   onExpandData,
 }) => {
   const { gridColumns, selectedKeys } = useGridTableContext();
+  const [filtersVisible, setFiltersVisible] = React.useState(false);
 
   const handleFileInputChange = async (file: File | null) => {
     if (file) {
@@ -248,49 +250,58 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
 
   return (
     <div className="gridtable__toolbar">
-      {/* <Dropdown onChange={onVisibleColumnsChange} /> */}
-      {onRowInsert ? (
+      <div className="gridtable__toolbar__actions">
+        {/* <Dropdown onChange={onVisibleColumnsChange} /> */}
+        {
+          <ActionIconBtn
+            action={() => setFiltersVisible((prev) => !prev)}
+            icon={icon_filter}
+            iconSize={16}
+          />
+        }
+        {onRowInsert ? (
+          <ActionIconBtn action={onRowInsert} icon={icon_plus} iconSize={16} />
+        ) : null}
+        {refreshData ? (
+          <ActionIconBtn
+            action={refreshData}
+            icon={icon_refresh}
+            iconSize={16}
+          />
+        ) : null}
         <ActionIconBtn
-          submitFunc={onRowInsert}
-          icon={icon_plus}
+          action={() => removeRangeHandler()}
+          icon={icon_trash}
           iconSize={16}
         />
-      ) : null}
-      {refreshData ? (
-        <ActionIconBtn
-          submitFunc={refreshData}
-          icon={icon_refresh}
-          iconSize={16}
-        />
-      ) : null}
-      <ActionIconBtn
-        submitFunc={() => removeRangeHandler()}
-        icon={icon_trash}
-        iconSize={16}
-      />
-      <Select
-        onDropdownOpen={() => getdata()}
-        placeholder="Pick one"
-        rightSection={isload ? <Loader size={16} /> : null}
-        data={isload ? [] : customdata}
-        value={selected}
-        onChange={(value) => setSelected(value)}
-      />
-      {enableExcelActions ? (
-        <div className="gridtable__toolbar__last">
-          <FileInput
-            size="xs"
-            accept=".xlsx"
-            placeholder="Import Excel"
-            onChange={handleFileInputChange}
-            clearable
+        {enableExcelActions ? (
+          <div className="gridtable__toolbar__actions__last">
+            <FileInput
+              size="xs"
+              accept=".xlsx"
+              placeholder="Import Excel"
+              onChange={handleFileInputChange}
+              clearable
+            />
+            <ExcelButton
+              onDownloadTemplate={() => exportToExcel(true, data)}
+              onExportAll={() => exportToExcel(false, data)}
+              onExportSelected={() => exportToExcel(false, getSelectedData())}
+            />
+            {onExpandData ? <ItemNumberSelector /> : null}
+          </div>
+        ) : null}
+      </div>
+      {filtersVisible ? (
+        <div className="gridtable__toolbar__filter__container">
+          <Select
+            onDropdownOpen={() => getdata()}
+            placeholder="Pick one"
+            rightSection={isload ? <Loader size={16} /> : null}
+            data={isload ? [] : customdata}
+            value={selected}
+            onChange={(value) => setSelected(value)}
           />
-          <ExcelButton
-            onDownloadTemplate={() => exportToExcel(true, data)}
-            onExportAll={() => exportToExcel(false, data)}
-            onExportSelected={() => exportToExcel(false, getSelectedData())}
-          />
-          {onExpandData ? <ItemNumberSelector /> : null}
         </div>
       ) : null}
     </div>

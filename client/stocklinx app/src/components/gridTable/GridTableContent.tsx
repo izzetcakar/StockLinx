@@ -88,7 +88,18 @@ const GridtableContent: React.FC<GridtableProps> = ({
         ) : null}
         <tr className="gridtable__column__row">
           {enableSelectActions ? (
-            <td className="gridtable__checkbox__cell">
+            <td
+              className={
+                selectedKeys.length > 0
+                  ? "gridtable__column__checkbox__cell selected__keys"
+                  : "gridtable__column__checkbox__cell "
+              }
+            >
+              {selectedKeys.length > 0 ? (
+                <div className="gridtable__selected__count">
+                  ({selectedKeys.length})
+                </div>
+              ) : null}
               <Checkbox
                 checked={
                   selectedKeys.length === data.length && selectedKeys.length > 0

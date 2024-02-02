@@ -1,17 +1,32 @@
 .gridtable__toolbar {
   display: flex;
+  flex-direction: column;
   max-width: 100%;
   height: fit-content;
   padding: 10px;
-  align-items: center;
   gap: 10px;
-  justify-content: flex-start;
 
-  .gridtable__toolbar__last {
+  .gridtable__toolbar__actions {
     display: flex;
-    margin-left: auto;
+    max-width: 100%;
+    height: fit-content;
     align-items: center;
     gap: 10px;
-    width: fit-content;
+    justify-content: flex-start;
+    .gridtable__toolbar__actions__last {
+      display: flex;
+      margin-left: auto;
+      align-items: center;
+      gap: 10px;
+      width: fit-content;
+    }
+  }
+  .gridtable__toolbar__filter__container {
+    display: flex;
+    padding: 10px;
+    max-width: 100%;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    gap: 10px;
   }
 }

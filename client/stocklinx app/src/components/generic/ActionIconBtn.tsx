@@ -2,13 +2,13 @@ import { useState } from "react";
 import "./generic.scss";
 
 interface ActionIconBtnProps {
-  submitFunc: () => void;
+  action: () => void;
   icon: string;
   iconSize?: number;
   disable?: boolean;
 }
 const ActionIconBtn: React.FC<ActionIconBtnProps> = ({
-  submitFunc,
+  action,
   icon,
   iconSize = 20,
   disable = false,
@@ -16,7 +16,7 @@ const ActionIconBtn: React.FC<ActionIconBtnProps> = ({
   const [clicked, setClicked] = useState(false);
 
   const handleClick = () => {
-    submitFunc();
+    action();
     setClicked(true);
     setTimeout(() => setClicked(false), 100);
   };
