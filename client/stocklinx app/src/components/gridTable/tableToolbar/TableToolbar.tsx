@@ -88,7 +88,7 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
                     });
                   } else if (column?.lookup) {
                     const selectedLookup = (
-                      column.lookup.dataSource as { [key: string]: any }[]
+                      column.lookup.defaultData as { [key: string]: any }[]
                     ).find((lookupData) => {
                       if (!column.lookup) {
                         return false;
@@ -183,7 +183,7 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
 
           if (column?.lookup) {
             const selectedLookup = (
-              column.lookup.dataSource as { [key: string]: any }[]
+              column.lookup.defaultData as { [key: string]: any }[]
             ).find((lookupData) => {
               if (!column.lookup) {
                 return false;

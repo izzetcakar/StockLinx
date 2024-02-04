@@ -12,7 +12,8 @@ export interface BaseColumn {
   selectable?: boolean;
 }
 export interface Lookup {
-  dataSource: object[];
+  defaultData: object[];
+  dataSource?: string;
   valueExpr: string;
   displayExpr: string;
 }
@@ -21,24 +22,23 @@ export interface IDropdownData {
   text: string;
 }
 export enum FilterType {
-  TEXT = "text",
-  NUMBER = "number",
-  BOOLEAN = "boolean",
-  LOOKUP = "lookup",
+  TEXT = "TEXT",
+  NUMBER = "NUMBER",
+  BOOLEAN = "BOOLEAN",
+  LOOKUP = "LOOKUP",
 }
 export interface Filter {
-  field: string;
+  columnId: string;
   type: FilterType;
   value: string | number | boolean | null;
   isApplied: boolean;
-  isAction?: boolean;
+  defaultData?: any[];
+  dataSource?: string;
 }
-export interface NewFilter {
-  field: string;
+export interface QueryFilter {
+  dataField: string;
+  operator: string;
   value: string | number | boolean | null;
-  type: FilterType;
-  isApplied: boolean;
-  getData?: () => any[];
 }
 export interface ExcelColumn {
   caption: string;
@@ -55,10 +55,6 @@ export interface ColumnError {
   column: string;
   error: string;
 }
-// export interface RowError {
-//   row: number;
-//   errors: ColumnError[];
-// }
 export interface RowError {
   row: number;
   column: string;
@@ -82,6 +78,7 @@ export interface GridtableProps {
   onRowRemove?: (id: string) => void;
   onRowRemoveRange?: (ids: string[]) => void;
   onExpandData?: (skip: number, top: number) => void;
+  onApplyFilter?: () => QueryFilter[];
   excelColumns?: ExcelColumn[];
   enableToolbar?: boolean;
   enableExcelActions?: boolean;

@@ -1,5 +1,4 @@
-import { useCallback, useEffect } from "react";
-import { Filter, FilterType } from "../interfaces/interfaces";
+import { FilterType, Filter } from "../interfaces/interfaces";
 import { NumberInput, Select, TextInput } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 import filterClasses from "./filter.module.scss";
@@ -15,8 +14,8 @@ export const useFilter = () => {
     gridColumns,
   } = useGridTableContext();
 
-  const getFilterType = (field: string): FilterType => {
-    const column = gridColumns.find((column) => column.dataField === field);
+  const getFilterType = (columndId: string): FilterType => {
+    const column = gridColumns.find((column) => column.id === columndId);
     if (!column) return FilterType.TEXT;
     if (column.lookup) return FilterType.LOOKUP;
     switch (column.dataType) {
@@ -30,7 +29,6 @@ export const useFilter = () => {
   };
   const getFilterInput = (filter: Filter) => {
     const searchIcon = <IconSearch size={16} />;
-    if (filter.isAction) return null;
     switch (filter.type) {
       case FilterType.TEXT:
         return (
@@ -59,7 +57,7 @@ export const useFilter = () => {
             classNames={filterClasses}
             placeholder="All"
             value={filter.value as string}
-            data={filterLookupData(filter.field)}
+            data={filterLookupData(filter.columnId)}
             onChange={(e) => handleFilterChange(e, filter)}
             variant="filled"
             radius={0}
@@ -74,7 +72,7 @@ export const useFilter = () => {
             classNames={filterClasses}
             placeholder="All"
             value={filter.value as string}
-            data={filterLookupData(filter.field)}
+            data={filterLookupData(filter.columnId)}
             onChange={(e) => handleFilterChange(e, filter)}
             variant="filled"
             radius={0}
@@ -85,11 +83,11 @@ export const useFilter = () => {
         );
     }
   };
-  const filterLookupData = (field: string) => {
-    const column = gridColumns.find((column) => column.dataField === field);
+  const filterLookupData = (columnId: string) => {
+    const column = gridColumns.find((column) => column.id === columnId);
     if (!column || !column.lookup) return [];
 
-    return (column.lookup.dataSource as { [key: string]: any }[]).map(
+    return (column.lookup.defaultData as { [key: string]: any }[]).map(
       (item) => {
         if (!column.lookup) {
           return { value: "", label: "" };
@@ -124,19 +122,17 @@ export const useFilter = () => {
     return newValue;
   };
   const handleFilterChange = (e: any, filter: Filter) => {
-    clearCellSelection();
-    clearRowSelection();
     const newValue = getFilterChangedValue(e, filter);
     const newIsApplied = newValue === null || newValue === "" ? false : true;
     setFilters((prev) =>
       prev.map((item) =>
-        item.field === filter.field
+        item.columnId === filter.columnId
           ? { ...item, value: newValue, isApplied: newIsApplied }
           : item
       )
     );
   };
-  const applyFilterToData = (inputData: object[]) => {
+  const getFilteredData = (inputData: object[]) => {
     if (filters.length === 0) return inputData;
     return inputData.filter((item: { [key: string]: any }) => {
       let isMatch = true;
@@ -148,7 +144,7 @@ export const useFilter = () => {
             return;
           }
           const value =
-            typeof itemValue === "string" && filter.type !== "lookup"
+            typeof itemValue === "string" && filter.type !== FilterType.LOOKUP
               ? itemValue.toString().toLowerCase()
               : itemValue.toString();
           switch (filter.type) {
@@ -172,24 +168,27 @@ export const useFilter = () => {
       return isMatch;
     });
   };
-  const handleFilterAll = useCallback(() => {
-    const newFilter: Filter[] = gridColumns.map((column) => ({
-      field: column.dataField,
+  const handleFilterAll = () => {
+    const Filter: Filter[] = gridColumns.map((column) => ({
+      columnId: column.id,
       type: getFilterType(column.dataField),
       value: null,
       isApplied: false,
-      isAction: column.dataType === "action",
+      ...(column.lookup?.defaultData && {
+        defaultData: column.lookup.defaultData,
+      }),
+      ...(column.lookup?.dataSource && {
+        dataSource: column.lookup.dataSource,
+      }),
     }));
-    setFilters(newFilter);
-  }, [gridColumns]);
 
-  useEffect(() => {
-    handleFilterAll();
-  }, []);
+    setFilters(Filter);
+  };
 
   return {
     getFilterType,
     getFilterInput,
-    applyFilterToData,
+    getFilteredData,
+    handleFilterAll,
   };
 };

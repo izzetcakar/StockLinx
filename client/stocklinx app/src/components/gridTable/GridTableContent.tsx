@@ -10,6 +10,7 @@ import { useGridTableContext } from "./context/GenericStateContext";
 import { useColumns } from "./customhooks/columns";
 import { usePaging } from "./customhooks/paging";
 import "./gridtable.scss";
+import { useFilter } from "./customhooks/filter";
 
 const GridtableContent: React.FC<GridtableProps> = ({
   data = [],
@@ -37,7 +38,7 @@ const GridtableContent: React.FC<GridtableProps> = ({
 
   const { expandData } = usePaging(data.length, onExpandData);
 
-  // const { applyFilterToData } = useFilter();
+  const { handleFilterAll } = useFilter();
 
   // const filterDataByInput = useCallback(
   //   (inputData: object[]) => {
@@ -65,6 +66,7 @@ const GridtableContent: React.FC<GridtableProps> = ({
 
   useEffect(() => {
     handleBaseColumnsChange();
+    handleFilterAll();
   }, [columns]);
 
   return (
