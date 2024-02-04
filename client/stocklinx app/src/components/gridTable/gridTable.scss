@@ -154,24 +154,18 @@
 .gridtable__row__cell.selected {
   background-color: #2195f339;
 }
-.gridtable__column__checkbox__cell {
-  display: flex;
-  flex-direction: column;
-  justify-content: end;
-  align-items: center;
-  gap: 4px;
-  padding: 20px 4px 4px 4px;
+.gridtable__column__cell.checkbox {
+  width: fit-content;
+  text-align: center;
+  padding-left: 8px;
+  padding-right: 8px;
   border: none !important;
-  box-shadow: inset -1px 0 0 var(--global-border-color),
-    inset 0 0 0 var(--global-border-color);
-}
-.gridtable__column__checkbox__cell.selected__keys {
-  padding-top: 0;
 }
 .gridtable__selected__count {
   width: 1rem;
   height: 1rem;
-  text-align: center;
+  padding-bottom: 4px;
+  margin: 0 auto;
 }
 .gridtable__checkbox__cell {
   width: fit-content;

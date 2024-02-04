@@ -296,6 +296,7 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
         <div className="gridtable__toolbar__filter__container">
           <Select
             onDropdownOpen={() => getdata()}
+            searchable
             placeholder="Pick one"
             rightSection={isload ? <Loader size={16} /> : null}
             data={isload ? [] : customdata}
