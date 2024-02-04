@@ -1,9 +1,9 @@
 import React, { MutableRefObject, useContext, useRef, useState } from "react";
 import { createContext } from "react";
-import { Column, NewFilter, SelectedCell } from "../interfaces/interfaces";
+import { Column, Filter, SelectedCell } from "../interfaces/interfaces";
 
 interface GridTableContextProps {
-  filters: NewFilter[];
+  filters: Filter[];
   itemPerPage: number;
   selectedCells: SelectedCell[];
   isDrawing: boolean;
@@ -11,7 +11,7 @@ interface GridTableContextProps {
   gridColumns: Column[];
   selectedKeys: string[];
   loading: boolean;
-  setFilters: React.Dispatch<React.SetStateAction<NewFilter[]>>;
+  setFilters: React.Dispatch<React.SetStateAction<Filter[]>>;
   setItemPerPage: React.Dispatch<React.SetStateAction<number>>;
   setSelectedCells: React.Dispatch<React.SetStateAction<SelectedCell[]>>;
   setIsDrawing: React.Dispatch<React.SetStateAction<boolean>>;
@@ -55,7 +55,7 @@ export const GenericStateProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   //Filters
-  const [filters, setFilters] = useState<NewFilter[]>([]);
+  const [filters, setFilters] = useState<Filter[]>([]);
   //Pagination
   const [itemPerPage, setItemPerPage] = useState<number>(24);
   //Cell Selection
