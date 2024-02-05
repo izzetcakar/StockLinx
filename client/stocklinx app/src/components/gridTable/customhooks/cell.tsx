@@ -4,7 +4,7 @@ export const useCell = () => {
   const getLookupValue = (value: any, lookup: Lookup) => {
     const lookupKey = lookup.valueExpr;
     const lookupDisplay = lookup.displayExpr;
-    const item = lookup.dataSource.find(
+    const item = lookup.defaultData.find(
       (item: { [key: string]: any }) => item[lookupKey] === value
     );
 

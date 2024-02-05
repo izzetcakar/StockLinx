@@ -1,17 +1,13 @@
 import { FilterType, Filter, Column } from "../interfaces/interfaces";
 import { Loader, NumberInput, Select, TextInput } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
-import filterClasses from "./filter.module.scss";
-import textInputClasses from "./textInput.module.scss";
 import { useGridTableContext } from "../context/GenericStateContext";
 import { useState } from "react";
 import axios from "axios";
 
-const useInputFilter = (
-  gridColumns: Column[],
-  filter: Filter,
-  handleFilterChange: (e: any, filter: Filter) => void
-) => {
+export const useInputFilter = (filter: Filter) => {
+  const { gridColumns, setFilters } = useGridTableContext();
+  const column = gridColumns.find((c) => c.id === filter.columnId);
   const filterLookupData = () => {
     const column = gridColumns.find((column) => column.id === filter.columnId);
     if (!column || !column.lookup) return [];
@@ -30,99 +26,6 @@ const useInputFilter = (
   };
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState(filterLookupData() || []);
-
-  const handleData = async () => {
-    setLoading(true);
-    //fetch data from a pokemon api
-    const res = await axios.get("https://pokeapi.co/api/v2/pokemon");
-    const data = res.data.results;
-    setData(data.map((x: any) => ({ label: x.name, value: x.name })));
-    setLoading(false);
-  };
-
-  const getFilterInput = () => {
-    const searchIcon = <IconSearch size={16} />;
-    switch (filter.type) {
-      case FilterType.TEXT:
-        return (
-          <TextInput
-            value={filter.value ? (filter.value as string) : ""}
-            onChange={(e) => handleFilterChange(e, filter)}
-            classNames={textInputClasses}
-            icon={searchIcon}
-            variant="filled"
-          />
-        );
-      case FilterType.NUMBER:
-        return (
-          <NumberInput
-            value={filter.value ? (filter.value as number) : ""}
-            onChange={(e) => handleFilterChange(e, filter)}
-            classNames={textInputClasses}
-            icon={searchIcon}
-            variant="filled"
-            hideControls
-          />
-        );
-      case FilterType.BOOLEAN:
-        return (
-          <Select
-            placeholder="All"
-            value={filter.value as string}
-            data={loading ? [] : data}
-            onChange={(e) => handleFilterChange(e, filter)}
-            onDropdownOpen={handleData}
-            rightSection={loading ? <Loader size={16} /> : null}
-            variant="filled"
-            radius={0}
-            searchable
-            clearable
-            withinPortal
-          />
-        );
-      case FilterType.LOOKUP:
-        return (
-          <Select
-            placeholder="All"
-            value={filter.value as string}
-            data={loading ? [] : data}
-            onChange={(e) => handleFilterChange(e, filter)}
-            onDropdownOpen={handleData}
-            rightSection={loading ? <Loader size={16} /> : null}
-            variant="filled"
-            radius={0}
-            searchable
-            clearable
-            withinPortal
-          />
-        );
-    }
-  };
-  return { getFilterInput };
-};
-
-export const useFilter = () => {
-  const {
-    filters,
-    setFilters,
-    clearRowSelection,
-    clearCellSelection,
-    gridColumns,
-  } = useGridTableContext();
-
-  const getFilterType = (columndId: string): FilterType => {
-    const column = gridColumns.find((column) => column.id === columndId);
-    if (!column) return FilterType.TEXT;
-    if (column.lookup) return FilterType.LOOKUP;
-    switch (column.dataType) {
-      case "number":
-        return FilterType.NUMBER;
-      case "boolean":
-        return FilterType.BOOLEAN;
-      default:
-        return FilterType.TEXT;
-    }
-  };
 
   const getFilterChangedValue = (e: any, filter: Filter) => {
     let newValue: string | number | boolean | null;
@@ -157,13 +60,110 @@ export const useFilter = () => {
       )
     );
   };
+  const handleData = async () => {
+    setLoading(true);
+    //fetch data from a pokemon api
+    const res = await axios.get("https://pokeapi.co/api/v2/pokemon");
+    const data = res.data.results;
+    setData(data.map((x: any) => ({ label: x.name, value: x.name })));
+    setLoading(false);
+  };
+  const getFilterInput = () => {
+    const searchIcon = <IconSearch size={16} />;
+    const label = column?.caption || "";
+
+    switch (filter.type) {
+      case FilterType.TEXT:
+        return (
+          <TextInput
+            label={label}
+            value={filter.value ? (filter.value as string) : ""}
+            onChange={(e) => handleFilterChange(e, filter)}
+            icon={searchIcon}
+          />
+        );
+      case FilterType.NUMBER:
+        return (
+          <NumberInput
+            label={label}
+            value={filter.value ? (filter.value as number) : ""}
+            onChange={(e) => handleFilterChange(e, filter)}
+            icon={searchIcon}
+            hideControls
+          />
+        );
+      case FilterType.BOOLEAN:
+        return (
+          <Select
+            label={label}
+            placeholder="All"
+            value={filter.value as string}
+            data={loading ? [] : data}
+            onChange={(e) => handleFilterChange(e, filter)}
+            onDropdownOpen={handleData}
+            rightSection={loading ? <Loader size={16} /> : null}
+            searchable
+            clearable
+            withinPortal
+          />
+        );
+      case FilterType.LOOKUP:
+        return (
+          <Select
+            label={label}
+            placeholder="All"
+            value={filter.value as string}
+            data={loading ? [] : data}
+            onChange={(e) => handleFilterChange(e, filter)}
+            onDropdownOpen={handleData}
+            rightSection={loading ? <Loader size={16} /> : null}
+            searchable
+            clearable
+            withinPortal
+          />
+        );
+    }
+  };
+
+  return { getFilterInput };
+};
+
+export const useFilter = () => {
+  const {
+    filters,
+    setFilters,
+    clearRowSelection,
+    clearCellSelection,
+    gridColumns,
+  } = useGridTableContext();
+
+  const getFilterType = (
+    columndId: string,
+    inputColumns: Column[]
+  ): FilterType => {
+    const column = inputColumns.find((column) => column.id === columndId);
+    if (!column) return FilterType.TEXT;
+    if (column.lookup) return FilterType.LOOKUP;
+    switch (column.dataType) {
+      case "number":
+        return FilterType.NUMBER;
+      case "boolean":
+        return FilterType.BOOLEAN;
+      default:
+        return FilterType.TEXT;
+    }
+  };
   const getFilteredData = (inputData: object[]) => {
     if (filters.length === 0) return inputData;
     return inputData.filter((item: { [key: string]: any }) => {
       let isMatch = true;
       filters.forEach((filter) => {
         if (filter.isApplied) {
-          const itemValue = item[filter.field];
+          const column = gridColumns.find(
+            (column) => column.id === filter.columnId
+          );
+          if (!column) return;
+          const itemValue = item[column.dataField];
           if (itemValue === null || itemValue === undefined) {
             isMatch = false;
             return;
@@ -193,10 +193,10 @@ export const useFilter = () => {
       return isMatch;
     });
   };
-  const handleFilterAll = () => {
-    const Filter: Filter[] = gridColumns.map((column) => ({
+  const handleFilterAll = (inputColumns: Column[]) => {
+    const newFilters: Filter[] = inputColumns.map((column) => ({
       columnId: column.id,
-      type: getFilterType(column.dataField),
+      type: getFilterType(column.id, inputColumns),
       value: null,
       isApplied: false,
       ...(column.lookup?.defaultData && {
@@ -207,12 +207,11 @@ export const useFilter = () => {
       }),
     }));
 
-    setFilters(Filter);
+    setFilters(newFilters);
   };
 
   return {
     getFilterType,
-    getFilterInput,
     getFilteredData,
     handleFilterAll,
   };

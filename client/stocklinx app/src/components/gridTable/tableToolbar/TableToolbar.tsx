@@ -1,6 +1,7 @@
 import React from "react";
 import {
   ExcelColumn,
+  Filter,
   ImportedExcelData,
   RowError,
 } from "../interfaces/interfaces";
@@ -13,12 +14,18 @@ import uuid4 from "uuid4";
 import ExcelJS from "exceljs";
 import ExcelButton from "./ExcelButton";
 import { utils, read } from "xlsx";
-import { FileInput, Loader, Select } from "@mantine/core";
+import { FileInput } from "@mantine/core";
 import { openConfirmModal, openExcelModal } from "../modals/modals";
 import { useGridTableContext } from "../context/GenericStateContext";
 import ItemNumberSelector from "../tableFooter/ItemNumberSelector";
 import "./tableToolbar.scss";
-import axios from "axios";
+import { useInputFilter } from "../customhooks/filter";
+
+const FilterComponent = (filter: Filter) => {
+  const test = useInputFilter(filter).getFilterInput();
+  return test;
+};
+
 interface TableToolbarProps {
   data: object[];
   excelColumns?: ExcelColumn[];
@@ -39,7 +46,7 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
   refreshData,
   onExpandData,
 }) => {
-  const { gridColumns, selectedKeys } = useGridTableContext();
+  const { gridColumns, selectedKeys, filters } = useGridTableContext();
   const [filtersVisible, setFiltersVisible] = React.useState(false);
 
   const handleFileInputChange = async (file: File | null) => {
@@ -235,19 +242,6 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
     );
   };
 
-  //generte custom request data and return data
-  const [isload, setIsload] = React.useState(false);
-  const [customdata, setCustomdata] = React.useState<any>([]);
-  const [selected, setSelected] = React.useState<any>(null);
-  const getdata = async () => {
-    setIsload(true);
-    //fetch data from a pokemon api
-    const res = await axios.get("https://pokeapi.co/api/v2/pokemon");
-    const data = res.data.results;
-    setCustomdata(data.map((x: any) => ({ label: x.name, value: x.name })));
-    setIsload(false);
-  };
-
   return (
     <div className="gridtable__toolbar">
       <div className="gridtable__toolbar__actions">
@@ -294,15 +288,13 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
       </div>
       {filtersVisible ? (
         <div className="gridtable__toolbar__filter__container">
-          <Select
-            onDropdownOpen={() => getdata()}
-            searchable
-            placeholder="Pick one"
-            rightSection={isload ? <Loader size={16} /> : null}
-            data={isload ? [] : customdata}
-            value={selected}
-            onChange={(value) => setSelected(value)}
-          />
+          {filters.map((filter) => {
+            return (
+              <div key={filter.columnId}>
+                <FilterComponent {...filter} />
+              </div>
+            );
+          })}
         </div>
       ) : null}
     </div>

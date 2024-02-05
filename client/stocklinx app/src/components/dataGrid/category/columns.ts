@@ -1,8 +1,8 @@
-import { Column } from "../../gridTable/interfaces/interfaces";
+import { BaseColumn } from "../../gridTable/interfaces/interfaces";
 import "../customDatagrid.scss";
 
 export const useColumns = () => {
-  const columns: Column[] = [
+  const columns: BaseColumn[] = [
     {
       dataField: "categoryName",
       caption: "Name",
@@ -13,7 +13,7 @@ export const useColumns = () => {
       caption: "Name",
       dataType: "string",
       lookup: {
-        dataSource: [
+        defaultData: [
           { name: "Asset" },
           { name: "License" },
           { name: "Accessory" },
