@@ -100,7 +100,6 @@ export const useInputFilter = (filter: Filter) => {
             value={filter.value as string}
             data={loading ? [] : data}
             onChange={(e) => handleFilterChange(e, filter)}
-            onDropdownOpen={handleData}
             rightSection={loading ? <Loader size={16} /> : null}
             searchable
             clearable
@@ -115,7 +114,7 @@ export const useInputFilter = (filter: Filter) => {
             value={filter.value as string}
             data={loading ? [] : data}
             onChange={(e) => handleFilterChange(e, filter)}
-            onDropdownOpen={handleData}
+            onDropdownOpen={column?.lookup?.dataSource ? handleData : undefined}
             rightSection={loading ? <Loader size={16} /> : null}
             searchable
             clearable
