@@ -18,7 +18,7 @@ export const useColumns = () => {
       caption: "Company",
       dataType: "action",
       lookup: {
-        dataSource: companies,
+        defaultData: companies,
         valueExpr: "id",
         displayExpr: "name",
       },
@@ -59,7 +59,7 @@ export const useColumns = () => {
       caption: "Location",
       dataType: "string",
       lookup: {
-        dataSource: locations,
+        defaultData: locations,
         valueExpr: "id",
         displayExpr: "name",
       },

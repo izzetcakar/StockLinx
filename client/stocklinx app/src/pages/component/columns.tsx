@@ -53,7 +53,7 @@ export const useColumns = () => {
       caption: "Category",
       dataField: "categoryId",
       lookup: {
-        dataSource: categories,
+        defaultData: categories,
         valueExpr: "id",
         displayExpr: "name",
       },
@@ -73,7 +73,7 @@ export const useColumns = () => {
       caption: "Location",
       dataField: "locationId",
       lookup: {
-        dataSource: locations,
+        defaultData: locations,
         valueExpr: "id",
         displayExpr: "name",
       },
@@ -99,7 +99,7 @@ export const useColumns = () => {
       caption: "Branch",
       dataField: "branchId",
       lookup: {
-        dataSource: branches,
+        defaultData: branches,
         valueExpr: "id",
         displayExpr: "name",
       },

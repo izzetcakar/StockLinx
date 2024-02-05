@@ -20,7 +20,7 @@ export const useColumns = () => {
       caption: "Branch",
       dataType: "string",
       lookup: {
-        dataSource: branches,
+        defaultData: branches,
         valueExpr: "id",
         displayExpr: "name",
       },
@@ -61,7 +61,7 @@ export const useColumns = () => {
       caption: "Location",
       dataType: "string",
       lookup: {
-        dataSource: locations,
+        defaultData: locations,
         valueExpr: "id",
         displayExpr: "name",
       },
@@ -88,7 +88,7 @@ export const useColumns = () => {
       caption: "Manager",
       dataType: "string",
       lookup: {
-        dataSource: users,
+        defaultData: users,
         valueExpr: "id",
         displayExpr: "firstName",
       },

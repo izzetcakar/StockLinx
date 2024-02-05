@@ -130,7 +130,7 @@ export const useColumns = () => {
       dataField: "modelId",
       caption: "Model",
       lookup: {
-        dataSource: models,
+        defaultData: models,
         valueExpr: "id",
         displayExpr: "name",
       },
@@ -140,7 +140,7 @@ export const useColumns = () => {
       dataField: "productStatusId",
       caption: "Status",
       lookup: {
-        dataSource: productStatuses,
+        defaultData: productStatuses,
         valueExpr: "id",
         displayExpr: "name",
       },

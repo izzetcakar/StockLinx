@@ -37,7 +37,7 @@ export const useColumns = () => {
       dataField: "type",
       caption: "Type",
       lookup: {
-        dataSource: productTypes,
+        defaultData: productTypes,
         valueExpr: "id",
         displayExpr: "name",
       },

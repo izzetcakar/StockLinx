@@ -59,7 +59,7 @@ export const useColumns = () => {
       caption: "Category",
       dataType: "string",
       lookup: {
-        dataSource: cateogries,
+        defaultData: cateogries,
         valueExpr: "id",
         displayExpr: "name",
       },
@@ -84,7 +84,7 @@ export const useColumns = () => {
       caption: "Manufacturer",
       dataType: "string",
       lookup: {
-        dataSource: manufacturers,
+        defaultData: manufacturers,
         valueExpr: "id",
         displayExpr: "name",
       },
@@ -116,7 +116,7 @@ export const useColumns = () => {
       dataField: "fieldSetId",
       caption: "FieldSet",
       lookup: {
-        dataSource: fieldSets,
+        defaultData: fieldSets,
         valueExpr: "id",
         displayExpr: "name",
       },

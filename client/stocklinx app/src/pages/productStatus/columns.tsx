@@ -33,7 +33,7 @@ export const useColumns = () => {
       dataField: "type",
       caption: "Type",
       lookup: {
-        dataSource: createDataFromEnum(ProductStatusType),
+        defaultData: createDataFromEnum(ProductStatusType),
         valueExpr: "value",
         displayExpr: "id",
       },

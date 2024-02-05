@@ -107,7 +107,7 @@ export const useColumns = () => {
       caption: "Manufacturer",
       dataField: "manufacturerId",
       lookup: {
-        dataSource: manufacturers,
+        defaultData: manufacturers,
         valueExpr: "id",
         displayExpr: "name",
       },
@@ -148,7 +148,7 @@ export const useColumns = () => {
       caption: "Branch",
       dataField: "branchId",
       lookup: {
-        dataSource: branches,
+        defaultData: branches,
         valueExpr: "id",
         displayExpr: "name",
       },
@@ -177,7 +177,7 @@ export const useColumns = () => {
       caption: "Supplier",
       dataField: "supplierId",
       lookup: {
-        dataSource: suppliers,
+        defaultData: suppliers,
         valueExpr: "id",
         displayExpr: "name",
       },
@@ -188,7 +188,7 @@ export const useColumns = () => {
       caption: "Category",
       dataField: "categoryId",
       lookup: {
-        dataSource: categories.filter((c) => c.type === CategoryType.LICENSE),
+        defaultData: categories.filter((c) => c.type === CategoryType.LICENSE),
         valueExpr: "id",
         displayExpr: "name",
       },

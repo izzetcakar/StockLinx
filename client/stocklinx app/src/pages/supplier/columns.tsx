@@ -53,7 +53,7 @@ export const useColumns = () => {
       caption: "Location",
       dataType: "string",
       lookup: {
-        dataSource: locations,
+        defaultData: locations,
         valueExpr: "id",
         displayExpr: "name",
       },

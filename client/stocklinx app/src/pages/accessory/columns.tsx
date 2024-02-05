@@ -95,7 +95,7 @@ export const useColumns = () => {
       dataField: "categoryId",
       dataType: "string",
       lookup: {
-        dataSource: categories.filter(
+        defaultData: categories.filter(
           (category) => category.type === CategoryType.ACCESSORY
         ),
         valueExpr: "id",
@@ -122,7 +122,7 @@ export const useColumns = () => {
       caption: "Location",
       dataField: "locationId",
       lookup: {
-        dataSource: locations,
+        defaultData: locations,
         valueExpr: "id",
         displayExpr: "name",
       },
