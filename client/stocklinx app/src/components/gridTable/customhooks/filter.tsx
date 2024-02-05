@@ -3,7 +3,6 @@ import { Loader, NumberInput, Select, TextInput } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 import { useGridTableContext } from "../context/GenericStateContext";
 import { useState } from "react";
-import axios from "axios";
 
 export const useInputFilter = (filter: Filter) => {
   const { gridColumns, setFilters } = useGridTableContext();
@@ -61,12 +60,22 @@ export const useInputFilter = (filter: Filter) => {
     );
   };
   const handleData = async () => {
+    const dataSource = column?.lookup?.dataSource;
+    if (!dataSource) return;
     setLoading(true);
-    //fetch data from a pokemon api
-    const res = await axios.get("https://pokeapi.co/api/v2/pokemon");
-    const data = res.data.results;
-    setData(data.map((x: any) => ({ label: x.name, value: x.name })));
-    setLoading(false);
+    try {
+      const data = await dataSource();
+      setData(
+        data.map((x: any) => ({
+          label: x[column?.lookup?.displayExpr as string],
+          value: x[column?.lookup?.valueExpr as string],
+        }))
+      );
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
   };
   const getFilterInput = () => {
     const searchIcon = <IconSearch size={16} />;
@@ -114,7 +123,7 @@ export const useInputFilter = (filter: Filter) => {
             value={filter.value as string}
             data={loading ? [] : data}
             onChange={(e) => handleFilterChange(e, filter)}
-            onDropdownOpen={column?.lookup?.dataSource ? handleData : undefined}
+            onDropdownOpen={handleData}
             rightSection={loading ? <Loader size={16} /> : null}
             searchable
             clearable

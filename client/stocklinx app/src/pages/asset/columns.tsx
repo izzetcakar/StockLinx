@@ -18,6 +18,7 @@ import { assetActions } from "../../redux/asset/actions";
 import { useNavigate } from "react-router-dom";
 import base_asset from "../../assets/baseProductImages/base_asset.jpg";
 import { getImage } from "../../functions/Image";
+import axios from "axios";
 
 export const useColumns = () => {
   const dispatch = useDispatch();
@@ -58,6 +59,17 @@ export const useColumns = () => {
   };
   const checkOut = (id: string) => {
     dispatch(assetActions.checkOut({ id: id }));
+  };
+
+  const getTest = async () => {
+    const res = await axios.get("https://pokeapi.co/api/v2/pokemon?limit=10");
+    const data = res.data.results;
+    return data.map((item: any) => {
+      return {
+        id: item.url,
+        name: item.name,
+      };
+    });
   };
 
   const columns: BaseColumn[] = [
@@ -143,6 +155,7 @@ export const useColumns = () => {
         defaultData: productStatuses,
         valueExpr: "id",
         displayExpr: "name",
+        dataSource: getTest,
       },
       dataType: "string",
     },

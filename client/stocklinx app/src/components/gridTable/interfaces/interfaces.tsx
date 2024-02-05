@@ -13,7 +13,7 @@ export interface BaseColumn {
 }
 export interface Lookup {
   defaultData: object[];
-  dataSource?: string;
+  dataSource?: () => Promise<any> | any;
   valueExpr: string;
   displayExpr: string;
 }
