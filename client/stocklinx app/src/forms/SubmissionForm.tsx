@@ -128,13 +128,12 @@ const styles = StyleSheet.create({
   signatureContainer: {
     display: "flex",
     flexDirection: "row",
-    width: "100%",
+    justifyContent: "space-between",
     height: "auto",
   },
   descriptionSignature: {
     display: "flex",
     flexDirection: "column",
-    width: "auto",
     height: "auto",
     padding: 8,
     gap: 5,
@@ -142,15 +141,10 @@ const styles = StyleSheet.create({
   descriptionRow: {
     display: "flex",
     flexDirection: "row",
-    width: "100%",
     height: "auto",
   },
-  descriptionColumn: {
-    textAlign: "left",
-  },
-  descriptionValue: {
-    textAlign: "justify",
-  },
+  descriptionColumn: {},
+  descriptionValue: {},
   signature: {
     display: "flex",
     width: "auto",
@@ -167,7 +161,7 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
   },
   signatureWrapper: {
-    width: 400,
+    maxWidth: 400,
   },
 });
 
