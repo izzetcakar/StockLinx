@@ -12,7 +12,7 @@ export const useCell = () => {
       ? ((item as { [key: string]: any })[lookupDisplay] as string)
       : " ";
   };
-  const renderColumnValue = (obj: object, column: Column) => {
+  const renderCell = (obj: object, column: Column) => {
     const value = (
       obj as {
         [key: string | number]: any;
@@ -45,5 +45,17 @@ export const useCell = () => {
     }
     return value;
   };
-  return { getLookupValue, renderColumnValue };
+  const getCellValue = (obj: object, column: Column) => {
+    let value = (
+      obj as {
+        [key: string | number]: any;
+      }
+    )[column.dataField];
+
+    if (value === undefined) value = null;
+    if (column.lookup) return getLookupValue(value, column.lookup);
+
+    return value;
+  };
+  return { getLookupValue, renderCell, getCellValue };
 };
