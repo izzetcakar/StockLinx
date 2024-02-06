@@ -1,9 +1,9 @@
-import { Column, Lookup } from "../interfaces/interfaces";
+import { Column } from "../interfaces/interfaces";
 import { useCell } from "./cell";
 import { useGridTableContext } from "../context/GenericStateContext";
 
 export const useSelectCell = (data: object[]) => {
-  const { getLookupValue } = useCell();
+  const { getCellValue } = useCell();
   const {
     selectedCells,
     setSelectedCells,
@@ -13,35 +13,29 @@ export const useSelectCell = (data: object[]) => {
     gridColumns,
   } = useGridTableContext();
 
-  const getCellValue = (value: any, lookup: Lookup | undefined) => {
-    if (value === null || value === undefined) {
-      return "";
-    }
-    return lookup ? getLookupValue(value, lookup) : value;
-  };
   const handleCellMouseDown = (
     rowIndex: number,
     columnIndex: number,
     column: Column,
-    value: any
+    obj: object
   ) => {
     setIsDrawing(true);
     startCellRef.current = {
       rowIndex,
       columnIndex,
       column: column.dataField,
-      value,
+      value: getCellValue(obj, column),
     };
-    handleCellClick(rowIndex, columnIndex, column, value);
+    handleCellClick(rowIndex, columnIndex, column, obj);
   };
   const handleCellMouseEnter = (
     rowIndex: number,
     columnIndex: number,
     column: Column,
-    value: any
+    obj: object
   ) => {
     if (isDrawing) {
-      handleCellClick(rowIndex, columnIndex, column, value);
+      handleCellClick(rowIndex, columnIndex, column, obj);
     }
   };
   const handleCellMouseUp = () => {
@@ -53,7 +47,7 @@ export const useSelectCell = (data: object[]) => {
     rowIndex: number,
     columnIndex: number,
     column: Column,
-    value: any
+    obj: object
   ) => {
     if (!isDrawing) {
       setSelectedCells([]);
@@ -70,7 +64,7 @@ export const useSelectCell = (data: object[]) => {
             rowIndex,
             columnIndex,
             column: column.dataField,
-            value: getCellValue(value, column.lookup),
+            value: getCellValue(obj, column),
           },
         ]);
       } else {
@@ -111,12 +105,11 @@ export const useSelectCell = (data: object[]) => {
             gridColumns[j].dataField
           ];
           const currentColumn = gridColumns[j];
-          const lookup = gridColumns[j]?.lookup;
           const cell = {
             rowIndex: i,
             columnIndex: j,
             column: gridColumns[j].dataField,
-            value: getCellValue(newValue, lookup),
+            value: getCellValue(newValue, column),
           };
           if (currentColumn.selectable !== false) {
             cellsInRectangle.push(cell);
