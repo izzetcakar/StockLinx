@@ -171,7 +171,7 @@ export const useColumns = () => {
           const user = users.find((user) => user.id === deployedProduct.userId);
           if (user) return user.firstName + " " + user.lastName;
         }
-        return "";
+        return null;
       },
     },
     {
