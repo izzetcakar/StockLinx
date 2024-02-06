@@ -5,8 +5,8 @@ namespace StockLinx.Core.Repositories
 {
     public interface IDeployedProductRepository : IRepository<DeployedProduct>
     {
-        DeployedProductDto GetDto(DeployedProduct entity);
-        List<DeployedProductDto> GetDtos(List<DeployedProduct> entities);
+        Task<DeployedProductDto> GetDto(DeployedProduct entity);
+        Task<List<DeployedProductDto>> GetDtos(List<DeployedProduct> entities);
         Task<List<DeployedProductDto>> GetAllDtos();
     }
 }

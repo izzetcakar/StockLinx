@@ -172,7 +172,7 @@ namespace StockLinx.Service.Services
             await _customLogService.CreateCustomLog("Check In", asset.Id, deployedProduct.UserId, "Asset", "User");
             await _unitOfWork.CommitAsync();
             var assetDto = await _assetRepository.GetDto(asset);
-            var deployedProductDto = _deployedProductRepository.GetDto(deployedProduct);
+            var deployedProductDto = await _deployedProductRepository.GetDto(deployedProduct);
             return new AssetCheckInResponseDto
             {
                 Asset = assetDto,

@@ -138,7 +138,7 @@ namespace StockLinx.Service.Services
             await _customLogService.CreateCustomLog("CheckIn", consumable.Id, deployedProduct.UserId, "Consumable", "User");
             await _unitOfWork.CommitAsync();
             var consumableDto = await _consumableRepository.GetDto(consumable);
-            var deployedProductDto = _deployedProductRepository.GetDto(deployedProduct);
+            var deployedProductDto = await _deployedProductRepository.GetDto(deployedProduct);
             return new ConsumableCheckInResponseDto
             {
                 Consumable = consumableDto,

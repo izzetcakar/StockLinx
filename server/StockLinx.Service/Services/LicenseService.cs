@@ -137,7 +137,7 @@ namespace StockLinx.Service.Services
             await _customLogService.CreateCustomLog("CheckIn", license.Id, deployedProduct.UserId, "License", "User");
             await _unitOfWork.CommitAsync();
             var licenseDto = await _licenseRepository.GetDto(license);
-            var deployedProductDto = _deployedProductRepository.GetDto(deployedProduct);
+            var deployedProductDto = await _deployedProductRepository.GetDto(deployedProduct);
             return new LicenseCheckInResponseDto
             {
                 License = licenseDto,
