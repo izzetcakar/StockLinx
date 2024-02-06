@@ -55,7 +55,7 @@ const GridtableContent: React.FC<GridtableProps> = ({
   const { handleSelectRow, handleselectAll, getSelectedRowClass } =
     useSelectRow(data, keyfield, isDrawing);
 
-  const { renderColumnValue } = useCell();
+  const { renderCell } = useCell();
 
   useEffect(() => {
     setKeyfield(itemKey as keyof object);
@@ -171,24 +171,14 @@ const GridtableContent: React.FC<GridtableProps> = ({
                     key={`$row__cell__${column.id}__${rowIndex}`}
                     className={getSelectedClassName(rowIndex, columnIndex)}
                     onMouseDown={() =>
-                      handleCellMouseDown(
-                        rowIndex,
-                        columnIndex,
-                        column,
-                        (obj as { [key: string]: any })[column.dataField]
-                      )
+                      handleCellMouseDown(rowIndex, columnIndex, column, obj)
                     }
                     onMouseEnter={() =>
-                      handleCellMouseEnter(
-                        rowIndex,
-                        columnIndex,
-                        column,
-                        (obj as { [key: string]: any })[column.dataField]
-                      )
+                      handleCellMouseEnter(rowIndex, columnIndex, column, obj)
                     }
                     onMouseUp={handleCellMouseUp}
                   >
-                    {renderColumnValue(obj, column)}
+                    {renderCell(obj, column)}
                   </td>
                 ))}
             </tr>
