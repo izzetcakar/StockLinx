@@ -54,11 +54,11 @@ const User = () => {
       <div className="product__container__title">
         User - {user?.firstName} {user?.lastName}
       </div>
-      <Tabs defaultValue="info">
+      <Tabs defaultValue="deployedProducts">
         <Tabs.List grow>
+          <Tabs.Tab value="deployedProducts">Deployed Products</Tabs.Tab>
           <Tabs.Tab value="info">Info</Tabs.Tab>
           <Tabs.Tab value="history">History</Tabs.Tab>
-          <Tabs.Tab value="deployedProducts">Deployed Products</Tabs.Tab>
         </Tabs.List>
         <Tabs.Panel value="info">
           <div className="product__content__container">
