@@ -16,7 +16,7 @@ export interface LookupData {
   label: string;
 }
 export interface Lookup {
-  defaultData: LookupData[];
+  data: LookupData[];
   dataSource?: () => Promise<any> | any;
 }
 
@@ -37,7 +37,7 @@ export interface QueryFilter {
   value: string | number | boolean | null;
 }
 export interface ExcelColumn {
-  dataField: string;
+  caption: string;
   errorText?: string;
   nullable?: boolean;
   validate?: (value: any) => boolean;
@@ -56,12 +56,6 @@ export interface RowError {
   column: string;
   error: string;
 }
-// export interface SelectedCell {
-//   rowIndex: number;
-//   columnIndex: number;
-//   column: string;
-//   value: any;
-// }
 export interface GridtableProps {
   itemKey: string;
   data: object[];

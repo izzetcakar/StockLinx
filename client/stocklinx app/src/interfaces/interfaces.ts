@@ -1,7 +1,7 @@
 //Client side interfaces
 export enum LngType {
-  TURKISH,
-  ENGLISH,
+  TURKISH = "TURKISH",
+  ENGLISH = "ENGLISH",
 }
 export enum ApiStatus {
   IDLE,
@@ -10,18 +10,18 @@ export enum ApiStatus {
   FAILED,
 }
 export enum ProductStatusType {
-  AVAILABLE,
-  DEPLOYED,
-  ORDERED,
-  OUT_OF_STOCK,
-  DAMAGED,
+  AVAILABLE = "AVAILABLE",
+  DEPLOYED = "DEPLOYED",
+  ORDERED = "ORDERED",
+  OUT_OF_STOCK = "OUT_OF_STOCK",
+  DAMAGED = "DAMAGED",
 }
 export enum CategoryType {
-  ASSET,
-  LICENSE,
-  ACCESSORY,
-  CONSUMABLE,
-  COMPONENT,
+  ASSET = "ASSET",
+  LICENSE = "LICENSE",
+  ACCESSORY = "ACCESSORY",
+  CONSUMABLE = "CONSUMABLE",
+  COMPONENT = "COMPONENT",
 }
 export interface IDropdownData {
   id: number;
