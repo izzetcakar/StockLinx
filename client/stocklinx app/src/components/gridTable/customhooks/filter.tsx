@@ -1,4 +1,9 @@
-import { FilterType, Filter, Column } from "../interfaces/interfaces";
+import {
+  FilterType,
+  Filter,
+  Column,
+  LookupData,
+} from "../interfaces/interfaces";
 import { Loader, NumberInput, Select, TextInput } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 import { useGridTableContext } from "../context/GenericStateContext";
@@ -7,24 +12,10 @@ import { useState } from "react";
 export const useInputFilter = (filter: Filter) => {
   const { gridColumns, setFilters } = useGridTableContext();
   const column = gridColumns.find((c) => c.id === filter.columnId);
-  const filterLookupData = () => {
-    const column = gridColumns.find((column) => column.id === filter.columnId);
-    if (!column || !column.lookup) return [];
-
-    return (column.lookup.defaultData as { [key: string]: any }[]).map(
-      (item) => {
-        if (!column.lookup) {
-          return { value: "", label: "" };
-        }
-        return {
-          value: item[column.lookup.valueExpr as string],
-          label: item[column.lookup.displayExpr as string],
-        };
-      }
-    );
-  };
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState(filterLookupData() || []);
+  const [filterData, setFilterData] = useState<LookupData[]>(
+    column?.lookup?.defaultData || []
+  );
 
   const getFilterChangedValue = (e: any, filter: Filter) => {
     let newValue: string | number | boolean | null;
@@ -50,33 +41,28 @@ export const useInputFilter = (filter: Filter) => {
   };
   const handleFilterChange = (e: any, filter: Filter) => {
     const newValue = getFilterChangedValue(e, filter);
-    const newIsApplied = newValue === null || newValue === "" ? false : true;
     setFilters((prev) =>
       prev.map((item) =>
-        item.columnId === filter.columnId
-          ? { ...item, value: newValue, isApplied: newIsApplied }
-          : item
+        item.columnId === filter.columnId ? { ...item, value: newValue } : item
       )
     );
   };
-  const handleData = async () => {
+
+  const getFilterDataSource = async () => {
     const dataSource = column?.lookup?.dataSource;
     if (!dataSource) return;
     setLoading(true);
     try {
       const data = await dataSource();
-      setData(
-        data.map((x: any) => ({
-          label: x[column?.lookup?.displayExpr as string],
-          value: x[column?.lookup?.valueExpr as string],
-        }))
-      );
+      setFilterData(data);
     } catch (error) {
       console.error("Error fetching data:", error);
+      setFilterData([]);
     } finally {
       setLoading(false);
     }
   };
+
   const getFilterInput = () => {
     const searchIcon = <IconSearch size={16} />;
     const label = column?.caption || "";
@@ -86,7 +72,7 @@ export const useInputFilter = (filter: Filter) => {
         return (
           <TextInput
             label={label}
-            value={filter.value ? (filter.value as string) : ""}
+            value={filter.value ? filter.value.toString() : ""}
             onChange={(e) => handleFilterChange(e, filter)}
             icon={searchIcon}
           />
@@ -95,7 +81,7 @@ export const useInputFilter = (filter: Filter) => {
         return (
           <NumberInput
             label={label}
-            value={filter.value ? (filter.value as number) : ""}
+            value={filter.value ? parseInt(filter.value as string) : ""}
             onChange={(e) => handleFilterChange(e, filter)}
             icon={searchIcon}
             hideControls
@@ -107,7 +93,7 @@ export const useInputFilter = (filter: Filter) => {
             label={label}
             placeholder="All"
             value={filter.value as string}
-            data={loading ? [] : data}
+            data={loading ? [] : filterData}
             onChange={(e) => handleFilterChange(e, filter)}
             rightSection={loading ? <Loader size={16} /> : null}
             searchable
@@ -121,9 +107,9 @@ export const useInputFilter = (filter: Filter) => {
             label={label}
             placeholder="All"
             value={filter.value as string}
-            data={loading ? [] : data}
+            data={loading ? [] : filterData}
             onChange={(e) => handleFilterChange(e, filter)}
-            onDropdownOpen={handleData}
+            onDropdownOpen={getFilterDataSource}
             rightSection={loading ? <Loader size={16} /> : null}
             searchable
             clearable
@@ -137,13 +123,7 @@ export const useInputFilter = (filter: Filter) => {
 };
 
 export const useFilter = () => {
-  const {
-    filters,
-    setFilters,
-    clearRowSelection,
-    clearCellSelection,
-    gridColumns,
-  } = useGridTableContext();
+  const { filters, setFilters, gridColumns } = useGridTableContext();
 
   const getFilterType = (
     columndId: string,
@@ -166,7 +146,7 @@ export const useFilter = () => {
     return inputData.filter((item: { [key: string]: any }) => {
       let isMatch = true;
       filters.forEach((filter) => {
-        if (filter.isApplied) {
+        if (filter.value) {
           const column = gridColumns.find(
             (column) => column.id === filter.columnId
           );
@@ -202,19 +182,17 @@ export const useFilter = () => {
     });
   };
   const handleFilterAll = (inputColumns: Column[]) => {
-    const newFilters: Filter[] = inputColumns.map((column) => ({
-      columnId: column.id,
-      type: getFilterType(column.id, inputColumns),
-      value: null,
-      isApplied: false,
-      ...(column.lookup?.defaultData && {
-        defaultData: column.lookup.defaultData,
-      }),
-      ...(column.lookup?.dataSource && {
-        dataSource: column.lookup.dataSource,
-      }),
-    }));
-
+    const newFilters: Filter[] = inputColumns.map(
+      (column) =>
+        ({
+          defaultData: column.lookup?.defaultData || [],
+          columnId: column.id,
+          type: getFilterType(column.id, inputColumns),
+          value: null,
+          isApplied: false,
+          dataSource: column.lookup?.dataSource,
+        } as Filter)
+    );
     setFilters(newFilters);
   };
 
