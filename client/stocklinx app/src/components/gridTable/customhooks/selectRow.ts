@@ -1,11 +1,7 @@
 import { useEffect } from "react";
 import { useGridTableContext } from "../context/GenericStateContext";
 
-export const useSelectRow = (
-  data: object[],
-  keyfield: keyof object,
-  isDrawing: boolean
-) => {
+export const useSelectRow = (data: object[], keyfield: keyof object) => {
   const { selectedKeys, setSelectedKeys, clearRowSelection } =
     useGridTableContext();
 
@@ -21,8 +17,6 @@ export const useSelectRow = (
   const getSelectedRowClass = (id: string): string => {
     return selectedKeys.includes(id)
       ? "gridtable__row selected"
-      : isDrawing
-      ? "gridtable__row drawing"
       : "gridtable__row";
   };
   const handleselectAll = () => {

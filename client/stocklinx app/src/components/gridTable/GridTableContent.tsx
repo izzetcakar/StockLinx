@@ -5,7 +5,6 @@ import { GridtableProps } from "./interfaces/interfaces";
 import { Checkbox } from "@mantine/core";
 import { useSelectRow } from "./customhooks/selectRow";
 import { useCell } from "./customhooks/cell";
-import { useSelectCell } from "./customhooks/selectCell";
 import { useGridTableContext } from "./context/GenericStateContext";
 import { useColumns } from "./customhooks/columns";
 import { usePaging } from "./customhooks/paging";
@@ -24,7 +23,6 @@ const GridtableContent: React.FC<GridtableProps> = ({
   itemKey,
   excelColumns,
   enableToolbar = false,
-  enableExcelActions = false,
   enableEditActions = false,
   enableSelectActions = false,
 }) => {
@@ -37,23 +35,8 @@ const GridtableContent: React.FC<GridtableProps> = ({
 
   const { expandData } = usePaging(data.length, onExpandData);
 
-  // const filterDataByInput = useCallback(
-  //   (inputData: object[]) => {
-  //     return applyFilterToData(inputData);
-  //   },
-  //   [applyFilterToData]
-  // );
-
-  const {
-    handleCellMouseDown,
-    handleCellMouseUp,
-    handleCellMouseEnter,
-    getSelectedClassName,
-    isDrawing,
-  } = useSelectCell(data);
-
   const { handleSelectRow, handleselectAll, getSelectedRowClass } =
-    useSelectRow(data, keyfield, isDrawing);
+    useSelectRow(data, keyfield);
 
   const { renderCell } = useCell();
 
@@ -72,10 +55,10 @@ const GridtableContent: React.FC<GridtableProps> = ({
           <tr className="gridtable__header__row">
             <td className="gridtable__header__row__cell">
               <TableToolbar
+                itemKey={keyfield}
                 data={data}
                 excelColumns={excelColumns}
-                enableExcelActions={enableExcelActions}
-                itemKey={keyfield}
+                enableExcelActions={excelColumns ? true : false}
                 onRowInsert={onRowInsert}
                 onRowRemoveRange={onRowRemoveRange}
                 refreshData={refreshData}
@@ -166,17 +149,10 @@ const GridtableContent: React.FC<GridtableProps> = ({
               ) : null}
               {gridColumns
                 .filter((column) => column.visible !== false)
-                .map((column, columnIndex) => (
+                .map((column) => (
                   <td
                     key={`$row__cell__${column.id}__${rowIndex}`}
-                    className={getSelectedClassName(rowIndex, columnIndex)}
-                    onMouseDown={() =>
-                      handleCellMouseDown(rowIndex, columnIndex, column, obj)
-                    }
-                    onMouseEnter={() =>
-                      handleCellMouseEnter(rowIndex, columnIndex, column, obj)
-                    }
-                    onMouseUp={handleCellMouseUp}
+                    className="gridtable__row__cell"
                   >
                     {renderCell(obj, column)}
                   </td>
