@@ -5,22 +5,21 @@ export interface BaseColumn {
   dataField: string;
   caption: string;
   renderComponent?: (e: object) => any;
-  renderHeader?: () => React.ReactNode | string | number | null;
+  renderHeader?: () => any;
   lookup?: Lookup;
   dataType: "string" | "number" | "boolean" | "date" | "action";
   visible?: boolean;
   selectable?: boolean;
 }
+export interface LookupData {
+  value: any;
+  label: string;
+}
 export interface Lookup {
-  defaultData: object[];
+  defaultData: LookupData[];
   dataSource?: () => Promise<any> | any;
-  valueExpr: string;
-  displayExpr: string;
 }
-export interface IDropdownData {
-  id: number;
-  text: string;
-}
+
 export enum FilterType {
   TEXT = "TEXT",
   NUMBER = "NUMBER",
@@ -31,9 +30,6 @@ export interface Filter {
   columnId: string;
   type: FilterType;
   value: string | number | boolean | null;
-  isApplied: boolean;
-  defaultData?: any[];
-  dataSource?: string;
 }
 export interface QueryFilter {
   dataField: string;
@@ -41,10 +37,10 @@ export interface QueryFilter {
   value: string | number | boolean | null;
 }
 export interface ExcelColumn {
-  caption: string;
-  validate?: (value: any) => boolean;
+  dataField: string;
   errorText?: string;
   nullable?: boolean;
+  validate?: (value: any) => boolean;
 }
 export interface ImportedExcelData {
   id: string;
@@ -60,12 +56,12 @@ export interface RowError {
   column: string;
   error: string;
 }
-export interface SelectedCell {
-  rowIndex: number;
-  columnIndex: number;
-  column: string;
-  value: any;
-}
+// export interface SelectedCell {
+//   rowIndex: number;
+//   columnIndex: number;
+//   column: string;
+//   value: any;
+// }
 export interface GridtableProps {
   itemKey: string;
   data: object[];
@@ -81,7 +77,6 @@ export interface GridtableProps {
   onApplyFilter?: () => QueryFilter[];
   excelColumns?: ExcelColumn[];
   enableToolbar?: boolean;
-  enableExcelActions?: boolean;
   enableEditActions?: boolean;
   enableSelectActions?: boolean;
   ref?: any;
