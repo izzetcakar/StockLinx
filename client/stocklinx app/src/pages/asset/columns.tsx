@@ -82,7 +82,7 @@ export const useColumns = () => {
           <Anchor
             onClick={() => navigate(`/asset/${(e as IAsset)?.id}`)}
             target="_blank"
-            underline={true}
+            underline="always"
           >
             {(e as IAsset).name}
           </Anchor>
@@ -115,7 +115,7 @@ export const useColumns = () => {
           <Anchor
             onClick={() => navigate(`/asset/${(e as IAsset)?.id}`)}
             target="_blank"
-            underline={true}
+            underline="always"
           >
             {(e as IAsset).tagNo}
           </Anchor>
@@ -131,7 +131,7 @@ export const useColumns = () => {
           <Anchor
             onClick={() => navigate(`/asset/${(e as IAsset)?.id}`)}
             target="_blank"
-            underline={true}
+            underline="always"
           >
             {(e as IAsset).serialNo}
           </Anchor>
@@ -142,9 +142,10 @@ export const useColumns = () => {
       dataField: "modelId",
       caption: "Model",
       lookup: {
-        defaultData: models,
-        valueExpr: "id",
-        displayExpr: "name",
+        data: models.map((model) => ({
+          value: model.id,
+          label: model.name,
+        })),
       },
       dataType: "string",
     },
@@ -152,9 +153,10 @@ export const useColumns = () => {
       dataField: "productStatusId",
       caption: "Status",
       lookup: {
-        defaultData: productStatuses,
-        valueExpr: "id",
-        displayExpr: "name",
+        data: productStatuses.map((productStatus) => ({
+          value: productStatus.id,
+          label: productStatus.name,
+        })),
         dataSource: getTest,
       },
       dataType: "string",

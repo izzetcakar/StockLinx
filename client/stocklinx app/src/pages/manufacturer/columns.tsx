@@ -22,7 +22,7 @@ export const useColumns = () => {
               navigate(`/manufacturer/${(e as IManufacturer)?.id}`)
             }
             target="_blank"
-            underline={true}
+            underline="always"
           >
             {(e as IManufacturer).name}
           </Anchor>

@@ -1,9 +1,9 @@
 import { Select } from "@mantine/core";
 import { useGridTableContext } from "../context/GenericStateContext";
 
-interface ItemNumberSelectorProps {}
+interface ItemPerPageSelectorProps {}
 
-const ItemNumberSelector: React.FC<ItemNumberSelectorProps> = () => {
+const ItemPerPageSelector: React.FC<ItemPerPageSelectorProps> = () => {
   const { itemPerPage, setItemPerPage } = useGridTableContext();
   return (
     <Select
@@ -24,8 +24,7 @@ const ItemNumberSelector: React.FC<ItemNumberSelectorProps> = () => {
       size="xs"
       w={50}
       rightSectionWidth={0}
-      iconWidth={0}
-      icon={false}
+      leftSection={0}
       rightSection={false}
       styles={{
         input: {
@@ -33,9 +32,8 @@ const ItemNumberSelector: React.FC<ItemNumberSelectorProps> = () => {
           paddingRight: 5,
         },
       }}
-      withinPortal
     />
   );
 };
 
-export default ItemNumberSelector;
+export default ItemPerPageSelector;

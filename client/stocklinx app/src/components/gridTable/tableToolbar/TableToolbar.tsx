@@ -13,13 +13,13 @@ import ActionIconBtn from "../../generic/ActionIconBtn";
 import uuid4 from "uuid4";
 import ExcelJS from "exceljs";
 import ExcelButton from "./ExcelButton";
+import ItemNumberSelector from "../tableFooter/ItemNumberSelector";
 import { utils, read } from "xlsx";
 import { FileInput } from "@mantine/core";
 import { openConfirmModal, openExcelModal } from "../modals/modals";
 import { useGridTableContext } from "../context/GenericStateContext";
-import ItemNumberSelector from "../tableFooter/ItemNumberSelector";
-import "./tableToolbar.scss";
 import { useInputFilter } from "../customhooks/filter";
+import "./tableToolbar.scss";
 
 const FilterComponent = (filter: Filter) => {
   const test = useInputFilter(filter).getFilterInput();
@@ -29,7 +29,6 @@ const FilterComponent = (filter: Filter) => {
 interface TableToolbarProps {
   data: object[];
   excelColumns?: ExcelColumn[];
-  enableExcelActions: boolean;
   itemKey: string;
   onRowInsert?: () => void;
   onRowRemoveRange: (ids: string[]) => void;
@@ -39,7 +38,6 @@ interface TableToolbarProps {
 const TableToolbar: React.FC<TableToolbarProps> = ({
   data,
   excelColumns,
-  enableExcelActions,
   itemKey,
   onRowInsert,
   onRowRemoveRange,
@@ -52,7 +50,6 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
   const handleFileInputChange = async (file: File | null) => {
     if (file) {
       const reader = new FileReader();
-
       const readFile = () => {
         return new Promise<{
           errors: RowError[];
@@ -95,19 +92,14 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
                     });
                   } else if (column?.lookup) {
                     const selectedLookup = (
-                      column.lookup.defaultData as { [key: string]: any }[]
+                      column.lookup.data as { [key: string]: any }[]
                     ).find((lookupData) => {
                       if (!column.lookup) {
                         return false;
                       }
-                      if (
-                        lookupData[column.lookup.displayExpr as string] ===
-                        row[columnCaption]
-                      ) {
-                        row[columnCaption] =
-                          lookupData[column.lookup.valueExpr as string];
-                        newData[rowIndex][columnData] =
-                          lookupData[column.lookup.valueExpr as string];
+                      if (lookupData["label"] === row[columnCaption]) {
+                        row[columnCaption] = lookupData["label"];
+                        newData[rowIndex][columnData] = lookupData["label"];
                         return lookupData;
                       }
                     });
@@ -185,31 +177,24 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
           const column = gridColumns.find(
             (c) => c.caption === excelColumn.caption
           );
-          let datafield = column?.dataField as string;
-          let value = item[datafield as string];
+          if (!column) return;
+          const dataField = column.dataField;
+          let value = item[dataField];
 
           if (column?.lookup) {
             const selectedLookup = (
-              column.lookup.defaultData as { [key: string]: any }[]
+              column.lookup.data as { [key: string]: any }[]
             ).find((lookupData) => {
-              if (!column.lookup) {
-                return false;
-              }
-              if (
-                lookupData[column.lookup.valueExpr as string] ===
-                item[column.dataField]
-              ) {
+              if (lookupData["label"] === item[dataField]) {
                 return lookupData;
               }
             });
             if (!selectedLookup) {
               return;
             }
-            datafield = column.lookup.displayExpr;
-            value = selectedLookup[datafield as string];
+            value = selectedLookup[dataField];
           } else {
-            if (!column) return;
-            value = item[datafield as string];
+            value = item[dataField];
           }
           newRow = { ...newRow, [excelColumn.caption]: value };
         });
@@ -250,31 +235,31 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
           <ActionIconBtn
             action={() => setFiltersVisible((prev) => !prev)}
             icon={icon_filter}
-            iconSize={16}
+            iconSize={25}
           />
         }
         {onRowInsert ? (
-          <ActionIconBtn action={onRowInsert} icon={icon_plus} iconSize={16} />
+          <ActionIconBtn action={onRowInsert} icon={icon_plus} iconSize={25} />
         ) : null}
         {refreshData ? (
           <ActionIconBtn
             action={refreshData}
             icon={icon_refresh}
-            iconSize={16}
+            iconSize={25}
           />
         ) : null}
         <ActionIconBtn
           action={() => removeRangeHandler()}
           icon={icon_trash}
-          iconSize={16}
+          iconSize={25}
         />
-        {enableExcelActions ? (
+        {excelColumns ? (
           <div className="gridtable__toolbar__actions__last">
             <FileInput
               size="xs"
               accept=".xlsx"
-              placeholder="Import Excel"
               onChange={handleFileInputChange}
+              placeholder="Import Excel"
               clearable
             />
             <ExcelButton

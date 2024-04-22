@@ -59,10 +59,13 @@ const CheckInForm: React.FC<CheckInFormProps> = ({
           placeholder="Select User"
           {...form.getInputProps("userId")}
           classNames={filterClasses}
-          dropdownPosition="bottom"
-          nothingFound="No user found"
+          comboboxProps={{
+              position: "top",
+              middlewares: { flip: false, shift: false },
+            }}
+          nothingFoundMessage="No user found"
           withAsterisk
-          withinPortal
+          
         />
         <Textarea
           label="Notes"
@@ -70,7 +73,7 @@ const CheckInForm: React.FC<CheckInFormProps> = ({
           {...form.getInputProps("notes")}
           value={form.values.notes || ""}
         />
-        <Group position="right" mt="md">
+        <Group mt="md" justify="flex-end">
           <Button type="submit" color="dark">
             CheckIn
           </Button>

@@ -54,9 +54,7 @@ const Accessory = () => {
         }
         excelColumns={useColumns().excelColumns}
         enableToolbar
-        enableFooter
         enableEditActions
-        enableExcelActions
         enableSelectActions
       />
     </>

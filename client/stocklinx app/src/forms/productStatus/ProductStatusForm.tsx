@@ -63,13 +63,15 @@ const ProductStatusForm: React.FC<ProductStatusFormProps> = ({
           placeholder="Select Type"
           {...form.getInputProps("type")}
           classNames={filterClasses}
-          dropdownPosition="bottom"
-          nothingFound="No type found"
+          comboboxProps={{
+            position: "bottom",
+            middlewares: { flip: false, shift: false },
+          }}
+          nothingFoundMessage="No type found"
           withAsterisk
-          withinPortal
         />
       </Flex>
-      <Group position="right">
+      <Group mt="md" justify="flex-end">
         <Button type="submit" color="dark">
           Submit
         </Button>

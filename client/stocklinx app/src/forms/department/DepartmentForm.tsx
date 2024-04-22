@@ -72,9 +72,12 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
           {...form.getInputProps("locationId")}
           value={form.values.locationId || ""}
           classNames={filterClasses}
-          dropdownPosition="bottom"
-          nothingFound="No location found"
-          withinPortal
+          comboboxProps={{
+              position: "top",
+              middlewares: { flip: false, shift: false },
+            }}
+          nothingFoundMessage="No location found"
+          
         />
         <Textarea
           placeholder="Your notes here"
@@ -82,7 +85,7 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
           {...form.getInputProps("notes")}
           value={form.values.notes || ""}
         />
-        <Group position="right" mt="md">
+        <Group mt="md" justify="flex-end">
           <Button type="submit" color="dark">
             Submit
           </Button>

@@ -19,16 +19,17 @@ export const useColumns = () => {
       dataField: "companyId",
       dataType: "string",
       lookup: {
-        defaultData: companies,
-        valueExpr: "id",
-        displayExpr: "name",
+        data: companies.map((company) => ({
+          value: company.id,
+          label: company.name,
+        })),
       },
       renderComponent(e) {
         return (
           <Anchor
             onClick={() => navigate(`/company/${(e as IUser)?.companyId}`)}
             target="_blank"
-            underline={true}
+            underline="always"
           >
             {
               companies.find(
@@ -44,9 +45,10 @@ export const useColumns = () => {
       caption: "Branch",
       dataType: "string",
       lookup: {
-        defaultData: branches,
-        valueExpr: "id",
-        displayExpr: "name",
+        data: branches.map((branch) => ({
+          value: branch.id,
+          label: branch.name,
+        })),
       },
       renderComponent(e) {
         return (
@@ -66,7 +68,7 @@ export const useColumns = () => {
               )
             }
             target="_blank"
-            underline={true}
+            underline="always"
           >
             {
               branches.find(
@@ -86,9 +88,10 @@ export const useColumns = () => {
       caption: "Department",
       dataType: "string",
       lookup: {
-        defaultData: departments,
-        valueExpr: "id",
-        displayExpr: "name",
+        data: departments.map((department) => ({
+          value: department.id,
+          label: department.name,
+        })),
       },
       renderComponent(e) {
         return (
@@ -103,7 +106,7 @@ export const useColumns = () => {
               )
             }
             target="_blank"
-            underline={true}
+            underline="always"
           >
             {
               departments.find(
@@ -123,7 +126,7 @@ export const useColumns = () => {
           <Anchor
             onClick={() => navigate(`/user/${(e as IUser)?.id}`)}
             target="_blank"
-            underline={true}
+            underline="always"
           >
             {(e as IUser)?.firstName} {(e as IUser)?.lastName}
           </Anchor>

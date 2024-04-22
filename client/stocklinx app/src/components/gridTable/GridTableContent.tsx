@@ -31,11 +31,11 @@ const GridtableContent: React.FC<GridtableProps> = ({
   );
   const { gridColumns, selectedKeys } = useGridTableContext();
 
-  const { handleBaseColumnsChange } = useColumns(columns);
+  const { onBaseColumnsChange } = useColumns(columns);
 
   const { expandData } = usePaging(data.length, onExpandData);
 
-  const { handleSelectRow, handleselectAll, getSelectedRowClass } =
+  const { handleSelectRow, handleSelectAll, getSelectedRowClass } =
     useSelectRow(data, keyfield);
 
   const { renderCell } = useCell();
@@ -45,7 +45,7 @@ const GridtableContent: React.FC<GridtableProps> = ({
   }, [itemKey]);
 
   useEffect(() => {
-    handleBaseColumnsChange();
+    onBaseColumnsChange();
   }, [columns]);
 
   return (
@@ -58,7 +58,6 @@ const GridtableContent: React.FC<GridtableProps> = ({
                 itemKey={keyfield}
                 data={data}
                 excelColumns={excelColumns}
-                enableExcelActions={excelColumns ? true : false}
                 onRowInsert={onRowInsert}
                 onRowRemoveRange={onRowRemoveRange}
                 refreshData={refreshData}
@@ -68,7 +67,7 @@ const GridtableContent: React.FC<GridtableProps> = ({
           </tr>
         ) : null}
         <tr className="gridtable__column__row">
-          {enableSelectActions ? (
+          {enableSelectActions && data.length > 0 ? (
             <td className="gridtable__column__cell checkbox">
               {selectedKeys.length > 0 ? (
                 <div className="gridtable__selected__count">
@@ -80,16 +79,16 @@ const GridtableContent: React.FC<GridtableProps> = ({
                   selectedKeys.length === data.length && selectedKeys.length > 0
                 }
                 disabled={data.length < 1}
-                onChange={() => handleselectAll()}
+                onChange={handleSelectAll}
                 indeterminate={
                   selectedKeys.length > 0 && selectedKeys.length < data.length
                 }
                 radius={2}
-                size={18}
+                size="xs"
               />
             </td>
           ) : null}
-          {enableEditActions ? (
+          {enableEditActions && data.length > 0 ? (
             <td className="gridtable__edit__cell"></td>
           ) : null}
           {gridColumns.map((vColumn) => (
@@ -133,7 +132,7 @@ const GridtableContent: React.FC<GridtableProps> = ({
                     checked={selectedKeys.includes(obj[keyfield])}
                     onChange={() => handleSelectRow(obj[keyfield])}
                     radius={2}
-                    size={18}
+                    size="xs"
                   />
                 </td>
               ) : null}

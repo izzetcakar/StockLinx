@@ -1,4 +1,4 @@
-import { Column } from "../../gridTable/interfaces/interfaces";
+import { BaseColumn } from "../../gridTable/interfaces/interfaces";
 import icon_delete from "../../../assets/customLog/Delete.png";
 import icon_update from "../../../assets/customLog/Update.png";
 import icon_create from "../../../assets/customLog/Create.png";
@@ -29,7 +29,7 @@ const getActionIcon = (action: string) => {
 export const useColumns = () => {
   const navigate = useNavigate();
   const users = useSelector((state: RootState) => state.user.users);
-  const columns: Column[] = [
+  const columns: BaseColumn[] = [
     {
       dataField: "action",
       caption: "Action",
@@ -62,7 +62,7 @@ export const useColumns = () => {
           <Anchor
             onClick={() => navigate(`/user/${user.id}`)}
             target="_blank"
-            underline={true}
+            underline="always"
           >
             {user.firstName} {user.lastName}
           </Anchor>

@@ -94,7 +94,7 @@ const Consumable = () => {
                     navigate(`/manufacturer/${consumable?.manufacturerId}`)
                   }
                   target="_blank"
-                  underline={true}
+                  underline="always"
                 >
                   {
                     manufacturers.find(
@@ -113,7 +113,7 @@ const Consumable = () => {
                     navigate(`/supplier/${consumable?.supplierId}`)
                   }
                   target="_blank"
-                  underline={true}
+                  underline="always"
                 >
                   {
                     suppliers.find(

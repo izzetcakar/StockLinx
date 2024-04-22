@@ -17,7 +17,7 @@ const DropDown: React.FC<DropDownProps> = ({ onChange }) => {
           variant="default"
           color="dark"
           size="xs"
-          rightIcon={<IconChevronDown size={16} />}
+          rightSection={<IconChevronDown size={16} />}
         >
           Columns
         </Button>

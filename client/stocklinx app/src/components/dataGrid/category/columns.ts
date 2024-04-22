@@ -13,15 +13,13 @@ export const useColumns = () => {
       caption: "Name",
       dataType: "string",
       lookup: {
-        defaultData: [
-          { name: "Asset" },
-          { name: "License" },
-          { name: "Accessory" },
-          { name: "Consumable" },
-          { name: "Component" },
+        data: [
+          { label: "Asset", value: "Asset" },
+          { label: "License", value: "License" },
+          { label: "Accessory", value: "Accessory" },
+          { label: "Consumable", value: "Consumable" },
+          { label: "Component", value: "Component" },
         ],
-        valueExpr: "name",
-        displayExpr: "name",
       },
     },
     {

@@ -66,7 +66,7 @@ export const useColumns = () => {
           <Anchor
             onClick={() => navigate(`/accessory/${(e as IAccessory)?.id}`)}
             target="_blank"
-            underline={true}
+            underline="always"
           >
             {(e as IAccessory).name}
           </Anchor>
@@ -95,11 +95,12 @@ export const useColumns = () => {
       dataField: "categoryId",
       dataType: "string",
       lookup: {
-        defaultData: categories.filter(
-          (category) => category.type === CategoryType.ACCESSORY
-        ),
-        valueExpr: "id",
-        displayExpr: "name",
+        data: categories
+          .filter((category) => category.type === CategoryType.ACCESSORY)
+          .map((category) => ({
+            value: category.id,
+            label: category.name,
+          })),
       },
     },
     {
@@ -111,7 +112,7 @@ export const useColumns = () => {
           <Anchor
             onClick={() => navigate(`/accessory/${(e as IAccessory)?.id}`)}
             target="_blank"
-            underline={true}
+            underline="always"
           >
             {(e as IAccessory).modelNo}
           </Anchor>
@@ -122,9 +123,10 @@ export const useColumns = () => {
       caption: "Location",
       dataField: "locationId",
       lookup: {
-        defaultData: locations,
-        valueExpr: "id",
-        displayExpr: "name",
+        data: locations.map((location) => ({
+          value: location.id,
+          label: location.name,
+        })),
       },
       dataType: "string",
     },

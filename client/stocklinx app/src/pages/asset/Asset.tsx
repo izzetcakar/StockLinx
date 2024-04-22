@@ -100,7 +100,7 @@ const Asset = () => {
                     )
                   }
                   target="_blank"
-                  underline={true}
+                  underline="always"
                 >
                   {
                     categories.find(
@@ -119,7 +119,7 @@ const Asset = () => {
                 <Anchor
                   onClick={() => navigate(`/category/${asset?.modelId}`)}
                   target="_blank"
-                  underline={true}
+                  underline="always"
                 >
                   {models.find((model) => model.id === asset?.modelId)?.name}
                 </Anchor>

@@ -59,8 +59,7 @@ const Login = () => {
           <Image alt="..." src={logo} />
           <form
             className="sign-form"
-            onSubmit={signForm.onSubmit((_, _event) => {
-              _event.stopPropagation();
+            onSubmit={signForm.onSubmit(() => {
               handleSignIn();
             })}
           >
@@ -70,13 +69,13 @@ const Login = () => {
                 label="Email"
                 placeholder="Email"
                 {...signForm.getInputProps("email")}
-                icon={<IconMail size="1.2rem" />}
+                leftSection={<IconMail size="1.2rem" />}
               />
               <PasswordInput
                 label="Password"
                 placeholder="Password"
                 {...signForm.getInputProps("password")}
-                icon={<IconKey size="1.2rem" />}
+                leftSection={<IconKey size="1.2rem" />}
               />
               <ReCAPTCHA
                 sitekey={captchaSiteKey}

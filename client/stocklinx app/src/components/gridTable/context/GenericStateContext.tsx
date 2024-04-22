@@ -1,28 +1,19 @@
-import React, { MutableRefObject, useContext, useRef, useState } from "react";
+import React, { useContext, useState } from "react";
 import { createContext } from "react";
-import { Column, Filter, SelectedCell } from "../interfaces/interfaces";
+import { Column, Filter } from "../interfaces/interfaces";
 
 interface GridTableContextProps {
   filters: Filter[];
-  itemPerPage: number;
-  selectedCells: SelectedCell[];
-  isDrawing: boolean;
-  startCellRef: MutableRefObject<SelectedCell | null>;
   gridColumns: Column[];
+  itemPerPage: number;
   selectedKeys: string[];
   loading: boolean;
+  setSelectedKeys: React.Dispatch<React.SetStateAction<string[]>>;
   setFilters: React.Dispatch<React.SetStateAction<Filter[]>>;
   setItemPerPage: React.Dispatch<React.SetStateAction<number>>;
-  setSelectedCells: React.Dispatch<React.SetStateAction<SelectedCell[]>>;
-  setIsDrawing: React.Dispatch<React.SetStateAction<boolean>>;
-  setSelectedKeys: React.Dispatch<React.SetStateAction<string[]>>;
   setGridColumns: React.Dispatch<React.SetStateAction<Column[]>>;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  setStartCellRef: (
-    newRef: React.MutableRefObject<SelectedCell | null>
-  ) => void;
   clearFilters: () => void;
-  clearCellSelection: () => void;
   clearRowSelection: () => void;
   clearColumnVisibility: () => void;
   clearAll: () => void;
@@ -31,25 +22,18 @@ interface GridTableContextProps {
 const GridTableContext = createContext<GridTableContextProps>({
   filters: [],
   itemPerPage: 10,
-  selectedCells: [],
-  isDrawing: false,
-  startCellRef: { current: null },
   gridColumns: [],
   selectedKeys: [],
   loading: false,
+  setSelectedKeys: () => {},
   setFilters: () => {},
   setItemPerPage: () => {},
-  setSelectedCells: () => {},
-  setIsDrawing: () => {},
-  setSelectedKeys: () => {},
   setGridColumns: () => {},
   setLoading: () => {},
   clearFilters: () => {},
-  clearCellSelection: () => {},
   clearRowSelection: () => {},
   clearColumnVisibility: () => {},
   clearAll: () => {},
-  setStartCellRef: () => {},
 });
 export const GenericStateProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -58,10 +42,6 @@ export const GenericStateProvider: React.FC<{ children: React.ReactNode }> = ({
   const [filters, setFilters] = useState<Filter[]>([]);
   //Pagination
   const [itemPerPage, setItemPerPage] = useState<number>(24);
-  //Cell Selection
-  const [selectedCells, setSelectedCells] = useState<SelectedCell[]>([]);
-  const [isDrawing, setIsDrawing] = useState(false);
-  const startCellRef = useRef<SelectedCell | null>(null);
   //Row Selection
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   //Column Visibility
@@ -69,18 +49,8 @@ export const GenericStateProvider: React.FC<{ children: React.ReactNode }> = ({
   //Generic
   const [loading, setLoading] = useState<boolean>(false);
 
-  const setStartCellRef = (
-    newRef: React.MutableRefObject<SelectedCell | null>
-  ) => {
-    startCellRef.current = newRef.current;
-  };
-
   const clearFilters = () => {
     if (filters.length > 0) setFilters([]);
-  };
-
-  const clearCellSelection = () => {
-    if (selectedCells.length > 0) setSelectedCells([]);
   };
 
   const clearRowSelection = () => {
@@ -93,7 +63,6 @@ export const GenericStateProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const clearAll = () => {
     clearFilters();
-    clearCellSelection();
     clearRowSelection();
     clearColumnVisibility();
   };
@@ -101,22 +70,15 @@ export const GenericStateProvider: React.FC<{ children: React.ReactNode }> = ({
   const values = {
     filters,
     itemPerPage,
-    selectedCells,
-    isDrawing,
-    startCellRef,
     selectedKeys,
     gridColumns,
     loading,
     setFilters,
     setItemPerPage,
-    setSelectedCells,
-    setIsDrawing,
     setSelectedKeys,
     setGridColumns,
-    setStartCellRef,
     setLoading,
     clearFilters,
-    clearCellSelection,
     clearRowSelection,
     clearColumnVisibility,
     clearAll,

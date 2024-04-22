@@ -124,10 +124,12 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory, create }) => {
           {...form.getInputProps("categoryId")}
           value={form.values.categoryId || ""}
           classNames={filterClasses}
-          dropdownPosition="bottom"
-          nothingFound="No categories found"
+          comboboxProps={{
+            position: "bottom",
+            middlewares: { flip: false, shift: false },
+          }}
+          nothingFoundMessage="No categories found"
           withAsterisk
-          withinPortal
         />
         <Select
           data={suppliers.map((supplier) => ({
@@ -139,10 +141,12 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory, create }) => {
           {...form.getInputProps("supplierId")}
           value={form.values.supplierId || ""}
           classNames={filterClasses}
-          dropdownPosition="bottom"
-          nothingFound="No suppliers found"
+          comboboxProps={{
+            position: "bottom",
+            middlewares: { flip: false, shift: false },
+          }}
+          nothingFoundMessage="No suppliers found"
           clearable
-          withinPortal
         />
         <Select
           data={manufacturers.map((manufacturer) => ({
@@ -154,10 +158,12 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory, create }) => {
           {...form.getInputProps("manufacturerId")}
           value={form.values.manufacturerId || ""}
           classNames={filterClasses}
-          dropdownPosition="bottom"
-          nothingFound="No manufacturers found"
+          comboboxProps={{
+            position: "bottom",
+            middlewares: { flip: false, shift: false },
+          }}
+          nothingFoundMessage="No manufacturers found"
           clearable
-          withinPortal
         />
         <TextInput
           label="Model No"
@@ -187,7 +193,7 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory, create }) => {
           label="Purchase Cost"
           {...form.getInputProps("purchaseCost")}
           value={form.values.purchaseCost || ""}
-          precision={2}
+          decimalScale={2}
           hideControls
         />
         <NumberInput
@@ -205,7 +211,7 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory, create }) => {
           {...form.getInputProps("notes")}
           value={form.values.notes || ""}
         />
-        <Group position="right" mt="md">
+        <Group mt="md" justify="flex-end">
           <Button type="submit" color="dark">
             Submit
           </Button>

@@ -277,10 +277,13 @@ const ModelForm: React.FC<ModelFormProps> = ({ model, create }) => {
           placeholder="Select Category"
           {...form.getInputProps("categoryId")}
           classNames={filterClasses}
-          dropdownPosition="bottom"
-          nothingFound="No category found"
+          comboboxProps={{
+              position: "top",
+              middlewares: { flip: false, shift: false },
+            }}
+          nothingFoundMessage="No category found"
           withAsterisk
-          withinPortal
+          
         />
         <Select
           data={fieldSets.map((fieldSet) => ({
@@ -291,10 +294,13 @@ const ModelForm: React.FC<ModelFormProps> = ({ model, create }) => {
           placeholder="Select Field Set"
           {...form.getInputProps("fieldSetId")}
           classNames={filterClasses}
-          dropdownPosition="bottom"
-          nothingFound="No field set found"
+          comboboxProps={{
+              position: "top",
+              middlewares: { flip: false, shift: false },
+            }}
+          nothingFoundMessage="No field set found"
           onChange={(e) => onFieldIdChange(e as string)}
-          withinPortal
+          
         />
         <Select
           data={manufacturers.map((manufacturer) => ({
@@ -305,9 +311,12 @@ const ModelForm: React.FC<ModelFormProps> = ({ model, create }) => {
           placeholder="Select Manufacturer"
           {...form.getInputProps("manufacturerId")}
           classNames={filterClasses}
-          dropdownPosition="bottom"
-          nothingFound="No manufacturer found"
-          withinPortal
+          comboboxProps={{
+              position: "top",
+              middlewares: { flip: false, shift: false },
+            }}
+          nothingFoundMessage="No manufacturer found"
+          
         />
         <TextInput
           label="Name"
@@ -338,7 +347,7 @@ const ModelForm: React.FC<ModelFormProps> = ({ model, create }) => {
             </div>
           </div>
         ) : null}
-        <Group position="right" mt="md">
+        <Group mt="md" justify="flex-end">
           <Button type="submit" color="dark">
             Submit
           </Button>

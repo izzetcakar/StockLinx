@@ -86,10 +86,12 @@ export const GenericProvider: React.FC<GenericProviderProps> = ({
             value={company}
             onChange={(value) => setCompany(value)}
             classNames={filterClasses}
-            dropdownPosition="bottom"
-            nothingFound="No company found"
+            comboboxProps={{
+              position: "top",
+              middlewares: { flip: false, shift: false },
+            }}
+            nothingFoundMessage="No company found"
             withAsterisk
-            withinPortal
           />
           <Select
             data={branches
@@ -105,10 +107,14 @@ export const GenericProvider: React.FC<GenericProviderProps> = ({
               dispatch(branchActions.setBranch(findBranchById(value as string)))
             }
             classNames={filterClasses}
-            dropdownPosition="bottom"
-            nothingFound={company ? "No branch found" : "Select company first"}
+            comboboxProps={{
+              position: "top",
+              middlewares: { flip: false, shift: false },
+            }}
+            nothingFoundMessage={
+              company ? "No branch found" : "Select company first"
+            }
             withAsterisk
-            withinPortal
           />
           <LoadingOverlay visible={loading > 0} zIndex={1000} />
         </Drawer>

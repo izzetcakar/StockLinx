@@ -20,16 +20,17 @@ export const useColumns = () => {
       caption: "Branch",
       dataType: "string",
       lookup: {
-        defaultData: branches,
-        valueExpr: "id",
-        displayExpr: "name",
+        data: branches.map((branch) => ({
+          value: branch.id,
+          label: branch.name,
+        })),
       },
       renderComponent(e) {
         return (
           <Anchor
             onClick={() => navigate(`/branch/${(e as IDepartment)?.branchId}`)}
             target="_blank"
-            underline={true}
+            underline="always"
           >
             {
               branches.find(
@@ -49,7 +50,7 @@ export const useColumns = () => {
           <Anchor
             onClick={() => navigate(`/department/${(e as IDepartment)?.id}`)}
             target="_blank"
-            underline={true}
+            underline="always"
           >
             {(e as IDepartment).name}
           </Anchor>
@@ -61,9 +62,10 @@ export const useColumns = () => {
       caption: "Location",
       dataType: "string",
       lookup: {
-        defaultData: locations,
-        valueExpr: "id",
-        displayExpr: "name",
+        data: locations.map((location) => ({
+          value: location.id,
+          label: location.name,
+        })),
       },
       renderComponent(e) {
         return (
@@ -72,7 +74,7 @@ export const useColumns = () => {
               navigate(`/location/${(e as IDepartment)?.locationId}`)
             }
             target="_blank"
-            underline={true}
+            underline="always"
           >
             {
               locations.find(
@@ -88,16 +90,17 @@ export const useColumns = () => {
       caption: "Manager",
       dataType: "string",
       lookup: {
-        defaultData: users,
-        valueExpr: "id",
-        displayExpr: "firstName",
+        data: users.map((user) => ({
+          value: user.id,
+          label: user.firstName + " " + user.lastName,
+        })),
       },
       renderComponent(e) {
         return (
           <Anchor
             onClick={() => navigate(`/user/${(e as IDepartment)?.managerId}`)}
             target="_blank"
-            underline={true}
+            underline="always"
           >
             {
               users.find((user) => user.id === (e as IDepartment)?.managerId)

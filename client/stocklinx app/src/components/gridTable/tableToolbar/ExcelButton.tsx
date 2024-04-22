@@ -18,12 +18,12 @@ const ExcelButton: React.FC<ExcelButtonProps> = ({
       transitionProps={{ transition: "pop-top-right" }}
       position="bottom-end"
       width="auto"
-      withinPortal
+      
       classNames={filterClasses}
     >
       <Menu.Target>
         {/* <Button
-          rightIcon={
+          rightSection={
             <IconChevronDown
               style={{ width: rem(18), height: rem(18) }}
               stroke={1.5}

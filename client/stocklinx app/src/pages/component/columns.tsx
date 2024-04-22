@@ -26,7 +26,7 @@ export const useColumns = () => {
           <Anchor
             onClick={() => navigate(`/component/${(e as IComponent)?.id}`)}
             target="_blank"
-            underline={true}
+            underline="always"
           >
             {(e as IComponent).name}
           </Anchor>
@@ -42,7 +42,7 @@ export const useColumns = () => {
           <Anchor
             onClick={() => navigate(`/asset/${(e as IComponent)?.id}`)}
             target="_blank"
-            underline={true}
+            underline="always"
           >
             {(e as IComponent).serialNo}
           </Anchor>
@@ -53,9 +53,10 @@ export const useColumns = () => {
       caption: "Category",
       dataField: "categoryId",
       lookup: {
-        defaultData: categories,
-        valueExpr: "id",
-        displayExpr: "name",
+        data: categories.map((category) => ({
+          value: category.id,
+          label: category.name,
+        })),
       },
       dataType: "string",
     },
@@ -73,9 +74,10 @@ export const useColumns = () => {
       caption: "Location",
       dataField: "locationId",
       lookup: {
-        defaultData: locations,
-        valueExpr: "id",
-        displayExpr: "name",
+        data: locations.map((location) => ({
+          value: location.id,
+          label: location.name,
+        })),
       },
       dataType: "string",
     },
@@ -99,9 +101,10 @@ export const useColumns = () => {
       caption: "Branch",
       dataField: "branchId",
       lookup: {
-        defaultData: branches,
-        valueExpr: "id",
-        displayExpr: "name",
+        data: branches.map((branch) => ({
+          value: branch.id,
+          label: branch.name,
+        })),
       },
       dataType: "string",
       visible: false,

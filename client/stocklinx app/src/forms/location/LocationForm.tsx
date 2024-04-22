@@ -91,7 +91,7 @@ const LocationForm: React.FC<LocationFormProps> = ({ location, create }) => {
           {...form.getInputProps("notes")}
           value={form.values.notes || ""}
         />
-        <Group position="right" mt="md">
+        <Group mt="md" justify="flex-end">
           <Button type="submit" color="dark">
             Submit
           </Button>

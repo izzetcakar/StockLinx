@@ -48,7 +48,6 @@ const Component = () => {
         excelColumns={useColumns().excelColumns}
         enableToolbar
         enableEditActions
-        enableExcelActions
         enableSelectActions
       />
     </>

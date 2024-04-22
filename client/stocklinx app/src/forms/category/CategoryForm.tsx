@@ -60,12 +60,14 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ category, create }) => {
           placeholder="Select Type"
           {...form.getInputProps("type")}
           classNames={filterClasses}
-          dropdownPosition="bottom"
+          comboboxProps={{
+            position: "bottom",
+            middlewares: { flip: false, shift: false },
+          }}
           withAsterisk
-          withinPortal
         />
       </Flex>
-      <Group position="right">
+      <Group mt="md" justify="flex-end">
         <Button type="submit" color="dark">
           Submit
         </Button>

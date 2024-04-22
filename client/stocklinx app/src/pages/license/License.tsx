@@ -89,7 +89,7 @@ const License = () => {
                     navigate(`/manufacturer/${license?.manufacturerId}`)
                   }
                   target="_blank"
-                  underline={true}
+                  underline="always"
                 >
                   {
                     manufacturers.find(
@@ -106,7 +106,7 @@ const License = () => {
                 <Anchor
                   onClick={() => navigate(`/supplier/${license?.supplierId}`)}
                   target="_blank"
-                  underline={true}
+                  underline="always"
                 >
                   {
                     suppliers.find(

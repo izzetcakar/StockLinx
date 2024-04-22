@@ -65,7 +65,7 @@ export const useColumns = () => {
           <Anchor
             onClick={() => navigate(`/license/${(e as ILicense)?.id}`)}
             target="_blank"
-            underline={true}
+            underline="always"
           >
             {(e as ILicense).name}
           </Anchor>
@@ -81,7 +81,7 @@ export const useColumns = () => {
           <Anchor
             onClick={() => navigate(`/license/${(e as ILicense)?.id}`)}
             target="_blank"
-            underline={true}
+            underline="always"
           >
             {(e as ILicense).licenseKey}
           </Anchor>
@@ -107,9 +107,10 @@ export const useColumns = () => {
       caption: "Manufacturer",
       dataField: "manufacturerId",
       lookup: {
-        defaultData: manufacturers,
-        valueExpr: "id",
-        displayExpr: "name",
+        data: manufacturers.map((manufacturer) => ({
+          value: manufacturer.id,
+          label: manufacturer.name,
+        })),
       },
       dataType: "string",
     },
@@ -148,9 +149,10 @@ export const useColumns = () => {
       caption: "Branch",
       dataField: "branchId",
       lookup: {
-        defaultData: branches,
-        valueExpr: "id",
-        displayExpr: "name",
+        data: branches.map((branch) => ({
+          value: branch.id,
+          label: branch.name,
+        })),
       },
       dataType: "string",
       visible: false,
@@ -177,9 +179,10 @@ export const useColumns = () => {
       caption: "Supplier",
       dataField: "supplierId",
       lookup: {
-        defaultData: suppliers,
-        valueExpr: "id",
-        displayExpr: "name",
+        data: suppliers.map((supplier) => ({
+          value: supplier.id,
+          label: supplier.name,
+        })),
       },
       dataType: "string",
       visible: false,
@@ -188,9 +191,12 @@ export const useColumns = () => {
       caption: "Category",
       dataField: "categoryId",
       lookup: {
-        defaultData: categories.filter((c) => c.type === CategoryType.LICENSE),
-        valueExpr: "id",
-        displayExpr: "name",
+        data: categories
+          .filter((c) => c.type === CategoryType.LICENSE)
+          .map((category) => ({
+            value: category.id,
+            label: category.name,
+          })),
       },
       dataType: "string",
       visible: false,

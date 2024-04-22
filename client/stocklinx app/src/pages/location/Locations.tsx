@@ -34,7 +34,6 @@ const Location = () => {
         excelColumns={useColumns().excelColumns}
         enableToolbar
         enableEditActions
-        enableExcelActions
         enableSelectActions
       />
     </>

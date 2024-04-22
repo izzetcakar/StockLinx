@@ -1,11 +1,10 @@
-import "./header.scss";
-import iconSetting from "../../assets/icon_setting.png";
-import iconPower from "../../assets/icon_power.png";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
-import { Button, Menu, Text, rem } from "@mantine/core";
-import filterClasses from "../../mantineModules/baseFilter.module.scss";
+import { Button, Menu, rem } from "@mantine/core";
 import { IconChevronDown } from "@tabler/icons-react";
+import filterClasses from "../../mantineModules/baseFilter.module.scss";
+import iconSetting from "../../assets/icon_setting.png";
+import "./header.scss";
 
 const Header = () => {
   const user = useSelector((state: RootState) => state.user.user);
@@ -34,12 +33,11 @@ const Header = () => {
           transitionProps={{ transition: "pop-top-right" }}
           position="bottom-end"
           width="auto"
-          withinPortal
           classNames={filterClasses}
         >
           <Menu.Target>
             <Button
-              rightIcon={
+              rightSection={
                 <IconChevronDown
                   style={{ width: rem(18), height: rem(18) }}
                   stroke={1.5}
@@ -64,12 +62,11 @@ const Header = () => {
           transitionProps={{ transition: "pop-top-right" }}
           position="bottom-end"
           width="auto"
-          withinPortal
           classNames={filterClasses}
         >
           <Menu.Target>
             <Button
-              rightIcon={
+              rightSection={
                 <IconChevronDown
                   style={{ width: rem(18), height: rem(18) }}
                   stroke={1.5}

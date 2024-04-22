@@ -14,12 +14,14 @@ export const useSelectRow = (data: object[], keyfield: keyof object) => {
       prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
     );
   };
+
   const getSelectedRowClass = (id: string): string => {
     return selectedKeys.includes(id)
       ? "gridtable__row selected"
       : "gridtable__row";
   };
-  const handleselectAll = () => {
+
+  const handleSelectAll = () => {
     if (selectedKeys.length === data.length) {
       setSelectedKeys([]);
     } else {
@@ -30,6 +32,6 @@ export const useSelectRow = (data: object[], keyfield: keyof object) => {
   return {
     handleSelectRow,
     getSelectedRowClass,
-    handleselectAll,
+    handleSelectAll,
   };
 };

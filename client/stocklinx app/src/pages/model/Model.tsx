@@ -59,7 +59,7 @@ const Model = () => {
                 <Anchor
                   onClick={() => navigate(`/category/${model?.categoryId}`)}
                   target="_blank"
-                  underline={true}
+                  underline="always"
                 >
                   {
                     categories.find(
@@ -77,7 +77,7 @@ const Model = () => {
                     navigate(`/manufacturer/${model?.manufacturerId}`)
                   }
                   target="_blank"
-                  underline={true}
+                  underline="always"
                 >
                   {
                     manufacturers.find(

@@ -76,7 +76,7 @@ const User = () => {
                 <Anchor
                   onClick={() => navigate(`/company/${getCompany()?.id}`)}
                   target="_blank"
-                  underline={true}
+                  underline="always"
                 >
                   {getCompany()?.name}
                 </Anchor>
@@ -88,7 +88,7 @@ const User = () => {
                 <Anchor
                   onClick={() => navigate(`/branch/${getBranch()?.id}`)}
                   target="_blank"
-                  underline={true}
+                  underline="always"
                 >
                   {getBranch()?.name}
                 </Anchor>

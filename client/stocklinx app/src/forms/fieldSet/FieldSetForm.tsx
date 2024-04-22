@@ -47,7 +47,7 @@ const FieldSetForm: React.FC<FieldSetFormProps> = ({ fieldSet }) => {
           {...form.getInputProps("name")}
           withAsterisk
         />
-        <Group position="right" mt="md">
+        <Group mt="md" justify="flex-end">
           <Button type="submit" color="dark">
             Submit
           </Button>

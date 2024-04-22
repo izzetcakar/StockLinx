@@ -48,7 +48,6 @@ const Model = () => {
         excelColumns={useColumns().excelColumns}
         enableToolbar
         enableEditActions
-        enableExcelActions
         enableSelectActions
       />
     </>

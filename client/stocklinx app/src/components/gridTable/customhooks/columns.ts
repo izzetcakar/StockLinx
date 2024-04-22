@@ -7,7 +7,7 @@ export const useColumns = (columns: BaseColumn[]) => {
   const { gridColumns, setGridColumns } = useGridTableContext();
   const { handleFilterAll } = useFilter();
 
-  const handleBaseColumnsChange = () => {
+  const onBaseColumnsChange = () => {
     const newColumns = columns.map((column) => {
       return {
         ...column,
@@ -15,10 +15,10 @@ export const useColumns = (columns: BaseColumn[]) => {
       };
     });
     setGridColumns(newColumns);
-    handleFilterAll(newColumns);
+    handleFilterAll();
   };
 
-  const onVisibleColumnsChange = (columnId: string) => {
+  const onColumnVisibleChange = (columnId: string) => {
     const newColumns = gridColumns.map((column) => {
       if (column.id === columnId) {
         return {
@@ -32,7 +32,7 @@ export const useColumns = (columns: BaseColumn[]) => {
   };
 
   return {
-    onVisibleColumnsChange,
-    handleBaseColumnsChange,
+    onColumnVisibleChange,
+    onBaseColumnsChange,
   };
 };

@@ -23,7 +23,7 @@ export const useColumns = () => {
           <Anchor
             onClick={() => navigate(`/supplier/${(e as ISupplier)?.id}`)}
             target="_blank"
-            underline={true}
+            underline="always"
           >
             {(e as ISupplier).name}
           </Anchor>
@@ -53,9 +53,10 @@ export const useColumns = () => {
       caption: "Location",
       dataType: "string",
       lookup: {
-        defaultData: locations,
-        valueExpr: "id",
-        displayExpr: "name",
+        data: locations.map((location) => ({
+          value: location.id,
+          label: location.name,
+        })),
       },
       renderComponent(e) {
         return (
@@ -64,7 +65,7 @@ export const useColumns = () => {
               navigate(`/location/${(e as ISupplier)?.locationId}`)
             }
             target="_blank"
-            underline={true}
+            underline="always"
           >
             {
               locations.find(

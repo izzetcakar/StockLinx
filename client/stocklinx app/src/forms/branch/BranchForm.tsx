@@ -60,10 +60,12 @@ const BranchForm: React.FC<BranchFormProps> = ({ branch, create }) => {
           placeholder="Select Company"
           {...form.getInputProps("companyId")}
           classNames={filterClasses}
-          dropdownPosition="bottom"
-          nothingFound="No company found"
+          comboboxProps={{
+            position: "bottom",
+            middlewares: { flip: false, shift: false },
+          }}
+          nothingFoundMessage="No company found"
           withAsterisk
-          withinPortal
         />
         <Select
           data={locations.map((location) => ({
@@ -75,11 +77,13 @@ const BranchForm: React.FC<BranchFormProps> = ({ branch, create }) => {
           {...form.getInputProps("locationId")}
           value={form.values.locationId || ""}
           classNames={filterClasses}
-          dropdownPosition="bottom"
-          nothingFound="No location found"
-          withinPortal
+          comboboxProps={{
+            position: "bottom",
+            middlewares: { flip: false, shift: false },
+          }}
+          nothingFoundMessage="No location found"
         />
-        <Group position="right" mt="md">
+        <Group mt="md" justify="flex-end">
           <Button type="submit" color="dark">
             Submit
           </Button>

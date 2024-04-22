@@ -45,7 +45,7 @@ const Supplier = () => {
                 <Anchor
                   onClick={() => navigate(`/location/${supplier?.locationId}`)}
                   target="_blank"
-                  underline={true}
+                  underline="always"
                 >
                   {
                     locations.find(

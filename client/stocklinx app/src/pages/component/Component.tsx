@@ -87,7 +87,7 @@ const Component = () => {
                 <Anchor
                   onClick={() => navigate(`/supplier/${component?.supplierId}`)}
                   target="_blank"
-                  underline={true}
+                  underline="always"
                 >
                   {
                     suppliers.find(

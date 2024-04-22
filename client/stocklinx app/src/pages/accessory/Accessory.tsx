@@ -94,7 +94,7 @@ const Accessory = () => {
                     navigate(`/manufacturer/${accessory?.manufacturerId}`)
                   }
                   target="_blank"
-                  underline={true}
+                  underline="always"
                 >
                   {
                     manufacturers.find(
@@ -111,7 +111,7 @@ const Accessory = () => {
                 <Anchor
                   onClick={() => navigate(`/supplier/${accessory?.supplierId}`)}
                   target="_blank"
-                  underline={true}
+                  underline="always"
                 >
                   {
                     suppliers.find(

@@ -42,7 +42,6 @@ const Department = () => {
         excelColumns={useColumns().excelColumns}
         enableToolbar
         enableEditActions
-        enableExcelActions
         enableSelectActions
       />
     </>

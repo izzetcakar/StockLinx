@@ -45,7 +45,6 @@ const User = () => {
         }
         enableToolbar
         enableEditActions
-        enableExcelActions
         enableSelectActions
       />
     </>

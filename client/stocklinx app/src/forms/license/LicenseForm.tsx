@@ -94,10 +94,13 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license, create }) => {
           placeholder="Select Category"
           {...form.getInputProps("categoryId")}
           classNames={filterClasses}
-          dropdownPosition="bottom"
-          nothingFound="No categories found"
+          comboboxProps={{
+              position: "top",
+              middlewares: { flip: false, shift: false },
+            }}
+          nothingFoundMessage="No categories found"
           withAsterisk
-          withinPortal
+          
         />
         <TextInput
           label="License Key"
@@ -109,7 +112,7 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license, create }) => {
         <NumberInput
           defaultValue={1}
           min={1}
-          precision={0}
+          decimalScale={0}
           placeholder="Seats"
           label="Seats"
           {...form.getInputProps("quantity")}
@@ -124,10 +127,13 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license, create }) => {
           placeholder="Select Manufacturer"
           {...form.getInputProps("manufacturerId")}
           classNames={filterClasses}
-          dropdownPosition="bottom"
-          nothingFound="No manufacturers found"
+          comboboxProps={{
+              position: "top",
+              middlewares: { flip: false, shift: false },
+            }}
+          nothingFoundMessage="No manufacturers found"
           clearable
-          withinPortal
+          
         />
         <TextInput
           label="Licensed To"
@@ -155,10 +161,13 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license, create }) => {
           placeholder="Select Supplier"
           {...form.getInputProps("supplierId")}
           classNames={filterClasses}
-          dropdownPosition="bottom"
-          nothingFound="No suppliers found"
+          comboboxProps={{
+              position: "top",
+              middlewares: { flip: false, shift: false },
+            }}
+          nothingFoundMessage="No suppliers found"
           clearable
-          withinPortal
+          
         />
         <TextInput
           label="Order No"
@@ -171,7 +180,7 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license, create }) => {
           label="Purchase Cost"
           {...form.getInputProps("purchaseCost")}
           value={form.values.purchaseCost || ""}
-          precision={2}
+          decimalScale={2}
           hideControls
         />
         <DateInput
@@ -219,7 +228,7 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license, create }) => {
           {...form.getInputProps("notes")}
           value={form.values.notes || ""}
         />
-        <Group position="right" mt="md">
+        <Group mt="md" justify="flex-end">
           <Button type="submit" color="dark">
             Submit
           </Button>

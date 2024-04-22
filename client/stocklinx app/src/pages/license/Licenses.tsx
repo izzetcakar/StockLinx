@@ -52,7 +52,6 @@ const License = () => {
         excelColumns={useColumns().excelColumns}
         enableToolbar
         enableEditActions
-        enableExcelActions
         enableSelectActions
       />
     </>

@@ -19,7 +19,7 @@ export const useColumns = () => {
           <Anchor
             onClick={() => navigate(`/location/${(e as ILocation)?.id}`)}
             target="_blank"
-            underline={true}
+            underline="always"
           >
             {(e as ILocation).name}
           </Anchor>

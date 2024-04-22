@@ -1,5 +1,9 @@
 import { checkEmpty } from "./functions/checkEmpty";
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "./redux/rootReducer";
+import { LoadingOverlay } from "@mantine/core";
+import { useContext } from "react";
 import Accessories from "./pages/accessory/Accessories";
 import Assets from "./pages/asset/Assets";
 import Components from "./pages/component/Components";
@@ -22,11 +26,6 @@ import Header from "./components/Header/Header";
 import Sidebar from "./components/sidebar/Sidebar";
 import Generic from "./pages/generic/Generic";
 import GenericContext from "./context/GenericContext";
-import { useSelector } from "react-redux";
-import { RootState } from "./redux/rootReducer";
-import { LoadingOverlay } from "@mantine/core";
-import { useContext } from "react";
-import "./app.scss";
 import Accessory from "./pages/accessory/Accessory";
 import Asset from "./pages/asset/Asset";
 import Branch from "./pages/branch/Branch";
@@ -43,6 +42,8 @@ import ProductStatus from "./pages/productStatus/ProductStatus";
 import Supplier from "./pages/supplier/Supplier";
 import User from "./pages/user/User";
 import Permissions from "./pages/permission/Permissions";
+import "./app.scss";
+import "@mantine/core/styles.css";
 
 const Layout = () => {
   const userRedux = useSelector((state: RootState) => state.user.user);
@@ -51,7 +52,7 @@ const Layout = () => {
 
   if (checkEmpty(userRedux)) {
     return (
-      <div className="main-container">
+      <div className="main__container">
         <div>
           <Sidebar />
         </div>

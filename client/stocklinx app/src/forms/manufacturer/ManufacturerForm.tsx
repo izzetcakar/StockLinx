@@ -108,7 +108,7 @@ const ManufacturerForm: React.FC<ManufacturerFormProps> = ({
           value={form.values.notes || ""}
         />
       </Flex>
-      <Group position="right" mt="md">
+      <Group mt="md" justify="flex-end">
         <Button type="submit" color="dark">
           Submit
         </Button>

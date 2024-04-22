@@ -29,7 +29,7 @@ export const useColumns = () => {
           <Anchor
             onClick={() => navigate(`/consumable/${(e as IConsumable)?.id}`)}
             target="_blank"
-            underline={true}
+            underline="always"
           >
             {(e as IConsumable).name}
           </Anchor>
@@ -40,11 +40,12 @@ export const useColumns = () => {
       caption: "Category",
       dataField: "categoryId",
       lookup: {
-        defaultData: categories.filter(
-          (category) => category.type === CategoryType.CONSUMABLE
-        ),
-        valueExpr: "id",
-        displayExpr: "name",
+        data: categories
+          .filter((category) => category.type === CategoryType.CONSUMABLE)
+          .map((category) => ({
+            value: category.id,
+            label: category.name,
+          })),
       },
       dataType: "string",
     },
@@ -57,7 +58,7 @@ export const useColumns = () => {
           <Anchor
             onClick={() => navigate(`/consumable/${(e as IConsumable)?.id}`)}
             target="_blank"
-            underline={true}
+            underline="always"
           >
             {(e as IConsumable).modelNo}
           </Anchor>
@@ -73,7 +74,7 @@ export const useColumns = () => {
           <Anchor
             onClick={() => navigate(`/consumable/${(e as IConsumable)?.id}`)}
             target="_blank"
-            underline={true}
+            underline="always"
           >
             {(e as IConsumable).itemNo}
           </Anchor>
@@ -110,9 +111,10 @@ export const useColumns = () => {
       caption: "Branch",
       dataField: "branchId",
       lookup: {
-        defaultData: branches,
-        valueExpr: "id",
-        displayExpr: "name",
+        data: branches.map((branch) => ({
+          value: branch.id,
+          label: branch.name,
+        })),
       },
       dataType: "string",
       visible: false,
@@ -121,9 +123,10 @@ export const useColumns = () => {
       caption: "Supplier",
       dataField: "supplierId",
       lookup: {
-        defaultData: suppliers,
-        valueExpr: "id",
-        displayExpr: "name",
+        data: suppliers.map((supplier) => ({
+          value: supplier.id,
+          label: supplier.name,
+        })),
       },
       dataType: "string",
       visible: false,
@@ -132,9 +135,10 @@ export const useColumns = () => {
       caption: "Manufacturer",
       dataField: "manufacturerId",
       lookup: {
-        defaultData: manufacturers,
-        valueExpr: "id",
-        displayExpr: "name",
+        data: manufacturers.map((manufacturer) => ({
+          value: manufacturer.id,
+          label: manufacturer.name,
+        })),
       },
       dataType: "string",
       visible: false,

@@ -44,10 +44,13 @@ const PermissionForm: React.FC<PermissionFormProps> = ({ branch }) => {
           label="User"
           placeholder="Select User"
           classNames={filterClasses}
-          dropdownPosition="bottom"
-          nothingFound="No user found"
+          comboboxProps={{
+              position: "top",
+              middlewares: { flip: false, shift: false },
+            }}
+          nothingFoundMessage="No user found"
           onChange={(e) => setUser(e as string)}
-          withinPortal
+          
         />
         <Button onClick={() => givePermission()}>ADD</Button>
       </Flex>

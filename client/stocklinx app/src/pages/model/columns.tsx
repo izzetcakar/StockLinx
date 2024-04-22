@@ -29,7 +29,7 @@ export const useColumns = () => {
           <Anchor
             onClick={() => navigate(`/model/${(e as IModel)?.id}`)}
             target="_blank"
-            underline={true}
+            underline="always"
           >
             {(e as IModel).name}
           </Anchor>
@@ -59,16 +59,17 @@ export const useColumns = () => {
       caption: "Category",
       dataType: "string",
       lookup: {
-        defaultData: cateogries,
-        valueExpr: "id",
-        displayExpr: "name",
+        data: cateogries.map((category) => ({
+          value: category.id,
+          label: category.name,
+        })),
       },
       renderComponent(e) {
         return (
           <Anchor
             onClick={() => navigate(`/category/${(e as IModel)?.categoryId}`)}
             target="_blank"
-            underline={true}
+            underline="always"
           >
             {
               cateogries.find(
@@ -84,9 +85,10 @@ export const useColumns = () => {
       caption: "Manufacturer",
       dataType: "string",
       lookup: {
-        defaultData: manufacturers,
-        valueExpr: "id",
-        displayExpr: "name",
+        data: manufacturers.map((manufacturer) => ({
+          value: manufacturer.id,
+          label: manufacturer.name,
+        })),
       },
       renderComponent(e) {
         return (
@@ -95,7 +97,7 @@ export const useColumns = () => {
               navigate(`/manufacturer/${(e as IModel)?.manufacturerId}`)
             }
             target="_blank"
-            underline={true}
+            underline="always"
           >
             {
               manufacturers.find(
@@ -116,9 +118,10 @@ export const useColumns = () => {
       dataField: "fieldSetId",
       caption: "FieldSet",
       lookup: {
-        defaultData: fieldSets,
-        valueExpr: "id",
-        displayExpr: "name",
+        data: fieldSets.map((fieldSet) => ({
+          value: fieldSet.id,
+          label: fieldSet.name,
+        })),
       },
       dataType: "string",
     },

@@ -4,7 +4,7 @@ export const createDataFromEnum = (enumObj: { [s: number]: string }) => {
     if (!isNaN(Number(key))) {
       continue;
     }
-    data.push({ value: enumObj[key], id: key });
+    data.push({ value: enumObj[key], label: key });
   }
   return data;
 };

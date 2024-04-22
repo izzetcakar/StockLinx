@@ -85,8 +85,10 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ company, create }) => {
           placeholder="Select Location"
           {...form.getInputProps("locationId")}
           classNames={filterClasses}
-          dropdownPosition="bottom"
-          withinPortal
+          comboboxProps={{
+            position: "bottom",
+            middlewares: { flip: false, shift: false },
+          }}
         />
         <TextInput
           label="Email"
@@ -94,7 +96,7 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ company, create }) => {
           {...form.getInputProps("email")}
           value={form.values.email || ""}
         />
-        <Group position="right" mt="md">
+        <Group mt="md" justify="flex-end">
           <Button type="submit" color="dark">
             Submit
           </Button>

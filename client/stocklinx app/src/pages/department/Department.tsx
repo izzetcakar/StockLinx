@@ -57,7 +57,7 @@ const Department = () => {
                     )
                   }
                   target="_blank"
-                  underline={true}
+                  underline="always"
                 >
                   {
                     companies.find(
@@ -77,7 +77,7 @@ const Department = () => {
                 <Anchor
                   onClick={() => navigate(`/branch/${department?.branchId}`)}
                   target="_blank"
-                  underline={true}
+                  underline="always"
                 >
                   {
                     branches.find(
@@ -99,7 +99,7 @@ const Department = () => {
                     navigate(`/location/${department?.locationId}`)
                   }
                   target="_blank"
-                  underline={true}
+                  underline="always"
                 >
                   {
                     locations.find(

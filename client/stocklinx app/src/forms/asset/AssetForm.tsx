@@ -61,7 +61,6 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
       <Text mah="fit-content">{index + 1}. Asset</Text>
       <TextInput
         placeholder="Tag No"
-        sx={{ flex: 1 }}
         {...form.getInputProps(`overageAssets.${index}.tagNo`)}
         value={
           form.values.overageAssets?.find((_, arrIndex) => arrIndex === index)
@@ -71,7 +70,6 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
       />
       <TextInput
         placeholder="Serial No"
-        sx={{ flex: 1 }}
         {...form.getInputProps(`overageAssets.${index}.serialNo`)}
         value={
           form.values.overageAssets?.find((_, arrIndex) => arrIndex === index)
@@ -170,10 +168,12 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
           {...form.getInputProps("modelId")}
           value={form.values.modelId || ""}
           classNames={filterClasses}
-          dropdownPosition="bottom"
-          nothingFound="No models found"
+          comboboxProps={{
+            position: "bottom",
+            middlewares: { flip: false, shift: false },
+          }}
+          nothingFoundMessage="No models found"
           clearable
-          withinPortal
         />
         <Select
           data={productStatuses.map((model) => ({
@@ -184,10 +184,12 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
           placeholder="Select Product Status"
           {...form.getInputProps("productStatusId")}
           classNames={filterClasses}
-          dropdownPosition="bottom"
-          nothingFound="No product statuses found"
+          comboboxProps={{
+            position: "bottom",
+            middlewares: { flip: false, shift: false },
+          }}
+          nothingFoundMessage="No product statuses found"
           withAsterisk
-          withinPortal
         />
         <Textarea
           placeholder="Your notes here"
@@ -216,10 +218,12 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
           placeholder="Select Supplier"
           {...form.getInputProps("supplierId")}
           classNames={filterClasses}
-          dropdownPosition="bottom"
-          nothingFound="No suppliers found"
+          comboboxProps={{
+            position: "bottom",
+            middlewares: { flip: false, shift: false },
+          }}
+          nothingFoundMessage="No suppliers found"
           clearable
-          withinPortal
         />
         <DateInput
           clearable
@@ -235,9 +239,9 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
           label="Purchase Cost"
           {...form.getInputProps("purchaseCost")}
           value={form.values.purchaseCost || ""}
-          precision={2}
+          decimalScale={2}
         />
-        <Group position="right" mt="md">
+        <Group mt="md" justify="flex-end">
           <Button type="submit" color="dark">
             Submit
           </Button>

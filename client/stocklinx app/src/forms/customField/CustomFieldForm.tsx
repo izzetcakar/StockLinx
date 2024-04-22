@@ -118,9 +118,12 @@ const CustomFieldForm: React.FC<CustomFieldFormProps> = ({ customField }) => {
           placeholder="Select Type"
           {...form.getInputProps("type")}
           classNames={filterClasses}
-          dropdownPosition="bottom"
+          comboboxProps={{
+              position: "top",
+              middlewares: { flip: false, shift: false },
+            }}
           withAsterisk
-          withinPortal
+          
         />
         <TextInput
           label="Default Value"
@@ -162,11 +165,14 @@ const CustomFieldForm: React.FC<CustomFieldFormProps> = ({ customField }) => {
           onChange={onFieldSetsChange}
           classNames={filterClasses}
           placeholder="Select Field Sets"
-          dropdownPosition="bottom"
-          nothingFound="No field sets found"
-          withinPortal
+          comboboxProps={{
+              position: "top",
+              middlewares: { flip: false, shift: false },
+            }}
+          nothingFoundMessage="No field sets found"
+          
         />
-        <Group position="right" mt="md">
+        <Group mt="md" justify="flex-end">
           <Button type="submit" color="dark">
             Submit
           </Button>

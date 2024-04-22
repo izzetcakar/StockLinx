@@ -92,10 +92,13 @@ const ComponentForm: React.FC<ComponentFormProps> = ({ component, create }) => {
           placeholder="Select Category"
           {...form.getInputProps("categoryId")}
           classNames={filterClasses}
-          dropdownPosition="bottom"
-          nothingFound="No category found"
+          comboboxProps={{
+              position: "top",
+              middlewares: { flip: false, shift: false },
+            }}
+          nothingFoundMessage="No category found"
           withAsterisk
-          withinPortal
+          
         />
         <NumberInput
           defaultValue={1}
@@ -121,10 +124,13 @@ const ComponentForm: React.FC<ComponentFormProps> = ({ component, create }) => {
           {...form.getInputProps("supplierId")}
           value={form.values.supplierId || ""}
           classNames={filterClasses}
-          dropdownPosition="bottom"
-          nothingFound="No supplier found"
+          comboboxProps={{
+              position: "top",
+              middlewares: { flip: false, shift: false },
+            }}
+          nothingFoundMessage="No supplier found"
           clearable
-          withinPortal
+          
         />
         <TextInput
           label="Order No"
@@ -147,7 +153,7 @@ const ComponentForm: React.FC<ComponentFormProps> = ({ component, create }) => {
           label="Purchase Cost"
           {...form.getInputProps("purchaseCost")}
           value={form.values.purchaseCost || ""}
-          precision={2}
+          decimalScale={2}
           hideControls
         />
         <Textarea
@@ -156,7 +162,7 @@ const ComponentForm: React.FC<ComponentFormProps> = ({ component, create }) => {
           {...form.getInputProps("notes")}
           value={form.values.notes || ""}
         />
-        <Group position="right" mt="md">
+        <Group mt="md" justify="flex-end">
           <Button type="submit" color="dark">
             Submit
           </Button>

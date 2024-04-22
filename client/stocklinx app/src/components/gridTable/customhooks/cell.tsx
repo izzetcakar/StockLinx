@@ -1,17 +1,10 @@
-import { Column, Lookup } from "../interfaces/interfaces";
+import { Column, LookupData } from "../interfaces/interfaces";
 
 export const useCell = () => {
-  const getLookupValue = (value: any, lookup: Lookup) => {
-    const lookupKey = lookup.valueExpr;
-    const lookupDisplay = lookup.displayExpr;
-    const item = lookup.defaultData.find(
-      (item: { [key: string]: any }) => item[lookupKey] === value
-    );
-
-    return item
-      ? ((item as { [key: string]: any })[lookupDisplay] as string)
-      : " ";
+  const getLookupValue = (value: any, data: LookupData[]) => {
+    return data.find((item: LookupData) => item.value === value) || "";
   };
+
   const renderCell = (obj: object, column: Column) => {
     const value = (
       obj as {
@@ -19,17 +12,15 @@ export const useCell = () => {
       }
     )[column.dataField];
 
-    if (value === undefined) return null;
+    if (!value) return "";
 
     if (column.renderComponent) {
       return column.renderComponent(obj);
     }
     if (column.lookup) {
-      return getLookupValue(value, column.lookup);
+      getLookupValue(value, column.lookup.data);
     }
-    if (value === null || value === undefined) {
-      return "";
-    }
+    if (!value) return "";
     if (column.dataType === "boolean") {
       const name = value ? "check" : "x";
       const color = value ? "#63bd4f" : "#ed6b6b";
@@ -45,17 +36,17 @@ export const useCell = () => {
     }
     return value;
   };
+
   const getCellValue = (obj: object, column: Column) => {
     let value = (
       obj as {
         [key: string | number]: any;
       }
     )[column.dataField];
-
-    if (value === undefined) value = null;
-    if (column.lookup) return getLookupValue(value, column.lookup);
-
+    if (!value) value = null;
+    if (column.lookup) return getLookupValue(value, column.lookup.data);
     return value;
   };
+
   return { getLookupValue, renderCell, getCellValue };
 };

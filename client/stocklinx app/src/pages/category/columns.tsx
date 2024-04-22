@@ -26,7 +26,7 @@ export const useColumns = () => {
           <Anchor
             onClick={() => navigate(`/category/${(e as ICategory)?.id}`)}
             target="_blank"
-            underline={true}
+            underline="always"
           >
             {(e as ICategory).name}
           </Anchor>
@@ -37,9 +37,10 @@ export const useColumns = () => {
       dataField: "type",
       caption: "Type",
       lookup: {
-        defaultData: productTypes,
-        valueExpr: "id",
-        displayExpr: "name",
+        data: productTypes.map((type) => ({
+          value: type.id,
+          label: type.name,
+        })),
       },
       dataType: "number",
     },

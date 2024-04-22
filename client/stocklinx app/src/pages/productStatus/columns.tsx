@@ -22,7 +22,7 @@ export const useColumns = () => {
               navigate(`/productStatus/${(e as IProductStatus)?.id}`)
             }
             target="_blank"
-            underline={true}
+            underline="always"
           >
             {(e as IProductStatus).name}
           </Anchor>
@@ -33,9 +33,7 @@ export const useColumns = () => {
       dataField: "type",
       caption: "Type",
       lookup: {
-        defaultData: createDataFromEnum(ProductStatusType),
-        valueExpr: "value",
-        displayExpr: "id",
+        data: createDataFromEnum(ProductStatusType),
       },
       dataType: "number",
     },

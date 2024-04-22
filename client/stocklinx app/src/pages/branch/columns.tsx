@@ -18,16 +18,17 @@ export const useColumns = () => {
       caption: "Company",
       dataType: "action",
       lookup: {
-        defaultData: companies,
-        valueExpr: "id",
-        displayExpr: "name",
+        data: companies.map((company) => ({
+          value: company.id,
+          label: company.name,
+        })),
       },
       renderComponent(e) {
         return (
           <Anchor
             onClick={() => navigate(`/company/${(e as IBranch)?.companyId}`)}
             target="_blank"
-            underline={true}
+            underline="always"
           >
             {
               companies.find(
@@ -47,7 +48,7 @@ export const useColumns = () => {
           <Anchor
             onClick={() => navigate(`/branch/${(e as IBranch)?.id}`)}
             target="_blank"
-            underline={true}
+            underline="always"
           >
             {(e as IBranch).name}
           </Anchor>
@@ -59,16 +60,17 @@ export const useColumns = () => {
       caption: "Location",
       dataType: "string",
       lookup: {
-        defaultData: locations,
-        valueExpr: "id",
-        displayExpr: "name",
+        data: locations.map((location) => ({
+          value: location.id,
+          label: location.name,
+        })),
       },
       renderComponent(e) {
         return (
           <Anchor
             onClick={() => navigate(`/location/${(e as IBranch)?.locationId}`)}
             target="_blank"
-            underline={true}
+            underline="always"
           >
             {
               locations.find(
