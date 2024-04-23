@@ -12,9 +12,9 @@ namespace StockLinx.Repository.Configurations
             builder.Property(x => x.Name).IsRequired();
             builder.Property(x => x.Quantity).IsRequired().HasDefaultValue(1);
 
+            builder.HasOne(x => x.ProductStatus).WithMany(x => x.Components).HasForeignKey(x => x.ProductStatusId);
+            builder.HasOne(x => x.Category).WithMany(x => x.Components).HasForeignKey(x => x.CategoryId).OnDelete(DeleteBehavior.SetNull);
             builder.HasOne(x => x.Supplier).WithMany(x => x.Components).HasForeignKey(x => x.SupplierId).OnDelete(DeleteBehavior.SetNull);
-            builder.HasOne(x => x.Branch).WithMany(x => x.Components).HasForeignKey(x => x.BranchId).OnDelete(DeleteBehavior.Cascade);
-            builder.HasOne(x => x.Category).WithMany(x => x.Components).HasForeignKey(x => x.CategoryId).OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

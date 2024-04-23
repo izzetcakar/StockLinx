@@ -3,6 +3,7 @@
     public abstract class BaseProduct : BaseEntity
     {
         public Guid BranchId { get; set; }
+        public Guid? ProductStatusId { get; set; }
         public string Name { get; set; }
         public string? OrderNo { get; set; }
         public string? Notes { get; set; }
@@ -13,5 +14,6 @@
 
         //Relates
         public Branch Branch { get; set; }
+        public ProductStatus ProductStatus { get; set; }
     }
 }

@@ -2,7 +2,7 @@
 {
     public class Consumable : BaseProduct
     {
-        public Guid CategoryId { get; set; }
+        public Guid? CategoryId { get; set; }
         public Guid? SupplierId { get; set; }
         public Guid? ManufacturerId { get; set; }
         public string? ModelNo { get; set; }

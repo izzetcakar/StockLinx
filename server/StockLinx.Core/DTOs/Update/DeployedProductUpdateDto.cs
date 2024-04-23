@@ -8,7 +8,9 @@
         public Guid? ComponentId { get; set; }
         public Guid? ConsumableId { get; set; }
         public Guid? LicenseId { get; set; }
-        public string? Notes { get; set; }
+        public Guid? ProductStatusId { get; set; }
         public DateTime AssignDate { get; set; }
+        public string? Notes { get; set; }
+        public int Quantity { get; set; }
     }
 }

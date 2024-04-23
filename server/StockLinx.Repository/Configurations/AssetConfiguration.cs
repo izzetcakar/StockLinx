@@ -13,9 +13,8 @@ namespace StockLinx.Repository.Configurations
             builder.Property(x => x.CheckoutCounter).HasDefaultValue(0);
             builder.Property(x => x.Name).IsRequired();
 
+            builder.HasOne(x => x.ProductStatus).WithMany(x => x.Assets).HasForeignKey(x => x.ProductStatusId);
             builder.HasOne(x => x.Model).WithMany(x => x.Assets).HasForeignKey(x => x.ModelId).OnDelete(DeleteBehavior.SetNull);
-            builder.HasOne(x => x.Branch).WithMany(x => x.Assets).HasForeignKey(x => x.BranchId).OnDelete(DeleteBehavior.Cascade);
-            builder.HasOne(x => x.ProductStatus).WithMany(x => x.Assets).HasForeignKey(x => x.ProductStatusId).OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
