@@ -80,7 +80,6 @@ namespace StockLinx.Service.Services
             {
                 throw new ArgumentNullException("Department is not found");
             }
-            department.DeletedDate = DateTime.UtcNow;
             _departmentRepository.Update(department, department);
             await _customLogService.CreateCustomLog("Delete", department.Id, department.BranchId, "Department", "Branch");
             await _unitOfWork.CommitAsync();
@@ -96,7 +95,6 @@ namespace StockLinx.Service.Services
                 {
                     throw new ArgumentNullException($"{departmentId} - Department is not found");
                 }
-                department.DeletedDate = DateTime.UtcNow;
                 departments.Add(department);
                 await _customLogService.CreateCustomLog("Delete", department.Id, department.BranchId, "Department", "Branch");
             }

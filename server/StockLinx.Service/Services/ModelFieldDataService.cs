@@ -77,7 +77,6 @@ namespace StockLinx.Service.Services
             {
                 throw new ArgumentNullException("ModelFieldData is not found");
             }
-            modelFieldData.DeletedDate = DateTime.UtcNow;
             _modelFieldDataRepository.Update(modelFieldData, modelFieldData);
             await _unitOfWork.CommitAsync();
         }
@@ -92,7 +91,6 @@ namespace StockLinx.Service.Services
                 {
                     throw new ArgumentNullException($"{id} - ModelFieldData is not found");
                 }
-                modelFieldData.DeletedDate = DateTime.UtcNow;
                 modelFieldDatas.Add(modelFieldData);
             }
             _modelFieldDataRepository.UpdateRange(modelFieldDatas);

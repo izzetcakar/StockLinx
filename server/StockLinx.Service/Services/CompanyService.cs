@@ -16,8 +16,16 @@ namespace StockLinx.Service.Services
         private readonly ICustomLogService _customLogService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        public CompanyService(IRepository<Company> repository, ICompanyRepository companyRepository, IUnitOfWork unitOfWork,
-            IMapper mapper, ICustomLogService customLogService, IUserService userService) : base(repository, unitOfWork)
+
+        public CompanyService(
+            IRepository<Company> repository,
+            ICompanyRepository companyRepository,
+            IUnitOfWork unitOfWork,
+            IMapper mapper,
+            ICustomLogService customLogService,
+            IUserService userService
+        )
+            : base(repository, unitOfWork)
         {
             _companyRepository = companyRepository;
             _mapper = mapper;
@@ -52,7 +60,11 @@ namespace StockLinx.Service.Services
             {
                 if (newCompany.ImagePath.Contains("base64,"))
                 {
-                    ImageHandler.UploadBase64AsJpg(newCompany.ImagePath, $"{newCompany.Id}", "Companies");
+                    ImageHandler.UploadBase64AsJpg(
+                        newCompany.ImagePath,
+                        $"{newCompany.Id}",
+                        "Companies"
+                    );
                     newCompany.ImagePath = $"Companies/{newCompany.Id}.jpg";
                 }
             }
@@ -63,7 +75,9 @@ namespace StockLinx.Service.Services
             return _companyRepository.GetDto(newCompany);
         }
 
-        public async Task<List<CompanyDto>> CreateRangeCompanyAsync(List<CompanyCreateDto> createDtos)
+        public async Task<List<CompanyDto>> CreateRangeCompanyAsync(
+            List<CompanyCreateDto> createDtos
+        )
         {
             var user = await _userService.GetCurrentUser();
             if ((bool)!user.IsAdmin)
@@ -77,7 +91,13 @@ namespace StockLinx.Service.Services
                 newCompany.Id = Guid.NewGuid();
                 newCompany.CreatedDate = DateTime.UtcNow;
                 newCompanies.Add(newCompany);
-                await _customLogService.CreateCustomLog("Create", newCompany.Id, null, "Company", null);
+                await _customLogService.CreateCustomLog(
+                    "Create",
+                    newCompany.Id,
+                    null,
+                    "Company",
+                    null
+                );
             }
             await _companyRepository.AddRangeAsync(newCompanies);
             await _unitOfWork.CommitAsync();
@@ -103,13 +123,23 @@ namespace StockLinx.Service.Services
             {
                 if (updatedCompany.ImagePath.Contains("base64,"))
                 {
-                    ImageHandler.UploadBase64AsJpg(updatedCompany.ImagePath, $"{updatedCompany.Id}", "Companies");
+                    ImageHandler.UploadBase64AsJpg(
+                        updatedCompany.ImagePath,
+                        $"{updatedCompany.Id}",
+                        "Companies"
+                    );
                     updatedCompany.ImagePath = $"Companies/{updatedCompany.Id}.jpg";
                 }
             }
 
             _companyRepository.Update(companyInDb, updatedCompany);
-            await _customLogService.CreateCustomLog("Update", updatedCompany.Id, null, "Company", null);
+            await _customLogService.CreateCustomLog(
+                "Update",
+                updatedCompany.Id,
+                null,
+                "Company",
+                null
+            );
             await _unitOfWork.CommitAsync();
             return _companyRepository.GetDto(updatedCompany);
         }
@@ -147,9 +177,14 @@ namespace StockLinx.Service.Services
                 {
                     throw new ArgumentNullException($"{companyId} - Company is not found");
                 }
-                company.DeletedDate = DateTime.UtcNow;
                 companies.Add(company);
-                await _customLogService.CreateCustomLog("Delete", company.Id, null, "Company", null);
+                await _customLogService.CreateCustomLog(
+                    "Delete",
+                    company.Id,
+                    null,
+                    "Company",
+                    null
+                );
             }
             _companyRepository.UpdateRange(companies);
             await _unitOfWork.CommitAsync();

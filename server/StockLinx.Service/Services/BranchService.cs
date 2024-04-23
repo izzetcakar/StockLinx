@@ -15,8 +15,15 @@ namespace StockLinx.Service.Services
         private readonly ICustomLogService _customLogService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        public BranchService(IRepository<Branch> repository, IBranchRepository branchRepository,
-            IMapper mapper, IUnitOfWork unitOfWork, ICustomLogService customLogService) : base(repository, unitOfWork)
+
+        public BranchService(
+            IRepository<Branch> repository,
+            IBranchRepository branchRepository,
+            IMapper mapper,
+            IUnitOfWork unitOfWork,
+            ICustomLogService customLogService
+        )
+            : base(repository, unitOfWork)
         {
             _branchRepository = branchRepository;
             _unitOfWork = unitOfWork;
@@ -41,7 +48,13 @@ namespace StockLinx.Service.Services
             newBranch.Id = Guid.NewGuid();
             newBranch.CreatedDate = DateTime.UtcNow;
             await _branchRepository.AddAsync(newBranch);
-            await _customLogService.CreateCustomLog("Create", newBranch.Id, newBranch.CompanyId, "Branch", "Company");
+            await _customLogService.CreateCustomLog(
+                "Create",
+                newBranch.Id,
+                newBranch.CompanyId,
+                "Branch",
+                "Company"
+            );
             await _unitOfWork.CommitAsync();
             return _branchRepository.GetDto(newBranch);
         }
@@ -55,7 +68,13 @@ namespace StockLinx.Service.Services
                 newBranch.Id = Guid.NewGuid();
                 newBranch.CreatedDate = DateTime.UtcNow;
                 newBranches.Add(newBranch);
-                await _customLogService.CreateCustomLog("Create", newBranch.Id, newBranch.CompanyId, "Branch", "Company");
+                await _customLogService.CreateCustomLog(
+                    "Create",
+                    newBranch.Id,
+                    newBranch.CompanyId,
+                    "Branch",
+                    "Company"
+                );
             }
             await _branchRepository.AddRangeAsync(newBranches);
             await _unitOfWork.CommitAsync();
@@ -72,7 +91,13 @@ namespace StockLinx.Service.Services
             var updatedBranch = _mapper.Map<Branch>(updateDto);
             updatedBranch.UpdatedDate = DateTime.UtcNow;
             _branchRepository.Update(branchInDb, updatedBranch);
-            await _customLogService.CreateCustomLog("Update", updatedBranch.Id, updatedBranch.CompanyId, "Branch", "Company");
+            await _customLogService.CreateCustomLog(
+                "Update",
+                updatedBranch.Id,
+                updatedBranch.CompanyId,
+                "Branch",
+                "Company"
+            );
             await _unitOfWork.CommitAsync();
             return _branchRepository.GetDto(updatedBranch);
         }
@@ -84,9 +109,14 @@ namespace StockLinx.Service.Services
             {
                 throw new ArgumentNullException("Branch is not found");
             }
-            branch.DeletedDate = DateTime.UtcNow;
             _branchRepository.Update(branch, branch);
-            await _customLogService.CreateCustomLog("Delete", branch.Id, branch.CompanyId, "Branch", "Company");
+            await _customLogService.CreateCustomLog(
+                "Delete",
+                branch.Id,
+                branch.CompanyId,
+                "Branch",
+                "Company"
+            );
             await _unitOfWork.CommitAsync();
         }
 
@@ -100,9 +130,14 @@ namespace StockLinx.Service.Services
                 {
                     throw new ArgumentNullException($"{branchId} - Branch is not found");
                 }
-                branch.DeletedDate = DateTime.UtcNow;
                 branches.Add(branch);
-                await _customLogService.CreateCustomLog("Delete", branch.Id, branch.CompanyId, "Branch", "Company");
+                await _customLogService.CreateCustomLog(
+                    "Delete",
+                    branch.Id,
+                    branch.CompanyId,
+                    "Branch",
+                    "Company"
+                );
             }
             _branchRepository.UpdateRange(branches);
             await _unitOfWork.CommitAsync();

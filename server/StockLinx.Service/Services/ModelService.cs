@@ -85,7 +85,6 @@ namespace StockLinx.Service.Services
             {
                 throw new ArgumentNullException("Model is not found");
             }
-            model.DeletedDate = DateTime.UtcNow;
             _modelRepository.Update(model, model);
             await _customLogService.CreateCustomLog("Delete", model.Id, null, "Model", null);
             await _unitOfWork.CommitAsync();
@@ -101,7 +100,6 @@ namespace StockLinx.Service.Services
                 {
                     throw new ArgumentNullException($"{modelId} - Model is not found");
                 }
-                model.DeletedDate = DateTime.UtcNow;
                 models.Add(model);
                 await _customLogService.CreateCustomLog("Delete", model.Id, null, "Model", null);
             }

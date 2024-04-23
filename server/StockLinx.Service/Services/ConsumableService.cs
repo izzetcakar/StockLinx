@@ -18,8 +18,16 @@ namespace StockLinx.Service.Services
         private readonly ICustomLogService _customLogService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        public ConsumableService(IRepository<Consumable> repository, IConsumableRepository consumableRepository, IUnitOfWork unitOfWork,
-             IMapper mapper, IDeployedProductRepository deployedProductRepository, ICustomLogService customLogService) : base(repository, unitOfWork)
+
+        public ConsumableService(
+            IRepository<Consumable> repository,
+            IConsumableRepository consumableRepository,
+            IUnitOfWork unitOfWork,
+            IMapper mapper,
+            IDeployedProductRepository deployedProductRepository,
+            ICustomLogService customLogService
+        )
+            : base(repository, unitOfWork)
         {
             _consumableRepository = consumableRepository;
             _deployedProductRepository = deployedProductRepository;
@@ -45,12 +53,20 @@ namespace StockLinx.Service.Services
             newConsumable.Id = Guid.NewGuid();
             newConsumable.CreatedDate = DateTime.UtcNow;
             await _consumableRepository.AddAsync(newConsumable);
-            await _customLogService.CreateCustomLog("Create", newConsumable.Id, newConsumable.BranchId, "Consumable", "Branch");
+            await _customLogService.CreateCustomLog(
+                "Create",
+                newConsumable.Id,
+                newConsumable.BranchId,
+                "Consumable",
+                "Branch"
+            );
             await _unitOfWork.CommitAsync();
             return await _consumableRepository.GetDto(newConsumable);
         }
 
-        public async Task<List<ConsumableDto>> CreateRangeConsumableAsync(List<ConsumableCreateDto> createDtos)
+        public async Task<List<ConsumableDto>> CreateRangeConsumableAsync(
+            List<ConsumableCreateDto> createDtos
+        )
         {
             var newConsumables = new List<Consumable>();
             foreach (var createDto in createDtos)
@@ -59,7 +75,13 @@ namespace StockLinx.Service.Services
                 newConsumable.Id = Guid.NewGuid();
                 newConsumable.CreatedDate = DateTime.UtcNow;
                 newConsumables.Add(newConsumable);
-                await _customLogService.CreateCustomLog("Create", newConsumable.Id, newConsumable.BranchId, "Consumable", "Branch");
+                await _customLogService.CreateCustomLog(
+                    "Create",
+                    newConsumable.Id,
+                    newConsumable.BranchId,
+                    "Consumable",
+                    "Branch"
+                );
             }
             await _consumableRepository.AddRangeAsync(newConsumables);
             await _unitOfWork.CommitAsync();
@@ -76,7 +98,13 @@ namespace StockLinx.Service.Services
             var updatedConsumable = _mapper.Map<Consumable>(updateDto);
             updatedConsumable.UpdatedDate = DateTime.UtcNow;
             _consumableRepository.Update(consumableInDb, updatedConsumable);
-            await _customLogService.CreateCustomLog("Update", consumableInDb.Id, consumableInDb.BranchId, "Consumable", "Branch");
+            await _customLogService.CreateCustomLog(
+                "Update",
+                consumableInDb.Id,
+                consumableInDb.BranchId,
+                "Consumable",
+                "Branch"
+            );
             await _unitOfWork.CommitAsync();
             return await _consumableRepository.GetDto(updatedConsumable);
         }
@@ -88,9 +116,14 @@ namespace StockLinx.Service.Services
             {
                 throw new ArgumentNullException("Consumable is not found");
             }
-            consumable.DeletedDate = DateTime.UtcNow;
             _consumableRepository.Update(consumable, consumable);
-            await _customLogService.CreateCustomLog("Delete", consumable.Id, consumable.BranchId, "Consumable", "Branch");
+            await _customLogService.CreateCustomLog(
+                "Delete",
+                consumable.Id,
+                consumable.BranchId,
+                "Consumable",
+                "Branch"
+            );
             await _unitOfWork.CommitAsync();
         }
 
@@ -104,9 +137,14 @@ namespace StockLinx.Service.Services
                 {
                     throw new ArgumentNullException($"{consumableId} - Consumable is not found");
                 }
-                consumable.DeletedDate = DateTime.UtcNow;
                 consumables.Add(consumable);
-                await _customLogService.CreateCustomLog("Delete", consumable.Id, consumable.BranchId, "Consumable", "Branch");
+                await _customLogService.CreateCustomLog(
+                    "Delete",
+                    consumable.Id,
+                    consumable.BranchId,
+                    "Consumable",
+                    "Branch"
+                );
             }
             _consumableRepository.UpdateRange(consumables);
             await _unitOfWork.CommitAsync();
@@ -119,8 +157,12 @@ namespace StockLinx.Service.Services
             {
                 throw new Exception("Consumable is not found");
             }
-            var deployedProducts = await _deployedProductRepository.GetAll().Where(d => d.DeletedDate == null).ToListAsync();
-            var availableQuantity = consumable.Quantity - deployedProducts.Count(d => d.ConsumableId.HasValue && d.ConsumableId == consumable.Id);
+            var deployedProducts = await _deployedProductRepository.GetAll().ToListAsync();
+            var availableQuantity =
+                consumable.Quantity
+                - deployedProducts.Count(d =>
+                    d.ConsumableId.HasValue && d.ConsumableId == consumable.Id
+                );
             if (availableQuantity < 1)
             {
                 throw new Exception("Consumable is out of stock");
@@ -135,7 +177,13 @@ namespace StockLinx.Service.Services
                 Notes = checkInDto.Notes,
             };
             await _deployedProductRepository.AddAsync(deployedProduct);
-            await _customLogService.CreateCustomLog("CheckIn", consumable.Id, deployedProduct.UserId, "Consumable", "User");
+            await _customLogService.CreateCustomLog(
+                "CheckIn",
+                consumable.Id,
+                deployedProduct.UserId,
+                "Consumable",
+                "User"
+            );
             await _unitOfWork.CommitAsync();
             var consumableDto = await _consumableRepository.GetDto(consumable);
             var deployedProductDto = await _deployedProductRepository.GetDto(deployedProduct);
@@ -148,7 +196,9 @@ namespace StockLinx.Service.Services
 
         public async Task<ConsumableDto> CheckOut(Guid id)
         {
-            var deployedProduct = await _deployedProductRepository.Where(d => d.ConsumableId.HasValue && d.Id == id).SingleOrDefaultAsync();
+            var deployedProduct = await _deployedProductRepository
+                .Where(d => d.ConsumableId.HasValue && d.Id == id)
+                .SingleOrDefaultAsync();
             if (deployedProduct == null)
             {
                 throw new Exception("Deployed product is not found");
@@ -158,9 +208,14 @@ namespace StockLinx.Service.Services
             {
                 throw new Exception("Consumable is not found");
             }
-            deployedProduct.DeletedDate = DateTime.UtcNow;
             _deployedProductRepository.Update(deployedProduct, deployedProduct);
-            await _customLogService.CreateCustomLog("CheckOut", consumable.Id, consumable.BranchId, "Consumable", "Branch");
+            await _customLogService.CreateCustomLog(
+                "CheckOut",
+                consumable.Id,
+                consumable.BranchId,
+                "Consumable",
+                "Branch"
+            );
             await _unitOfWork.CommitAsync();
             return await _consumableRepository.GetDto(consumable);
         }

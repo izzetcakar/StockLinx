@@ -17,8 +17,16 @@ namespace StockLinx.Service.Services
         private readonly ICustomLogService _customLogService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        public AssetService(IRepository<Asset> repository, IAssetRepository assetRepository, IDeployedProductRepository deployedProductRepository,
-            IUnitOfWork unitOfWork, IMapper mapper, ICustomLogService customLogService) : base(repository, unitOfWork)
+
+        public AssetService(
+            IRepository<Asset> repository,
+            IAssetRepository assetRepository,
+            IDeployedProductRepository deployedProductRepository,
+            IUnitOfWork unitOfWork,
+            IMapper mapper,
+            ICustomLogService customLogService
+        )
+            : base(repository, unitOfWork)
         {
             _assetRepository = assetRepository;
             _deployedProductRepository = deployedProductRepository;
@@ -30,7 +38,7 @@ namespace StockLinx.Service.Services
         public async Task<AssetDto> GetDto(Guid id)
         {
             var asset = await GetByIdAsync(id);
-            return await _assetRepository.GetDto(asset);
+            return _assetRepository.GetDto(asset);
         }
 
         public async Task<List<AssetDto>> GetAllDtos()
@@ -45,7 +53,13 @@ namespace StockLinx.Service.Services
             newAsset.Id = Guid.NewGuid();
             newAsset.CreatedDate = DateTime.UtcNow;
             newAssets.Add(newAsset);
-            await _customLogService.CreateCustomLog("Create", newAsset.Id, newAsset.BranchId, "Asset", "Branch");
+            await _customLogService.CreateCustomLog(
+                "Create",
+                newAsset.Id,
+                newAsset.BranchId,
+                "Asset",
+                "Branch"
+            );
 
             if (newAsset.ImagePath != null)
             {
@@ -67,12 +81,18 @@ namespace StockLinx.Service.Services
                     extraAsset.CreatedDate = DateTime.UtcNow;
                     extraAsset.ImagePath = newAsset.ImagePath;
                     newAssets.Add(extraAsset);
-                    await _customLogService.CreateCustomLog("Create", extraAsset.Id, extraAsset.BranchId, "Asset", "Branch");
+                    await _customLogService.CreateCustomLog(
+                        "Create",
+                        extraAsset.Id,
+                        extraAsset.BranchId,
+                        "Asset",
+                        "Branch"
+                    );
                 }
             }
             await _assetRepository.AddRangeAsync(newAssets);
             await _unitOfWork.CommitAsync();
-            return await _assetRepository.GetDtos(newAssets);
+            return _assetRepository.GetDtos(newAssets);
         }
 
         public async Task<List<AssetDto>> CreateRangeAssetAsync(List<AssetCreateDto> createDtos)
@@ -84,11 +104,17 @@ namespace StockLinx.Service.Services
                 newAsset.Id = Guid.NewGuid();
                 newAsset.CreatedDate = DateTime.UtcNow;
                 newAssets.Add(newAsset);
-                await _customLogService.CreateCustomLog("Create", newAsset.Id, newAsset.BranchId, "Asset", "Branch");
+                await _customLogService.CreateCustomLog(
+                    "Create",
+                    newAsset.Id,
+                    newAsset.BranchId,
+                    "Asset",
+                    "Branch"
+                );
             }
             await _assetRepository.AddRangeAsync(newAssets);
             await _unitOfWork.CommitAsync();
-            return await _assetRepository.GetDtos(newAssets);
+            return _assetRepository.GetDtos(newAssets);
         }
 
         public async Task<AssetDto> UpdateAssetAsync(AssetUpdateDto updateDto)
@@ -105,15 +131,25 @@ namespace StockLinx.Service.Services
             {
                 if (updatedAsset.ImagePath.Contains("base64,"))
                 {
-                    ImageHandler.UploadBase64AsJpg(updatedAsset.ImagePath, $"{updatedAsset.Id}", "Assets");
+                    ImageHandler.UploadBase64AsJpg(
+                        updatedAsset.ImagePath,
+                        $"{updatedAsset.Id}",
+                        "Assets"
+                    );
                     updatedAsset.ImagePath = $"Assets/{updatedAsset.Id}.jpg";
                 }
             }
 
             _assetRepository.Update(assetInDb, updatedAsset);
-            await _customLogService.CreateCustomLog("Update", updatedAsset.Id, updatedAsset.BranchId, "Asset", "Branch");
+            await _customLogService.CreateCustomLog(
+                "Update",
+                updatedAsset.Id,
+                updatedAsset.BranchId,
+                "Asset",
+                "Branch"
+            );
             await _unitOfWork.CommitAsync();
-            return await _assetRepository.GetDto(updatedAsset);
+            return _assetRepository.GetDto(updatedAsset);
         }
 
         public async Task DeleteAssetAsync(Guid assetId)
@@ -123,9 +159,14 @@ namespace StockLinx.Service.Services
             {
                 throw new ArgumentNullException("Asset is not found");
             }
-            asset.DeletedDate = DateTime.UtcNow;
             _assetRepository.Update(asset, asset);
-            await _customLogService.CreateCustomLog("Delete", asset.Id, asset.BranchId, "Asset", "Branch");
+            await _customLogService.CreateCustomLog(
+                "Delete",
+                asset.Id,
+                asset.BranchId,
+                "Asset",
+                "Branch"
+            );
             await _unitOfWork.CommitAsync();
         }
 
@@ -139,9 +180,14 @@ namespace StockLinx.Service.Services
                 {
                     throw new ArgumentNullException($"{assetId} - Asset is not found");
                 }
-                asset.DeletedDate = DateTime.UtcNow;
                 assets.Add(asset);
-                await _customLogService.CreateCustomLog("Delete", asset.Id, asset.BranchId, "Asset", "Branch");
+                await _customLogService.CreateCustomLog(
+                    "Delete",
+                    asset.Id,
+                    asset.BranchId,
+                    "Asset",
+                    "Branch"
+                );
             }
             _assetRepository.UpdateRange(assets);
             await _unitOfWork.CommitAsync();
@@ -154,7 +200,9 @@ namespace StockLinx.Service.Services
             {
                 throw new Exception("Asset not found");
             }
-            Boolean isDeployed = await _deployedProductRepository.AnyAsync(d => d.AssetId == checkInDto.Id);
+            Boolean isDeployed = await _deployedProductRepository.AnyAsync(d =>
+                d.AssetId == checkInDto.Id
+            );
             if (isDeployed)
             {
                 throw new Exception("Asset is already checked in");
@@ -169,9 +217,15 @@ namespace StockLinx.Service.Services
                 Notes = checkInDto.Notes,
             };
             await _deployedProductRepository.AddAsync(deployedProduct);
-            await _customLogService.CreateCustomLog("Check In", asset.Id, deployedProduct.UserId, "Asset", "User");
+            await _customLogService.CreateCustomLog(
+                "Check In",
+                asset.Id,
+                deployedProduct.UserId,
+                "Asset",
+                "User"
+            );
             await _unitOfWork.CommitAsync();
-            var assetDto = await _assetRepository.GetDto(asset);
+            var assetDto = _assetRepository.GetDto(asset);
             var deployedProductDto = await _deployedProductRepository.GetDto(deployedProduct);
             return new AssetCheckInResponseDto
             {
@@ -192,11 +246,16 @@ namespace StockLinx.Service.Services
             {
                 throw new Exception("Asset is not found");
             }
-            deployedProduct.DeletedDate = DateTime.UtcNow;
             _deployedProductRepository.Update(deployedProduct, deployedProduct);
-            await _customLogService.CreateCustomLog("Check Out", asset.Id, asset.BranchId, "Asset", "Branch");
+            await _customLogService.CreateCustomLog(
+                "Check Out",
+                asset.Id,
+                asset.BranchId,
+                "Asset",
+                "Branch"
+            );
             await _unitOfWork.CommitAsync();
-            return await _assetRepository.GetDto(asset);
+            return _assetRepository.GetDto(asset);
         }
     }
 }

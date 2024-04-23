@@ -87,7 +87,6 @@ namespace StockLinx.Service.Services
             {
                 throw new ArgumentNullException("License is not found");
             }
-            license.DeletedDate = DateTime.UtcNow;
             _licenseRepository.Update(license, license);
             await _customLogService.CreateCustomLog("Delete", license.Id, license.BranchId, "License", "Branch");
             await _unitOfWork.CommitAsync();
@@ -103,7 +102,6 @@ namespace StockLinx.Service.Services
                 {
                     throw new ArgumentNullException($"{licenseId} - License is not found");
                 }
-                license.DeletedDate = DateTime.UtcNow;
                 licenses.Add(license);
                 await _customLogService.CreateCustomLog("Delete", license.Id, license.BranchId, "License", "Branch");
             }
@@ -118,7 +116,7 @@ namespace StockLinx.Service.Services
             {
                 throw new Exception("License is not found");
             }
-            var deployedProducts = await _deployedProductRepository.GetAll().Where(d => d.DeletedDate == null).ToListAsync();
+            var deployedProducts = await _deployedProductRepository.GetAll().ToListAsync();
             var availableQuantity = license.Quantity - deployedProducts.Count(d => d.LicenseId.HasValue && d.LicenseId == license.Id);
             if (availableQuantity < 1)
             {
@@ -157,7 +155,6 @@ namespace StockLinx.Service.Services
             {
                 throw new Exception("License is not found");
             }
-            deployedProduct.DeletedDate = DateTime.UtcNow;
             _deployedProductRepository.Update(deployedProduct, deployedProduct);
             await _customLogService.CreateCustomLog("CheckOut", license.Id, license.BranchId, "License", "Branch");
             await _unitOfWork.CommitAsync();

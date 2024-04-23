@@ -84,7 +84,6 @@ namespace StockLinx.Service.Services
             {
                 throw new ArgumentNullException("Location is not found");
             }
-            location.DeletedDate = DateTime.UtcNow;
             _locationRepository.Update(location, location);
             await _customLogService.CreateCustomLog("Delete", location.Id, null, "Location", null);
             await _unitOfWork.CommitAsync();
@@ -100,7 +99,6 @@ namespace StockLinx.Service.Services
                 {
                     throw new ArgumentNullException($"{locationId} - Location is not found");
                 }
-                location.DeletedDate = DateTime.UtcNow;
                 locations.Add(location);
                 await _customLogService.CreateCustomLog("Delete", location.Id, null, "Location", null);
             }

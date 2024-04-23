@@ -83,7 +83,6 @@ namespace StockLinx.Service.Services
             {
                 throw new ArgumentNullException("ProductStatus is not found");
             }
-            productStatus.DeletedDate = DateTime.UtcNow;
             _productStatusRepository.Update(productStatus, productStatus);
             await _customLogService.CreateCustomLog("Delete", productStatus.Id, null, "ProductStatus", null);
             await _unitOfWork.CommitAsync();
@@ -99,7 +98,6 @@ namespace StockLinx.Service.Services
                 {
                     throw new ArgumentNullException($"{productStatusId} - ProductStatus is not found");
                 }
-                productStatus.DeletedDate = DateTime.UtcNow;
                 productStatuses.Add(productStatus);
                 await _customLogService.CreateCustomLog("Delete", productStatus.Id, null, "ProductStatus", null);
             }

@@ -103,7 +103,6 @@ namespace StockLinx.Service.Services
             {
                 throw new ArgumentNullException("Manufacturer is not found");
             }
-            manufacturer.DeletedDate = DateTime.UtcNow;
             _manufacturerRepository.Update(manufacturer, manufacturer);
             await _customLogService.CreateCustomLog("Delete", manufacturer.Id, null, "Manufacturer", null);
             await _unitOfWork.CommitAsync();
@@ -119,7 +118,6 @@ namespace StockLinx.Service.Services
                 {
                     throw new ArgumentNullException($"{manufacturerId} - Manufacturer is not found");
                 }
-                manufacturer.DeletedDate = DateTime.UtcNow;
                 manufacturers.Add(manufacturer);
                 await _customLogService.CreateCustomLog("Delete", manufacturer.Id, null, "Manufacturer", null);
             }

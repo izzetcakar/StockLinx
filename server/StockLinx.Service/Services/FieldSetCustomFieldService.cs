@@ -60,7 +60,6 @@ namespace StockLinx.Service.Services
         public async Task DeleteFieldSetCustomFieldAsync(Guid id)
         {
             var fieldSetCustomField = await GetByIdAsync(id);
-            fieldSetCustomField.DeletedDate = DateTime.UtcNow;
             _repository.Update(fieldSetCustomField, fieldSetCustomField);
             await _unitOfWork.CommitAsync();
         }
@@ -75,7 +74,6 @@ namespace StockLinx.Service.Services
                 {
                     throw new ArgumentNullException($"{id} - FieldSetCustomField is not found");
                 }
-                entity.DeletedDate = DateTime.UtcNow;
                 fieldSetCustomFields.Add(entity);
             }
             _repository.UpdateRange(fieldSetCustomFields);
@@ -94,7 +92,6 @@ namespace StockLinx.Service.Services
 
                 if (!isItemExist)
                 {
-                    itemInDb.DeletedDate = DateTime.UtcNow;
                     itemsToDelete.Add(itemInDb);
                 }
             }

@@ -15,8 +15,15 @@ namespace StockLinx.Service.Services
         private readonly ICustomLogService _customLogService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        public CategoryService(IRepository<Category> repository, ICategoryRepository categoryRepository,
-            IUnitOfWork unitOfWork, IMapper mapper, ICustomLogService customLogService) : base(repository, unitOfWork)
+
+        public CategoryService(
+            IRepository<Category> repository,
+            ICategoryRepository categoryRepository,
+            IUnitOfWork unitOfWork,
+            IMapper mapper,
+            ICustomLogService customLogService
+        )
+            : base(repository, unitOfWork)
         {
             _categoryRepository = categoryRepository;
             _customLogService = customLogService;
@@ -41,12 +48,20 @@ namespace StockLinx.Service.Services
             newCategory.Id = Guid.NewGuid();
             newCategory.CreatedDate = DateTime.UtcNow;
             await _categoryRepository.AddAsync(newCategory);
-            await _customLogService.CreateCustomLog("Create", newCategory.Id, null, "Category", null);
+            await _customLogService.CreateCustomLog(
+                "Create",
+                newCategory.Id,
+                null,
+                "Category",
+                null
+            );
             await _unitOfWork.CommitAsync();
             return _categoryRepository.GetDto(newCategory);
         }
 
-        public async Task<List<CategoryDto>> CreateRangeCategoryAsync(List<CategoryCreateDto> createDtos)
+        public async Task<List<CategoryDto>> CreateRangeCategoryAsync(
+            List<CategoryCreateDto> createDtos
+        )
         {
             var newCategories = new List<Category>();
             foreach (var createDto in createDtos)
@@ -55,7 +70,13 @@ namespace StockLinx.Service.Services
                 newCategory.Id = Guid.NewGuid();
                 newCategory.CreatedDate = DateTime.UtcNow;
                 newCategories.Add(newCategory);
-                await _customLogService.CreateCustomLog("Create", newCategory.Id, null, "Category", null);
+                await _customLogService.CreateCustomLog(
+                    "Create",
+                    newCategory.Id,
+                    null,
+                    "Category",
+                    null
+                );
             }
             await _categoryRepository.AddRangeAsync(newCategories);
             await _unitOfWork.CommitAsync();
@@ -72,7 +93,13 @@ namespace StockLinx.Service.Services
             var updatedCategory = _mapper.Map<Category>(updateDto);
             updatedCategory.UpdatedDate = DateTime.UtcNow;
             _categoryRepository.Update(categoryInDb, updatedCategory);
-            await _customLogService.CreateCustomLog("Update", updatedCategory.Id, null, "Category", null);
+            await _customLogService.CreateCustomLog(
+                "Update",
+                updatedCategory.Id,
+                null,
+                "Category",
+                null
+            );
             await _unitOfWork.CommitAsync();
             return _categoryRepository.GetDto(updatedCategory);
         }
@@ -84,7 +111,6 @@ namespace StockLinx.Service.Services
             {
                 throw new ArgumentNullException("Category is not found");
             }
-            category.DeletedDate = DateTime.UtcNow;
             _categoryRepository.Update(category, category);
             await _customLogService.CreateCustomLog("Delete", categoryId, null, "Category", null);
             await _unitOfWork.CommitAsync();
@@ -100,9 +126,14 @@ namespace StockLinx.Service.Services
                 {
                     throw new ArgumentNullException($"{categoryId} - Category is not found");
                 }
-                category.DeletedDate = DateTime.UtcNow;
                 categories.Add(category);
-                await _customLogService.CreateCustomLog("Delete", categoryId, null, "Category", null);
+                await _customLogService.CreateCustomLog(
+                    "Delete",
+                    categoryId,
+                    null,
+                    "Category",
+                    null
+                );
             }
             _categoryRepository.UpdateRange(categories);
             await _unitOfWork.CommitAsync();

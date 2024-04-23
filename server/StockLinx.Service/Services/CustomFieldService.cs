@@ -94,7 +94,6 @@ namespace StockLinx.Service.Services
             {
                 throw new ArgumentNullException("CustomField is not found");
             }
-            customField.DeletedDate = DateTime.UtcNow;
             _customFieldRepository.Update(customField, customField);
             await _unitOfWork.CommitAsync();
         }
@@ -109,7 +108,6 @@ namespace StockLinx.Service.Services
                 {
                     throw new ArgumentNullException($"{customFieldId} - CustomField is not found");
                 }
-                customField.DeletedDate = DateTime.UtcNow;
                 customFields.Add(customField);
             }
             _customFieldRepository.UpdateRange(customFields);

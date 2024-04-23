@@ -78,7 +78,6 @@ namespace StockLinx.Service.Services
             {
                 throw new ArgumentNullException("FieldSet is not found");
             }
-            fieldSet.DeletedDate = DateTime.UtcNow;
             _fieldSetRepository.Update(fieldSet, fieldSet);
             await _unitOfWork.CommitAsync();
         }
@@ -93,7 +92,6 @@ namespace StockLinx.Service.Services
                 {
                     throw new ArgumentNullException($"{fieldSetId} - FieldSet is not found");
                 }
-                fieldSet.DeletedDate = DateTime.UtcNow;
                 fieldSets.Add(fieldSet);
             }
             _fieldSetRepository.UpdateRange(fieldSets);

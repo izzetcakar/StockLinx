@@ -17,8 +17,16 @@ namespace StockLinx.Service.Services
         private readonly ICustomLogService _customLogService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        public PermissionService(IRepository<Permission> repository, IUnitOfWork unitOfWork, IMapper mapper,
-            IPermissionRepository permissionRepository, ICustomLogService customLogService, IUserService userService) : base(repository, unitOfWork)
+
+        public PermissionService(
+            IRepository<Permission> repository,
+            IUnitOfWork unitOfWork,
+            IMapper mapper,
+            IPermissionRepository permissionRepository,
+            ICustomLogService customLogService,
+            IUserService userService
+        )
+            : base(repository, unitOfWork)
         {
             _permissionRepository = permissionRepository;
             _customLogService = customLogService;
@@ -61,12 +69,20 @@ namespace StockLinx.Service.Services
             newPermission.Id = Guid.NewGuid();
             newPermission.CreatedDate = DateTime.UtcNow;
             await _permissionRepository.AddAsync(newPermission);
-            await _customLogService.CreateCustomLog("Permission Given", newPermission.UserId, newPermission.BranchId, "User", "Branch");
+            await _customLogService.CreateCustomLog(
+                "Permission Given",
+                newPermission.UserId,
+                newPermission.BranchId,
+                "User",
+                "Branch"
+            );
             await _unitOfWork.CommitAsync();
             return _permissionRepository.GetDto(newPermission);
         }
 
-        public async Task<List<PermissionDto>> CreateRangePermissionAsync(List<PermissionCreateDto> createDtos)
+        public async Task<List<PermissionDto>> CreateRangePermissionAsync(
+            List<PermissionCreateDto> createDtos
+        )
         {
             var user = await _userService.GetCurrentUser();
             if ((bool)!user.IsAdmin)
@@ -80,7 +96,13 @@ namespace StockLinx.Service.Services
                 newPermission.Id = Guid.NewGuid();
                 newPermission.CreatedDate = DateTime.UtcNow;
                 newPermissions.Add(newPermission);
-                await _customLogService.CreateCustomLog("Permission Given", newPermission.UserId, newPermission.BranchId, "User", "Branch");
+                await _customLogService.CreateCustomLog(
+                    "Permission Given",
+                    newPermission.UserId,
+                    newPermission.BranchId,
+                    "User",
+                    "Branch"
+                );
             }
             await _permissionRepository.AddRangeAsync(newPermissions);
             await _unitOfWork.CommitAsync();
@@ -99,9 +121,14 @@ namespace StockLinx.Service.Services
             {
                 throw new ArgumentNullException("Permission is not found");
             }
-            permission.DeletedDate = DateTime.UtcNow;
             _permissionRepository.Update(permission, permission);
-            await _customLogService.CreateCustomLog("Permission taken", permission.UserId, permission.BranchId, "User", "Branch");
+            await _customLogService.CreateCustomLog(
+                "Permission taken",
+                permission.UserId,
+                permission.BranchId,
+                "User",
+                "Branch"
+            );
             await _unitOfWork.CommitAsync();
         }
 
@@ -115,9 +142,14 @@ namespace StockLinx.Service.Services
                 {
                     throw new ArgumentNullException($"{permissionId} - Permission is not found");
                 }
-                permission.DeletedDate = DateTime.UtcNow;
                 permissions.Add(permission);
-                await _customLogService.CreateCustomLog("Permission taken", permission.UserId, permission.BranchId, "User", "Branch");
+                await _customLogService.CreateCustomLog(
+                    "Permission taken",
+                    permission.UserId,
+                    permission.BranchId,
+                    "User",
+                    "Branch"
+                );
             }
             _permissionRepository.UpdateRange(permissions);
             await _unitOfWork.CommitAsync();
@@ -127,27 +159,42 @@ namespace StockLinx.Service.Services
         {
             var entities = _mapper.Map<List<Permission>>(createDtos);
             var toAdd = new List<Permission>();
-            var entitiesInDb = await _permissionRepository.GetAll().Where(p => p.DeletedDate == null).AsNoTracking().ToListAsync();
+            var entitiesInDb = await _permissionRepository.GetAll().AsNoTracking().ToListAsync();
             foreach (var entityInDb in entitiesInDb)
             {
-                var entity = entities.FirstOrDefault(p => p.UserId == entityInDb.UserId && p.BranchId == entityInDb.BranchId);
+                var entity = entities.FirstOrDefault(p =>
+                    p.UserId == entityInDb.UserId && p.BranchId == entityInDb.BranchId
+                );
                 if (entity == null)
                 {
                     var toDelete = await GetByIdAsync(entityInDb.Id);
-                    toDelete.DeletedDate = DateTime.UtcNow;
                     _permissionRepository.Update(entityInDb, toDelete);
-                    await _customLogService.CreateCustomLog("Permission taken", entityInDb.UserId, entityInDb.BranchId, "User", "Branch");
+                    await _customLogService.CreateCustomLog(
+                        "Permission taken",
+                        entityInDb.UserId,
+                        entityInDb.BranchId,
+                        "User",
+                        "Branch"
+                    );
                 }
             }
             foreach (var entity in entities)
             {
-                var entityInDb = entitiesInDb.FirstOrDefault(p => p.UserId == entity.UserId && p.BranchId == entity.BranchId);
+                var entityInDb = entitiesInDb.FirstOrDefault(p =>
+                    p.UserId == entity.UserId && p.BranchId == entity.BranchId
+                );
                 if (entityInDb == null)
                 {
                     entity.Id = Guid.NewGuid();
                     entity.CreatedDate = DateTime.UtcNow;
                     toAdd.Add(entity);
-                    await _customLogService.CreateCustomLog("Permission Given", entity.UserId, entity.BranchId, "User", "Branch");
+                    await _customLogService.CreateCustomLog(
+                        "Permission Given",
+                        entity.UserId,
+                        entity.BranchId,
+                        "User",
+                        "Branch"
+                    );
                 }
             }
             await _permissionRepository.AddRangeAsync(toAdd);

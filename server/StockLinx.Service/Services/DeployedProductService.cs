@@ -62,7 +62,6 @@ namespace StockLinx.Service.Services
             {
                 throw new ArgumentNullException("DeployedProduct is not found.");
             }
-            deployedProduct.DeletedDate = DateTime.UtcNow;
             _deployedProductRepository.Update(deployedProduct, deployedProduct);
             await _unitOfWork.CommitAsync();
         }

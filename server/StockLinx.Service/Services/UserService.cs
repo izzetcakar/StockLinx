@@ -147,7 +147,6 @@ namespace StockLinx.Service.Services
             {
                 throw new ArgumentNullException("User is not found");
             }
-            user.DeletedDate = DateTime.UtcNow;
             _userRepository.Update(user, user);
             await _customLogService.CreateCustomLog("Delete", user.Id, user.DepartmentId, "User", "Department");
             await _unitOfWork.CommitAsync();
@@ -163,7 +162,6 @@ namespace StockLinx.Service.Services
                 {
                     throw new ArgumentNullException($"{userId} - User is not found");
                 }
-                user.DeletedDate = DateTime.UtcNow;
                 users.Add(user);
                 await _customLogService.CreateCustomLog("Delete", user.Id, user.DepartmentId, "User", "Department");
             }

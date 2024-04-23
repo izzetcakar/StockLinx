@@ -18,8 +18,16 @@ namespace StockLinx.Service.Services
         private readonly ICustomLogService _customLogService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        public AccessoryService(IRepository<Accessory> repository, IAccessoryRepository accessoryRepository, IUnitOfWork unitOfWork,
-            IMapper mapper, IDeployedProductRepository deployedProductRepository, ICustomLogService customLogService) : base(repository, unitOfWork)
+
+        public AccessoryService(
+            IRepository<Accessory> repository,
+            IAccessoryRepository accessoryRepository,
+            IUnitOfWork unitOfWork,
+            IMapper mapper,
+            IDeployedProductRepository deployedProductRepository,
+            ICustomLogService customLogService
+        )
+            : base(repository, unitOfWork)
         {
             _accessoryRepository = accessoryRepository;
             _deployedProductRepository = deployedProductRepository;
@@ -44,23 +52,36 @@ namespace StockLinx.Service.Services
             var newAccessory = _mapper.Map<Accessory>(createDto);
             newAccessory.Id = Guid.NewGuid();
             newAccessory.CreatedDate = DateTime.UtcNow;
+            newAccessory.Quantity = 1;
 
             if (newAccessory.ImagePath != null)
             {
                 if (newAccessory.ImagePath.Contains("base64,"))
                 {
-                    ImageHandler.UploadBase64AsJpg(newAccessory.ImagePath, $"{newAccessory.Id}", "Accessories");
+                    ImageHandler.UploadBase64AsJpg(
+                        newAccessory.ImagePath,
+                        $"{newAccessory.Id}",
+                        "Accessories"
+                    );
                     newAccessory.ImagePath = $"Accessories/{newAccessory.Id}.jpg";
                 }
             }
 
             await _accessoryRepository.AddAsync(newAccessory);
-            await _customLogService.CreateCustomLog("Create", newAccessory.Id, newAccessory.BranchId, "Accessory", "Branch");
+            await _customLogService.CreateCustomLog(
+                "Create",
+                newAccessory.Id,
+                newAccessory.BranchId,
+                "Accessory",
+                "Branch"
+            );
             await _unitOfWork.CommitAsync();
             return await _accessoryRepository.GetDto(newAccessory);
         }
 
-        public async Task<List<AccessoryDto>> CreateRangeAccessoryAsync(List<AccessoryCreateDto> createDtos)
+        public async Task<List<AccessoryDto>> CreateRangeAccessoryAsync(
+            List<AccessoryCreateDto> createDtos
+        )
         {
             var newAccessories = new List<Accessory>();
             foreach (var createDto in createDtos)
@@ -68,8 +89,15 @@ namespace StockLinx.Service.Services
                 var newAccessory = _mapper.Map<Accessory>(createDto);
                 newAccessory.Id = Guid.NewGuid();
                 newAccessory.CreatedDate = DateTime.UtcNow;
+                newAccessory.Quantity = 1;
                 newAccessories.Add(newAccessory);
-                await _customLogService.CreateCustomLog("Create", newAccessory.Id, newAccessory.BranchId, "Accessory", "Branch");
+                await _customLogService.CreateCustomLog(
+                    "Create",
+                    newAccessory.Id,
+                    newAccessory.BranchId,
+                    "Accessory",
+                    "Branch"
+                );
             }
             await _accessoryRepository.AddRangeAsync(newAccessories);
             await _unitOfWork.CommitAsync();
@@ -90,13 +118,23 @@ namespace StockLinx.Service.Services
             {
                 if (updatedAccessory.ImagePath.Contains("base64,"))
                 {
-                    ImageHandler.UploadBase64AsJpg(updatedAccessory.ImagePath, $"{updatedAccessory.Id}", "Accessories");
+                    ImageHandler.UploadBase64AsJpg(
+                        updatedAccessory.ImagePath,
+                        $"{updatedAccessory.Id}",
+                        "Accessories"
+                    );
                     updatedAccessory.ImagePath = $"Accessories/{updatedAccessory.Id}.jpg";
                 }
             }
 
             _accessoryRepository.Update(accessoryInDb, updatedAccessory);
-            await _customLogService.CreateCustomLog("Update", updatedAccessory.Id, updatedAccessory.BranchId, "Accessory", "Branch");
+            await _customLogService.CreateCustomLog(
+                "Update",
+                updatedAccessory.Id,
+                updatedAccessory.BranchId,
+                "Accessory",
+                "Branch"
+            );
             await _unitOfWork.CommitAsync();
             return await _accessoryRepository.GetDto(updatedAccessory);
         }
@@ -108,9 +146,15 @@ namespace StockLinx.Service.Services
             {
                 throw new ArgumentNullException("Accessory is not found");
             }
-            accessory.DeletedDate = DateTime.UtcNow;
+
             _accessoryRepository.Update(accessory, accessory);
-            await _customLogService.CreateCustomLog("Delete", accessory.Id, accessory.BranchId, "Accessory", "Branch");
+            await _customLogService.CreateCustomLog(
+                "Delete",
+                accessory.Id,
+                accessory.BranchId,
+                "Accessory",
+                "Branch"
+            );
             await _unitOfWork.CommitAsync();
         }
 
@@ -128,9 +172,14 @@ namespace StockLinx.Service.Services
             }
             foreach (var accessory in accessories)
             {
-                accessory.DeletedDate = DateTime.UtcNow;
                 _accessoryRepository.Update(accessory, accessory);
-                await _customLogService.CreateCustomLog("Delete", accessory.Id, accessory.BranchId, "Accessory", "Branch");
+                await _customLogService.CreateCustomLog(
+                    "Delete",
+                    accessory.Id,
+                    accessory.BranchId,
+                    "Accessory",
+                    "Branch"
+                );
             }
             await _unitOfWork.CommitAsync();
         }
@@ -142,8 +191,12 @@ namespace StockLinx.Service.Services
             {
                 throw new Exception("Accessory not found");
             }
-            var deployedProducts = await _deployedProductRepository.GetAll().Where(d => d.DeletedDate == null).ToListAsync();
-            var availableQuantity = accessory.Quantity - deployedProducts.Count(d => d.AccessoryId.HasValue && d.AccessoryId == accessory.Id);
+            var deployedProducts = await _deployedProductRepository.GetAll().ToListAsync();
+            var availableQuantity =
+                accessory.Quantity
+                - deployedProducts.Count(d =>
+                    d.AccessoryId.HasValue && d.AccessoryId == accessory.Id
+                );
             if (availableQuantity < 1)
             {
                 throw new Exception("Accessory is out of stock");
@@ -158,7 +211,13 @@ namespace StockLinx.Service.Services
                 Notes = checkInDto.Notes,
             };
             await _deployedProductRepository.AddAsync(deployedProduct);
-            await _customLogService.CreateCustomLog("CheckIn", accessory.Id, deployedProduct.UserId, "Accessory", "User");
+            await _customLogService.CreateCustomLog(
+                "CheckIn",
+                accessory.Id,
+                deployedProduct.UserId,
+                "Accessory",
+                "User"
+            );
             await _unitOfWork.CommitAsync();
             var accessoryDto = await _accessoryRepository.GetDto(accessory);
             var deployedProductDto = await _deployedProductRepository.GetDto(deployedProduct);
@@ -181,9 +240,14 @@ namespace StockLinx.Service.Services
             {
                 throw new Exception("Accessory is not found");
             }
-            deployedProduct.DeletedDate = DateTime.UtcNow;
             _deployedProductRepository.Update(deployedProduct, deployedProduct);
-            await _customLogService.CreateCustomLog("CheckOut", accessory.Id, accessory.BranchId, "Accessory", "Branch");
+            await _customLogService.CreateCustomLog(
+                "CheckOut",
+                accessory.Id,
+                accessory.BranchId,
+                "Accessory",
+                "Branch"
+            );
             await _unitOfWork.CommitAsync();
             var accessoryDto = await _accessoryRepository.GetDto(accessory);
             return accessoryDto;
