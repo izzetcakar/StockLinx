@@ -6,9 +6,8 @@ namespace StockLinx.Repository.Repositories.EF_Core
 {
     public class GenericRepository : Repository<User>, IGenericRepository
     {
-        public GenericRepository(AppDbContext dbContext) : base(dbContext)
-        {
-        }
+        public GenericRepository(AppDbContext dbContext)
+            : base(dbContext) { }
 
         public void CreateBaseEntities()
         {
@@ -74,46 +73,56 @@ namespace StockLinx.Repository.Repositories.EF_Core
             var newBranches = new List<Branch>();
             foreach (var company in newCompanies)
             {
-                newBranches.Add(new Branch
-                {
-                    Id = Guid.NewGuid(),
-                    CreatedDate = DateTime.UtcNow,
-                    CompanyId = company.Id,
-                    Name = $"{company.Name} Merkez"
-                });
+                newBranches.Add(
+                    new Branch
+                    {
+                        Id = Guid.NewGuid(),
+                        CreatedDate = DateTime.UtcNow,
+                        CompanyId = company.Id,
+                        Name = $"{company.Name} Merkez"
+                    }
+                );
             }
             dbContext.Branches.AddRange(newBranches);
             var newDepartments = new List<Department>();
             foreach (var branch in newBranches)
             {
-                newDepartments.Add(new Department
-                {
-                    Id = Guid.NewGuid(),
-                    CreatedDate = DateTime.UtcNow,
-                    BranchId = branch.Id,
-                    Name = "İnsan Kaynakları"
-                });
-                newDepartments.Add(new Department
-                {
-                    Id = Guid.NewGuid(),
-                    CreatedDate = DateTime.UtcNow,
-                    BranchId = branch.Id,
-                    Name = "Muhasebe"
-                });
-                newDepartments.Add(new Department
-                {
-                    Id = Guid.NewGuid(),
-                    CreatedDate = DateTime.UtcNow,
-                    BranchId = branch.Id,
-                    Name = "İdari İşler"
-                });
-                newDepartments.Add(new Department
-                {
-                    Id = Guid.NewGuid(),
-                    CreatedDate = DateTime.UtcNow,
-                    BranchId = branch.Id,
-                    Name = "Bilgi İşlem"
-                });
+                newDepartments.Add(
+                    new Department
+                    {
+                        Id = Guid.NewGuid(),
+                        CreatedDate = DateTime.UtcNow,
+                        BranchId = branch.Id,
+                        Name = "İnsan Kaynakları"
+                    }
+                );
+                newDepartments.Add(
+                    new Department
+                    {
+                        Id = Guid.NewGuid(),
+                        CreatedDate = DateTime.UtcNow,
+                        BranchId = branch.Id,
+                        Name = "Muhasebe"
+                    }
+                );
+                newDepartments.Add(
+                    new Department
+                    {
+                        Id = Guid.NewGuid(),
+                        CreatedDate = DateTime.UtcNow,
+                        BranchId = branch.Id,
+                        Name = "İdari İşler"
+                    }
+                );
+                newDepartments.Add(
+                    new Department
+                    {
+                        Id = Guid.NewGuid(),
+                        CreatedDate = DateTime.UtcNow,
+                        BranchId = branch.Id,
+                        Name = "Bilgi İşlem"
+                    }
+                );
             }
             dbContext.Departments.AddRange(newDepartments);
             var newUser = new User();
@@ -331,88 +340,88 @@ namespace StockLinx.Repository.Repositories.EF_Core
             dbContext.FieldSets.AddRange(newFieldSets);
             var newCustomFields = new List<CustomField>
             {
-                  new CustomField
-                  {
-                      Id = Guid.NewGuid(),
-                      CreatedDate = DateTime.UtcNow,
-                      Name = "Marka",
-                      DefaultValue = "Samsung",
-                      HelpText = "Telefon markası",
-                      Type = "string",
-                      IsRequired = true,
-                      ValidationRegex = null,
-                      ValidationText = "Telefon markası giriniz",
-                      FieldSetCustomFields = new List<FieldSetCustomField>
-                      {
-                          new FieldSetCustomField
-                          {
-                              Id = Guid.NewGuid(),
-                              CreatedDate = DateTime.UtcNow,
-                              FieldSetId = newFieldSets[1].Id,
-                              CustomFieldId = Guid.NewGuid()
-                          }
-                      }
-                  },
-                  new CustomField
-                  {
-                      Id = Guid.NewGuid(),
-                      CreatedDate = DateTime.UtcNow,
-                      Name = "Model",
-                      DefaultValue = "Galaxy S10",
-                      HelpText = "Telefon modeli",
-                      Type = "string",
-                      IsRequired = true,
-                      ValidationRegex = null,
-                      ValidationText = "Telefon modeli giriniz",
-                  },
-                  new CustomField
-                  {
-                      Id = Guid.NewGuid(),
-                      CreatedDate = DateTime.UtcNow,
-                      Name = "CPU",
-                      DefaultValue = null,
-                      HelpText = "İşlemci",
-                      Type = "string",
-                      IsRequired = true,
-                      ValidationRegex = null,
-                      ValidationText = "İşlemci giriniz",
-                  },
-                  new CustomField
-                  {
-                      Id = Guid.NewGuid(),
-                      CreatedDate = DateTime.UtcNow,
-                      Name = "GPU",
-                      DefaultValue = null,
-                      HelpText = "Ekran kartı",
-                      Type = "string",
-                      IsRequired = true,
-                      ValidationRegex = null,
-                      ValidationText = "Ekran kartı giriniz",
-                  },
-                  new CustomField
-                  {
-                      Id = Guid.NewGuid(),
-                      CreatedDate = DateTime.UtcNow,
-                      Name = "RAM",
-                      DefaultValue = null,
-                      HelpText = "RAM",
-                      Type = "number",
-                      IsRequired = true,
-                      ValidationRegex = null,
-                      ValidationText = "RAM giriniz",
-                  },
-                  new CustomField
-                  {
-                      Id = Guid.NewGuid(),
-                      CreatedDate = DateTime.UtcNow,
-                      Name = "HDD",
-                      DefaultValue = null,
-                      HelpText = "HDD",
-                      Type = "string",
-                      IsRequired = true,
-                      ValidationRegex = null,
-                      ValidationText = "HDD giriniz",
-                  },
+                new CustomField
+                {
+                    Id = Guid.NewGuid(),
+                    CreatedDate = DateTime.UtcNow,
+                    Name = "Marka",
+                    DefaultValue = "Samsung",
+                    HelpText = "Telefon markası",
+                    Type = "string",
+                    IsRequired = true,
+                    ValidationRegex = null,
+                    ValidationText = "Telefon markası giriniz",
+                    FieldSetCustomFields = new List<FieldSetCustomField>
+                    {
+                        new FieldSetCustomField
+                        {
+                            Id = Guid.NewGuid(),
+                            CreatedDate = DateTime.UtcNow,
+                            FieldSetId = newFieldSets[1].Id,
+                            CustomFieldId = Guid.NewGuid()
+                        }
+                    }
+                },
+                new CustomField
+                {
+                    Id = Guid.NewGuid(),
+                    CreatedDate = DateTime.UtcNow,
+                    Name = "Model",
+                    DefaultValue = "Galaxy S10",
+                    HelpText = "Telefon modeli",
+                    Type = "string",
+                    IsRequired = true,
+                    ValidationRegex = null,
+                    ValidationText = "Telefon modeli giriniz",
+                },
+                new CustomField
+                {
+                    Id = Guid.NewGuid(),
+                    CreatedDate = DateTime.UtcNow,
+                    Name = "CPU",
+                    DefaultValue = null,
+                    HelpText = "İşlemci",
+                    Type = "string",
+                    IsRequired = true,
+                    ValidationRegex = null,
+                    ValidationText = "İşlemci giriniz",
+                },
+                new CustomField
+                {
+                    Id = Guid.NewGuid(),
+                    CreatedDate = DateTime.UtcNow,
+                    Name = "GPU",
+                    DefaultValue = null,
+                    HelpText = "Ekran kartı",
+                    Type = "string",
+                    IsRequired = true,
+                    ValidationRegex = null,
+                    ValidationText = "Ekran kartı giriniz",
+                },
+                new CustomField
+                {
+                    Id = Guid.NewGuid(),
+                    CreatedDate = DateTime.UtcNow,
+                    Name = "RAM",
+                    DefaultValue = null,
+                    HelpText = "RAM",
+                    Type = "number",
+                    IsRequired = true,
+                    ValidationRegex = null,
+                    ValidationText = "RAM giriniz",
+                },
+                new CustomField
+                {
+                    Id = Guid.NewGuid(),
+                    CreatedDate = DateTime.UtcNow,
+                    Name = "HDD",
+                    DefaultValue = null,
+                    HelpText = "HDD",
+                    Type = "string",
+                    IsRequired = true,
+                    ValidationRegex = null,
+                    ValidationText = "HDD giriniz",
+                },
             };
             dbContext.CustomFields.AddRange(newCustomFields);
             var newProductStatuses = new List<ProductStatus>
@@ -456,20 +465,41 @@ namespace StockLinx.Repository.Repositories.EF_Core
             dbContext.ProductStatuses.AddRange(newProductStatuses);
         }
 
+        public void ClearBaseEntities()
+        {
+            dbContext.RemoveRange(dbContext.Locations);
+            dbContext.RemoveRange(dbContext.Companies);
+            dbContext.RemoveRange(dbContext.Branches);
+            dbContext.RemoveRange(dbContext.Departments);
+            dbContext.RemoveRange(dbContext.Users);
+            dbContext.RemoveRange(dbContext.Categories);
+            dbContext.RemoveRange(dbContext.Manufacturers);
+            dbContext.RemoveRange(dbContext.Suppliers);
+            dbContext.RemoveRange(dbContext.FieldSets);
+            dbContext.RemoveRange(dbContext.CustomFields);
+            dbContext.RemoveRange(dbContext.ProductStatuses);
+        }
+
         public IEnumerable<EntityCounter> GetEntityCounts()
         {
             var entityCounts = new List<EntityCounter>();
-            var accessoryCount = dbContext.Accessories.Where(x => x.DeletedDate == null).Count();
-            var licenseCount = dbContext.Licenses.Where(x => x.DeletedDate == null).Count();
-            var consumableCount = dbContext.Consumables.Where(x => x.DeletedDate == null).Count();
-            var assetCount = dbContext.Assets.Where(x => x.DeletedDate == null).Count();
-            var componentCount = dbContext.Components.Where(x => x.DeletedDate == null).Count();
-            var userCount = dbContext.Users.Where(x => x.DeletedDate == null).Count();
-            entityCounts.Add(new EntityCounter { EntityName = "Accessory", Count = accessoryCount });
+            var accessoryCount = dbContext.Accessories.Count();
+            var licenseCount = dbContext.Licenses.Count();
+            var consumableCount = dbContext.Consumables.Count();
+            var assetCount = dbContext.Assets.Count();
+            var componentCount = dbContext.Components.Count();
+            var userCount = dbContext.Users.Count();
+            entityCounts.Add(
+                new EntityCounter { EntityName = "Accessory", Count = accessoryCount }
+            );
             entityCounts.Add(new EntityCounter { EntityName = "License", Count = licenseCount });
-            entityCounts.Add(new EntityCounter { EntityName = "Consumable", Count = consumableCount });
+            entityCounts.Add(
+                new EntityCounter { EntityName = "Consumable", Count = consumableCount }
+            );
             entityCounts.Add(new EntityCounter { EntityName = "Asset", Count = assetCount });
-            entityCounts.Add(new EntityCounter { EntityName = "Component", Count = componentCount });
+            entityCounts.Add(
+                new EntityCounter { EntityName = "Component", Count = componentCount }
+            );
             entityCounts.Add(new EntityCounter { EntityName = "User", Count = userCount });
             return entityCounts;
         }
@@ -477,29 +507,32 @@ namespace StockLinx.Repository.Repositories.EF_Core
         public IEnumerable<ProductStatusCounter> GetProductStatusCounts()
         {
             var productStatusCounts = new List<ProductStatusCounter>();
-            var assets = dbContext.Assets.Where(x => x.DeletedDate == null);
-            var productStatuses = dbContext.ProductStatuses.Where(x => x.DeletedDate == null);
+            var assets = dbContext.Assets;
+            var productStatuses = dbContext.ProductStatuses;
 
-            productStatusCounts = productStatuses.Select(status => new ProductStatusCounter
-            {
-                Count = assets.Count(a => a.ProductStatusId == status.Id),
-                Status = status.Name
-            }).ToList();
+            productStatusCounts = productStatuses
+                .Select(status => new ProductStatusCounter { Count = 0, Status = status.Name })
+                .ToList();
             return productStatusCounts;
         }
+
         public IEnumerable<ProductLocationCounterDto> GetProductLocationCounts()
         {
             var productLocationCounts = new List<ProductLocationCounterDto>();
-            var locations = dbContext.Locations.Where(x => x.DeletedDate == null);
-            var assets = dbContext.Assets.Where(x => x.DeletedDate == null);
-            var deployedAssets = dbContext.DeployedProducts.Where(x => x.DeletedDate == null);
-            productLocationCounts = locations.Select(l => new ProductLocationCounterDto
-            {
-                LocationId = l.Id,
-                LocationName = l.Name,
-                ProductCount = assets.Where(a => a.Branch.LocationId == l.Id).Count(),
-                AssignedCount = deployedAssets.Where(d => d.User.Department.Branch.LocationId == l.Id).Count(),
-            }).ToList();
+            var locations = dbContext.Locations;
+            var assets = dbContext.Assets;
+            var deployedAssets = dbContext.DeployedProducts;
+            productLocationCounts = locations
+                .Select(l => new ProductLocationCounterDto
+                {
+                    LocationId = l.Id,
+                    LocationName = l.Name,
+                    ProductCount = assets.Where(a => a.Branch.LocationId == l.Id).Count(),
+                    AssignedCount = deployedAssets
+                        .Where(d => d.User.Department.Branch.LocationId == l.Id)
+                        .Count(),
+                })
+                .ToList();
             return productLocationCounts;
         }
 
@@ -507,49 +540,78 @@ namespace StockLinx.Repository.Repositories.EF_Core
         {
             var productCategoryCounts = new List<ProductCategoryCounterDto>();
 
-            var assetCount = dbContext.Models.Where(m => m.Category.Type == CategoryType.Asset && m.DeletedDate == null).Count();
-            var accessoryCount = dbContext.Accessories.Where(m => m.Category.Type == CategoryType.Accessory && m.DeletedDate == null).Count();
-            var componentCount = dbContext.Components.Where(m => m.Category.Type == CategoryType.Component && m.DeletedDate == null).Count();
-            var consumableCount = dbContext.Consumables.Where(m => m.Category.Type == CategoryType.Consumable && m.DeletedDate == null).Count();
-            var licenseCount = dbContext.Licenses.Where(m => m.Category.Type == CategoryType.License && m.DeletedDate == null).Count();
+            var assetCount = dbContext
+                .Models.Where(m => m.Category.Type == CategoryType.Asset)
+                .Count();
+            var accessoryCount = dbContext
+                .Accessories.Where(m => m.Category.Type == CategoryType.Accessory)
+                .Count();
+            var componentCount = dbContext
+                .Components.Where(m => m.Category.Type == CategoryType.Component)
+                .Count();
+            var consumableCount = dbContext
+                .Consumables.Where(m => m.Category.Type == CategoryType.Consumable)
+                .Count();
+            var licenseCount = dbContext
+                .Licenses.Where(m => m.Category.Type == CategoryType.License)
+                .Count();
 
-            var assets = dbContext.Models.Where(m => m.Category.Type == CategoryType.Asset && m.DeletedDate == null).Select(m => new ProductCategoryCounterDto
-            {
-                CategoryId = m.CategoryId,
-                CategoryName = m.Category.Name,
-                ProductName = "Asset",
-                ProductCount = assetCount,
-            }).ToList();
-            var accessories = dbContext.Accessories.Where(a => a.CategoryId != null && a.DeletedDate == null).Select(a => new ProductCategoryCounterDto
-            {
-                CategoryId = a.CategoryId,
-                CategoryName = a.Category.Name,
-                ProductName = "Accessory",
-                ProductCount = accessoryCount,
-            }).ToList();
-            var components = dbContext.Components.Where(c => c.CategoryId != null && c.DeletedDate == null).Select(c => new ProductCategoryCounterDto
-            {
-                CategoryId = c.CategoryId,
-                CategoryName = c.Category.Name,
-                ProductName = "Component",
-                ProductCount = componentCount,
-            }).ToList();
-            var consumables = dbContext.Consumables.Where(c => c.CategoryId != null && c.DeletedDate == null).Select(c => new ProductCategoryCounterDto
-            {
-                CategoryId = c.CategoryId,
-                CategoryName = c.Category.Name,
-                ProductName = "Consumable",
-                ProductCount = consumableCount,
-            }).ToList();
-            var licenses = dbContext.Licenses.Where(l => l.CategoryId != null && l.DeletedDate == null).Select(l => new ProductCategoryCounterDto
-            {
-                CategoryId = l.CategoryId,
-                CategoryName = l.Category.Name,
-                ProductName = "License",
-                ProductCount = licenseCount,
-            }).ToList();
-            return productCategoryCounts.Concat(assets).Concat(accessories).Concat(components).Concat(consumables).Concat(licenses);
+            var assets = dbContext
+                .Models.Where(m => m.Category.Type == CategoryType.Asset)
+                .Select(m => new ProductCategoryCounterDto
+                {
+                    CategoryId = (Guid)m.CategoryId,
+                    CategoryName = m.Category.Name,
+                    ProductName = "Asset",
+                    ProductCount = assetCount,
+                })
+                .ToList();
+            var accessories = dbContext
+                .Accessories.Where(a => a.CategoryId != null)
+                .Select(a => new ProductCategoryCounterDto
+                {
+                    CategoryId = (Guid)a.CategoryId,
+                    CategoryName = a.Category.Name,
+                    ProductName = "Accessory",
+                    ProductCount = accessoryCount,
+                })
+                .ToList();
+            var components = dbContext
+                .Components.Where(c => c.CategoryId != null)
+                .Select(c => new ProductCategoryCounterDto
+                {
+                    CategoryId = (Guid)c.CategoryId,
+                    CategoryName = c.Category.Name,
+                    ProductName = "Component",
+                    ProductCount = componentCount,
+                })
+                .ToList();
+            var consumables = dbContext
+                .Consumables.Where(c => c.CategoryId != null)
+                .Select(c => new ProductCategoryCounterDto
+                {
+                    CategoryId = (Guid)c.CategoryId,
+                    CategoryName = c.Category.Name,
+                    ProductName = "Consumable",
+                    ProductCount = consumableCount,
+                })
+                .ToList();
+            var licenses = dbContext
+                .Licenses.Where(l => l.CategoryId != null)
+                .Select(l => new ProductCategoryCounterDto
+                {
+                    CategoryId = (Guid)l.CategoryId,
+                    CategoryName = l.Category.Name,
+                    ProductName = "License",
+                    ProductCount = licenseCount,
+                })
+                .ToList();
+            return productCategoryCounts
+                .Concat(assets)
+                .Concat(accessories)
+                .Concat(components)
+                .Concat(consumables)
+                .Concat(licenses);
         }
-
     }
 }

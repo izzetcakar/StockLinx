@@ -20,6 +20,14 @@ namespace StockLinx.API.Controllers
             await _service.CreateBaseEntities();
             return CreateActionResult(CustomResponseDto<string>.Success(200, "Base entities created successfully"));
         }
+
+        [HttpDelete("clearBaseEntities")]
+        public async Task<IActionResult> ClearBaseEntities()
+        {
+            await _service.ClearBaseEntities();
+            return CreateActionResult(CustomResponseDto<string>.Success(200, "Base entities deleted successfully"));
+        }
+
         [HttpGet("entityCount")]
         public async Task<IActionResult> EntityCount()
         {

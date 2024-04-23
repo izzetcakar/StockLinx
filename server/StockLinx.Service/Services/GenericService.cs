@@ -28,6 +28,18 @@ namespace StockLinx.Service.Services
                 throw ex;
             }
         }
+        public async Task ClearBaseEntities()
+        {
+            try
+            {
+                _repository.ClearBaseEntities();
+                await _unitOfWork.CommitAsync();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         public IEnumerable<EntityCounter> GetEntityCounts()
         {
