@@ -6,14 +6,17 @@ using StockLinx.Core.Repositories;
 
 namespace StockLinx.Repository.Repositories.EF_Core
 {
-    public class FieldSetCustomFieldRepository : Repository<FieldSetCustomField>, IFieldSetCustomFieldRepository
+    public class FieldSetCustomFieldRepository
+        : Repository<FieldSetCustomField>,
+            IFieldSetCustomFieldRepository
     {
         private readonly IMapper _mapper;
-        public FieldSetCustomFieldRepository(AppDbContext dbContext, IMapper mapper) : base(dbContext)
+
+        public FieldSetCustomFieldRepository(AppDbContext dbContext, IMapper mapper)
+            : base(dbContext)
         {
             _mapper = mapper;
         }
-
 
         public FieldSetCustomFieldDto GetDto(FieldSetCustomField entity)
         {
@@ -26,9 +29,10 @@ namespace StockLinx.Repository.Repositories.EF_Core
             dtos = _mapper.Map<List<FieldSetCustomFieldDto>>(entities);
             return dtos;
         }
+
         public async Task<List<FieldSetCustomFieldDto>> GetAllDtos()
         {
-            var items = await dbContext.FieldSetCustomFields.Where(f => f.DeletedDate == null).AsNoTracking().ToListAsync();
+            var items = await dbContext.FieldSetCustomFields.AsNoTracking().ToListAsync();
             return GetDtos(items);
         }
     }

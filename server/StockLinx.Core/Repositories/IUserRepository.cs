@@ -9,5 +9,6 @@ namespace StockLinx.Core.Repositories
         UserDto GetDto(User entity);
         List<UserDto> GetDtos(List<User> entities);
         Task<List<UserDto>> GetAllDtos();
+        Task<bool> CanDelete(Guid id);
     }
 }

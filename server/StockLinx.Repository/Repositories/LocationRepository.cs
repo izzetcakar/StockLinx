@@ -9,7 +9,9 @@ namespace StockLinx.Repository.Repositories.EF_Core
     public class LocationRepository : Repository<Location>, ILocationRepository
     {
         private readonly IMapper _mapper;
-        public LocationRepository(AppDbContext dbContext, IMapper mapper) : base(dbContext)
+
+        public LocationRepository(AppDbContext dbContext, IMapper mapper)
+            : base(dbContext)
         {
             _mapper = mapper;
         }
@@ -18,15 +20,17 @@ namespace StockLinx.Repository.Repositories.EF_Core
         {
             return _mapper.Map<LocationDto>(entity);
         }
+
         public List<LocationDto> GetDtos(List<Location> entities)
         {
             var dtos = new List<LocationDto>();
             dtos = _mapper.Map<List<LocationDto>>(entities);
             return dtos;
         }
+
         public async Task<List<LocationDto>> GetAllDtos()
         {
-            var entities = await dbContext.Locations.Where(l => l.DeletedDate == null).AsNoTracking().ToListAsync();
+            var entities = await dbContext.Locations.AsNoTracking().ToListAsync();
             return GetDtos(entities);
         }
     }

@@ -28,8 +28,23 @@ namespace StockLinx.Repository.Repositories.EF_Core
         }
         public async Task<List<DepartmentDto>> GetAllDtos()
         {
-            var entities = await dbContext.Departments.Where(c => c.DeletedDate == null).AsNoTracking().ToListAsync();
+            var entities = await dbContext.Departments.AsNoTracking().ToListAsync();
             return GetDtos(entities);
+        }
+
+        public async Task<bool> CanDelete(Guid id)
+        {
+            var entity = dbContext.Departments.Find(id);
+            if (entity == null)
+            {
+                throw new Exception("Department not found.");
+            }
+            var users = await dbContext.Users.AnyAsync(u => u.DepartmentId == id);
+            if (users)
+            {
+                throw new Exception("Cannot delete department because it has users.");
+            }
+            return true;
         }
     }
 }

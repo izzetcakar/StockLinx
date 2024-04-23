@@ -9,7 +9,9 @@ namespace StockLinx.Repository.Repositories.EF_Core
     public class FieldSetRepository : Repository<FieldSet>, IFieldSetRepository
     {
         private readonly IMapper _mapper;
-        public FieldSetRepository(AppDbContext dbContext, IMapper mapper) : base(dbContext)
+
+        public FieldSetRepository(AppDbContext dbContext, IMapper mapper)
+            : base(dbContext)
         {
             _mapper = mapper;
         }
@@ -18,15 +20,17 @@ namespace StockLinx.Repository.Repositories.EF_Core
         {
             return _mapper.Map<FieldSetDto>(entity);
         }
+
         public List<FieldSetDto> GetDtos(List<FieldSet> entities)
         {
             var dtos = new List<FieldSetDto>();
             dtos = _mapper.Map<List<FieldSetDto>>(entities);
             return dtos;
         }
+
         public async Task<List<FieldSetDto>> GetAllDtos()
         {
-            var entities = await dbContext.FieldSets.Where(f => f.DeletedDate == null).AsNoTracking().ToListAsync();
+            var entities = await dbContext.FieldSets.AsNoTracking().ToListAsync();
             return GetDtos(entities);
         }
     }

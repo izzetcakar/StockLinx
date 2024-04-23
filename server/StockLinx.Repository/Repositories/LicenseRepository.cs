@@ -9,25 +9,25 @@ namespace StockLinx.Repository.Repositories.EF_Core
     public class LicenseRepository : Repository<License>, ILicenseRepository
     {
         private readonly IMapper _mapper;
-        public LicenseRepository(AppDbContext dbContext, IMapper mapper) : base(dbContext)
+
+        public LicenseRepository(AppDbContext dbContext, IMapper mapper)
+            : base(dbContext)
         {
             _mapper = mapper;
         }
 
         public async Task<LicenseDto> GetDto(License entity)
         {
-            var deployedProducts = await dbContext.DeployedProducts.Where(d => d.DeletedDate == null).AsNoTracking().ToListAsync();
-            var companyId = await dbContext.Branches.Where(b => b.Id == entity.BranchId && b.DeletedDate == null).Select(b => b.CompanyId).FirstOrDefaultAsync();
-            var availableQuantity = entity.Quantity - deployedProducts.Where(d => d.DeletedDate == null).Count(d => d.LicenseId.HasValue && d.LicenseId == entity.Id);
-            if (companyId == null)
-            {
-                return null;
-            }
+            var deployedProducts = await dbContext
+                .DeployedProducts.Where(d => d.LicenseId.HasValue && d.LicenseId == entity.Id)
+                .AsNoTracking()
+                .ToListAsync();
+            var availableQuantity = entity.Quantity - deployedProducts.Sum(d => d.Quantity);
             var dto = _mapper.Map<LicenseDto>(entity);
-            dto.CompanyId = companyId;
             dto.AvailableQuantity = availableQuantity;
             return dto;
         }
+
         public async Task<List<LicenseDto>> GetDtos(List<License> entities)
         {
             var dtos = new List<LicenseDto>();
@@ -38,10 +38,26 @@ namespace StockLinx.Repository.Repositories.EF_Core
             }
             return dtos;
         }
+
         public async Task<List<LicenseDto>> GetAllDtos()
         {
-            var entities = await dbContext.Licenses.Where(l => l.DeletedDate == null).AsNoTracking().ToListAsync();
+            var entities = await dbContext.Licenses.AsNoTracking().ToListAsync();
             return await GetDtos(entities);
+        }
+
+        public async Task<bool> CanDelete(Guid id)
+        {
+            var entity = dbContext.Licenses.Find(id);
+            if (entity == null)
+            {
+                throw new Exception("License not found.");
+            }
+            var deployedProducts = await dbContext.DeployedProducts.AnyAsync(d => d.LicenseId.HasValue && d.LicenseId == id);
+            if (deployedProducts)
+            {
+                throw new Exception("Cannot delete license because it is used in deployed products.");
+            }
+            return true;
         }
     }
 }

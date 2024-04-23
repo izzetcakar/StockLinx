@@ -19,9 +19,9 @@ namespace StockLinx.Repository.Repositories.EF_Core
             var dto = _mapper.Map<DeployedProductDto>(entity);
             if (entity.AccessoryId != null)
             {
-                var accessory = await dbContext.Accessories.Where(d => d.DeletedDate == null).SingleOrDefaultAsync(a => a.Id == entity.AccessoryId);
+                var accessory = await dbContext.Accessories.SingleOrDefaultAsync(a => a.Id == entity.AccessoryId);
                 if (accessory == null) return null;
-                var category = await dbContext.Categories.Where(d => d.DeletedDate == null).SingleOrDefaultAsync(c => c.Id == accessory.CategoryId);
+                var category = await dbContext.Categories.SingleOrDefaultAsync(c => c.Id == accessory.CategoryId);
                 dto.ProductId = accessory.Id;
                 dto.ProductType = "Accessory";
                 dto.ProductRoute = $"/accessory/{accessory.Id}";
@@ -32,13 +32,13 @@ namespace StockLinx.Repository.Repositories.EF_Core
             }
             else if (entity.AssetId != null)
             {
-                var asset = await dbContext.Assets.Where(d => d.DeletedDate == null).SingleOrDefaultAsync(a => a.Id == entity.AssetId);
+                var asset = await dbContext.Assets.SingleOrDefaultAsync(a => a.Id == entity.AssetId);
                 if (asset == null) return null;
-                var model = await dbContext.Models.Where(d => d.DeletedDate == null).SingleOrDefaultAsync(m => (asset.ModelId != null && m.Id == asset.ModelId));
+                var model = await dbContext.Models.SingleOrDefaultAsync(m => (asset.ModelId != null && m.Id == asset.ModelId));
                 if (model != null)
                 {
-                    var manufacturer = await dbContext.Manufacturers.Where(d => d.DeletedDate == null).SingleOrDefaultAsync(m => m.Id == model.ManufacturerId);
-                    var category = await dbContext.Categories.Where(d => d.DeletedDate == null).SingleOrDefaultAsync(c => c.Id == model.CategoryId);
+                    var manufacturer = await dbContext.Manufacturers.SingleOrDefaultAsync(m => m.Id == model.ManufacturerId);
+                    var category = await dbContext.Categories.SingleOrDefaultAsync(c => c.Id == model.CategoryId);
                     var description = Generic.AddHyphenIfNotEmpty(manufacturer.Name) + model.ModelNo;
                     dto.Category = category?.Name;
                     dto.ProductDescription = description;
@@ -51,9 +51,9 @@ namespace StockLinx.Repository.Repositories.EF_Core
             }
             else if (entity.ComponentId != null)
             {
-                var component = await dbContext.Components.Where(d => d.DeletedDate == null).SingleOrDefaultAsync(c => c.Id == entity.ComponentId);
+                var component = await dbContext.Components.SingleOrDefaultAsync(c => c.Id == entity.ComponentId);
                 if (component == null) return null;
-                var category = await dbContext.Categories.Where(d => d.DeletedDate == null).SingleOrDefaultAsync(c => c.Id == component.CategoryId);
+                var category = await dbContext.Categories.SingleOrDefaultAsync(c => c.Id == component.CategoryId);
                 dto.ProductId = component.Id;
                 dto.ProductType = "Component";
                 dto.ProductRoute = $"/component/{component.Id}";
@@ -64,10 +64,10 @@ namespace StockLinx.Repository.Repositories.EF_Core
             }
             else if (entity.ConsumableId != null)
             {
-                var consumable = await dbContext.Consumables.Where(d => d.DeletedDate == null).SingleOrDefaultAsync(c => c.Id == entity.ConsumableId);
+                var consumable = await dbContext.Consumables.SingleOrDefaultAsync(c => c.Id == entity.ConsumableId);
                 if (consumable == null) return null;
-                var manufacturer = await dbContext.Manufacturers.Where(d => d.DeletedDate == null).SingleOrDefaultAsync(m => m.Id == consumable.ManufacturerId);
-                var category = await dbContext.Categories.Where(d => d.DeletedDate == null).SingleOrDefaultAsync(c => c.Id == consumable.CategoryId);
+                var manufacturer = await dbContext.Manufacturers.SingleOrDefaultAsync(m => m.Id == consumable.ManufacturerId);
+                var category = await dbContext.Categories.SingleOrDefaultAsync(c => c.Id == consumable.CategoryId);
                 var description = Generic.AddHyphenIfNotEmpty(manufacturer.Name) + consumable.ModelNo;
                 dto.ProductId = consumable.Id;
                 dto.ProductType = "Consumable";
@@ -79,10 +79,10 @@ namespace StockLinx.Repository.Repositories.EF_Core
             }
             else if (entity.LicenseId != null)
             {
-                var license = await dbContext.Licenses.Where(d => d.DeletedDate == null).SingleOrDefaultAsync(l => l.Id == entity.LicenseId);
+                var license = await dbContext.Licenses.SingleOrDefaultAsync(l => l.Id == entity.LicenseId);
                 if (license == null) return null;
-                var manufacturer = await dbContext.Manufacturers.Where(d => d.DeletedDate == null).SingleOrDefaultAsync(m => m.Id == license.ManufacturerId);
-                var category = await dbContext.Categories.Where(d => d.DeletedDate == null).SingleOrDefaultAsync(c => c.Id == license.CategoryId);
+                var manufacturer = await dbContext.Manufacturers.SingleOrDefaultAsync(m => m.Id == license.ManufacturerId);
+                var category = await dbContext.Categories.SingleOrDefaultAsync(c => c.Id == license.CategoryId);
                 dto.ProductId = license.Id;
                 dto.ProductType = "License";
                 dto.ProductRoute = $"/license/{license.Id}";
@@ -105,7 +105,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
         }
         public async Task<List<DeployedProductDto>> GetAllDtos()
         {
-            var entities = await dbContext.DeployedProducts.Where(d => d.DeletedDate == null).AsNoTracking().ToListAsync();
+            var entities = await dbContext.DeployedProducts.AsNoTracking().ToListAsync();
             return await GetDtos(entities);
         }
     }

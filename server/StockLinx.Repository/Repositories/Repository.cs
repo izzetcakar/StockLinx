@@ -44,6 +44,16 @@ namespace StockLinx.Repository.Repositories.EF_Core
             return null;
         }
 
+        public void Remove(T entity)
+        {
+            dbSet.Remove(entity);
+        }
+
+        public void RemoveRange(IEnumerable<T> entities)
+        {
+            dbSet.RemoveRange(entities);
+        }
+
         public void Update(T oldEntity, T newEntity)
         {
             dbSet.Entry(oldEntity).CurrentValues.SetValues(newEntity);

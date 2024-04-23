@@ -5,8 +5,9 @@ namespace StockLinx.Core.Repositories
 {
     public interface IAssetRepository : IRepository<Asset>
     {
-        Task<AssetDto> GetDto(Asset entity);
-        Task<List<AssetDto>> GetDtos(List<Asset> entities);
+        AssetDto GetDto(Asset entity);
+        List<AssetDto> GetDtos(List<Asset> entities);
         Task<List<AssetDto>> GetAllDtos();
+        Task<bool> CanDelete(Guid id);
     }
 }

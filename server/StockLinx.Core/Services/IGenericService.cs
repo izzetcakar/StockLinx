@@ -6,6 +6,7 @@ namespace StockLinx.Core.Services
     public interface IGenericService : IService<User>
     {
         Task CreateBaseEntities();
+        Task ClearBaseEntities();
         IEnumerable<ProductStatusCounter> GetProductStatusCounts();
         IEnumerable<EntityCounter> GetEntityCounts();
         IEnumerable<ProductLocationCounterDto> GetProductLocationCounts();

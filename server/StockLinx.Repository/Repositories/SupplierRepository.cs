@@ -9,7 +9,9 @@ namespace StockLinx.Repository.Repositories.EF_Core
     public class SupplierRepository : Repository<Supplier>, ISupplierRepository
     {
         private readonly IMapper _mapper;
-        public SupplierRepository(AppDbContext dbContext, IMapper mapper) : base(dbContext)
+
+        public SupplierRepository(AppDbContext dbContext, IMapper mapper)
+            : base(dbContext)
         {
             _mapper = mapper;
         }
@@ -18,15 +20,17 @@ namespace StockLinx.Repository.Repositories.EF_Core
         {
             return _mapper.Map<SupplierDto>(entity);
         }
+
         public List<SupplierDto> GetDtos(List<Supplier> entities)
         {
             var dtos = new List<SupplierDto>();
             dtos = _mapper.Map<List<SupplierDto>>(entities);
             return dtos;
         }
+
         public async Task<List<SupplierDto>> GetAllDtos()
         {
-            var entities = await dbContext.Suppliers.Where(s => s.DeletedDate == null).AsNoTracking().ToListAsync();
+            var entities = await dbContext.Suppliers.AsNoTracking().ToListAsync();
             return GetDtos(entities);
         }
     }
