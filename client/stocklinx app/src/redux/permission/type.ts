@@ -1,4 +1,4 @@
-import { IPermission } from "../../interfaces/interfaces";
+import { IPermission } from "../../interfaces/serverInterfaces";
 import { permissionConst } from "./constant";
 
 export interface PermissionState {

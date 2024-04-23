@@ -16,7 +16,7 @@ import {
   CategoryType,
   IModel,
   IModelFieldData,
-} from "../../interfaces/interfaces";
+} from "../../interfaces/serverInterfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { modelActions } from "../../redux/model/actions";
 import uuid4 from "uuid4";

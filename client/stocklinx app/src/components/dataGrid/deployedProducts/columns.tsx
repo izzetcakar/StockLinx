@@ -1,5 +1,5 @@
 import { BaseColumn } from "../../gridTable/interfaces/interfaces";
-import { IDeployedProductDto } from "../../../interfaces/interfaces";
+import { IDeployedProductDto } from "../../../interfaces/serverInterfaces";
 import { Anchor } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 

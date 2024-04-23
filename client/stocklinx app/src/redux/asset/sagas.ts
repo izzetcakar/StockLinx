@@ -1,6 +1,6 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { assetActions } from "./actions";
-import { IAsset } from "../../interfaces/interfaces";
+import { IAsset } from "../../interfaces/serverInterfaces";
 import { assetConst } from "./constant";
 import {
   AssetCheckInSuccessPayload,

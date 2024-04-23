@@ -1,4 +1,4 @@
-import { IDeployedProduct } from "../../interfaces/interfaces";
+import { IDeployedProduct } from "../../interfaces/serverInterfaces";
 import { deployedProductConst } from "./constant";
 import {
   CreateDeployedProductFailure,

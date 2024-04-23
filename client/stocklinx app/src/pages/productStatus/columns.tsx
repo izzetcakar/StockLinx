@@ -1,4 +1,4 @@
-import { IProductStatus, ProductStatusType } from "../../interfaces/interfaces";
+import { IProductStatus, ProductStatusType } from "../../interfaces/serverInterfaces";
 import { createDataFromEnum } from "../../functions/createDataFromEnum";
 import {
   BaseColumn,

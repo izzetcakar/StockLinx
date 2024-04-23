@@ -4,7 +4,7 @@ import {
   BaseColumn,
   ExcelColumn,
 } from "../../components/gridTable/interfaces/interfaces";
-import { CategoryType, IConsumable } from "../../interfaces/interfaces";
+import { CategoryType, IConsumable } from "../../interfaces/serverInterfaces";
 import { Anchor } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 

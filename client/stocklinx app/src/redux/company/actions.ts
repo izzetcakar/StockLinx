@@ -1,4 +1,4 @@
-import { ICompany } from "../../interfaces/interfaces";
+import { ICompany } from "../../interfaces/serverInterfaces";
 import { companyConst } from "./constant";
 import {
   CreateCompanyFailure,

@@ -1,4 +1,4 @@
-import { IModel } from "../../interfaces/interfaces";
+import { IModel } from "../../interfaces/serverInterfaces";
 import { request } from "../../server/api";
 const requestUrl = "Model/";
 

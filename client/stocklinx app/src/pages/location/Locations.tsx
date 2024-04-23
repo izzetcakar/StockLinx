@@ -1,4 +1,4 @@
-import { ILocation } from "../../interfaces/interfaces";
+import { ILocation } from "../../interfaces/serverInterfaces";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";

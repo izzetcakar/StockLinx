@@ -15,15 +15,15 @@ import {
 import { useForm } from "@mantine/form";
 import { DateInput } from "@mantine/dates";
 import { IconPlus, IconTrash } from "@tabler/icons-react";
-import { IAsset } from "../../interfaces/interfaces";
+import { IAsset } from "../../interfaces/serverInterfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import filterClasses from "../../mantineModules/baseFilter.module.scss";
 import { assetActions } from "../../redux/asset/actions";
 import { useInitial } from "./useInitial";
 import { toBase64 } from "../../functions/Image";
-import base_asset from "../../assets/baseProductImages/base_asset.jpg";
 import { openNotificationError } from "../../notification/Notification";
+import base_asset from "../../assets/baseProductImages/base_asset.jpg";
 
 interface AssetFormProps {
   asset?: IAsset;
@@ -34,9 +34,6 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
   const dispatch = useDispatch();
   const branch = useSelector((state: RootState) => state.branch.branch);
   const models = useSelector((state: RootState) => state.model.models);
-  const productStatuses = useSelector(
-    (state: RootState) => state.productStatus.productStatuses
-  );
   const suppliers = useSelector((state: RootState) => state.supplier.suppliers);
   const { initialValues, isCreate } = useInitial(asset, create);
 
@@ -52,8 +49,6 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
             : "Purchase cost must be a non-negative number";
         }
       },
-      productStatusId: (value: string) =>
-        value !== "" ? null : "Product status should not be empty",
     },
   });
   const overageAssetFields = form.values?.overageAssets?.map((_, index) => (
@@ -174,22 +169,6 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
           }}
           nothingFoundMessage="No models found"
           clearable
-        />
-        <Select
-          data={productStatuses.map((model) => ({
-            value: model.id,
-            label: model.name,
-          }))}
-          label="Product Status"
-          placeholder="Select Product Status"
-          {...form.getInputProps("productStatusId")}
-          classNames={filterClasses}
-          comboboxProps={{
-            position: "bottom",
-            middlewares: { flip: false, shift: false },
-          }}
-          nothingFoundMessage="No product statuses found"
-          withAsterisk
         />
         <Textarea
           placeholder="Your notes here"

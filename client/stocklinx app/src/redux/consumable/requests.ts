@@ -1,7 +1,7 @@
 import {
   IConsumable,
   IConsumableCheckInDto,
-} from "../../interfaces/interfaces";
+} from "../../interfaces/serverInterfaces";
 import { request } from "../../server/api";
 const requestUrl = "Consumable/";
 

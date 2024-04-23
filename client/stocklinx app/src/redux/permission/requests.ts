@@ -1,4 +1,4 @@
-import { IPermission } from "../../interfaces/interfaces";
+import { IPermission } from "../../interfaces/serverInterfaces";
 import { request } from "../../server/api";
 const requestUrl = "Permission/";
 

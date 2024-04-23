@@ -1,7 +1,7 @@
 import React from "react";
 import { TextInput, Button, Group, Flex, Select } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { IBranch } from "../../interfaces/interfaces";
+import { IBranch } from "../../interfaces/serverInterfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { branchActions } from "../../redux/branch/actions";
 import { RootState } from "../../redux/rootReducer";

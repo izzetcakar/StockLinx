@@ -1,4 +1,4 @@
-import { ICategory } from "../../interfaces/interfaces";
+import { ICategory } from "../../interfaces/serverInterfaces";
 import { request } from "../../server/api";
 const requestUrl = "Category/";
 

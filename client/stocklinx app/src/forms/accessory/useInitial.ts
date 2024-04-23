@@ -1,5 +1,5 @@
 import uuid4 from "uuid4";
-import { IAccessory } from "../../interfaces/interfaces";
+import { IAccessory } from "../../interfaces/serverInterfaces";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { getImage } from "../../functions/Image";
@@ -14,7 +14,8 @@ export const useInitial = (accessory?: IAccessory, create?: boolean) => {
     name: "",
     manufacturerId: null,
     supplierId: null,
-    categoryId: "",
+    categoryId: null,
+    productStatusId: null,
     modelNo: "",
     quantity: 1,
     orderNo: null,

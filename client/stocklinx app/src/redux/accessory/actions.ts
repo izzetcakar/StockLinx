@@ -1,4 +1,4 @@
-import { IAccessory } from "../../interfaces/interfaces";
+import { IAccessory } from "../../interfaces/serverInterfaces";
 import { accessoryConst } from "./constant";
 import {
   CreateAccessoryFailure,

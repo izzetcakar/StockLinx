@@ -1,4 +1,4 @@
-import { IAsset, IAssetCheckInDto } from "../../interfaces/interfaces";
+import { IAsset, IAssetCheckInDto } from "../../interfaces/serverInterfaces";
 import { request } from "../../server/api";
 const requestUrl = "Asset/";
 

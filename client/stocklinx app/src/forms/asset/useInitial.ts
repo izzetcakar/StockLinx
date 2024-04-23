@@ -1,5 +1,5 @@
 import uuid4 from "uuid4";
-import { IAsset } from "../../interfaces/interfaces";
+import { IAsset } from "../../interfaces/serverInterfaces";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { getImage } from "../../functions/Image";
@@ -19,7 +19,6 @@ export const useInitial = (asset?: IAsset, create?: boolean) => {
     purchaseDate: null,
     notes: null,
     modelId: null,
-    productStatusId: "",
     tagNo: null,
     overageAssets: [],
   };

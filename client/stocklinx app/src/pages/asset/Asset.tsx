@@ -26,6 +26,9 @@ const Asset = () => {
   const productStatuses = useSelector(
     (state: RootState) => state.productStatus.productStatuses
   );
+  const deployedProducts = useSelector(
+    (state: RootState) => state.deployedProduct.deployedProducts
+  );
 
   useLayoutEffect(() => {
     dispatch(companyActions.getAll());
@@ -53,9 +56,9 @@ const Asset = () => {
               <div className="product__content__title">Status</div>
               <div className="product__content__value">
                 {
-                  productStatuses.find(
-                    (productStatus) =>
-                      productStatus.id === asset?.productStatusId
+                  deployedProducts.find(
+                    (deployedProduct) =>
+                      deployedProduct.productStatusId === asset?.productStatusId
                   )?.name
                 }
               </div>

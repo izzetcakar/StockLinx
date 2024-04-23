@@ -1,4 +1,4 @@
-import { IConsumable } from "../../interfaces/interfaces";
+import { IConsumable } from "../../interfaces/serverInterfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { companyActions } from "../../redux/company/actions";

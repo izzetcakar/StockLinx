@@ -1,4 +1,4 @@
-import { IProductStatus } from "../../interfaces/interfaces";
+import { IProductStatus } from "../../interfaces/serverInterfaces";
 import { productStatusConst } from "./constant";
 
 export interface ProductStatusState {

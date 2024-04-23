@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Group, Flex, Select, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { IDeployedProduct } from "../../interfaces/interfaces";
+import { IDeployedProduct } from "../../interfaces/serverInterfaces";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import filterClasses from "../../mantineModules/baseFilter.module.scss";
@@ -27,6 +27,7 @@ const CheckInForm: React.FC<CheckInFormProps> = ({
       accessoryId: deployedProduct.accessoryId,
       componentId: deployedProduct.componentId,
       consumableId: deployedProduct.consumableId,
+      productStatusId: deployedProduct.productStatusId,
       assignDate: new Date(),
       notes: null,
     },
@@ -60,12 +61,11 @@ const CheckInForm: React.FC<CheckInFormProps> = ({
           {...form.getInputProps("userId")}
           classNames={filterClasses}
           comboboxProps={{
-              position: "top",
-              middlewares: { flip: false, shift: false },
-            }}
+            position: "top",
+            middlewares: { flip: false, shift: false },
+          }}
           nothingFoundMessage="No user found"
           withAsterisk
-          
         />
         <Textarea
           label="Notes"

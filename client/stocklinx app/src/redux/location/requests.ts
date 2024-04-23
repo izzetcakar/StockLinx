@@ -1,4 +1,4 @@
-import { ILocation } from "../../interfaces/interfaces";
+import { ILocation } from "../../interfaces/serverInterfaces";
 import { request } from "../../server/api";
 const requestUrl = "Location/";
 

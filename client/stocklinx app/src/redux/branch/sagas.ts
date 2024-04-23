@@ -1,6 +1,6 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { branchActions } from "./actions";
-import { IBranch } from "../../interfaces/interfaces";
+import { IBranch } from "../../interfaces/serverInterfaces";
 import { branchConst } from "./constant";
 import {
   CreateBranchRequest,

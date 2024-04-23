@@ -1,4 +1,4 @@
-import { IFieldSet } from "../../interfaces/interfaces";
+import { IFieldSet } from "../../interfaces/serverInterfaces";
 import { fieldSetConst } from "./constant";
 import {
   CreateFieldSetFailure,

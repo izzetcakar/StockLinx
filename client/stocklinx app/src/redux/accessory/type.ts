@@ -2,7 +2,7 @@ import {
   IAccessory,
   IAccessoryCheckInDto,
   IDeployedProduct,
-} from "../../interfaces/interfaces";
+} from "../../interfaces/serverInterfaces";
 import { accessoryConst } from "./constant";
 
 export interface AccessoryState {

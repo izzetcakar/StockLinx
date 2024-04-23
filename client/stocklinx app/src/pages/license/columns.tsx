@@ -9,7 +9,7 @@ import {
   IDeployedProduct,
   ILicense,
   ILicenseCheckInDto,
-} from "../../interfaces/interfaces";
+} from "../../interfaces/serverInterfaces";
 import { openCheckInModal } from "../../modals/modals";
 import { licenseActions } from "../../redux/license/actions";
 import uuid4 from "uuid4";

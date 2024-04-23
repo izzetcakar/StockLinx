@@ -1,6 +1,6 @@
 import uuid4 from "uuid4";
 import { useSelector } from "react-redux";
-import { IDepartment } from "../../interfaces/interfaces";
+import { IDepartment } from "../../interfaces/serverInterfaces";
 import { RootState } from "../../redux/rootReducer";
 
 export const useInitial = (department?: IDepartment, create?: boolean) => {

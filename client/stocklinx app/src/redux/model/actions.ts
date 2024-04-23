@@ -1,4 +1,4 @@
-import { IModel } from "../../interfaces/interfaces";
+import { IModel } from "../../interfaces/serverInterfaces";
 import { modelConst } from "./constant";
 import {
   CreateModelFailure,

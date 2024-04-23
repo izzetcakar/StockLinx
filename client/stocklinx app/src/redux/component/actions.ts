@@ -1,4 +1,4 @@
-import { IComponent } from "../../interfaces/interfaces";
+import { IComponent } from "../../interfaces/serverInterfaces";
 import { componentConst } from "./constant";
 import {
   CreateComponentFailure,

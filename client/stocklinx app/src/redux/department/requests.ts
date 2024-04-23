@@ -1,4 +1,4 @@
-import { IDepartment } from "../../interfaces/interfaces";
+import { IDepartment } from "../../interfaces/serverInterfaces";
 import { request } from "../../server/api";
 const requestUrl = "Department/";
 

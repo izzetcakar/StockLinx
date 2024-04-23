@@ -1,4 +1,4 @@
-import { ICategory } from "../../interfaces/interfaces";
+import { ICategory } from "../../interfaces/serverInterfaces";
 import { categoryConst } from "./constant";
 import {
   CreateCategoryFailure,

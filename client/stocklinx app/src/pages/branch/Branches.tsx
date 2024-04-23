@@ -1,7 +1,7 @@
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
-import { IBranch } from "../../interfaces/interfaces";
+import { IBranch } from "../../interfaces/serverInterfaces";
 import { useColumns } from "./columns";
 import { companyActions } from "../../redux/company/actions";
 import Gridtable from "../../components/gridTable/GridTable";

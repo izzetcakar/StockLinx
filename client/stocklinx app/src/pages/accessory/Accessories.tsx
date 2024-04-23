@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { IAccessory } from "../../interfaces/interfaces";
+import { IAccessory } from "../../interfaces/serverInterfaces";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { useDispatch } from "react-redux";

@@ -6,7 +6,7 @@ import {
 import { RootState } from "../../redux/rootReducer";
 import { Anchor, Image } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
-import { ICompany } from "../../interfaces/interfaces";
+import { ICompany } from "../../interfaces/serverInterfaces";
 import { getImage } from "../../functions/Image";
 
 export const useColumns = () => {

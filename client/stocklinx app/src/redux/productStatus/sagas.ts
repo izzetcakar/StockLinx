@@ -1,6 +1,6 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { productStatusActions } from "./actions";
-import { IProductStatus } from "../../interfaces/interfaces";
+import { IProductStatus } from "../../interfaces/serverInterfaces";
 import { productStatusConst } from "./constant";
 import {
   CreateProductStatusRequest,

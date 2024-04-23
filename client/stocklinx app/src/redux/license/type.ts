@@ -2,7 +2,7 @@ import {
   IDeployedProduct,
   ILicense,
   ILicenseCheckInDto,
-} from "../../interfaces/interfaces";
+} from "../../interfaces/serverInterfaces";
 import { licenseConst } from "./constant";
 
 export interface LicenseState {

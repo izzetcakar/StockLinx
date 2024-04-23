@@ -1,4 +1,4 @@
-import { ILicense } from "../../interfaces/interfaces";
+import { ILicense } from "../../interfaces/serverInterfaces";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";

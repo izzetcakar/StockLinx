@@ -1,4 +1,4 @@
-import { IFieldSet } from "../../interfaces/interfaces";
+import { IFieldSet } from "../../interfaces/serverInterfaces";
 import { request } from "../../server/api";
 const requestUrl = "FieldSet/";
 

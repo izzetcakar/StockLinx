@@ -1,4 +1,4 @@
-import { IFieldSetCustomField } from "../../interfaces/interfaces";
+import { IFieldSetCustomField } from "../../interfaces/serverInterfaces";
 import { request } from "../../server/api";
 const requestUrl = "FieldSetCustomField/";
 

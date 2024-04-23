@@ -1,4 +1,4 @@
-import { IDepartment } from "../../interfaces/interfaces";
+import { IDepartment } from "../../interfaces/serverInterfaces";
 import { departmentConst } from "./constant";
 
 export interface DepartmentState {

@@ -1,4 +1,4 @@
-import { ILicense } from "../../interfaces/interfaces";
+import { ILicense } from "../../interfaces/serverInterfaces";
 import { licenseConst } from "./constant";
 import {
   CreateLicenseFailure,

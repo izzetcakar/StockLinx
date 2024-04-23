@@ -6,7 +6,7 @@ import {
 import { RootState } from "../../redux/rootReducer";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { IBranch } from "../../interfaces/interfaces";
+import { IBranch } from "../../interfaces/serverInterfaces";
 
 export const useColumns = () => {
   const navigate = useNavigate();

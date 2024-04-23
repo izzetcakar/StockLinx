@@ -1,14 +1,3 @@
-//Client side interfaces
-export enum LngType {
-  TURKISH = "TURKISH",
-  ENGLISH = "ENGLISH",
-}
-export enum ApiStatus {
-  IDLE,
-  SUCCESS,
-  LOADING,
-  FAILED,
-}
 export enum ProductStatusType {
   AVAILABLE = "AVAILABLE",
   DEPLOYED = "DEPLOYED",
@@ -23,35 +12,10 @@ export enum CategoryType {
   CONSUMABLE = "CONSUMABLE",
   COMPONENT = "COMPONENT",
 }
-export interface IDropdownData {
-  id: number;
-  text: string;
-}
-export interface VerifyPopupData {
-  visible: boolean;
-  confirmAction: () => Promise<void> | void;
-}
-export interface ApiResponse<T> {
-  data: T[] | T | null;
-  message: string;
-  success: boolean;
-  status?: number;
-}
-export interface SelectData {
-  value: string;
-  label: string;
-}
-export interface IdentifiableItem {
-  id: string;
-  name: string;
-}
-
-//Server side interfaces
 export interface BaseEntity {
   id: string;
   createdDate?: Date;
   updatedDate?: Date | null;
-  deletedDate?: Date | null;
 }
 export interface ICompany extends BaseEntity {
   locationId: string | null;
@@ -92,8 +56,8 @@ export interface IProductStatus extends BaseEntity {
   type: ProductStatusType;
 }
 export interface IBaseProduct extends BaseEntity {
-  companyId?: string;
   branchId: string;
+  productStatusId: string | null;
   name: string;
   orderNo: string | null;
   notes: string | null;
@@ -105,7 +69,7 @@ export interface IBaseProduct extends BaseEntity {
 export interface IAccessory extends IBaseProduct {
   manufacturerId: string | null;
   supplierId: string | null;
-  categoryId: string;
+  categoryId: string | null;
   imagePath: string | null;
   modelNo: string;
   quantity: number;
@@ -113,7 +77,6 @@ export interface IAccessory extends IBaseProduct {
 }
 export interface IAsset extends IBaseProduct {
   modelId: string | null;
-  productStatusId: string;
   imagePath: string | null;
   tagNo: string | null;
   serialNo: string | null;
@@ -124,14 +87,14 @@ export interface OverageAsset {
   tagNo: string;
 }
 export interface IComponent extends IBaseProduct {
-  categoryId: string;
+  categoryId: string | null;
   supplierId: string | null;
   serialNo: string | null;
   quantity: number;
   availableQuantity?: number;
 }
 export interface ILicense extends IBaseProduct {
-  categoryId: string;
+  categoryId: string | null;
   manufacturerId: string | null;
   supplierId: string | null;
   licenseKey: string;
@@ -145,7 +108,7 @@ export interface ILicense extends IBaseProduct {
   availableQuantity?: number;
 }
 export interface IConsumable extends IBaseProduct {
-  categoryId: string;
+  categoryId: string | null;
   supplierId: string | null;
   manufacturerId: string | null;
   modelNo: string | null;
@@ -154,7 +117,7 @@ export interface IConsumable extends IBaseProduct {
   availableQuantity?: number;
 }
 export interface IModel extends BaseEntity {
-  categoryId: string;
+  categoryId: string | null;
   manufacturerId: string | null;
   fieldSetId: string | null;
   name: string;
@@ -192,8 +155,10 @@ export interface IDeployedProduct extends BaseEntity {
   componentId: string | null;
   licenseId: string | null;
   consumableId: string | null;
+  productStatusId: string | null;
   assignDate: Date | null;
   notes: string | null;
+  quantity: number;
 }
 export interface IManufacturer extends BaseEntity {
   name: string;
@@ -216,7 +181,6 @@ export interface ISupplier extends BaseEntity {
   notes: string | null;
 }
 export interface IUser extends BaseEntity {
-  companyId?: string;
   departmentId: string;
   employeeNo: string;
   firstName: string;
@@ -258,36 +222,6 @@ export interface IProductCategoryCount {
   productName: string;
   productCount: number;
 }
-export interface IAccessoryCheckInDto {
-  userId: string;
-  accessoryId: string;
-  assaignDate: Date;
-  notes: string | null;
-}
-export interface IAssetCheckInDto {
-  userId: string;
-  assetId: string;
-  assaignDate: Date;
-  notes: string | null;
-}
-export interface IComponentCheckInDto {
-  userId: string;
-  componentId: string;
-  assaignDate: Date;
-  notes: string | null;
-}
-export interface ILicenseCheckInDto {
-  userId: string;
-  licenseId: string;
-  assaignDate: Date;
-  notes: string | null;
-}
-export interface IConsumableCheckInDto {
-  userId: string;
-  consumableId: string;
-  assaignDate: Date;
-  notes: string | null;
-}
 export interface ICustomLog {
   id: string;
   userId: string;
@@ -301,15 +235,6 @@ export interface ICustomLog {
   targetRoute?: string | null;
   itemController: string;
   targetController?: string | null;
-}
-export interface IDeployedProductDto extends BaseEntity {
-  userId: string;
-  productId?: string | null;
-  productType?: string | null;
-  productName?: string | null;
-  productRoute?: string | null;
-  assignDate: Date | null;
-  notes: string | null;
 }
 export interface IPermission extends BaseEntity {
   companyId?: string;

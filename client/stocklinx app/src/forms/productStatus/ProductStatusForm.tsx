@@ -1,7 +1,7 @@
 import React from "react";
 import { TextInput, Button, Group, Flex, Select } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { ProductStatusType, IProductStatus } from "../../interfaces/interfaces";
+import { ProductStatusType, IProductStatus } from "../../interfaces/serverInterfaces";
 import { useDispatch } from "react-redux";
 import { productStatusActions } from "../../redux/productStatus/actions";
 import filterClasses from "../../mantineModules/baseFilter.module.scss";

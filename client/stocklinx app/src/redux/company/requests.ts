@@ -1,4 +1,4 @@
-import { ICompany } from "../../interfaces/interfaces";
+import { ICompany } from "../../interfaces/serverInterfaces";
 import { request } from "../../server/api";
 const requestUrl = "Company/";
 

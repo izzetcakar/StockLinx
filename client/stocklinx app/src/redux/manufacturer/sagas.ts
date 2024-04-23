@@ -1,6 +1,6 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { manufacturerActions } from "./actions";
-import { IManufacturer } from "../../interfaces/interfaces";
+import { IManufacturer } from "../../interfaces/serverInterfaces";
 import { manufacturerConst } from "./constant";
 import {
   CreateManufacturerRequest,

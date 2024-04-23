@@ -1,6 +1,6 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { modelFieldDataActions } from "./actions";
-import { IModelFieldData } from "../../interfaces/interfaces";
+import { IModelFieldData } from "../../interfaces/serverInterfaces";
 import { modelFieldDataConst } from "./constant";
 import {
   CreateModelFieldDataRequest,

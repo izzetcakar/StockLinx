@@ -1,5 +1,5 @@
 import uuid4 from "uuid4";
-import { ICompany } from "../../interfaces/interfaces";
+import { ICompany } from "../../interfaces/serverInterfaces";
 import { getImage } from "../../functions/Image";
 
 export const useInitial = (company?: ICompany, create?: boolean) => {

@@ -1,4 +1,4 @@
-import { IAsset } from "../../interfaces/interfaces";
+import { IAsset } from "../../interfaces/serverInterfaces";
 import { assetConst } from "./constant";
 import {
   CreateAssetFailure,

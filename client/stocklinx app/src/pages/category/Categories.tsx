@@ -1,4 +1,4 @@
-import { ICategory } from "../../interfaces/interfaces";
+import { ICategory } from "../../interfaces/serverInterfaces";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { useDispatch } from "react-redux";

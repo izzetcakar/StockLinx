@@ -1,4 +1,4 @@
-import { ISupplier } from "../../interfaces/interfaces";
+import { ISupplier } from "../../interfaces/serverInterfaces";
 import { supplierConst } from "./constant";
 
 export interface SupplierState {

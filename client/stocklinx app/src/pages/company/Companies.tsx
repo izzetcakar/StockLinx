@@ -2,7 +2,7 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { companyActions } from "../../redux/company/actions";
-import { ICompany } from "../../interfaces/interfaces";
+import { ICompany } from "../../interfaces/serverInterfaces";
 import { useColumns } from "./columns";
 import Gridtable from "../../components/gridTable/GridTable";
 import { openCompanyModal } from "../../modals/modals";

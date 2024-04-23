@@ -2,7 +2,7 @@ import {
   IAsset,
   IAssetCheckInDto,
   IDeployedProduct,
-} from "../../interfaces/interfaces";
+} from "../../interfaces/serverInterfaces";
 import { assetConst } from "./constant";
 
 export interface AssetState {

@@ -1,6 +1,6 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { licenseActions } from "./actions";
-import { ILicense } from "../../interfaces/interfaces";
+import { ILicense } from "../../interfaces/serverInterfaces";
 import { licenseConst } from "./constant";
 import {
   CheckInLicenseRequest,

@@ -19,7 +19,7 @@ import {
   IProductStatus,
   ISupplier,
   IUser,
-} from "../interfaces/interfaces";
+} from "../interfaces/serverInterfaces";
 import CategoryForm from "../forms/category/CategoryForm";
 import BranchForm from "../forms/branch/BranchForm";
 import CompanyForm from "../forms/company/CompanyForm";

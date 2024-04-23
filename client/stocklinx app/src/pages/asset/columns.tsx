@@ -12,7 +12,7 @@ import {
   IAssetCheckInDto,
   IDeployedProduct,
   IDeployedProductDto,
-} from "../../interfaces/interfaces";
+} from "../../interfaces/serverInterfaces";
 import uuid4 from "uuid4";
 import { assetActions } from "../../redux/asset/actions";
 import { useNavigate } from "react-router-dom";

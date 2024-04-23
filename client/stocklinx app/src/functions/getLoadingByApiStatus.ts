@@ -1,4 +1,4 @@
-import { ApiStatus } from "../interfaces/interfaces";
+import { ApiStatus } from "../interfaces/enums";
 
 export const getLoadingByApiStatus = (status: ApiStatus) => {
   switch (status) {

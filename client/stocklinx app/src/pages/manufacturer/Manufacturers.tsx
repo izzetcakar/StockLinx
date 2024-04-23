@@ -1,4 +1,4 @@
-import { IManufacturer } from "../../interfaces/interfaces";
+import { IManufacturer } from "../../interfaces/serverInterfaces";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";

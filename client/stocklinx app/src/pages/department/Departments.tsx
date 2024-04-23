@@ -1,4 +1,4 @@
-import { IDepartment } from "../../interfaces/interfaces";
+import { IDepartment } from "../../interfaces/serverInterfaces";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";

@@ -11,7 +11,7 @@ import {
   UpdateUserRequest,
 } from "./type";
 import { userRequests } from "./requests";
-import { IUser } from "../../interfaces/interfaces";
+import { IUser } from "../../interfaces/serverInterfaces";
 import {
   openNotificationError,
   openNotificationSuccess,

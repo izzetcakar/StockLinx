@@ -1,5 +1,5 @@
 import uuid4 from "uuid4";
-import { ILocation } from "../../interfaces/interfaces";
+import { ILocation } from "../../interfaces/serverInterfaces";
 
 export const useInitial = (location?: ILocation, create?: boolean) => {
   let isCreate = create || false;

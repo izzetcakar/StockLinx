@@ -4,7 +4,7 @@ import icon_update from "../../../assets/customLog/Update.png";
 import icon_create from "../../../assets/customLog/Create.png";
 import icon_checkIn from "../../../assets/customLog/CheckIn.png";
 import icon_checkOut from "../../../assets/customLog/CheckOut.png";
-import { ICustomLog } from "../../../interfaces/interfaces";
+import { ICustomLog } from "../../../interfaces/serverInterfaces";
 import { RootState } from "../../../redux/rootReducer";
 import { useSelector } from "react-redux";
 import { Anchor, Tooltip } from "@mantine/core";

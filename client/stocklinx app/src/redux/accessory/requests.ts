@@ -1,4 +1,4 @@
-import { IAccessory, IAccessoryCheckInDto } from "../../interfaces/interfaces";
+import { IAccessory, IAccessoryCheckInDto } from "../../interfaces/serverInterfaces";
 import { request } from "../../server/api";
 const requestUrl = "Accessory/";
 

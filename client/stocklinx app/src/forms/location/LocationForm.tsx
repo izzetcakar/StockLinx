@@ -1,7 +1,7 @@
 import React from "react";
 import { TextInput, Flex, Textarea, Group, Button } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { ILocation } from "../../interfaces/interfaces";
+import { ILocation } from "../../interfaces/serverInterfaces";
 import { locationActions } from "../../redux/location/actions";
 import { useDispatch } from "react-redux";
 import { useInitial } from "./useInitial";

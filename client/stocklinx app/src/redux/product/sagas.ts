@@ -6,7 +6,7 @@ import {
   IProductCategoryCount,
   IProductLocationCount,
   IProductStatusCount,
-} from "../../interfaces/interfaces";
+} from "../../interfaces/serverInterfaces";
 import { productRequests } from "./requests";
 import { genericActions } from "../generic/actions";
 import { openNotificationError } from "../../notification/Notification";

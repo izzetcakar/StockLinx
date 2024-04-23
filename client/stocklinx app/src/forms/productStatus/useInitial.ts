@@ -1,5 +1,5 @@
 import uuid4 from "uuid4";
-import { IProductStatus, ProductStatusType } from "../../interfaces/interfaces";
+import { IProductStatus, ProductStatusType } from "../../interfaces/serverInterfaces";
 
 export const useInitial = (
   productStatus?: IProductStatus,

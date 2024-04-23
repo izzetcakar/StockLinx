@@ -1,6 +1,6 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { consumableActions } from "./actions";
-import { IConsumable } from "../../interfaces/interfaces";
+import { IConsumable } from "../../interfaces/serverInterfaces";
 import { consumableConst } from "./constant";
 import {
   CheckInConsumableRequest,

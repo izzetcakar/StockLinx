@@ -1,4 +1,4 @@
-import { IAsset } from "../../interfaces/interfaces";
+import { IAsset } from "../../interfaces/serverInterfaces";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { useDispatch } from "react-redux";

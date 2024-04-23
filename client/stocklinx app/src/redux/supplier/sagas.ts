@@ -1,6 +1,6 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { supplierActions } from "./actions";
-import { ISupplier } from "../../interfaces/interfaces";
+import { ISupplier } from "../../interfaces/serverInterfaces";
 import { supplierConst } from "./constant";
 import {
   CreateSupplierRequest,

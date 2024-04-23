@@ -1,4 +1,4 @@
-import { IComponent, IComponentCheckInDto } from "../../interfaces/interfaces";
+import { IComponent, IComponentCheckInDto } from "../../interfaces/serverInterfaces";
 import { request } from "../../server/api";
 const requestUrl = "Component/";
 

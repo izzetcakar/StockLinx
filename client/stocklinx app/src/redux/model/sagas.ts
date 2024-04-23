@@ -1,6 +1,6 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { modelActions } from "./actions";
-import { IModel } from "../../interfaces/interfaces";
+import { IModel } from "../../interfaces/serverInterfaces";
 import { modelConst } from "./constant";
 import {
   CreateModelRequest,

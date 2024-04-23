@@ -1,5 +1,5 @@
 import uuid4 from "uuid4";
-import { CategoryType, ICategory } from "../../interfaces/interfaces";
+import { CategoryType, ICategory } from "../../interfaces/serverInterfaces";
 
 export const useInitial = (category?: ICategory, create?: boolean) => {
   let isCreate = create || false;

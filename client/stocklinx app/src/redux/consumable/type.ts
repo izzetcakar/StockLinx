@@ -2,7 +2,7 @@ import {
   IConsumable,
   IConsumableCheckInDto,
   IDeployedProduct,
-} from "../../interfaces/interfaces";
+} from "../../interfaces/serverInterfaces";
 import { consumableConst } from "./constant";
 
 export interface ConsumableState {

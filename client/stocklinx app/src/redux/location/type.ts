@@ -1,4 +1,4 @@
-import { ILocation } from "../../interfaces/interfaces";
+import { ILocation } from "../../interfaces/serverInterfaces";
 import { locationConst } from "./constant";
 
 export interface LocationState {

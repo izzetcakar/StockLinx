@@ -1,6 +1,6 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { categoryActions } from "./actions";
-import { ICategory } from "../../interfaces/interfaces";
+import { ICategory } from "../../interfaces/serverInterfaces";
 import { categoryConst } from "./constant";
 import {
   CreateCategoryRequest,

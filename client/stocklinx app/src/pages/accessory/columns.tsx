@@ -9,7 +9,7 @@ import {
   IAccessory,
   IAccessoryCheckInDto,
   IDeployedProduct,
-} from "../../interfaces/interfaces";
+} from "../../interfaces/serverInterfaces";
 import { Anchor, Button, Image } from "@mantine/core";
 import { accessoryActions } from "../../redux/accessory/actions";
 import { openCheckInModal } from "../../modals/modals";
@@ -27,6 +27,9 @@ export const useColumns = () => {
   );
   const accessories = useSelector(
     (state: RootState) => state.accessory.accessories
+  );
+  const productStatuses = useSelector(
+    (state: RootState) => state.productStatus.productStatuses
   );
 
   const handleCheckIn = (data: IDeployedProduct) => {
@@ -50,6 +53,7 @@ export const useColumns = () => {
       licenseId: null,
       componentId: null,
       consumableId: null,
+      productStatusId: "",
       assignDate: new Date(),
       notes: null,
     };
@@ -72,6 +76,17 @@ export const useColumns = () => {
           </Anchor>
         );
       },
+    },
+    {
+      caption: "Status",
+      dataField: "productStatusId",
+      lookup: {
+        data: productStatuses.map((status) => ({
+          value: status.id,
+          label: status.name,
+        })),
+      },
+      dataType: "string",
     },
     {
       caption: "Image",

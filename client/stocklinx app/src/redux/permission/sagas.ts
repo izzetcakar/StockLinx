@@ -1,6 +1,6 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { permissionActions } from "./actions";
-import { IPermission } from "../../interfaces/interfaces";
+import { IPermission } from "../../interfaces/serverInterfaces";
 import { permissionConst } from "./constant";
 import {
   CreatePermissionRequest,

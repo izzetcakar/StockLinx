@@ -1,4 +1,4 @@
-import { IModelFieldData } from "../../interfaces/interfaces";
+import { IModelFieldData } from "../../interfaces/serverInterfaces";
 import { modelFieldDataConst } from "./constant";
 
 export interface ModelFieldDataState {

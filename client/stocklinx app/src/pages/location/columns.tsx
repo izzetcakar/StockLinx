@@ -4,7 +4,7 @@ import {
   ExcelColumn,
 } from "../../components/gridTable/interfaces/interfaces";
 import { useNavigate } from "react-router-dom";
-import { ILocation } from "../../interfaces/interfaces";
+import { ILocation } from "../../interfaces/serverInterfaces";
 
 export const useColumns = () => {
   const navigate = useNavigate();

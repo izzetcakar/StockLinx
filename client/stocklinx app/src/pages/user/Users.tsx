@@ -1,4 +1,4 @@
-import { IUser } from "../../interfaces/interfaces";
+import { IUser } from "../../interfaces/serverInterfaces";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";

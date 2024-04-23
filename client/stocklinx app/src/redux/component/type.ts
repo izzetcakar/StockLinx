@@ -1,4 +1,4 @@
-import { IComponent, IComponentCheckInDto, IDeployedProduct } from "../../interfaces/interfaces";
+import { IComponent, IComponentCheckInDto, IDeployedProduct } from "../../interfaces/serverInterfaces";
 import { componentConst } from "./constant";
 
 export interface ComponentState {

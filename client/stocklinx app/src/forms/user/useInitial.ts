@@ -1,5 +1,5 @@
 import uuid4 from "uuid4";
-import { IUser } from "../../interfaces/interfaces";
+import { IUser } from "../../interfaces/serverInterfaces";
 
 export const useInitial = (user?: IUser, create?: boolean) => {
   let isCreate = create || false;

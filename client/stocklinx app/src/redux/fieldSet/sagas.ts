@@ -1,6 +1,6 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { fieldSetActions } from "./actions";
-import { IFieldSet } from "../../interfaces/interfaces";
+import { IFieldSet } from "../../interfaces/serverInterfaces";
 import { fieldSetConst } from "./constant";
 import {
   CreateFieldSetRequest,

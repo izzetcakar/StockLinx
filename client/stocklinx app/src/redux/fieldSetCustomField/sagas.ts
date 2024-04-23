@@ -1,6 +1,6 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { fieldSetCustomFieldActions } from "./actions";
-import { IFieldSetCustomField } from "../../interfaces/interfaces";
+import { IFieldSetCustomField } from "../../interfaces/serverInterfaces";
 import { fieldSetCustomFieldConst } from "./constant";
 import {
   CreateFieldSetCustomFieldRequest,

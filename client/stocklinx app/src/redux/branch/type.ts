@@ -1,4 +1,4 @@
-import { IBranch } from "../../interfaces/interfaces";
+import { IBranch } from "../../interfaces/serverInterfaces";
 import { branchConst } from "./constant";
 
 export interface BranchState {

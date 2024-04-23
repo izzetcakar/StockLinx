@@ -1,4 +1,4 @@
-import { IFieldSetCustomField } from "../../interfaces/interfaces";
+import { IFieldSetCustomField } from "../../interfaces/serverInterfaces";
 import { fieldSetCustomFieldConst } from "./constant";
 import {
   CreateFieldSetCustomFieldFailure,

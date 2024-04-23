@@ -1,4 +1,4 @@
-import { IComponent } from "../../interfaces/interfaces";
+import { IComponent } from "../../interfaces/serverInterfaces";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";

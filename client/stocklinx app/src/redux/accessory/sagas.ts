@@ -1,6 +1,6 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { accessoryActions } from "./actions";
-import { IAccessory } from "../../interfaces/interfaces";
+import { IAccessory } from "../../interfaces/serverInterfaces";
 import { accessoryConst } from "./constant";
 import {
   AccessoryCheckInSuccessPayload,

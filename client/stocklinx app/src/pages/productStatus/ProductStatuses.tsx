@@ -1,4 +1,4 @@
-import { IProductStatus } from "../../interfaces/interfaces";
+import { IProductStatus } from "../../interfaces/serverInterfaces";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { useDispatch } from "react-redux";

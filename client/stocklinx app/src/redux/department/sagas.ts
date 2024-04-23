@@ -1,6 +1,6 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { departmentActions } from "./actions";
-import { IDepartment } from "../../interfaces/interfaces";
+import { IDepartment } from "../../interfaces/serverInterfaces";
 import { departmentConst } from "./constant";
 import {
   CreateDepartmentRequest,

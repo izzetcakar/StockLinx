@@ -12,7 +12,7 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { DateInput } from "@mantine/dates";
-import { CategoryType, IAccessory } from "../../interfaces/interfaces";
+import { CategoryType, IAccessory } from "../../interfaces/serverInterfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { accessoryActions } from "../../redux/accessory/actions";
 import { RootState } from "../../redux/rootReducer";
@@ -55,7 +55,7 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory, create }) => {
             : "Purchase cost must be a non-negative number";
         }
       },
-      categoryId: (value: string) =>
+      categoryId: (value: string | null) =>
         value !== "" ? null : "Category should not be empty",
     },
   });

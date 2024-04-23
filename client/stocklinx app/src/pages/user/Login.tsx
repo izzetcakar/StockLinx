@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import logo from "/logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "@mantine/form";
-import { IUserLoginDto } from "../../interfaces/interfaces";
+import { IUserLoginDto } from "../../interfaces/serverInterfaces";
 import {
   Button,
   Flex,

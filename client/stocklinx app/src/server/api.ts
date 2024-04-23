@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { ApiResponse } from "../interfaces/interfaces";
+import { ApiResponse } from "../interfaces/clintInterfaces";
 
 const BASE_URL: string = import.meta.env.VITE_REACT_APP_BASE_URL as string;
 

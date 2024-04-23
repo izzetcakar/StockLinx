@@ -11,7 +11,7 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { DateInput } from "@mantine/dates";
-import { CategoryType, ILicense } from "../../interfaces/interfaces";
+import { CategoryType, ILicense } from "../../interfaces/serverInterfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { licenseActions } from "../../redux/license/actions";
 import { RootState } from "../../redux/rootReducer";

@@ -1,4 +1,4 @@
-import { ILicense, ILicenseCheckInDto } from "../../interfaces/interfaces";
+import { ILicense, ILicenseCheckInDto } from "../../interfaces/serverInterfaces";
 import { request } from "../../server/api";
 const requestUrl = "License/";
 

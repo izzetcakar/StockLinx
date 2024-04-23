@@ -1,4 +1,4 @@
-import { IProductStatus } from "../../interfaces/interfaces";
+import { IProductStatus } from "../../interfaces/serverInterfaces";
 import { request } from "../../server/api";
 const requestUrl = "ProductStatus/";
 

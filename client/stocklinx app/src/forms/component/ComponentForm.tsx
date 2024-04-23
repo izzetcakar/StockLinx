@@ -10,7 +10,7 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { DateInput } from "@mantine/dates";
-import { CategoryType, IComponent } from "../../interfaces/interfaces";
+import { CategoryType, IComponent } from "../../interfaces/serverInterfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { componentActions } from "../../redux/component/actions";
 import { RootState } from "../../redux/rootReducer";

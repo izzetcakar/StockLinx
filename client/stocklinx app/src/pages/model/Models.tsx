@@ -1,4 +1,4 @@
-import { IModel } from "../../interfaces/interfaces";
+import { IModel } from "../../interfaces/serverInterfaces";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";

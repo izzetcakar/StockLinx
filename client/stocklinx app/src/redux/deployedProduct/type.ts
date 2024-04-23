@@ -1,7 +1,7 @@
 import {
   IDeployedProduct,
   IDeployedProductDto,
-} from "../../interfaces/interfaces";
+} from "../../interfaces/serverInterfaces";
 import { deployedProductConst } from "./constant";
 
 export interface DeployedProductState {

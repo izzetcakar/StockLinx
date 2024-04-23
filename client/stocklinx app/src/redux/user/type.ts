@@ -1,4 +1,4 @@
-import { IUser, IUserLoginDto } from "../../interfaces/interfaces";
+import { IUser, IUserLoginDto } from "../../interfaces/serverInterfaces";
 import { userConst } from "./constant";
 
 export interface UserState {

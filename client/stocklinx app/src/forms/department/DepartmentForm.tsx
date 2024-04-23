@@ -8,7 +8,7 @@ import {
   Select,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { IDepartment } from "../../interfaces/interfaces";
+import { IDepartment } from "../../interfaces/serverInterfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { departmentActions } from "../../redux/department/actions";
 import { RootState } from "../../redux/rootReducer";

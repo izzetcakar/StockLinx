@@ -1,6 +1,6 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { componentActions } from "./actions";
-import { IComponent } from "../../interfaces/interfaces";
+import { IComponent } from "../../interfaces/serverInterfaces";
 import { componentConst } from "./constant";
 import {
   CheckInComponentRequest,
