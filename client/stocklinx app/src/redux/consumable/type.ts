@@ -1,6 +1,6 @@
+import { IProductCheckInDto } from "../../interfaces/dtos";
 import {
   IConsumable,
-  IConsumableCheckInDto,
   IDeployedProduct,
 } from "../../interfaces/serverInterfaces";
 import { consumableConst } from "./constant";
@@ -25,7 +25,7 @@ export interface ConsumableRemovePayload {
   id: string;
 }
 export interface CheckInPayload {
-  checkInDto: IConsumableCheckInDto;
+  checkInDto: IProductCheckInDto;
 }
 export interface ConsumableCheckInSuccessPayload {
   consumable: IConsumable;

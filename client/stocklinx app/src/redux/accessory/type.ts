@@ -1,6 +1,6 @@
+import { IProductCheckInDto } from "../../interfaces/dtos";
 import {
   IAccessory,
-  IAccessoryCheckInDto,
   IDeployedProduct,
 } from "../../interfaces/serverInterfaces";
 import { accessoryConst } from "./constant";
@@ -25,7 +25,7 @@ export interface AccessoryRemovePayload {
   id: string;
 }
 export interface CheckInPayload {
-  checkInDto: IAccessoryCheckInDto;
+  checkInDto: IProductCheckInDto;
 }
 export interface AccessoryCheckInSuccessPayload {
   accessory: IAccessory;

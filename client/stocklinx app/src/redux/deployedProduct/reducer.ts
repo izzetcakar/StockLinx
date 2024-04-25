@@ -1,4 +1,3 @@
-import { closeModal } from "@mantine/modals";
 import { deployedProductConst } from "./constant";
 import { DeployedProductActions, DeployedProductState } from "./type";
 
@@ -42,7 +41,6 @@ export default (state = initialState, action: DeployedProductActions) => {
         ...state,
       };
     case deployedProductConst.CREATE_DEPLOYEDPRODUCT_SUCCESS:
-      closeModal("checkIn-modal");
       return {
         ...state,
         deployedProducts: [

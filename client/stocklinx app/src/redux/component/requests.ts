@@ -1,4 +1,5 @@
-import { IComponent, IComponentCheckInDto } from "../../interfaces/serverInterfaces";
+import { IProductCheckInDto } from "../../interfaces/dtos";
+import { IComponent } from "../../interfaces/serverInterfaces";
 import { request } from "../../server/api";
 const requestUrl = "Component/";
 
@@ -45,7 +46,7 @@ const removeRange = (ids: string[]) => {
     queryData: ids,
   });
 };
-const checkIn = (checkInDto: IComponentCheckInDto) => {
+const checkIn = (checkInDto: IProductCheckInDto) => {
   return request<IComponent>({
     requestUrl: requestUrl + "checkin",
     apiType: "post",

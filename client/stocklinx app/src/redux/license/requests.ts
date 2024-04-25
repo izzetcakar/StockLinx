@@ -1,4 +1,5 @@
-import { ILicense, ILicenseCheckInDto } from "../../interfaces/serverInterfaces";
+import { IProductCheckInDto } from "../../interfaces/dtos";
+import { ILicense } from "../../interfaces/serverInterfaces";
 import { request } from "../../server/api";
 const requestUrl = "License/";
 
@@ -45,7 +46,7 @@ const removeRange = (ids: string[]) => {
     queryData: ids,
   });
 };
-const checkIn = (checkInDto: ILicenseCheckInDto) => {
+const checkIn = (checkInDto: IProductCheckInDto) => {
   return request<ILicense>({
     requestUrl: requestUrl + "checkin",
     apiType: "post",

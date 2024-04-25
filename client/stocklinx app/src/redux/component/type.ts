@@ -1,4 +1,8 @@
-import { IComponent, IComponentCheckInDto, IDeployedProduct } from "../../interfaces/serverInterfaces";
+import { IProductCheckInDto } from "../../interfaces/dtos";
+import {
+  IComponent,
+  IDeployedProduct,
+} from "../../interfaces/serverInterfaces";
 import { componentConst } from "./constant";
 
 export interface ComponentState {
@@ -21,7 +25,7 @@ export interface ComponentRemovePayload {
   id: string;
 }
 export interface CheckInPayload {
-  checkInDto: IComponentCheckInDto;
+  checkInDto: IProductCheckInDto;
 }
 export interface ComponentCheckInSuccessPayload {
   component: IComponent;

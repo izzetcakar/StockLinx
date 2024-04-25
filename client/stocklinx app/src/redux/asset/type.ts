@@ -1,8 +1,5 @@
-import {
-  IAsset,
-  IAssetCheckInDto,
-  IDeployedProduct,
-} from "../../interfaces/serverInterfaces";
+import { IProductCheckInDto } from "../../interfaces/dtos";
+import { IAsset, IDeployedProduct } from "../../interfaces/serverInterfaces";
 import { assetConst } from "./constant";
 
 export interface AssetState {
@@ -25,7 +22,7 @@ export interface AssetRemovePayload {
   id: string;
 }
 export interface CheckInPayload {
-  checkInDto: IAssetCheckInDto;
+  checkInDto: IProductCheckInDto;
 }
 export interface AssetCheckInSuccessPayload {
   asset: IAsset;

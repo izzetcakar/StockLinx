@@ -1,5 +1,4 @@
 import { call, put, takeEvery } from "redux-saga/effects";
-import { deployedProductActions } from "./actions";
 import { IDeployedProduct } from "../../interfaces/serverInterfaces";
 import { deployedProductConst } from "./constant";
 import {
@@ -16,6 +15,7 @@ import {
   openNotificationError,
   openNotificationSuccess,
 } from "../../notification/Notification";
+import { deployedProductActions } from "../deployedProduct/actions";
 
 interface IResponse {
   data: IDeployedProduct[] | IDeployedProduct | null;
@@ -115,7 +115,6 @@ function* createRangeDeployedProductSaga(
   }
   yield put(genericActions.decreaseLoading());
 }
-
 function* updateDeployedProductSaga(action: UpdateDeployedProductRequest) {
   yield put(genericActions.increaseLoading());
   try {

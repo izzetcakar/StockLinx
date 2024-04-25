@@ -1,4 +1,5 @@
-import { IAsset, IAssetCheckInDto } from "../../interfaces/serverInterfaces";
+import { IProductCheckInDto } from "../../interfaces/dtos";
+import { IAsset } from "../../interfaces/serverInterfaces";
 import { request } from "../../server/api";
 const requestUrl = "Asset/";
 
@@ -45,7 +46,7 @@ const removeRange = (ids: string[]) => {
     queryData: ids,
   });
 };
-const checkIn = (checkInDto: IAssetCheckInDto) => {
+const checkIn = (checkInDto: IProductCheckInDto) => {
   return request<IAsset>({
     requestUrl: requestUrl + "checkin",
     apiType: "post",

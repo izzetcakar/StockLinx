@@ -1,12 +1,9 @@
-import {
-  IDeployedProduct,
-  IDeployedProductDto,
-} from "../../interfaces/serverInterfaces";
+import { IDeployedProduct } from "../../interfaces/serverInterfaces";
 import { deployedProductConst } from "./constant";
 
 export interface DeployedProductState {
-  deployedProduct: IDeployedProductDto | null;
-  deployedProducts: IDeployedProductDto[];
+  deployedProduct: IDeployedProduct | null;
+  deployedProducts: IDeployedProduct[];
 }
 export interface DeployedProductRequestPayload {
   id: string;
@@ -23,12 +20,6 @@ export interface DeployedProductRemoveRangePayload {
 export interface DeployedProductRemovePayload {
   id: string;
 }
-export interface DeployedProductDtoPayload {
-  deployedProduct: IDeployedProductDto;
-}
-export interface DeployedProductDtosPayload {
-  deployedProducts: IDeployedProductDto[];
-}
 
 //GET
 export interface FetchDeployedProductsRequest {
@@ -36,11 +27,12 @@ export interface FetchDeployedProductsRequest {
 }
 export type FetchDeployedProductsSuccess = {
   type: typeof deployedProductConst.FETCH_DEPLOYEDPRODUCTS_SUCCESS;
-  payload: DeployedProductDtosPayload;
+  payload: DeployedProductsPayload;
 };
 export type FetchDeployedProductsFailure = {
   type: typeof deployedProductConst.FETCH_DEPLOYEDPRODUCTS_FAILURE;
 };
+
 //GET:/ID
 export interface FetchDeployedProductRequest {
   type: typeof deployedProductConst.FETCH_DEPLOYEDPRODUCT_REQUEST;
@@ -48,11 +40,12 @@ export interface FetchDeployedProductRequest {
 }
 export type FetchDeployedProductSuccess = {
   type: typeof deployedProductConst.FETCH_DEPLOYEDPRODUCT_SUCCESS;
-  payload: DeployedProductDtoPayload;
+  payload: DeployedProductPayload;
 };
 export type FetchDeployedProductFailure = {
   type: typeof deployedProductConst.FETCH_DEPLOYEDPRODUCT_FAILURE;
 };
+
 //POST
 export interface CreateDeployedProductRequest {
   type: typeof deployedProductConst.CREATE_DEPLOYEDPRODUCT_REQUEST;
@@ -60,11 +53,12 @@ export interface CreateDeployedProductRequest {
 }
 export type CreateDeployedProductSuccess = {
   type: typeof deployedProductConst.CREATE_DEPLOYEDPRODUCT_SUCCESS;
-  payload: DeployedProductDtoPayload;
+  payload: DeployedProductPayload;
 };
 export type CreateDeployedProductFailure = {
   type: typeof deployedProductConst.CREATE_DEPLOYEDPRODUCT_FAILURE;
 };
+
 //POST RANGE
 export interface CreateRangeDeployedProductRequest {
   type: typeof deployedProductConst.CREATE_RANGE_DEPLOYEDPRODUCT_REQUEST;
@@ -72,11 +66,12 @@ export interface CreateRangeDeployedProductRequest {
 }
 export type CreateRangeDeployedProductSuccess = {
   type: typeof deployedProductConst.CREATE_RANGE_DEPLOYEDPRODUCT_SUCCESS;
-  payload: DeployedProductDtosPayload;
+  payload: DeployedProductsPayload;
 };
 export type CreateRangeDeployedProductFailure = {
   type: typeof deployedProductConst.CREATE_RANGE_DEPLOYEDPRODUCT_FAILURE;
 };
+
 //PUT
 export interface UpdateDeployedProductRequest {
   type: typeof deployedProductConst.UPDATE_DEPLOYEDPRODUCT_REQUEST;
@@ -84,11 +79,12 @@ export interface UpdateDeployedProductRequest {
 }
 export type UpdateDeployedProductSuccess = {
   type: typeof deployedProductConst.UPDATE_DEPLOYEDPRODUCT_SUCCESS;
-  payload: DeployedProductDtoPayload;
+  payload: DeployedProductPayload;
 };
 export type UpdateDeployedProductFailure = {
   type: typeof deployedProductConst.UPDATE_DEPLOYEDPRODUCT_FAILURE;
 };
+
 //REMOVE
 export interface RemoveDeployedProductRequest {
   type: typeof deployedProductConst.REMOVE_DEPLOYEDPRODUCT_REQUEST;
@@ -101,6 +97,7 @@ export type RemoveDeployedProductSuccess = {
 export type RemoveDeployedProductFailure = {
   type: typeof deployedProductConst.REMOVE_DEPLOYEDPRODUCT_FAILURE;
 };
+
 //REMOVE RANGE
 export interface RemoveRangeDeployedProductRequest {
   type: typeof deployedProductConst.REMOVE_RANGE_DEPLOYEDPRODUCT_REQUEST;

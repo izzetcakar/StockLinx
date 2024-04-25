@@ -1,8 +1,5 @@
-import {
-  IDeployedProduct,
-  ILicense,
-  ILicenseCheckInDto,
-} from "../../interfaces/serverInterfaces";
+import { IProductCheckInDto } from "../../interfaces/dtos";
+import { IDeployedProduct, ILicense } from "../../interfaces/serverInterfaces";
 import { licenseConst } from "./constant";
 
 export interface LicenseState {
@@ -25,7 +22,7 @@ export interface LicenseRemovePayload {
   id: string;
 }
 export interface CheckInPayload {
-  checkInDto: ILicenseCheckInDto;
+  checkInDto: IProductCheckInDto;
 }
 export interface LicenseCheckInSuccessPayload {
   license: ILicense;
