@@ -35,7 +35,6 @@
     padding: 8px;
     border-bottom: 1px solid var(--global-border-color);
     max-width: 100%;
-    user-select: none;
   }
   .gridtable__filter__row {
     background-color: white;
@@ -98,8 +97,6 @@
   padding-bottom: 6px;
   padding-left: 8px;
   padding-right: 8px;
-
-  background-color: red;
   border: none !important;
   box-shadow: inset -1px 0 0 var(--global-border-color),
     inset 0 0 0 var(--global-border-color);
@@ -140,7 +137,6 @@
   width: 100%;
   word-wrap: none;
   white-space: nowrap;
-  user-select: none;
   overflow: hidden;
 }
 .gridtable__footer__row {
@@ -155,7 +151,6 @@
   width: 100%;
   word-wrap: none;
   white-space: nowrap;
-  user-select: none;
   overflow: hidden;
 }
 .gridtable__row__cell {
@@ -163,7 +158,6 @@
   padding: 4px;
   word-wrap: none;
   white-space: nowrap;
-  user-select: none;
   overflow: hidden;
 }
 .gridtable__row__cell.selected {
