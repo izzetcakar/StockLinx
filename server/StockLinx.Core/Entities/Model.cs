@@ -13,7 +13,7 @@
         //Relates
         public FieldSet? FieldSet { get; set; }
         public Manufacturer? Manufacturer { get; set; }
-        public Category Category { get; set; }
+        public Category? Category { get; set; }
         public ICollection<Asset>? Assets { get; set; }
         public ICollection<ModelFieldData>? ModelFieldData { get; set; }
     }

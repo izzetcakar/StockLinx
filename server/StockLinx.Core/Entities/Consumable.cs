@@ -10,7 +10,7 @@
         public int Quantity { get; set; }
 
         //Relates
-        public Category Category { get; set; }
+        public Category? Category { get; set; }
         public Supplier? Supplier { get; set; }
         public Manufacturer? Manufacturer { get; set; }
         public ICollection<DeployedProduct>? DeployedProducts { get; set; }
