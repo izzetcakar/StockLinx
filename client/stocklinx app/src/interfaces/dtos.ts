@@ -16,33 +16,10 @@ export interface IDeployedProductDto extends BaseDto {
   quantity: number;
 }
 
-export interface IAccessoryCheckInDto {
+export interface IProductCheckInDto {
   userId: string;
-  accessoryId: string;
+  productId: string;
   assaignDate: Date;
   notes: string | null;
-}
-export interface IAssetCheckInDto {
-  userId: string;
-  assetId: string;
-  assaignDate: Date;
-  notes: string | null;
-}
-export interface IComponentCheckInDto {
-  userId: string;
-  componentId: string;
-  assaignDate: Date;
-  notes: string | null;
-}
-export interface ILicenseCheckInDto {
-  userId: string;
-  licenseId: string;
-  assaignDate: Date;
-  notes: string | null;
-}
-export interface IConsumableCheckInDto {
-  userId: string;
-  consumableId: string;
-  assaignDate: Date;
-  notes: string | null;
+  quantity: number;
 }

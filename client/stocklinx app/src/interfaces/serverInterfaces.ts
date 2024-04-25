@@ -57,7 +57,7 @@ export interface IProductStatus extends BaseEntity {
 }
 export interface IBaseProduct extends BaseEntity {
   branchId: string;
-  productStatusId: string | null;
+  productStatusId?: string | null;
   name: string;
   orderNo: string | null;
   notes: string | null;
@@ -225,16 +225,14 @@ export interface IProductCategoryCount {
 export interface ICustomLog {
   id: string;
   userId: string;
+  itemId: string;
+  targetId: string | null;
   date: Date;
   action: string;
-  itemId: string;
-  itemRoute: string;
-  itemName: string;
-  targetId?: string | null;
-  targetName?: string | null;
-  targetRoute?: string | null;
+  item: string;
   itemController: string;
-  targetController?: string | null;
+  target: string | null;
+  targetController: string | null;
 }
 export interface IPermission extends BaseEntity {
   companyId?: string;
