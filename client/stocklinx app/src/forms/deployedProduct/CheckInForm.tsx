@@ -28,6 +28,7 @@ const CheckInForm: React.FC<CheckInFormProps> = ({
       componentId: deployedProduct.componentId,
       consumableId: deployedProduct.consumableId,
       productStatusId: deployedProduct.productStatusId,
+      quantity: deployedProduct.quantity,
       assignDate: new Date(),
       notes: null,
     },
