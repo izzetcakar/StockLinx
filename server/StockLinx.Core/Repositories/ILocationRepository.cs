@@ -7,6 +7,6 @@ namespace StockLinx.Core.Repositories
     {
         LocationDto GetDto(Location entity);
         List<LocationDto> GetDtos(List<Location> entities);
-        Task<List<LocationDto>> GetAllDtos();
+        Task<List<LocationDto>> GetAllDtosAsync();
     }
 }

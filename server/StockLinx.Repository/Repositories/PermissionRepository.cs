@@ -38,7 +38,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
             return dtos;
         }
 
-        public async Task<List<PermissionDto>> GetAllDtos()
+        public async Task<List<PermissionDto>> GetAllDtosAsync()
         {
             var entities = await dbContext.Permissions.AsNoTracking().ToListAsync();
             return GetDtos(entities);

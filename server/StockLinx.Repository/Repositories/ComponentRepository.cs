@@ -16,7 +16,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
             _mapper = mapper;
         }
 
-        public async Task<ComponentDto> GetDto(Component entity)
+        public async Task<ComponentDto> GetDtoAsync(Component entity)
         {
             var deployedProducts = await dbContext
                 .DeployedProducts.Where(d => d.ComponentId.HasValue && d.ComponentId == entity.Id)
@@ -28,26 +28,26 @@ namespace StockLinx.Repository.Repositories.EF_Core
             return dto;
         }
 
-        public async Task<List<ComponentDto>> GetDtos(List<Component> entities)
+        public async Task<List<ComponentDto>> GetDtosAsync(List<Component> entities)
         {
             var deployedProducts = await dbContext.DeployedProducts.AsNoTracking().ToListAsync();
             var dtos = new List<ComponentDto>();
 
             foreach (var entity in entities)
             {
-                var dto = await GetDto(entity);
+                var dto = await GetDtoAsync(entity);
                 dtos.Add(dto);
             }
             return dtos;
         }
 
-        public async Task<List<ComponentDto>> GetAllDtos()
+        public async Task<List<ComponentDto>> GetAllDtosAsync()
         {
             var entities = await dbContext.Components.AsNoTracking().ToListAsync();
-            return await GetDtos(entities);
+            return await GetDtosAsync(entities);
         }
 
-        public async Task<bool> CanDelete(Guid id)
+        public async Task<bool> CanDeleteAsync(Guid id)
         {
             var entity = dbContext.Components.Find(id);
             if (entity == null)
@@ -60,6 +60,15 @@ namespace StockLinx.Repository.Repositories.EF_Core
                 throw new Exception("Cannot delete component because it is used in deployed products.");
             }
             return true;
+        }
+
+        public async Task<int> GetAvaliableQuantityAsync(Component entity)
+        {
+            List<DeployedProduct> deployedProducts = await dbContext.DeployedProducts.ToListAsync();
+            int availableQuantity = entity.Quantity - deployedProducts.Count(d =>
+                    d.ComponentId.HasValue && d.ComponentId == entity.Id
+                );
+            return availableQuantity;
         }
     }
 }

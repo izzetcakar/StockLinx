@@ -43,13 +43,13 @@ namespace StockLinx.Repository.Repositories.EF_Core
             return dtos;
         }
 
-        public async Task<List<UserDto>> GetAllDtos()
+        public async Task<List<UserDto>> GetAllDtosAsync()
         {
             var entities = await dbContext.Users.AsNoTracking().ToListAsync();
             return GetDtos(entities);
         }
 
-        public async Task<bool> CanDelete(Guid id)
+        public async Task<bool> CanDeleteAsync(Guid id)
         {
             var entity = dbContext.Users.Find(id);
             if (entity == null)

@@ -9,7 +9,7 @@ namespace StockLinx.Core.Repositories
     {
         ModelDto GetDto(Model entity);
         List<ModelDto> GetDtos(List<Model> entities);
-        Task<List<ModelDto>> GetAllDtos();
+        Task<List<ModelDto>> GetAllDtosAsync();
         ModelDto CreateModel(ModelCreateDto dto);
         void UpdateModel(ModelUpdateDto dto);
     }

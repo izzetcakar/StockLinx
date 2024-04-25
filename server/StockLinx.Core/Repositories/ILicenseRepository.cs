@@ -5,9 +5,10 @@ namespace StockLinx.Core.Repositories
 {
     public interface ILicenseRepository : IRepository<License>
     {
-        Task<LicenseDto> GetDto(License entity);
-        Task<List<LicenseDto>> GetDtos(List<License> entities);
-        Task<List<LicenseDto>> GetAllDtos();
-        Task<bool> CanDelete(Guid id);
+        Task<LicenseDto> GetDtoAsync(License entity);
+        Task<List<LicenseDto>> GetDtosAsync(List<License> entities);
+        Task<List<LicenseDto>> GetAllDtosAsync();
+        Task<bool> CanDeleteAsync(Guid id);
+        Task<int> GetAvaliableQuantityAsync(License entity);
     }
 }

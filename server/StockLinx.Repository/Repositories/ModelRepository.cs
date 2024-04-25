@@ -48,7 +48,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
             return dtos;
         }
 
-        public async Task<List<ModelDto>> GetAllDtos()
+        public async Task<List<ModelDto>> GetAllDtosAsync()
         {
             var entities = await dbContext.Models.AsNoTracking().ToListAsync();
             return GetDtos(entities);

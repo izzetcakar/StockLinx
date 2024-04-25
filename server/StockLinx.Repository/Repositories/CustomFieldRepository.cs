@@ -24,7 +24,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
             dtos = _mapper.Map<List<CustomFieldDto>>(entities);
             return dtos;
         }
-        public async Task<List<CustomFieldDto>> GetAllDtos()
+        public async Task<List<CustomFieldDto>> GetAllDtosAsync()
         {
             var entities = await dbContext.CustomFields.AsNoTracking().ToListAsync();
             return GetDtos(entities);

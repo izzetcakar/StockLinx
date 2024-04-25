@@ -11,7 +11,7 @@ namespace StockLinx.Repository.Configurations
             builder.HasKey(e => e.Id);
             builder.Property(e => e.Action).IsRequired();
             builder.Property(e => e.UserId).IsRequired();
-            builder.Property(e => e.ItemId).IsRequired();
+            builder.Property(e => e.Item).IsRequired();
             builder.Property(e => e.ItemController).IsRequired();
             builder.Property(e => e.Date).IsRequired();
         }

@@ -16,37 +16,37 @@ namespace StockLinx.Repository.Repositories.EF_Core
             _mapper = mapper;
         }
 
-        public async Task<AccessoryDto> GetDto(Accessory entity)
+        public async Task<AccessoryDto> GetDtoAsync(Accessory entity)
         {
-            var deployedProducts = await dbContext
+            List<DeployedProduct> deployedProducts = await dbContext
                 .DeployedProducts.Where(d => d.AccessoryId.HasValue && d.AccessoryId == entity.Id)
                 .AsNoTracking()
                 .ToListAsync();
-            var availableQuantity = entity.Quantity - deployedProducts.Sum(d => d.Quantity);
-            var dto = _mapper.Map<AccessoryDto>(entity);
+            int availableQuantity = entity.Quantity - deployedProducts.Sum(d => d.Quantity);
+            AccessoryDto dto = _mapper.Map<AccessoryDto>(entity);
             dto.AvailableQuantity = availableQuantity;
             return dto;
         }
 
-        public async Task<List<AccessoryDto>> GetDtos(List<Accessory> entities)
+        public async Task<List<AccessoryDto>> GetDtosAsync(List<Accessory> entities)
         {
-            var dtos = new List<AccessoryDto>();
+            List<AccessoryDto> dtos = new List<AccessoryDto>();
 
-            foreach (var entity in entities)
+            foreach (Accessory entity in entities)
             {
-                var dto = await GetDto(entity);
+                AccessoryDto dto = await GetDtoAsync(entity);
                 dtos.Add(dto);
             }
             return dtos;
         }
 
-        public async Task<List<AccessoryDto>> GetAllDtos()
+        public async Task<List<AccessoryDto>> GetAllDtosAsync()
         {
-            var entities = await dbContext.Accessories.AsNoTracking().ToListAsync();
-            return await GetDtos(entities);
+            List<Accessory> entities = await dbContext.Accessories.AsNoTracking().ToListAsync();
+            return await GetDtosAsync(entities);
         }
 
-        public async Task<bool> CanDelete(Guid id)
+        public async Task<bool> CanDeleteAsync(Guid id)
         {
             var entity = dbContext.Accessories.Find(id);
             if (entity == null)
@@ -59,6 +59,15 @@ namespace StockLinx.Repository.Repositories.EF_Core
                 throw new Exception("Cannot delete accessory because it is used in deployed products.");
             }
             return true;
+        }
+
+        public async Task<int> GetAvaliableQuantityAsync(Accessory entity)
+        {
+            List<DeployedProduct> deployedProducts = await dbContext.DeployedProducts.ToListAsync();
+            int availableQuantity = entity.Quantity - deployedProducts.Count(d =>
+                    d.AccessoryId.HasValue && d.AccessoryId == entity.Id
+                );
+            return availableQuantity;
         }
     }
 }

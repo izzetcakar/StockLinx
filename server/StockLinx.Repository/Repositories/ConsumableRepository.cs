@@ -16,7 +16,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
             _mapper = mapper;
         }
 
-        public async Task<ConsumableDto> GetDto(Consumable entity)
+        public async Task<ConsumableDto> GetDtoAsync(Consumable entity)
         {
             var deployedProducts = await dbContext
                 .DeployedProducts.Where(d => d.ConsumableId.HasValue && d.ConsumableId == entity.Id)
@@ -28,26 +28,26 @@ namespace StockLinx.Repository.Repositories.EF_Core
             return dto;
         }
 
-        public async Task<List<ConsumableDto>> GetDtos(List<Consumable> entities)
+        public async Task<List<ConsumableDto>> GetDtosAsync(List<Consumable> entities)
         {
             var deployedProducts = await dbContext.DeployedProducts.AsNoTracking().ToListAsync();
             var dtos = new List<ConsumableDto>();
 
             foreach (Consumable entity in entities)
             {
-                var dto = await GetDto(entity);
+                var dto = await GetDtoAsync(entity);
                 dtos.Add(dto);
             }
             return dtos;
         }
 
-        public async Task<List<ConsumableDto>> GetAllDtos()
+        public async Task<List<ConsumableDto>> GetAllDtosAsync()
         {
             var entities = await dbContext.Consumables.AsNoTracking().ToListAsync();
-            return await GetDtos(entities);
+            return await GetDtosAsync(entities);
         }
 
-        public async Task<bool> CanDelete(Guid id)
+        public async Task<bool> CanDeleteAsync(Guid id)
         {
             var entity = dbContext.Consumables.Find(id);
             if (entity == null)
@@ -60,6 +60,15 @@ namespace StockLinx.Repository.Repositories.EF_Core
                 throw new Exception("Cannot delete consumable because it is used in deployed products.");
             }
             return true;
+        }
+
+        public async Task<int> GetAvaliableQuantityAsync(Consumable entity)
+        {
+            List<DeployedProduct> deployedProducts = await dbContext.DeployedProducts.ToListAsync();
+            int availableQuantity = entity.Quantity - deployedProducts.Count(d =>
+                    d.ConsumableId.HasValue && d.ConsumableId == entity.Id
+                );
+            return availableQuantity;
         }
     }
 }

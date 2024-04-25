@@ -28,7 +28,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
             return dtos;
         }
 
-        public async Task<List<LocationDto>> GetAllDtos()
+        public async Task<List<LocationDto>> GetAllDtosAsync()
         {
             var entities = await dbContext.Locations.AsNoTracking().ToListAsync();
             return GetDtos(entities);

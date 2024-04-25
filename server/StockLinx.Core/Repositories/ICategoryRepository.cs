@@ -7,6 +7,6 @@ namespace StockLinx.Core.Repositories
     {
         CategoryDto GetDto(Category entity);
         List<CategoryDto> GetDtos(List<Category> entities);
-        Task<List<CategoryDto>> GetAllDtos();
+        Task<List<CategoryDto>> GetAllDtosAsync();
     }
 }

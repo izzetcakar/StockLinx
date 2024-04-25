@@ -24,7 +24,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
             dtos = _mapper.Map<List<CategoryDto>>(entities);
             return dtos;
         }
-        public async Task<List<CategoryDto>> GetAllDtos()
+        public async Task<List<CategoryDto>> GetAllDtosAsync()
         {
             var entities = await dbContext.Categories.AsNoTracking().ToListAsync();
             return GetDtos(entities);

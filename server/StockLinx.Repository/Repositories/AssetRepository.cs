@@ -23,7 +23,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
 
         public List<AssetDto> GetDtos(List<Asset> entities)
         {
-            var dtos = new List<AssetDto>();
+            List<AssetDto> dtos = new List<AssetDto>();
 
             foreach (var entity in entities)
             {
@@ -33,13 +33,13 @@ namespace StockLinx.Repository.Repositories.EF_Core
             return dtos;
         }
 
-        public async Task<List<AssetDto>> GetAllDtos()
+        public async Task<List<AssetDto>> GetAllDtosAsync()
         {
-            var entities = await dbContext.Assets.AsNoTracking().ToListAsync();
+            List<Asset> entities = await dbContext.Assets.AsNoTracking().ToListAsync();
             return GetDtos(entities);
         }
 
-        public async Task<bool> CanDelete(Guid id)
+        public async Task<bool> CanDeleteAsync(Guid id)
         {
             var entity = dbContext.Accessories.Find(id);
             if (entity == null)

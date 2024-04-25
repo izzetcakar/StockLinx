@@ -26,13 +26,13 @@ namespace StockLinx.Repository.Repositories.EF_Core
             return dtos;
         }
 
-        public async Task<List<CompanyDto>> GetAllDtos()
+        public async Task<List<CompanyDto>> GetAllDtosAsync()
         {
             var entities = await dbContext.Companies.AsNoTracking().ToListAsync();
             return GetDtos(entities);
         }
 
-        public async Task<bool> CanDelete(Guid id)
+        public async Task<bool> CanDeleteAsync(Guid id)
         {
             var entity = dbContext.Companies.Find(id);
             if (entity == null)

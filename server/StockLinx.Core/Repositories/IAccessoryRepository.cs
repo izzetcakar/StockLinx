@@ -5,9 +5,10 @@ namespace StockLinx.Core.Repositories
 {
     public interface IAccessoryRepository : IRepository<Accessory>
     {
-        Task<AccessoryDto> GetDto(Accessory entity);
-        Task<List<AccessoryDto>> GetDtos(List<Accessory> entities);
-        Task<List<AccessoryDto>> GetAllDtos();
-        Task<bool> CanDelete(Guid id);
+        Task<AccessoryDto> GetDtoAsync(Accessory entity);
+        Task<List<AccessoryDto>> GetDtosAsync(List<Accessory> entities);
+        Task<List<AccessoryDto>> GetAllDtosAsync();
+        Task<bool> CanDeleteAsync(Guid id);
+        Task<int> GetAvaliableQuantityAsync(Accessory entity);
     }
 }

@@ -7,6 +7,6 @@ namespace StockLinx.Core.Repositories
     {
         FieldSetDto GetDto(FieldSet entity);
         List<FieldSetDto> GetDtos(List<FieldSet> entities);
-        Task<List<FieldSetDto>> GetAllDtos();
+        Task<List<FieldSetDto>> GetAllDtosAsync();
     }
 }

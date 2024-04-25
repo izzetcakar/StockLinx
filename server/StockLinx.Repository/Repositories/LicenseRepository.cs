@@ -16,7 +16,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
             _mapper = mapper;
         }
 
-        public async Task<LicenseDto> GetDto(License entity)
+        public async Task<LicenseDto> GetDtoAsync(License entity)
         {
             var deployedProducts = await dbContext
                 .DeployedProducts.Where(d => d.LicenseId.HasValue && d.LicenseId == entity.Id)
@@ -28,24 +28,24 @@ namespace StockLinx.Repository.Repositories.EF_Core
             return dto;
         }
 
-        public async Task<List<LicenseDto>> GetDtos(List<License> entities)
+        public async Task<List<LicenseDto>> GetDtosAsync(List<License> entities)
         {
             var dtos = new List<LicenseDto>();
             foreach (var entity in entities)
             {
-                var dto = await GetDto(entity);
+                var dto = await GetDtoAsync(entity);
                 dtos.Add(dto);
             }
             return dtos;
         }
 
-        public async Task<List<LicenseDto>> GetAllDtos()
+        public async Task<List<LicenseDto>> GetAllDtosAsync()
         {
             var entities = await dbContext.Licenses.AsNoTracking().ToListAsync();
-            return await GetDtos(entities);
+            return await GetDtosAsync(entities);
         }
 
-        public async Task<bool> CanDelete(Guid id)
+        public async Task<bool> CanDeleteAsync(Guid id)
         {
             var entity = dbContext.Licenses.Find(id);
             if (entity == null)
@@ -58,6 +58,14 @@ namespace StockLinx.Repository.Repositories.EF_Core
                 throw new Exception("Cannot delete license because it is used in deployed products.");
             }
             return true;
+        }
+        public async Task<int> GetAvaliableQuantityAsync(License entity)
+        {
+            List<DeployedProduct> deployedProducts = await dbContext.DeployedProducts.ToListAsync();
+            int availableQuantity = entity.Quantity - deployedProducts.Count(d =>
+                    d.LicenseId.HasValue && d.LicenseId == entity.Id
+                );
+            return availableQuantity;
         }
     }
 }

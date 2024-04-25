@@ -28,13 +28,13 @@ namespace StockLinx.Repository.Repositories.EF_Core
             return dtos;
         }
 
-        public async Task<List<ProductStatusDto>> GetAllDtos()
+        public async Task<List<ProductStatusDto>> GetAllDtosAsync()
         {
             var entities = await dbContext.ProductStatuses.AsNoTracking().ToListAsync();
             return GetDtos(entities);
         }
 
-        public async Task<bool> CanDelete(Guid id)
+        public async Task<bool> CanDeleteAsync(Guid id)
         {
             var entity = dbContext.ProductStatuses.Find(id);
             if (entity == null)

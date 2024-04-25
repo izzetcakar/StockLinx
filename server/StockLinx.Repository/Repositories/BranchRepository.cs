@@ -31,7 +31,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
             var entities = await dbContext.Branches.AsNoTracking().ToListAsync();
             return GetDtos(entities);
         }
-        public async Task<bool> CanDelete(Guid id)
+        public async Task<bool> CanDeleteAsync(Guid id)
         {
             var entity = dbContext.Branches.Find(id);
             if (entity == null)

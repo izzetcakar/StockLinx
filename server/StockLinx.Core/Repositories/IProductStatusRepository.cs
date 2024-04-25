@@ -7,7 +7,7 @@ namespace StockLinx.Core.Repositories
     {
         ProductStatusDto GetDto(ProductStatus entity);
         List<ProductStatusDto> GetDtos(List<ProductStatus> entities);
-        Task<List<ProductStatusDto>> GetAllDtos();
-        Task<bool> CanDelete(Guid id);
+        Task<List<ProductStatusDto>> GetAllDtosAsync();
+        Task<bool> CanDeleteAsync(Guid id);
     }
 }

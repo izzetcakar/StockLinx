@@ -14,7 +14,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
             _mapper = mapper;
         }
 
-        public async Task<DeployedProductDto> GetDto(DeployedProduct entity)
+        public async Task<DeployedProductDto> GetDtoAsync(DeployedProduct entity)
         {
             var dto = _mapper.Map<DeployedProductDto>(entity);
             if (entity.AccessoryId != null)
@@ -93,20 +93,20 @@ namespace StockLinx.Repository.Repositories.EF_Core
             }
             return dto;
         }
-        public async Task<List<DeployedProductDto>> GetDtos(List<DeployedProduct> entities)
+        public async Task<List<DeployedProductDto>> GetDtosAsync(List<DeployedProduct> entities)
         {
             var dtos = new List<DeployedProductDto>();
             foreach (var entity in entities)
             {
-                var dto = await GetDto(entity);
+                var dto = await GetDtoAsync(entity);
                 dtos.Add(dto);
             }
             return dtos;
         }
-        public async Task<List<DeployedProductDto>> GetAllDtos()
+        public async Task<List<DeployedProductDto>> GetAllDtosAsync()
         {
             var entities = await dbContext.DeployedProducts.AsNoTracking().ToListAsync();
-            return await GetDtos(entities);
+            return await GetDtosAsync(entities);
         }
     }
 

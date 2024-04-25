@@ -30,7 +30,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
             return dtos;
         }
 
-        public async Task<List<FieldSetCustomFieldDto>> GetAllDtos()
+        public async Task<List<FieldSetCustomFieldDto>> GetAllDtosAsync()
         {
             var items = await dbContext.FieldSetCustomFields.AsNoTracking().ToListAsync();
             return GetDtos(items);

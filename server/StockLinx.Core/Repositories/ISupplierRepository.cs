@@ -7,6 +7,6 @@ namespace StockLinx.Core.Repositories
     {
         SupplierDto GetDto(Supplier entity);
         List<SupplierDto> GetDtos(List<Supplier> entities);
-        Task<List<SupplierDto>> GetAllDtos();
+        Task<List<SupplierDto>> GetAllDtosAsync();
     }
 }
