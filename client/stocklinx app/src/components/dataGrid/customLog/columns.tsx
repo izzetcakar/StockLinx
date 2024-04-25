@@ -7,7 +7,7 @@ import icon_checkOut from "../../../assets/customLog/CheckOut.png";
 import { ICustomLog } from "../../../interfaces/serverInterfaces";
 import { RootState } from "../../../redux/rootReducer";
 import { useSelector } from "react-redux";
-import { Anchor, Tooltip } from "@mantine/core";
+import { Anchor } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 
 const getActionIcon = (action: string) => {
@@ -75,36 +75,24 @@ export const useColumns = () => {
       dataType: "date",
     },
     {
-      dataField: "itemName",
+      dataField: "item",
       caption: "Item",
-      dataType: "action",
-      renderComponent(e) {
-        const route = (e as ICustomLog).itemRoute;
-        return (
-          <Tooltip label={(e as ICustomLog).itemController}>
-            <Anchor onClick={() => navigate(`/${route}`)}>
-              {(e as ICustomLog).itemName}
-            </Anchor>
-          </Tooltip>
-        );
-      },
-      selectable: false,
+      dataType: "string",
     },
     {
-      dataField: "targetName",
+      dataField: "itemController",
+      caption: "Item Controller",
+      dataType: "string",
+    },
+    {
+      dataField: "target",
       caption: "Target",
-      dataType: "action",
-      renderComponent(e) {
-        const route = (e as ICustomLog).targetRoute;
-        return (
-          <Tooltip label={(e as ICustomLog).targetController}>
-            <Anchor onClick={() => navigate(route ? `/${route}` : "")}>
-              {(e as ICustomLog).targetName}
-            </Anchor>
-          </Tooltip>
-        );
-      },
-      selectable: false,
+      dataType: "string",
+    },
+    {
+      dataField: "targetController",
+      caption: "Target Controller",
+      dataType: "string",
     },
   ];
 

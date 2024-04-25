@@ -1,7 +1,7 @@
 import { BaseColumn } from "../../gridTable/interfaces/interfaces";
-import { IDeployedProductDto } from "../../../interfaces/serverInterfaces";
 import { Anchor } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
+import { IDeployedProductDto } from "../../../interfaces/dtos";
 
 export const useColumns = () => {
   const navigate = useNavigate();
