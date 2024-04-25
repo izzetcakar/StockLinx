@@ -24,93 +24,93 @@ namespace StockLinx.Service.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<CustomFieldDto> GetDto(Guid id)
+        public async Task<CustomFieldDto> GetDtoAsync(Guid id)
         {
             var customField = await GetByIdAsync(id);
             return _customFieldRepository.GetDto(customField);
         }
 
-        public async Task<List<CustomFieldDto>> GetAllDtos()
+        public async Task<List<CustomFieldDto>> GetAllDtosAsync()
         {
-            return await _customFieldRepository.GetAllDtos();
+            return await _customFieldRepository.GetAllDtosAsync();
         }
 
-        public async Task CreateCustomFieldAsync(CustomFieldCreateDto createDto)
+        public async Task CreateCustomFieldAsync(CustomFieldCreateDto dto)
         {
-            var newCustomField = _mapper.Map<CustomField>(createDto);
-            var fcToAdd = new List<FieldSetCustomField>();
-            newCustomField.Id = Guid.NewGuid();
-            newCustomField.CreatedDate = DateTime.UtcNow;
+            CustomField customField = _mapper.Map<CustomField>(dto);
+            List<FieldSetCustomField> fcToAdd = new List<FieldSetCustomField>();
+            customField.Id = Guid.NewGuid();
+            customField.CreatedDate = DateTime.UtcNow;
 
-            if (createDto.FieldSetCustomFields != null && createDto.FieldSetCustomFields.Any())
+            if (dto.FieldSetCustomFields != null && dto.FieldSetCustomFields.Any())
             {
-                foreach (var fieldSetCustomFieldDto in createDto.FieldSetCustomFields)
+                foreach (var fieldSetCustomFieldDto in dto.FieldSetCustomFields)
                 {
-                    var newFieldSetCustomField = _mapper.Map<FieldSetCustomField>(fieldSetCustomFieldDto);
-                    newFieldSetCustomField.Id = Guid.NewGuid();
-                    newFieldSetCustomField.CreatedDate = DateTime.UtcNow;
-                    newFieldSetCustomField.CustomFieldId = newCustomField.Id;
-                    fcToAdd.Add(newFieldSetCustomField);
+                    var fieldSetCustomField = _mapper.Map<FieldSetCustomField>(fieldSetCustomFieldDto);
+                    fieldSetCustomField.Id = Guid.NewGuid();
+                    fieldSetCustomField.CreatedDate = DateTime.UtcNow;
+                    fieldSetCustomField.Id = customField.Id;
+                    fcToAdd.Add(fieldSetCustomField);
                 }
                 await _fieldSetCustomFieldRepository.AddRangeAsync(fcToAdd);
             }
-            newCustomField.FieldSetCustomFields = null;
-            await _customFieldRepository.AddAsync(newCustomField);
+            customField.FieldSetCustomFields = null;
+            await _customFieldRepository.AddAsync(customField);
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task CreateRangeCustomFieldAsync(List<CustomFieldCreateDto> createDtos)
+        public async Task CreateRangeCustomFieldAsync(List<CustomFieldCreateDto> dtos)
         {
-            var newCustomFields = new List<CustomField>();
-            foreach (var createDto in createDtos)
+            List<CustomField> customFields = new List<CustomField>();
+            foreach (var dto in dtos)
             {
-                var newCustomField = _mapper.Map<CustomField>(createDto);
-                newCustomField.Id = Guid.NewGuid();
-                newCustomField.CreatedDate = DateTime.UtcNow;
-                newCustomFields.Add(newCustomField);
+                var customField = _mapper.Map<CustomField>(dto);
+                customField.Id = Guid.NewGuid();
+                customField.CreatedDate = DateTime.UtcNow;
+                customFields.Add(customField);
             }
-            await _customFieldRepository.AddRangeAsync(newCustomFields);
+            await _customFieldRepository.AddRangeAsync(customFields);
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task<CustomFieldDto> UpdateCustomFieldAsync(CustomFieldUpdateDto updateDto)
+        public async Task<CustomFieldDto> UpdateCustomFieldAsync(CustomFieldUpdateDto dto)
         {
-            var customFieldInDb = await GetByIdAsync(updateDto.Id);
+            var customFieldInDb = await GetByIdAsync(dto.Id);
             if (customFieldInDb == null)
             {
                 throw new ArgumentNullException("CustomField is not found");
             }
-            var updatedCustomField = _mapper.Map<CustomField>(updateDto);
-            updatedCustomField.UpdatedDate = DateTime.UtcNow;
-            _customFieldRepository.Update(customFieldInDb, updatedCustomField);
+            CustomField customField = _mapper.Map<CustomField>(dto);
+            customField.UpdatedDate = DateTime.UtcNow;
+            _customFieldRepository.Update(customFieldInDb, customField);
             await _unitOfWork.CommitAsync();
-            return _customFieldRepository.GetDto(updatedCustomField);
+            return _customFieldRepository.GetDto(customField);
         }
 
-        public async Task DeleteCustomFieldAsync(Guid customFieldId)
+        public async Task DeleteCustomFieldAsync(Guid id)
         {
-            var customField = await GetByIdAsync(customFieldId);
+            var customField = await GetByIdAsync(id);
             if (customField == null)
             {
                 throw new ArgumentNullException("CustomField is not found");
             }
-            _customFieldRepository.Update(customField, customField);
+            _customFieldRepository.Remove(customField);
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task DeleteRangeCustomFieldAsync(List<Guid> customFieldIds)
+        public async Task DeleteRangeCustomFieldAsync(List<Guid> ids)
         {
-            var customFields = new List<CustomField>();
-            foreach (var customFieldId in customFieldIds)
+            List<CustomField> customFields = new List<CustomField>();
+            foreach (var id in ids)
             {
-                var customField = await GetByIdAsync(customFieldId);
+                var customField = await GetByIdAsync(id);
                 if (customField == null)
                 {
-                    throw new ArgumentNullException($"{customFieldId} - CustomField is not found");
+                    throw new ArgumentNullException("CustomField is not found");
                 }
                 customFields.Add(customField);
             }
-            _customFieldRepository.UpdateRange(customFields);
+            _customFieldRepository.RemoveRange(customFields);
             await _unitOfWork.CommitAsync();
         }
     }

@@ -24,81 +24,81 @@ namespace StockLinx.Service.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<DepartmentDto> GetDto(Guid id)
+        public async Task<DepartmentDto> GetDtoAsync(Guid id)
         {
             var department = await GetByIdAsync(id);
             return _departmentRepository.GetDto(department);
         }
 
-        public async Task<List<DepartmentDto>> GetAllDtos()
+        public async Task<List<DepartmentDto>> GetAllDtosAsync()
         {
-            return await _departmentRepository.GetAllDtos();
+            return await _departmentRepository.GetAllDtosAsync();
         }
 
-        public async Task<DepartmentDto> CreateDepartmentAsync(DepartmentCreateDto createDto)
+        public async Task<DepartmentDto> CreateDepartmentAsync(DepartmentCreateDto dto)
         {
-            var newDepartment = _mapper.Map<Department>(createDto);
-            newDepartment.Id = Guid.NewGuid();
-            newDepartment.CreatedDate = DateTime.UtcNow;
-            await _departmentRepository.AddAsync(newDepartment);
-            await _customLogService.CreateCustomLog("Create", newDepartment.Id, newDepartment.BranchId, "Department", "Branch");
+            Department department = _mapper.Map<Department>(dto);
+            department.Id = Guid.NewGuid();
+            department.CreatedDate = DateTime.UtcNow;
+            await _departmentRepository.AddAsync(department);
+            await _customLogService.CreateCustomLog("Create", "Department", department.Name);
             await _unitOfWork.CommitAsync();
-            return _departmentRepository.GetDto(newDepartment);
+            return _departmentRepository.GetDto(department);
         }
 
-        public async Task<List<DepartmentDto>> CreateRangeDepartmentAsync(List<DepartmentCreateDto> createDtos)
+        public async Task<List<DepartmentDto>> CreateRangeDepartmentAsync(List<DepartmentCreateDto> dtos)
         {
-            var newDepartments = new List<Department>();
-            foreach (var createDto in createDtos)
+            List<Department> departments = new List<Department>();
+            foreach (var dto in dtos)
             {
-                var newDepartment = _mapper.Map<Department>(createDto);
-                newDepartment.Id = Guid.NewGuid();
-                newDepartment.CreatedDate = DateTime.UtcNow;
-                newDepartments.Add(newDepartment);
-                await _customLogService.CreateCustomLog("Create", newDepartment.Id, newDepartment.BranchId, "Department", "Branch");
+                Department department = _mapper.Map<Department>(dto);
+                department.Id = Guid.NewGuid();
+                department.CreatedDate = DateTime.UtcNow;
+                departments.Add(department);
+                await _customLogService.CreateCustomLog("Create", "Department", department.Name);
             }
-            await _departmentRepository.AddRangeAsync(newDepartments);
+            await _departmentRepository.AddRangeAsync(departments);
             await _unitOfWork.CommitAsync();
-            return _departmentRepository.GetDtos(newDepartments);
+            return _departmentRepository.GetDtos(departments);
         }
 
-        public async Task<DepartmentDto> UpdateDepartmentAsync(DepartmentUpdateDto updateDto)
+        public async Task<DepartmentDto> UpdateDepartmentAsync(DepartmentUpdateDto dto)
         {
-            var departmentInDb = await GetByIdAsync(updateDto.Id);
-            var updatedDepartment = _mapper.Map<Department>(updateDto);
-            updatedDepartment.UpdatedDate = DateTime.UtcNow;
-            _departmentRepository.Update(departmentInDb, updatedDepartment);
-            await _customLogService.CreateCustomLog("Update", updatedDepartment.Id, updatedDepartment.BranchId, "Department", "Branch");
+            Department departmentInDb = await GetByIdAsync(dto.Id);
+            Department department = _mapper.Map<Department>(dto);
+            department.UpdatedDate = DateTime.UtcNow;
+            _departmentRepository.Update(departmentInDb, department);
+            await _customLogService.CreateCustomLog("Update", "Department", department.Name);
             await _unitOfWork.CommitAsync();
-            return _departmentRepository.GetDto(updatedDepartment);
+            return _departmentRepository.GetDto(department);
         }
 
-        public async Task DeleteDepartmentAsync(Guid departmentId)
+        public async Task DeleteDepartmentAsync(Guid id)
         {
-            var department = await GetByIdAsync(departmentId);
+            var department = await GetByIdAsync(id);
             if (department == null)
             {
                 throw new ArgumentNullException("Department is not found");
             }
-            _departmentRepository.Update(department, department);
-            await _customLogService.CreateCustomLog("Delete", department.Id, department.BranchId, "Department", "Branch");
+            _departmentRepository.Remove(department);
+            await _customLogService.CreateCustomLog("Delete", "Department", department.Name);
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task DeleteRangeDepartmentAsync(List<Guid> departmentIds)
+        public async Task DeleteRangeDepartmentAsync(List<Guid> ids)
         {
             var departments = new List<Department>();
-            foreach (var departmentId in departmentIds)
+            foreach (var id in ids)
             {
-                var department = await GetByIdAsync(departmentId);
+                var department = await GetByIdAsync(id);
                 if (department == null)
                 {
-                    throw new ArgumentNullException($"{departmentId} - Department is not found");
+                    throw new ArgumentNullException($"{id} - Department is not found");
                 }
                 departments.Add(department);
-                await _customLogService.CreateCustomLog("Delete", department.Id, department.BranchId, "Department", "Branch");
+                await _customLogService.CreateCustomLog("Delete", "Department", department.Name);
             }
-            _departmentRepository.UpdateRange(departments);
+            _departmentRepository.RemoveRange(departments);
             await _unitOfWork.CommitAsync();
         }
     }

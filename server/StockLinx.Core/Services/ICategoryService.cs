@@ -7,12 +7,12 @@ namespace StockLinx.Core.Services
 {
     public interface ICategoryService : IService<Category>
     {
-        Task<CategoryDto> GetDto(Guid id);
-        Task<List<CategoryDto>> GetAllDtos();
-        Task<CategoryDto> CreateCategoryAsync(CategoryCreateDto createDto);
-        Task<List<CategoryDto>> CreateRangeCategoryAsync(List<CategoryCreateDto> createDtos);
-        Task<CategoryDto> UpdateCategoryAsync(CategoryUpdateDto updateDto);
-        Task DeleteCategoryAsync(Guid categoryId);
-        Task DeleteRangeCategoryAsync(List<Guid> categoryIds);
+        Task<CategoryDto> GetDtoAsync(Guid id);
+        Task<List<CategoryDto>> GetAllDtosAsync();
+        Task<CategoryDto> CreateCategoryAsync(CategoryCreateDto dto);
+        Task<List<CategoryDto>> CreateRangeCategoryAsync(List<CategoryCreateDto> dtos);
+        Task<CategoryDto> UpdateCategoryAsync(CategoryUpdateDto dto);
+        Task DeleteCategoryAsync(Guid id);
+        Task DeleteRangeCategoryAsync(List<Guid> ids);
     }
 }

@@ -7,12 +7,12 @@ namespace StockLinx.Core.Services
 {
     public interface ILocationService : IService<Location>
     {
-        Task<LocationDto> GetDto(Guid id);
-        Task<List<LocationDto>> GetAllDtos();
-        Task<LocationDto> CreateLocationAsync(LocationCreateDto createDto);
-        Task<List<LocationDto>> CreateRangeLocationAsync(List<LocationCreateDto> createDtos);
-        Task<LocationDto> UpdateLocationAsync(LocationUpdateDto updateDto);
-        Task DeleteLocationAsync(Guid locationId);
-        Task DeleteRangeLocationAsync(List<Guid> locationIds);
+        Task<LocationDto> GetDtoAsync(Guid id);
+        Task<List<LocationDto>> GetAllDtosAsync();
+        Task<LocationDto> CreateLocationAsync(LocationCreateDto dto);
+        Task<List<LocationDto>> CreateRangeLocationAsync(List<LocationCreateDto> dtos);
+        Task<LocationDto> UpdateLocationAsync(LocationUpdateDto dto);
+        Task DeleteLocationAsync(Guid id);
+        Task DeleteRangeLocationAsync(List<Guid> ids);
     }
 }

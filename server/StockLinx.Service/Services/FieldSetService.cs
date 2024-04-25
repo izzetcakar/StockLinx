@@ -22,79 +22,79 @@ namespace StockLinx.Service.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<FieldSetDto> GetDto(Guid id)
+        public async Task<FieldSetDto> GetDtoAsync(Guid id)
         {
-            var fieldSet = await GetByIdAsync(id);
+            FieldSet fieldSet = await GetByIdAsync(id);
             return _fieldSetRepository.GetDto(fieldSet);
         }
 
-        public async Task<List<FieldSetDto>> GetAllDtos()
+        public async Task<List<FieldSetDto>> GetAllDtosAsync()
         {
-            return await _fieldSetRepository.GetAllDtos();
+            return await _fieldSetRepository.GetAllDtosAsync();
         }
         public async Task<FieldSetDto> CreateFieldSetAsync(FieldSetCreateDto createDto)
         {
-            var newFieldSet = _mapper.Map<FieldSet>(createDto);
-            newFieldSet.Id = Guid.NewGuid();
-            newFieldSet.CreatedDate = DateTime.UtcNow;
-            await _fieldSetRepository.AddAsync(newFieldSet);
+            FieldSet fieldSet = _mapper.Map<FieldSet>(createDto);
+            fieldSet.Id = Guid.NewGuid();
+            fieldSet.CreatedDate = DateTime.UtcNow;
+            await _fieldSetRepository.AddAsync(fieldSet);
             await _unitOfWork.CommitAsync();
-            return _fieldSetRepository.GetDto(newFieldSet);
+            return _fieldSetRepository.GetDto(fieldSet);
         }
 
-        public async Task<List<FieldSetDto>> CreateRangeFieldSetAsync(List<FieldSetCreateDto> createDtos)
+        public async Task<List<FieldSetDto>> CreateRangeFieldSetAsync(List<FieldSetCreateDto> dtos)
         {
-            var newEntities = new List<FieldSet>();
-            foreach (var createDto in createDtos)
+            List<FieldSet> newEntities = new List<FieldSet>();
+            foreach (var dto in dtos)
             {
-                var newFieldSet = _mapper.Map<FieldSet>(createDto);
-                newFieldSet.Id = Guid.NewGuid();
-                newFieldSet.CreatedDate = DateTime.UtcNow;
-                newEntities.Add(newFieldSet);
+                FieldSet fieldSet = _mapper.Map<FieldSet>(dto);
+                fieldSet.Id = Guid.NewGuid();
+                fieldSet.CreatedDate = DateTime.UtcNow;
+                newEntities.Add(fieldSet);
             }
             await _fieldSetRepository.AddRangeAsync(newEntities);
             await _unitOfWork.CommitAsync();
             return _fieldSetRepository.GetDtos(newEntities);
         }
 
-        public async Task<FieldSetDto> UpdateFieldSetAsync(FieldSetUpdateDto updateDto)
+        public async Task<FieldSetDto> UpdateFieldSetAsync(FieldSetUpdateDto dto)
         {
-            var fieldSetInDb = await GetByIdAsync(updateDto.Id);
+            var fieldSetInDb = await GetByIdAsync(dto.Id);
             if (fieldSetInDb == null)
             {
                 throw new ArgumentNullException("FieldSet is not found");
             }
-            var updatedFieldSet = _mapper.Map<FieldSet>(updateDto);
+            FieldSet updatedFieldSet = _mapper.Map<FieldSet>(dto);
             updatedFieldSet.UpdatedDate = DateTime.UtcNow;
             _fieldSetRepository.Update(fieldSetInDb, updatedFieldSet);
             await _unitOfWork.CommitAsync();
             return _fieldSetRepository.GetDto(updatedFieldSet);
         }
 
-        public async Task DeleteFieldSetAsync(Guid fieldSetId)
+        public async Task DeleteFieldSetAsync(Guid id)
         {
-            var fieldSet = await GetByIdAsync(fieldSetId);
+            var fieldSet = await GetByIdAsync(id);
             if (fieldSet == null)
             {
                 throw new ArgumentNullException("FieldSet is not found");
             }
-            _fieldSetRepository.Update(fieldSet, fieldSet);
+            _fieldSetRepository.Remove(fieldSet);
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task DeleteRangeFieldSetAsync(List<Guid> fieldSetIds)
+        public async Task DeleteRangeFieldSetAsync(List<Guid> ids)
         {
             var fieldSets = new List<FieldSet>();
-            foreach (var fieldSetId in fieldSetIds)
+            foreach (var id in ids)
             {
-                var fieldSet = await GetByIdAsync(fieldSetId);
+                var fieldSet = await GetByIdAsync(id);
                 if (fieldSet == null)
                 {
-                    throw new ArgumentNullException($"{fieldSetId} - FieldSet is not found");
+                    throw new ArgumentNullException("FieldSet is not found");
                 }
                 fieldSets.Add(fieldSet);
             }
-            _fieldSetRepository.UpdateRange(fieldSets);
+            _fieldSetRepository.RemoveRange(fieldSets);
             await _unitOfWork.CommitAsync();
         }
     }

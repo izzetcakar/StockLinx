@@ -15,41 +15,48 @@ namespace StockLinx.Service.Services
     {
         private readonly IAccessoryRepository _accessoryRepository;
         private readonly IDeployedProductRepository _deployedProductRepository;
+        private readonly IBranchRepository _branchRepository;
         private readonly ICustomLogService _customLogService;
+        private readonly IUserService _userService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
         public AccessoryService(
             IRepository<Accessory> repository,
             IAccessoryRepository accessoryRepository,
-            IUnitOfWork unitOfWork,
-            IMapper mapper,
+            IBranchRepository branchRepository,
             IDeployedProductRepository deployedProductRepository,
-            ICustomLogService customLogService
+            ICustomLogService customLogService,
+            IUserService userService,
+            IMapper mapper,
+            IUnitOfWork unitOfWork
         )
             : base(repository, unitOfWork)
         {
             _accessoryRepository = accessoryRepository;
             _deployedProductRepository = deployedProductRepository;
+            _branchRepository = branchRepository;
             _customLogService = customLogService;
+            _userService = userService;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
 
         public async Task<AccessoryDto> GetDto(Guid id)
         {
-            var accessory = await GetByIdAsync(id);
-            return await _accessoryRepository.GetDto(accessory);
+            Accessory accessory = await GetByIdAsync(id);
+            return await _accessoryRepository.GetDtoAsync(accessory);
         }
 
         public async Task<List<AccessoryDto>> GetAllDtos()
         {
-            return await _accessoryRepository.GetAllDtos();
+            return await _accessoryRepository.GetAllDtosAsync();
         }
 
-        public async Task<AccessoryDto> CreateAccessoryAsync(AccessoryCreateDto createDto)
+        public async Task<AccessoryDto> CreateAccessoryAsync(AccessoryCreateDto dto)
         {
-            var newAccessory = _mapper.Map<Accessory>(createDto);
+            Branch branch = await _branchRepository.GetByIdAsync(dto.BranchId);
+            Accessory newAccessory = _mapper.Map<Accessory>(dto);
             newAccessory.Id = Guid.NewGuid();
             newAccessory.CreatedDate = DateTime.UtcNow;
             newAccessory.Quantity = 1;
@@ -68,189 +75,151 @@ namespace StockLinx.Service.Services
             }
 
             await _accessoryRepository.AddAsync(newAccessory);
-            await _customLogService.CreateCustomLog(
-                "Create",
-                newAccessory.Id,
-                newAccessory.BranchId,
-                "Accessory",
-                "Branch"
-            );
+            await _customLogService.CreateCustomLog("Create", "Accessory", newAccessory.Name, "Branch", branch.Name);
             await _unitOfWork.CommitAsync();
-            return await _accessoryRepository.GetDto(newAccessory);
+            return await _accessoryRepository.GetDtoAsync(newAccessory);
         }
 
         public async Task<List<AccessoryDto>> CreateRangeAccessoryAsync(
-            List<AccessoryCreateDto> createDtos
+            List<AccessoryCreateDto> dtos
         )
         {
-            var newAccessories = new List<Accessory>();
-            foreach (var createDto in createDtos)
+            Branch branch = await _branchRepository.GetByIdAsync(dtos[0].BranchId);
+            List<Accessory> newAccessories = new List<Accessory>();
+            foreach (var dto in dtos)
             {
-                var newAccessory = _mapper.Map<Accessory>(createDto);
+                Accessory newAccessory = _mapper.Map<Accessory>(dto);
                 newAccessory.Id = Guid.NewGuid();
                 newAccessory.CreatedDate = DateTime.UtcNow;
                 newAccessory.Quantity = 1;
                 newAccessories.Add(newAccessory);
-                await _customLogService.CreateCustomLog(
-                    "Create",
-                    newAccessory.Id,
-                    newAccessory.BranchId,
-                    "Accessory",
-                    "Branch"
-                );
+                await _customLogService.CreateCustomLog("Create", "Accessory", newAccessory.Name, "Branch", branch.Name);
             }
             await _accessoryRepository.AddRangeAsync(newAccessories);
             await _unitOfWork.CommitAsync();
-            return await _accessoryRepository.GetDtos(newAccessories);
+            return await _accessoryRepository.GetDtosAsync(newAccessories);
         }
 
-        public async Task<AccessoryDto> UpdateAccessoryAsync(AccessoryUpdateDto updateDto)
+        public async Task<AccessoryDto> UpdateAccessoryAsync(AccessoryUpdateDto dto)
         {
-            var accessoryInDb = await GetByIdAsync(updateDto.Id);
+            var accessoryInDb = await GetByIdAsync(dto.Id);
             if (accessoryInDb == null)
             {
                 throw new ArgumentNullException("Accessory is not found");
             }
-            var updatedAccessory = _mapper.Map<Accessory>(updateDto);
-            updatedAccessory.UpdatedDate = DateTime.UtcNow;
+            var accessory = _mapper.Map<Accessory>(dto);
+            accessory.UpdatedDate = DateTime.UtcNow;
 
-            if (updatedAccessory.ImagePath != null)
+            if (accessory.ImagePath != null)
             {
-                if (updatedAccessory.ImagePath.Contains("base64,"))
+                if (accessory.ImagePath.Contains("base64,"))
                 {
                     ImageHandler.UploadBase64AsJpg(
-                        updatedAccessory.ImagePath,
-                        $"{updatedAccessory.Id}",
+                        accessory.ImagePath,
+                        $"{accessory.Id}",
                         "Accessories"
                     );
-                    updatedAccessory.ImagePath = $"Accessories/{updatedAccessory.Id}.jpg";
+                    accessory.ImagePath = $"Accessories/{accessory.Id}.jpg";
                 }
             }
 
-            _accessoryRepository.Update(accessoryInDb, updatedAccessory);
-            await _customLogService.CreateCustomLog(
-                "Update",
-                updatedAccessory.Id,
-                updatedAccessory.BranchId,
-                "Accessory",
-                "Branch"
-            );
+            _accessoryRepository.Update(accessoryInDb, accessory);
+            await _customLogService.CreateCustomLog("Update", "Accessory", accessory.Name);
             await _unitOfWork.CommitAsync();
-            return await _accessoryRepository.GetDto(updatedAccessory);
+            return await _accessoryRepository.GetDtoAsync(accessory);
         }
 
-        public async Task DeleteAccessoryAsync(Guid accessoryId)
+        public async Task DeleteAccessoryAsync(Guid id)
         {
-            var accessory = await GetByIdAsync(accessoryId);
+            var accessory = await GetByIdAsync(id);
             if (accessory == null)
             {
                 throw new ArgumentNullException("Accessory is not found");
             }
 
-            _accessoryRepository.Update(accessory, accessory);
-            await _customLogService.CreateCustomLog(
-                "Delete",
-                accessory.Id,
-                accessory.BranchId,
-                "Accessory",
-                "Branch"
-            );
+            bool canDelete = await _accessoryRepository.CanDeleteAsync(id);
+            if (canDelete)
+            {
+                await _customLogService.CreateCustomLog("Delete", "Accessory", accessory.Name);
+                _accessoryRepository.Remove(accessory);
+            }
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task DeleteRangeAccessoryAsync(List<Guid> accessoryIds)
+        public async Task DeleteRangeAccessoryAsync(List<Guid> ids)
         {
-            var accessories = new List<Accessory>();
-            foreach (var accessoryId in accessoryIds)
+            List<Accessory> accessories = new List<Accessory>();
+            foreach (var id in ids)
             {
-                var accessory = await GetByIdAsync(accessoryId);
+                var accessory = await GetByIdAsync(id);
                 if (accessory == null)
                 {
-                    throw new ArgumentNullException($"{accessoryId} - Accessory is not found");
+                    throw new ArgumentNullException("Accessory is not found");
                 }
                 accessories.Add(accessory);
             }
-            foreach (var accessory in accessories)
+            foreach (Accessory accessory in accessories)
             {
-                _accessoryRepository.Update(accessory, accessory);
-                await _customLogService.CreateCustomLog(
-                    "Delete",
-                    accessory.Id,
-                    accessory.BranchId,
-                    "Accessory",
-                    "Branch"
-                );
+                bool canDelete = await _accessoryRepository.CanDeleteAsync(accessory.Id);
+                if (canDelete)
+                {
+                    await _customLogService.CreateCustomLog("Delete", "Accessory", accessory.Name);
+                    _accessoryRepository.Remove(accessory);
+                }
             }
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task<AccessoryCheckInResponseDto> CheckIn(AccessoryCheckInDto checkInDto)
+        public async Task<DeployedProductDto> CheckIn(ProductCheckInDto checkInDto)
         {
-            var accessory = await _accessoryRepository.GetByIdAsync(checkInDto.AccessoryId);
+            User user = await _userService.GetByIdAsync(checkInDto.UserId);
+            var accessory = await _accessoryRepository.GetByIdAsync(checkInDto.ProductId);
             if (accessory == null)
             {
                 throw new Exception("Accessory not found");
             }
-            var deployedProducts = await _deployedProductRepository.GetAll().ToListAsync();
-            var availableQuantity =
-                accessory.Quantity
-                - deployedProducts.Count(d =>
-                    d.AccessoryId.HasValue && d.AccessoryId == accessory.Id
-                );
+            int availableQuantity = await _accessoryRepository.GetAvaliableQuantityAsync(accessory);
             if (availableQuantity < 1)
             {
                 throw new Exception("Accessory is out of stock");
             }
-            var deployedProduct = new DeployedProduct
+            if (checkInDto.Quantity < availableQuantity)
+            {
+                throw new Exception("Accessory stock is not enough");
+            }
+            DeployedProduct deployedProduct = new DeployedProduct
             {
                 Id = Guid.NewGuid(),
                 AccessoryId = accessory.Id,
                 UserId = checkInDto.UserId,
                 AssignDate = DateTime.UtcNow,
                 CreatedDate = DateTime.UtcNow,
+                Quantity = availableQuantity,
                 Notes = checkInDto.Notes,
             };
             await _deployedProductRepository.AddAsync(deployedProduct);
-            await _customLogService.CreateCustomLog(
-                "CheckIn",
-                accessory.Id,
-                deployedProduct.UserId,
-                "Accessory",
-                "User"
-            );
+            await _customLogService.CreateCustomLog("CheckIn", "Accessory", accessory.Name, "User", user.FirstName + user.LastName);
             await _unitOfWork.CommitAsync();
-            var accessoryDto = await _accessoryRepository.GetDto(accessory);
-            var deployedProductDto = await _deployedProductRepository.GetDto(deployedProduct);
-            return new AccessoryCheckInResponseDto
-            {
-                Accessory = accessoryDto,
-                DeployedProduct = deployedProductDto
-            };
+            DeployedProductDto deployedProductDto = await _deployedProductRepository.GetDtoAsync(deployedProduct);
+            return deployedProductDto;
         }
 
-        public async Task<AccessoryDto> CheckOut(Guid id)
+        public async Task CheckOut(Guid id)
         {
-            var deployedProduct = await _deployedProductRepository.GetByIdAsync(id);
-            if (deployedProduct == null)
-            {
-                throw new Exception("Deployed product is not found");
-            }
-            var accessory = await _accessoryRepository.GetByIdAsync(deployedProduct.AccessoryId);
+            var accessory = await _accessoryRepository.GetByIdAsync(id);
             if (accessory == null)
             {
                 throw new Exception("Accessory is not found");
             }
-            _deployedProductRepository.Update(deployedProduct, deployedProduct);
-            await _customLogService.CreateCustomLog(
-                "CheckOut",
-                accessory.Id,
-                accessory.BranchId,
-                "Accessory",
-                "Branch"
-            );
+            List<DeployedProduct> deployedProducts = await _deployedProductRepository.GetAll().Where(dp => dp.AccessoryId == id).ToListAsync();
+            var deployedProduct = deployedProducts.Find(dp => dp.AccessoryId == id);
+            if (deployedProduct == null)
+            {
+                throw new Exception("Deployed product is not found");
+            }
+            _deployedProductRepository.Remove(deployedProduct);
+            await _customLogService.CreateCustomLog("CheckOut", "Accessory", deployedProduct.Accessory.Name);
             await _unitOfWork.CommitAsync();
-            var accessoryDto = await _accessoryRepository.GetDto(accessory);
-            return accessoryDto;
         }
     }
 }

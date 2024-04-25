@@ -7,12 +7,12 @@ namespace StockLinx.Core.Services
 {
     public interface ISupplierService : IService<Supplier>
     {
-        Task<SupplierDto> GetDto(Guid id);
-        Task<List<SupplierDto>> GetAllDtos();
-        Task<SupplierDto> CreateSupplierAsync(SupplierCreateDto createDto);
-        Task<List<SupplierDto>> CreateRangeSupplierAsync(List<SupplierCreateDto> createDtos);
-        Task<SupplierDto> UpdateSupplierAsync(SupplierUpdateDto updateDto);
-        Task DeleteSupplierAsync(Guid supplierId);
-        Task DeleteRangeSupplierAsync(List<Guid> supplierIds);
+        Task<SupplierDto> GetDtoAsync(Guid id);
+        Task<List<SupplierDto>> GetAllDtosAsync();
+        Task<SupplierDto> CreateSupplierAsync(SupplierCreateDto dto);
+        Task<List<SupplierDto>> CreateRangeSupplierAsync(List<SupplierCreateDto> dtos);
+        Task<SupplierDto> UpdateSupplierAsync(SupplierUpdateDto dto);
+        Task DeleteSupplierAsync(Guid id);
+        Task DeleteRangeSupplierAsync(List<Guid> ids);
     }
 }

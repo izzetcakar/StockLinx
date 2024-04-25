@@ -24,104 +24,104 @@ namespace StockLinx.Service.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<ManufacturerDto> GetDto(Guid id)
+        public async Task<ManufacturerDto> GetDtoAsync(Guid id)
         {
-            var manufacturer = await GetByIdAsync(id);
+            Manufacturer manufacturer = await GetByIdAsync(id);
             return _manufacturerRepository.GetDto(manufacturer);
         }
 
-        public async Task<List<ManufacturerDto>> GetAllDtos()
+        public async Task<List<ManufacturerDto>> GetAllDtosAsync()
         {
-            return await _manufacturerRepository.GetAllDtos();
+            return await _manufacturerRepository.GetAllDtosAsync();
         }
-        public async Task<ManufacturerDto> CreateManufacturerAsync(ManufacturerCreateDto createDto)
+        public async Task<ManufacturerDto> CreateManufacturerAsync(ManufacturerCreateDto dto)
         {
-            var newManufacturer = _mapper.Map<Manufacturer>(createDto);
-            newManufacturer.Id = Guid.NewGuid();
-            newManufacturer.CreatedDate = DateTime.UtcNow;
+            Manufacturer manufacturer = _mapper.Map<Manufacturer>(dto);
+            manufacturer.Id = Guid.NewGuid();
+            manufacturer.CreatedDate = DateTime.UtcNow;
 
-            if (newManufacturer.ImagePath != null)
+            if (manufacturer.ImagePath != null)
             {
-                if (newManufacturer.ImagePath.Contains("base64,"))
+                if (manufacturer.ImagePath.Contains("base64,"))
                 {
-                    ImageHandler.UploadBase64AsJpg(newManufacturer.ImagePath, $"{newManufacturer.Id}", "Manufacturers");
-                    newManufacturer.ImagePath = $"Manufacturers/{newManufacturer.Id}.jpg";
+                    ImageHandler.UploadBase64AsJpg(manufacturer.ImagePath, $"{manufacturer.Id}", "Manufacturers");
+                    manufacturer.ImagePath = $"Manufacturers/{manufacturer.Id}.jpg";
                 }
             }
 
-            await _manufacturerRepository.AddAsync(newManufacturer);
-            await _customLogService.CreateCustomLog("Create", newManufacturer.Id, null, "Manufacturer", null);
+            await _manufacturerRepository.AddAsync(manufacturer);
+            await _customLogService.CreateCustomLog("Create", "Manufacturer", manufacturer.Name);
             await _unitOfWork.CommitAsync();
-            return _manufacturerRepository.GetDto(newManufacturer);
+            return _manufacturerRepository.GetDto(manufacturer);
         }
 
-        public async Task<List<ManufacturerDto>> CreateRangeManufacturerAsync(List<ManufacturerCreateDto> createDtos)
+        public async Task<List<ManufacturerDto>> CreateRangeManufacturerAsync(List<ManufacturerCreateDto> dtos)
         {
-            var newManufacturers = new List<Manufacturer>();
-            foreach (var createDto in createDtos)
+            List<Manufacturer> manufacturers = new List<Manufacturer>();
+            foreach (var dto in dtos)
             {
-                var newManufacturer = _mapper.Map<Manufacturer>(createDto);
-                newManufacturer.Id = Guid.NewGuid();
-                newManufacturer.CreatedDate = DateTime.UtcNow;
-                newManufacturers.Add(newManufacturer);
-                await _customLogService.CreateCustomLog("Create", newManufacturer.Id, null, "Manufacturer", null);
+                Manufacturer manufacturer = _mapper.Map<Manufacturer>(dto);
+                manufacturer.Id = Guid.NewGuid();
+                manufacturer.CreatedDate = DateTime.UtcNow;
+                manufacturers.Add(manufacturer);
+                await _customLogService.CreateCustomLog("Create", "Manufacturer", manufacturer.Name);
             }
-            await _manufacturerRepository.AddRangeAsync(newManufacturers);
+            await _manufacturerRepository.AddRangeAsync(manufacturers);
             await _unitOfWork.CommitAsync();
-            return _manufacturerRepository.GetDtos(newManufacturers);
+            return _manufacturerRepository.GetDtos(manufacturers);
         }
 
-        public async Task<ManufacturerDto> UpdateManufacturerAsync(ManufacturerUpdateDto updateDto)
+        public async Task<ManufacturerDto> UpdateManufacturerAsync(ManufacturerUpdateDto dto)
         {
-            var manufacturerInDb = await GetByIdAsync(updateDto.Id);
+            var manufacturerInDb = await GetByIdAsync(dto.Id);
             if (manufacturerInDb == null)
             {
                 throw new ArgumentNullException("Manufacturer is not found");
             }
-            var updatedManufacturer = _mapper.Map<Manufacturer>(updateDto);
-            updatedManufacturer.UpdatedDate = DateTime.UtcNow;
+            Manufacturer manufacturer = _mapper.Map<Manufacturer>(dto);
+            manufacturer.UpdatedDate = DateTime.UtcNow;
 
-            if (updatedManufacturer.ImagePath != null)
+            if (manufacturer.ImagePath != null)
             {
-                if (updatedManufacturer.ImagePath.Contains("base64,"))
+                if (manufacturer.ImagePath.Contains("base64,"))
                 {
-                    ImageHandler.UploadBase64AsJpg(updatedManufacturer.ImagePath, $"{updatedManufacturer.Id}", "Manufacturers");
-                    updatedManufacturer.ImagePath = $"Manufacturers/{updatedManufacturer.Id}.jpg";
+                    ImageHandler.UploadBase64AsJpg(manufacturer.ImagePath, $"{manufacturer.Id}", "Manufacturers");
+                    manufacturer.ImagePath = $"Manufacturers/{manufacturer.Id}.jpg";
                 }
             }
 
-            _manufacturerRepository.Update(manufacturerInDb, updatedManufacturer);
-            await _customLogService.CreateCustomLog("Update", updatedManufacturer.Id, null, "Manufacturer", null);
+            _manufacturerRepository.Update(manufacturerInDb, manufacturer);
+            await _customLogService.CreateCustomLog("Update", "Manufacturer", manufacturer.Name);
             await _unitOfWork.CommitAsync();
-            return _manufacturerRepository.GetDto(updatedManufacturer);
+            return _manufacturerRepository.GetDto(manufacturer);
         }
 
-        public async Task DeleteManufacturerAsync(Guid manufacturerId)
+        public async Task DeleteManufacturerAsync(Guid id)
         {
-            var manufacturer = await GetByIdAsync(manufacturerId);
+            var manufacturer = await GetByIdAsync(id);
             if (manufacturer == null)
             {
                 throw new ArgumentNullException("Manufacturer is not found");
             }
-            _manufacturerRepository.Update(manufacturer, manufacturer);
-            await _customLogService.CreateCustomLog("Delete", manufacturer.Id, null, "Manufacturer", null);
+            _manufacturerRepository.Remove(manufacturer);
+            await _customLogService.CreateCustomLog("Delete", "Manufacturer", manufacturer.Name);
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task DeleteRangeManufacturerAsync(List<Guid> manufacturerIds)
+        public async Task DeleteRangeManufacturerAsync(List<Guid> ids)
         {
-            var manufacturers = new List<Manufacturer>();
-            foreach (var manufacturerId in manufacturerIds)
+            List<Manufacturer> manufacturers = new List<Manufacturer>();
+            foreach (var id in ids)
             {
-                var manufacturer = await GetByIdAsync(manufacturerId);
+                Manufacturer manufacturer = await GetByIdAsync(id);
                 if (manufacturer == null)
                 {
-                    throw new ArgumentNullException($"{manufacturerId} - Manufacturer is not found");
+                    throw new ArgumentNullException("Manufacturer is not found");
                 }
                 manufacturers.Add(manufacturer);
-                await _customLogService.CreateCustomLog("Delete", manufacturer.Id, null, "Manufacturer", null);
+                await _customLogService.CreateCustomLog("Delete", "Manufacturer", manufacturer.Name);
             }
-            _manufacturerRepository.UpdateRange(manufacturers);
+            _manufacturerRepository.RemoveRange(manufacturers);
             await _unitOfWork.CommitAsync();
         }
 

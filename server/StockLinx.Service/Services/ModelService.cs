@@ -24,86 +24,79 @@ namespace StockLinx.Service.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<ModelDto> GetDto(Guid id)
+        public async Task<ModelDto> GetDtoAsync(Guid id)
         {
-            var model = await GetByIdAsync(id);
+            Model model = await GetByIdAsync(id);
             return _modelRepository.GetDto(model);
         }
 
-        public async Task<List<ModelDto>> GetAllDtos()
+        public async Task<List<ModelDto>> GetAllDtosAsync()
         {
-            return await _modelRepository.GetAllDtos();
+            return await _modelRepository.GetAllDtosAsync();
         }
 
-        public async Task<ModelDto> CreateModelAsync(ModelCreateDto createDto)
+        public async Task<ModelDto> CreateModelAsync(ModelCreateDto dto)
         {
-            var added = _modelRepository.CreateModel(createDto);
+            ModelDto added = _modelRepository.CreateModel(dto);
             await _unitOfWork.CommitAsync();
-            await _customLogService.CreateCustomLog("Create", added.Id, null, "Model", null);
+            await _customLogService.CreateCustomLog("Create", "Model", added.Name);
             return added;
         }
 
-        public async Task<List<ModelDto>> CreateRangeModelAsync(List<ModelCreateDto> createDtos)
+        public async Task<List<ModelDto>> CreateRangeModelAsync(List<ModelCreateDto> dtos)
         {
-            var newModels = new List<Model>();
-            foreach (var createDto in createDtos)
+            List<Model> models = new List<Model>();
+            foreach (ModelCreateDto dto in dtos)
             {
-                var newModel = _mapper.Map<Model>(createDto);
-                newModel.Id = Guid.NewGuid();
-                newModel.CreatedDate = DateTime.UtcNow;
-                newModels.Add(newModel);
-                await _customLogService.CreateCustomLog("Create", newModel.Id, null, "Model", null);
+                Model model = _mapper.Map<Model>(dto);
+                model.Id = Guid.NewGuid();
+                model.CreatedDate = DateTime.UtcNow;
+                models.Add(model);
+                await _customLogService.CreateCustomLog("Create", "Model", model.Name);
             }
-            await _modelRepository.AddRangeAsync(newModels);
+            await _modelRepository.AddRangeAsync(models);
             await _unitOfWork.CommitAsync();
-            return _modelRepository.GetDtos(newModels);
+            return _modelRepository.GetDtos(models);
         }
 
-        public async Task UpdateModelAsync(ModelUpdateDto updateDto)
+        public async Task UpdateModelAsync(ModelUpdateDto dto)
         {
-            var modelInDb = await GetByIdAsync(updateDto.Id);
+            var modelInDb = await GetByIdAsync(dto.Id);
             if (modelInDb == null)
             {
                 throw new ArgumentNullException("Model is not found");
             }
-            try
-            {
-                _modelRepository.UpdateModel(updateDto);
-                await _customLogService.CreateCustomLog("Update", updateDto.Id, null, "Model", null);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-
+            _modelRepository.UpdateModel(dto);
+            await _customLogService.CreateCustomLog("Update", "Model", dto.Name);
         }
 
-        public async Task DeleteModelAsync(Guid modelId)
+        public async Task DeleteModelAsync(Guid id)
         {
-            var model = await GetByIdAsync(modelId);
+            var model = await GetByIdAsync(id);
             if (model == null)
             {
                 throw new ArgumentNullException("Model is not found");
             }
-            _modelRepository.Update(model, model);
-            await _customLogService.CreateCustomLog("Delete", model.Id, null, "Model", null);
+            _modelRepository.Remove(model);
+            await _customLogService.CreateCustomLog("Delete", "Model", model.Name);
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task DeleteRangeModelAsync(List<Guid> modelIds)
+        public async Task DeleteRangeModelAsync(List<Guid> ids)
         {
             var models = new List<Model>();
-            foreach (var modelId in modelIds)
+            foreach (var id in ids)
             {
-                var model = await GetByIdAsync(modelId);
+                var model = await GetByIdAsync(id);
                 if (model == null)
                 {
-                    throw new ArgumentNullException($"{modelId} - Model is not found");
+                    throw new ArgumentNullException("Model is not found");
                 }
                 models.Add(model);
-                await _customLogService.CreateCustomLog("Delete", model.Id, null, "Model", null);
+                await _customLogService.CreateCustomLog("Delete","Model", model.Name);
             }
-            _modelRepository.UpdateRange(models);
+            _modelRepository.RemoveRange(models);
+            await _unitOfWork.CommitAsync();
         }
     }
 }

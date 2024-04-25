@@ -7,12 +7,12 @@ namespace StockLinx.Core.Services
 {
     public interface IPermissionService : IService<Permission>
     {
-        Task<PermissionDto> GetDto(Guid id);
-        Task<List<PermissionDto>> GetAllDtos();
-        Task<PermissionDto> CreatePermissionAsync(PermissionCreateDto createDto);
-        Task<List<PermissionDto>> CreateRangePermissionAsync(List<PermissionCreateDto> createDtos);
-        Task DeletePermissionAsync(Guid permissionId);
-        Task DeleteRangePermissionAsync(List<Guid> permissionIds);
-        Task<List<PermissionDto>> Scyncronaize(List<PermissionSyncDto> createDtos);
+        Task<PermissionDto> GetDtoAsync(Guid id);
+        Task<List<PermissionDto>> GetAllDtosAsync();
+        Task<PermissionDto> CreatePermissionAsync(PermissionCreateDto dto);
+        Task<List<PermissionDto>> CreateRangePermissionAsync(List<PermissionCreateDto> dtos);
+        Task DeletePermissionAsync(Guid id);
+        Task DeleteRangePermissionAsync(List<Guid> ids);
+        Task<List<PermissionDto>> Scyncronaize(List<PermissionSyncDto> dtos);
     }
 }

@@ -24,85 +24,85 @@ namespace StockLinx.Service.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<LocationDto> GetDto(Guid id)
+        public async Task<LocationDto> GetDtoAsync(Guid id)
         {
             var location = await GetByIdAsync(id);
             return _locationRepository.GetDto(location);
         }
 
-        public async Task<List<LocationDto>> GetAllDtos()
+        public async Task<List<LocationDto>> GetAllDtosAsync()
         {
-            return await _locationRepository.GetAllDtos();
+            return await _locationRepository.GetAllDtosAsync();
         }
 
-        public async Task<LocationDto> CreateLocationAsync(LocationCreateDto createDto)
+        public async Task<LocationDto> CreateLocationAsync(LocationCreateDto dto)
         {
-            var newLocation = _mapper.Map<Location>(createDto);
-            newLocation.Id = Guid.NewGuid();
-            newLocation.CreatedDate = DateTime.UtcNow;
-            await _locationRepository.AddAsync(newLocation);
-            await _customLogService.CreateCustomLog("Create", newLocation.Id, null, "Location", null);
+            Location location = _mapper.Map<Location>(dto);
+            location.Id = Guid.NewGuid();
+            location.CreatedDate = DateTime.UtcNow;
+            await _locationRepository.AddAsync(location);
+            await _customLogService.CreateCustomLog("Create", "Location", location.Name);
             await _unitOfWork.CommitAsync();
-            return _locationRepository.GetDto(newLocation);
+            return _locationRepository.GetDto(location);
         }
 
-        public async Task<List<LocationDto>> CreateRangeLocationAsync(List<LocationCreateDto> createDtos)
+        public async Task<List<LocationDto>> CreateRangeLocationAsync(List<LocationCreateDto> dtos)
         {
-            var newLocations = new List<Location>();
-            foreach (var createDto in createDtos)
+            List<Location> locations = new List<Location>();
+            foreach (var dto in dtos)
             {
-                var newLocation = _mapper.Map<Location>(createDto);
-                newLocation.Id = Guid.NewGuid();
-                newLocation.CreatedDate = DateTime.UtcNow;
-                newLocations.Add(newLocation);
-                await _customLogService.CreateCustomLog("Create", newLocation.Id, null, "Location", null);
+                Location location = _mapper.Map<Location>(dto);
+                location.Id = Guid.NewGuid();
+                location.CreatedDate = DateTime.UtcNow;
+                locations.Add(location);
+                await _customLogService.CreateCustomLog("Create", "Location", location.Name);
             }
-            await _locationRepository.AddRangeAsync(newLocations);
+            await _locationRepository.AddRangeAsync(locations);
             await _unitOfWork.CommitAsync();
-            return _locationRepository.GetDtos(newLocations);
+            return _locationRepository.GetDtos(locations);
         }
 
-        public async Task<LocationDto> UpdateLocationAsync(LocationUpdateDto updateDto)
+        public async Task<LocationDto> UpdateLocationAsync(LocationUpdateDto dto)
         {
-            var locationInDb = await GetByIdAsync(updateDto.Id);
+            var locationInDb = await GetByIdAsync(dto.Id);
             if (locationInDb == null)
             {
                 throw new ArgumentNullException("Location is not found");
             }
-            var updatedLocation = _mapper.Map<Location>(updateDto);
-            updatedLocation.UpdatedDate = DateTime.UtcNow;
-            _locationRepository.Update(locationInDb, updatedLocation);
-            await _customLogService.CreateCustomLog("Update", updatedLocation.Id, null, "Location", null);
+            Location location = _mapper.Map<Location>(dto);
+            location.UpdatedDate = DateTime.UtcNow;
+            _locationRepository.Update(locationInDb, location);
+            await _customLogService.CreateCustomLog("Update", "Location", location.Name);
             await _unitOfWork.CommitAsync();
-            return _locationRepository.GetDto(updatedLocation);
+            return _locationRepository.GetDto(location);
         }
 
-        public async Task DeleteLocationAsync(Guid locationId)
+        public async Task DeleteLocationAsync(Guid id)
         {
-            var location = await GetByIdAsync(locationId);
+            var location = await GetByIdAsync(id);
             if (location == null)
             {
                 throw new ArgumentNullException("Location is not found");
             }
-            _locationRepository.Update(location, location);
-            await _customLogService.CreateCustomLog("Delete", location.Id, null, "Location", null);
+            _locationRepository.Remove(location);
+            await _customLogService.CreateCustomLog("Delete", "Location", location.Name);
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task DeleteRangeLocationAsync(List<Guid> locationIds)
+        public async Task DeleteRangeLocationAsync(List<Guid> ids)
         {
             var locations = new List<Location>();
-            foreach (var locationId in locationIds)
+            foreach (var id in ids)
             {
-                var location = await GetByIdAsync(locationId);
+                var location = await GetByIdAsync(id);
                 if (location == null)
                 {
-                    throw new ArgumentNullException($"{locationId} - Location is not found");
+                    throw new ArgumentNullException("Location is not found");
                 }
                 locations.Add(location);
-                await _customLogService.CreateCustomLog("Delete", location.Id, null, "Location", null);
+                await _customLogService.CreateCustomLog("Delete", "Location", location.Name);
             }
-            _locationRepository.UpdateRange(locations);
+            _locationRepository.RemoveRange(locations);
             await _unitOfWork.CommitAsync();
         }
     }

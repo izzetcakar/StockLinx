@@ -15,6 +15,8 @@ namespace StockLinx.Service.Services
     {
         private readonly IComponentRepository _componentRepository;
         private readonly IDeployedProductRepository _deployedProductRepository;
+        private readonly IBranchRepository _branchRepository;
+        private readonly IUserService _userService;
         private readonly ICustomLogService _customLogService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
@@ -23,6 +25,8 @@ namespace StockLinx.Service.Services
             IRepository<Component> repository,
             IComponentRepository componentRepository,
             IDeployedProductRepository deployedProductRepository,
+            IBranchRepository branchRepository,
+            IUserService userService,
             IUnitOfWork unitOfWork,
             IMapper mapper,
             ICustomLogService customLogService
@@ -31,193 +35,155 @@ namespace StockLinx.Service.Services
         {
             _componentRepository = componentRepository;
             _deployedProductRepository = deployedProductRepository;
+            _branchRepository = branchRepository;
+            _userService = userService;
             _customLogService = customLogService;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<ComponentDto> GetDto(Guid id)
+        public async Task<ComponentDto> GetDtoAsync(Guid id)
         {
             var component = await GetByIdAsync(id);
-            return await _componentRepository.GetDto(component);
+            return await _componentRepository.GetDtoAsync(component);
         }
 
-        public async Task<List<ComponentDto>> GetAllDtos()
+        public async Task<List<ComponentDto>> GetAllDtosAsync()
         {
-            return await _componentRepository.GetAllDtos();
+            return await _componentRepository.GetAllDtosAsync();
         }
 
-        public async Task<ComponentDto> CreateComponentAsync(ComponentCreateDto createDto)
+        public async Task<ComponentDto> CreateComponentAsync(ComponentCreateDto dto)
         {
-            var newComponent = _mapper.Map<Component>(createDto);
-            newComponent.Id = Guid.NewGuid();
-            newComponent.CreatedDate = DateTime.UtcNow;
-            await _componentRepository.AddAsync(newComponent);
-            await _customLogService.CreateCustomLog(
-                "Create",
-                newComponent.Id,
-                newComponent.BranchId,
-                "Component",
-                "Branch"
-            );
+            var component = _mapper.Map<Component>(dto);
+            component.Id = Guid.NewGuid();
+            component.CreatedDate = DateTime.UtcNow;
+            await _componentRepository.AddAsync(component);
+            await _customLogService.CreateCustomLog("Create","Component",component.Name);
             await _unitOfWork.CommitAsync();
-            return await _componentRepository.GetDto(newComponent);
+            return await _componentRepository.GetDtoAsync(component);
         }
 
         public async Task<List<ComponentDto>> CreateRangeComponentAsync(
             List<ComponentCreateDto> createDtos
         )
         {
-            var newComponents = new List<Component>();
+            var components = new List<Component>();
             foreach (var createDto in createDtos)
             {
-                var newComponent = _mapper.Map<Component>(createDto);
-                newComponent.Id = Guid.NewGuid();
-                newComponent.CreatedDate = DateTime.UtcNow;
-                newComponents.Add(newComponent);
-                await _customLogService.CreateCustomLog(
-                    "Create",
-                    newComponent.Id,
-                    newComponent.BranchId,
-                    "Component",
-                    "Branch"
-                );
+                var component = _mapper.Map<Component>(createDto);
+                component.Id = Guid.NewGuid();
+                component.CreatedDate = DateTime.UtcNow;
+                components.Add(component);
+                await _customLogService.CreateCustomLog("Create","Component",component.Name);
             }
-            await _componentRepository.AddRangeAsync(newComponents);
+            await _componentRepository.AddRangeAsync(components);
             await _unitOfWork.CommitAsync();
-            return await _componentRepository.GetDtos(newComponents);
+            return await _componentRepository.GetDtosAsync(components);
         }
 
-        public async Task<ComponentDto> UpdateComponentAsync(ComponentUpdateDto updateDto)
+        public async Task<ComponentDto> UpdateComponentAsync(ComponentUpdateDto dto)
         {
-            var componentInDb = await GetByIdAsync(updateDto.Id);
+            var componentInDb = await GetByIdAsync(dto.Id);
             if (componentInDb == null)
             {
                 throw new ArgumentNullException("Component is not found");
             }
-            var updatedComponent = _mapper.Map<Component>(updateDto);
-            updatedComponent.UpdatedDate = DateTime.UtcNow;
-            _componentRepository.Update(componentInDb, updatedComponent);
-            await _customLogService.CreateCustomLog(
-                "Update",
-                updatedComponent.Id,
-                updatedComponent.BranchId,
-                "Component",
-                "Branch"
-            );
+            Component component = _mapper.Map<Component>(dto);
+            component.UpdatedDate = DateTime.UtcNow;
+            _componentRepository.Update(componentInDb, component);
+            await _customLogService.CreateCustomLog("Update","Component",component.Name);
             await _unitOfWork.CommitAsync();
-            return await _componentRepository.GetDto(updatedComponent);
+            return await _componentRepository.GetDtoAsync(component);
         }
 
-        public async Task DeleteComponentAsync(Guid componentId)
+        public async Task DeleteComponentAsync(Guid id)
         {
-            var component = await GetByIdAsync(componentId);
+            var component = await GetByIdAsync(id);
             if (component == null)
             {
                 throw new ArgumentNullException("Component is not found");
             }
-            _componentRepository.Update(component, component);
-            await _customLogService.CreateCustomLog(
-                "Delete",
-                component.Id,
-                component.BranchId,
-                "Component",
-                "Branch"
-            );
+            bool canDelete = await _componentRepository.CanDeleteAsync(id);
+            if (canDelete)
+            {
+            _componentRepository.Remove(component);
+            await _customLogService.CreateCustomLog("Delete","Component",component.Name);
             await _unitOfWork.CommitAsync();
+            }
         }
 
-        public async Task DeleteRangeComponentAsync(List<Guid> componentIds)
+        public async Task DeleteRangeComponentAsync(List<Guid> ids)
         {
             var components = new List<Component>();
-            foreach (var componentId in componentIds)
+            foreach (var id in ids)
             {
-                var component = await GetByIdAsync(componentId);
+                var component = await GetByIdAsync(id);
                 if (component == null)
                 {
-                    throw new ArgumentNullException($"{componentId} - Component is not found");
+                    throw new ArgumentNullException($"{id} - Component is not found");
                 }
-                components.Add(component);
-                await _customLogService.CreateCustomLog(
-                    "Delete",
-                    component.Id,
-                    component.BranchId,
-                    "Component",
-                    "Branch"
-                );
-            }
-            _componentRepository.UpdateRange(components);
+                bool canDelete = await _componentRepository.CanDeleteAsync(id);
+                if (canDelete)
+                {
+                    components.Add(component);
+                    await _customLogService.CreateCustomLog("Delete","Component",component.Name);
+                }
+}
+            _componentRepository.RemoveRange(components);
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task<ComponentCheckInResponseDto> CheckIn(ComponentCheckInDto checkInDto)
+        public async Task<DeployedProductDto> CheckInAsync(ProductCheckInDto checkInDto)
         {
-            var component = await _componentRepository.GetByIdAsync(checkInDto.ComponentId);
+            User user = await _userService.GetByIdAsync(checkInDto.UserId);
+            var component = await _componentRepository.GetByIdAsync(checkInDto.ProductId);
             if (component == null)
             {
-                throw new Exception("Component is not found");
+                throw new Exception("Component not found");
             }
-            var deployedProducts = await _deployedProductRepository.GetAll().ToListAsync();
-            var availableQuantity =
-                component.Quantity
-                - deployedProducts.Count(d =>
-                    d.ComponentId.HasValue && d.ComponentId == component.Id
-                );
+            int availableQuantity = await _componentRepository.GetAvaliableQuantityAsync(component);
             if (availableQuantity < 1)
             {
                 throw new Exception("Component is out of stock");
             }
-            var deployedProduct = new DeployedProduct
+            if (checkInDto.Quantity < availableQuantity)
+            {
+                throw new Exception("Component stock is not enough");
+            }
+            DeployedProduct deployedProduct = new DeployedProduct
             {
                 Id = Guid.NewGuid(),
-                ComponentId = checkInDto.ComponentId,
+                ComponentId = component.Id,
                 UserId = checkInDto.UserId,
                 AssignDate = DateTime.UtcNow,
                 CreatedDate = DateTime.UtcNow,
+                Quantity = availableQuantity,
                 Notes = checkInDto.Notes,
             };
             await _deployedProductRepository.AddAsync(deployedProduct);
-            await _customLogService.CreateCustomLog(
-                "CheckIn",
-                component.Id,
-                deployedProduct.UserId,
-                "Component",
-                "User"
-            );
+            await _customLogService.CreateCustomLog("CheckIn", "Component", component.Name, "User", user.FirstName + user.LastName);
             await _unitOfWork.CommitAsync();
-            var componentDto = await _componentRepository.GetDto(component);
-            var deployedProductDto = await _deployedProductRepository.GetDto(deployedProduct);
-            return new ComponentCheckInResponseDto
-            {
-                Component = componentDto,
-                DeployedProduct = deployedProductDto
-            };
+            DeployedProductDto deployedProductDto = await _deployedProductRepository.GetDtoAsync(deployedProduct);
+            return deployedProductDto;
         }
 
-        public async Task<ComponentDto> CheckOut(Guid id)
+        public async Task CheckOutAsync(Guid id)
         {
-            var deployedProduct = await _deployedProductRepository
-                .Where(d => d.ComponentId.HasValue && d.Id == id)
-                .SingleOrDefaultAsync();
-            if (deployedProduct == null)
-            {
-                throw new Exception("Deployed product is not found");
-            }
-            var component = await _componentRepository.GetByIdAsync(deployedProduct.ComponentId);
+            var component = await _componentRepository.GetByIdAsync(id);
             if (component == null)
             {
                 throw new Exception("Component is not found");
             }
-            _deployedProductRepository.Update(deployedProduct, deployedProduct);
-            await _customLogService.CreateCustomLog(
-                "CheckOut",
-                component.Id,
-                component.BranchId,
-                "Component",
-                "Branch"
-            );
+            List<DeployedProduct> deployedProducts = await _deployedProductRepository.GetAll().Where(dp => dp.ComponentId == id).ToListAsync();
+            var deployedProduct = deployedProducts.Find(dp => dp.ComponentId == id);
+            if (deployedProduct == null)
+            {
+                throw new Exception("Deployed product is not found");
+            }
+            _deployedProductRepository.Remove(deployedProduct);
+            await _customLogService.CreateCustomLog("CheckOut", "Component", deployedProduct.Component.Name);
             await _unitOfWork.CommitAsync();
-            return await _componentRepository.GetDto(component);
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 using StockLinx.Core.Services;
@@ -19,7 +18,7 @@ namespace StockLinx.Service.Services
             _serviceProvider = serviceProvider;
         }
 
-        public async Task CreateCustomLog(string action, Guid itemId, Guid? targetId, string itemController, string? targetController)
+        public async Task CreateCustomLog(string action, string itemController, string item, string targetController, string target)
         {
             var userService = _serviceProvider.GetRequiredService<IUserService>();
             var user = await userService.GetCurrentUser();
@@ -28,8 +27,8 @@ namespace StockLinx.Service.Services
                 Id = Guid.NewGuid(),
                 Date = DateTime.UtcNow,
                 UserId = user.Id,
-                ItemId = itemId,
-                TargetId = targetId,
+                Item = item,
+                Target = target,
                 ItemController = itemController,
                 TargetController = targetController,
                 Action = action,
@@ -37,31 +36,28 @@ namespace StockLinx.Service.Services
             await _customLogRepository.AddAsync(customLog);
         }
 
-        public async Task<IEnumerable<CustomLogDto>> GetAllDtosAsync()
+        public async Task CreateCustomLog(string action, string itemController, string item)
         {
-            var allLogs = await _customLogRepository
-                .GetAll()
-                .ToListAsync();
-
-            var logDtos = allLogs.Select(async x => new CustomLogDto
+            var userService = _serviceProvider.GetRequiredService<IUserService>();
+            var user = await userService.GetCurrentUser();
+            var customLog = new CustomLog
             {
-                Id = x.Id,
-                UserId = x.UserId,
-                Date = x.Date,
-                Action = x.Action,
-                ItemId = x.ItemId.ToString(),
-                ItemRoute = $"{x.ItemController.ToLower()}/{x.ItemId}",
-                TargetId = x.TargetId?.ToString(),
-                TargetRoute = x.TargetController != null ? $"{x.TargetController.ToLower()}/{x.TargetId}" : null,
-                ItemController = x.ItemController,
-                TargetController = x.TargetController,
-                ItemName = await _customLogRepository.GetObjByIdAsync(x.ItemController, x.ItemId),
-                TargetName = (x.TargetController != null && x.TargetId != null)
-                    ? await _customLogRepository.GetObjByIdAsync(x.TargetController, (Guid)x.TargetId)
-                    : null,
-            }).Select(x => x.Result).OrderByDescending(x => x.Date).ToList();
+                Id = Guid.NewGuid(),
+                Date = DateTime.UtcNow,
+                UserId = user.Id,
+                Action = action,
+                Item = item,
+                ItemController = itemController,
+                Target = null,
+                TargetController = null,
+            };
+            await _customLogRepository.AddAsync(customLog);
+        }
 
-            return logDtos;
+        public async Task<IEnumerable<CustomLog>> GetAllDtosAsync()
+        {
+            var customLogs = await _customLogRepository.GetAll().ToListAsync();
+            return customLogs;
         }
     }
 }

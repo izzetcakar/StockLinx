@@ -8,14 +8,14 @@ namespace StockLinx.Core.Services
 {
     public interface IComponentService : IService<Component>
     {
-        Task<ComponentDto> GetDto(Guid id);
-        Task<List<ComponentDto>> GetAllDtos();
-        Task<ComponentDto> CreateComponentAsync(ComponentCreateDto createDto);
-        Task<List<ComponentDto>> CreateRangeComponentAsync(List<ComponentCreateDto> createDtos);
-        Task<ComponentDto> UpdateComponentAsync(ComponentUpdateDto updateDto);
-        Task DeleteComponentAsync(Guid componentId);
-        Task DeleteRangeComponentAsync(List<Guid> componentIds);
-        Task<ComponentCheckInResponseDto> CheckIn(ComponentCheckInDto checkInDto);
-        Task<ComponentDto> CheckOut(Guid id);
+        Task<ComponentDto> GetDtoAsync(Guid id);
+        Task<List<ComponentDto>> GetAllDtosAsync();
+        Task<ComponentDto> CreateComponentAsync(ComponentCreateDto dto);
+        Task<List<ComponentDto>> CreateRangeComponentAsync(List<ComponentCreateDto> dtos);
+        Task<ComponentDto> UpdateComponentAsync(ComponentUpdateDto dto);
+        Task DeleteComponentAsync(Guid id);
+        Task DeleteRangeComponentAsync(List<Guid> ids);
+        Task<DeployedProductDto> CheckInAsync(ProductCheckInDto checkInDto);
+        Task CheckOutAsync(Guid id);
     }
 }

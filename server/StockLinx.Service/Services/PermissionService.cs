@@ -35,131 +35,107 @@ namespace StockLinx.Service.Services
             _userService = userService;
         }
 
-        public async Task<PermissionDto> GetDto(Guid id)
+        public async Task<PermissionDto> GetDtoAsync(Guid id)
         {
-            var user = await _userService.GetCurrentUser();
+            User user = await _userService.GetCurrentUser();
             bool isAdmin = (bool)user.IsAdmin;
             if (!isAdmin)
             {
                 throw new ArgumentNullException("User is not admin");
             }
-            var permission = await GetByIdAsync(id);
+            Permission permission = await GetByIdAsync(id);
             return _permissionRepository.GetDto(permission);
         }
 
-        public async Task<List<PermissionDto>> GetAllDtos()
+        public async Task<List<PermissionDto>> GetAllDtosAsync()
         {
-            var user = await _userService.GetCurrentUser();
+            User user = await _userService.GetCurrentUser();
             bool isAdmin = (bool)user.IsAdmin;
             if (!isAdmin)
             {
                 return new List<PermissionDto>();
             }
-            return await _permissionRepository.GetAllDtos();
+            return await _permissionRepository.GetAllDtosAsync();
         }
 
-        public async Task<PermissionDto> CreatePermissionAsync(PermissionCreateDto createDto)
+        public async Task<PermissionDto> CreatePermissionAsync(PermissionCreateDto dto)
         {
-            var user = await _userService.GetCurrentUser();
+            User user = await _userService.GetCurrentUser();
             if ((bool)!user.IsAdmin)
             {
                 throw new ArgumentNullException("User is not admin");
             }
-            var newPermission = _mapper.Map<Permission>(createDto);
-            newPermission.Id = Guid.NewGuid();
-            newPermission.CreatedDate = DateTime.UtcNow;
-            await _permissionRepository.AddAsync(newPermission);
-            await _customLogService.CreateCustomLog(
-                "Permission Given",
-                newPermission.UserId,
-                newPermission.BranchId,
-                "User",
-                "Branch"
-            );
+            Permission permission = _mapper.Map<Permission>(dto);
+            permission.Id = Guid.NewGuid();
+            permission.CreatedDate = DateTime.UtcNow;
+            await _permissionRepository.AddAsync(permission);
+            await _customLogService.CreateCustomLog("Permission Given","Permission",permission.Branch.Name);
             await _unitOfWork.CommitAsync();
-            return _permissionRepository.GetDto(newPermission);
+            return _permissionRepository.GetDto(permission);
         }
 
         public async Task<List<PermissionDto>> CreateRangePermissionAsync(
-            List<PermissionCreateDto> createDtos
+            List<PermissionCreateDto> dtos
         )
         {
-            var user = await _userService.GetCurrentUser();
+            User user = await _userService.GetCurrentUser();
             if ((bool)!user.IsAdmin)
             {
                 throw new ArgumentNullException("User is not admin");
             }
-            var newPermissions = new List<Permission>();
-            foreach (var createDto in createDtos)
+            List<Permission> permissions = new List<Permission>();
+            foreach (var dto in dtos)
             {
-                var newPermission = _mapper.Map<Permission>(createDto);
-                newPermission.Id = Guid.NewGuid();
-                newPermission.CreatedDate = DateTime.UtcNow;
-                newPermissions.Add(newPermission);
-                await _customLogService.CreateCustomLog(
-                    "Permission Given",
-                    newPermission.UserId,
-                    newPermission.BranchId,
-                    "User",
-                    "Branch"
-                );
+                Permission permission = _mapper.Map<Permission>(dto);
+                permission.Id = Guid.NewGuid();
+                permission.CreatedDate = DateTime.UtcNow;
+                permissions.Add(permission);
+                await _customLogService.CreateCustomLog("Permission Given","Permission",permission.Branch.Name);
             }
-            await _permissionRepository.AddRangeAsync(newPermissions);
+            await _permissionRepository.AddRangeAsync(permissions);
             await _unitOfWork.CommitAsync();
-            return _permissionRepository.GetDtos(newPermissions);
+            return _permissionRepository.GetDtos(permissions);
         }
 
-        public async Task DeletePermissionAsync(Guid permissionId)
+        public async Task DeletePermissionAsync(Guid id)
         {
-            var user = await _userService.GetCurrentUser();
+            User user = await _userService.GetCurrentUser();
             if ((bool)!user.IsAdmin)
             {
                 throw new ArgumentNullException("User is not admin");
             }
-            var permission = await GetByIdAsync(permissionId);
+            Permission permission = await GetByIdAsync(id);
             if (permission == null)
             {
                 throw new ArgumentNullException("Permission is not found");
             }
-            _permissionRepository.Update(permission, permission);
-            await _customLogService.CreateCustomLog(
-                "Permission taken",
-                permission.UserId,
-                permission.BranchId,
-                "User",
-                "Branch"
-            );
+            _permissionRepository.Remove(permission);
+            await _customLogService.CreateCustomLog("Permission taken","Permission",permission.Branch.Name);
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task DeleteRangePermissionAsync(List<Guid> permissionIds)
+        public async Task DeleteRangePermissionAsync(List<Guid> ids)
         {
-            var permissions = new List<Permission>();
-            foreach (var permissionId in permissionIds)
+            List<Permission> permissions = new List<Permission>();
+            foreach (var id in ids)
             {
-                var permission = await GetByIdAsync(permissionId);
+                var permission = await GetByIdAsync(id);
                 if (permission == null)
                 {
-                    throw new ArgumentNullException($"{permissionId} - Permission is not found");
+                    throw new ArgumentNullException("Permission is not found");
                 }
                 permissions.Add(permission);
-                await _customLogService.CreateCustomLog(
-                    "Permission taken",
-                    permission.UserId,
-                    permission.BranchId,
-                    "User",
-                    "Branch"
-                );
+                await _customLogService.CreateCustomLog("Permission taken","Permission",permission.Branch.Name);
             }
-            _permissionRepository.UpdateRange(permissions);
+            _permissionRepository.RemoveRange(permissions);
             await _unitOfWork.CommitAsync();
         }
 
         public async Task<List<PermissionDto>> Scyncronaize(List<PermissionSyncDto> createDtos)
         {
-            var entities = _mapper.Map<List<Permission>>(createDtos);
-            var toAdd = new List<Permission>();
-            var entitiesInDb = await _permissionRepository.GetAll().AsNoTracking().ToListAsync();
+            List<Permission> entities = _mapper.Map<List<Permission>>(createDtos);
+            List<Permission> toAdd = new List<Permission>();
+            List<Permission> entitiesInDb = await _permissionRepository.GetAll().AsNoTracking().ToListAsync();
             foreach (var entityInDb in entitiesInDb)
             {
                 var entity = entities.FirstOrDefault(p =>
@@ -167,18 +143,12 @@ namespace StockLinx.Service.Services
                 );
                 if (entity == null)
                 {
-                    var toDelete = await GetByIdAsync(entityInDb.Id);
+                    Permission toDelete = await GetByIdAsync(entityInDb.Id);
                     _permissionRepository.Update(entityInDb, toDelete);
-                    await _customLogService.CreateCustomLog(
-                        "Permission taken",
-                        entityInDb.UserId,
-                        entityInDb.BranchId,
-                        "User",
-                        "Branch"
-                    );
+                    await _customLogService.CreateCustomLog("Permission taken","Permission",entityInDb.Branch.Name);
                 }
             }
-            foreach (var entity in entities)
+            foreach (Permission entity in entities)
             {
                 var entityInDb = entitiesInDb.FirstOrDefault(p =>
                     p.UserId == entity.UserId && p.BranchId == entity.BranchId
@@ -188,18 +158,12 @@ namespace StockLinx.Service.Services
                     entity.Id = Guid.NewGuid();
                     entity.CreatedDate = DateTime.UtcNow;
                     toAdd.Add(entity);
-                    await _customLogService.CreateCustomLog(
-                        "Permission Given",
-                        entity.UserId,
-                        entity.BranchId,
-                        "User",
-                        "Branch"
-                    );
+                    await _customLogService.CreateCustomLog("Permission Given","Permission",entity.Branch.Name);
                 }
             }
             await _permissionRepository.AddRangeAsync(toAdd);
             await _unitOfWork.CommitAsync();
-            var dtos = await _permissionRepository.GetAllDtos();
+            List<PermissionDto> dtos = await _permissionRepository.GetAllDtosAsync();
             return dtos;
         }
     }

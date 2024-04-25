@@ -7,12 +7,12 @@ namespace StockLinx.Core.Services
 {
     public interface IBranchService : IService<Branch>
     {
-        Task<BranchDto> GetDto(Guid id);
-        Task<List<BranchDto>> GetAllDtos();
-        Task<BranchDto> CreateBranchAsync(BranchCreateDto createDto);
-        Task<List<BranchDto>> CreateRangeBranchAsync(List<BranchCreateDto> createDtos);
-        Task<BranchDto> UpdateBranchAsync(BranchUpdateDto updateDto);
-        Task DeleteBranchAsync(Guid branchId);
-        Task DeleteRangeBranchAsync(List<Guid> branchIds);
+        Task<BranchDto> GetDtoAsync(Guid id);
+        Task<List<BranchDto>> GetAllDtosAsync();
+        Task<BranchDto> CreateBranchAsync(BranchCreateDto dto);
+        Task<List<BranchDto>> CreateRangeBranchAsync(List<BranchCreateDto> dtos);
+        Task<BranchDto> UpdateBranchAsync(BranchUpdateDto dto);
+        Task DeleteBranchAsync(Guid id);
+        Task DeleteRangeBranchAsync(List<Guid> ids);
     }
 }

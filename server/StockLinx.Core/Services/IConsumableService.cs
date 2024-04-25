@@ -8,14 +8,14 @@ namespace StockLinx.Core.Services
 {
     public interface IConsumableService : IService<Consumable>
     {
-        Task<ConsumableDto> GetDto(Guid id);
-        Task<List<ConsumableDto>> GetAllDtos();
-        Task<ConsumableDto> CreateConsumableAsync(ConsumableCreateDto createDto);
-        Task<List<ConsumableDto>> CreateRangeConsumableAsync(List<ConsumableCreateDto> createDtos);
-        Task<ConsumableDto> UpdateConsumableAsync(ConsumableUpdateDto updateDto);
-        Task DeleteConsumableAsync(Guid consumableId);
-        Task DeleteRangeConsumableAsync(List<Guid> consumableIds);
-        Task<ConsumableCheckInResponseDto> CheckIn(ConsumableCheckInDto checkInDto);
-        Task<ConsumableDto> CheckOut(Guid id);
+        Task<ConsumableDto> GetDtoAsync(Guid id);
+        Task<List<ConsumableDto>> GetAllDtosAsync();
+        Task<ConsumableDto> CreateConsumableAsync(ConsumableCreateDto dto);
+        Task<List<ConsumableDto>> CreateRangeConsumableAsync(List<ConsumableCreateDto> dtos);
+        Task<ConsumableDto> UpdateConsumableAsync(ConsumableUpdateDto dto);
+        Task DeleteConsumableAsync(Guid id);
+        Task DeleteRangeConsumableAsync(List<Guid> ids);
+        Task<DeployedProductDto> CheckInAsync(ProductCheckInDto checkInDto);
+        Task CheckOutAsync(Guid id);
     }
 }

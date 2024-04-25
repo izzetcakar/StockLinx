@@ -23,104 +23,104 @@ namespace StockLinx.Service.Services
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
-        public async Task<SupplierDto> GetDto(Guid id)
+        public async Task<SupplierDto> GetDtoAsync(Guid id)
         {
-            var supplier = await GetByIdAsync(id);
+            Supplier supplier = await GetByIdAsync(id);
             return _supplierRepository.GetDto(supplier);
         }
 
-        public async Task<List<SupplierDto>> GetAllDtos()
+        public async Task<List<SupplierDto>> GetAllDtosAsync()
         {
-            return await _supplierRepository.GetAllDtos();
+            return await _supplierRepository.GetAllDtosAsync();
         }
 
-        public async Task<SupplierDto> CreateSupplierAsync(SupplierCreateDto createDto)
+        public async Task<SupplierDto> CreateSupplierAsync(SupplierCreateDto dto)
         {
-            var newSupplier = _mapper.Map<Supplier>(createDto);
-            newSupplier.Id = Guid.NewGuid();
-            newSupplier.CreatedDate = DateTime.UtcNow;
+            Supplier supplier = _mapper.Map<Supplier>(dto);
+            supplier.Id = Guid.NewGuid();
+            supplier.CreatedDate = DateTime.UtcNow;
 
-            if (newSupplier.ImagePath != null)
+            if (supplier.ImagePath != null)
             {
-                if (newSupplier.ImagePath.Contains("base64,"))
+                if (supplier.ImagePath.Contains("base64,"))
                 {
-                    ImageHandler.UploadBase64AsJpg(newSupplier.ImagePath, $"{newSupplier.Id}", "Suppliers");
-                    newSupplier.ImagePath = $"Suppliers/{newSupplier.Id}.jpg";
+                    ImageHandler.UploadBase64AsJpg(supplier.ImagePath, $"{supplier.Id}", "Suppliers");
+                    supplier.ImagePath = $"Suppliers/{supplier.Id}.jpg";
                 }
             }
 
-            await _supplierRepository.AddAsync(newSupplier);
-            await _customLogService.CreateCustomLog("Create", newSupplier.Id, null, "Supplier", null);
+            await _supplierRepository.AddAsync(supplier);
+            await _customLogService.CreateCustomLog("Create", "Supplier", supplier.Name);
             await _unitOfWork.CommitAsync();
-            return _supplierRepository.GetDto(newSupplier);
+            return _supplierRepository.GetDto(supplier);
         }
 
-        public async Task<List<SupplierDto>> CreateRangeSupplierAsync(List<SupplierCreateDto> createDtos)
+        public async Task<List<SupplierDto>> CreateRangeSupplierAsync(List<SupplierCreateDto> dtos)
         {
-            var newSuppliers = new List<Supplier>();
-            foreach (var createDto in createDtos)
+            List<Supplier> suppliers = new List<Supplier>();
+            foreach (var dto in dtos)
             {
-                var newSupplier = _mapper.Map<Supplier>(createDto);
-                newSupplier.Id = Guid.NewGuid();
-                newSupplier.CreatedDate = DateTime.UtcNow;
-                newSuppliers.Add(newSupplier);
-                await _customLogService.CreateCustomLog("Create", newSupplier.Id, null, "Supplier", null);
+                Supplier supplier = _mapper.Map<Supplier>(dto);
+                supplier.Id = Guid.NewGuid();
+                supplier.CreatedDate = DateTime.UtcNow;
+                suppliers.Add(supplier);
+                await _customLogService.CreateCustomLog("Create", "Supplier", supplier.Name);
             }
-            await _supplierRepository.AddRangeAsync(newSuppliers);
-            return _supplierRepository.GetDtos(newSuppliers);
+            await _supplierRepository.AddRangeAsync(suppliers);
+            return _supplierRepository.GetDtos(suppliers);
         }
 
-        public async Task<SupplierDto> UpdateSupplierAsync(SupplierUpdateDto updateDto)
+        public async Task<SupplierDto> UpdateSupplierAsync(SupplierUpdateDto dto)
         {
-            var supplierInDb = await GetByIdAsync(updateDto.Id);
+            Supplier supplierInDb = await GetByIdAsync(dto.Id);
             if (supplierInDb == null)
             {
                 throw new ArgumentNullException("Supplier is not found");
             }
-            var updatedSupplier = _mapper.Map<Supplier>(updateDto);
-            updatedSupplier.UpdatedDate = DateTime.UtcNow;
+            Supplier supplier = _mapper.Map<Supplier>(dto);
+            supplier.UpdatedDate = DateTime.UtcNow;
 
-            if (updatedSupplier.ImagePath != null)
+            if (supplier.ImagePath != null)
             {
-                if (updatedSupplier.ImagePath.Contains("base64,"))
+                if (supplier.ImagePath.Contains("base64,"))
                 {
-                    ImageHandler.UploadBase64AsJpg(updatedSupplier.ImagePath, $"{updatedSupplier.Id}", "Suppliers");
-                    updatedSupplier.ImagePath = $"Suppliers/{updatedSupplier.Id}.jpg";
+                    ImageHandler.UploadBase64AsJpg(supplier.ImagePath, $"{supplier.Id}", "Suppliers");
+                    supplier.ImagePath = $"Suppliers/{supplier.Id}.jpg";
                 }
             }
 
-            _supplierRepository.Update(supplierInDb, updatedSupplier);
-            await _customLogService.CreateCustomLog("Update", updatedSupplier.Id, null, "Supplier", null);
+            _supplierRepository.Update(supplierInDb, supplier);
+            await _customLogService.CreateCustomLog("Update", "Supplier", supplier.Name);
             await _unitOfWork.CommitAsync();
-            return _supplierRepository.GetDto(updatedSupplier);
+            return _supplierRepository.GetDto(supplier);
         }
 
-        public async Task DeleteSupplierAsync(Guid supplierId)
+        public async Task DeleteSupplierAsync(Guid id)
         {
-            var supplier = await GetByIdAsync(supplierId);
+            Supplier supplier = await GetByIdAsync(id);
             if (supplier == null)
             {
                 throw new ArgumentNullException("Supplier is not found");
             }
-            _supplierRepository.Update(supplier, supplier);
-            await _customLogService.CreateCustomLog("Delete", supplier.Id, null, "Supplier", null);
+            _supplierRepository.Remove(supplier);
+            await _customLogService.CreateCustomLog("Delete", "Supplier", supplier.Name);
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task DeleteRangeSupplierAsync(List<Guid> supplierIds)
+        public async Task DeleteRangeSupplierAsync(List<Guid> ids)
         {
-            var suppliers = new List<Supplier>();
-            foreach (var supplierId in supplierIds)
+            List<Supplier> suppliers = new List<Supplier>();
+            foreach (var id in ids)
             {
-                var supplier = await GetByIdAsync(supplierId);
+                Supplier supplier = await GetByIdAsync(id);
                 if (supplier == null)
                 {
-                    throw new ArgumentNullException($"{supplierId} - Supplier is not found");
+                    throw new ArgumentNullException("Supplier is not found");
                 }
                 suppliers.Add(supplier);
-                await _customLogService.CreateCustomLog("Delete", supplier.Id, null, "Supplier", null);
+                await _customLogService.CreateCustomLog("Delete" , "Supplier", supplier.Name);
             }
-            _supplierRepository.UpdateRange(suppliers);
+            _supplierRepository.RemoveRange(suppliers);
             await _unitOfWork.CommitAsync();
         }
     }

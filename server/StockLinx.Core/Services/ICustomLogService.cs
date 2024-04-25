@@ -5,7 +5,8 @@ namespace StockLinx.Core.Services
 {
     public interface ICustomLogService : IService<CustomLog>
     {
-        Task CreateCustomLog(string action, Guid itemId, Guid? targetId, string itemController, string? targetController);
-        Task<IEnumerable<CustomLogDto>> GetAllDtosAsync();
+        Task CreateCustomLog(string action, string itemController, string item, string targetController, string target);
+        Task CreateCustomLog(string action, string itemController, string item);
+        Task<IEnumerable<CustomLog>> GetAllDtosAsync();
     }
 }

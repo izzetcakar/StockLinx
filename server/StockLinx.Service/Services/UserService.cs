@@ -17,43 +17,45 @@ namespace StockLinx.Service.Services
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUserRepository _userRepository;
+        private readonly IDepartmentRepository _departmentRepository;
         private readonly ICustomLogService _customLogService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
-        public UserService(IRepository<User> repository, IUnitOfWork unitOfWork, IUserRepository userRepository,
+        public UserService(IRepository<User> repository, IUnitOfWork unitOfWork, IUserRepository userRepository, IDepartmentRepository departmentRepository,
              IMapper mapper, IHttpContextAccessor httpContextAccessor, ICustomLogService customLogService) : base(repository, unitOfWork)
         {
             _httpContextAccessor = httpContextAccessor;
             _userRepository = userRepository;
+            _departmentRepository = departmentRepository;
+            _customLogService = customLogService;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
-            _customLogService = customLogService;
         }
 
-        public async Task<UserDto> GetDto(Guid id)
+        public async Task<UserDto> GetDtoAsync(Guid id)
         {
-            var user = await GetByIdAsync(id);
+            User user = await GetByIdAsync(id);
             return _userRepository.GetDto(user);
         }
 
-        public async Task<List<UserDto>> GetAllDtos()
+        public async Task<List<UserDto>> GetAllDtosAsync()
         {
-            return await _userRepository.GetAllDtos();
+            return await _userRepository.GetAllDtosAsync();
         }
 
         public Guid GetIdByToken()
         {
             if (_httpContextAccessor.HttpContext != null)
             {
-                string userIdString = _httpContextAccessor.HttpContext.User.FindFirstValue("UserId");
-                if (Guid.TryParse(userIdString, out Guid userIdGuid))
+                string idString = _httpContextAccessor.HttpContext.User.FindFirstValue("Id");
+                if (Guid.TryParse(idString, out Guid idGuid))
                 {
-                    return userIdGuid;
+                    return idGuid;
                 }
                 else
                 {
-                    throw new FormatException("Invalid UserId format");
+                    throw new FormatException("Invalid Id format");
                 }
             }
             else
@@ -64,8 +66,8 @@ namespace StockLinx.Service.Services
 
         public async Task<User> GetCurrentUser()
         {
-            var userId = GetIdByToken();
-            var user = await _userRepository.GetByIdAsync(userId);
+            var id = GetIdByToken();
+            var user = await _userRepository.GetByIdAsync(id);
             if (user == null)
             {
                 throw new Exception("User is not found");
@@ -86,86 +88,96 @@ namespace StockLinx.Service.Services
             return user;
         }
 
-        public async Task<UserDto> CreateUserAsync(UserCreateDto createDto)
+        public async Task<UserDto> CreateUserAsync(UserCreateDto dto)
         {
-            var newUser = _mapper.Map<User>(createDto);
-            newUser.Id = Guid.NewGuid();
-            newUser.CreatedDate = DateTime.UtcNow;
-            newUser.IsAdmin = false;
-            var employeeNoExist = await _userRepository.AnyAsync(x => x.EmployeeNo == newUser.EmployeeNo);
+            User user = _mapper.Map<User>(dto);
+            Department department = await _departmentRepository.GetByIdAsync(dto.DepartmentId);
+            user.Id = Guid.NewGuid();
+            user.CreatedDate = DateTime.UtcNow;
+            user.IsAdmin = false;
+            var employeeNoExist = await _userRepository.AnyAsync(x => x.EmployeeNo == user.EmployeeNo);
             if (employeeNoExist)
             {
                 throw new Exception("EmployeeNo already exists");
             }
-            await _userRepository.AddAsync(newUser);
-            await _customLogService.CreateCustomLog("Create", newUser.Id, newUser.DepartmentId, "User", "Department");
+            await _userRepository.AddAsync(user);
+            await _customLogService.CreateCustomLog("Create", "User", user.FirstName + " " + user.LastName,"Department", department.Name);
             await _unitOfWork.CommitAsync();
-            return _userRepository.GetDto(newUser);
+            return _userRepository.GetDto(user);
         }
 
-        public async Task<List<UserDto>> CreateRangeUserAsync(List<UserCreateDto> createDtos)
+        public async Task<List<UserDto>> CreateRangeUserAsync(List<UserCreateDto> dtos)
         {
-            var newUsers = new List<User>();
-            foreach (var createDto in createDtos)
+            List<User> users = new List<User>();
+            foreach (var dto in dtos)
             {
-                var newUser = _mapper.Map<User>(createDto);
-                newUser.Id = Guid.NewGuid();
-                newUser.CreatedDate = DateTime.UtcNow;
-                newUser.IsAdmin = false;
-                var employeeNoExist = await _userRepository.AnyAsync(x => x.EmployeeNo == newUser.EmployeeNo);
+                User user = _mapper.Map<User>(dto);
+                Department department = await _departmentRepository.GetByIdAsync(dto.DepartmentId);
+                user.Id = Guid.NewGuid();
+                user.CreatedDate = DateTime.UtcNow;
+                user.IsAdmin = false;
+                var employeeNoExist = await _userRepository.AnyAsync(x => x.EmployeeNo == user.EmployeeNo);
                 if (employeeNoExist)
                 {
                     throw new Exception("EmployeeNo already exists");
                 }
-                newUsers.Add(newUser);
-                await _customLogService.CreateCustomLog("Create", newUser.Id, newUser.DepartmentId, "User", "Department");
+                users.Add(user);
+                await _customLogService.CreateCustomLog("Create", "User", user.FirstName + " " + user.LastName, "Department", department.Name);
             }
-            await _userRepository.AddRangeAsync(newUsers);
+            await _userRepository.AddRangeAsync(users);
             await _unitOfWork.CommitAsync();
-            return _userRepository.GetDtos(newUsers);
+            return _userRepository.GetDtos(users);
         }
 
-        public async Task<UserDto> UpdateUserAsync(UserUpdateDto updateDto)
+        public async Task<UserDto> UpdateUserAsync(UserUpdateDto dto)
         {
-            var userInDb = await GetByIdAsync(updateDto.Id);
+            User userInDb = await GetByIdAsync(dto.Id);
             if (userInDb == null)
             {
                 throw new ArgumentNullException("User is not found");
             }
-            var updatedUser = _mapper.Map<User>(updateDto);
-            updatedUser.UpdatedDate = DateTime.UtcNow;
-            _userRepository.Update(userInDb, updatedUser);
-            await _customLogService.CreateCustomLog("Update", updatedUser.Id, updatedUser.DepartmentId, "User", "Department");
+            User user = _mapper.Map<User>(dto);
+            user.UpdatedDate = DateTime.UtcNow;
+            _userRepository.Update(userInDb, user);
+            await _customLogService.CreateCustomLog("Update", "User", user.FirstName + " " + user.LastName);
             await _unitOfWork.CommitAsync();
-            return _userRepository.GetDto(updatedUser);
+            return _userRepository.GetDto(user);
         }
 
-        public async Task DeleteUserAsync(Guid userId)
+        public async Task DeleteUserAsync(Guid id)
         {
-            var user = await GetByIdAsync(userId);
+            User user = await GetByIdAsync(id);
             if (user == null)
             {
                 throw new ArgumentNullException("User is not found");
             }
-            _userRepository.Update(user, user);
-            await _customLogService.CreateCustomLog("Delete", user.Id, user.DepartmentId, "User", "Department");
-            await _unitOfWork.CommitAsync();
+            bool canDelete = await _userRepository.CanDeleteAsync(id);
+            if(canDelete)
+            {
+                await _customLogService.CreateCustomLog("Delete", "User", user.FirstName + " " + user.LastName);
+                _userRepository.Remove(user);
+                await _unitOfWork.CommitAsync();
+            }
         }
 
-        public async Task DeleteRangeUserAsync(List<Guid> userIds)
+        public async Task DeleteRangeUserAsync(List<Guid> ids)
         {
-            var users = new List<User>();
-            foreach (var userId in userIds)
+            List<User> users = new List<User>();
+            foreach (var id in ids)
             {
-                var user = await GetByIdAsync(userId);
+                User user = await GetByIdAsync(id);
                 if (user == null)
                 {
-                    throw new ArgumentNullException($"{userId} - User is not found");
+                    throw new ArgumentNullException("User is not found");
                 }
-                users.Add(user);
-                await _customLogService.CreateCustomLog("Delete", user.Id, user.DepartmentId, "User", "Department");
+                bool canDelete = await _userRepository.CanDeleteAsync(id);
+                if(canDelete)
+                {
+                    users.Add(user);
+                    await _customLogService.CreateCustomLog("Delete", "User", user.FirstName + " " + user.LastName);
+                }
             }
-            _userRepository.UpdateRange(users);
+            _userRepository.RemoveRange(users);
             await _unitOfWork.CommitAsync();
         }
     }

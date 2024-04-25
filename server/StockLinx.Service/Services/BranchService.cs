@@ -12,6 +12,7 @@ namespace StockLinx.Service.Services
     public class BranchService : Service<Branch>, IBranchService
     {
         private readonly IBranchRepository _branchRepository;
+        private readonly ICompanyRepository _companyRepository;
         private readonly ICustomLogService _customLogService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
@@ -19,6 +20,7 @@ namespace StockLinx.Service.Services
         public BranchService(
             IRepository<Branch> repository,
             IBranchRepository branchRepository,
+            ICompanyRepository companyRepository,
             IMapper mapper,
             IUnitOfWork unitOfWork,
             ICustomLogService customLogService
@@ -26,120 +28,101 @@ namespace StockLinx.Service.Services
             : base(repository, unitOfWork)
         {
             _branchRepository = branchRepository;
+            _companyRepository = companyRepository;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _customLogService = customLogService;
         }
 
-        public async Task<BranchDto> GetDto(Guid id)
+        public async Task<BranchDto> GetDtoAsync(Guid id)
         {
-            var branch = await GetByIdAsync(id);
+            Branch branch = await GetByIdAsync(id);
             return _branchRepository.GetDto(branch);
         }
 
-        public async Task<List<BranchDto>> GetAllDtos()
+        public async Task<List<BranchDto>> GetAllDtosAsync()
         {
             return await _branchRepository.GetAllDtos();
         }
 
-        public async Task<BranchDto> CreateBranchAsync(BranchCreateDto createDto)
+        public async Task<BranchDto> CreateBranchAsync(BranchCreateDto dto)
         {
-            var newBranch = _mapper.Map<Branch>(createDto);
+            Branch newBranch = _mapper.Map<Branch>(dto);
+            Company company = await _companyRepository.GetByIdAsync(newBranch.CompanyId);
             newBranch.Id = Guid.NewGuid();
             newBranch.CreatedDate = DateTime.UtcNow;
             await _branchRepository.AddAsync(newBranch);
-            await _customLogService.CreateCustomLog(
-                "Create",
-                newBranch.Id,
-                newBranch.CompanyId,
-                "Branch",
-                "Company"
-            );
+            await _customLogService.CreateCustomLog("Create", "Branch", newBranch.Name, "Company", company.Name);
             await _unitOfWork.CommitAsync();
             return _branchRepository.GetDto(newBranch);
         }
 
-        public async Task<List<BranchDto>> CreateRangeBranchAsync(List<BranchCreateDto> createDtos)
+        public async Task<List<BranchDto>> CreateRangeBranchAsync(List<BranchCreateDto> dtos)
         {
-            var newBranches = new List<Branch>();
-            foreach (var createDto in createDtos)
+            List<Branch> newBranches = new List<Branch>();
+            Company company = await _companyRepository.GetByIdAsync(newBranches[0].CompanyId);
+            foreach (BranchCreateDto dto in dtos)
             {
-                var newBranch = _mapper.Map<Branch>(createDto);
+                var newBranch = _mapper.Map<Branch>(dto);
                 newBranch.Id = Guid.NewGuid();
                 newBranch.CreatedDate = DateTime.UtcNow;
                 newBranches.Add(newBranch);
-                await _customLogService.CreateCustomLog(
-                    "Create",
-                    newBranch.Id,
-                    newBranch.CompanyId,
-                    "Branch",
-                    "Company"
-                );
+                await _customLogService.CreateCustomLog("Create", "Branch", newBranch.Name, "Company", company.Name);
             }
             await _branchRepository.AddRangeAsync(newBranches);
             await _unitOfWork.CommitAsync();
             return _branchRepository.GetDtos(newBranches);
         }
 
-        public async Task<BranchDto> UpdateBranchAsync(BranchUpdateDto updateDto)
+        public async Task<BranchDto> UpdateBranchAsync(BranchUpdateDto dto)
         {
-            var branchInDb = await GetByIdAsync(updateDto.Id);
+            var branchInDb = await GetByIdAsync(dto.Id);
             if (branchInDb == null)
             {
                 throw new ArgumentNullException("Branch is not found");
             }
-            var updatedBranch = _mapper.Map<Branch>(updateDto);
-            updatedBranch.UpdatedDate = DateTime.UtcNow;
-            _branchRepository.Update(branchInDb, updatedBranch);
-            await _customLogService.CreateCustomLog(
-                "Update",
-                updatedBranch.Id,
-                updatedBranch.CompanyId,
-                "Branch",
-                "Company"
-            );
+            var branch = _mapper.Map<Branch>(dto);
+            branch.UpdatedDate = DateTime.UtcNow;
+            _branchRepository.Update(branchInDb, branch);
+            await _customLogService.CreateCustomLog("Update", "Branch", branch.Name);
             await _unitOfWork.CommitAsync();
-            return _branchRepository.GetDto(updatedBranch);
+            return _branchRepository.GetDto(branch);
         }
 
-        public async Task DeleteBranchAsync(Guid branchId)
+        public async Task DeleteBranchAsync(Guid id)
         {
-            var branch = await GetByIdAsync(branchId);
+            var branch = await GetByIdAsync(id);
             if (branch == null)
             {
                 throw new ArgumentNullException("Branch is not found");
             }
-            _branchRepository.Update(branch, branch);
-            await _customLogService.CreateCustomLog(
-                "Delete",
-                branch.Id,
-                branch.CompanyId,
-                "Branch",
-                "Company"
-            );
-            await _unitOfWork.CommitAsync();
+            bool canDelete = await _branchRepository.CanDeleteAsync(id);
+            if (canDelete)
+            {
+                _branchRepository.Remove(branch);
+                await _customLogService.CreateCustomLog("Delete", "Branch", branch.Name);
+                await _unitOfWork.CommitAsync();
+            }
         }
 
-        public async Task DeleteRangeBranchAsync(List<Guid> branchIds)
+        public async Task DeleteRangeBranchAsync(List<Guid> ids)
         {
-            var branches = new List<Branch>();
-            foreach (var branchId in branchIds)
+            List<Branch> branches = new List<Branch>();
+            foreach (Guid id in ids)
             {
-                var branch = await GetByIdAsync(branchId);
+                var branch = await GetByIdAsync(id);
                 if (branch == null)
                 {
-                    throw new ArgumentNullException($"{branchId} - Branch is not found");
+                    throw new ArgumentNullException("Branch is not found");
                 }
-                branches.Add(branch);
-                await _customLogService.CreateCustomLog(
-                    "Delete",
-                    branch.Id,
-                    branch.CompanyId,
-                    "Branch",
-                    "Company"
-                );
+                bool canDelete = await _branchRepository.CanDeleteAsync(branch.Id);
+                if (canDelete)
+                {
+                    branches.Add(branch);
+                    await _customLogService.CreateCustomLog("Delete", "Branch", branch.Name);
+                }
             }
-            _branchRepository.UpdateRange(branches);
+            _branchRepository.RemoveRange(branches);
             await _unitOfWork.CommitAsync();
         }
     }

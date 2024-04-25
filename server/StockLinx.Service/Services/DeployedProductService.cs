@@ -20,40 +20,40 @@ namespace StockLinx.Service.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<DeployedProductDto> GetDto(Guid id)
+        public async Task<DeployedProductDto> GetDtoAsync(Guid id)
         {
             var deployedProduct = await GetByIdAsync(id);
-            return await _deployedProductRepository.GetDto(deployedProduct);
+            return await _deployedProductRepository.GetDtoAsync(deployedProduct);
         }
 
-        public async Task<List<DeployedProductDto>> GetAllDtos()
+        public async Task<List<DeployedProductDto>> GetAllDtosAsync()
         {
-            return await _deployedProductRepository.GetAllDtos();
+            return await _deployedProductRepository.GetAllDtosAsync();
         }
 
-        public async Task<DeployedProductDto> CreateDeployedProductAsync(DeployedProductCreateDto createDto)
+        public async Task<DeployedProductDto> CreateDeployedProductAsync(DeployedProductCreateDto dto)
         {
-            var newDeployedProduct = _mapper.Map<DeployedProduct>(createDto);
-            newDeployedProduct.Id = Guid.NewGuid();
-            newDeployedProduct.CreatedDate = DateTime.UtcNow;
-            var added = await AddAsync(newDeployedProduct);
+            var deployedProduct = _mapper.Map<DeployedProduct>(dto);
+            deployedProduct.Id = Guid.NewGuid();
+            deployedProduct.CreatedDate = DateTime.UtcNow;
+            var added = await AddAsync(deployedProduct);
             await _unitOfWork.CommitAsync();
-            return await _deployedProductRepository.GetDto(added);
+            return await _deployedProductRepository.GetDtoAsync(added);
         }
 
-        public async Task<List<DeployedProductDto>> CreateRangeDeployedProductAsync(List<DeployedProductCreateDto> createDtos)
+        public async Task<List<DeployedProductDto>> CreateRangeDeployedProductAsync(List<DeployedProductCreateDto> dtos)
         {
-            var newDeployedProducts = new List<DeployedProduct>();
-            foreach (var deployedProduct in createDtos)
+            List<DeployedProduct> deployedProducts = new List<DeployedProduct>();
+            foreach (var dto in dtos)
             {
-                var newDeployedProduct = _mapper.Map<DeployedProduct>(deployedProduct);
-                newDeployedProduct.Id = Guid.NewGuid();
-                newDeployedProduct.CreatedDate = DateTime.UtcNow;
-                newDeployedProducts.Add(newDeployedProduct);
+                DeployedProduct deployedProduct = _mapper.Map<DeployedProduct>(dto);
+                deployedProduct.Id = Guid.NewGuid();
+                deployedProduct.CreatedDate = DateTime.UtcNow;
+                deployedProducts.Add(deployedProduct);
             }
-            await _deployedProductRepository.AddRangeAsync(newDeployedProducts);
+            await _deployedProductRepository.AddRangeAsync(deployedProducts);
             await _unitOfWork.CommitAsync();
-            return await _deployedProductRepository.GetDtos(newDeployedProducts);
+            return await _deployedProductRepository.GetDtosAsync(deployedProducts);
         }
         public async Task DeleteDeployedProductAsync(Guid id)
         {
@@ -62,7 +62,7 @@ namespace StockLinx.Service.Services
             {
                 throw new ArgumentNullException("DeployedProduct is not found.");
             }
-            _deployedProductRepository.Update(deployedProduct, deployedProduct);
+            _deployedProductRepository.Remove(deployedProduct);
             await _unitOfWork.CommitAsync();
         }
     }

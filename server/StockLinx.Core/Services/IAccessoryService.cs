@@ -10,12 +10,12 @@ namespace StockLinx.Core.Services
     {
         Task<AccessoryDto> GetDto(Guid id);
         Task<List<AccessoryDto>> GetAllDtos();
-        Task<AccessoryDto> CreateAccessoryAsync(AccessoryCreateDto createDto);
-        Task<List<AccessoryDto>> CreateRangeAccessoryAsync(List<AccessoryCreateDto> createDtos);
-        Task<AccessoryDto> UpdateAccessoryAsync(AccessoryUpdateDto updateDto);
-        Task DeleteAccessoryAsync(Guid accessoryId);
-        Task DeleteRangeAccessoryAsync(List<Guid> accessoryIds);
-        Task<AccessoryCheckInResponseDto> CheckIn(AccessoryCheckInDto checkInDto);
-        Task<AccessoryDto> CheckOut(Guid id);
+        Task<AccessoryDto> CreateAccessoryAsync(AccessoryCreateDto dto);
+        Task<List<AccessoryDto>> CreateRangeAccessoryAsync(List<AccessoryCreateDto> dtos);
+        Task<AccessoryDto> UpdateAccessoryAsync(AccessoryUpdateDto dto);
+        Task DeleteAccessoryAsync(Guid id);
+        Task DeleteRangeAccessoryAsync(List<Guid> ids);
+        Task<DeployedProductDto> CheckIn(ProductCheckInDto checkInDto);
+        Task CheckOut(Guid id);
     }
 }

@@ -6,10 +6,10 @@ namespace StockLinx.Core.Services
 {
     public interface IDeployedProductService : IService<DeployedProduct>
     {
-        Task<DeployedProductDto> GetDto(Guid id);
-        Task<List<DeployedProductDto>> GetAllDtos();
-        Task<DeployedProductDto> CreateDeployedProductAsync(DeployedProductCreateDto createDto);
-        Task<List<DeployedProductDto>> CreateRangeDeployedProductAsync(List<DeployedProductCreateDto> createDtos);
-        Task DeleteDeployedProductAsync(Guid deployedProductId);
+        Task<DeployedProductDto> GetDtoAsync(Guid id);
+        Task<List<DeployedProductDto>> GetAllDtosAsync();
+        Task<DeployedProductDto> CreateDeployedProductAsync(DeployedProductCreateDto dto);
+        Task<List<DeployedProductDto>> CreateRangeDeployedProductAsync(List<DeployedProductCreateDto> dtos);
+        Task DeleteDeployedProductAsync(Guid id);
     }
 }

@@ -8,14 +8,14 @@ namespace StockLinx.Core.Services
 {
     public interface IAssetService : IService<Asset>
     {
-        Task<AssetDto> GetDto(Guid id);
-        Task<List<AssetDto>> GetAllDtos();
-        Task<List<AssetDto>> CreateAssetAsync(AssetCreateDto createDto);
-        Task<List<AssetDto>> CreateRangeAssetAsync(List<AssetCreateDto> createDtos);
-        Task<AssetDto> UpdateAssetAsync(AssetUpdateDto updateDto);
-        Task DeleteAssetAsync(Guid assetId);
-        Task DeleteRangeAssetAsync(List<Guid> assetIds);
-        Task<AssetCheckInResponseDto> CheckIn(AssetCheckInDto checkInDto);
-        Task<AssetDto> CheckOut(Guid id);
+        Task<AssetDto> GetDtoAsync(Guid id);
+        Task<List<AssetDto>> GetAllDtosAsync();
+        Task<List<AssetDto>> CreateAssetAsync(AssetCreateDto dto);
+        Task<List<AssetDto>> CreateRangeAssetAsync(List<AssetCreateDto> dtos);
+        Task<AssetDto> UpdateAssetAsync(AssetUpdateDto dto);
+        Task DeleteAssetAsync(Guid id);
+        Task DeleteRangeAssetAsync(List<Guid> ids);
+        Task<DeployedProductDto> CheckInAsync(ProductCheckInDto checkInDto);
+        Task CheckOutAsync(Guid id);
     }
 }

@@ -21,36 +21,36 @@ namespace StockLinx.Service.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<FieldSetCustomFieldDto> GetDto(Guid id)
+        public async Task<FieldSetCustomFieldDto> GetDtoAsync(Guid id)
         {
             var fieldSetCustomField = await GetByIdAsync(id);
             return _repository.GetDto(fieldSetCustomField);
         }
 
-        public async Task<List<FieldSetCustomFieldDto>> GetAllDtos()
+        public async Task<List<FieldSetCustomFieldDto>> GetAllDtosAsync()
         {
-            return await _repository.GetAllDtos();
+            return await _repository.GetAllDtosAsync();
         }
 
         public async Task<FieldSetCustomFieldDto> CreateFieldSetCustomFieldAsync(FieldSetCustomFieldDto dto)
         {
-            var newFieldSetCustomField = _mapper.Map<FieldSetCustomField>(dto);
-            newFieldSetCustomField.Id = Guid.NewGuid();
-            newFieldSetCustomField.CreatedDate = DateTime.UtcNow;
-            await _repository.AddAsync(newFieldSetCustomField);
+            FieldSetCustomField fieldSetCustomField = _mapper.Map<FieldSetCustomField>(dto);
+            fieldSetCustomField.Id = Guid.NewGuid();
+            fieldSetCustomField.CreatedDate = DateTime.UtcNow;
+            await _repository.AddAsync(fieldSetCustomField);
             await _unitOfWork.CommitAsync();
-            return _repository.GetDto(newFieldSetCustomField);
+            return _repository.GetDto(fieldSetCustomField);
         }
 
         public async Task<List<FieldSetCustomFieldDto>> CreateRangeFieldSetCustomFieldAsync(List<FieldSetCustomFieldDto> dtos)
         {
-            var newEntities = new List<FieldSetCustomField>();
+            List<FieldSetCustomField> newEntities = new List<FieldSetCustomField>();
             foreach (var dto in dtos)
             {
-                var newFieldSetCustomField = _mapper.Map<FieldSetCustomField>(dto);
-                newFieldSetCustomField.Id = Guid.NewGuid();
-                newFieldSetCustomField.CreatedDate = DateTime.UtcNow;
-                newEntities.Add(newFieldSetCustomField);
+                FieldSetCustomField fieldSetCustomField = _mapper.Map<FieldSetCustomField>(dto);
+                fieldSetCustomField.Id = Guid.NewGuid();
+                fieldSetCustomField.CreatedDate = DateTime.UtcNow;
+                newEntities.Add(fieldSetCustomField);
             }
             await _repository.AddRangeAsync(newEntities);
             await _unitOfWork.CommitAsync();
@@ -59,24 +59,24 @@ namespace StockLinx.Service.Services
 
         public async Task DeleteFieldSetCustomFieldAsync(Guid id)
         {
-            var fieldSetCustomField = await GetByIdAsync(id);
-            _repository.Update(fieldSetCustomField, fieldSetCustomField);
+            FieldSetCustomField fieldSetCustomField = await GetByIdAsync(id);
+            _repository.Remove(fieldSetCustomField);
             await _unitOfWork.CommitAsync();
         }
 
         public async Task DeleteRangeFieldSetCustomFieldAsync(List<Guid> ids)
         {
-            var fieldSetCustomFields = new List<FieldSetCustomField>();
+            List<FieldSetCustomField> fieldSetCustomFields = new List<FieldSetCustomField>();
             foreach (var id in ids)
             {
-                var entity = await GetByIdAsync(id);
+                FieldSetCustomField entity = await GetByIdAsync(id);
                 if (entity == null)
                 {
-                    throw new ArgumentNullException($"{id} - FieldSetCustomField is not found");
+                    throw new ArgumentNullException("FieldSetCustomField is not found");
                 }
                 fieldSetCustomFields.Add(entity);
             }
-            _repository.UpdateRange(fieldSetCustomFields);
+            _repository.RemoveRange(fieldSetCustomFields);
             await _unitOfWork.CommitAsync();
         }
 

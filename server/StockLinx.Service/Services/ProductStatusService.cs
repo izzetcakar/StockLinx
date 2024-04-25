@@ -24,84 +24,84 @@ namespace StockLinx.Service.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<ProductStatusDto> GetDto(Guid id)
+        public async Task<ProductStatusDto> GetDtoAsync(Guid id)
         {
-            var productStatus = await GetByIdAsync(id);
+            ProductStatus productStatus = await GetByIdAsync(id);
             return _productStatusRepository.GetDto(productStatus);
         }
 
-        public async Task<List<ProductStatusDto>> GetAllDtos()
+        public async Task<List<ProductStatusDto>> GetAllDtosAsync()
         {
-            return await _productStatusRepository.GetAllDtos();
+            return await _productStatusRepository.GetAllDtosAsync();
         }
-        public async Task<ProductStatusDto> CreateProductStatusAsync(ProductStatusCreateDto createDto)
+        public async Task<ProductStatusDto> CreateProductStatusAsync(ProductStatusCreateDto dto)
         {
-            var newProductStatus = _mapper.Map<ProductStatus>(createDto);
-            newProductStatus.Id = Guid.NewGuid();
-            newProductStatus.CreatedDate = DateTime.UtcNow;
-            await _productStatusRepository.AddAsync(newProductStatus);
-            await _customLogService.CreateCustomLog("Create", newProductStatus.Id, null, "ProductStatus", null);
+            ProductStatus productStatus = _mapper.Map<ProductStatus>(dto);
+            productStatus.Id = Guid.NewGuid();
+            productStatus.CreatedDate = DateTime.UtcNow;
+            await _productStatusRepository.AddAsync(productStatus);
+            await _customLogService.CreateCustomLog("Create","ProductStatus", productStatus.Name);
             await _unitOfWork.CommitAsync();
-            return _productStatusRepository.GetDto(newProductStatus);
+            return _productStatusRepository.GetDto(productStatus);
         }
 
-        public async Task<List<ProductStatusDto>> CreateRangeProductStatusAsync(List<ProductStatusCreateDto> createDtos)
+        public async Task<List<ProductStatusDto>> CreateRangeProductStatusAsync(List<ProductStatusCreateDto> dtos)
         {
-            var newProductStatuses = new List<ProductStatus>();
-            foreach (var createDto in createDtos)
+            List<ProductStatus> productStatuses = new List<ProductStatus>();
+            foreach (var dto in dtos)
             {
-                var newProductStatus = _mapper.Map<ProductStatus>(createDto);
-                newProductStatus.Id = Guid.NewGuid();
-                newProductStatus.CreatedDate = DateTime.UtcNow;
-                newProductStatuses.Add(newProductStatus);
-                await _customLogService.CreateCustomLog("Create", newProductStatus.Id, null, "ProductStatus", null);
+                ProductStatus productStatus = _mapper.Map<ProductStatus>(dto);
+                productStatus.Id = Guid.NewGuid();
+                productStatus.CreatedDate = DateTime.UtcNow;
+                productStatuses.Add(productStatus);
+                await _customLogService.CreateCustomLog("Create", "ProductStatus", productStatus.Name);
             }
-            await _productStatusRepository.AddRangeAsync(newProductStatuses);
+            await _productStatusRepository.AddRangeAsync(productStatuses);
             await _unitOfWork.CommitAsync();
-            return _productStatusRepository.GetDtos(newProductStatuses);
+            return _productStatusRepository.GetDtos(productStatuses);
         }
 
-        public async Task<ProductStatusDto> UpdateProductStatusAsync(ProductStatusUpdateDto updateDto)
+        public async Task<ProductStatusDto> UpdateProductStatusAsync(ProductStatusUpdateDto dto)
         {
-            var productStatusInDb = await GetByIdAsync(updateDto.Id);
+            ProductStatus productStatusInDb = await GetByIdAsync(dto.Id);
             if (productStatusInDb == null)
             {
                 throw new ArgumentNullException("ProductStatus is not found");
             }
-            var updatedProductStatus = _mapper.Map<ProductStatus>(updateDto);
-            updatedProductStatus.UpdatedDate = DateTime.UtcNow;
-            _productStatusRepository.Update(productStatusInDb, updatedProductStatus);
-            await _customLogService.CreateCustomLog("Update", updatedProductStatus.Id, null, "ProductStatus", null);
+            ProductStatus productStatus = _mapper.Map<ProductStatus>(dto);
+            productStatus.UpdatedDate = DateTime.UtcNow;
+            _productStatusRepository.Update(productStatusInDb, productStatus);
+            await _customLogService.CreateCustomLog("Update", "ProductStatus", productStatus.Name);
             await _unitOfWork.CommitAsync();
-            return _productStatusRepository.GetDto(updatedProductStatus);
+            return _productStatusRepository.GetDto(productStatus);
         }
 
-        public async Task DeleteProductStatusAsync(Guid productStatusId)
+        public async Task DeleteProductStatusAsync(Guid id)
         {
-            var productStatus = await GetByIdAsync(productStatusId);
+            ProductStatus productStatus = await GetByIdAsync(id);
             if (productStatus == null)
             {
                 throw new ArgumentNullException("ProductStatus is not found");
             }
-            _productStatusRepository.Update(productStatus, productStatus);
-            await _customLogService.CreateCustomLog("Delete", productStatus.Id, null, "ProductStatus", null);
+            _productStatusRepository.Remove(productStatus);
+            await _customLogService.CreateCustomLog("Delete", "ProductStatus", productStatus.Name);
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task DeleteRangeProductStatusAsync(List<Guid> productStatusIds)
+        public async Task DeleteRangeProductStatusAsync(List<Guid> ids)
         {
-            var productStatuses = new List<ProductStatus>();
-            foreach (var productStatusId in productStatusIds)
+            List<ProductStatus> productStatuses = new List<ProductStatus>();
+            foreach (var id in ids)
             {
-                var productStatus = await GetByIdAsync(productStatusId);
+                ProductStatus productStatus = await GetByIdAsync(id);
                 if (productStatus == null)
                 {
-                    throw new ArgumentNullException($"{productStatusId} - ProductStatus is not found");
+                    throw new ArgumentNullException($"{id} - ProductStatus is not found");
                 }
                 productStatuses.Add(productStatus);
-                await _customLogService.CreateCustomLog("Delete", productStatus.Id, null, "ProductStatus", null);
+                await _customLogService.CreateCustomLog("Delete", "ProductStatus", productStatus.Name);
             }
-            _productStatusRepository.UpdateRange(productStatuses);
+            _productStatusRepository.RemoveRange(productStatuses);
             await _unitOfWork.CommitAsync();
         }
     }
