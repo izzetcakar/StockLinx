@@ -22,8 +22,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var components = await _componentService.GetAllDtos();
-                return CreateActionResult(CustomResponseDto<List<ComponentDto>>.Success(200, components));
+                List<ComponentDto> result = await _componentService.GetAllDtosAsync();
+                return CreateActionResult(CustomResponseDto<List<ComponentDto>>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -36,8 +36,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var componentDto = await _componentService.GetDto(id);
-                return CreateActionResult(CustomResponseDto<ComponentDto>.Success(200, componentDto));
+                ComponentDto result = await _componentService.GetDtoAsync(id);
+                return CreateActionResult(CustomResponseDto<ComponentDto>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -46,12 +46,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(ComponentCreateDto createDto)
+        public async Task<IActionResult> Add(ComponentCreateDto dto)
         {
             try
             {
-                var added = await _componentService.CreateComponentAsync(createDto);
-                return CreateActionResult(CustomResponseDto<ComponentDto>.Success(201, added));
+                ComponentDto result = await _componentService.CreateComponentAsync(dto);
+                return CreateActionResult(CustomResponseDto<ComponentDto>.Success(201, result));
             }
             catch (Exception ex)
             {
@@ -60,12 +60,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost("range")]
-        public async Task<IActionResult> AddRangeComponents(List<ComponentCreateDto> createDtos)
+        public async Task<IActionResult> AddRangeComponents(List<ComponentCreateDto> dtos)
         {
             try
             {
-                var added = await _componentService.CreateRangeComponentAsync(createDtos);
-                return CreateActionResult(CustomResponseDto<List<ComponentDto>>.Success(201, added));
+                List<ComponentDto> result = await _componentService.CreateRangeComponentAsync(dtos);
+                return CreateActionResult(CustomResponseDto<List<ComponentDto>>.Success(201, result));
             }
             catch (Exception ex)
             {
@@ -74,12 +74,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(ComponentUpdateDto updateDto)
+        public async Task<IActionResult> Update(ComponentUpdateDto dto)
         {
             try
             {
-                var dto = await _componentService.UpdateComponentAsync(updateDto);
-                return CreateActionResult(CustomResponseDto<ComponentDto>.Success(200, dto));
+                ComponentDto result = await _componentService.UpdateComponentAsync(dto);
+                return CreateActionResult(CustomResponseDto<ComponentDto>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -102,11 +102,11 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpDelete("range")]
-        public async Task<IActionResult> DeleteRangeComponents(List<Guid> componentIds)
+        public async Task<IActionResult> DeleteRangeComponents(List<Guid> ids)
         {
             try
             {
-                await _componentService.DeleteRangeComponentAsync(componentIds);
+                await _componentService.DeleteRangeComponentAsync(ids);
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
             }
             catch (Exception ex)
@@ -116,12 +116,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost("checkin")]
-        public async Task<IActionResult> CheckInComponent(ComponentCheckInDto checkInDto)
+        public async Task<IActionResult> CheckInComponent(ProductCheckInDto dto)
         {
             try
             {
-                var dto = await _componentService.CheckIn(checkInDto);
-                return CreateActionResult(CustomResponseDto<ComponentCheckInResponseDto>.Success(200, dto));
+                DeployedProductDto result = await _componentService.CheckInAsync(dto);
+                return CreateActionResult(CustomResponseDto<DeployedProductDto>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -134,8 +134,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var dto = await _componentService.CheckOut(id);
-                return CreateActionResult(CustomResponseDto<ComponentDto>.Success(200, dto));
+                await _componentService.CheckOutAsync(id);
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
             }
             catch (Exception ex)
             {

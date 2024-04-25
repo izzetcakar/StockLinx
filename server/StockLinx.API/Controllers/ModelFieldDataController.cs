@@ -20,8 +20,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var modelFieldDatas = await _modelFieldDataService.GetAllDtos();
-                return CreateActionResult(CustomResponseDto<List<ModelFieldDataDto>>.Success(200, modelFieldDatas));
+                List<ModelFieldDataDto> result = await _modelFieldDataService.GetAllDtosAsync();
+                return CreateActionResult(CustomResponseDto<List<ModelFieldDataDto>>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -34,8 +34,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var modelFieldDataDto = await _modelFieldDataService.GetDto(id);
-                return CreateActionResult(CustomResponseDto<ModelFieldDataDto>.Success(200, modelFieldDataDto));
+                ModelFieldDataDto result = await _modelFieldDataService.GetDtoAsync(id);
+                return CreateActionResult(CustomResponseDto<ModelFieldDataDto>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -48,8 +48,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var added = await _modelFieldDataService.CreateModelFieldDataAsync(dto);
-                return CreateActionResult(CustomResponseDto<ModelFieldDataDto>.Success(201, added));
+                ModelFieldDataDto result = await _modelFieldDataService.CreateModelFieldDataAsync(dto);
+                return CreateActionResult(CustomResponseDto<ModelFieldDataDto>.Success(201, result));
             }
             catch (Exception ex)
             {
@@ -62,8 +62,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var added = await _modelFieldDataService.CreateRangeModelFieldDataAsync(dtos);
-                return CreateActionResult(CustomResponseDto<List<ModelFieldDataDto>>.Success(201, added));
+                List<ModelFieldDataDto> result = await _modelFieldDataService.CreateRangeModelFieldDataAsync(dtos);
+                return CreateActionResult(CustomResponseDto<List<ModelFieldDataDto>>.Success(201, result));
             }
             catch (Exception ex)
             {
@@ -72,12 +72,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(ModelFieldDataDto updateDto)
+        public async Task<IActionResult> Update(ModelFieldDataDto dto)
         {
             try
             {
-                var dto = await _modelFieldDataService.UpdateModelFieldDataAsync(updateDto);
-                return CreateActionResult(CustomResponseDto<ModelFieldDataDto>.Success(200, dto));
+                ModelFieldDataDto result = await _modelFieldDataService.UpdateModelFieldDataAsync(dto);
+                return CreateActionResult(CustomResponseDto<ModelFieldDataDto>.Success(200, result));
             }
             catch (Exception ex)
             {

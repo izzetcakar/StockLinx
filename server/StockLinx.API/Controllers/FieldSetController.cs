@@ -22,8 +22,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var fieldSets = await _fieldSetService.GetAllDtos();
-                return CreateActionResult(CustomResponseDto<List<FieldSetDto>>.Success(200, fieldSets));
+                List<FieldSetDto> result = await _fieldSetService.GetAllDtosAsync();
+                return CreateActionResult(CustomResponseDto<List<FieldSetDto>>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -36,8 +36,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var fieldSetDto = await _fieldSetService.GetDto(id);
-                return CreateActionResult(CustomResponseDto<FieldSetDto>.Success(200, fieldSetDto));
+                FieldSetDto result = await _fieldSetService.GetDtoAsync(id);
+                return CreateActionResult(CustomResponseDto<FieldSetDto>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -46,11 +46,11 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(FieldSetCreateDto createDto)
+        public async Task<IActionResult> Add(FieldSetCreateDto dto)
         {
             try
             {
-                await _fieldSetService.CreateFieldSetAsync(createDto);
+                await _fieldSetService.CreateFieldSetAsync(dto);
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
             }
             catch (Exception ex)
@@ -60,11 +60,11 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost("range")]
-        public async Task<IActionResult> AddRangeFieldSets(List<FieldSetCreateDto> createDtos)
+        public async Task<IActionResult> AddRangeFieldSets(List<FieldSetCreateDto> dtos)
         {
             try
             {
-                await _fieldSetService.CreateRangeFieldSetAsync(createDtos);
+                await _fieldSetService.CreateRangeFieldSetAsync(dtos);
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
             }
             catch (Exception ex)
@@ -74,12 +74,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(FieldSetUpdateDto updateDto)
+        public async Task<IActionResult> Update(FieldSetUpdateDto dto)
         {
             try
             {
-                var dto = await _fieldSetService.UpdateFieldSetAsync(updateDto);
-                return CreateActionResult(CustomResponseDto<FieldSetDto>.Success(200, dto));
+                FieldSetDto result = await _fieldSetService.UpdateFieldSetAsync(dto);
+                return CreateActionResult(CustomResponseDto<FieldSetDto>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -102,11 +102,11 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpDelete("range")]
-        public async Task<IActionResult> DeleteRangeFieldSets(List<Guid> fieldSetIds)
+        public async Task<IActionResult> DeleteRangeFieldSets(List<Guid> ids)
         {
             try
             {
-                await _fieldSetService.DeleteRangeFieldSetAsync(fieldSetIds);
+                await _fieldSetService.DeleteRangeFieldSetAsync(ids);
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
             }
             catch (Exception ex)

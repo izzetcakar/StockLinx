@@ -12,7 +12,6 @@ namespace StockLinx.API.Controllers
     public class LicenseController : CustomBaseController
     {
         private readonly ILicenseService _licenseService;
-
         public LicenseController(ILicenseService licenseService)
         {
             _licenseService = licenseService;
@@ -23,8 +22,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var licenses = await _licenseService.GetAllDtos();
-                return CreateActionResult(CustomResponseDto<List<LicenseDto>>.Success(200, licenses));
+                List<LicenseDto> result = await _licenseService.GetAllDtosAsync();
+                return CreateActionResult(CustomResponseDto<List<LicenseDto>>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -37,8 +36,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var licenseDto = await _licenseService.GetDto(id);
-                return CreateActionResult(CustomResponseDto<LicenseDto>.Success(200, licenseDto));
+                LicenseDto result = await _licenseService.GetDtoAsync(id);
+                return CreateActionResult(CustomResponseDto<LicenseDto>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -47,12 +46,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(LicenseCreateDto createDto)
+        public async Task<IActionResult> Add(LicenseCreateDto dto)
         {
             try
             {
-                var added = await _licenseService.CreateLicenseAsync(createDto);
-                return CreateActionResult(CustomResponseDto<LicenseDto>.Success(201, added));
+                LicenseDto result = await _licenseService.CreateLicenseAsync(dto);
+                return CreateActionResult(CustomResponseDto<LicenseDto>.Success(201, result));
             }
             catch (Exception ex)
             {
@@ -61,12 +60,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost("range")]
-        public async Task<IActionResult> AddRangeLicenses(List<LicenseCreateDto> createDtos)
+        public async Task<IActionResult> AddRangeLicenses(List<LicenseCreateDto> dtos)
         {
             try
             {
-                var added = await _licenseService.CreateRangeLicenseAsync(createDtos);
-                return CreateActionResult(CustomResponseDto<List<LicenseDto>>.Success(201, added));
+                List<LicenseDto> result = await _licenseService.CreateRangeLicenseAsync(dtos);
+                return CreateActionResult(CustomResponseDto<List<LicenseDto>>.Success(201, result));
             }
             catch (Exception ex)
             {
@@ -75,12 +74,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(LicenseUpdateDto updateDto)
+        public async Task<IActionResult> Update(LicenseUpdateDto dto)
         {
             try
             {
-                var dto = await _licenseService.UpdateLicenseAsync(updateDto);
-                return CreateActionResult(CustomResponseDto<LicenseDto>.Success(200, dto));
+                LicenseDto result = await _licenseService.UpdateLicenseAsync(dto);
+                return CreateActionResult(CustomResponseDto<LicenseDto>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -103,11 +102,11 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpDelete("range")]
-        public async Task<IActionResult> DeleteRangeLicenses(List<Guid> licenseIds)
+        public async Task<IActionResult> DeleteRangeLicenses(List<Guid> ids)
         {
             try
             {
-                await _licenseService.DeleteRangeLicenseAsync(licenseIds);
+                await _licenseService.DeleteRangeLicenseAsync(ids);
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
             }
             catch (Exception ex)
@@ -117,12 +116,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost("checkin")]
-        public async Task<IActionResult> CheckInLicense(LicenseCheckInDto checkInDto)
+        public async Task<IActionResult> CheckInLicense(ProductCheckInDto dto)
         {
             try
             {
-                var dto = await _licenseService.CheckIn(checkInDto);
-                return CreateActionResult(CustomResponseDto<LicenseCheckInResponseDto>.Success(200, dto));
+                DeployedProductDto result = await _licenseService.CheckInAsync(dto);
+                return CreateActionResult(CustomResponseDto<DeployedProductDto>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -135,8 +134,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var dto = await _licenseService.CheckOut(id);
-                return CreateActionResult(CustomResponseDto<LicenseDto>.Success(200, dto));
+                await _licenseService.CheckOutAsync(id);
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
             }
             catch (Exception ex)
             {

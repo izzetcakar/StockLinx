@@ -23,8 +23,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var locationDtos = await _locationService.GetAllDtos();
-                return CreateActionResult(CustomResponseDto<List<LocationDto>>.Success(200, locationDtos));
+                List<LocationDto> result = await _locationService.GetAllDtosAsync();
+                return CreateActionResult(CustomResponseDto<List<LocationDto>>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -37,8 +37,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var locationDto = await _locationService.GetDto(id);
-                return CreateActionResult(CustomResponseDto<LocationDto>.Success(200, locationDto));
+                LocationDto result = await _locationService.GetDtoAsync(id);
+                return CreateActionResult(CustomResponseDto<LocationDto>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -47,12 +47,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(LocationCreateDto createDto)
+        public async Task<IActionResult> Add(LocationCreateDto dto)
         {
             try
             {
-                var added = await _locationService.CreateLocationAsync(createDto);
-                return CreateActionResult(CustomResponseDto<LocationDto>.Success(201, added));
+                LocationDto result = await _locationService.CreateLocationAsync(dto);
+                return CreateActionResult(CustomResponseDto<LocationDto>.Success(201, result));
             }
             catch (Exception ex)
             {
@@ -61,12 +61,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost("range")]
-        public async Task<IActionResult> AddRangeLocations(List<LocationCreateDto> createDtos)
+        public async Task<IActionResult> AddRangeLocations(List<LocationCreateDto> dtos)
         {
             try
             {
-                var added = await _locationService.CreateRangeLocationAsync(createDtos);
-                return CreateActionResult(CustomResponseDto<List<LocationDto>>.Success(201, added));
+                List<LocationDto> result = await _locationService.CreateRangeLocationAsync(dtos);
+                return CreateActionResult(CustomResponseDto<List<LocationDto>>.Success(201, result));
             }
             catch (Exception ex)
             {
@@ -75,12 +75,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(LocationUpdateDto updateDto)
+        public async Task<IActionResult> Update(LocationUpdateDto dto)
         {
             try
             {
-                var dto = await _locationService.UpdateLocationAsync(updateDto);
-                return CreateActionResult(CustomResponseDto<LocationDto>.Success(200, dto));
+                LocationDto result = await _locationService.UpdateLocationAsync(dto);
+                return CreateActionResult(CustomResponseDto<LocationDto>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -103,11 +103,11 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpDelete("range")]
-        public async Task<IActionResult> DeleteRangeLocations(List<Guid> locationIds)
+        public async Task<IActionResult> DeleteRangeLocations(List<Guid> ids)
         {
             try
             {
-                await _locationService.DeleteRangeLocationAsync(locationIds);
+                await _locationService.DeleteRangeLocationAsync(ids);
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
             }
             catch (Exception ex)

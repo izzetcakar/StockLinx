@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
+using StockLinx.Core.Entities;
 using StockLinx.Core.Services;
 
 namespace StockLinx.API.Controllers
@@ -21,7 +21,7 @@ namespace StockLinx.API.Controllers
             try
             {
                 var logList = await _customLogService.GetAllDtosAsync();
-                return CreateActionResult(CustomResponseDto<IEnumerable<CustomLogDto>>.Success(200, logList));
+                return CreateActionResult(CustomResponseDto<IEnumerable<CustomLog>>.Success(200, logList));
             }
             catch (Exception ex)
             {

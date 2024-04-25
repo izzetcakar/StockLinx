@@ -22,8 +22,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var assets = await _assetService.GetAllDtos();
-                return CreateActionResult(CustomResponseDto<List<AssetDto>>.Success(200, assets));
+                List<AssetDto> result = await _assetService.GetAllDtosAsync();
+                return CreateActionResult(CustomResponseDto<List<AssetDto>>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -36,8 +36,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var assetDto = await _assetService.GetDto(id);
-                return CreateActionResult(CustomResponseDto<AssetDto>.Success(200, assetDto));
+                AssetDto result = await _assetService.GetDtoAsync(id);
+                return CreateActionResult(CustomResponseDto<AssetDto>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -46,12 +46,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(AssetCreateDto createDto)
+        public async Task<IActionResult> Add(AssetCreateDto dto)
         {
             try
             {
-                var added = await _assetService.CreateAssetAsync(createDto);
-                return CreateActionResult(CustomResponseDto<List<AssetDto>>.Success(201, added));
+                List<AssetDto> result = await _assetService.CreateAssetAsync(dto);
+                return CreateActionResult(CustomResponseDto<List<AssetDto>>.Success(201, result));
             }
             catch (Exception ex)
             {
@@ -60,12 +60,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost("range")]
-        public async Task<IActionResult> AddRangeAssets(List<AssetCreateDto> createDtos)
+        public async Task<IActionResult> AddRangeAssets(List<AssetCreateDto> dto)
         {
             try
             {
-                var added = await _assetService.CreateRangeAssetAsync(createDtos);
-                return CreateActionResult(CustomResponseDto<List<AssetDto>>.Success(201, added));
+                List<AssetDto> result = await _assetService.CreateRangeAssetAsync(dto);
+                return CreateActionResult(CustomResponseDto<List<AssetDto>>.Success(201, result));
             }
             catch (Exception ex)
             {
@@ -74,12 +74,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(AssetUpdateDto updateDto)
+        public async Task<IActionResult> Update(AssetUpdateDto dto)
         {
             try
             {
-                var dto = await _assetService.UpdateAssetAsync(updateDto);
-                return CreateActionResult(CustomResponseDto<AssetDto>.Success(200, dto));
+                AssetDto result = await _assetService.UpdateAssetAsync(dto);
+                return CreateActionResult(CustomResponseDto<AssetDto>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -102,11 +102,11 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpDelete("range")]
-        public async Task<IActionResult> DeleteRangeAssets(List<Guid> assetIds)
+        public async Task<IActionResult> DeleteRangeAssets(List<Guid> ids)
         {
             try
             {
-                await _assetService.DeleteRangeAssetAsync(assetIds);
+                await _assetService.DeleteRangeAssetAsync(ids);
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
             }
             catch (Exception ex)
@@ -116,12 +116,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost("checkin")]
-        public async Task<IActionResult> CheckIn(AssetCheckInDto checkInDto)
+        public async Task<IActionResult> CheckIn(ProductCheckInDto dto)
         {
             try
             {
-                var dto = await _assetService.CheckIn(checkInDto);
-                return CreateActionResult(CustomResponseDto<AssetCheckInResponseDto>.Success(200, dto));
+                DeployedProductDto result = await _assetService.CheckInAsync(dto);
+                return CreateActionResult(CustomResponseDto<DeployedProductDto>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -134,8 +134,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var dto = await _assetService.CheckOut(id);
-                return CreateActionResult(CustomResponseDto<AssetDto>.Success(200, dto));
+                await _assetService.CheckOutAsync(id);
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
             }
             catch (Exception ex)
             {

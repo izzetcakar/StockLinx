@@ -22,8 +22,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var customFields = await _customFieldService.GetAllDtos();
-                return CreateActionResult(CustomResponseDto<List<CustomFieldDto>>.Success(200, customFields));
+                List<CustomFieldDto> result = await _customFieldService.GetAllDtosAsync();
+                return CreateActionResult(CustomResponseDto<List<CustomFieldDto>>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -36,8 +36,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var customFieldDto = await _customFieldService.GetDto(id);
-                return CreateActionResult(CustomResponseDto<CustomFieldDto>.Success(200, customFieldDto));
+                CustomFieldDto result = await _customFieldService.GetDtoAsync(id);
+                return CreateActionResult(CustomResponseDto<CustomFieldDto>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -46,11 +46,11 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(CustomFieldCreateDto createDto)
+        public async Task<IActionResult> Add(CustomFieldCreateDto dto)
         {
             try
             {
-                await _customFieldService.CreateCustomFieldAsync(createDto);
+                await _customFieldService.CreateCustomFieldAsync(dto);
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
             }
             catch (Exception ex)
@@ -60,11 +60,11 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost("range")]
-        public async Task<IActionResult> AddRangeCustomFields(List<CustomFieldCreateDto> createDtos)
+        public async Task<IActionResult> AddRangeCustomFields(List<CustomFieldCreateDto> dtos)
         {
             try
             {
-                await _customFieldService.CreateRangeCustomFieldAsync(createDtos);
+                await _customFieldService.CreateRangeCustomFieldAsync(dtos);
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
             }
             catch (Exception ex)
@@ -74,12 +74,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(CustomFieldUpdateDto updateDto)
+        public async Task<IActionResult> Update(CustomFieldUpdateDto dto)
         {
             try
             {
-                var dto = await _customFieldService.UpdateCustomFieldAsync(updateDto);
-                return CreateActionResult(CustomResponseDto<CustomFieldDto>.Success(200, dto));
+                CustomFieldDto result = await _customFieldService.UpdateCustomFieldAsync(dto);
+                return CreateActionResult(CustomResponseDto<CustomFieldDto>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -102,11 +102,11 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpDelete("range")]
-        public async Task<IActionResult> DeleteRangeCustomFields(List<Guid> customFieldIds)
+        public async Task<IActionResult> DeleteRangeCustomFields(List<Guid> ids)
         {
             try
             {
-                await _customFieldService.DeleteRangeCustomFieldAsync(customFieldIds);
+                await _customFieldService.DeleteRangeCustomFieldAsync(ids);
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
             }
             catch (Exception ex)

@@ -3,7 +3,6 @@ using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
-using StockLinx.Core.Entities;
 using StockLinx.Core.Services;
 
 namespace StockLinx.API.Controllers
@@ -24,28 +23,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var manufacturers = await _manufacturerService.GetAllDtos();
-                return CreateActionResult(CustomResponseDto<List<ManufacturerDto>>.Success(200, manufacturers));
-            }
-            catch (Exception ex)
-            {
-                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
-            }
-        }
-
-        [HttpGet("paged")]
-        public async Task<IActionResult> GetManufacturersPaged(
-            [FromQuery(Name = "skip")] int? skip,
-            [FromQuery(Name = "take")] int? take,
-            [FromQuery(Name = "filter")] string? filterExpression)
-        {
-            try
-            {
-                var filters = FilterExpression.ParseFilterExpression(filterExpression);
-
-                var manufacturers = await _manufacturerService.GetManufacturersPagedAsync(skip ?? 0, take ?? 24, filters ?? new Dictionary<string, string>());
-
-                return CreateActionResult(CustomResponseDto<List<ManufacturerDto>>.Success(200, manufacturers));
+                List<ManufacturerDto> result = await _manufacturerService.GetAllDtosAsync();
+                return CreateActionResult(CustomResponseDto<List<ManufacturerDto>>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -58,8 +37,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var manufacturerDto = await _manufacturerService.GetDto(id);
-                return CreateActionResult(CustomResponseDto<ManufacturerDto>.Success(200, manufacturerDto));
+                ManufacturerDto result = await _manufacturerService.GetDtoAsync(id);
+                return CreateActionResult(CustomResponseDto<ManufacturerDto>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -68,12 +47,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(ManufacturerCreateDto createDto)
+        public async Task<IActionResult> Add(ManufacturerCreateDto dto)
         {
             try
             {
-                var added = await _manufacturerService.CreateManufacturerAsync(createDto);
-                return CreateActionResult(CustomResponseDto<ManufacturerDto>.Success(201, added));
+                ManufacturerDto result = await _manufacturerService.CreateManufacturerAsync(dto);
+                return CreateActionResult(CustomResponseDto<ManufacturerDto>.Success(201, result));
             }
             catch (Exception ex)
             {
@@ -82,12 +61,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost("range")]
-        public async Task<IActionResult> AddRangeManufacturers(List<ManufacturerCreateDto> createDtos)
+        public async Task<IActionResult> AddRangeManufacturers(List<ManufacturerCreateDto> dtos)
         {
             try
             {
-                var added = await _manufacturerService.CreateRangeManufacturerAsync(createDtos);
-                return CreateActionResult(CustomResponseDto<List<ManufacturerDto>>.Success(201, added));
+                List<ManufacturerDto> result = await _manufacturerService.CreateRangeManufacturerAsync(dtos);
+                return CreateActionResult(CustomResponseDto<List<ManufacturerDto>>.Success(201, result));
             }
             catch (Exception ex)
             {
@@ -96,12 +75,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(ManufacturerUpdateDto updateDto)
+        public async Task<IActionResult> Update(ManufacturerUpdateDto dto)
         {
             try
             {
-                var dto = await _manufacturerService.UpdateManufacturerAsync(updateDto);
-                return CreateActionResult(CustomResponseDto<ManufacturerDto>.Success(200, dto));
+                ManufacturerDto result = await _manufacturerService.UpdateManufacturerAsync(dto);
+                return CreateActionResult(CustomResponseDto<ManufacturerDto>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -124,11 +103,11 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpDelete("range")]
-        public async Task<IActionResult> DeleteRangeManufacturers(List<Guid> manufacturerIds)
+        public async Task<IActionResult> DeleteRangeManufacturers(List<Guid> ids)
         {
             try
             {
-                await _manufacturerService.DeleteRangeManufacturerAsync(manufacturerIds);
+                await _manufacturerService.DeleteRangeManufacturerAsync(ids);
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
             }
             catch (Exception ex)

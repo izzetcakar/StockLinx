@@ -22,8 +22,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var branchs = await _branchService.GetAllDtos();
-                return CreateActionResult(CustomResponseDto<List<BranchDto>>.Success(200, branchs));
+                List<BranchDto> result = await _branchService.GetAllDtosAsync();
+                return CreateActionResult(CustomResponseDto<List<BranchDto>>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -36,8 +36,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var branchDto = await _branchService.GetDto(id);
-                return CreateActionResult(CustomResponseDto<BranchDto>.Success(200, branchDto));
+                BranchDto result = await _branchService.GetDtoAsync(id);
+                return CreateActionResult(CustomResponseDto<BranchDto>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -46,12 +46,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(BranchCreateDto createDto)
+        public async Task<IActionResult> Add(BranchCreateDto dto)
         {
             try
             {
-                var added = await _branchService.CreateBranchAsync(createDto);
-                return CreateActionResult(CustomResponseDto<BranchDto>.Success(201, added));
+                BranchDto result = await _branchService.CreateBranchAsync(dto);
+                return CreateActionResult(CustomResponseDto<BranchDto>.Success(201, result));
             }
             catch (Exception ex)
             {
@@ -60,12 +60,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost("range")]
-        public async Task<IActionResult> AddRangeBranches(List<BranchCreateDto> createDtos)
+        public async Task<IActionResult> AddRangeBranches(List<BranchCreateDto> dtos)
         {
             try
             {
-                var added = await _branchService.CreateRangeBranchAsync(createDtos);
-                return CreateActionResult(CustomResponseDto<List<BranchDto>>.Success(201, added));
+                List<BranchDto> result = await _branchService.CreateRangeBranchAsync(dtos);
+                return CreateActionResult(CustomResponseDto<List<BranchDto>>.Success(201, result));
             }
             catch (Exception ex)
             {
@@ -74,12 +74,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(BranchUpdateDto updateDto)
+        public async Task<IActionResult> Update(BranchUpdateDto dto)
         {
             try
             {
-                var dto = await _branchService.UpdateBranchAsync(updateDto);
-                return CreateActionResult(CustomResponseDto<BranchDto>.Success(200, dto));
+                BranchDto result = await _branchService.UpdateBranchAsync(dto);
+                return CreateActionResult(CustomResponseDto<BranchDto>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -102,11 +102,11 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpDelete("range")]
-        public async Task<IActionResult> DeleteRangeBranches(List<Guid> branchIds)
+        public async Task<IActionResult> DeleteRangeBranches(List<Guid> ids)
         {
             try
             {
-                await _branchService.DeleteRangeBranchAsync(branchIds);
+                await _branchService.DeleteRangeBranchAsync(ids);
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
             }
             catch (Exception ex)

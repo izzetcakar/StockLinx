@@ -33,8 +33,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var userDtos = await _userService.GetAllDtos();
-                return CreateActionResult(CustomResponseDto<List<UserDto>>.Success(200, userDtos));
+                List<UserDto> result = await _userService.GetAllDtosAsync();
+                return CreateActionResult(CustomResponseDto<List<UserDto>>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -46,8 +46,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var userDto = await _userService.GetDto(id);
-                return CreateActionResult(CustomResponseDto<UserDto>.Success(200, userDto));
+                UserDto result = await _userService.GetDtoAsync(id);
+                return CreateActionResult(CustomResponseDto<UserDto>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -55,12 +55,12 @@ namespace StockLinx.API.Controllers
             }
         }
         [HttpPut]
-        public async Task<IActionResult> Update(UserUpdateDto updateDto)
+        public async Task<IActionResult> Update(UserUpdateDto dto)
         {
             try
             {
-                var dto = await _userService.UpdateUserAsync(updateDto);
-                return CreateActionResult(CustomResponseDto<UserDto>.Success(200, dto));
+                UserDto result = await _userService.UpdateUserAsync(dto);
+                return CreateActionResult(CustomResponseDto<UserDto>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -81,11 +81,11 @@ namespace StockLinx.API.Controllers
             }
         }
         [HttpPost("login")]
-        public async Task<IActionResult> Login(UserLoginDto userLoginDto)
+        public async Task<IActionResult> Login(UserLoginDto dto)
         {
             try
             {
-                var user = await _userService.Login(userLoginDto);
+                var user = await _userService.Login(dto);
                 if (user != null)
                 {
                     TokenDto token = new TokenDto();
@@ -104,11 +104,11 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var user = await _userService.GetCurrentUser();
+                User user = await _userService.GetCurrentUser();
                 if (user != null)
                 {
-                    var userDto = _mapper.Map<UserDto>(user);
-                    return CreateActionResult(CustomResponseDto<UserDto>.Success(200, userDto));
+                    UserDto dto = _mapper.Map<UserDto>(user);
+                    return CreateActionResult(CustomResponseDto<UserDto>.Success(200, dto));
                 }
                 else
                 {
@@ -142,12 +142,12 @@ namespace StockLinx.API.Controllers
             return jwt;
         }
         [HttpPost]
-        public async Task<IActionResult> Add(UserCreateDto createDto)
+        public async Task<IActionResult> Add(UserCreateDto dto)
         {
             try
             {
-                var added = await _userService.CreateUserAsync(createDto);
-                return CreateActionResult(CustomResponseDto<UserDto>.Success(201, added));
+                UserDto result = await _userService.CreateUserAsync(dto);
+                return CreateActionResult(CustomResponseDto<UserDto>.Success(201, result));
             }
             catch (Exception ex)
             {
@@ -155,12 +155,12 @@ namespace StockLinx.API.Controllers
             }
         }
         [HttpPost("range")]
-        public async Task<IActionResult> AddRangeUsers(List<UserCreateDto> createDtos)
+        public async Task<IActionResult> AddRangeUsers(List<UserCreateDto> dtos)
         {
             try
             {
-                var added = await _userService.CreateRangeUserAsync(createDtos);
-                return CreateActionResult(CustomResponseDto<List<UserDto>>.Success(201, added));
+                List<UserDto> result = await _userService.CreateRangeUserAsync(dtos);
+                return CreateActionResult(CustomResponseDto<List<UserDto>>.Success(201, result));
             }
             catch (Exception ex)
             {
@@ -169,11 +169,11 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpDelete("range")]
-        public async Task<IActionResult> DeleteRangeUsers(List<Guid> userIds)
+        public async Task<IActionResult> DeleteRangeUsers(List<Guid> ids)
         {
             try
             {
-                await _userService.DeleteRangeUserAsync(userIds);
+                await _userService.DeleteRangeUserAsync(ids);
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
             }
             catch (Exception ex)

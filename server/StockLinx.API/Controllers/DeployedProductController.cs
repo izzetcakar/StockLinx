@@ -22,8 +22,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var deployedProducts = await _deployedProductService.GetAllDtos();
-                return CreateActionResult(CustomResponseDto<List<DeployedProductDto>>.Success(200, deployedProducts));
+                List<DeployedProductDto> result = await _deployedProductService.GetAllDtosAsync();
+                return CreateActionResult(CustomResponseDto<List<DeployedProductDto>>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -36,8 +36,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var deployedProductDto = await _deployedProductService.GetDto(id);
-                return CreateActionResult(CustomResponseDto<DeployedProductDto>.Success(200, deployedProductDto));
+                DeployedProductDto result = await _deployedProductService.GetDtoAsync(id);
+                return CreateActionResult(CustomResponseDto<DeployedProductDto>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -46,12 +46,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(DeployedProductCreateDto createDto)
+        public async Task<IActionResult> Add(DeployedProductCreateDto dto)
         {
             try
             {
-                var added = await _deployedProductService.CreateDeployedProductAsync(createDto);
-                return CreateActionResult(CustomResponseDto<DeployedProductDto>.Success(201, added));
+                DeployedProductDto result = await _deployedProductService.CreateDeployedProductAsync(dto);
+                return CreateActionResult(CustomResponseDto<DeployedProductDto>.Success(201, result));
             }
             catch (Exception ex)
             {
@@ -60,12 +60,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost("range")]
-        public async Task<IActionResult> AddRange(List<DeployedProductCreateDto> createRangeDto)
+        public async Task<IActionResult> AddRange(List<DeployedProductCreateDto> dto)
         {
             try
             {
-                var added = await _deployedProductService.CreateRangeDeployedProductAsync(createRangeDto);
-                return CreateActionResult(CustomResponseDto<List<DeployedProductDto>>.Success(201, added));
+                List<DeployedProductDto> result = await _deployedProductService.CreateRangeDeployedProductAsync(dto);
+                return CreateActionResult(CustomResponseDto<List<DeployedProductDto>>.Success(201, result));
             }
             catch (Exception ex)
             {

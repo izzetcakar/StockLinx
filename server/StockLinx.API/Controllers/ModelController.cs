@@ -23,8 +23,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var models = await _modelService.GetAllDtos();
-                return CreateActionResult(CustomResponseDto<List<ModelDto>>.Success(200, models));
+                List<ModelDto> result = await _modelService.GetAllDtosAsync();
+                return CreateActionResult(CustomResponseDto<List<ModelDto>>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -37,8 +37,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var modelDto = await _modelService.GetDto(id);
-                return CreateActionResult(CustomResponseDto<ModelDto>.Success(200, modelDto));
+                ModelDto result = await _modelService.GetDtoAsync(id);
+                return CreateActionResult(CustomResponseDto<ModelDto>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -47,12 +47,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(ModelCreateDto createDto)
+        public async Task<IActionResult> Add(ModelCreateDto dto)
         {
             try
             {
-                var added = await _modelService.CreateModelAsync(createDto);
-                return CreateActionResult(CustomResponseDto<ModelDto>.Success(201, added));
+                ModelDto result = await _modelService.CreateModelAsync(dto);
+                return CreateActionResult(CustomResponseDto<ModelDto>.Success(201, result));
             }
             catch (Exception ex)
             {
@@ -61,12 +61,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost("range")]
-        public async Task<IActionResult> AddRangeModels(List<ModelCreateDto> createDtos)
+        public async Task<IActionResult> AddRangeModels(List<ModelCreateDto> dtos)
         {
             try
             {
-                var added = await _modelService.CreateRangeModelAsync(createDtos);
-                return CreateActionResult(CustomResponseDto<List<ModelDto>>.Success(201, added));
+                List<ModelDto> result = await _modelService.CreateRangeModelAsync(dtos);
+                return CreateActionResult(CustomResponseDto<List<ModelDto>>.Success(201, result));
             }
             catch (Exception ex)
             {
@@ -75,11 +75,11 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(ModelUpdateDto updateDto)
+        public async Task<IActionResult> Update(ModelUpdateDto dto)
         {
             try
             {
-                await _modelService.UpdateModelAsync(updateDto);
+                await _modelService.UpdateModelAsync(dto);
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
             }
             catch (Exception ex)
@@ -103,11 +103,11 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpDelete("range")]
-        public async Task<IActionResult> DeleteRangeModels(List<Guid> modelIds)
+        public async Task<IActionResult> DeleteRangeModels(List<Guid> ids)
         {
             try
             {
-                await _modelService.DeleteRangeModelAsync(modelIds);
+                await _modelService.DeleteRangeModelAsync(ids);
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
             }
             catch (Exception ex)

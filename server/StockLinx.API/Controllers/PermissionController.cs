@@ -21,8 +21,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var permissions = await _permissionService.GetAllDtos();
-                return CreateActionResult(CustomResponseDto<List<PermissionDto>>.Success(200, permissions));
+                List<PermissionDto> result = await _permissionService.GetAllDtosAsync();
+                return CreateActionResult(CustomResponseDto<List<PermissionDto>>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -35,8 +35,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var permissionDto = await _permissionService.GetDto(id);
-                return CreateActionResult(CustomResponseDto<PermissionDto>.Success(200, permissionDto));
+                PermissionDto result = await _permissionService.GetDtoAsync(id);
+                return CreateActionResult(CustomResponseDto<PermissionDto>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -45,12 +45,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(PermissionCreateDto createDto)
+        public async Task<IActionResult> Add(PermissionCreateDto dto)
         {
             try
             {
-                var added = await _permissionService.CreatePermissionAsync(createDto);
-                return CreateActionResult(CustomResponseDto<PermissionDto>.Success(201, added));
+                PermissionDto result = await _permissionService.CreatePermissionAsync(dto);
+                return CreateActionResult(CustomResponseDto<PermissionDto>.Success(201, result));
             }
             catch (Exception ex)
             {
@@ -59,12 +59,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost("range")]
-        public async Task<IActionResult> AddRangePermissions(List<PermissionCreateDto> createDtos)
+        public async Task<IActionResult> AddRangePermissions(List<PermissionCreateDto> dtos)
         {
             try
             {
-                var added = await _permissionService.CreateRangePermissionAsync(createDtos);
-                return CreateActionResult(CustomResponseDto<List<PermissionDto>>.Success(201, added));
+                List<PermissionDto> result = await _permissionService.CreateRangePermissionAsync(dtos);
+                return CreateActionResult(CustomResponseDto<List<PermissionDto>>.Success(201, result));
             }
             catch (Exception ex)
             {
@@ -87,11 +87,11 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpDelete("range")]
-        public async Task<IActionResult> DeleteRangePermissions(List<Guid> permissionIds)
+        public async Task<IActionResult> DeleteRangePermissions(List<Guid> ids)
         {
             try
             {
-                await _permissionService.DeleteRangePermissionAsync(permissionIds);
+                await _permissionService.DeleteRangePermissionAsync(ids);
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
             }
             catch (Exception ex)
@@ -101,12 +101,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost("sync")]
-        public async Task<IActionResult> Sync(List<PermissionSyncDto> syncDtos)
+        public async Task<IActionResult> Sync(List<PermissionSyncDto> dtos)
         {
             try
             {
-                var dtos = await _permissionService.Scyncronaize(syncDtos);
-                return CreateActionResult(CustomResponseDto<List<PermissionDto>>.Success(200, dtos));
+                List<PermissionDto> result = await _permissionService.Scyncronaize(dtos);
+                return CreateActionResult(CustomResponseDto<List<PermissionDto>>.Success(200, result));
             }
             catch (Exception ex)
             {

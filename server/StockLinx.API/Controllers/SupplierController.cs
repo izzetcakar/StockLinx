@@ -9,7 +9,6 @@ namespace StockLinx.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-
     public class SupplierController : CustomBaseController
     {
         private readonly ISupplierService _supplierService;
@@ -24,8 +23,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var suppliers = await _supplierService.GetAllDtos();
-                return CreateActionResult(CustomResponseDto<List<SupplierDto>>.Success(200, suppliers));
+                List<SupplierDto> result = await _supplierService.GetAllDtosAsync();
+                return CreateActionResult(CustomResponseDto<List<SupplierDto>>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -38,8 +37,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var supplierDto = await _supplierService.GetDto(id);
-                return CreateActionResult(CustomResponseDto<SupplierDto>.Success(200, supplierDto));
+                SupplierDto result = await _supplierService.GetDtoAsync(id);
+                return CreateActionResult(CustomResponseDto<SupplierDto>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -48,12 +47,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(SupplierCreateDto createDto)
+        public async Task<IActionResult> Add(SupplierCreateDto dto)
         {
             try
             {
-                var added = await _supplierService.CreateSupplierAsync(createDto);
-                return CreateActionResult(CustomResponseDto<SupplierDto>.Success(201, added));
+                SupplierDto result = await _supplierService.CreateSupplierAsync(dto);
+                return CreateActionResult(CustomResponseDto<SupplierDto>.Success(201, result));
             }
             catch (Exception ex)
             {
@@ -62,12 +61,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost("range")]
-        public async Task<IActionResult> AddRangeSuppliers(List<SupplierCreateDto> createDtos)
+        public async Task<IActionResult> AddRangeSuppliers(List<SupplierCreateDto> dtos)
         {
             try
             {
-                var added = await _supplierService.CreateRangeSupplierAsync(createDtos);
-                return CreateActionResult(CustomResponseDto<List<SupplierDto>>.Success(201, added));
+                List<SupplierDto> result = await _supplierService.CreateRangeSupplierAsync(dtos);
+                return CreateActionResult(CustomResponseDto<List<SupplierDto>>.Success(201, result));
             }
             catch (Exception ex)
             {
@@ -76,12 +75,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(SupplierUpdateDto updateDto)
+        public async Task<IActionResult> Update(SupplierUpdateDto dto)
         {
             try
             {
-                var dto = await _supplierService.UpdateSupplierAsync(updateDto);
-                return CreateActionResult(CustomResponseDto<SupplierDto>.Success(200, dto));
+                SupplierDto result = await _supplierService.UpdateSupplierAsync(dto);
+                return CreateActionResult(CustomResponseDto<SupplierDto>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -104,11 +103,11 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpDelete("range")]
-        public async Task<IActionResult> DeleteRangeSuppliers(List<Guid> supplierIds)
+        public async Task<IActionResult> DeleteRangeSuppliers(List<Guid> ids)
         {
             try
             {
-                await _supplierService.DeleteRangeSupplierAsync(supplierIds);
+                await _supplierService.DeleteRangeSupplierAsync(ids);
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
             }
             catch (Exception ex)

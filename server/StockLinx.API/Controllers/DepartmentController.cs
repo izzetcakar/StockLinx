@@ -22,8 +22,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var departments = await _departmentService.GetAllDtos();
-                return CreateActionResult(CustomResponseDto<List<DepartmentDto>>.Success(200, departments));
+                List<DepartmentDto> result = await _departmentService.GetAllDtosAsync();
+                return CreateActionResult(CustomResponseDto<List<DepartmentDto>>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -36,8 +36,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var departmentDto = await _departmentService.GetDto(id);
-                return CreateActionResult(CustomResponseDto<DepartmentDto>.Success(200, departmentDto));
+                DepartmentDto result = await _departmentService.GetDtoAsync(id);
+                return CreateActionResult(CustomResponseDto<DepartmentDto>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -46,12 +46,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(DepartmentCreateDto createDto)
+        public async Task<IActionResult> Add(DepartmentCreateDto dto)
         {
             try
             {
-                var added = await _departmentService.CreateDepartmentAsync(createDto);
-                return CreateActionResult(CustomResponseDto<DepartmentDto>.Success(201, added));
+                DepartmentDto result = await _departmentService.CreateDepartmentAsync(dto);
+                return CreateActionResult(CustomResponseDto<DepartmentDto>.Success(201, result));
             }
             catch (Exception ex)
             {
@@ -60,12 +60,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost("range")]
-        public async Task<IActionResult> AddRangeDepartments(List<DepartmentCreateDto> createDtos)
+        public async Task<IActionResult> AddRangeDepartments(List<DepartmentCreateDto> dtos)
         {
             try
             {
-                var added = await _departmentService.CreateRangeDepartmentAsync(createDtos);
-                return CreateActionResult(CustomResponseDto<List<DepartmentDto>>.Success(201, added));
+                List<DepartmentDto> result = await _departmentService.CreateRangeDepartmentAsync(dtos);
+                return CreateActionResult(CustomResponseDto<List<DepartmentDto>>.Success(201, result));
             }
             catch (Exception ex)
             {
@@ -74,12 +74,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(DepartmentUpdateDto updateDto)
+        public async Task<IActionResult> Update(DepartmentUpdateDto dto)
         {
             try
             {
-                var dto = await _departmentService.UpdateDepartmentAsync(updateDto);
-                return CreateActionResult(CustomResponseDto<DepartmentDto>.Success(200, dto));
+                DepartmentDto result = await _departmentService.UpdateDepartmentAsync(dto);
+                return CreateActionResult(CustomResponseDto<DepartmentDto>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -102,11 +102,11 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpDelete("range")]
-        public async Task<IActionResult> DeleteRangeDepartments(List<Guid> departmentIds)
+        public async Task<IActionResult> DeleteRangeDepartments(List<Guid> ids)
         {
             try
             {
-                await _departmentService.DeleteRangeDepartmentAsync(departmentIds);
+                await _departmentService.DeleteRangeDepartmentAsync(ids);
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
             }
             catch (Exception ex)

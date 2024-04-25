@@ -22,8 +22,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var consumables = await _consumableService.GetAllDtos();
-                return CreateActionResult(CustomResponseDto<List<ConsumableDto>>.Success(200, consumables));
+                List<ConsumableDto> result = await _consumableService.GetAllDtosAsync();
+                return CreateActionResult(CustomResponseDto<List<ConsumableDto>>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -36,8 +36,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var consumableDto = await _consumableService.GetDto(id);
-                return CreateActionResult(CustomResponseDto<ConsumableDto>.Success(200, consumableDto));
+                ConsumableDto result = await _consumableService.GetDtoAsync(id);
+                return CreateActionResult(CustomResponseDto<ConsumableDto>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -46,12 +46,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(ConsumableCreateDto createDto)
+        public async Task<IActionResult> Add(ConsumableCreateDto dto)
         {
             try
             {
-                var added = await _consumableService.CreateConsumableAsync(createDto);
-                return CreateActionResult(CustomResponseDto<ConsumableDto>.Success(201, added));
+                ConsumableDto result = await _consumableService.CreateConsumableAsync(dto);
+                return CreateActionResult(CustomResponseDto<ConsumableDto>.Success(201, result));
             }
             catch (Exception ex)
             {
@@ -60,12 +60,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost("range")]
-        public async Task<IActionResult> AddRangeConsumables(List<ConsumableCreateDto> createDtos)
+        public async Task<IActionResult> AddRangeConsumables(List<ConsumableCreateDto> dtos)
         {
             try
             {
-                var added = await _consumableService.CreateRangeConsumableAsync(createDtos);
-                return CreateActionResult(CustomResponseDto<List<ConsumableDto>>.Success(201, added));
+                List<ConsumableDto> result = await _consumableService.CreateRangeConsumableAsync(dtos);
+                return CreateActionResult(CustomResponseDto<List<ConsumableDto>>.Success(201, result));
             }
             catch (Exception ex)
             {
@@ -74,12 +74,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(ConsumableUpdateDto updateDto)
+        public async Task<IActionResult> Update(ConsumableUpdateDto dto)
         {
             try
             {
-                var dto = await _consumableService.UpdateConsumableAsync(updateDto);
-                return CreateActionResult(CustomResponseDto<ConsumableDto>.Success(200, dto));
+                ConsumableDto result = await _consumableService.UpdateConsumableAsync(dto);
+                return CreateActionResult(CustomResponseDto<ConsumableDto>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -102,11 +102,11 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpDelete("range")]
-        public async Task<IActionResult> DeleteRangeConsumables(List<Guid> consumableIds)
+        public async Task<IActionResult> DeleteRangeConsumables(List<Guid> ids)
         {
             try
             {
-                await _consumableService.DeleteRangeConsumableAsync(consumableIds);
+                await _consumableService.DeleteRangeConsumableAsync(ids);
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
             }
             catch (Exception ex)
@@ -116,12 +116,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost("checkin")]
-        public async Task<IActionResult> CheckInConsumable(ConsumableCheckInDto checkInDto)
+        public async Task<IActionResult> CheckInConsumable(ProductCheckInDto dto)
         {
             try
             {
-                var dto = await _consumableService.CheckIn(checkInDto);
-                return CreateActionResult(CustomResponseDto<ConsumableCheckInResponseDto>.Success(200, dto));
+                DeployedProductDto result = await _consumableService.CheckInAsync(dto);
+                return CreateActionResult(CustomResponseDto<DeployedProductDto>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -134,8 +134,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var dto = await _consumableService.CheckOut(id);
-                return CreateActionResult(CustomResponseDto<ConsumableDto>.Success(200, dto));
+                await _consumableService.CheckOutAsync(id);
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
             }
             catch (Exception ex)
             {

@@ -12,6 +12,7 @@ namespace StockLinx.API.Controllers
     public class ProductStatusController : CustomBaseController
     {
         private readonly IProductStatusService _productStatusService;
+
         public ProductStatusController(IProductStatusService productStatusService)
         {
             _productStatusService = productStatusService;
@@ -22,8 +23,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var productStatuses = await _productStatusService.GetAllDtos();
-                return CreateActionResult(CustomResponseDto<List<ProductStatusDto>>.Success(200, productStatuses));
+                List<ProductStatusDto> result = await _productStatusService.GetAllDtosAsync();
+                return CreateActionResult(CustomResponseDto<List<ProductStatusDto>>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -36,8 +37,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var productStatusDto = await _productStatusService.GetDto(id);
-                return CreateActionResult(CustomResponseDto<ProductStatusDto>.Success(200, productStatusDto));
+                ProductStatusDto result = await _productStatusService.GetDtoAsync(id);
+                return CreateActionResult(CustomResponseDto<ProductStatusDto>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -46,12 +47,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(ProductStatusCreateDto createDto)
+        public async Task<IActionResult> Add(ProductStatusCreateDto dto)
         {
             try
             {
-                var added = await _productStatusService.CreateProductStatusAsync(createDto);
-                return CreateActionResult(CustomResponseDto<ProductStatusDto>.Success(201, added));
+                ProductStatusDto result = await _productStatusService.CreateProductStatusAsync(dto);
+                return CreateActionResult(CustomResponseDto<ProductStatusDto>.Success(201, result));
             }
             catch (Exception ex)
             {
@@ -60,12 +61,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost("range")]
-        public async Task<IActionResult> AddRangeProductStatuses(List<ProductStatusCreateDto> createDtos)
+        public async Task<IActionResult> AddRangeProductStatuss(List<ProductStatusCreateDto> dtos)
         {
             try
             {
-                var added = await _productStatusService.CreateRangeProductStatusAsync(createDtos);
-                return CreateActionResult(CustomResponseDto<List<ProductStatusDto>>.Success(201, added));
+                List<ProductStatusDto> result = await _productStatusService.CreateRangeProductStatusAsync(dtos);
+                return CreateActionResult(CustomResponseDto<List<ProductStatusDto>>.Success(201, result));
             }
             catch (Exception ex)
             {
@@ -74,12 +75,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(ProductStatusUpdateDto updateDto)
+        public async Task<IActionResult> Update(ProductStatusUpdateDto dto)
         {
             try
             {
-                var dto = await _productStatusService.UpdateProductStatusAsync(updateDto);
-                return CreateActionResult(CustomResponseDto<ProductStatusDto>.Success(200, dto));
+                ProductStatusDto result = await _productStatusService.UpdateProductStatusAsync(dto);
+                return CreateActionResult(CustomResponseDto<ProductStatusDto>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -102,11 +103,11 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpDelete("range")]
-        public async Task<IActionResult> DeleteRangeProductStatuses(List<Guid> productStatusIds)
+        public async Task<IActionResult> DeleteRangeProductStatuss(List<Guid> ids)
         {
             try
             {
-                await _productStatusService.DeleteRangeProductStatusAsync(productStatusIds);
+                await _productStatusService.DeleteRangeProductStatusAsync(ids);
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
             }
             catch (Exception ex)

@@ -20,8 +20,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var fieldSetCustomFields = await _fieldSetCustomFieldService.GetAllDtos();
-                return CreateActionResult(CustomResponseDto<List<FieldSetCustomFieldDto>>.Success(200, fieldSetCustomFields));
+                List<FieldSetCustomFieldDto> result = await _fieldSetCustomFieldService.GetAllDtosAsync();
+                return CreateActionResult(CustomResponseDto<List<FieldSetCustomFieldDto>>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -34,8 +34,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var fieldSetCustomFieldDto = await _fieldSetCustomFieldService.GetDto(id);
-                return CreateActionResult(CustomResponseDto<FieldSetCustomFieldDto>.Success(200, fieldSetCustomFieldDto));
+                FieldSetCustomFieldDto result = await _fieldSetCustomFieldService.GetDtoAsync(id);
+                return CreateActionResult(CustomResponseDto<FieldSetCustomFieldDto>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -48,8 +48,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var added = await _fieldSetCustomFieldService.CreateFieldSetCustomFieldAsync(dto);
-                return CreateActionResult(CustomResponseDto<FieldSetCustomFieldDto>.Success(201, added));
+                FieldSetCustomFieldDto result = await _fieldSetCustomFieldService.CreateFieldSetCustomFieldAsync(dto);
+                return CreateActionResult(CustomResponseDto<FieldSetCustomFieldDto>.Success(201, result));
             }
             catch (Exception ex)
             {
@@ -62,8 +62,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var added = await _fieldSetCustomFieldService.CreateRangeFieldSetCustomFieldAsync(dtos);
-                return CreateActionResult(CustomResponseDto<List<FieldSetCustomFieldDto>>.Success(201, added));
+                List<FieldSetCustomFieldDto> result = await _fieldSetCustomFieldService.CreateRangeFieldSetCustomFieldAsync(dtos);
+                return CreateActionResult(CustomResponseDto<List<FieldSetCustomFieldDto>>.Success(201, result));
             }
             catch (Exception ex)
             {

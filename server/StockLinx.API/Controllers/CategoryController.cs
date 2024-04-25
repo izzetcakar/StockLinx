@@ -22,8 +22,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var categories = await _categoryService.GetAllDtos();
-                return CreateActionResult(CustomResponseDto<List<CategoryDto>>.Success(200, categories));
+                List<CategoryDto> result = await _categoryService.GetAllDtosAsync();
+                return CreateActionResult(CustomResponseDto<List<CategoryDto>>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -36,8 +36,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var categoryDto = await _categoryService.GetDto(id);
-                return CreateActionResult(CustomResponseDto<CategoryDto>.Success(201, categoryDto));
+                CategoryDto result = await _categoryService.GetDtoAsync(id);
+                return CreateActionResult(CustomResponseDto<CategoryDto>.Success(201, result));
             }
             catch (Exception ex)
             {
@@ -46,12 +46,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(CategoryCreateDto createDto)
+        public async Task<IActionResult> Add(CategoryCreateDto dto)
         {
             try
             {
-                var added = await _categoryService.CreateCategoryAsync(createDto);
-                return CreateActionResult(CustomResponseDto<CategoryDto>.Success(201, added));
+                CategoryDto result = await _categoryService.CreateCategoryAsync(dto);
+                return CreateActionResult(CustomResponseDto<CategoryDto>.Success(201, result));
             }
             catch (Exception ex)
             {
@@ -59,12 +59,12 @@ namespace StockLinx.API.Controllers
             }
         }
         [HttpPost("range")]
-        public async Task<IActionResult> AddRange(List<CategoryCreateDto> createDtos)
+        public async Task<IActionResult> AddRange(List<CategoryCreateDto> dtos)
         {
             try
             {
-                var added = await _categoryService.CreateRangeCategoryAsync(createDtos);
-                return CreateActionResult(CustomResponseDto<List<CategoryDto>>.Success(201, added));
+                List<CategoryDto> result = await _categoryService.CreateRangeCategoryAsync(dtos);
+                return CreateActionResult(CustomResponseDto<List<CategoryDto>>.Success(201, result));
             }
             catch (Exception ex)
             {
@@ -73,12 +73,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(CategoryUpdateDto updateDto)
+        public async Task<IActionResult> Update(CategoryUpdateDto dto)
         {
             try
             {
-                var dto = await _categoryService.UpdateCategoryAsync(updateDto);
-                return CreateActionResult(CustomResponseDto<CategoryDto>.Success(200, dto));
+                CategoryDto result = await _categoryService.UpdateCategoryAsync(dto);
+                return CreateActionResult(CustomResponseDto<CategoryDto>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -100,11 +100,11 @@ namespace StockLinx.API.Controllers
             }
         }
         [HttpDelete("range")]
-        public async Task<IActionResult> DeleteRange(List<Guid> categoryIds)
+        public async Task<IActionResult> DeleteRange(List<Guid> ids)
         {
             try
             {
-                await _categoryService.DeleteRangeCategoryAsync(categoryIds);
+                await _categoryService.DeleteRangeCategoryAsync(ids);
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
             }
             catch (Exception ex)
