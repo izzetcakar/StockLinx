@@ -47,8 +47,6 @@ const ComponentForm: React.FC<ComponentFormProps> = ({ component, create }) => {
             : "Purchase cost must be a non-negative number";
         }
       },
-      categoryId: (value: string) =>
-        value !== "" ? null : "Please select a category",
     },
   });
   const handleSubmit = (data: object) => {
@@ -93,12 +91,11 @@ const ComponentForm: React.FC<ComponentFormProps> = ({ component, create }) => {
           {...form.getInputProps("categoryId")}
           classNames={filterClasses}
           comboboxProps={{
-              position: "top",
-              middlewares: { flip: false, shift: false },
-            }}
+            position: "top",
+            middlewares: { flip: false, shift: false },
+          }}
           nothingFoundMessage="No category found"
           withAsterisk
-          
         />
         <NumberInput
           defaultValue={1}
@@ -125,12 +122,11 @@ const ComponentForm: React.FC<ComponentFormProps> = ({ component, create }) => {
           value={form.values.supplierId || ""}
           classNames={filterClasses}
           comboboxProps={{
-              position: "top",
-              middlewares: { flip: false, shift: false },
-            }}
+            position: "top",
+            middlewares: { flip: false, shift: false },
+          }}
           nothingFoundMessage="No supplier found"
           clearable
-          
         />
         <TextInput
           label="Order No"

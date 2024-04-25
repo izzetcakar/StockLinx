@@ -53,8 +53,6 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
             : "Purchase cost must be a non-negative number";
         }
       },
-      categoryId: (value: string) =>
-        value !== "" ? null : "Please select a category",
     },
   });
 
@@ -101,12 +99,11 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
           {...form.getInputProps("categoryId")}
           classNames={filterClasses}
           comboboxProps={{
-              position: "top",
-              middlewares: { flip: false, shift: false },
-            }}
+            position: "top",
+            middlewares: { flip: false, shift: false },
+          }}
           nothingFoundMessage="No category found"
           withAsterisk
-          
         />
         <Select
           data={suppliers.map((supplier) => ({
@@ -118,12 +115,11 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
           {...form.getInputProps("supplierId")}
           classNames={filterClasses}
           comboboxProps={{
-              position: "top",
-              middlewares: { flip: false, shift: false },
-            }}
+            position: "top",
+            middlewares: { flip: false, shift: false },
+          }}
           nothingFoundMessage="No supplier found"
           clearable
-          
         />
         <Select
           data={manufacturers.map((manufacturer) => ({
@@ -135,12 +131,11 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
           {...form.getInputProps("manufacturerId")}
           classNames={filterClasses}
           comboboxProps={{
-              position: "top",
-              middlewares: { flip: false, shift: false },
-            }}
+            position: "top",
+            middlewares: { flip: false, shift: false },
+          }}
           nothingFoundMessage="No manufacturer found"
           clearable
-          
         />
         <TextInput
           label="Model No"
