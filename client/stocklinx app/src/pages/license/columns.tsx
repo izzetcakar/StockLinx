@@ -8,13 +8,13 @@ import {
   CategoryType,
   IDeployedProduct,
   ILicense,
-  ILicenseCheckInDto,
 } from "../../interfaces/serverInterfaces";
 import { openCheckInModal } from "../../modals/modals";
 import { licenseActions } from "../../redux/license/actions";
 import uuid4 from "uuid4";
 import { Anchor, Button } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
+import { IProductCheckInDto } from "../../interfaces/dtos";
 
 export const useColumns = () => {
   const dispatch = useDispatch();
@@ -32,11 +32,12 @@ export const useColumns = () => {
     dispatch(
       licenseActions.checkIn({
         checkInDto: {
-          licenseId: data.licenseId,
+          productId: data.licenseId,
           userId: data.userId,
           notes: data.notes,
           assaignDate: data.assignDate,
-        } as ILicenseCheckInDto,
+          quantity: data.quantity,
+        } as IProductCheckInDto,
       })
     );
   };
@@ -51,6 +52,8 @@ export const useColumns = () => {
       consumableId: null,
       assignDate: new Date(),
       notes: null,
+      productStatusId: null,
+      quantity: 1,
     };
     openCheckInModal(newDeployedProduct, handleCheckIn);
   };

@@ -17,7 +17,6 @@ const Asset = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const asset = useSelector((state: RootState) => state.asset.asset);
-  const companies = useSelector((state: RootState) => state.company.companies);
   const branches = useSelector((state: RootState) => state.branch.branches);
   const categories = useSelector(
     (state: RootState) => state.category.categories
@@ -25,9 +24,6 @@ const Asset = () => {
   const models = useSelector((state: RootState) => state.model.models);
   const productStatuses = useSelector(
     (state: RootState) => state.productStatus.productStatuses
-  );
-  const deployedProducts = useSelector(
-    (state: RootState) => state.deployedProduct.deployedProducts
   );
 
   useLayoutEffect(() => {
@@ -56,19 +52,9 @@ const Asset = () => {
               <div className="product__content__title">Status</div>
               <div className="product__content__value">
                 {
-                  deployedProducts.find(
-                    (deployedProduct) =>
-                      deployedProduct.productStatusId === asset?.productStatusId
+                  productStatuses.find(
+                    (status) => status.id === asset?.productStatusId
                   )?.name
-                }
-              </div>
-            </div>
-            <div className="product__content">
-              <div className="product__content__title">Company</div>
-              <div className="product__content__value">
-                {
-                  companies.find((company) => company.id === asset?.companyId)
-                    ?.name
                 }
               </div>
             </div>

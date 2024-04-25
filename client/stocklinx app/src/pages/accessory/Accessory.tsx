@@ -19,7 +19,6 @@ const Accessory = () => {
   const accessory = useSelector(
     (state: RootState) => state.accessory.accessory
   );
-  const companies = useSelector((state: RootState) => state.company.companies);
   const branches = useSelector((state: RootState) => state.branch.branches);
   const manufacturers = useSelector(
     (state: RootState) => state.manufacturer.manufacturers
@@ -53,16 +52,6 @@ const Accessory = () => {
         </Tabs.List>
         <Tabs.Panel value="info">
           <div className="product__content__container">
-            <div className="product__content">
-              <div className="product__content__title">Company</div>
-              <div className="product__content__value">
-                {
-                  companies.find(
-                    (company) => company.id === accessory?.companyId
-                  )?.name
-                }
-              </div>
-            </div>
             <div className="product__content">
               <div className="product__content__title">Branch</div>
               <div className="product__content__value">

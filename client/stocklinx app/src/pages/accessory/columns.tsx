@@ -7,7 +7,6 @@ import {
 import {
   CategoryType,
   IAccessory,
-  IAccessoryCheckInDto,
   IDeployedProduct,
 } from "../../interfaces/serverInterfaces";
 import { Anchor, Button, Image } from "@mantine/core";
@@ -15,6 +14,7 @@ import { accessoryActions } from "../../redux/accessory/actions";
 import { openCheckInModal } from "../../modals/modals";
 import { useNavigate } from "react-router-dom";
 import { getImage } from "../../functions/Image";
+import { IProductCheckInDto } from "../../interfaces/dtos";
 import base_accessory from "../../assets/baseProductImages/base_accessory.png";
 import uuid4 from "uuid4";
 
@@ -36,11 +36,12 @@ export const useColumns = () => {
     dispatch(
       accessoryActions.checkIn({
         checkInDto: {
-          accessoryId: data.accessoryId,
+          productId: data.accessoryId,
           userId: data.userId,
           notes: data.notes,
           assaignDate: data.assignDate,
-        } as IAccessoryCheckInDto,
+          quantity: data.quantity,
+        } as IProductCheckInDto,
       })
     );
   };
@@ -56,6 +57,7 @@ export const useColumns = () => {
       productStatusId: "",
       assignDate: new Date(),
       notes: null,
+      quantity: 1,
     };
     openCheckInModal(newDeployedProduct, handleCheckIn);
   };

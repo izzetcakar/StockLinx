@@ -7,18 +7,14 @@ import {
 import { Anchor, Button, Image } from "@mantine/core";
 import { openConfirmModal } from "../../components/gridTable/modals/modals";
 import { openCheckInModal } from "../../modals/modals";
-import {
-  IAsset,
-  IAssetCheckInDto,
-  IDeployedProduct,
-  IDeployedProductDto,
-} from "../../interfaces/serverInterfaces";
+import { IAsset, IDeployedProduct } from "../../interfaces/serverInterfaces";
 import uuid4 from "uuid4";
 import { assetActions } from "../../redux/asset/actions";
 import { useNavigate } from "react-router-dom";
 import base_asset from "../../assets/baseProductImages/base_asset.jpg";
 import { getImage } from "../../functions/Image";
 import axios from "axios";
+import { IProductCheckInDto } from "../../interfaces/dtos";
 
 export const useColumns = () => {
   const dispatch = useDispatch();
@@ -28,18 +24,19 @@ export const useColumns = () => {
     (state: RootState) => state.productStatus.productStatuses
   );
   const users = useSelector((state: RootState) => state.user.users);
-  const deployedProducts: IDeployedProductDto[] = useSelector(
+  const deployedProducts = useSelector(
     (state: RootState) => state.deployedProduct.deployedProducts
   );
   const handleCheckIn = (data: IDeployedProduct) => {
     dispatch(
       assetActions.checkIn({
         checkInDto: {
-          assetId: data.assetId,
+          productId: data.assetId,
           userId: data.userId,
           notes: data.notes,
           assaignDate: data.assignDate,
-        } as IAssetCheckInDto,
+          quantity: data.quantity,
+        } as IProductCheckInDto,
       })
     );
   };
@@ -54,6 +51,8 @@ export const useColumns = () => {
       consumableId: null,
       assignDate: new Date(),
       notes: null,
+      productStatusId: null,
+      quantity: 1,
     };
     openCheckInModal(newDeployedProduct, handleCheckIn);
   };
@@ -167,7 +166,7 @@ export const useColumns = () => {
       dataType: "string",
       renderComponent(e) {
         const deployedProduct = deployedProducts.find(
-          (deployedProduct) => deployedProduct?.productId === (e as IAsset).id
+          (deployedProduct) => deployedProduct?.assetId === (e as IAsset).id
         );
         if (deployedProduct) {
           const user = users.find((user) => user.id === deployedProduct.userId);
@@ -187,7 +186,7 @@ export const useColumns = () => {
       dataType: "action",
       renderComponent(e) {
         const deployedProduct = deployedProducts.find(
-          (deployedProduct) => deployedProduct?.productId === (e as IAsset).id
+          (deployedProduct) => deployedProduct?.assetId === (e as IAsset).id
         );
         return (
           <div style={{ display: "flex", justifyContent: "center" }}>

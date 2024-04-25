@@ -15,6 +15,7 @@ import { openAccessoryModal } from "../../modals/modals";
 import { userActions } from "../../redux/user/actions";
 import { categoryActions } from "../../redux/category/actions";
 import GenericContext from "../../context/GenericContext";
+import { productStatusActions } from "../../redux/productStatus/actions";
 
 const Accessory = () => {
   const dispatch = useDispatch();
@@ -33,6 +34,7 @@ const Accessory = () => {
     dispatch(branchActions.getAll());
     dispatch(userActions.getAll());
     dispatch(categoryActions.getAll());
+    dispatch(productStatusActions.getAll());
   };
 
   return (

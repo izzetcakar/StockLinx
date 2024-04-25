@@ -7,39 +7,12 @@ import { Anchor } from "@mantine/core";
 
 export const useColumns = () => {
   const navigate = useNavigate();
-  const companies = useSelector((state: RootState) => state.company.companies);
   const branches = useSelector((state: RootState) => state.branch.branches);
   const departments = useSelector(
     (state: RootState) => state.department.departments
   );
 
   const columns: BaseColumn[] = [
-    {
-      caption: "Company",
-      dataField: "companyId",
-      dataType: "string",
-      lookup: {
-        data: companies.map((company) => ({
-          value: company.id,
-          label: company.name,
-        })),
-      },
-      renderComponent(e) {
-        return (
-          <Anchor
-            onClick={() => navigate(`/company/${(e as IUser)?.companyId}`)}
-            target="_blank"
-            underline="always"
-          >
-            {
-              companies.find(
-                (company) => company.id === (e as IUser)?.companyId
-              )?.name
-            }
-          </Anchor>
-        );
-      },
-    },
     {
       dataField: "branchId",
       caption: "Branch",
