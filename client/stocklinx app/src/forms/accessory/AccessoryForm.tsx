@@ -36,6 +36,9 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory, create }) => {
   const categories = useSelector(
     (state: RootState) => state.category.categories
   );
+  const productStatuses = useSelector(
+    (state: RootState) => state.productStatus.productStatuses
+  );
   const { initialValues, isCreate } = useInitial(accessory, create);
 
   const form = useForm<IAccessory>({
@@ -55,8 +58,6 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory, create }) => {
             : "Purchase cost must be a non-negative number";
         }
       },
-      categoryId: (value: string | null) =>
-        value !== "" ? null : "Category should not be empty",
     },
   });
 
@@ -129,7 +130,22 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory, create }) => {
             middlewares: { flip: false, shift: false },
           }}
           nothingFoundMessage="No categories found"
-          withAsterisk
+        />
+        <Select
+          data={productStatuses.map((status) => ({
+            value: status.id,
+            label: status.name,
+          }))}
+          label="Status"
+          placeholder="Select Status"
+          {...form.getInputProps("productStatusId")}
+          value={form.values.productStatusId || ""}
+          classNames={filterClasses}
+          comboboxProps={{
+            position: "bottom",
+            middlewares: { flip: false, shift: false },
+          }}
+          nothingFoundMessage="No status found"
         />
         <Select
           data={suppliers.map((supplier) => ({
@@ -211,7 +227,7 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory, create }) => {
           {...form.getInputProps("notes")}
           value={form.values.notes || ""}
         />
-        <Group mt="md" justify="flex-end">
+        <Group pt="md" pb="md" justify="flex-end">
           <Button type="submit" color="dark">
             Submit
           </Button>
