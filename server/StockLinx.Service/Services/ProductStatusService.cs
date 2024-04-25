@@ -15,8 +15,15 @@ namespace StockLinx.Service.Services
         private readonly ICustomLogService _customLogService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        public ProductStatusService(IRepository<ProductStatus> repository, IUnitOfWork unitOfWork,
-            IMapper mapper, IProductStatusRepository productStatusRepository, ICustomLogService customLogService) : base(repository, unitOfWork)
+
+        public ProductStatusService(
+            IRepository<ProductStatus> repository,
+            IUnitOfWork unitOfWork,
+            IMapper mapper,
+            IProductStatusRepository productStatusRepository,
+            ICustomLogService customLogService
+        )
+            : base(repository, unitOfWork)
         {
             _productStatusRepository = productStatusRepository;
             _customLogService = customLogService;
@@ -27,6 +34,10 @@ namespace StockLinx.Service.Services
         public async Task<ProductStatusDto> GetDtoAsync(Guid id)
         {
             ProductStatus productStatus = await GetByIdAsync(id);
+            if (productStatus == null)
+            {
+                throw new Exception("ProductStatus is not found");
+            }
             return _productStatusRepository.GetDto(productStatus);
         }
 
@@ -34,27 +45,40 @@ namespace StockLinx.Service.Services
         {
             return await _productStatusRepository.GetAllDtosAsync();
         }
+
         public async Task<ProductStatusDto> CreateProductStatusAsync(ProductStatusCreateDto dto)
         {
             ProductStatus productStatus = _mapper.Map<ProductStatus>(dto);
             productStatus.Id = Guid.NewGuid();
             productStatus.CreatedDate = DateTime.UtcNow;
             await _productStatusRepository.AddAsync(productStatus);
-            await _customLogService.CreateCustomLog("Create","ProductStatus", productStatus.Name);
+            await _customLogService.CreateCustomLog(
+                "Create",
+                "ProductStatus",
+                productStatus.Id,
+                productStatus.Name
+            );
             await _unitOfWork.CommitAsync();
             return _productStatusRepository.GetDto(productStatus);
         }
 
-        public async Task<List<ProductStatusDto>> CreateRangeProductStatusAsync(List<ProductStatusCreateDto> dtos)
+        public async Task<List<ProductStatusDto>> CreateRangeProductStatusAsync(
+            List<ProductStatusCreateDto> dtos
+        )
         {
             List<ProductStatus> productStatuses = new List<ProductStatus>();
-            foreach (var dto in dtos)
+            foreach (ProductStatusCreateDto dto in dtos)
             {
                 ProductStatus productStatus = _mapper.Map<ProductStatus>(dto);
                 productStatus.Id = Guid.NewGuid();
                 productStatus.CreatedDate = DateTime.UtcNow;
                 productStatuses.Add(productStatus);
-                await _customLogService.CreateCustomLog("Create", "ProductStatus", productStatus.Name);
+                await _customLogService.CreateCustomLog(
+                    "Create",
+                    "ProductStatus",
+                    productStatus.Id,
+                    productStatus.Name
+                );
             }
             await _productStatusRepository.AddRangeAsync(productStatuses);
             await _unitOfWork.CommitAsync();
@@ -66,12 +90,17 @@ namespace StockLinx.Service.Services
             ProductStatus productStatusInDb = await GetByIdAsync(dto.Id);
             if (productStatusInDb == null)
             {
-                throw new ArgumentNullException("ProductStatus is not found");
+                throw new Exception("ProductStatus is not found");
             }
             ProductStatus productStatus = _mapper.Map<ProductStatus>(dto);
             productStatus.UpdatedDate = DateTime.UtcNow;
             _productStatusRepository.Update(productStatusInDb, productStatus);
-            await _customLogService.CreateCustomLog("Update", "ProductStatus", productStatus.Name);
+            await _customLogService.CreateCustomLog(
+                "Update",
+                "ProductStatus",
+                productStatus.Id,
+                productStatus.Name
+            );
             await _unitOfWork.CommitAsync();
             return _productStatusRepository.GetDto(productStatus);
         }
@@ -81,25 +110,35 @@ namespace StockLinx.Service.Services
             ProductStatus productStatus = await GetByIdAsync(id);
             if (productStatus == null)
             {
-                throw new ArgumentNullException("ProductStatus is not found");
+                throw new Exception("ProductStatus is not found");
             }
             _productStatusRepository.Remove(productStatus);
-            await _customLogService.CreateCustomLog("Delete", "ProductStatus", productStatus.Name);
+            await _customLogService.CreateCustomLog(
+                "Delete",
+                "ProductStatus",
+                productStatus.Id,
+                productStatus.Name
+            );
             await _unitOfWork.CommitAsync();
         }
 
         public async Task DeleteRangeProductStatusAsync(List<Guid> ids)
         {
             List<ProductStatus> productStatuses = new List<ProductStatus>();
-            foreach (var id in ids)
+            foreach (Guid id in ids)
             {
                 ProductStatus productStatus = await GetByIdAsync(id);
                 if (productStatus == null)
                 {
-                    throw new ArgumentNullException($"{id} - ProductStatus is not found");
+                    throw new Exception($"{id} - ProductStatus is not found");
                 }
                 productStatuses.Add(productStatus);
-                await _customLogService.CreateCustomLog("Delete", "ProductStatus", productStatus.Name);
+                await _customLogService.CreateCustomLog(
+                    "Delete",
+                    "ProductStatus",
+                    productStatus.Id,
+                    productStatus.Name
+                );
             }
             _productStatusRepository.RemoveRange(productStatuses);
             await _unitOfWork.CommitAsync();

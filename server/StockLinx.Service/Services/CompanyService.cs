@@ -36,7 +36,11 @@ namespace StockLinx.Service.Services
 
         public async Task<CompanyDto> GetDtoAsync(Guid id)
         {
-            var company = await GetByIdAsync(id);
+            Company company = await GetByIdAsync(id);
+            if (company == null)
+            {
+                throw new Exception("Company is not found");
+            }
             return _companyRepository.GetDto(company);
         }
 
@@ -47,10 +51,10 @@ namespace StockLinx.Service.Services
 
         public async Task<CompanyDto> CreateCompanyAsync(CompanyCreateDto dto)
         {
-            var user = await _userService.GetCurrentUser();
+            User user = await _userService.GetCurrentUser();
             if ((bool)!user.IsAdmin)
             {
-                throw new ArgumentNullException("User is not admin");
+                throw new Exception("User is not admin");
             }
             Company company = _mapper.Map<Company>(dto);
             company.Id = Guid.NewGuid();
@@ -60,38 +64,37 @@ namespace StockLinx.Service.Services
             {
                 if (company.ImagePath.Contains("base64,"))
                 {
-                    ImageHandler.UploadBase64AsJpg(
-                        company.ImagePath,
-                        $"{company.Id}",
-                        "Companies"
-                    );
+                    ImageHandler.UploadBase64AsJpg(company.ImagePath, $"{company.Id}", "Companies");
                     company.ImagePath = $"Companies/{company.Id}.jpg";
                 }
             }
 
             await _companyRepository.AddAsync(company);
-            await _customLogService.CreateCustomLog("Create","Company", company.Name);
+            await _customLogService.CreateCustomLog("Create", "Company", company.Id, company.Name);
             await _unitOfWork.CommitAsync();
             return _companyRepository.GetDto(company);
         }
 
-        public async Task<List<CompanyDto>> CreateRangeCompanyAsync(
-            List<CompanyCreateDto> dtos
-        )
+        public async Task<List<CompanyDto>> CreateRangeCompanyAsync(List<CompanyCreateDto> dtos)
         {
-            var user = await _userService.GetCurrentUser();
+            User user = await _userService.GetCurrentUser();
             if ((bool)!user.IsAdmin)
             {
-                throw new ArgumentNullException("User is not admin");
+                throw new Exception("User is not admin");
             }
-            var companies = new List<Company>();
-            foreach (var dto in dtos)
+            List<Company> companies = new List<Company>();
+            foreach (CompanyCreateDto dto in dtos)
             {
-                var company = _mapper.Map<Company>(dto);
+                Company company = _mapper.Map<Company>(dto);
                 company.Id = Guid.NewGuid();
                 company.CreatedDate = DateTime.UtcNow;
                 companies.Add(company);
-                await _customLogService.CreateCustomLog("Create", "Company", company.Name);
+                await _customLogService.CreateCustomLog(
+                    "Create",
+                    "Company",
+                    company.Id,
+                    company.Name
+                );
             }
             await _companyRepository.AddRangeAsync(companies);
             await _unitOfWork.CommitAsync();
@@ -100,54 +103,55 @@ namespace StockLinx.Service.Services
 
         public async Task<CompanyDto> UpdateCompanyAsync(CompanyUpdateDto dto)
         {
-            var user = await _userService.GetCurrentUser();
+            User user = await _userService.GetCurrentUser();
             if ((bool)!user.IsAdmin)
             {
-                throw new ArgumentNullException("User is not admin");
+                throw new Exception("User is not admin");
             }
-            var companyInDb = await GetByIdAsync(dto.Id);
+            Company companyInDb = await GetByIdAsync(dto.Id);
             if (companyInDb == null)
             {
-                throw new ArgumentNullException("Company is not found");
+                throw new Exception("Company is not found");
             }
-            var company = _mapper.Map<Company>(dto);
+            Company company = _mapper.Map<Company>(dto);
             company.UpdatedDate = DateTime.UtcNow;
 
             if (company.ImagePath != null)
             {
                 if (company.ImagePath.Contains("base64,"))
                 {
-                    ImageHandler.UploadBase64AsJpg(
-                        company.ImagePath,
-                        $"{company.Id}",
-                        "Companies"
-                    );
+                    ImageHandler.UploadBase64AsJpg(company.ImagePath, $"{company.Id}", "Companies");
                     company.ImagePath = $"Companies/{company.Id}.jpg";
                 }
             }
 
             _companyRepository.Update(companyInDb, company);
-            await _customLogService.CreateCustomLog("Update", "Company", company.Name);
+            await _customLogService.CreateCustomLog("Update", "Company", company.Id, company.Name);
             await _unitOfWork.CommitAsync();
             return _companyRepository.GetDto(company);
         }
 
         public async Task DeleteCompanyAsync(Guid id)
         {
-            var user = await _userService.GetCurrentUser();
+            User user = await _userService.GetCurrentUser();
             if ((bool)!user.IsAdmin)
             {
-                throw new ArgumentNullException("User is not admin");
+                throw new Exception("User is not admin");
             }
-            var company = await GetByIdAsync(id);
+            Company company = await GetByIdAsync(id);
             if (company == null)
             {
-                throw new ArgumentNullException("Company is not found");
+                throw new Exception("Company is not found");
             }
             bool canDelete = await _companyRepository.CanDeleteAsync(id);
             if (canDelete)
             {
-                await _customLogService.CreateCustomLog("Delete", "Company", company.Name);
+                await _customLogService.CreateCustomLog(
+                    "Delete",
+                    "Company",
+                    company.Id,
+                    company.Name
+                );
                 _companyRepository.Remove(company);
                 await _unitOfWork.CommitAsync();
             }
@@ -155,24 +159,29 @@ namespace StockLinx.Service.Services
 
         public async Task DeleteRangeCompanyAsync(List<Guid> ids)
         {
-            var user = await _userService.GetCurrentUser();
+            User user = await _userService.GetCurrentUser();
             if ((bool)!user.IsAdmin)
             {
-                throw new ArgumentNullException("User is not admin");
+                throw new Exception("User is not admin");
             }
-            var companies = new List<Company>();
-            foreach (var id in ids)
+            List<Company> companies = new List<Company>();
+            foreach (Guid id in ids)
             {
-                var company = await GetByIdAsync(id);
+                Company company = await GetByIdAsync(id);
                 if (company == null)
                 {
-                    throw new ArgumentNullException("Company is not found");
+                    throw new Exception("Company is not found");
                 }
                 bool canDelete = await _companyRepository.CanDeleteAsync(id);
                 if (canDelete)
                 {
                     companies.Add(company);
-                    await _customLogService.CreateCustomLog("Delete", "Company", company.Name);
+                    await _customLogService.CreateCustomLog(
+                        "Delete",
+                        "Company",
+                        company.Id,
+                        company.Name
+                    );
                 }
             }
             _companyRepository.RemoveRange(companies);

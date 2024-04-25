@@ -23,6 +23,10 @@ namespace StockLinx.Service.Services
         public async Task<ModelFieldDataDto> GetDtoAsync(Guid id)
         {
             ModelFieldData modelFieldData = await GetByIdAsync(id);
+            if (modelFieldData == null)
+            {
+                throw new Exception("ModelFieldData is not found");
+            }
             return _modelFieldDataRepository.GetDto(modelFieldData);
         }
 
@@ -44,7 +48,7 @@ namespace StockLinx.Service.Services
         public async Task<List<ModelFieldDataDto>> CreateRangeModelFieldDataAsync(List<ModelFieldDataDto> dtos)
         {
             List<ModelFieldData> modelFieldDatas = new List<ModelFieldData>();
-            foreach (var dto in dtos)
+            foreach (ModelFieldDataDto dto in dtos)
             {
                 ModelFieldData modelFieldData = _mapper.Map<ModelFieldData>(dto);
                 modelFieldData.Id = Guid.NewGuid();
@@ -58,10 +62,10 @@ namespace StockLinx.Service.Services
 
         public async Task<ModelFieldDataDto> UpdateModelFieldDataAsync(ModelFieldDataDto dto)
         {
-            var modelFieldDataInDb = await GetByIdAsync(dto.Id);
+            ModelFieldData modelFieldDataInDb = await GetByIdAsync(dto.Id);
             if (modelFieldDataInDb == null)
             {
-                throw new ArgumentNullException("ModelFieldData is not found");
+                throw new Exception("ModelFieldData is not found");
             }
             ModelFieldData modelFieldData = _mapper.Map<ModelFieldData>(dto);
             modelFieldData.UpdatedDate = DateTime.UtcNow;
@@ -72,10 +76,10 @@ namespace StockLinx.Service.Services
 
         public async Task DeleteModelFieldDataAsync(Guid id)
         {
-            var modelFieldData = await GetByIdAsync(id);
+            ModelFieldData modelFieldData = await GetByIdAsync(id);
             if (modelFieldData == null)
             {
-                throw new ArgumentNullException("ModelFieldData is not found");
+                throw new Exception("ModelFieldData is not found");
             }
             _modelFieldDataRepository.Remove(modelFieldData);
             await _unitOfWork.CommitAsync();
@@ -84,12 +88,12 @@ namespace StockLinx.Service.Services
         public async Task DeleteRangeModelFieldDataAsync(List<Guid> ids)
         {
             List<ModelFieldData> modelFieldDatas = new List<ModelFieldData>();
-            foreach (var id in ids)
+            foreach (Guid id in ids)
             {
-                var modelFieldData = await _modelFieldDataRepository.GetByIdAsync(id);
+                ModelFieldData modelFieldData = await GetByIdAsync(id);
                 if (modelFieldData == null)
                 {
-                    throw new ArgumentNullException("ModelFieldData is not found");
+                    throw new Exception("ModelFieldData is not found");
                 }
                 modelFieldDatas.Add(modelFieldData);
             }

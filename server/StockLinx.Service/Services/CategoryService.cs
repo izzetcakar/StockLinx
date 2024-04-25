@@ -34,6 +34,10 @@ namespace StockLinx.Service.Services
         public async Task<CategoryDto> GetDtoAsync(Guid id)
         {
             Category category = await GetByIdAsync(id);
+            if (category == null)
+            {
+                throw new Exception("Category is not found");
+            }
             return _categoryRepository.GetDto(category);
         }
 
@@ -48,21 +52,31 @@ namespace StockLinx.Service.Services
             category.Id = Guid.NewGuid();
             category.CreatedDate = DateTime.UtcNow;
             await _categoryRepository.AddAsync(category);
-            await _customLogService.CreateCustomLog("Create", "Category", category.Name);
+            await _customLogService.CreateCustomLog(
+                "Create",
+                "Category",
+                category.Id,
+                category.Name
+            );
             await _unitOfWork.CommitAsync();
             return _categoryRepository.GetDto(category);
         }
 
         public async Task<List<CategoryDto>> CreateRangeCategoryAsync(List<CategoryCreateDto> dtos)
         {
-            var categories = new List<Category>();
-            foreach (var dto in dtos)
+            List<Category> categories = new List<Category>();
+            foreach (CategoryCreateDto dto in dtos)
             {
                 Category category = _mapper.Map<Category>(dto);
                 category.Id = Guid.NewGuid();
                 category.CreatedDate = DateTime.UtcNow;
                 categories.Add(category);
-                await _customLogService.CreateCustomLog("Create", "Category", category.Name);
+                await _customLogService.CreateCustomLog(
+                    "Create",
+                    "Category",
+                    category.Id,
+                    category.Name
+                );
             }
             await _categoryRepository.AddRangeAsync(categories);
             await _unitOfWork.CommitAsync();
@@ -71,43 +85,58 @@ namespace StockLinx.Service.Services
 
         public async Task<CategoryDto> UpdateCategoryAsync(CategoryUpdateDto dto)
         {
-            var categoryInDb = await GetByIdAsync(dto.Id);
+            Category categoryInDb = await GetByIdAsync(dto.Id);
             if (categoryInDb == null)
             {
-                throw new ArgumentNullException("Category is not found");
+                throw new Exception("Category is not found");
             }
-            var category = _mapper.Map<Category>(dto);
+            Category category = _mapper.Map<Category>(dto);
             category.UpdatedDate = DateTime.UtcNow;
             _categoryRepository.Update(categoryInDb, category);
-            await _customLogService.CreateCustomLog("Update","Category",category.Name);
+            await _customLogService.CreateCustomLog(
+                "Update",
+                "Category",
+                category.Id,
+                category.Name
+            );
             await _unitOfWork.CommitAsync();
             return _categoryRepository.GetDto(category);
         }
 
         public async Task DeleteCategoryAsync(Guid id)
         {
-            var category = await GetByIdAsync(id);
+            Category category = await GetByIdAsync(id);
             if (category == null)
             {
-                throw new ArgumentNullException("Category is not found");
+                throw new Exception("Category is not found");
             }
             _categoryRepository.Remove(category);
-            await _customLogService.CreateCustomLog("Delete", "Category", category.Name);
+            await _customLogService.CreateCustomLog(
+                "Delete",
+                "Category",
+                category.Id,
+                category.Name
+            );
             await _unitOfWork.CommitAsync();
         }
 
         public async Task DeleteRangeCategoryAsync(List<Guid> ids)
         {
-            var categories = new List<Category>();
-            foreach (var id in ids)
+            List<Category> categories = new List<Category>();
+            foreach (Guid id in ids)
             {
-                var category = await GetByIdAsync(id);
+                Category category = await GetByIdAsync(id);
                 if (category == null)
                 {
-                    throw new ArgumentNullException("Category is not found");
+                    throw new Exception("Category is not found");
                 }
                 categories.Add(category);
-                await _customLogService.CreateCustomLog("Delete", "Category", category.Name);
+                await _customLogService.CreateCustomLog(
+                    "Delete",
+                    "Category",
+                    category.Id,
+                    category.Name
+                );
             }
             _categoryRepository.RemoveRange(categories);
             await _unitOfWork.CommitAsync();

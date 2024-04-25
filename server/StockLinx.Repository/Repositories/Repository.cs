@@ -46,21 +46,42 @@ namespace StockLinx.Repository.Repositories.EF_Core
 
         public void Remove(T entity)
         {
+            T result = dbSet.Find(dbSet.Entry(entity).Property("Id").CurrentValue);
+            if (result == null)
+            {
+                throw new Exception($"{typeof(T).Name} not found");
+            }
             dbSet.Remove(entity);
         }
 
         public void RemoveRange(IEnumerable<T> entities)
         {
+            var result = dbSet.Find(entities);
+            if (result == null)
+            {
+                throw new Exception($"{typeof(T).Name} not found");
+            }
             dbSet.RemoveRange(entities);
         }
 
         public void Update(T oldEntity, T newEntity)
         {
+            T oldE = dbSet.Find(dbSet.Entry(oldEntity).Property("Id").CurrentValue);
+            T newE = dbSet.Find(dbSet.Entry(newEntity).Property("Id").CurrentValue);
+            if (oldE == null || newE == null)
+            {
+                throw new Exception($"{typeof(T).Name} not found");
+            }
             dbSet.Entry(oldEntity).CurrentValues.SetValues(newEntity);
         }
 
         public void UpdateRange(IEnumerable<T> entities)
         {
+            var result = dbSet.Find(entities);
+            if (result == null)
+            {
+                throw new Exception($"{typeof(T).Name} not found");
+            }
             dbSet.UpdateRange(entities);
         }
 

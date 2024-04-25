@@ -43,11 +43,17 @@ namespace StockLinx.Service.Services
 
         public async Task<T> GetByIdAsync(Guid id)
         {
+            T result = await _repository.GetByIdAsync(id);
+            if (result == null)
+            {
+                throw new Exception($"{typeof(T).Name} not found");
+            }
             return await _repository.GetByIdAsync(id);
         }
 
         public async Task UpdateAsync(T oldEntity, T newEntity)
         {
+            await GetByIdAsync((Guid)oldEntity.GetType().GetProperty("Id").GetValue(oldEntity));
             _repository.Update(oldEntity, newEntity);
             await _unitOfWork.CommitAsync();
         }

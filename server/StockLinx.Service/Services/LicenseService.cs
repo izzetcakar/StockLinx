@@ -44,7 +44,11 @@ namespace StockLinx.Service.Services
 
         public async Task<LicenseDto> GetDtoAsync(Guid id)
         {
-            var license = await GetByIdAsync(id);
+            License license = await GetByIdAsync(id);
+            if (license == null)
+            {
+                throw new Exception("License is not found");
+            }
             return await _licenseRepository.GetDtoAsync(license);
         }
 
@@ -55,11 +59,11 @@ namespace StockLinx.Service.Services
 
         public async Task<LicenseDto> CreateLicenseAsync(LicenseCreateDto dto)
         {
-            var license = _mapper.Map<License>(dto);
+            License license = _mapper.Map<License>(dto);
             license.Id = Guid.NewGuid();
             license.CreatedDate = DateTime.UtcNow;
             await _licenseRepository.AddAsync(license);
-            await _customLogService.CreateCustomLog("Create","License",license.Name);
+            await _customLogService.CreateCustomLog("Create", "License", license.Id, license.Name);
             await _unitOfWork.CommitAsync();
             return await _licenseRepository.GetDtoAsync(license);
         }
@@ -68,14 +72,19 @@ namespace StockLinx.Service.Services
             List<LicenseCreateDto> createDtos
         )
         {
-            var licenses = new List<License>();
-            foreach (var createDto in createDtos)
+            List<License> licenses = new List<License>();
+            foreach (LicenseCreateDto createDto in createDtos)
             {
-                var license = _mapper.Map<License>(createDto);
+                License license = _mapper.Map<License>(createDto);
                 license.Id = Guid.NewGuid();
                 license.CreatedDate = DateTime.UtcNow;
                 licenses.Add(license);
-                await _customLogService.CreateCustomLog("Create","License",license.Name);
+                await _customLogService.CreateCustomLog(
+                    "Create",
+                    "License",
+                    license.Id,
+                    license.Name
+                );
             }
             await _licenseRepository.AddRangeAsync(licenses);
             await _unitOfWork.CommitAsync();
@@ -84,52 +93,62 @@ namespace StockLinx.Service.Services
 
         public async Task<LicenseDto> UpdateLicenseAsync(LicenseUpdateDto dto)
         {
-            var licenseInDb = await GetByIdAsync(dto.Id);
+            License licenseInDb = await GetByIdAsync(dto.Id);
             if (licenseInDb == null)
             {
-                throw new ArgumentNullException("License is not found");
+                throw new Exception("License is not found");
             }
             License license = _mapper.Map<License>(dto);
             license.UpdatedDate = DateTime.UtcNow;
             _licenseRepository.Update(licenseInDb, license);
-            await _customLogService.CreateCustomLog("Update","License",license.Name);
+            await _customLogService.CreateCustomLog("Update", "License", license.Id, license.Name);
             await _unitOfWork.CommitAsync();
             return await _licenseRepository.GetDtoAsync(license);
         }
 
         public async Task DeleteLicenseAsync(Guid id)
         {
-            var license = await GetByIdAsync(id);
+            License license = await GetByIdAsync(id);
             if (license == null)
             {
-                throw new ArgumentNullException("License is not found");
+                throw new Exception("License is not found");
             }
             bool canDelete = await _licenseRepository.CanDeleteAsync(id);
             if (canDelete)
             {
-            _licenseRepository.Remove(license);
-            await _customLogService.CreateCustomLog("Delete","License",license.Name);
-            await _unitOfWork.CommitAsync();
+                _licenseRepository.Remove(license);
+                await _customLogService.CreateCustomLog(
+                    "Delete",
+                    "License",
+                    license.Id,
+                    license.Name
+                );
+                await _unitOfWork.CommitAsync();
             }
         }
 
         public async Task DeleteRangeLicenseAsync(List<Guid> ids)
         {
-            var licenses = new List<License>();
-            foreach (var id in ids)
+            List<License> licenses = new List<License>();
+            foreach (Guid id in ids)
             {
-                var license = await GetByIdAsync(id);
+                License license = await GetByIdAsync(id);
                 if (license == null)
                 {
-                    throw new ArgumentNullException($"{id} - License is not found");
+                    throw new Exception($"{id} - License is not found");
                 }
                 bool canDelete = await _licenseRepository.CanDeleteAsync(id);
                 if (canDelete)
                 {
                     licenses.Add(license);
-                    await _customLogService.CreateCustomLog("Delete","License",license.Name);
+                    await _customLogService.CreateCustomLog(
+                        "Delete",
+                        "License",
+                        license.Id,
+                        license.Name
+                    );
                 }
-}
+            }
             _licenseRepository.RemoveRange(licenses);
             await _unitOfWork.CommitAsync();
         }
@@ -137,7 +156,7 @@ namespace StockLinx.Service.Services
         public async Task<DeployedProductDto> CheckInAsync(ProductCheckInDto checkInDto)
         {
             User user = await _userService.GetByIdAsync(checkInDto.UserId);
-            var license = await _licenseRepository.GetByIdAsync(checkInDto.ProductId);
+            License license = await GetByIdAsync(checkInDto.ProductId);
             if (license == null)
             {
                 throw new Exception("License not found");
@@ -162,27 +181,45 @@ namespace StockLinx.Service.Services
                 Notes = checkInDto.Notes,
             };
             await _deployedProductRepository.AddAsync(deployedProduct);
-            await _customLogService.CreateCustomLog("CheckIn", "License", license.Name, "User", user.FirstName + user.LastName);
+            await _customLogService.CreateCustomLog(
+                "CheckIn",
+                "License",
+                license.Id,
+                license.Name,
+                "User",
+                user.Id,
+                user.FirstName + user.LastName
+            );
             await _unitOfWork.CommitAsync();
-            DeployedProductDto deployedProductDto = await _deployedProductRepository.GetDtoAsync(deployedProduct);
+            DeployedProductDto deployedProductDto = await _deployedProductRepository.GetDtoAsync(
+                deployedProduct
+            );
             return deployedProductDto;
         }
 
         public async Task CheckOutAsync(Guid id)
         {
-            var license = await _licenseRepository.GetByIdAsync(id);
+            License license = await GetByIdAsync(id);
             if (license == null)
             {
                 throw new Exception("License is not found");
             }
-            List<DeployedProduct> deployedProducts = await _deployedProductRepository.GetAll().Where(dp => dp.LicenseId == id).ToListAsync();
+            List<DeployedProduct> deployedProducts = await _deployedProductRepository
+                .GetAll()
+                .Where(dp => dp.LicenseId == id)
+                .ToListAsync();
             var deployedProduct = deployedProducts.Find(dp => dp.LicenseId == id);
             if (deployedProduct == null)
             {
                 throw new Exception("Deployed product is not found");
             }
             _deployedProductRepository.Remove(deployedProduct);
-            await _customLogService.CreateCustomLog("CheckOut", "License", deployedProduct.License.Name);
+            await _customLogService.CreateCustomLog(
+                "CheckOut",
+                "License",
+                license.Id,
+                deployedProduct.License.Name
+            );
             await _unitOfWork.CommitAsync();
         }
     }

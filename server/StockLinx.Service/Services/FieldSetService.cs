@@ -25,6 +25,10 @@ namespace StockLinx.Service.Services
         public async Task<FieldSetDto> GetDtoAsync(Guid id)
         {
             FieldSet fieldSet = await GetByIdAsync(id);
+            if (fieldSet == null)
+            {
+                throw new Exception("FieldSet is not found");
+            }
             return _fieldSetRepository.GetDto(fieldSet);
         }
 
@@ -45,7 +49,7 @@ namespace StockLinx.Service.Services
         public async Task<List<FieldSetDto>> CreateRangeFieldSetAsync(List<FieldSetCreateDto> dtos)
         {
             List<FieldSet> newEntities = new List<FieldSet>();
-            foreach (var dto in dtos)
+            foreach (FieldSetCreateDto dto in dtos)
             {
                 FieldSet fieldSet = _mapper.Map<FieldSet>(dto);
                 fieldSet.Id = Guid.NewGuid();
@@ -59,10 +63,10 @@ namespace StockLinx.Service.Services
 
         public async Task<FieldSetDto> UpdateFieldSetAsync(FieldSetUpdateDto dto)
         {
-            var fieldSetInDb = await GetByIdAsync(dto.Id);
+            FieldSet fieldSetInDb = await GetByIdAsync(dto.Id);
             if (fieldSetInDb == null)
             {
-                throw new ArgumentNullException("FieldSet is not found");
+                throw new Exception("FieldSet is not found");
             }
             FieldSet updatedFieldSet = _mapper.Map<FieldSet>(dto);
             updatedFieldSet.UpdatedDate = DateTime.UtcNow;
@@ -73,10 +77,10 @@ namespace StockLinx.Service.Services
 
         public async Task DeleteFieldSetAsync(Guid id)
         {
-            var fieldSet = await GetByIdAsync(id);
+            FieldSet fieldSet = await GetByIdAsync(id);
             if (fieldSet == null)
             {
-                throw new ArgumentNullException("FieldSet is not found");
+                throw new Exception("FieldSet is not found");
             }
             _fieldSetRepository.Remove(fieldSet);
             await _unitOfWork.CommitAsync();
@@ -84,13 +88,13 @@ namespace StockLinx.Service.Services
 
         public async Task DeleteRangeFieldSetAsync(List<Guid> ids)
         {
-            var fieldSets = new List<FieldSet>();
-            foreach (var id in ids)
+            List<FieldSet> fieldSets = new List<FieldSet>();
+            foreach (Guid id in ids)
             {
-                var fieldSet = await GetByIdAsync(id);
+                FieldSet fieldSet = await GetByIdAsync(id);
                 if (fieldSet == null)
                 {
-                    throw new ArgumentNullException("FieldSet is not found");
+                    throw new Exception("FieldSet is not found");
                 }
                 fieldSets.Add(fieldSet);
             }

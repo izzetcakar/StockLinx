@@ -15,8 +15,15 @@ namespace StockLinx.Service.Services
         private readonly ICustomLogService _customLogService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        public ModelService(IRepository<Model> repository, IModelRepository modelRepository,
-            IUnitOfWork unitOfWork, IMapper mapper, ICustomLogService customLogService) : base(repository, unitOfWork)
+
+        public ModelService(
+            IRepository<Model> repository,
+            IModelRepository modelRepository,
+            IUnitOfWork unitOfWork,
+            IMapper mapper,
+            ICustomLogService customLogService
+        )
+            : base(repository, unitOfWork)
         {
             _modelRepository = modelRepository;
             _customLogService = customLogService;
@@ -27,6 +34,10 @@ namespace StockLinx.Service.Services
         public async Task<ModelDto> GetDtoAsync(Guid id)
         {
             Model model = await GetByIdAsync(id);
+            if (model == null)
+            {
+                throw new Exception("Model is not found");
+            }
             return _modelRepository.GetDto(model);
         }
 
@@ -39,7 +50,7 @@ namespace StockLinx.Service.Services
         {
             ModelDto added = _modelRepository.CreateModel(dto);
             await _unitOfWork.CommitAsync();
-            await _customLogService.CreateCustomLog("Create", "Model", added.Name);
+            await _customLogService.CreateCustomLog("Create", "Model", Guid.Empty, added.Name);
             return added;
         }
 
@@ -52,7 +63,7 @@ namespace StockLinx.Service.Services
                 model.Id = Guid.NewGuid();
                 model.CreatedDate = DateTime.UtcNow;
                 models.Add(model);
-                await _customLogService.CreateCustomLog("Create", "Model", model.Name);
+                await _customLogService.CreateCustomLog("Create", "Model", model.Id, model.Name);
             }
             await _modelRepository.AddRangeAsync(models);
             await _unitOfWork.CommitAsync();
@@ -61,39 +72,39 @@ namespace StockLinx.Service.Services
 
         public async Task UpdateModelAsync(ModelUpdateDto dto)
         {
-            var modelInDb = await GetByIdAsync(dto.Id);
+            Model modelInDb = await GetByIdAsync(dto.Id);
             if (modelInDb == null)
             {
-                throw new ArgumentNullException("Model is not found");
+                throw new Exception("Model is not found");
             }
             _modelRepository.UpdateModel(dto);
-            await _customLogService.CreateCustomLog("Update", "Model", dto.Name);
+            await _customLogService.CreateCustomLog("Update", "Model", dto.Id, dto.Name);
         }
 
         public async Task DeleteModelAsync(Guid id)
         {
-            var model = await GetByIdAsync(id);
+            Model model = await GetByIdAsync(id);
             if (model == null)
             {
-                throw new ArgumentNullException("Model is not found");
+                throw new Exception("Model is not found");
             }
             _modelRepository.Remove(model);
-            await _customLogService.CreateCustomLog("Delete", "Model", model.Name);
+            await _customLogService.CreateCustomLog("Delete", "Model", model.Id, model.Name);
             await _unitOfWork.CommitAsync();
         }
 
         public async Task DeleteRangeModelAsync(List<Guid> ids)
         {
-            var models = new List<Model>();
-            foreach (var id in ids)
+            List<Model> models = new List<Model>();
+            foreach (Guid id in ids)
             {
-                var model = await GetByIdAsync(id);
+                Model model = await GetByIdAsync(id);
                 if (model == null)
                 {
-                    throw new ArgumentNullException("Model is not found");
+                    throw new Exception("Model is not found");
                 }
                 models.Add(model);
-                await _customLogService.CreateCustomLog("Delete","Model", model.Name);
+                await _customLogService.CreateCustomLog("Delete", "Model", model.Id, model.Name);
             }
             _modelRepository.RemoveRange(models);
             await _unitOfWork.CommitAsync();

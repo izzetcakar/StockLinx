@@ -11,14 +11,28 @@ namespace StockLinx.Service.Services
     {
         private readonly ICustomLogRepository _customLogRepository;
         private readonly IServiceProvider _serviceProvider;
-        public CustomLogService(IRepository<CustomLog> repository, IUnitOfWork unitOfWork,
-            ICustomLogRepository customLogRepository, IServiceProvider serviceProvider) : base(repository, unitOfWork)
+
+        public CustomLogService(
+            IRepository<CustomLog> repository,
+            IUnitOfWork unitOfWork,
+            ICustomLogRepository customLogRepository,
+            IServiceProvider serviceProvider
+        )
+            : base(repository, unitOfWork)
         {
             _customLogRepository = customLogRepository;
             _serviceProvider = serviceProvider;
         }
 
-        public async Task CreateCustomLog(string action, string itemController, string item, string targetController, string target)
+        public async Task CreateCustomLog(
+            string action,
+            string itemController,
+            Guid itemId,
+            string item,
+            string targetController,
+            Guid targetId,
+            string target
+        )
         {
             var userService = _serviceProvider.GetRequiredService<IUserService>();
             var user = await userService.GetCurrentUser();
@@ -26,17 +40,24 @@ namespace StockLinx.Service.Services
             {
                 Id = Guid.NewGuid(),
                 Date = DateTime.UtcNow,
-                UserId = user.Id,
-                Item = item,
-                Target = target,
-                ItemController = itemController,
-                TargetController = targetController,
                 Action = action,
+                UserId = user.Id,
+                ItemController = itemController,
+                ItemId = itemId,
+                Item = item,
+                TargetController = targetController,
+                TargetId = targetId,
+                Target = target,
             };
             await _customLogRepository.AddAsync(customLog);
         }
 
-        public async Task CreateCustomLog(string action, string itemController, string item)
+        public async Task CreateCustomLog(
+            string action,
+            string itemController,
+            Guid itemId,
+            string item
+        )
         {
             var userService = _serviceProvider.GetRequiredService<IUserService>();
             var user = await userService.GetCurrentUser();
@@ -48,8 +69,10 @@ namespace StockLinx.Service.Services
                 Action = action,
                 Item = item,
                 ItemController = itemController,
+                ItemId = itemId,
                 Target = null,
                 TargetController = null,
+                TargetId = null,
             };
             await _customLogRepository.AddAsync(customLog);
         }

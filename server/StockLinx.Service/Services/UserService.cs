@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Create;
@@ -9,7 +10,6 @@ using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 using StockLinx.Core.Services;
 using StockLinx.Core.UnitOfWork;
-using System.Security.Claims;
 
 namespace StockLinx.Service.Services
 {
@@ -22,8 +22,16 @@ namespace StockLinx.Service.Services
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
-        public UserService(IRepository<User> repository, IUnitOfWork unitOfWork, IUserRepository userRepository, IDepartmentRepository departmentRepository,
-             IMapper mapper, IHttpContextAccessor httpContextAccessor, ICustomLogService customLogService) : base(repository, unitOfWork)
+        public UserService(
+            IRepository<User> repository,
+            IUnitOfWork unitOfWork,
+            IUserRepository userRepository,
+            IDepartmentRepository departmentRepository,
+            IMapper mapper,
+            IHttpContextAccessor httpContextAccessor,
+            ICustomLogService customLogService
+        )
+            : base(repository, unitOfWork)
         {
             _httpContextAccessor = httpContextAccessor;
             _userRepository = userRepository;
@@ -36,6 +44,10 @@ namespace StockLinx.Service.Services
         public async Task<UserDto> GetDtoAsync(Guid id)
         {
             User user = await GetByIdAsync(id);
+            if (user == null)
+            {
+                throw new Exception("User is not found");
+            }
             return _userRepository.GetDto(user);
         }
 
@@ -48,7 +60,7 @@ namespace StockLinx.Service.Services
         {
             if (_httpContextAccessor.HttpContext != null)
             {
-                string idString = _httpContextAccessor.HttpContext.User.FindFirstValue("Id");
+                string idString = _httpContextAccessor.HttpContext.User.FindFirstValue("UserId");
                 if (Guid.TryParse(idString, out Guid idGuid))
                 {
                     return idGuid;
@@ -66,8 +78,8 @@ namespace StockLinx.Service.Services
 
         public async Task<User> GetCurrentUser()
         {
-            var id = GetIdByToken();
-            var user = await _userRepository.GetByIdAsync(id);
+            Guid id = GetIdByToken();
+            User user = await GetByIdAsync(id);
             if (user == null)
             {
                 throw new Exception("User is not found");
@@ -80,7 +92,9 @@ namespace StockLinx.Service.Services
 
         public async Task<User> Login(UserLoginDto userLoginDto)
         {
-            var user = await _userRepository.Where(x => x.Email == userLoginDto.Email && x.Password == userLoginDto.Password).SingleOrDefaultAsync();
+            var user = await _userRepository
+                .Where(x => x.Email == userLoginDto.Email && x.Password == userLoginDto.Password)
+                .SingleOrDefaultAsync();
             if (user == null)
             {
                 throw new Exception("User is not found");
@@ -95,13 +109,23 @@ namespace StockLinx.Service.Services
             user.Id = Guid.NewGuid();
             user.CreatedDate = DateTime.UtcNow;
             user.IsAdmin = false;
-            var employeeNoExist = await _userRepository.AnyAsync(x => x.EmployeeNo == user.EmployeeNo);
+            bool employeeNoExist = await _userRepository.AnyAsync(x =>
+                x.EmployeeNo == user.EmployeeNo
+            );
             if (employeeNoExist)
             {
                 throw new Exception("EmployeeNo already exists");
             }
             await _userRepository.AddAsync(user);
-            await _customLogService.CreateCustomLog("Create", "User", user.FirstName + " " + user.LastName,"Department", department.Name);
+            await _customLogService.CreateCustomLog(
+                "Create",
+                "User",
+                user.Id,
+                user.FirstName + " " + user.LastName,
+                "Department",
+                department.Id,
+                department.Name
+            );
             await _unitOfWork.CommitAsync();
             return _userRepository.GetDto(user);
         }
@@ -109,20 +133,30 @@ namespace StockLinx.Service.Services
         public async Task<List<UserDto>> CreateRangeUserAsync(List<UserCreateDto> dtos)
         {
             List<User> users = new List<User>();
-            foreach (var dto in dtos)
+            foreach (UserCreateDto dto in dtos)
             {
                 User user = _mapper.Map<User>(dto);
                 Department department = await _departmentRepository.GetByIdAsync(dto.DepartmentId);
                 user.Id = Guid.NewGuid();
                 user.CreatedDate = DateTime.UtcNow;
                 user.IsAdmin = false;
-                var employeeNoExist = await _userRepository.AnyAsync(x => x.EmployeeNo == user.EmployeeNo);
+                bool employeeNoExist = await _userRepository.AnyAsync(x =>
+                    x.EmployeeNo == user.EmployeeNo
+                );
                 if (employeeNoExist)
                 {
                     throw new Exception("EmployeeNo already exists");
                 }
                 users.Add(user);
-                await _customLogService.CreateCustomLog("Create", "User", user.FirstName + " " + user.LastName, "Department", department.Name);
+                await _customLogService.CreateCustomLog(
+                    "Create",
+                    "User",
+                    user.Id,
+                    user.FirstName + " " + user.LastName,
+                    "Department",
+                    department.Id,
+                    department.Name
+                );
             }
             await _userRepository.AddRangeAsync(users);
             await _unitOfWork.CommitAsync();
@@ -134,12 +168,17 @@ namespace StockLinx.Service.Services
             User userInDb = await GetByIdAsync(dto.Id);
             if (userInDb == null)
             {
-                throw new ArgumentNullException("User is not found");
+                throw new Exception("User is not found");
             }
             User user = _mapper.Map<User>(dto);
             user.UpdatedDate = DateTime.UtcNow;
             _userRepository.Update(userInDb, user);
-            await _customLogService.CreateCustomLog("Update", "User", user.FirstName + " " + user.LastName);
+            await _customLogService.CreateCustomLog(
+                "Update",
+                "User",
+                user.Id,
+                user.FirstName + " " + user.LastName
+            );
             await _unitOfWork.CommitAsync();
             return _userRepository.GetDto(user);
         }
@@ -149,12 +188,17 @@ namespace StockLinx.Service.Services
             User user = await GetByIdAsync(id);
             if (user == null)
             {
-                throw new ArgumentNullException("User is not found");
+                throw new Exception("User is not found");
             }
             bool canDelete = await _userRepository.CanDeleteAsync(id);
-            if(canDelete)
+            if (canDelete)
             {
-                await _customLogService.CreateCustomLog("Delete", "User", user.FirstName + " " + user.LastName);
+                await _customLogService.CreateCustomLog(
+                    "Delete",
+                    "User",
+                    user.Id,
+                    user.FirstName + " " + user.LastName
+                );
                 _userRepository.Remove(user);
                 await _unitOfWork.CommitAsync();
             }
@@ -163,18 +207,23 @@ namespace StockLinx.Service.Services
         public async Task DeleteRangeUserAsync(List<Guid> ids)
         {
             List<User> users = new List<User>();
-            foreach (var id in ids)
+            foreach (Guid id in ids)
             {
                 User user = await GetByIdAsync(id);
                 if (user == null)
                 {
-                    throw new ArgumentNullException("User is not found");
+                    throw new Exception("User is not found");
                 }
                 bool canDelete = await _userRepository.CanDeleteAsync(id);
-                if(canDelete)
+                if (canDelete)
                 {
                     users.Add(user);
-                    await _customLogService.CreateCustomLog("Delete", "User", user.FirstName + " " + user.LastName);
+                    await _customLogService.CreateCustomLog(
+                        "Delete",
+                        "User",
+                        user.Id,
+                        user.FirstName + " " + user.LastName
+                    );
                 }
             }
             _userRepository.RemoveRange(users);

@@ -23,7 +23,11 @@ namespace StockLinx.Service.Services
 
         public async Task<FieldSetCustomFieldDto> GetDtoAsync(Guid id)
         {
-            var fieldSetCustomField = await GetByIdAsync(id);
+            FieldSetCustomField fieldSetCustomField = await GetByIdAsync(id);
+            if (fieldSetCustomField == null)
+            {
+                throw new Exception("FieldSetCustomField is not found");
+            }
             return _repository.GetDto(fieldSetCustomField);
         }
 
@@ -45,7 +49,7 @@ namespace StockLinx.Service.Services
         public async Task<List<FieldSetCustomFieldDto>> CreateRangeFieldSetCustomFieldAsync(List<FieldSetCustomFieldDto> dtos)
         {
             List<FieldSetCustomField> newEntities = new List<FieldSetCustomField>();
-            foreach (var dto in dtos)
+            foreach (FieldSetCustomFieldDto dto in dtos)
             {
                 FieldSetCustomField fieldSetCustomField = _mapper.Map<FieldSetCustomField>(dto);
                 fieldSetCustomField.Id = Guid.NewGuid();
@@ -67,12 +71,12 @@ namespace StockLinx.Service.Services
         public async Task DeleteRangeFieldSetCustomFieldAsync(List<Guid> ids)
         {
             List<FieldSetCustomField> fieldSetCustomFields = new List<FieldSetCustomField>();
-            foreach (var id in ids)
+            foreach (Guid id in ids)
             {
                 FieldSetCustomField entity = await GetByIdAsync(id);
                 if (entity == null)
                 {
-                    throw new ArgumentNullException("FieldSetCustomField is not found");
+                    throw new Exception("FieldSetCustomField is not found");
                 }
                 fieldSetCustomFields.Add(entity);
             }
@@ -82,8 +86,8 @@ namespace StockLinx.Service.Services
 
         public async Task SynchronizeFieldSetCustomFieldsAsync(List<FieldSetCustomFieldDto> dtos)
         {
-            var itemsToDelete = new List<FieldSetCustomField>();
-            var itemsToAdd = new List<FieldSetCustomField>();
+            List<FieldSetCustomField> itemsToDelete = new List<FieldSetCustomField>();
+            List<FieldSetCustomField> itemsToAdd = new List<FieldSetCustomField>();
             var itemsInDb = await _repository.Where(x => x.CustomFieldId == dtos[0].CustomFieldId).ToListAsync();
 
             foreach (var itemInDb in itemsInDb)

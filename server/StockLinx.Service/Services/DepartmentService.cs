@@ -15,8 +15,15 @@ namespace StockLinx.Service.Services
         private readonly ICustomLogService _customLogService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public DepartmentService(IRepository<Department> repository, IDepartmentRepository departmentRepository,
-            IUnitOfWork unitOfWork, IMapper mapper, ICustomLogService customLogService) : base(repository, unitOfWork)
+
+        public DepartmentService(
+            IRepository<Department> repository,
+            IDepartmentRepository departmentRepository,
+            IUnitOfWork unitOfWork,
+            IMapper mapper,
+            ICustomLogService customLogService
+        )
+            : base(repository, unitOfWork)
         {
             _departmentRepository = departmentRepository;
             _customLogService = customLogService;
@@ -26,7 +33,11 @@ namespace StockLinx.Service.Services
 
         public async Task<DepartmentDto> GetDtoAsync(Guid id)
         {
-            var department = await GetByIdAsync(id);
+            Department department = await GetByIdAsync(id);
+            if (department == null)
+            {
+                throw new Exception("Department is not found");
+            }
             return _departmentRepository.GetDto(department);
         }
 
@@ -41,21 +52,33 @@ namespace StockLinx.Service.Services
             department.Id = Guid.NewGuid();
             department.CreatedDate = DateTime.UtcNow;
             await _departmentRepository.AddAsync(department);
-            await _customLogService.CreateCustomLog("Create", "Department", department.Name);
+            await _customLogService.CreateCustomLog(
+                "Create",
+                "Department",
+                department.Id,
+                department.Name
+            );
             await _unitOfWork.CommitAsync();
             return _departmentRepository.GetDto(department);
         }
 
-        public async Task<List<DepartmentDto>> CreateRangeDepartmentAsync(List<DepartmentCreateDto> dtos)
+        public async Task<List<DepartmentDto>> CreateRangeDepartmentAsync(
+            List<DepartmentCreateDto> dtos
+        )
         {
             List<Department> departments = new List<Department>();
-            foreach (var dto in dtos)
+            foreach (DepartmentCreateDto dto in dtos)
             {
                 Department department = _mapper.Map<Department>(dto);
                 department.Id = Guid.NewGuid();
                 department.CreatedDate = DateTime.UtcNow;
                 departments.Add(department);
-                await _customLogService.CreateCustomLog("Create", "Department", department.Name);
+                await _customLogService.CreateCustomLog(
+                    "Create",
+                    "Department",
+                    department.Id,
+                    department.Name
+                );
             }
             await _departmentRepository.AddRangeAsync(departments);
             await _unitOfWork.CommitAsync();
@@ -68,35 +91,50 @@ namespace StockLinx.Service.Services
             Department department = _mapper.Map<Department>(dto);
             department.UpdatedDate = DateTime.UtcNow;
             _departmentRepository.Update(departmentInDb, department);
-            await _customLogService.CreateCustomLog("Update", "Department", department.Name);
+            await _customLogService.CreateCustomLog(
+                "Update",
+                "Department",
+                department.Id,
+                department.Name
+            );
             await _unitOfWork.CommitAsync();
             return _departmentRepository.GetDto(department);
         }
 
         public async Task DeleteDepartmentAsync(Guid id)
         {
-            var department = await GetByIdAsync(id);
+            Department department = await GetByIdAsync(id);
             if (department == null)
             {
-                throw new ArgumentNullException("Department is not found");
+                throw new Exception("Department is not found");
             }
             _departmentRepository.Remove(department);
-            await _customLogService.CreateCustomLog("Delete", "Department", department.Name);
+            await _customLogService.CreateCustomLog(
+                "Delete",
+                "Department",
+                department.Id,
+                department.Name
+            );
             await _unitOfWork.CommitAsync();
         }
 
         public async Task DeleteRangeDepartmentAsync(List<Guid> ids)
         {
-            var departments = new List<Department>();
-            foreach (var id in ids)
+            List<Department> departments = new List<Department>();
+            foreach (Guid id in ids)
             {
-                var department = await GetByIdAsync(id);
+                Department department = await GetByIdAsync(id);
                 if (department == null)
                 {
-                    throw new ArgumentNullException($"{id} - Department is not found");
+                    throw new Exception($"{id} - Department is not found");
                 }
                 departments.Add(department);
-                await _customLogService.CreateCustomLog("Delete", "Department", department.Name);
+                await _customLogService.CreateCustomLog(
+                    "Delete",
+                    "Department",
+                    department.Id,
+                    department.Name
+                );
             }
             _departmentRepository.RemoveRange(departments);
             await _unitOfWork.CommitAsync();
