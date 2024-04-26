@@ -203,30 +203,31 @@ namespace StockLinx.Service.Services
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task<DeployedProductDto> CheckInAsync(ProductCheckInDto checkInDto)
+        public async Task<DeployedProduct> CheckInAsync(ProductCheckInDto checkInDto)
         {
-            bool isDeployed = await _deployedProductRepository.AnyAsync(d =>
-                d.AssetId == checkInDto.ProductId
-            );
-            if (isDeployed)
-            {
-                throw new Exception("Asset is already checked in");
-            }
-            User user = await _userService.GetCurrentUser();
+            User user = await _userService.GetByIdAsync(checkInDto.UserId);
             Asset asset = await GetByIdAsync(checkInDto.ProductId);
+            bool isDeployed = await _deployedProductRepository
+                .GetAll()
+                .AnyAsync(x => x.AssetId == asset.Id);
             if (asset == null)
             {
                 throw new Exception("Asset not found");
             }
+            if (isDeployed)
+            {
+                throw new Exception("Asset is already deployed");
+            }
+
             DeployedProduct deployedProduct = new DeployedProduct
             {
                 Id = Guid.NewGuid(),
-                AssetId = checkInDto.ProductId,
+                AssetId = asset.Id,
                 UserId = checkInDto.UserId,
                 AssignDate = DateTime.UtcNow,
                 CreatedDate = DateTime.UtcNow,
-                Notes = checkInDto.Notes,
                 Quantity = 1,
+                Notes = checkInDto.Notes,
             };
             await _deployedProductRepository.AddAsync(deployedProduct);
             await _customLogService.CreateCustomLog(
@@ -239,35 +240,19 @@ namespace StockLinx.Service.Services
                 user.FirstName + user.LastName
             );
             await _unitOfWork.CommitAsync();
-            DeployedProductDto deployedProductDto = await _deployedProductRepository.GetDtoAsync(
-                deployedProduct
-            );
-            return deployedProductDto;
+            return deployedProduct;
         }
 
         public async Task CheckOutAsync(Guid id)
         {
-            Asset asset = await GetByIdAsync(id);
-            if (asset == null)
+            DeployedProduct deployedProduct = await _deployedProductRepository.GetByIdAsync(id);
+            Asset asset = await GetByIdAsync((Guid)deployedProduct.AssetId);
+            if (deployedProduct == null || asset == null)
             {
-                throw new Exception("Asset is not found");
-            }
-            List<DeployedProduct> deployedProducts = await _deployedProductRepository
-                .GetAll()
-                .Where(dp => dp.AssetId == id)
-                .ToListAsync();
-            var deployedProduct = deployedProducts.Find(dp => dp.AssetId == id);
-            if (deployedProduct == null)
-            {
-                throw new Exception("Asset is already checked out");
+                throw new Exception("Deployed product is not found");
             }
             _deployedProductRepository.Remove(deployedProduct);
-            await _customLogService.CreateCustomLog(
-                "CheckOut",
-                "Asset",
-                asset.Id,
-                deployedProduct.Asset.Name
-            );
+            await _customLogService.CreateCustomLog("CheckOut", "Asset", asset.Id, asset.Name);
             await _unitOfWork.CommitAsync();
         }
     }

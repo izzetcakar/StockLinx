@@ -16,18 +16,15 @@ namespace StockLinx.Repository.Repositories.EF_Core
 
         public async Task<DeployedProductDto> GetDtoAsync(DeployedProduct entity)
         {
-            var dto = _mapper.Map<DeployedProductDto>(entity);
+            DeployedProductDto dto = _mapper.Map<DeployedProductDto>(entity);
             if (entity.AccessoryId != null)
             {
                 var accessory = await dbContext.Accessories.SingleOrDefaultAsync(a => a.Id == entity.AccessoryId);
                 if (accessory == null) return null;
-                var category = await dbContext.Categories.SingleOrDefaultAsync(c => c.Id == accessory.CategoryId);
                 dto.ProductId = accessory.Id;
                 dto.ProductType = "Accessory";
                 dto.ProductRoute = $"/accessory/{accessory.Id}";
-                dto.Category = category.Name;
                 dto.ProductName = accessory.Name;
-                dto.ProductDescription = Generic.AddHyphenIfNotEmpty(accessory.Name) + accessory.ModelNo;
                 return dto;
             }
             else if (entity.AssetId != null)
@@ -39,9 +36,6 @@ namespace StockLinx.Repository.Repositories.EF_Core
                 {
                     var manufacturer = await dbContext.Manufacturers.SingleOrDefaultAsync(m => m.Id == model.ManufacturerId);
                     var category = await dbContext.Categories.SingleOrDefaultAsync(c => c.Id == model.CategoryId);
-                    var description = Generic.AddHyphenIfNotEmpty(manufacturer.Name) + model.ModelNo;
-                    dto.Category = category?.Name;
-                    dto.ProductDescription = description;
                 }
                 dto.ProductId = asset.Id;
                 dto.ProductType = "Asset";
@@ -53,13 +47,10 @@ namespace StockLinx.Repository.Repositories.EF_Core
             {
                 var component = await dbContext.Components.SingleOrDefaultAsync(c => c.Id == entity.ComponentId);
                 if (component == null) return null;
-                var category = await dbContext.Categories.SingleOrDefaultAsync(c => c.Id == component.CategoryId);
                 dto.ProductId = component.Id;
                 dto.ProductType = "Component";
                 dto.ProductRoute = $"/component/{component.Id}";
-                dto.Category = category.Name;
                 dto.ProductName = component.Name;
-                dto.ProductDescription = component.SerialNo;
                 return dto;
             }
             else if (entity.ConsumableId != null)
@@ -67,14 +58,10 @@ namespace StockLinx.Repository.Repositories.EF_Core
                 var consumable = await dbContext.Consumables.SingleOrDefaultAsync(c => c.Id == entity.ConsumableId);
                 if (consumable == null) return null;
                 var manufacturer = await dbContext.Manufacturers.SingleOrDefaultAsync(m => m.Id == consumable.ManufacturerId);
-                var category = await dbContext.Categories.SingleOrDefaultAsync(c => c.Id == consumable.CategoryId);
-                var description = Generic.AddHyphenIfNotEmpty(manufacturer.Name) + consumable.ModelNo;
                 dto.ProductId = consumable.Id;
                 dto.ProductType = "Consumable";
                 dto.ProductRoute = $"/consumable/{consumable.Id}";
-                dto.Category = category.Name;
                 dto.ProductName = consumable.Name;
-                dto.ProductDescription = description;
                 return dto;
             }
             else if (entity.LicenseId != null)
@@ -82,20 +69,17 @@ namespace StockLinx.Repository.Repositories.EF_Core
                 var license = await dbContext.Licenses.SingleOrDefaultAsync(l => l.Id == entity.LicenseId);
                 if (license == null) return null;
                 var manufacturer = await dbContext.Manufacturers.SingleOrDefaultAsync(m => m.Id == license.ManufacturerId);
-                var category = await dbContext.Categories.SingleOrDefaultAsync(c => c.Id == license.CategoryId);
                 dto.ProductId = license.Id;
                 dto.ProductType = "License";
                 dto.ProductRoute = $"/license/{license.Id}";
-                dto.Category = category.Name;
                 dto.ProductName = license.Name;
-                dto.ProductDescription = Generic.AddHyphenIfNotEmpty(manufacturer.Name) + license.LicenseKey;
                 return dto;
             }
             return dto;
         }
         public async Task<List<DeployedProductDto>> GetDtosAsync(List<DeployedProduct> entities)
         {
-            var dtos = new List<DeployedProductDto>();
+            List<DeployedProductDto> dtos = new List<DeployedProductDto>();
             foreach (var entity in entities)
             {
                 var dto = await GetDtoAsync(entity);
@@ -105,7 +89,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
         }
         public async Task<List<DeployedProductDto>> GetAllDtosAsync()
         {
-            var entities = await dbContext.DeployedProducts.AsNoTracking().ToListAsync();
+            var entities = await dbContext.DeployedProducts.ToListAsync();
             return await GetDtosAsync(entities);
         }
     }

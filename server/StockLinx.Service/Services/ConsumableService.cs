@@ -163,7 +163,7 @@ namespace StockLinx.Service.Services
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task<DeployedProductDto> CheckInAsync(ProductCheckInDto checkInDto)
+        public async Task<DeployedProduct> CheckInAsync(ProductCheckInDto checkInDto)
         {
             User user = await _userService.GetByIdAsync(checkInDto.UserId);
             Consumable consumable = await GetByIdAsync(checkInDto.ProductId);
@@ -174,11 +174,7 @@ namespace StockLinx.Service.Services
             int availableQuantity = await _consumableRepository.GetAvaliableQuantityAsync(
                 consumable
             );
-            if (availableQuantity < 1)
-            {
-                throw new Exception("Consumable is out of stock");
-            }
-            if (checkInDto.Quantity < availableQuantity)
+            if (availableQuantity - checkInDto.Quantity < 0)
             {
                 throw new Exception("Consumable stock is not enough");
             }
@@ -189,7 +185,7 @@ namespace StockLinx.Service.Services
                 UserId = checkInDto.UserId,
                 AssignDate = DateTime.UtcNow,
                 CreatedDate = DateTime.UtcNow,
-                Quantity = availableQuantity,
+                Quantity = checkInDto.Quantity,
                 Notes = checkInDto.Notes,
             };
             await _deployedProductRepository.AddAsync(deployedProduct);
@@ -203,25 +199,14 @@ namespace StockLinx.Service.Services
                 user.FirstName + user.LastName
             );
             await _unitOfWork.CommitAsync();
-            DeployedProductDto deployedProductDto = await _deployedProductRepository.GetDtoAsync(
-                deployedProduct
-            );
-            return deployedProductDto;
+            return deployedProduct;
         }
 
         public async Task CheckOutAsync(Guid id)
         {
-            Consumable consumable = await GetByIdAsync(id);
-            if (consumable == null)
-            {
-                throw new Exception("Consumable is not found");
-            }
-            List<DeployedProduct> deployedProducts = await _deployedProductRepository
-                .GetAll()
-                .Where(dp => dp.ConsumableId == id)
-                .ToListAsync();
-            var deployedProduct = deployedProducts.Find(dp => dp.ConsumableId == id);
-            if (deployedProduct == null)
+            DeployedProduct deployedProduct = await _deployedProductRepository.GetByIdAsync(id);
+            Consumable consumable = await GetByIdAsync((Guid)deployedProduct.ConsumableId);
+            if (deployedProduct == null || consumable == null)
             {
                 throw new Exception("Deployed product is not found");
             }
@@ -230,7 +215,7 @@ namespace StockLinx.Service.Services
                 "CheckOut",
                 "Consumable",
                 consumable.Id,
-                deployedProduct.Consumable.Name
+                consumable.Name
             );
             await _unitOfWork.CommitAsync();
         }

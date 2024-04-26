@@ -15,7 +15,7 @@ namespace StockLinx.Core.Services
         Task<ComponentDto> UpdateComponentAsync(ComponentUpdateDto dto);
         Task DeleteComponentAsync(Guid id);
         Task DeleteRangeComponentAsync(List<Guid> ids);
-        Task<DeployedProductDto> CheckInAsync(ProductCheckInDto checkInDto);
+        Task<DeployedProduct> CheckInAsync(ProductCheckInDto checkInDto);
         Task CheckOutAsync(Guid id);
     }
 }

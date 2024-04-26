@@ -153,7 +153,7 @@ namespace StockLinx.Service.Services
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task<DeployedProductDto> CheckInAsync(ProductCheckInDto checkInDto)
+        public async Task<DeployedProduct> CheckInAsync(ProductCheckInDto checkInDto)
         {
             User user = await _userService.GetByIdAsync(checkInDto.UserId);
             License license = await GetByIdAsync(checkInDto.ProductId);
@@ -162,11 +162,7 @@ namespace StockLinx.Service.Services
                 throw new Exception("License not found");
             }
             int availableQuantity = await _licenseRepository.GetAvaliableQuantityAsync(license);
-            if (availableQuantity < 1)
-            {
-                throw new Exception("License is out of stock");
-            }
-            if (checkInDto.Quantity < availableQuantity)
+            if (availableQuantity - checkInDto.Quantity < 0)
             {
                 throw new Exception("License stock is not enough");
             }
@@ -177,7 +173,7 @@ namespace StockLinx.Service.Services
                 UserId = checkInDto.UserId,
                 AssignDate = DateTime.UtcNow,
                 CreatedDate = DateTime.UtcNow,
-                Quantity = availableQuantity,
+                Quantity = checkInDto.Quantity,
                 Notes = checkInDto.Notes,
             };
             await _deployedProductRepository.AddAsync(deployedProduct);
@@ -191,25 +187,14 @@ namespace StockLinx.Service.Services
                 user.FirstName + user.LastName
             );
             await _unitOfWork.CommitAsync();
-            DeployedProductDto deployedProductDto = await _deployedProductRepository.GetDtoAsync(
-                deployedProduct
-            );
-            return deployedProductDto;
+            return deployedProduct;
         }
 
         public async Task CheckOutAsync(Guid id)
         {
-            License license = await GetByIdAsync(id);
-            if (license == null)
-            {
-                throw new Exception("License is not found");
-            }
-            List<DeployedProduct> deployedProducts = await _deployedProductRepository
-                .GetAll()
-                .Where(dp => dp.LicenseId == id)
-                .ToListAsync();
-            var deployedProduct = deployedProducts.Find(dp => dp.LicenseId == id);
-            if (deployedProduct == null)
+            DeployedProduct deployedProduct = await _deployedProductRepository.GetByIdAsync(id);
+            License license = await GetByIdAsync((Guid)deployedProduct.LicenseId);
+            if (deployedProduct == null || license == null)
             {
                 throw new Exception("Deployed product is not found");
             }
@@ -218,7 +203,7 @@ namespace StockLinx.Service.Services
                 "CheckOut",
                 "License",
                 license.Id,
-                deployedProduct.License.Name
+                license.Name
             );
             await _unitOfWork.CommitAsync();
         }

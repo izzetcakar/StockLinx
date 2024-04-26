@@ -3,6 +3,7 @@ using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
+using StockLinx.Core.Entities;
 using StockLinx.Core.Services;
 
 namespace StockLinx.API.Controllers
@@ -123,8 +124,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                DeployedProductDto result = await _accessoryService.CheckIn(dto);
-                return CreateActionResult(CustomResponseDto<DeployedProductDto>.Success(200, result));
+                DeployedProduct result = await _accessoryService.CheckIn(dto);
+                return CreateActionResult(CustomResponseDto<DeployedProduct>.Success(200, result));
             }
             catch (Exception ex)
             {

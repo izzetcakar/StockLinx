@@ -15,7 +15,7 @@ namespace StockLinx.Core.Services
         Task<LicenseDto> UpdateLicenseAsync(LicenseUpdateDto dto);
         Task DeleteLicenseAsync(Guid id);
         Task DeleteRangeLicenseAsync(List<Guid> ids);
-        Task<DeployedProductDto> CheckInAsync(ProductCheckInDto checkInDto);
+        Task<DeployedProduct> CheckInAsync(ProductCheckInDto checkInDto);
         Task CheckOutAsync(Guid id);
     }
 }

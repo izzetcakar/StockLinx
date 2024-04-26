@@ -163,7 +163,7 @@ namespace StockLinx.Service.Services
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task<DeployedProductDto> CheckInAsync(ProductCheckInDto checkInDto)
+        public async Task<DeployedProduct> CheckInAsync(ProductCheckInDto checkInDto)
         {
             User user = await _userService.GetByIdAsync(checkInDto.UserId);
             Component component = await GetByIdAsync(checkInDto.ProductId);
@@ -172,11 +172,7 @@ namespace StockLinx.Service.Services
                 throw new Exception("Component not found");
             }
             int availableQuantity = await _componentRepository.GetAvaliableQuantityAsync(component);
-            if (availableQuantity < 1)
-            {
-                throw new Exception("Component is out of stock");
-            }
-            if (checkInDto.Quantity < availableQuantity)
+            if (availableQuantity - checkInDto.Quantity < 0)
             {
                 throw new Exception("Component stock is not enough");
             }
@@ -187,7 +183,7 @@ namespace StockLinx.Service.Services
                 UserId = checkInDto.UserId,
                 AssignDate = DateTime.UtcNow,
                 CreatedDate = DateTime.UtcNow,
-                Quantity = availableQuantity,
+                Quantity = checkInDto.Quantity,
                 Notes = checkInDto.Notes,
             };
             await _deployedProductRepository.AddAsync(deployedProduct);
@@ -201,25 +197,14 @@ namespace StockLinx.Service.Services
                 user.FirstName + user.LastName
             );
             await _unitOfWork.CommitAsync();
-            DeployedProductDto deployedProductDto = await _deployedProductRepository.GetDtoAsync(
-                deployedProduct
-            );
-            return deployedProductDto;
+            return deployedProduct;
         }
 
         public async Task CheckOutAsync(Guid id)
         {
-            Component component = await GetByIdAsync(id);
-            if (component == null)
-            {
-                throw new Exception("Component is not found");
-            }
-            List<DeployedProduct> deployedProducts = await _deployedProductRepository
-                .GetAll()
-                .Where(dp => dp.ComponentId == id)
-                .ToListAsync();
-            var deployedProduct = deployedProducts.Find(dp => dp.ComponentId == id);
-            if (deployedProduct == null)
+            DeployedProduct deployedProduct = await _deployedProductRepository.GetByIdAsync(id);
+            Component component = await GetByIdAsync((Guid)deployedProduct.ComponentId);
+            if (deployedProduct == null || component == null)
             {
                 throw new Exception("Deployed product is not found");
             }
@@ -228,7 +213,7 @@ namespace StockLinx.Service.Services
                 "CheckOut",
                 "Component",
                 component.Id,
-                deployedProduct.Component.Name
+                component.Name
             );
             await _unitOfWork.CommitAsync();
         }
