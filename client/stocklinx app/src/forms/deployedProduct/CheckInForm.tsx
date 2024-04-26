@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Group, Flex, Textarea } from "@mantine/core";
+import { Button, Group, Flex, Textarea, NumberInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IDeployedProduct } from "../../interfaces/serverInterfaces";
 import { useSelector } from "react-redux";
@@ -67,6 +67,13 @@ const CheckInForm: React.FC<CheckInFormProps> = ({
           placeholder="Your notes here"
           {...form.getInputProps("notes")}
           value={form.values.notes || ""}
+        />
+        <NumberInput
+          label="Quantity"
+          placeholder="Quantity"
+          min={1}
+          {...form.getInputProps("quantity")}
+          value={form.values.quantity}
         />
         <Group mt="md" justify="flex-end">
           <Button type="submit" color="dark">
