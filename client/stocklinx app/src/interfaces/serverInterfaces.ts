@@ -63,8 +63,10 @@ export interface IBaseProduct extends BaseEntity {
   notes: string | null;
   purchaseCost: number | null;
   purchaseDate: Date | null;
+  quantity: number;
   checkInCounter?: number | null;
   checkOutCounter?: number | null;
+  availableQuantity?: number;
 }
 export interface IAccessory extends IBaseProduct {
   manufacturerId: string | null;
@@ -72,8 +74,6 @@ export interface IAccessory extends IBaseProduct {
   categoryId: string | null;
   imagePath: string | null;
   modelNo: string;
-  quantity: number;
-  availableQuantity?: number;
 }
 export interface IAsset extends IBaseProduct {
   modelId: string | null;
@@ -90,8 +90,6 @@ export interface IComponent extends IBaseProduct {
   categoryId: string | null;
   supplierId: string | null;
   serialNo: string | null;
-  quantity: number;
-  availableQuantity?: number;
 }
 export interface ILicense extends IBaseProduct {
   categoryId: string | null;
@@ -104,8 +102,6 @@ export interface ILicense extends IBaseProduct {
   reassignable: boolean;
   expirationDate: Date | null;
   terminationDate: Date | null;
-  quantity: number;
-  availableQuantity?: number;
 }
 export interface IConsumable extends IBaseProduct {
   categoryId: string | null;
@@ -113,8 +109,6 @@ export interface IConsumable extends IBaseProduct {
   manufacturerId: string | null;
   modelNo: string | null;
   itemNo: string | null;
-  quantity: number;
-  availableQuantity?: number;
 }
 export interface IModel extends BaseEntity {
   categoryId: string | null;
