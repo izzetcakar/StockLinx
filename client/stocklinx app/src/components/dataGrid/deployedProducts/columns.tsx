@@ -26,9 +26,9 @@ export const useColumns = () => {
       },
     },
     {
-      dataField: "productDescription",
-      caption: "Description",
-      dataType: "string",
+      dataField: "quantity",
+      caption: "Quantity",
+      dataType: "number",
     },
     {
       dataField: "assignDate",

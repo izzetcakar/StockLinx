@@ -21,6 +21,7 @@ export const useInitial = (asset?: IAsset, create?: boolean) => {
     modelId: null,
     tagNo: null,
     overageAssets: [],
+    quantity: 1,
   };
 
   if (asset) {

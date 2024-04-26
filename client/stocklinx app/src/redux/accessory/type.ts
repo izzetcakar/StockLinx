@@ -27,9 +27,9 @@ export interface AccessoryRemovePayload {
 export interface CheckInPayload {
   checkInDto: IProductCheckInDto;
 }
-export interface AccessoryCheckInSuccessPayload {
-  accessory: IAccessory;
-  deployedProduct: IDeployedProduct;
+export interface CheckActionPayload {
+  id: string;
+  quantity: number;
 }
 
 //GET
@@ -122,7 +122,7 @@ export interface CheckInAccessoryRequest {
 }
 export type CheckInAccessorySuccess = {
   type: typeof accessoryConst.CHECK_IN_ACCESSORY_SUCCESS;
-  payload: AccessoryPayload;
+  payload: CheckActionPayload;
 };
 export type CheckInAccessoryFailure = {
   type: typeof accessoryConst.CHECK_IN_ACCESSORY_FAILURE;
@@ -130,11 +130,11 @@ export type CheckInAccessoryFailure = {
 //CHECKOUT
 export interface CheckOutAccessoryRequest {
   type: typeof accessoryConst.CHECK_OUT_ACCESSORY_REQUEST;
-  payload: AccessoryRequestPayload;
+  payload: IDeployedProduct;
 }
 export type CheckOutAccessorySuccess = {
   type: typeof accessoryConst.CHECK_OUT_ACCESSORY_SUCCESS;
-  payload: AccessoryPayload;
+  payload: CheckActionPayload;
 };
 export type CheckOutAccessoryFailure = {
   type: typeof accessoryConst.CHECK_OUT_ACCESSORY_FAILURE;

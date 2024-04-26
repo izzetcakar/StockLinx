@@ -1,9 +1,11 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { accessoryActions } from "./actions";
-import { IAccessory } from "../../interfaces/serverInterfaces";
+import {
+  IAccessory,
+  IDeployedProduct,
+} from "../../interfaces/serverInterfaces";
 import { accessoryConst } from "./constant";
 import {
-  AccessoryCheckInSuccessPayload,
   CheckInAccessoryRequest,
   CheckOutAccessoryRequest,
   CreateAccessoryRequest,
@@ -22,7 +24,7 @@ import {
 import { deployedProductActions } from "../deployedProduct/actions";
 
 interface IResponse {
-  data: IAccessory[] | IAccessory | AccessoryCheckInSuccessPayload | null;
+  data: IAccessory[] | IAccessory | IDeployedProduct | null;
   message: string;
   success: boolean;
   status: number;
@@ -49,6 +51,7 @@ function* fetchAccessoriesSaga() {
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* fetchAccessorySaga(action: FetchAccessoryRequest) {
   yield put(genericActions.increaseLoading());
   try {
@@ -71,6 +74,7 @@ function* fetchAccessorySaga(action: FetchAccessoryRequest) {
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* createAccessorySaga(action: CreateAccessoryRequest) {
   yield put(genericActions.increaseLoading());
   try {
@@ -92,6 +96,7 @@ function* createAccessorySaga(action: CreateAccessoryRequest) {
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* createRangeAccessorySaga(action: CreateRangeAccessoryRequest) {
   yield put(genericActions.increaseLoading());
   try {
@@ -115,6 +120,7 @@ function* createRangeAccessorySaga(action: CreateRangeAccessoryRequest) {
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* updateAccessorySaga(action: UpdateAccessoryRequest) {
   yield put(genericActions.increaseLoading());
   try {
@@ -136,6 +142,7 @@ function* updateAccessorySaga(action: UpdateAccessoryRequest) {
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* removeAccessorySaga(action: RemoveAccessoryRequest) {
   yield put(genericActions.increaseLoading());
   try {
@@ -155,6 +162,7 @@ function* removeAccessorySaga(action: RemoveAccessoryRequest) {
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* removeRangeAccessorySaga(action: RemoveRangeAccessoryRequest) {
   yield put(genericActions.increaseLoading());
   try {
@@ -176,6 +184,7 @@ function* removeRangeAccessorySaga(action: RemoveRangeAccessoryRequest) {
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* checkInAccessorySaga(action: CheckInAccessoryRequest) {
   yield put(genericActions.increaseLoading());
   try {
@@ -188,14 +197,14 @@ function* checkInAccessorySaga(action: CheckInAccessoryRequest) {
     } else {
       openNotificationSuccess("Accessory Checked In");
       yield put(
-        accessoryActions.checkInSuccess({
-          accessory: (data as AccessoryCheckInSuccessPayload).accessory,
+        deployedProductActions.createSuccess({
+          deployedProduct: data as IDeployedProduct,
         })
       );
       yield put(
-        deployedProductActions.createSuccess({
-          deployedProduct: (data as AccessoryCheckInSuccessPayload)
-            .deployedProduct,
+        accessoryActions.checkInSuccess({
+          id: action.payload.checkInDto.productId,
+          quantity: action.payload.checkInDto.quantity,
         })
       );
     }
@@ -208,7 +217,7 @@ function* checkInAccessorySaga(action: CheckInAccessoryRequest) {
 function* checkOutAccessorySaga(action: CheckOutAccessoryRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { message, success }: IResponse = yield call(
       accessoryRequests.checkOut,
       action.payload.id
     );
@@ -217,10 +226,13 @@ function* checkOutAccessorySaga(action: CheckOutAccessoryRequest) {
     } else {
       openNotificationSuccess("Accessory Checked Out");
       yield put(
-        accessoryActions.checkOutSuccess({ accessory: data as IAccessory })
+        deployedProductActions.removeSuccess({ id: action.payload.id })
       );
       yield put(
-        deployedProductActions.removeSuccess({ id: action.payload.id })
+        accessoryActions.checkOutSuccess({
+          id: action.payload.accessoryId as string,
+          quantity: action.payload.quantity,
+        })
       );
     }
   } catch (e) {

@@ -117,12 +117,39 @@ export default (state = initialState, action: AccessoryActions) => {
       return {
         ...state,
         accessories: state.accessories.map((accessory) =>
-          accessory.id === action.payload.accessory.id
-            ? action.payload.accessory
+          accessory.id === action.payload.id
+            ? {
+                ...accessory,
+                availableQuantity: accessory.availableQuantity
+                  ? accessory.availableQuantity - action.payload.quantity
+                  : 0,
+              }
             : accessory
         ),
       };
     case accessoryConst.CHECK_IN_ACCESSORY_FAILURE:
+      return {
+        ...state,
+      };
+    case accessoryConst.CHECK_OUT_ACCESSORY_REQUEST:
+      return {
+        ...state,
+      };
+    case accessoryConst.CHECK_OUT_ACCESSORY_SUCCESS:
+      return {
+        ...state,
+        accessories: state.accessories.map((accessory) =>
+          accessory.id === action.payload.id
+            ? {
+                ...accessory,
+                availableQuantity: accessory.availableQuantity
+                  ? accessory.availableQuantity + action.payload.quantity
+                  : action.payload.quantity,
+              }
+            : accessory
+        ),
+      };
+    case accessoryConst.CHECK_OUT_ACCESSORY_FAILURE:
       return {
         ...state,
       };

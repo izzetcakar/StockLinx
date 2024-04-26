@@ -1,5 +1,8 @@
 import { IProductCheckInDto } from "../../interfaces/dtos";
-import { IAccessory } from "../../interfaces/serverInterfaces";
+import {
+  IAccessory,
+  IDeployedProduct,
+} from "../../interfaces/serverInterfaces";
 import { request } from "../../server/api";
 const requestUrl = "Accessory/";
 
@@ -47,7 +50,7 @@ const removeRange = (ids: string[]) => {
   });
 };
 const checkIn = (checkInDto: IProductCheckInDto) => {
-  return request<IAccessory>({
+  return request<IDeployedProduct>({
     requestUrl: requestUrl + "checkin",
     apiType: "post",
     queryData: checkInDto,
