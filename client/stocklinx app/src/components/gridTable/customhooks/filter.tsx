@@ -69,7 +69,7 @@ export const useInputFilter = (filter: Filter) => {
             label={label}
             value={filter.value ? filter.value.toString() : ""}
             onChange={(e) => onValueChange(e, filter)}
-            leftSection={searchIcon}
+            leftSection={<IconSearch size={16} />}
           />
         );
       case FilterType.NUMBER:

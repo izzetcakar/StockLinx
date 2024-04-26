@@ -14,6 +14,6 @@
 
         //Relates
         public Branch Branch { get; set; }
-        public ProductStatus ProductStatus { get; set; }
+        public ProductStatus? ProductStatus { get; set; }
     }
 }

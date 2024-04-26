@@ -55,8 +55,8 @@ const Login = () => {
     <Flex w="100%" h="100vh" justify={"center"} align={"center"} bg={"#f4f0f0"}>
       <LoadingOverlay visible={loading > 0} />
       <Paper shadow="xs" py="md" px={40} mah="90%" maw="90%">
-        <Flex direction="column" gap={10} maw="100%" bg={"white"}>
-          <Image alt="..." src={logo} />
+        <Flex direction="column" gap={10} mah="100%" maw="100%" bg={"white"}>
+          <Image alt="..." src={logo} h={100} fit="contain" />
           <form
             className="sign-form"
             onSubmit={signForm.onSubmit(() => {
