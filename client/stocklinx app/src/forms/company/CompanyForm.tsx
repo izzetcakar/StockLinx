@@ -4,7 +4,6 @@ import {
   Button,
   Group,
   Flex,
-  Select,
   Image,
   FileInput,
 } from "@mantine/core";
@@ -13,9 +12,9 @@ import { ICompany } from "../../interfaces/serverInterfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { companyActions } from "../../redux/company/actions";
 import { RootState } from "../../redux/rootReducer";
-import filterClasses from "../../mantineModules/baseFilter.module.scss";
 import { useInitial } from "./useInitial";
 import { toBase64 } from "../../functions/Image";
+import FormSelect from "../mantine/FormSelect";
 interface CompanyFormProps {
   company?: ICompany;
   create?: boolean;
@@ -76,19 +75,14 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ company, create }) => {
           {...form.getInputProps("name")}
           withAsterisk
         />
-        <Select
+        <FormSelect
           data={locations.map((l) => ({
             value: l.id,
             label: l.name,
           }))}
           label="Location"
-          placeholder="Select Location"
-          {...form.getInputProps("locationId")}
-          classNames={filterClasses}
-          comboboxProps={{
-            position: "bottom",
-            middlewares: { flip: false, shift: false },
-          }}
+          inputProps={form.getInputProps("locationId")}
+          value={form.values.locationId || ""}
         />
         <TextInput
           label="Email"

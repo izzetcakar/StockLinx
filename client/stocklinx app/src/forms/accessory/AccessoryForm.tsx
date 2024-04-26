@@ -6,7 +6,6 @@ import {
   NumberInput,
   Flex,
   Textarea,
-  Select,
   Image,
   FileInput,
 } from "@mantine/core";
@@ -16,11 +15,11 @@ import { CategoryType, IAccessory } from "../../interfaces/serverInterfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { accessoryActions } from "../../redux/accessory/actions";
 import { RootState } from "../../redux/rootReducer";
-import filterClasses from "../../mantineModules/baseFilter.module.scss";
 import { useInitial } from "./useInitial";
 import { toBase64 } from "../../functions/Image";
 import base_accessory from "../../assets/baseProductImages/base_accessory.png";
 import { openNotificationError } from "../../notification/Notification";
+import FormSelect from "../mantine/FormSelect";
 
 interface AccessoryFormProps {
   accessory?: IAccessory;
@@ -113,7 +112,7 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory, create }) => {
           {...form.getInputProps("name")}
           withAsterisk
         />
-        <Select
+        <FormSelect
           data={categories
             .filter((category) => category.type === CategoryType.ACCESSORY)
             .map((category) => ({
@@ -121,64 +120,36 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory, create }) => {
               label: category.name,
             }))}
           label="Category"
-          placeholder="Select Category"
-          {...form.getInputProps("categoryId")}
+          inputProps={form.getInputProps("categoryId")}
           value={form.values.categoryId || ""}
-          classNames={filterClasses}
-          comboboxProps={{
-            position: "bottom",
-            middlewares: { flip: false, shift: false },
-          }}
-          nothingFoundMessage="No categories found"
         />
-        <Select
+        <FormSelect
           data={productStatuses.map((status) => ({
             value: status.id,
             label: status.name,
           }))}
           label="Status"
-          placeholder="Select Status"
-          {...form.getInputProps("productStatusId")}
+          inputProps={form.getInputProps("productStatusId")}
           value={form.values.productStatusId || ""}
-          classNames={filterClasses}
-          comboboxProps={{
-            position: "bottom",
-            middlewares: { flip: false, shift: false },
-          }}
-          nothingFoundMessage="No status found"
         />
-        <Select
+        <FormSelect
           data={suppliers.map((supplier) => ({
             value: supplier.id,
             label: supplier.name,
           }))}
           label="Supplier"
-          placeholder="Select Supplier"
-          {...form.getInputProps("supplierId")}
           value={form.values.supplierId || ""}
-          classNames={filterClasses}
-          comboboxProps={{
-            position: "bottom",
-            middlewares: { flip: false, shift: false },
-          }}
-          nothingFoundMessage="No suppliers found"
+          inputProps={form.getInputProps("supplierId")}
           clearable
         />
-        <Select
+        <FormSelect
           data={manufacturers.map((manufacturer) => ({
             value: manufacturer.id,
             label: manufacturer.name,
           }))}
           label="Manufacturer"
-          placeholder="Select Manufacturer"
-          {...form.getInputProps("manufacturerId")}
+          inputProps={form.getInputProps("manufacturerId")}
           value={form.values.manufacturerId || ""}
-          classNames={filterClasses}
-          comboboxProps={{
-            position: "bottom",
-            middlewares: { flip: false, shift: false },
-          }}
-          nothingFoundMessage="No manufacturers found"
           clearable
         />
         <TextInput

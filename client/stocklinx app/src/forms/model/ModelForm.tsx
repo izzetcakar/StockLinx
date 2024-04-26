@@ -26,6 +26,7 @@ import { DateInput } from "@mantine/dates";
 import { modelFieldDataActions } from "../../redux/modelFieldData/actions";
 import { useInitial } from "./useInitial";
 import { toBase64 } from "../../functions/Image";
+import FormSelect from "../mantine/FormSelect";
 interface ModelFormProps {
   model?: IModel;
   create?: boolean;
@@ -266,7 +267,7 @@ const ModelForm: React.FC<ModelFormProps> = ({ model, create }) => {
           placeholder="Upload image"
           onChange={(e) => handleImageChange(e)}
         />
-        <Select
+        <FormSelect
           data={categories
             .filter((c) => c.type === CategoryType.ASSET)
             .map((category) => ({
@@ -274,16 +275,9 @@ const ModelForm: React.FC<ModelFormProps> = ({ model, create }) => {
               label: category.name,
             }))}
           label="Category"
-          placeholder="Select Category"
-          {...form.getInputProps("categoryId")}
-          classNames={filterClasses}
-          comboboxProps={{
-              position: "top",
-              middlewares: { flip: false, shift: false },
-            }}
-          nothingFoundMessage="No category found"
+          inputProps={form.getInputProps("categoryId")}
+          value={form.values.categoryId || ""}
           withAsterisk
-          
         />
         <Select
           data={fieldSets.map((fieldSet) => ({
@@ -294,29 +288,18 @@ const ModelForm: React.FC<ModelFormProps> = ({ model, create }) => {
           placeholder="Select Field Set"
           {...form.getInputProps("fieldSetId")}
           classNames={filterClasses}
-          comboboxProps={{
-              position: "top",
-              middlewares: { flip: false, shift: false },
-            }}
+          comboboxProps={{ position: "bottom" }}
           nothingFoundMessage="No field set found"
           onChange={(e) => onFieldIdChange(e as string)}
-          
         />
-        <Select
+        <FormSelect
           data={manufacturers.map((manufacturer) => ({
             value: manufacturer.id,
             label: manufacturer.name,
           }))}
           label="Manufacturer"
-          placeholder="Select Manufacturer"
-          {...form.getInputProps("manufacturerId")}
-          classNames={filterClasses}
-          comboboxProps={{
-              position: "top",
-              middlewares: { flip: false, shift: false },
-            }}
-          nothingFoundMessage="No manufacturer found"
-          
+          inputProps={form.getInputProps("manufacturerId")}
+          value={form.values.manufacturerId || ""}
         />
         <TextInput
           label="Name"

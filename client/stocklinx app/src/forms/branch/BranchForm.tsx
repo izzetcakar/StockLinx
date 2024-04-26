@@ -1,12 +1,12 @@
 import React from "react";
-import { TextInput, Button, Group, Flex, Select } from "@mantine/core";
+import { TextInput, Button, Group, Flex } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IBranch } from "../../interfaces/serverInterfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { branchActions } from "../../redux/branch/actions";
 import { RootState } from "../../redux/rootReducer";
-import filterClasses from "../../mantineModules/baseFilter.module.scss";
 import { useInitial } from "./useInitial";
+import FormSelect from "../mantine/FormSelect";
 interface BranchFormProps {
   branch?: IBranch;
   create?: boolean;
@@ -51,37 +51,24 @@ const BranchForm: React.FC<BranchFormProps> = ({ branch, create }) => {
           {...form.getInputProps("name")}
           withAsterisk
         />
-        <Select
+        <FormSelect
           data={companies.map((company) => ({
             value: company.id,
             label: company.name,
           }))}
           label="Company"
-          placeholder="Select Company"
-          {...form.getInputProps("companyId")}
-          classNames={filterClasses}
-          comboboxProps={{
-            position: "bottom",
-            middlewares: { flip: false, shift: false },
-          }}
-          nothingFoundMessage="No company found"
+          inputProps={form.getInputProps("companyId")}
+          value={form.values.companyId || ""}
           withAsterisk
         />
-        <Select
+        <FormSelect
           data={locations.map((location) => ({
             value: location.id,
             label: location.name,
           }))}
           label="Location"
-          placeholder="Select Location"
-          {...form.getInputProps("locationId")}
+          inputProps={form.getInputProps("locationId")}
           value={form.values.locationId || ""}
-          classNames={filterClasses}
-          comboboxProps={{
-            position: "bottom",
-            middlewares: { flip: false, shift: false },
-          }}
-          nothingFoundMessage="No location found"
         />
         <Group mt="md" justify="flex-end">
           <Button type="submit" color="dark">

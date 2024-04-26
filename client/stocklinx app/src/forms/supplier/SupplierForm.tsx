@@ -5,7 +5,6 @@ import {
   Group,
   Flex,
   Textarea,
-  Select,
   Image,
   FileInput,
 } from "@mantine/core";
@@ -17,6 +16,7 @@ import { useDispatch } from "react-redux";
 import { supplierActions } from "../../redux/supplier/actions";
 import { useInitial } from "./useInitial";
 import { toBase64 } from "../../functions/Image";
+import FormSelect from "../mantine/FormSelect";
 
 interface SupplierFormProps {
   supplier?: ISupplier;
@@ -78,17 +78,15 @@ const SupplierForm: React.FC<SupplierFormProps> = ({ supplier, create }) => {
           {...form.getInputProps("name")}
           withAsterisk
         />
-        <Select
+        <FormSelect
           data={locations.map((location) => ({
             value: location.id,
             label: location.name,
           }))}
           label="Location"
-          placeholder="Select Location"
-          {...form.getInputProps("locationId")}
+          inputProps={form.getInputProps("locationId")}
           value={form.values.locationId || ""}
           clearable
-          
         />
         <TextInput
           label="Contact Name"

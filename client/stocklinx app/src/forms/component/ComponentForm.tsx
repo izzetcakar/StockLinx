@@ -6,7 +6,6 @@ import {
   NumberInput,
   Flex,
   Textarea,
-  Select,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { DateInput } from "@mantine/dates";
@@ -14,9 +13,9 @@ import { CategoryType, IComponent } from "../../interfaces/serverInterfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { componentActions } from "../../redux/component/actions";
 import { RootState } from "../../redux/rootReducer";
-import filterClasses from "../../mantineModules/baseFilter.module.scss";
 import { useInitial } from "./useInitial";
 import { openNotificationError } from "../../notification/Notification";
+import FormSelect from "../mantine/FormSelect";
 
 interface ComponentFormProps {
   component?: IComponent;
@@ -79,7 +78,7 @@ const ComponentForm: React.FC<ComponentFormProps> = ({ component, create }) => {
           placeholder="New Name"
           {...form.getInputProps("name")}
         />
-        <Select
+        <FormSelect
           data={categories
             .filter((category) => category.type === CategoryType.COMPONENT)
             .map((category) => ({
@@ -87,14 +86,8 @@ const ComponentForm: React.FC<ComponentFormProps> = ({ component, create }) => {
               label: category.name,
             }))}
           label="Category"
-          placeholder="Select Category"
-          {...form.getInputProps("categoryId")}
-          classNames={filterClasses}
-          comboboxProps={{
-            position: "top",
-            middlewares: { flip: false, shift: false },
-          }}
-          nothingFoundMessage="No category found"
+          inputProps={form.getInputProps("categoryId")}
+          value={form.values.categoryId || ""}
           withAsterisk
         />
         <NumberInput
@@ -111,21 +104,14 @@ const ComponentForm: React.FC<ComponentFormProps> = ({ component, create }) => {
           {...form.getInputProps("serialNo")}
           value={form.values.serialNo || ""}
         />
-        <Select
+        <FormSelect
           data={suppliers.map((supplier) => ({
             value: supplier.id,
             label: supplier.name,
           }))}
           label="Supplier"
-          placeholder="Select Supplier"
-          {...form.getInputProps("supplierId")}
+          inputProps={form.getInputProps("supplierId")}
           value={form.values.supplierId || ""}
-          classNames={filterClasses}
-          comboboxProps={{
-            position: "top",
-            middlewares: { flip: false, shift: false },
-          }}
-          nothingFoundMessage="No supplier found"
           clearable
         />
         <TextInput

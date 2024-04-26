@@ -16,6 +16,7 @@ import { useDispatch } from "react-redux";
 import { userActions } from "../../redux/user/actions";
 import { DateInput } from "@mantine/dates";
 import { useInitial } from "./useInitial";
+import FormSelect from "../mantine/FormSelect";
 
 interface UserFormProps {
   user?: IUser;
@@ -106,7 +107,6 @@ const UserForm: React.FC<UserFormProps> = ({ user, create }) => {
           value={company}
           onChange={(value) => handleCompanyChange(value as string)}
           withAsterisk
-          
         />
         <Select
           data={branches
@@ -117,9 +117,8 @@ const UserForm: React.FC<UserFormProps> = ({ user, create }) => {
           value={branch}
           onChange={(value) => handleBranchChange(value as string)}
           withAsterisk
-          
         />
-        <Select
+        <FormSelect
           data={departments
             .filter((department) => department.branchId === branch)
             .map((department) => ({
@@ -127,10 +126,9 @@ const UserForm: React.FC<UserFormProps> = ({ user, create }) => {
               label: department.name,
             }))}
           label="Department"
-          placeholder="Select Department"
-          {...form.getInputProps("departmentId")}
+          inputProps={form.getInputProps("departmentId")}
+          value={form.values.departmentId || ""}
           withAsterisk
-          
         />
         <TextInput
           label="First Name"

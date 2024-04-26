@@ -1,11 +1,11 @@
 import React from "react";
-import { TextInput, Button, Group, Flex, Select } from "@mantine/core";
+import { TextInput, Button, Group, Flex } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { CategoryType, ICategory } from "../../interfaces/serverInterfaces";
 import { useDispatch } from "react-redux";
 import { categoryActions } from "../../redux/category/actions";
-import filterClasses from "../../mantineModules/baseFilter.module.scss";
 import { useInitial } from "./useInitial";
+import FormSelect from "../mantine/FormSelect";
 interface CategoryFormProps {
   category?: ICategory;
   create?: boolean;
@@ -46,7 +46,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ category, create }) => {
           {...form.getInputProps("name")}
           withAsterisk
         />
-        <Select
+        <FormSelect
           data={
             [
               { value: CategoryType.ASSET, label: "Asset" },
@@ -57,13 +57,8 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ category, create }) => {
             ] as any
           }
           label="Type"
-          placeholder="Select Type"
-          {...form.getInputProps("type")}
-          classNames={filterClasses}
-          comboboxProps={{
-            position: "bottom",
-            middlewares: { flip: false, shift: false },
-          }}
+          inputProps={form.getInputProps("type")}
+          value={form.values.type || ""}
           withAsterisk
         />
       </Flex>

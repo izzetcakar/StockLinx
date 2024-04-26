@@ -1,19 +1,12 @@
 import React, { useEffect } from "react";
-import {
-  TextInput,
-  Button,
-  Group,
-  Flex,
-  Textarea,
-  Select,
-} from "@mantine/core";
+import { TextInput, Button, Group, Flex, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IDepartment } from "../../interfaces/serverInterfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { departmentActions } from "../../redux/department/actions";
 import { RootState } from "../../redux/rootReducer";
-import filterClasses from "../../mantineModules/baseFilter.module.scss";
 import { useInitial } from "./useInitial";
+import FormSelect from "../mantine/FormSelect";
 interface DepartmentFormProps {
   department?: IDepartment;
   create?: boolean;
@@ -62,22 +55,14 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
           {...form.getInputProps("name")}
           withAsterisk
         />
-        <Select
+        <FormSelect
           data={locations.map((location) => ({
             value: location.id,
             label: location.name,
           }))}
           label="Location"
-          placeholder="Select Location"
-          {...form.getInputProps("locationId")}
+          inputProps={form.getInputProps("locationId")}
           value={form.values.locationId || ""}
-          classNames={filterClasses}
-          comboboxProps={{
-              position: "top",
-              middlewares: { flip: false, shift: false },
-            }}
-          nothingFoundMessage="No location found"
-          
         />
         <Textarea
           placeholder="Your notes here"

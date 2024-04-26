@@ -8,7 +8,6 @@ import {
   ActionIcon,
   Textarea,
   Text,
-  Select,
   Image,
   FileInput,
 } from "@mantine/core";
@@ -18,12 +17,12 @@ import { IconPlus, IconTrash } from "@tabler/icons-react";
 import { IAsset } from "../../interfaces/serverInterfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
-import filterClasses from "../../mantineModules/baseFilter.module.scss";
 import { assetActions } from "../../redux/asset/actions";
 import { useInitial } from "./useInitial";
 import { toBase64 } from "../../functions/Image";
 import { openNotificationError } from "../../notification/Notification";
 import base_asset from "../../assets/baseProductImages/base_asset.jpg";
+import FormSelect from "../mantine/FormSelect";
 
 interface AssetFormProps {
   asset?: IAsset;
@@ -34,7 +33,6 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
   const dispatch = useDispatch();
   const branch = useSelector((state: RootState) => state.branch.branch);
   const models = useSelector((state: RootState) => state.model.models);
-  const suppliers = useSelector((state: RootState) => state.supplier.suppliers);
   const { initialValues, isCreate } = useInitial(asset, create);
 
   const form = useForm<IAsset>({
@@ -153,21 +151,14 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
           value={form.values.serialNo || ""}
         />
         {overageAssetFields}
-        <Select
+        <FormSelect
           data={models.map((model) => ({
             value: model.id,
             label: model.name,
           }))}
           label="Model"
-          placeholder="Select Model"
-          {...form.getInputProps("modelId")}
+          inputProps={form.getInputProps("modelId")}
           value={form.values.modelId || ""}
-          classNames={filterClasses}
-          comboboxProps={{
-            position: "bottom",
-            middlewares: { flip: false, shift: false },
-          }}
-          nothingFoundMessage="No models found"
           clearable
         />
         <Textarea
@@ -187,22 +178,6 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
           placeholder="New Order No"
           {...form.getInputProps("orderNo")}
           value={form.values.orderNo || ""}
-        />
-        <Select
-          data={suppliers.map((supplier) => ({
-            value: supplier.id,
-            label: supplier.name,
-          }))}
-          label="Supplier"
-          placeholder="Select Supplier"
-          {...form.getInputProps("supplierId")}
-          classNames={filterClasses}
-          comboboxProps={{
-            position: "bottom",
-            middlewares: { flip: false, shift: false },
-          }}
-          nothingFoundMessage="No suppliers found"
-          clearable
         />
         <DateInput
           clearable

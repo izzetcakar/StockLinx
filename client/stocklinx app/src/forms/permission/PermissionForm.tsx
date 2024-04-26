@@ -44,10 +44,7 @@ const PermissionForm: React.FC<PermissionFormProps> = ({ branch }) => {
           label="User"
           placeholder="Select User"
           classNames={filterClasses}
-          comboboxProps={{
-              position: "top",
-              middlewares: { flip: false, shift: false },
-            }}
+          comboboxProps={{ position: 'bottom' }}
           nothingFoundMessage="No user found"
           onChange={(e) => setUser(e as string)}
           

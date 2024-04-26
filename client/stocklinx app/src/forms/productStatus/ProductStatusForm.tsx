@@ -1,11 +1,14 @@
 import React from "react";
-import { TextInput, Button, Group, Flex, Select } from "@mantine/core";
+import { TextInput, Button, Group, Flex } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { ProductStatusType, IProductStatus } from "../../interfaces/serverInterfaces";
+import {
+  ProductStatusType,
+  IProductStatus,
+} from "../../interfaces/serverInterfaces";
 import { useDispatch } from "react-redux";
 import { productStatusActions } from "../../redux/productStatus/actions";
-import filterClasses from "../../mantineModules/baseFilter.module.scss";
 import { useInitial } from "./useInitial";
+import FormSelect from "../mantine/FormSelect";
 interface ProductStatusFormProps {
   productStatus?: IProductStatus;
   create?: boolean;
@@ -49,7 +52,7 @@ const ProductStatusForm: React.FC<ProductStatusFormProps> = ({
           {...form.getInputProps("name")}
           withAsterisk
         />
-        <Select
+        <FormSelect
           data={
             [
               { value: ProductStatusType.AVAILABLE, label: "Avaliable" },
@@ -60,14 +63,8 @@ const ProductStatusForm: React.FC<ProductStatusFormProps> = ({
             ] as any
           }
           label="Type"
-          placeholder="Select Type"
-          {...form.getInputProps("type")}
-          classNames={filterClasses}
-          comboboxProps={{
-            position: "bottom",
-            middlewares: { flip: false, shift: false },
-          }}
-          nothingFoundMessage="No type found"
+          inputProps={form.getInputProps("type")}
+          value={form.values.type || ""}
           withAsterisk
         />
       </Flex>

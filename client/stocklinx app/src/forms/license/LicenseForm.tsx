@@ -7,7 +7,6 @@ import {
   Flex,
   Textarea,
   Checkbox,
-  Select,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { DateInput } from "@mantine/dates";
@@ -15,9 +14,9 @@ import { CategoryType, ILicense } from "../../interfaces/serverInterfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { licenseActions } from "../../redux/license/actions";
 import { RootState } from "../../redux/rootReducer";
-import filterClasses from "../../mantineModules/baseFilter.module.scss";
 import { useInitial } from "./useInitial";
 import { openNotificationError } from "../../notification/Notification";
+import FormSelect from "../mantine/FormSelect";
 
 interface LicenseFormProps {
   license?: ILicense;
@@ -83,7 +82,7 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license, create }) => {
           placeholder="New Name"
           {...form.getInputProps("name")}
         />
-        <Select
+        <FormSelect
           data={categories
             .filter((category) => category.type === CategoryType.LICENSE)
             .map((category) => ({
@@ -91,16 +90,9 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license, create }) => {
               label: category.name,
             }))}
           label="Category"
-          placeholder="Select Category"
-          {...form.getInputProps("categoryId")}
-          classNames={filterClasses}
-          comboboxProps={{
-              position: "top",
-              middlewares: { flip: false, shift: false },
-            }}
-          nothingFoundMessage="No categories found"
+          inputProps={form.getInputProps("categoryId")}
+          value={form.values.categoryId || ""}
           withAsterisk
-          
         />
         <TextInput
           label="License Key"
@@ -118,22 +110,15 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license, create }) => {
           {...form.getInputProps("quantity")}
           hideControls
         />
-        <Select
+        <FormSelect
           data={manufacturers.map((manufacturer) => ({
             value: manufacturer.id,
             label: manufacturer.name,
           }))}
           label="Manufacturer"
-          placeholder="Select Manufacturer"
-          {...form.getInputProps("manufacturerId")}
-          classNames={filterClasses}
-          comboboxProps={{
-              position: "top",
-              middlewares: { flip: false, shift: false },
-            }}
-          nothingFoundMessage="No manufacturers found"
+          inputProps={form.getInputProps("manufacturerId")}
+          value={form.values.manufacturerId || ""}
           clearable
-          
         />
         <TextInput
           label="Licensed To"
@@ -152,22 +137,15 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license, create }) => {
           {...form.getInputProps("reassignable", { type: "checkbox" })}
           checked={form.values.reassignable}
         />
-        <Select
+        <FormSelect
           data={suppliers.map((supplier) => ({
             value: supplier.id,
             label: supplier.name,
           }))}
           label="Supplier"
-          placeholder="Select Supplier"
-          {...form.getInputProps("supplierId")}
-          classNames={filterClasses}
-          comboboxProps={{
-              position: "top",
-              middlewares: { flip: false, shift: false },
-            }}
-          nothingFoundMessage="No suppliers found"
+          inputProps={form.getInputProps("supplierId")}
+          value={form.values.supplierId || ""}
           clearable
-          
         />
         <TextInput
           label="Order No"

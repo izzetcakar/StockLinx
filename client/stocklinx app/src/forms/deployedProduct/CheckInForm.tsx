@@ -1,11 +1,11 @@
 import React from "react";
-import { Button, Group, Flex, Select, Textarea } from "@mantine/core";
+import { Button, Group, Flex, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IDeployedProduct } from "../../interfaces/serverInterfaces";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
-import filterClasses from "../../mantineModules/baseFilter.module.scss";
 import uuid4 from "uuid4";
+import FormSelect from "../mantine/FormSelect";
 
 interface CheckInFormProps {
   deployedProduct: IDeployedProduct;
@@ -52,20 +52,14 @@ const CheckInForm: React.FC<CheckInFormProps> = ({
         px={40}
         pt={20}
       >
-        <Select
+        <FormSelect
           data={users.map((user) => ({
             value: user.id,
             label: user.firstName + " " + user.lastName,
           }))}
           label="User"
-          placeholder="Select User"
-          {...form.getInputProps("userId")}
-          classNames={filterClasses}
-          comboboxProps={{
-            position: "top",
-            middlewares: { flip: false, shift: false },
-          }}
-          nothingFoundMessage="No user found"
+          inputProps={form.getInputProps("userId")}
+          value={form.values.userId || ""}
           withAsterisk
         />
         <Textarea
