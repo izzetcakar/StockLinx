@@ -14,8 +14,7 @@ namespace StockLinx.Service.Services
     public class ConsumableService : Service<Consumable>, IConsumableService
     {
         private readonly IConsumableRepository _consumableRepository;
-        private readonly IDeployedProductRepository _deployedProductRepository;
-        private readonly IBranchRepository _branchRepository;
+        private readonly IUserProductRepository _userProductRepository;
         private readonly IUserService _userService;
         private readonly ICustomLogService _customLogService;
         private readonly IMapper _mapper;
@@ -24,8 +23,7 @@ namespace StockLinx.Service.Services
         public ConsumableService(
             IRepository<Consumable> repository,
             IConsumableRepository consumableRepository,
-            IDeployedProductRepository deployedProductRepository,
-            IBranchRepository branchRepository,
+            IUserProductRepository userProductRepository,
             IUserService userService,
             IUnitOfWork unitOfWork,
             IMapper mapper,
@@ -34,8 +32,7 @@ namespace StockLinx.Service.Services
             : base(repository, unitOfWork)
         {
             _consumableRepository = consumableRepository;
-            _deployedProductRepository = deployedProductRepository;
-            _branchRepository = branchRepository;
+            _userProductRepository = userProductRepository;
             _userService = userService;
             _customLogService = customLogService;
             _mapper = mapper;
@@ -163,7 +160,7 @@ namespace StockLinx.Service.Services
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task<DeployedProduct> CheckInAsync(ProductCheckInDto checkInDto)
+        public async Task<UserProduct> CheckInAsync(UserProductCheckInDto checkInDto)
         {
             User user = await _userService.GetByIdAsync(checkInDto.UserId);
             Consumable consumable = await GetByIdAsync(checkInDto.ProductId);
@@ -178,7 +175,7 @@ namespace StockLinx.Service.Services
             {
                 throw new Exception("Consumable stock is not enough");
             }
-            DeployedProduct deployedProduct = new DeployedProduct
+            UserProduct userProduct = new UserProduct
             {
                 Id = Guid.NewGuid(),
                 ConsumableId = consumable.Id,
@@ -188,7 +185,7 @@ namespace StockLinx.Service.Services
                 Quantity = checkInDto.Quantity,
                 Notes = checkInDto.Notes,
             };
-            await _deployedProductRepository.AddAsync(deployedProduct);
+            await _userProductRepository.AddAsync(userProduct);
             await _customLogService.CreateCustomLog(
                 "CheckIn",
                 "Consumable",
@@ -199,18 +196,18 @@ namespace StockLinx.Service.Services
                 user.FirstName + user.LastName
             );
             await _unitOfWork.CommitAsync();
-            return deployedProduct;
+            return userProduct;
         }
 
         public async Task CheckOutAsync(Guid id)
         {
-            DeployedProduct deployedProduct = await _deployedProductRepository.GetByIdAsync(id);
-            Consumable consumable = await GetByIdAsync((Guid)deployedProduct.ConsumableId);
-            if (deployedProduct == null || consumable == null)
+            UserProduct userProduct = await _userProductRepository.GetByIdAsync(id);
+            Consumable consumable = await GetByIdAsync((Guid)userProduct.ConsumableId);
+            if (userProduct == null || consumable == null)
             {
-                throw new Exception("Deployed product is not found");
+                throw new Exception("Consumable product is not found");
             }
-            _deployedProductRepository.Remove(deployedProduct);
+            _userProductRepository.Remove(userProduct);
             await _customLogService.CreateCustomLog(
                 "CheckOut",
                 "Consumable",

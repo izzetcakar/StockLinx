@@ -18,11 +18,11 @@ namespace StockLinx.Repository.Repositories.EF_Core
 
         public async Task<ComponentDto> GetDtoAsync(Component entity)
         {
-            var deployedProducts = await dbContext
-                .DeployedProducts.Where(d => d.ComponentId.HasValue && d.ComponentId == entity.Id)
+            var assetProducts = await dbContext
+                .AssetProducts.Where(d => d.ComponentId.HasValue && d.ComponentId == entity.Id)
                 .AsNoTracking()
                 .ToListAsync();
-            var availableQuantity = entity.Quantity - deployedProducts.Sum(d => d.Quantity);
+            var availableQuantity = entity.Quantity - assetProducts.Sum(d => d.Quantity);
             var dto = _mapper.Map<ComponentDto>(entity);
             dto.AvailableQuantity = availableQuantity;
             return dto;
@@ -30,7 +30,6 @@ namespace StockLinx.Repository.Repositories.EF_Core
 
         public async Task<List<ComponentDto>> GetDtosAsync(List<Component> entities)
         {
-            var deployedProducts = await dbContext.DeployedProducts.AsNoTracking().ToListAsync();
             var dtos = new List<ComponentDto>();
 
             foreach (var entity in entities)
@@ -54,20 +53,25 @@ namespace StockLinx.Repository.Repositories.EF_Core
             {
                 throw new Exception("Component not found.");
             }
-            var deployedProducts = await dbContext.DeployedProducts.AnyAsync(d => d.ComponentId.HasValue && d.ComponentId == id);
-            if (deployedProducts)
+            bool assetProducts = await dbContext.AssetProducts.AnyAsync(d =>
+                d.ComponentId.HasValue && d.ComponentId == id
+            );
+            if (assetProducts)
             {
-                throw new Exception("Cannot delete component because it is used in deployed products.");
+                throw new Exception(
+                    "Cannot delete component because it is has deployed to an asset."
+                );
             }
             return true;
         }
 
         public async Task<int> GetAvaliableQuantityAsync(Component entity)
         {
-            List<DeployedProduct> deployedProducts = await dbContext.DeployedProducts.ToListAsync();
-            int availableQuantity = entity.Quantity - deployedProducts.Count(d =>
-                    d.ComponentId.HasValue && d.ComponentId == entity.Id
-                );
+            List<AssetProduct> assetProducts = await dbContext
+                .AssetProducts.Where(d => d.ComponentId.HasValue && d.ComponentId == entity.Id)
+                .AsNoTracking()
+                .ToListAsync();
+            int availableQuantity = entity.Quantity - assetProducts.Sum(d => d.Quantity);
             return availableQuantity;
         }
     }

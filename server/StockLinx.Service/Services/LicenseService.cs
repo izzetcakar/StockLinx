@@ -14,8 +14,9 @@ namespace StockLinx.Service.Services
     public class LicenseService : Service<License>, ILicenseService
     {
         private readonly ILicenseRepository _licenseRepository;
-        private readonly IDeployedProductRepository _deployedProductRepository;
-        private readonly IBranchRepository _branchRepository;
+        private readonly IUserProductRepository _userProductRepository;
+        private readonly IAssetProductRepository _assetProductRepository;
+        private readonly IAssetRepository _assetRepository;
         private readonly IUserService _userService;
         private readonly ICustomLogService _customLogService;
         private readonly IMapper _mapper;
@@ -24,8 +25,9 @@ namespace StockLinx.Service.Services
         public LicenseService(
             IRepository<License> repository,
             ILicenseRepository licenseRepository,
-            IDeployedProductRepository deployedProductRepository,
-            IBranchRepository branchRepository,
+            IUserProductRepository userProductRepository,
+            IAssetProductRepository assetProductRepository,
+            IAssetRepository assetRepository,
             IUserService userService,
             IUnitOfWork unitOfWork,
             IMapper mapper,
@@ -34,8 +36,9 @@ namespace StockLinx.Service.Services
             : base(repository, unitOfWork)
         {
             _licenseRepository = licenseRepository;
-            _deployedProductRepository = deployedProductRepository;
-            _branchRepository = branchRepository;
+            _userProductRepository = userProductRepository;
+            _assetProductRepository = assetProductRepository;
+            _assetRepository = assetRepository;
             _userService = userService;
             _customLogService = customLogService;
             _mapper = mapper;
@@ -153,7 +156,7 @@ namespace StockLinx.Service.Services
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task<DeployedProduct> CheckInAsync(ProductCheckInDto checkInDto)
+        public async Task<UserProduct> CheckInAsync(UserProductCheckInDto checkInDto)
         {
             User user = await _userService.GetByIdAsync(checkInDto.UserId);
             License license = await GetByIdAsync(checkInDto.ProductId);
@@ -166,7 +169,7 @@ namespace StockLinx.Service.Services
             {
                 throw new Exception("License stock is not enough");
             }
-            DeployedProduct deployedProduct = new DeployedProduct
+            UserProduct userProduct = new UserProduct
             {
                 Id = Guid.NewGuid(),
                 LicenseId = license.Id,
@@ -176,7 +179,7 @@ namespace StockLinx.Service.Services
                 Quantity = checkInDto.Quantity,
                 Notes = checkInDto.Notes,
             };
-            await _deployedProductRepository.AddAsync(deployedProduct);
+            await _userProductRepository.AddAsync(userProduct);
             await _customLogService.CreateCustomLog(
                 "CheckIn",
                 "License",
@@ -187,18 +190,68 @@ namespace StockLinx.Service.Services
                 user.FirstName + user.LastName
             );
             await _unitOfWork.CommitAsync();
-            return deployedProduct;
+            return userProduct;
+        }
+
+        public async Task<AssetProduct> CheckInAsync(AssetProductCheckInDto checkInDto)
+        {
+            Asset asset = await _assetRepository.GetByIdAsync(checkInDto.AssetId);
+            License license = await GetByIdAsync(checkInDto.ProductId);
+            if (license == null)
+            {
+                throw new Exception("License not found");
+            }
+            int availableQuantity = await _licenseRepository.GetAvaliableQuantityAsync(license);
+            if (availableQuantity - checkInDto.Quantity < 0)
+            {
+                throw new Exception("License stock is not enough");
+            }
+            AssetProduct assetProduct = new AssetProduct
+            {
+                Id = Guid.NewGuid(),
+                LicenseId = license.Id,
+                AssetId = checkInDto.AssetId,
+                AssignDate = DateTime.UtcNow,
+                CreatedDate = DateTime.UtcNow,
+                Quantity = checkInDto.Quantity,
+                Notes = checkInDto.Notes,
+            };
+            await _assetProductRepository.AddAsync(assetProduct);
+            await _customLogService.CreateCustomLog(
+                "CheckIn",
+                "License",
+                license.Id,
+                license.Name,
+                "Asset",
+                asset.Id,
+                asset.Name
+            );
+            await _unitOfWork.CommitAsync();
+            return assetProduct;
         }
 
         public async Task CheckOutAsync(Guid id)
         {
-            DeployedProduct deployedProduct = await _deployedProductRepository.GetByIdAsync(id);
-            License license = await GetByIdAsync((Guid)deployedProduct.LicenseId);
-            if (deployedProduct == null || license == null)
+            License license = null;
+            UserProduct userProduct = await _userProductRepository.GetByIdAsync(id);
+            if (userProduct != null)
             {
-                throw new Exception("Deployed product is not found");
+                license = await _licenseRepository.GetByIdAsync(userProduct.LicenseId);
+                _userProductRepository.Remove(userProduct);
             }
-            _deployedProductRepository.Remove(deployedProduct);
+            else
+            {
+                AssetProduct assetProduct = await _assetProductRepository.GetByIdAsync(id);
+                if (assetProduct != null)
+                {
+                    license = await _licenseRepository.GetByIdAsync(assetProduct.LicenseId);
+                    _assetProductRepository.Remove(assetProduct);
+                }
+            }
+            if (license == null)
+            {
+                throw new Exception("License not found");
+            }
             await _customLogService.CreateCustomLog(
                 "CheckOut",
                 "License",

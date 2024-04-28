@@ -14,7 +14,7 @@ namespace StockLinx.Service.Services
     public class AssetService : Service<Asset>, IAssetService
     {
         private readonly IAssetRepository _assetRepository;
-        private readonly IDeployedProductRepository _deployedProductRepository;
+        private readonly IUserProductRepository _userProductRepository;
         private readonly IBranchRepository _branchRepository;
         private readonly IUserService _userService;
         private readonly ICustomLogService _customLogService;
@@ -24,7 +24,7 @@ namespace StockLinx.Service.Services
         public AssetService(
             IRepository<Asset> repository,
             IAssetRepository assetRepository,
-            IDeployedProductRepository deployedProductRepository,
+            IUserProductRepository userProductRepository,
             IBranchRepository branchRepository,
             IUserService userService,
             IUnitOfWork unitOfWork,
@@ -34,7 +34,7 @@ namespace StockLinx.Service.Services
             : base(repository, unitOfWork)
         {
             _assetRepository = assetRepository;
-            _deployedProductRepository = deployedProductRepository;
+            _userProductRepository = userProductRepository;
             _branchRepository = branchRepository;
             _userService = userService;
             _customLogService = customLogService;
@@ -203,11 +203,11 @@ namespace StockLinx.Service.Services
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task<DeployedProduct> CheckInAsync(ProductCheckInDto checkInDto)
+        public async Task<UserProduct> CheckInAsync(UserProductCheckInDto checkInDto)
         {
             User user = await _userService.GetByIdAsync(checkInDto.UserId);
             Asset asset = await GetByIdAsync(checkInDto.ProductId);
-            bool isDeployed = await _deployedProductRepository
+            bool isDeployed = await _userProductRepository
                 .GetAll()
                 .AnyAsync(x => x.AssetId == asset.Id);
             if (asset == null)
@@ -219,7 +219,7 @@ namespace StockLinx.Service.Services
                 throw new Exception("Asset is already deployed");
             }
 
-            DeployedProduct deployedProduct = new DeployedProduct
+            UserProduct userProduct = new UserProduct
             {
                 Id = Guid.NewGuid(),
                 AssetId = asset.Id,
@@ -229,7 +229,7 @@ namespace StockLinx.Service.Services
                 Quantity = 1,
                 Notes = checkInDto.Notes,
             };
-            await _deployedProductRepository.AddAsync(deployedProduct);
+            await _userProductRepository.AddAsync(userProduct);
             await _customLogService.CreateCustomLog(
                 "CheckIn",
                 "Asset",
@@ -240,18 +240,18 @@ namespace StockLinx.Service.Services
                 user.FirstName + user.LastName
             );
             await _unitOfWork.CommitAsync();
-            return deployedProduct;
+            return userProduct;
         }
 
         public async Task CheckOutAsync(Guid id)
         {
-            DeployedProduct deployedProduct = await _deployedProductRepository.GetByIdAsync(id);
-            Asset asset = await GetByIdAsync((Guid)deployedProduct.AssetId);
-            if (deployedProduct == null || asset == null)
+            UserProduct userProduct = await _userProductRepository.GetByIdAsync(id);
+            Asset asset = await GetByIdAsync((Guid)userProduct.AssetId);
+            if (userProduct == null || asset == null)
             {
                 throw new Exception("Deployed product is not found");
             }
-            _deployedProductRepository.Remove(deployedProduct);
+            _userProductRepository.Remove(userProduct);
             await _customLogService.CreateCustomLog("CheckOut", "Asset", asset.Id, asset.Name);
             await _unitOfWork.CommitAsync();
         }

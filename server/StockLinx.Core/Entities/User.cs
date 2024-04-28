@@ -20,6 +20,6 @@
         //Relates
         public Department Department { get; set; }
         public ICollection<Permission>? Permissions { get; set; }
-        public ICollection<DeployedProduct>? DeployedProducts { get; set; }
+        public ICollection<UserProduct>? UserProducts { get; set; }
     }
 }

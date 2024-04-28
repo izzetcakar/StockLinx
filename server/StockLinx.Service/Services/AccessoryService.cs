@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
@@ -14,7 +13,7 @@ namespace StockLinx.Service.Services
     public class AccessoryService : Service<Accessory>, IAccessoryService
     {
         private readonly IAccessoryRepository _accessoryRepository;
-        private readonly IDeployedProductRepository _deployedProductRepository;
+        private readonly IUserProductRepository _userProductRepository;
         private readonly IBranchRepository _branchRepository;
         private readonly ICustomLogService _customLogService;
         private readonly IUserService _userService;
@@ -25,7 +24,7 @@ namespace StockLinx.Service.Services
             IRepository<Accessory> repository,
             IAccessoryRepository accessoryRepository,
             IBranchRepository branchRepository,
-            IDeployedProductRepository deployedProductRepository,
+            IUserProductRepository userProductRepository,
             ICustomLogService customLogService,
             IUserService userService,
             IMapper mapper,
@@ -34,7 +33,7 @@ namespace StockLinx.Service.Services
             : base(repository, unitOfWork)
         {
             _accessoryRepository = accessoryRepository;
-            _deployedProductRepository = deployedProductRepository;
+            _userProductRepository = userProductRepository;
             _branchRepository = branchRepository;
             _customLogService = customLogService;
             _userService = userService;
@@ -210,7 +209,7 @@ namespace StockLinx.Service.Services
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task<DeployedProduct> CheckInAsync(ProductCheckInDto checkInDto)
+        public async Task<UserProduct> CheckInAsync(UserProductCheckInDto checkInDto)
         {
             User user = await _userService.GetByIdAsync(checkInDto.UserId);
             Accessory accessory = await GetByIdAsync(checkInDto.ProductId);
@@ -223,7 +222,7 @@ namespace StockLinx.Service.Services
             {
                 throw new Exception("Accessory stock is not enough");
             }
-            DeployedProduct deployedProduct = new DeployedProduct
+            UserProduct userProduct = new UserProduct
             {
                 Id = Guid.NewGuid(),
                 AccessoryId = accessory.Id,
@@ -233,7 +232,7 @@ namespace StockLinx.Service.Services
                 Quantity = checkInDto.Quantity,
                 Notes = checkInDto.Notes,
             };
-            await _deployedProductRepository.AddAsync(deployedProduct);
+            await _userProductRepository.AddAsync(userProduct);
             await _customLogService.CreateCustomLog(
                 "CheckIn",
                 "Accessory",
@@ -244,18 +243,18 @@ namespace StockLinx.Service.Services
                 user.FirstName + user.LastName
             );
             await _unitOfWork.CommitAsync();
-            return deployedProduct;
+            return userProduct;
         }
 
         public async Task CheckOutAsync(Guid id)
         {
-            DeployedProduct deployedProduct = await _deployedProductRepository.GetByIdAsync(id);
-            Accessory accessory = await GetByIdAsync((Guid)deployedProduct.AccessoryId);
-            if (deployedProduct == null || accessory == null)
+            UserProduct userProduct = await _userProductRepository.GetByIdAsync(id);
+            Accessory accessory = await GetByIdAsync((Guid)userProduct.AccessoryId);
+            if (userProduct == null || accessory == null)
             {
-                throw new Exception("Deployed product is not found");
+                throw new Exception("Accessory product is not found");
             }
-            _deployedProductRepository.Remove(deployedProduct);
+            _userProductRepository.Remove(userProduct);
             await _customLogService.CreateCustomLog(
                 "CheckOut",
                 "Accessory",

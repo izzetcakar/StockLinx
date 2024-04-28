@@ -117,12 +117,26 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost("checkin")]
-        public async Task<IActionResult> CheckInLicense(ProductCheckInDto dto)
+        public async Task<IActionResult> CheckInLicense(UserProductCheckInDto dto)
         {
             try
             {
-                DeployedProduct result = await _licenseService.CheckInAsync(dto);
-                return CreateActionResult(CustomResponseDto<DeployedProduct>.Success(200, result));
+                UserProduct result = await _licenseService.CheckInAsync(dto);
+                return CreateActionResult(CustomResponseDto<UserProduct>.Success(200, result));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
+        }
+
+        [HttpPost("checkin")]
+        public async Task<IActionResult> CheckInLicense(AssetProductCheckInDto dto)
+        {
+            try
+            {
+                AssetProduct result = await _licenseService.CheckInAsync(dto);
+                return CreateActionResult(CustomResponseDto<AssetProduct>.Success(200, result));
             }
             catch (Exception ex)
             {

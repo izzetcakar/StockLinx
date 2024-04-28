@@ -10,6 +10,7 @@
 
         //Relates
         public Model? Model { get; set; }
-        public ICollection<DeployedProduct>? DeployedProducts { get; set; }
+        public ICollection<UserProduct>? UserProducts { get; set; }
+        public ICollection<AssetProduct>? AssetProducts { get; set; }
     }
 }

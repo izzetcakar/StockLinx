@@ -1,10 +1,9 @@
 ﻿namespace StockLinx.Core.DTOs.Generic
 {
-    public class DeployedProductDto : BaseDto
+    public class UserProductDto : BaseDto
     {
         public Guid UserId { get; set; }
         public Guid ProductId { get; set; }
-        public Guid? ProductStatusId { get; set; }
         public DateTime AssignDate { get; set; }
         public string ProductName { get; set; }
         public string ProductType { get; set; }

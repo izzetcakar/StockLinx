@@ -8,13 +8,13 @@ namespace StockLinx.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DeployedProductController : CustomBaseController
+    public class userProductController : CustomBaseController
     {
-        private readonly IDeployedProductService _deployedProductService;
+        private readonly IUserProductService _userProductService;
 
-        public DeployedProductController(IDeployedProductService deployedProductService)
+        public userProductController(IUserProductService userProductService)
         {
-            _deployedProductService = deployedProductService;
+            _userProductService = userProductService;
         }
 
         [HttpGet]
@@ -22,8 +22,10 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                List<DeployedProductDto> result = await _deployedProductService.GetAllDtosAsync();
-                return CreateActionResult(CustomResponseDto<List<DeployedProductDto>>.Success(200, result));
+                List<UserProductDto> result = await _userProductService.GetAllDtosAsync();
+                return CreateActionResult(
+                    CustomResponseDto<List<UserProductDto>>.Success(200, result)
+                );
             }
             catch (Exception ex)
             {
@@ -36,8 +38,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                DeployedProductDto result = await _deployedProductService.GetDtoAsync(id);
-                return CreateActionResult(CustomResponseDto<DeployedProductDto>.Success(200, result));
+                UserProductDto result = await _userProductService.GetDtoAsync(id);
+                return CreateActionResult(CustomResponseDto<UserProductDto>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -46,12 +48,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(DeployedProductCreateDto dto)
+        public async Task<IActionResult> Add(UserProductCreateDto dto)
         {
             try
             {
-                DeployedProductDto result = await _deployedProductService.CreateDeployedProductAsync(dto);
-                return CreateActionResult(CustomResponseDto<DeployedProductDto>.Success(201, result));
+                UserProductDto result = await _userProductService.CreateUserProductAsync(dto);
+                return CreateActionResult(CustomResponseDto<UserProductDto>.Success(201, result));
             }
             catch (Exception ex)
             {
@@ -60,12 +62,16 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost("range")]
-        public async Task<IActionResult> AddRange(List<DeployedProductCreateDto> dto)
+        public async Task<IActionResult> AddRange(List<UserProductCreateDto> dto)
         {
             try
             {
-                List<DeployedProductDto> result = await _deployedProductService.CreateRangeDeployedProductAsync(dto);
-                return CreateActionResult(CustomResponseDto<List<DeployedProductDto>>.Success(201, result));
+                List<UserProductDto> result = await _userProductService.CreateRangeUserProductAsync(
+                    dto
+                );
+                return CreateActionResult(
+                    CustomResponseDto<List<UserProductDto>>.Success(201, result)
+                );
             }
             catch (Exception ex)
             {
@@ -78,7 +84,7 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                await _deployedProductService.DeleteDeployedProductAsync(id);
+                await _userProductService.DeleteUserProductAsync(id);
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
             }
             catch (Exception ex)

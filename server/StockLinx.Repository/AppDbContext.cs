@@ -1,14 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Reflection;
+using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.Entities;
-using System.Reflection;
 
 namespace StockLinx.Repository
 {
     public class AppDbContext : DbContext
     {
-        public AppDbContext(DbContextOptions options) : base(options)
-        {
-        }
+        public AppDbContext(DbContextOptions options)
+            : base(options) { }
 
         public DbSet<Accessory> Accessories { get; set; }
         public DbSet<Asset> Assets { get; set; }
@@ -17,7 +16,8 @@ namespace StockLinx.Repository
         public DbSet<Component> Components { get; set; }
         public DbSet<Consumable> Consumables { get; set; }
         public DbSet<Department> Departments { get; set; }
-        public DbSet<DeployedProduct> DeployedProducts { get; set; }
+        public DbSet<UserProduct> UserProducts { get; set; }
+        public DbSet<AssetProduct> AssetProducts { get; set; }
         public DbSet<License> Licenses { get; set; }
         public DbSet<Location> Locations { get; set; }
         public DbSet<Manufacturer> Manufacturers { get; set; }

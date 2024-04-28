@@ -56,8 +56,8 @@ namespace StockLinx.Repository.Repositories.EF_Core
             {
                 throw new Exception("User not found");
             }
-            var deployedProducts = await dbContext.DeployedProducts.AnyAsync(dp => dp.UserId == id);
-            if (deployedProducts)
+            var userProducts = await dbContext.UserProducts.AnyAsync(dp => dp.UserId == id);
+            if (userProducts)
             {
                 throw new Exception("User has deployed items");
             }

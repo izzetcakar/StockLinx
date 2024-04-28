@@ -39,7 +39,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
             {
                 throw new Exception("Department not found.");
             }
-            var users = await dbContext.Users.AnyAsync(u => u.DepartmentId == id);
+            bool users = await dbContext.Users.AnyAsync(u => u.DepartmentId == id);
             if (users)
             {
                 throw new Exception("Cannot delete department because it has users.");

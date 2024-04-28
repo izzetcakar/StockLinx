@@ -38,32 +38,32 @@ namespace StockLinx.Repository.Repositories.EF_Core
             {
                 throw new Exception("Branch not found.");
             }
-            var assets = await dbContext.Assets.AnyAsync(a => a.BranchId == id);
-            var accessories = await dbContext.Accessories.AnyAsync(a => a.BranchId == id);
-            var components = await dbContext.Components.AnyAsync(c => c.BranchId == id);
-            var consumables = await dbContext.Consumables.AnyAsync(c => c.BranchId == id);
-            var licenses = await dbContext.Licenses.AnyAsync(l => l.BranchId == id);
+            bool assets = await dbContext.Assets.AnyAsync(a => a.BranchId == id);
+            bool accessories = await dbContext.Accessories.AnyAsync(a => a.BranchId == id);
+            bool components = await dbContext.Components.AnyAsync(c => c.BranchId == id);
+            bool consumables = await dbContext.Consumables.AnyAsync(c => c.BranchId == id);
+            bool licenses = await dbContext.Licenses.AnyAsync(l => l.BranchId == id);
             if (assets || accessories || components || consumables || licenses)
             {
                 throw new Exception("Cannot delete branch because it has items.");
             }
-            var deployedProducts = await dbContext
-                .DeployedProducts.AnyAsync(d => d.User.Department.BranchId == id);
-            if (deployedProducts)
+            bool userProducts = await dbContext
+                .UserProducts.AnyAsync(d => d.User.Department.BranchId == id);
+            if (userProducts)
             {
-                throw new Exception("Cannot delete branch because it is used in deployed products.");
+                throw new Exception("Cannot delete branch because it is used in user products.");
             }
-            var users = await dbContext.Users.AnyAsync(u => u.Department.BranchId == id);
+            bool users = await dbContext.Users.AnyAsync(u => u.Department.BranchId == id);
             if (users)
             {
                 throw new Exception("Cannot delete branch because it has users.");
             }
-            var departments = await dbContext.Departments.AnyAsync(d => d.BranchId == id);
+            bool departments = await dbContext.Departments.AnyAsync(d => d.BranchId == id);
             if (departments)
             {
                 throw new Exception("Cannot delete branch because it has departments.");
             }
-            var permissions = await dbContext.Permissions.AnyAsync(p => p.BranchId == id);
+            bool permissions = await dbContext.Permissions.AnyAsync(p => p.BranchId == id);
             if (permissions)
             {
                 throw new Exception("Cannot delete branch because it has permissions.");

@@ -14,7 +14,8 @@ namespace StockLinx.Service.Services
     public class ComponentService : Service<Component>, IComponentService
     {
         private readonly IComponentRepository _componentRepository;
-        private readonly IDeployedProductRepository _deployedProductRepository;
+        private readonly IAssetRepository _assetRepository;
+        private readonly IAssetProductRepository _assetProductRepository;
         private readonly IBranchRepository _branchRepository;
         private readonly IUserService _userService;
         private readonly ICustomLogService _customLogService;
@@ -24,7 +25,8 @@ namespace StockLinx.Service.Services
         public ComponentService(
             IRepository<Component> repository,
             IComponentRepository componentRepository,
-            IDeployedProductRepository deployedProductRepository,
+            IAssetRepository assetRepository,
+            IAssetProductRepository assetProductRepository,
             IBranchRepository branchRepository,
             IUserService userService,
             IUnitOfWork unitOfWork,
@@ -34,7 +36,8 @@ namespace StockLinx.Service.Services
             : base(repository, unitOfWork)
         {
             _componentRepository = componentRepository;
-            _deployedProductRepository = deployedProductRepository;
+            _assetRepository = assetRepository;
+            _assetProductRepository = assetProductRepository;
             _branchRepository = branchRepository;
             _userService = userService;
             _customLogService = customLogService;
@@ -163,9 +166,13 @@ namespace StockLinx.Service.Services
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task<DeployedProduct> CheckInAsync(ProductCheckInDto checkInDto)
+        public async Task<AssetProduct> CheckInAsync(AssetProductCheckInDto checkInDto)
         {
-            User user = await _userService.GetByIdAsync(checkInDto.UserId);
+            Asset asset = await _assetRepository.GetByIdAsync(checkInDto.AssetId);
+            if (asset == null)
+            {
+                throw new Exception("Asset not found");
+            }
             Component component = await GetByIdAsync(checkInDto.ProductId);
             if (component == null)
             {
@@ -176,39 +183,39 @@ namespace StockLinx.Service.Services
             {
                 throw new Exception("Component stock is not enough");
             }
-            DeployedProduct deployedProduct = new DeployedProduct
+            AssetProduct assetProduct = new AssetProduct
             {
                 Id = Guid.NewGuid(),
                 ComponentId = component.Id,
-                UserId = checkInDto.UserId,
+                AssetId = checkInDto.AssetId,
                 AssignDate = DateTime.UtcNow,
                 CreatedDate = DateTime.UtcNow,
                 Quantity = checkInDto.Quantity,
                 Notes = checkInDto.Notes,
             };
-            await _deployedProductRepository.AddAsync(deployedProduct);
+            await _assetProductRepository.AddAsync(assetProduct);
             await _customLogService.CreateCustomLog(
                 "CheckIn",
                 "Component",
                 component.Id,
                 component.Name,
-                "User",
-                user.Id,
-                user.FirstName + user.LastName
+                "Asset",
+                asset.Id,
+                asset.Name
             );
             await _unitOfWork.CommitAsync();
-            return deployedProduct;
+            return assetProduct;
         }
 
         public async Task CheckOutAsync(Guid id)
         {
-            DeployedProduct deployedProduct = await _deployedProductRepository.GetByIdAsync(id);
-            Component component = await GetByIdAsync((Guid)deployedProduct.ComponentId);
-            if (deployedProduct == null || component == null)
+            AssetProduct assetProduct = await _assetProductRepository.GetByIdAsync(id);
+            Component component = await GetByIdAsync((Guid)assetProduct.ComponentId);
+            if (assetProduct == null || component == null)
             {
-                throw new Exception("Deployed product is not found");
+                throw new Exception("Component product is not found");
             }
-            _deployedProductRepository.Remove(deployedProduct);
+            _assetProductRepository.Remove(assetProduct);
             await _customLogService.CreateCustomLog(
                 "CheckOut",
                 "Component",

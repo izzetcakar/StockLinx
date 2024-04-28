@@ -11,6 +11,5 @@
         public ICollection<Component>? Components { get; set; }
         public ICollection<Consumable>? Consumables { get; set; }
         public ICollection<License>? Licenses { get; set; }
-        public ICollection<DeployedProduct>? DeployedProducts { get; set; }
     }
 }

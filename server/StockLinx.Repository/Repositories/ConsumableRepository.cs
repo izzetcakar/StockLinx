@@ -18,11 +18,11 @@ namespace StockLinx.Repository.Repositories.EF_Core
 
         public async Task<ConsumableDto> GetDtoAsync(Consumable entity)
         {
-            var deployedProducts = await dbContext
-                .DeployedProducts.Where(d => d.ConsumableId.HasValue && d.ConsumableId == entity.Id)
+            var userProducts = await dbContext
+                .UserProducts.Where(d => d.ConsumableId.HasValue && d.ConsumableId == entity.Id)
                 .AsNoTracking()
                 .ToListAsync();
-            var availableQuantity = entity.Quantity - deployedProducts.Sum(d => d.Quantity);
+            var availableQuantity = entity.Quantity - userProducts.Sum(d => d.Quantity);
             var dto = _mapper.Map<ConsumableDto>(entity);
             dto.AvailableQuantity = availableQuantity;
             return dto;
@@ -30,7 +30,6 @@ namespace StockLinx.Repository.Repositories.EF_Core
 
         public async Task<List<ConsumableDto>> GetDtosAsync(List<Consumable> entities)
         {
-            var deployedProducts = await dbContext.DeployedProducts.AsNoTracking().ToListAsync();
             var dtos = new List<ConsumableDto>();
 
             foreach (Consumable entity in entities)
@@ -54,20 +53,25 @@ namespace StockLinx.Repository.Repositories.EF_Core
             {
                 throw new Exception("Consumable not found.");
             }
-            var deployedProducts = await dbContext.DeployedProducts.AnyAsync(d => d.ConsumableId.HasValue && d.ConsumableId == id);
-            if (deployedProducts)
+            bool userProducts = await dbContext.UserProducts.AnyAsync(d =>
+                d.ConsumableId.HasValue && d.ConsumableId == id
+            );
+            if (userProducts)
             {
-                throw new Exception("Cannot delete consumable because it is used in deployed products.");
+                throw new Exception(
+                    "Cannot delete consumable because it is used in user products."
+                );
             }
             return true;
         }
 
         public async Task<int> GetAvaliableQuantityAsync(Consumable entity)
         {
-            List<DeployedProduct> deployedProducts = await dbContext.DeployedProducts.ToListAsync();
-            int availableQuantity = entity.Quantity - deployedProducts.Count(d =>
-                    d.ConsumableId.HasValue && d.ConsumableId == entity.Id
-                );
+            List<UserProduct> userProducts = await dbContext
+                .UserProducts.Where(d => d.ConsumableId.HasValue && d.ConsumableId == entity.Id)
+                .AsNoTracking()
+                .ToListAsync();
+            int availableQuantity = entity.Quantity - userProducts.Sum(up => up.Quantity);
             return availableQuantity;
         }
     }

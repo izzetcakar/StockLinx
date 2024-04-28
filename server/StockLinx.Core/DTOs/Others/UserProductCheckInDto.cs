@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace StockLinx.Core.DTOs.Others
+﻿namespace StockLinx.Core.DTOs.Others
 {
-    public class ProductCheckInDto
+    public class UserProductCheckInDto
     {
         public Guid UserId { get; set; }
         public Guid ProductId { get; set; }

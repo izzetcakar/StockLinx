@@ -521,16 +521,14 @@ namespace StockLinx.Repository.Repositories.EF_Core
             var productLocationCounts = new List<ProductLocationCounterDto>();
             var locations = dbContext.Locations;
             var assets = dbContext.Assets;
-            var deployedAssets = dbContext.DeployedProducts;
+            // var deployedAssets = dbContext.DeployedProducts;
             productLocationCounts = locations
                 .Select(l => new ProductLocationCounterDto
                 {
                     LocationId = l.Id,
                     LocationName = l.Name,
                     ProductCount = assets.Where(a => a.Branch.LocationId == l.Id).Count(),
-                    AssignedCount = deployedAssets
-                        .Where(d => d.User.Department.Branch.LocationId == l.Id)
-                        .Count(),
+                    AssignedCount = 0
                 })
                 .ToList();
             return productLocationCounts;

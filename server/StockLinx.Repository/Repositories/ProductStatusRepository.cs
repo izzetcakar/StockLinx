@@ -46,7 +46,6 @@ namespace StockLinx.Repository.Repositories.EF_Core
             var components = await dbContext.Components.AnyAsync(c => c.ProductStatusId == id);
             var consumables = await dbContext.Consumables.AnyAsync(c => c.ProductStatusId == id);
             var licenses = await dbContext.Licenses.AnyAsync(l => l.ProductStatusId == id);
-            var deployedProducts = await dbContext.DeployedProducts.AnyAsync(dp => dp.ProductStatusId == id);
             if (assets || accessories || components || consumables || licenses)
             {
                 throw new Exception("Product Status is in use");

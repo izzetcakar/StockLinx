@@ -46,10 +46,17 @@ namespace StockLinx.Repository.Repositories.EF_Core
             {
                 throw new Exception("Accessory not found.");
             }
-            var deployedProducts = await dbContext.DeployedProducts.AnyAsync(d => d.AccessoryId.HasValue && d.AccessoryId == id);
-            if (deployedProducts)
+            bool userProducts = await dbContext.UserProducts.AnyAsync(d =>
+                d.AccessoryId.HasValue && d.AccessoryId == id
+            );
+            if (userProducts)
             {
-                throw new Exception("Cannot delete asset because it is used in deployed products.");
+                throw new Exception("Cannot delete asset because it has deployed.");
+            }
+            bool assetProducts = await dbContext.AssetProducts.AnyAsync(d => d.AssetId == id);
+            if (assetProducts)
+            {
+                throw new Exception("Cannot delete asset because it has products.");
             }
             return true;
         }

@@ -117,12 +117,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost("checkin")]
-        public async Task<IActionResult> CheckInComponent(ProductCheckInDto dto)
+        public async Task<IActionResult> CheckInComponent(AssetProductCheckInDto dto)
         {
             try
             {
-                DeployedProduct result = await _componentService.CheckInAsync(dto);
-                return CreateActionResult(CustomResponseDto<DeployedProduct>.Success(200, result));
+                AssetProduct result = await _componentService.CheckInAsync(dto);
+                return CreateActionResult(CustomResponseDto<AssetProduct>.Success(200, result));
             }
             catch (Exception ex)
             {

@@ -9,7 +9,9 @@ namespace StockLinx.Repository.Repositories.EF_Core
     public class CompanyRepository : Repository<Company>, ICompanyRepository
     {
         private readonly IMapper _mapper;
-        public CompanyRepository(AppDbContext dbContext, IMapper mapper) : base(dbContext)
+
+        public CompanyRepository(AppDbContext dbContext, IMapper mapper)
+            : base(dbContext)
         {
             _mapper = mapper;
         }
@@ -39,33 +41,36 @@ namespace StockLinx.Repository.Repositories.EF_Core
             {
                 throw new Exception("Company not found.");
             }
-            var assets = await dbContext.Assets.AnyAsync(a => a.Branch.CompanyId == id);
-            var accessories = await dbContext.Accessories.AnyAsync(a => a.Branch.CompanyId == id);
-            var components = await dbContext.Components.AnyAsync(c => c.Branch.CompanyId == id);
-            var consumables = await dbContext.Consumables.AnyAsync(c => c.Branch.CompanyId == id);
-            var licenses = await dbContext.Licenses.AnyAsync(l => l.Branch.CompanyId == id);
+            bool assets = await dbContext.Assets.AnyAsync(a => a.Branch.CompanyId == id);
+            bool accessories = await dbContext.Accessories.AnyAsync(a => a.Branch.CompanyId == id);
+            bool components = await dbContext.Components.AnyAsync(c => c.Branch.CompanyId == id);
+            bool consumables = await dbContext.Consumables.AnyAsync(c => c.Branch.CompanyId == id);
+            bool licenses = await dbContext.Licenses.AnyAsync(l => l.Branch.CompanyId == id);
 
             if (assets || accessories || components || consumables || licenses)
             {
                 throw new Exception("Cannot delete company because it has items.");
             }
-            var deployedProducts = await dbContext
-                .DeployedProducts.AnyAsync(d => d.User.Department.Branch.CompanyId == id);
-            if (deployedProducts)
+            bool userProducts = await dbContext.UserProducts.AnyAsync(d =>
+                d.User.Department.Branch.CompanyId == id
+            );
+            if (userProducts)
             {
-                throw new Exception("Cannot delete company because it is used in deployed products.");
+                throw new Exception(
+                    "Cannot delete company because it is used in user products."
+                );
             }
-            var users = await dbContext.Users.AnyAsync(u => u.Department.Branch.CompanyId == id);
+            bool users = await dbContext.Users.AnyAsync(u => u.Department.Branch.CompanyId == id);
             if (users)
             {
                 throw new Exception("Cannot delete company because it has users.");
             }
-            var departments = await dbContext.Departments.AnyAsync(d => d.Branch.CompanyId == id);
+            bool departments = await dbContext.Departments.AnyAsync(d => d.Branch.CompanyId == id);
             if (departments)
             {
                 throw new Exception("Cannot delete company because it has departments.");
             }
-            var permissions = await dbContext.Permissions.AnyAsync(p => p.Branch.CompanyId == id);
+            bool permissions = await dbContext.Permissions.AnyAsync(p => p.Branch.CompanyId == id);
             if (permissions)
             {
                 throw new Exception("Cannot delete company because it has permissions.");
