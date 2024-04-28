@@ -1,4 +1,9 @@
-import { FilterType, Filter, LookupData } from "../interfaces/interfaces";
+import {
+  FilterType,
+  Filter,
+  LookupData,
+  Column,
+} from "../interfaces/interfaces";
 import { Loader, NumberInput, Select, TextInput } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 import { useGridTableContext } from "../context/GenericStateContext";
@@ -105,6 +110,7 @@ export const useInputFilter = (filter: Filter) => {
             onChange={(e) => onValueChange(e, filter)}
             onDropdownOpen={getData}
             rightSection={loading ? <Loader size={16} /> : null}
+            maxDropdownHeight={200}
             searchable
             clearable
           />
@@ -116,10 +122,9 @@ export const useInputFilter = (filter: Filter) => {
 };
 
 export const useFilter = () => {
-  const { gridColumns, setFilters } = useGridTableContext();
+  const { setFilters } = useGridTableContext();
 
-  const getTypeByColumnId = (columndId: string): FilterType => {
-    const column = gridColumns.find((column) => column.id === columndId);
+  const getTypeByColumn = (column: Column): FilterType => {
     if (!column) return FilterType.TEXT;
     if (column.lookup) return FilterType.LOOKUP;
     switch (column.dataType) {
@@ -133,12 +138,12 @@ export const useFilter = () => {
     }
   };
 
-  const handleFilterAll = () => {
-    const newFilters: Filter[] = gridColumns.map(
+  const handleFilterAll = (columns: Column[]) => {
+    const newFilters: Filter[] = columns.map(
       (column) =>
         ({
           columnId: column.id,
-          type: getTypeByColumnId(column.id),
+          type: getTypeByColumn(column),
           value: null,
         } as Filter)
     );

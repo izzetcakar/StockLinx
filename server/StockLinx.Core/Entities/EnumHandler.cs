@@ -10,11 +10,11 @@
     }
     public enum CategoryType
     {
-        Asset,
-        License,
-        Accessory,
-        Consumable,
-        Component,
+        ASSET,
+        LICENSE,
+        ACCESSORY,
+        CONSUMABLE,
+        COMPONENT,
     }
 
 }

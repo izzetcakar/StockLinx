@@ -1,16 +1,16 @@
 export enum ProductStatusType {
-  AVAILABLE = "AVAILABLE",
-  DEPLOYED = "DEPLOYED",
-  ORDERED = "ORDERED",
-  OUT_OF_STOCK = "OUT_OF_STOCK",
-  DAMAGED = "DAMAGED",
+  AVAILABLE = 0,
+  DEPLOYED = 1,
+  ORDERED = 2,
+  OUT_OF_STOCK = 3,
+  DAMAGED = 4,
 }
 export enum CategoryType {
-  ASSET = "ASSET",
-  LICENSE = "LICENSE",
-  ACCESSORY = "ACCESSORY",
-  CONSUMABLE = "CONSUMABLE",
-  COMPONENT = "COMPONENT",
+  ASSET = 0,
+  LICENSE = 1,
+  ACCESSORY = 2,
+  CONSUMABLE = 3,
+  COMPONENT = 4,
 }
 export interface BaseEntity {
   id: string;
@@ -57,7 +57,8 @@ export interface IProductStatus extends BaseEntity {
 }
 export interface IBaseProduct extends BaseEntity {
   branchId: string;
-  productStatusId?: string | null;
+  productStatusId: string | null;
+  supplierId: string | null;
   name: string;
   orderNo: string | null;
   notes: string | null;
@@ -70,7 +71,6 @@ export interface IBaseProduct extends BaseEntity {
 }
 export interface IAccessory extends IBaseProduct {
   manufacturerId: string | null;
-  supplierId: string | null;
   categoryId: string | null;
   imagePath: string | null;
   modelNo: string;
@@ -88,13 +88,11 @@ export interface OverageAsset {
 }
 export interface IComponent extends IBaseProduct {
   categoryId: string | null;
-  supplierId: string | null;
   serialNo: string | null;
 }
 export interface ILicense extends IBaseProduct {
   categoryId: string | null;
   manufacturerId: string | null;
-  supplierId: string | null;
   licenseKey: string;
   licenseEmail: string | null;
   licensedTo: string | null;
@@ -105,7 +103,6 @@ export interface ILicense extends IBaseProduct {
 }
 export interface IConsumable extends IBaseProduct {
   categoryId: string | null;
-  supplierId: string | null;
   manufacturerId: string | null;
   modelNo: string | null;
   itemNo: string | null;

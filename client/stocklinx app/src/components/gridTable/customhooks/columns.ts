@@ -15,7 +15,7 @@ export const useColumns = (columns: BaseColumn[]) => {
       };
     });
     setGridColumns(newColumns);
-    handleFilterAll();
+    handleFilterAll(newColumns);
   };
 
   const onColumnVisibleChange = (columnId: string) => {

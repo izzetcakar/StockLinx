@@ -143,70 +143,70 @@ namespace StockLinx.Repository.Repositories.EF_Core
                     Id = Guid.NewGuid(),
                     CreatedDate = DateTime.UtcNow,
                     Name = "Bilgisayar",
-                    Type = CategoryType.Asset
+                    Type = CategoryType.ASSET
                 },
                 new Category
                 {
                     Id = Guid.NewGuid(),
                     CreatedDate = DateTime.UtcNow,
                     Name = "Telefon",
-                    Type = CategoryType.Asset
+                    Type = CategoryType.ASSET
                 },
                 new Category
                 {
                     Id = Guid.NewGuid(),
                     CreatedDate = DateTime.UtcNow,
                     Name = "Monitör",
-                    Type = CategoryType.Asset
+                    Type = CategoryType.ASSET
                 },
                 new Category
                 {
                     Id = Guid.NewGuid(),
                     CreatedDate = DateTime.UtcNow,
                     Name = "Klavye",
-                    Type = CategoryType.Accessory
+                    Type = CategoryType.ACCESSORY
                 },
                 new Category
                 {
                     Id = Guid.NewGuid(),
                     CreatedDate = DateTime.UtcNow,
                     Name = "Fare",
-                    Type = CategoryType.Accessory
+                    Type = CategoryType.ACCESSORY
                 },
                 new Category
                 {
                     Id = Guid.NewGuid(),
                     CreatedDate = DateTime.UtcNow,
                     Name = "HDD/SSD",
-                    Type = CategoryType.Component
+                    Type = CategoryType.COMPONENT
                 },
                 new Category
                 {
                     Id = Guid.NewGuid(),
                     CreatedDate = DateTime.UtcNow,
                     Name = "Yazıcı",
-                    Type = CategoryType.Component
+                    Type = CategoryType.COMPONENT
                 },
                 new Category
                 {
                     Id = Guid.NewGuid(),
                     CreatedDate = DateTime.UtcNow,
                     Name = "Windows Lisans",
-                    Type = CategoryType.License
+                    Type = CategoryType.LICENSE
                 },
                 new Category
                 {
                     Id = Guid.NewGuid(),
                     CreatedDate = DateTime.UtcNow,
                     Name = "Office Lisans",
-                    Type = CategoryType.License
+                    Type = CategoryType.LICENSE
                 },
                 new Category
                 {
                     Id = Guid.NewGuid(),
                     CreatedDate = DateTime.UtcNow,
                     Name = "Kartuş",
-                    Type = CategoryType.Consumable
+                    Type = CategoryType.CONSUMABLE
                 },
             };
             dbContext.Categories.AddRange(newCategoies);
@@ -541,23 +541,23 @@ namespace StockLinx.Repository.Repositories.EF_Core
             var productCategoryCounts = new List<ProductCategoryCounterDto>();
 
             var assetCount = dbContext
-                .Models.Where(m => m.Category.Type == CategoryType.Asset)
+                .Models.Where(m => m.Category.Type == CategoryType.ASSET)
                 .Count();
             var accessoryCount = dbContext
-                .Accessories.Where(m => m.Category.Type == CategoryType.Accessory)
+                .Accessories.Where(m => m.Category.Type == CategoryType.ACCESSORY)
                 .Count();
             var componentCount = dbContext
-                .Components.Where(m => m.Category.Type == CategoryType.Component)
+                .Components.Where(m => m.Category.Type == CategoryType.COMPONENT)
                 .Count();
             var consumableCount = dbContext
-                .Consumables.Where(m => m.Category.Type == CategoryType.Consumable)
+                .Consumables.Where(m => m.Category.Type == CategoryType.CONSUMABLE)
                 .Count();
             var licenseCount = dbContext
-                .Licenses.Where(m => m.Category.Type == CategoryType.License)
+                .Licenses.Where(m => m.Category.Type == CategoryType.LICENSE)
                 .Count();
 
             var assets = dbContext
-                .Models.Where(m => m.Category.Type == CategoryType.Asset)
+                .Models.Where(m => m.Category.Type == CategoryType.ASSET)
                 .Select(m => new ProductCategoryCounterDto
                 {
                     CategoryId = (Guid)m.CategoryId,

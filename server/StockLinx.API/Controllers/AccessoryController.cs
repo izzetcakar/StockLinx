@@ -124,7 +124,7 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                DeployedProduct result = await _accessoryService.CheckIn(dto);
+                DeployedProduct result = await _accessoryService.CheckInAsync(dto);
                 return CreateActionResult(CustomResponseDto<DeployedProduct>.Success(200, result));
             }
             catch (Exception ex)
@@ -138,7 +138,7 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                await _accessoryService.CheckOut(id);
+                await _accessoryService.CheckOutAsync(id);
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
             }
             catch (Exception ex)

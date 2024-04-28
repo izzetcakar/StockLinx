@@ -144,7 +144,7 @@ const ComponentForm: React.FC<ComponentFormProps> = ({ component, create }) => {
           {...form.getInputProps("notes")}
           value={form.values.notes || ""}
         />
-        <Group mt="md" justify="flex-end">
+        <Group pt="md" pb="md" justify="flex-end">
           <Button type="submit" color="dark">
             Submit
           </Button>

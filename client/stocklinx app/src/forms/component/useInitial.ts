@@ -10,6 +10,7 @@ export const useInitial = (component?: IComponent, create?: boolean) => {
   let initialValues: IComponent = {
     id: uuid4(),
     branchId: branch?.id || "",
+    productStatusId: null,
     name: "",
     serialNo: null,
     orderNo: null,
