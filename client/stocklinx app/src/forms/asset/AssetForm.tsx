@@ -10,6 +10,7 @@ import {
   Text,
   Image,
   FileInput,
+  Accordion,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { DateInput } from "@mantine/dates";
@@ -21,6 +22,7 @@ import { assetActions } from "../../redux/asset/actions";
 import { useInitial } from "./useInitial";
 import { toBase64 } from "../../functions/Image";
 import { openNotificationError } from "../../notification/Notification";
+import { IconCaretDownFilled } from "@tabler/icons-react";
 import base_asset from "../../assets/baseProductImages/base_asset.jpg";
 import FormSelect from "../mantine/FormSelect";
 
@@ -33,6 +35,9 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
   const dispatch = useDispatch();
   const branch = useSelector((state: RootState) => state.branch.branch);
   const models = useSelector((state: RootState) => state.model.models);
+  const productStatuses = useSelector(
+    (state: RootState) => state.productStatus.productStatuses
+  );
   const { initialValues, isCreate } = useInitial(asset, create);
 
   const form = useForm<IAsset>({
@@ -105,7 +110,7 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
         direction="column"
         gap={10}
         mx="auto"
-        h={"70dvh"}
+        h={"80dvh"}
         w={"80dvw"}
         px={40}
         pt={20}
@@ -161,6 +166,16 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
           value={form.values.modelId || ""}
           clearable
         />
+        <FormSelect
+          data={productStatuses.map((status) => ({
+            value: status.id,
+            label: status.name,
+          }))}
+          label="Status"
+          inputProps={form.getInputProps("productStatusId")}
+          value={form.values.productStatusId || ""}
+          clearable
+        />
         <Textarea
           placeholder="Your notes here"
           label="Note"
@@ -173,29 +188,55 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
           {...form.getInputProps("name")}
           withAsterisk
         />
-        <TextInput
-          label="Order No"
-          placeholder="New Order No"
-          {...form.getInputProps("orderNo")}
-          value={form.values.orderNo || ""}
-        />
-        <DateInput
-          clearable
-          label="Purchase Date"
-          placeholder="Purchase Date"
-          {...form.getInputProps("purchaseDate")}
-          value={
-            form.values.purchaseDate ? new Date(form.values.purchaseDate) : null
-          }
-        />
-        <NumberInput
-          placeholder="Purchase Cost"
-          label="Purchase Cost"
-          {...form.getInputProps("purchaseCost")}
-          value={form.values.purchaseCost || ""}
-          decimalScale={2}
-        />
-        <Group mt="md" justify="flex-end">
+        <Accordion
+          variant="filled"
+          defaultValue="Apples"
+          chevronPosition="left"
+          chevron={<IconCaretDownFilled />}
+          styles={{
+            root: { backgroundColor: "white" },
+            item: { backgroundColor: "white" },
+            content: { backgroundColor: "white", padding: 0 },
+            label: { fontWeight: "bold" },
+            chevron: { marginLeft: 0, marginRight: 5 },
+          }}
+        >
+          <Accordion.Item
+            key={"ACCORDION_ASSET_ORDER_RELATED_INFORMATION"}
+            value={"ACCORDION_ASSET_ORDER_RELATED_INFORMATION"}
+          >
+            <Accordion.Control>Order Related Information</Accordion.Control>
+            <Accordion.Panel>
+              <Flex direction="column" gap={10}>
+                <TextInput
+                  label="Order No"
+                  placeholder="New Order No"
+                  {...form.getInputProps("orderNo")}
+                  value={form.values.orderNo || ""}
+                />
+                <DateInput
+                  clearable
+                  label="Purchase Date"
+                  placeholder="Purchase Date"
+                  {...form.getInputProps("purchaseDate")}
+                  value={
+                    form.values.purchaseDate
+                      ? new Date(form.values.purchaseDate)
+                      : null
+                  }
+                />
+                <NumberInput
+                  placeholder="Purchase Cost"
+                  label="Purchase Cost"
+                  {...form.getInputProps("purchaseCost")}
+                  value={form.values.purchaseCost || ""}
+                  decimalScale={2}
+                />
+              </Flex>
+            </Accordion.Panel>
+          </Accordion.Item>
+        </Accordion>
+        <Group pt="md" pb="md" justify="flex-end">
           <Button type="submit" color="dark">
             Submit
           </Button>
