@@ -5,16 +5,10 @@ import {
 } from "../../components/gridTable/interfaces/interfaces";
 import { Anchor } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
+import { createDataFromEnum } from "../../functions/createDataFromEnum";
 
 export const useColumns = () => {
   const navigate = useNavigate();
-  const productTypes = [
-    { id: CategoryType.ASSET, name: "Asset" },
-    { id: CategoryType.LICENSE, name: "License" },
-    { id: CategoryType.ACCESSORY, name: "Accessory" },
-    { id: CategoryType.CONSUMABLE, name: "Consumable" },
-    { id: CategoryType.COMPONENT, name: "Component" },
-  ];
 
   const columns: BaseColumn[] = [
     {
@@ -37,10 +31,7 @@ export const useColumns = () => {
       dataField: "type",
       caption: "Type",
       lookup: {
-        data: productTypes.map((type) => ({
-          value: type.id,
-          label: type.name,
-        })),
+        data: createDataFromEnum(CategoryType),
       },
       dataType: "number",
     },

@@ -65,8 +65,8 @@ export const useColumns = () => {
     const data = res.data.results;
     return data.map((item: any) => {
       return {
-        id: item.url,
-        name: item.name,
+        value: item.url,
+        label: item.name,
       };
     });
   };

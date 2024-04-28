@@ -47,18 +47,22 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ category, create }) => {
           withAsterisk
         />
         <FormSelect
-          data={
-            [
-              { value: CategoryType.ASSET, label: "Asset" },
-              { value: CategoryType.LICENSE, label: "License" },
-              { value: CategoryType.ACCESSORY, label: "Accessory" },
-              { value: CategoryType.CONSUMABLE, label: "Consumable" },
-              { value: CategoryType.COMPONENT, label: "Component" },
-            ] as any
-          }
+          data={[
+            { value: CategoryType.ASSET.toString(), label: "Asset" },
+            { value: CategoryType.LICENSE.toString(), label: "License" },
+            { value: CategoryType.ACCESSORY.toString(), label: "Accessory" },
+            { value: CategoryType.CONSUMABLE.toString(), label: "Consumable" },
+            { value: CategoryType.COMPONENT.toString(), label: "Component" },
+          ]}
           label="Type"
           inputProps={form.getInputProps("type")}
-          value={form.values.type || ""}
+          value={form.values.type.toString() || ""}
+          onChange={(value) =>
+            form.setFieldValue(
+              "type",
+              (value ? parseInt(value) : null) as CategoryType
+            )
+          }
           withAsterisk
         />
       </Flex>

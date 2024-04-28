@@ -2,7 +2,7 @@ import { Column, LookupData } from "../interfaces/interfaces";
 
 export const useCell = () => {
   const getLookupValue = (value: any, data: LookupData[]) => {
-    return data.find((item: LookupData) => item.value === value) || "";
+    return data.find((item: LookupData) => item.value === value)?.label || "";
   };
 
   const renderCell = (obj: object, column: Column) => {
@@ -12,13 +12,15 @@ export const useCell = () => {
       }
     )[column.dataField];
 
-    if (!value) return "";
+    if (value === undefined || value === null) {
+      return "";
+    }
 
     if (column.renderComponent) {
       return column.renderComponent(obj);
     }
     if (column.lookup) {
-      getLookupValue(value, column.lookup.data);
+      return getLookupValue(value, column.lookup.data);
     }
     if (!value) return "";
     if (column.dataType === "boolean") {

@@ -8,6 +8,7 @@ interface FormSelectProps {
   inputProps: object;
   clearable?: boolean;
   withAsterisk?: boolean;
+  onChange?: (value: string | null) => void;
 }
 
 const FormSelect: React.FC<FormSelectProps> = ({
@@ -17,6 +18,7 @@ const FormSelect: React.FC<FormSelectProps> = ({
   inputProps,
   clearable,
   withAsterisk,
+  onChange,
 }) => {
   return (
     <Select
@@ -25,12 +27,14 @@ const FormSelect: React.FC<FormSelectProps> = ({
       placeholder={`Select ${label}`}
       {...inputProps}
       value={value}
+      onChange={(value) => onChange && onChange(value)}
       classNames={filterClasses}
       nothingFoundMessage={`No ${label.toLowerCase()} found`}
       comboboxProps={{
         position: "bottom",
         middlewares: { flip: true, shift: false },
       }}
+      maxDropdownHeight={200}
       clearable={clearable}
       withAsterisk={withAsterisk}
     />

@@ -55,16 +55,31 @@ const ProductStatusForm: React.FC<ProductStatusFormProps> = ({
         <FormSelect
           data={
             [
-              { value: ProductStatusType.AVAILABLE, label: "Avaliable" },
-              { value: ProductStatusType.DAMAGED, label: "Damaged" },
-              { value: ProductStatusType.DEPLOYED, label: "Deployed" },
-              { value: ProductStatusType.ORDERED, label: "Ordered" },
-              { value: ProductStatusType.OUT_OF_STOCK, label: "Out of Stock" },
+              {
+                value: ProductStatusType.AVAILABLE.toString(),
+                label: "Avaliable",
+              },
+              { value: ProductStatusType.DAMAGED.toString(), label: "Damaged" },
+              {
+                value: ProductStatusType.DEPLOYED.toString(),
+                label: "Deployed",
+              },
+              { value: ProductStatusType.ORDERED.toString(), label: "Ordered" },
+              {
+                value: ProductStatusType.OUT_OF_STOCK.toString(),
+                label: "Out of Stock",
+              },
             ] as any
           }
           label="Type"
           inputProps={form.getInputProps("type")}
-          value={form.values.type || ""}
+          value={form.values.type.toString() || ""}
+          onChange={(value) =>
+            form.setFieldValue(
+              "type",
+              (value ? parseInt(value) : null) as ProductStatusType
+            )
+          }
           withAsterisk
         />
       </Flex>
