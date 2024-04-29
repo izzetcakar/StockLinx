@@ -139,15 +139,22 @@ export interface IFieldSetCustomField extends BaseEntity {
   fieldSetId: string;
   customFieldId: string;
 }
-export interface IDeployedProduct extends BaseEntity {
+export interface IUserProduct extends BaseEntity {
   userId: string;
   accessoryId: string | null;
   assetId: string | null;
-  componentId: string | null;
   licenseId: string | null;
   consumableId: string | null;
   productStatusId: string | null;
-  assignDate: Date | null;
+  assignDate: Date;
+  notes: string | null;
+  quantity: number;
+}
+export interface IAssetProduct extends BaseEntity {
+  assetId: string;
+  componentId: string | null;
+  licenseId: string | null;
+  assignDate: Date;
   notes: string | null;
   quantity: number;
 }

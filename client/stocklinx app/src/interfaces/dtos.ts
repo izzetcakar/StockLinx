@@ -4,10 +4,9 @@ export interface BaseDto {
   updatedDate?: Date | null;
 }
 
-export interface IDeployedProductDto extends BaseDto {
+export interface IUserProductDto extends BaseDto {
   userId: string;
   productId: string;
-  productStatusId: string;
   productType: string;
   productName: string;
   productRoute?: string | null;
@@ -15,11 +14,13 @@ export interface IDeployedProductDto extends BaseDto {
   notes: string | null;
   quantity: number;
 }
-
-export interface IProductCheckInDto {
-  userId: string;
+export interface IAssetProductDto extends BaseDto {
+  assetId: string;
   productId: string;
-  assaignDate: Date;
+  productType: string;
+  productName: string;
+  productRoute?: string | null;
+  assignDate: Date;
   notes: string | null;
   quantity: number;
 }
