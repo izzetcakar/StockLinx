@@ -5,16 +5,15 @@ import {
   BaseColumn,
 } from "../../components/gridTable/interfaces/interfaces";
 import { Anchor, Button, Image } from "@mantine/core";
-import { openConfirmModal } from "../../components/gridTable/modals/modals";
-import { openCheckInModal } from "../../modals/modals";
-import { IAsset, IDeployedProduct } from "../../interfaces/serverInterfaces";
-import uuid4 from "uuid4";
+import { IAsset, IUserProduct } from "../../interfaces/serverInterfaces";
 import { assetActions } from "../../redux/asset/actions";
 import { useNavigate } from "react-router-dom";
-import base_asset from "../../assets/baseProductImages/base_asset.jpg";
 import { getImage } from "../../functions/Image";
+import { openUserProductCheckInModal } from "../../modals/modals";
+import { AssetCheckInPayload } from "../../interfaces/clientInterfaces";
+import base_asset from "../../assets/baseProductImages/base_asset.jpg";
 import axios from "axios";
-import { IProductCheckInDto } from "../../interfaces/dtos";
+import uuid4 from "uuid4";
 
 export const useColumns = () => {
   const dispatch = useDispatch();
@@ -24,40 +23,34 @@ export const useColumns = () => {
     (state: RootState) => state.productStatus.productStatuses
   );
   const users = useSelector((state: RootState) => state.user.users);
-  const deployedProducts = useSelector(
-    (state: RootState) => state.deployedProduct.deployedProducts
+  const userProducts = useSelector(
+    (state: RootState) => state.userProduct.userProducts
   );
-  const handleCheckIn = (data: IDeployedProduct) => {
+  const handleCheckIn = (data: IUserProduct) => {
     dispatch(
       assetActions.checkIn({
-        checkInDto: {
-          productId: data.assetId,
-          userId: data.userId,
-          notes: data.notes,
-          assaignDate: data.assignDate,
-          quantity: data.quantity,
-        } as IProductCheckInDto,
-      })
+        assetId: data.assetId,
+        userId: data.userId,
+        assaignDate: data.assignDate,
+        productStatusId: data.productStatusId,
+        notes: data.notes,
+      } as AssetCheckInPayload)
     );
   };
   const checkIn = (id: string) => {
-    const newDeployedProduct: IDeployedProduct = {
+    const newUserProduct: IUserProduct = {
       id: uuid4(),
       userId: "",
       assetId: id,
       licenseId: null,
       accessoryId: null,
-      componentId: null,
       consumableId: null,
       assignDate: new Date(),
       notes: null,
       productStatusId: null,
       quantity: 1,
     };
-    openCheckInModal(newDeployedProduct, handleCheckIn);
-  };
-  const checkOut = (id: string) => {
-    dispatch(assetActions.checkOut({ id: id }));
+    openUserProductCheckInModal(newUserProduct, handleCheckIn);
   };
 
   const getTest = async () => {
@@ -165,11 +158,11 @@ export const useColumns = () => {
       caption: "Checked Out To",
       dataType: "string",
       renderComponent(e) {
-        const deployedProduct = deployedProducts.find(
-          (deployedProduct) => deployedProduct?.assetId === (e as IAsset).id
+        const userProduct = userProducts.find(
+          (userProduct) => userProduct?.assetId === (e as IAsset).id
         );
-        if (deployedProduct) {
-          const user = users.find((user) => user.id === deployedProduct.userId);
+        if (userProduct) {
+          const user = users.find((user) => user.id === userProduct.userId);
           if (user) return user.firstName + " " + user.lastName;
         }
         return null;
@@ -185,26 +178,18 @@ export const useColumns = () => {
       caption: "Checkin/Checkout",
       dataType: "action",
       renderComponent(e) {
-        const deployedProduct = deployedProducts.find(
-          (deployedProduct) => deployedProduct?.assetId === (e as IAsset).id
+        const userProduct = userProducts.find(
+          (userProduct) => userProduct?.assetId === (e as IAsset).id
         );
         return (
           <div style={{ display: "flex", justifyContent: "center" }}>
             <Button
-              color={deployedProduct ? "red" : "green"}
+              color={userProduct ? "red" : "green"}
               variant="filled"
               size="xs"
-              onClick={() =>
-                deployedProduct
-                  ? openConfirmModal(
-                      "Check Out",
-                      "Are you sure you want to check out this asset",
-                      () => checkOut(deployedProduct.id)
-                    )
-                  : checkIn((e as IAsset).id)
-              }
+              onClick={() => checkIn((e as IAsset).id)}
             >
-              {deployedProduct ? "Check Out" : "Check In"}
+              {userProduct ? "Check Out" : "Check In"}
             </Button>
           </div>
         );
@@ -215,6 +200,24 @@ export const useColumns = () => {
     {
       dataField: "notes",
       caption: "Notes",
+      dataType: "string",
+      visible: false,
+    },
+    {
+      dataField: "orderNo",
+      caption: "Order No",
+      dataType: "string",
+      visible: false,
+    },
+    {
+      dataField: "purchaseDate",
+      caption: "Purchase Date",
+      dataType: "date",
+      visible: false,
+    },
+    {
+      dataField: "supplierId",
+      caption: "Supplier",
       dataType: "string",
       visible: false,
     },

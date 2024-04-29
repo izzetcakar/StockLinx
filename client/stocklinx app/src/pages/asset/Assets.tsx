@@ -12,7 +12,7 @@ import { branchActions } from "../../redux/branch/actions";
 import { productStatusActions } from "../../redux/productStatus/actions";
 import { openAssetModal } from "../../modals/modals";
 import { supplierActions } from "../../redux/supplier/actions";
-import { deployedProductActions } from "../../redux/deployedProduct/actions";
+import { userProductActions } from "../../redux/userProduct/actions";
 import { userActions } from "../../redux/user/actions";
 import { useContext } from "react";
 import GenericContext from "../../context/GenericContext";
@@ -30,7 +30,7 @@ const Asset = () => {
     dispatch(branchActions.getAll());
     dispatch(productStatusActions.getAll());
     dispatch(supplierActions.getAll());
-    dispatch(deployedProductActions.getAll());
+    dispatch(userProductActions.getAll());
     dispatch(userActions.getAll());
   };
 

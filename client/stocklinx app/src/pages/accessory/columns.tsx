@@ -7,14 +7,13 @@ import {
 import {
   CategoryType,
   IAccessory,
-  IDeployedProduct,
+  IUserProduct,
 } from "../../interfaces/serverInterfaces";
 import { Anchor, Button, Image } from "@mantine/core";
 import { accessoryActions } from "../../redux/accessory/actions";
-import { openCheckInModal } from "../../modals/modals";
 import { useNavigate } from "react-router-dom";
 import { getImage } from "../../functions/Image";
-import { IProductCheckInDto } from "../../interfaces/dtos";
+import { openUserProductCheckInModal } from "../../modals/modals";
 import base_accessory from "../../assets/baseProductImages/base_accessory.png";
 import uuid4 from "uuid4";
 
@@ -25,41 +24,35 @@ export const useColumns = () => {
   const categories = useSelector(
     (state: RootState) => state.category.categories
   );
-  const accessories = useSelector(
-    (state: RootState) => state.accessory.accessories
-  );
   const productStatuses = useSelector(
     (state: RootState) => state.productStatus.productStatuses
   );
 
-  const handleCheckIn = (data: IDeployedProduct) => {
+  const handleCheckIn = (data: IUserProduct) => {
     dispatch(
       accessoryActions.checkIn({
-        checkInDto: {
-          productId: data.accessoryId,
-          userId: data.userId,
-          notes: data.notes,
-          assaignDate: data.assignDate,
-          quantity: data.quantity,
-        } as IProductCheckInDto,
+        productId: data.accessoryId as string,
+        userId: data.userId,
+        assaignDate: data.assignDate,
+        notes: data.notes,
+        quantity: data.quantity,
       })
     );
   };
   const checkIn = (id: string) => {
-    const newDeployedProduct: IDeployedProduct = {
+    const newUserProduct: IUserProduct = {
       id: uuid4(),
       userId: "",
       accessoryId: id,
       assetId: null,
       licenseId: null,
-      componentId: null,
       consumableId: null,
       productStatusId: "",
       assignDate: new Date(),
       notes: null,
       quantity: 1,
     };
-    openCheckInModal(newDeployedProduct, handleCheckIn);
+    openUserProductCheckInModal(newUserProduct, handleCheckIn);
   };
 
   const columns: BaseColumn[] = [
@@ -167,8 +160,7 @@ export const useColumns = () => {
       caption: "Checkin/Checkout",
       dataType: "action",
       renderComponent(e) {
-        const id = (e as IAccessory).id;
-        const accessory = accessories.find((accessory) => accessory.id === id);
+        const accessory = e as IAccessory;
         return (
           <div style={{ display: "flex", justifyContent: "center" }}>
             <Button
@@ -179,7 +171,7 @@ export const useColumns = () => {
                 accessory?.availableQuantity !== undefined &&
                 accessory?.availableQuantity < 1
               }
-              onClick={() => checkIn(id)}
+              onClick={() => checkIn(accessory.id)}
             >
               Check In
             </Button>

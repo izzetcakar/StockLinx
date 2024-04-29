@@ -8,8 +8,8 @@ import { companyActions } from "../../redux/company/actions";
 import { branchActions } from "../../redux/branch/actions";
 import { departmentActions } from "../../redux/department/actions";
 import HistoryLogs from "../../components/dataGrid/customLog/HistoryLogs";
-import UserDeployedProducts from "../../components/dataGrid/deployedProducts/UserDeployedProducts";
 import "../product.scss";
+import UserProductsPage from "../../components/dataGrid/userProducts/UserProducts";
 
 const User = () => {
   const { id } = useParams();
@@ -54,9 +54,9 @@ const User = () => {
       <div className="product__container__title">
         User - {user?.firstName} {user?.lastName}
       </div>
-      <Tabs defaultValue="deployedProducts">
+      <Tabs defaultValue="userProducts">
         <Tabs.List grow>
-          <Tabs.Tab value="deployedProducts">Deployed Products</Tabs.Tab>
+          <Tabs.Tab value="userProducts">Deployed Products</Tabs.Tab>
           <Tabs.Tab value="info">Info</Tabs.Tab>
           <Tabs.Tab value="history">History</Tabs.Tab>
         </Tabs.List>
@@ -145,8 +145,8 @@ const User = () => {
         <Tabs.Panel value="history">
           <HistoryLogs id={id as string} />
         </Tabs.Panel>
-        <Tabs.Panel value="deployedProducts">
-          <UserDeployedProducts userId={id as string} />
+        <Tabs.Panel value="userProducts">
+          <UserProductsPage userId={id as string} />
         </Tabs.Panel>
       </Tabs>
     </div>

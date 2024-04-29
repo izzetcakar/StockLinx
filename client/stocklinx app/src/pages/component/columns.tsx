@@ -1,20 +1,49 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import {
   BaseColumn,
   ExcelColumn,
 } from "../../components/gridTable/interfaces/interfaces";
 import { useNavigate } from "react-router-dom";
-import { Anchor } from "@mantine/core";
-import { IComponent } from "../../interfaces/serverInterfaces";
+import { Anchor, Button } from "@mantine/core";
+import { IAssetProduct, IComponent } from "../../interfaces/serverInterfaces";
+import { componentActions } from "../../redux/component/actions";
+import { AssetProductCheckInPayload } from "../../interfaces/clientInterfaces";
+import { openAssetProductCheckInModal } from "../../modals/modals";
+import uuid4 from "uuid4";
 
 export const useColumns = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const branches = useSelector((state: RootState) => state.branch.branches);
   const locations = useSelector((state: RootState) => state.location.locations);
   const categories = useSelector(
     (state: RootState) => state.category.categories
   );
+
+  const handleCheckIn = (data: IAssetProduct) => {
+    dispatch(
+      componentActions.checkIn({
+        assetId: data.assetId,
+        productId: data.componentId,
+        notes: data.notes,
+        assaignDate: data.assignDate,
+        quantity: data.quantity,
+      } as AssetProductCheckInPayload)
+    );
+  };
+  const checkIn = (id: string) => {
+    const newAssetProduct: IAssetProduct = {
+      id: uuid4(),
+      componentId: id,
+      assetId: "",
+      licenseId: null,
+      assignDate: new Date(),
+      notes: null,
+      quantity: 1,
+    };
+    openAssetProductCheckInModal(newAssetProduct, handleCheckIn);
+  };
 
   const columns: BaseColumn[] = [
     {
@@ -95,6 +124,30 @@ export const useColumns = () => {
       caption: "Purchase Cost",
       dataField: "purchaseCost",
       dataType: "number",
+    },
+    {
+      dataField: "id",
+      caption: "Checkin/Checkout",
+      dataType: "action",
+      renderComponent(e) {
+        const component = e as IComponent;
+        return (
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <Button
+              color={"green"}
+              variant="filled"
+              size="xs"
+              disabled={
+                component.availableQuantity !== undefined &&
+                component?.availableQuantity < 1
+              }
+              onClick={() => checkIn(component.id)}
+            >
+              Check In
+            </Button>
+          </div>
+        );
+      },
     },
     // INVISIBLE COLUMNS
     {

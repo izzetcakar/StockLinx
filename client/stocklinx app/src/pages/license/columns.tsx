@@ -6,15 +6,13 @@ import {
 } from "../../components/gridTable/interfaces/interfaces";
 import {
   CategoryType,
-  IDeployedProduct,
+  IUserProduct,
   ILicense,
 } from "../../interfaces/serverInterfaces";
-import { openCheckInModal } from "../../modals/modals";
 import { licenseActions } from "../../redux/license/actions";
 import uuid4 from "uuid4";
 import { Anchor, Button } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
-import { IProductCheckInDto } from "../../interfaces/dtos";
 
 export const useColumns = () => {
   const dispatch = useDispatch();
@@ -28,7 +26,7 @@ export const useColumns = () => {
     (state: RootState) => state.category.categories
   );
 
-  const handleCheckIn = (data: IDeployedProduct) => {
+  const handleCheckIn = (data: IUserProduct) => {
     dispatch(
       licenseActions.checkIn({
         checkInDto: {
@@ -42,7 +40,7 @@ export const useColumns = () => {
     );
   };
   const checkIn = (id: string) => {
-    const newDeployedProduct: IDeployedProduct = {
+    const newUserProduct: IUserProduct = {
       id: uuid4(),
       userId: "",
       assetId: null,
@@ -55,7 +53,7 @@ export const useColumns = () => {
       productStatusId: null,
       quantity: 1,
     };
-    openCheckInModal(newDeployedProduct, handleCheckIn);
+    openCheckInModal(newUserProduct, handleCheckIn);
   };
 
   const columns: BaseColumn[] = [
