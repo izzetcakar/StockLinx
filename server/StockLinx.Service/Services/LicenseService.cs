@@ -230,28 +230,33 @@ namespace StockLinx.Service.Services
             return assetProduct;
         }
 
-        public async Task CheckOutAsync(Guid id)
+        public async Task UserCheckOutAsync(Guid id)
         {
-            License license = null;
             UserProduct userProduct = await _userProductRepository.GetByIdAsync(id);
-            if (userProduct != null)
+            if (userProduct == null)
             {
-                license = await _licenseRepository.GetByIdAsync(userProduct.LicenseId);
-                _userProductRepository.Remove(userProduct);
+                throw new Exception("UserProduct not found");
             }
-            else
+            License license = await _licenseRepository.GetByIdAsync(userProduct.LicenseId);
+            _userProductRepository.Remove(userProduct);
+            await _customLogService.CreateCustomLog(
+                "CheckOut",
+                "License",
+                license.Id,
+                license.Name
+            );
+            await _unitOfWork.CommitAsync();
+        }
+
+        public async Task AssetCheckOutAsync(Guid id)
+        {
+            AssetProduct assetProduct = await _assetProductRepository.GetByIdAsync(id);
+            if (assetProduct == null)
             {
-                AssetProduct assetProduct = await _assetProductRepository.GetByIdAsync(id);
-                if (assetProduct != null)
-                {
-                    license = await _licenseRepository.GetByIdAsync(assetProduct.LicenseId);
-                    _assetProductRepository.Remove(assetProduct);
-                }
+                throw new Exception("AssetProduct not found");
             }
-            if (license == null)
-            {
-                throw new Exception("License not found");
-            }
+            License license = await _licenseRepository.GetByIdAsync(assetProduct.LicenseId);
+            _assetProductRepository.Remove(assetProduct);
             await _customLogService.CreateCustomLog(
                 "CheckOut",
                 "License",

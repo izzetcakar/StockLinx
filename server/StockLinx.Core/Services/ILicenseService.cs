@@ -17,6 +17,7 @@ namespace StockLinx.Core.Services
         Task DeleteRangeLicenseAsync(List<Guid> ids);
         Task<UserProduct> CheckInAsync(UserProductCheckInDto checkInDto);
         Task<AssetProduct> CheckInAsync(AssetProductCheckInDto checkInDto);
-        Task CheckOutAsync(Guid id);
+        Task UserCheckOutAsync(Guid id);
+        Task AssetCheckOutAsync(Guid id);
     }
 }

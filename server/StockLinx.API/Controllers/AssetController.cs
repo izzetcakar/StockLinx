@@ -13,6 +13,7 @@ namespace StockLinx.API.Controllers
     public class AssetController : CustomBaseController
     {
         private readonly IAssetService _assetService;
+
         public AssetController(IAssetService assetService)
         {
             _assetService = assetService;
@@ -117,7 +118,7 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost("checkin")]
-        public async Task<IActionResult> CheckIn(UserProductCheckInDto dto)
+        public async Task<IActionResult> CheckIn(AssetCheckInDto dto)
         {
             try
             {
@@ -130,12 +131,12 @@ namespace StockLinx.API.Controllers
             }
         }
 
-        [HttpPost("checkout/{id}")]
-        public async Task<IActionResult> CheckOut(Guid id)
+        [HttpPost("checkout")]
+        public async Task<IActionResult> CheckOut(AssetCheckOutDto dto)
         {
             try
             {
-                await _assetService.CheckOutAsync(id);
+                await _assetService.CheckOutAsync(dto);
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
             }
             catch (Exception ex)
