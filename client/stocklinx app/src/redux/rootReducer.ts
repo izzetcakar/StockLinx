@@ -20,7 +20,8 @@ import fieldSetReducer from "./fieldSet/reducer";
 import customFieldReducer from "./customField/reducer";
 import fieldSetCustomFieldReducer from "./fieldSetCustomField/reducer";
 import modelFieldDataReducer from "./modelFieldData/reducer";
-import deployedProductReducer from "./deployedProduct/reducer";
+import userProductReducer from "./userProduct/reducer";
+import assetProductReducer from "./assetProduct/reducer";
 import permissionReducer from "./permission/reducer";
 
 const rootReducer = combineReducers({
@@ -45,7 +46,8 @@ const rootReducer = combineReducers({
   branch: branchReducer,
   user: userReducer,
   generic: genericReducer,
-  deployedProduct: deployedProductReducer,
+  userProduct: userProductReducer,
+  assetProduct: assetProductReducer,
   permission: permissionReducer,
 });
 
