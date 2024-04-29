@@ -4,7 +4,6 @@
     {
         public Guid? CategoryId { get; set; }
         public Guid? ManufacturerId { get; set; }
-        public Guid? SupplierId { get; set; }
         public string Name { get; set; }
         public string LicenseKey { get; set; }
         public string? LicenseEmail { get; set; }
@@ -17,7 +16,6 @@
 
         //Relates
         public Manufacturer? Manufacturer { get; set; }
-        public Supplier? Supplier { get; set; }
         public Category? Category { get; set; }
         public ICollection<UserProduct>? UserProducts { get; set; }
         public ICollection<AssetProduct>? AssetProducts { get; set; }

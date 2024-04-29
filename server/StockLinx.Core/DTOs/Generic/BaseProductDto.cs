@@ -3,7 +3,7 @@
     public abstract class BaseProductDto : BaseDto
     {
         public Guid BranchId { get; set; }
-        public Guid? ProductStatusId { get; set; }
+        public Guid? SupplierId { get; set; }
         public string Name { get; set; }
         public string? OrderNo { get; set; }
         public string? Notes { get; set; }
