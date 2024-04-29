@@ -10,7 +10,7 @@ import {
   IConsumable,
   ICustomField,
   IDepartment,
-  IDeployedProduct,
+  IUserProduct,
   IFieldSet,
   ILicense,
   ILocation,
@@ -19,6 +19,7 @@ import {
   IProductStatus,
   ISupplier,
   IUser,
+  IAssetProduct,
 } from "../interfaces/serverInterfaces";
 import CategoryForm from "../forms/category/CategoryForm";
 import BranchForm from "../forms/branch/BranchForm";
@@ -37,8 +38,9 @@ import SupplierForm from "../forms/supplier/SupplierForm";
 import UserForm from "../forms/user/UserForm";
 import FieldSetForm from "../forms/fieldSet/FieldSetForm";
 import CustomFieldForm from "../forms/customField/CustomFieldForm";
-import CheckInForm from "../forms/deployedProduct/CheckInForm";
+import UserProductCheckInForm from "../forms/checkInOut/UserProductCheckInForm";
 import PermissionForm from "../forms/permission/PermissionForm";
+import AssetProductCheckInForm from "../forms/checkInOut/AssetProductCheckInForm";
 
 export const genericConfirmModal = (onConfirm: () => void) =>
   modals.openConfirmModal({
@@ -50,7 +52,7 @@ export const genericConfirmModal = (onConfirm: () => void) =>
   });
 export const openCategoryModal = (category?: ICategory) =>
   modals.open({
-    modalId: "category-modal",
+    modalId: "category_modal",
     title: category ? "Edit Category" : "Create Category",
     children: <CategoryForm category={category} />,
     xOffset: "auto",
@@ -58,7 +60,7 @@ export const openCategoryModal = (category?: ICategory) =>
   });
 export const openBranchModal = (branch?: IBranch) =>
   modals.open({
-    modalId: "branch-modal",
+    modalId: "branch_modal",
     title: branch ? "Edit Branch" : "Create Branch",
     children: <BranchForm branch={branch} />,
     xOffset: "auto",
@@ -66,7 +68,7 @@ export const openBranchModal = (branch?: IBranch) =>
   });
 export const openCompanyModal = (company?: ICompany) =>
   modals.open({
-    modalId: "company-modal",
+    modalId: "company_modal",
     title: company ? "Update Company" : "Create Company",
     children: <CompanyForm company={company} />,
     xOffset: "auto",
@@ -74,7 +76,7 @@ export const openCompanyModal = (company?: ICompany) =>
   });
 export const openDepartmentModal = (department?: IDepartment) =>
   modals.open({
-    modalId: "department-modal",
+    modalId: "department_modal",
     title: department ? "Update Department" : "Create Department",
     children: <DepartmentForm department={department} />,
     xOffset: "auto",
@@ -82,7 +84,7 @@ export const openDepartmentModal = (department?: IDepartment) =>
   });
 export const openLocationModal = (location?: ILocation) =>
   modals.open({
-    modalId: "location-modal",
+    modalId: "location_modal",
     title: location ? "Edit Location" : "Update Location",
     children: <LocationForm location={location} />,
     xOffset: "auto",
@@ -90,7 +92,7 @@ export const openLocationModal = (location?: ILocation) =>
   });
 export const openManufacturerModal = (manufacturer?: IManufacturer) =>
   modals.open({
-    modalId: "manufacturer-modal",
+    modalId: "manufacturer_modal",
     title: manufacturer ? "Update Manufacturer" : "Create Manufacturer",
     children: <ManufacturerForm manufacturer={manufacturer} />,
     xOffset: "auto",
@@ -98,7 +100,7 @@ export const openManufacturerModal = (manufacturer?: IManufacturer) =>
   });
 export const openModelModal = (model?: IModel) =>
   modals.open({
-    modalId: "model-modal",
+    modalId: "model_modal",
     title: model ? "Update Model" : "Create Model",
     children: <ModelForm model={model} />,
     xOffset: "auto",
@@ -106,7 +108,7 @@ export const openModelModal = (model?: IModel) =>
   });
 export const openAccessoryModal = (accessory?: IAccessory) =>
   modals.open({
-    modalId: "accessory-modal",
+    modalId: "accessory_modal",
     title: accessory ? "Update Accessory" : "Create Accessory",
     children: <AccessoryForm accessory={accessory} />,
     xOffset: "auto",
@@ -114,7 +116,7 @@ export const openAccessoryModal = (accessory?: IAccessory) =>
   });
 export const openAssetModal = (asset?: IAsset) =>
   modals.open({
-    modalId: "asset-modal",
+    modalId: "asset_modal",
     title: asset ? "Update Asset" : "Create Asset",
     children: <AssetForm asset={asset} />,
     xOffset: "auto",
@@ -122,7 +124,7 @@ export const openAssetModal = (asset?: IAsset) =>
   });
 export const openComponentModal = (component?: IComponent) =>
   modals.open({
-    modalId: "component-modal",
+    modalId: "component_modal",
     title: component ? "Update Component" : "Create Component",
     children: <ComponentForm component={component} />,
     xOffset: "auto",
@@ -130,7 +132,7 @@ export const openComponentModal = (component?: IComponent) =>
   });
 export const openConsumableModal = (consumable?: IConsumable) =>
   modals.open({
-    modalId: "consumable-modal",
+    modalId: "consumable_modal",
     title: consumable ? "Update Consumable" : "Create Consumable",
     children: <ConsumableForm consumable={consumable} />,
     xOffset: "auto",
@@ -138,7 +140,7 @@ export const openConsumableModal = (consumable?: IConsumable) =>
   });
 export const openLicenseModal = (license?: ILicense) =>
   modals.open({
-    modalId: "license-modal",
+    modalId: "license_modal",
     title: license ? "Update License" : "Create License",
     children: <LicenseForm license={license} />,
     xOffset: "auto",
@@ -146,7 +148,7 @@ export const openLicenseModal = (license?: ILicense) =>
   });
 export const openProductStatusModal = (productStatus?: IProductStatus) =>
   modals.open({
-    modalId: "productStatus-modal",
+    modalId: "productStatus_modal",
     title: productStatus ? "Update ProductStatus" : "Create ProductStatus",
     children: <ProductStatusForm productStatus={productStatus} />,
     xOffset: "auto",
@@ -154,7 +156,7 @@ export const openProductStatusModal = (productStatus?: IProductStatus) =>
   });
 export const openSupplierModal = (supplier?: ISupplier) =>
   modals.open({
-    modalId: "supplier-modal",
+    modalId: "supplier_modal",
     title: supplier ? "Update Supplier" : "Create Supplier",
     children: <SupplierForm supplier={supplier} />,
     xOffset: "auto",
@@ -162,7 +164,7 @@ export const openSupplierModal = (supplier?: ISupplier) =>
   });
 export const openUserModal = (user?: IUser) =>
   modals.open({
-    modalId: "user-modal",
+    modalId: "user_modal",
     title: user ? "Update User" : "Create User",
     children: <UserForm user={user} />,
     xOffset: "auto",
@@ -170,7 +172,7 @@ export const openUserModal = (user?: IUser) =>
   });
 export const openFieldSetModal = (fieldSet?: IFieldSet) => {
   modals.open({
-    modalId: "fieldSet-modal",
+    modalId: "fieldSet_modal",
     title: fieldSet ? "Update FieldSet" : "Create FieldSet",
     children: <FieldSetForm fieldSet={fieldSet} />,
     xOffset: "auto",
@@ -179,22 +181,42 @@ export const openFieldSetModal = (fieldSet?: IFieldSet) => {
 };
 export const openCustomFieldModal = (customField?: ICustomField) => {
   modals.open({
-    modalId: "customField-modal",
+    modalId: "customField_modal",
     title: customField ? "Update CustomField" : "Create CustomField",
     children: <CustomFieldForm customField={customField} />,
     xOffset: "auto",
     size: "auto",
   });
 };
-export const openCheckInModal = (
-  deployedProduct: IDeployedProduct,
-  handleCheckIn: (data: IDeployedProduct) => void
+export const openUserProductCheckInModal = (
+  userProduct: IUserProduct,
+  handleCheckIn: (data: IUserProduct) => void
 ) => {
   modals.open({
-    modalId: "checkIn-modal",
+    modalId: "userProduct_checkIn_modal",
     title: "Check In",
     children: (
-      <CheckInForm deployedProduct={deployedProduct} onSubmit={handleCheckIn} />
+      <UserProductCheckInForm
+        userProduct={userProduct}
+        onSubmit={handleCheckIn}
+      />
+    ),
+    xOffset: "auto",
+    size: "auto",
+  });
+};
+export const openAssetProductCheckInModal = (
+  assetProduct: IAssetProduct,
+  handleCheckIn: (data: IAssetProduct) => void
+) => {
+  modals.open({
+    modalId: "assetProduct_checkIn_modal",
+    title: "Check In",
+    children: (
+      <AssetProductCheckInForm
+        assetProduct={assetProduct}
+        onSubmit={handleCheckIn}
+      />
     ),
     xOffset: "auto",
     size: "auto",
@@ -202,7 +224,7 @@ export const openCheckInModal = (
 };
 export const openPermissionModal = (branch: IBranch) => {
   modals.open({
-    modalId: "permission-modal",
+    modalId: "permission_modal",
     title: "Permission",
     children: <PermissionForm branch={branch} />,
     xOffset: "auto",

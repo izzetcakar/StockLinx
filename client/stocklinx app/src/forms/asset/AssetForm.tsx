@@ -38,6 +38,7 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
   const productStatuses = useSelector(
     (state: RootState) => state.productStatus.productStatuses
   );
+  const suppliers = useSelector((state: RootState) => state.supplier.suppliers);
   const { initialValues, isCreate } = useInitial(asset, create);
 
   const form = useForm<IAsset>({
@@ -208,6 +209,16 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
             <Accordion.Control>Order Related Information</Accordion.Control>
             <Accordion.Panel>
               <Flex direction="column" gap={10}>
+                <FormSelect
+                  data={suppliers.map((supplier) => ({
+                    value: supplier.id,
+                    label: supplier.name,
+                  }))}
+                  label="Supplier"
+                  inputProps={form.getInputProps("supplierId")}
+                  value={form.values.supplierId || ""}
+                  clearable
+                />
                 <TextInput
                   label="Order No"
                   placeholder="New Order No"

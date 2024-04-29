@@ -1,43 +1,31 @@
 import React from "react";
 import { Button, Group, Flex, Textarea, NumberInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { IDeployedProduct } from "../../interfaces/serverInterfaces";
+import { IAssetProduct } from "../../interfaces/serverInterfaces";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
-import uuid4 from "uuid4";
 import FormSelect from "../mantine/FormSelect";
 
-interface CheckInFormProps {
-  deployedProduct: IDeployedProduct;
-  onSubmit: (data: IDeployedProduct) => void;
+interface AssetProductCheckInFormProps {
+  assetProduct: IAssetProduct;
+  onSubmit: (data: IAssetProduct) => void;
 }
 
-const CheckInForm: React.FC<CheckInFormProps> = ({
-  deployedProduct,
+const AssetProductCheckInForm: React.FC<AssetProductCheckInFormProps> = ({
+  assetProduct,
   onSubmit,
 }) => {
-  const users = useSelector((state: RootState) => state.user.users);
+  const assets = useSelector((state: RootState) => state.asset.assets);
 
-  const form = useForm<IDeployedProduct>({
-    initialValues: {
-      id: uuid4(),
-      userId: "",
-      assetId: deployedProduct.assetId,
-      licenseId: deployedProduct.licenseId,
-      accessoryId: deployedProduct.accessoryId,
-      componentId: deployedProduct.componentId,
-      consumableId: deployedProduct.consumableId,
-      productStatusId: deployedProduct.productStatusId,
-      quantity: deployedProduct.quantity,
-      assignDate: new Date(),
-      notes: null,
-    },
+  const form = useForm<IAssetProduct>({
+    initialValues: assetProduct,
     validate: {
-      userId: (value: string) =>
+      assetId: (value: string) =>
         value !== "" ? null : "User must be selected",
     },
   });
-  const handleSubmit = (data: IDeployedProduct) => {
+
+  const handleSubmit = (data: IAssetProduct) => {
     onSubmit(data);
   };
 
@@ -53,13 +41,13 @@ const CheckInForm: React.FC<CheckInFormProps> = ({
         pt={20}
       >
         <FormSelect
-          data={users.map((user) => ({
-            value: user.id,
-            label: user.firstName + " " + user.lastName,
+          data={assets.map((asset) => ({
+            value: asset.id,
+            label: asset.name,
           }))}
           label="User"
-          inputProps={form.getInputProps("userId")}
-          value={form.values.userId || ""}
+          inputProps={form.getInputProps("assetId")}
+          value={form.values.assetId || ""}
           withAsterisk
         />
         <Textarea
@@ -77,7 +65,7 @@ const CheckInForm: React.FC<CheckInFormProps> = ({
         />
         <Group mt="md" justify="flex-end">
           <Button type="submit" color="dark">
-            CheckIn
+            AssetProductCheckIn
           </Button>
         </Group>
       </Flex>
@@ -85,4 +73,4 @@ const CheckInForm: React.FC<CheckInFormProps> = ({
   );
 };
 
-export default CheckInForm;
+export default AssetProductCheckInForm;

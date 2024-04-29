@@ -2,24 +2,22 @@ import { useDispatch, useSelector } from "react-redux";
 import { useColumns } from "./columns";
 import { RootState } from "../../../redux/rootReducer";
 import { useEffect, useRef } from "react";
-import { deployedProductActions } from "../../../redux/deployedProduct/actions";
+import { userProductActions } from "../../../redux/userProduct/actions";
 import { openSubmissionModal } from "../../../functions/exportSubmissionForm";
 import Gridtable from "../../gridTable/GridTable";
 
-interface UserDeployedProductsProps {
+interface UserProductsPageProps {
   userId: string;
 }
-const UserDeployedProducts: React.FC<UserDeployedProductsProps> = ({
-  userId,
-}) => {
+const UserProductsPage: React.FC<UserProductsPageProps> = ({ userId }) => {
   const dispatch = useDispatch();
-  const deployedProducts = useSelector(
-    (state: RootState) => state.deployedProduct.deployedProducts
+  const userProducts = useSelector(
+    (state: RootState) => state.userProduct.userProducts
   );
   const gridtableRef: any = useRef();
 
   const refreshData = () => {
-    dispatch(deployedProductActions.getAll());
+    dispatch(userProductActions.getAll());
   };
 
   useEffect(() => {
@@ -31,7 +29,7 @@ const UserDeployedProducts: React.FC<UserDeployedProductsProps> = ({
       <Gridtable
         itemKey="id"
         ref={gridtableRef}
-        data={deployedProducts.filter((dp) => dp.userId === userId)}
+        data={userProducts.filter((dp) => dp.userId === userId)}
         columns={useColumns()}
         enableSelectActions
       />
@@ -67,4 +65,4 @@ const UserDeployedProducts: React.FC<UserDeployedProductsProps> = ({
   );
 };
 
-export default UserDeployedProducts;
+export default UserProductsPage;

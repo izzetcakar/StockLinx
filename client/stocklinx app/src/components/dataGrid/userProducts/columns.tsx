@@ -1,7 +1,7 @@
 import { BaseColumn } from "../../gridTable/interfaces/interfaces";
 import { Anchor } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
-import { IDeployedProductDto } from "../../../interfaces/dtos";
+import { IUserProductDto } from "../../../interfaces/dtos";
 
 export const useColumns = () => {
   const navigate = useNavigate();
@@ -17,10 +17,10 @@ export const useColumns = () => {
       caption: "Name",
       dataType: "string",
       renderComponent(e) {
-        const route = (e as IDeployedProductDto)?.productRoute;
+        const route = (e as IUserProductDto)?.productRoute;
         return (
           <Anchor onClick={() => navigate(route ? route : "")}>
-            {(e as IDeployedProductDto).productName}
+            {(e as IUserProductDto).productName}
           </Anchor>
         );
       },
