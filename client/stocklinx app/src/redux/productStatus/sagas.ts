@@ -17,7 +17,7 @@ import {
   openNotificationSuccess,
 } from "../../notification/Notification";
 
-interface IResponse {
+type IResponse = {
   data: IProductStatus[] | IProductStatus | null;
   message: string;
   success: boolean;
@@ -27,88 +27,73 @@ interface IResponse {
 function* fetchProductStatusesSaga() {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
-      productStatusRequests.getAll
+    const { data }: IResponse = yield call(productStatusRequests.getAll);
+    yield put(
+      productStatusActions.getAllSuccess({
+        productStatuses: data as IProductStatus[],
+      })
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      yield put(
-        productStatusActions.getAllSuccess({
-          productStatuses: data as IProductStatus[],
-        })
-      );
-    }
   } catch (e) {
     openNotificationError("ProductStatus", (e as Error).message);
     yield put(productStatusActions.getAllFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* fetchProductStatusSaga(action: FetchProductStatusRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       productStatusRequests.get,
       action.payload.id
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      yield put(
-        productStatusActions.getSuccess({
-          productStatus: data as IProductStatus,
-        })
-      );
-    }
+    yield put(
+      productStatusActions.getSuccess({
+        productStatus: data as IProductStatus,
+      })
+    );
   } catch (e) {
     openNotificationError("ProductStatus", (e as Error).message);
     yield put(productStatusActions.getFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* createProductStatusSaga(action: CreateProductStatusRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       productStatusRequests.create,
       action.payload.productStatus
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("ProductStatus Created");
-      yield put(
-        productStatusActions.createSuccess({
-          productStatus: data as IProductStatus,
-        })
-      );
-    }
+    openNotificationSuccess("ProductStatus Created");
+    yield put(
+      productStatusActions.createSuccess({
+        productStatus: data as IProductStatus,
+      })
+    );
   } catch (e) {
     openNotificationError("ProductStatus", (e as Error).message);
     yield put(productStatusActions.createFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* createRangeProductStatusSaga(
   action: CreateRangeProductStatusRequest
 ) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       productStatusRequests.createRange,
       action.payload.productStatuses
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("ProductStatuses Created");
-      yield put(
-        productStatusActions.createRangeSuccess({
-          productStatuses: data as IProductStatus[],
-        })
-      );
-    }
+    openNotificationSuccess("ProductStatuses Created");
+    yield put(
+      productStatusActions.createRangeSuccess({
+        productStatuses: data as IProductStatus[],
+      })
+    );
   } catch (e) {
     openNotificationError("ProductStatus", (e as Error).message);
     yield put(productStatusActions.createRangeFailure());
@@ -119,62 +104,46 @@ function* createRangeProductStatusSaga(
 function* updateProductStatusSaga(action: UpdateProductStatusRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       productStatusRequests.update,
       action.payload.productStatus
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("ProductStatus Updated");
-      yield put(
-        productStatusActions.updateSuccess({
-          productStatus: data as IProductStatus,
-        })
-      );
-    }
+    openNotificationSuccess("ProductStatus Updated");
+    yield put(
+      productStatusActions.updateSuccess({
+        productStatus: data as IProductStatus,
+      })
+    );
   } catch (e) {
     openNotificationError("ProductStatus", (e as Error).message);
     yield put(productStatusActions.updateFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* removeProductStatusSaga(action: RemoveProductStatusRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
-      productStatusRequests.remove,
-      action.payload.id
-    );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("ProductStatus Removed");
-      yield put(productStatusActions.removeSuccess({ id: action.payload.id }));
-    }
+    yield call(productStatusRequests.remove, action.payload.id);
+    openNotificationSuccess("ProductStatus Removed");
+    yield put(productStatusActions.removeSuccess({ id: action.payload.id }));
   } catch (e) {
     openNotificationError("ProductStatus", (e as Error).message);
     yield put(productStatusActions.removeFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* removeRangeProductStatusSaga(
   action: RemoveRangeProductStatusRequest
 ) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
-      productStatusRequests.removeRange,
-      action.payload.ids
+    yield call(productStatusRequests.removeRange, action.payload.ids);
+    openNotificationSuccess("ProductStatuses Removed");
+    yield put(
+      productStatusActions.removeRangeSuccess({ ids: action.payload.ids })
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("ProductStatuses Removed");
-      yield put(
-        productStatusActions.removeRangeSuccess({ ids: action.payload.ids })
-      );
-    }
   } catch (e) {
     openNotificationError("ProductStatus", (e as Error).message);
     yield put(productStatusActions.removeRangeFailure());
@@ -183,9 +152,6 @@ function* removeRangeProductStatusSaga(
 }
 
 function* productStatussaga() {
-  // yield all([
-  //   takeLatest(productStatusConst.FETCH_PRODUCTSTATUSES_REQUEST, fetchProductStatusesSaga),
-  // ]);
   yield takeEvery(
     productStatusConst.FETCH_PRODUCTSTATUSES_REQUEST,
     fetchProductStatusesSaga
@@ -215,10 +181,5 @@ function* productStatussaga() {
     removeRangeProductStatusSaga
   );
 }
-// function* budgetItemSaga() {
-//   yield takeEvery(budgetItemConst.fetchList, listBudgetITem);
-//   yield takeEvery(budgetItemConst.fetchSave,saveBudgetITem);
-//   yield takeEvery(budgetItemConst.fetchUpdate,updateBudgetITem);
-// }
 
 export default productStatussaga;

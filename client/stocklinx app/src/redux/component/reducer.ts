@@ -117,8 +117,13 @@ export default (state = initialState, action: ComponentActions) => {
       return {
         ...state,
         components: state.components.map((component) =>
-          component.id === action.payload.component.id
-            ? action.payload.component
+          component.id === action.payload.id
+            ? {
+                ...component,
+                availableQuantity: component.availableQuantity
+                  ? component.availableQuantity - action.payload.quantity
+                  : 0,
+              }
             : component
         ),
       };
@@ -134,8 +139,13 @@ export default (state = initialState, action: ComponentActions) => {
       return {
         ...state,
         components: state.components.map((component) =>
-          component.id === action.payload.component.id
-            ? action.payload.component
+          component.id === action.payload.id
+            ? {
+                ...component,
+                availableQuantity: component.availableQuantity
+                  ? component.availableQuantity + action.payload.quantity
+                  : action.payload.quantity,
+              }
             : component
         ),
       };

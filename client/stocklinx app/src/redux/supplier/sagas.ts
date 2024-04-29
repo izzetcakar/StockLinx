@@ -17,7 +17,7 @@ import {
   openNotificationSuccess,
 } from "../../notification/Notification";
 
-interface IResponse {
+type IResponse = {
   data: ISupplier[] | ISupplier | null;
   message: string;
   success: boolean;
@@ -27,80 +27,65 @@ interface IResponse {
 function* fetchSuppliersSaga() {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
-      supplierRequests.getAll
+    const { data }: IResponse = yield call(supplierRequests.getAll);
+    yield put(
+      supplierActions.getAllSuccess({
+        suppliers: data as ISupplier[],
+      })
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      yield put(
-        supplierActions.getAllSuccess({
-          suppliers: data as ISupplier[],
-        })
-      );
-    }
   } catch (e) {
     openNotificationError("Supplier", (e as Error).message);
     yield put(supplierActions.getAllFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* fetchSupplierSaga(action: FetchSupplierRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       supplierRequests.get,
       action.payload.id
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      yield put(
-        supplierActions.getSuccess({
-          supplier: data as ISupplier,
-        })
-      );
-    }
+    yield put(
+      supplierActions.getSuccess({
+        supplier: data as ISupplier,
+      })
+    );
   } catch (e) {
     openNotificationError("Supplier", (e as Error).message);
     yield put(supplierActions.getFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* createSupplierSaga(action: CreateSupplierRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       supplierRequests.create,
       action.payload.supplier
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("Supplier Created");
-      yield put(supplierActions.createSuccess({ supplier: data as ISupplier }));
-    }
+    openNotificationSuccess("Supplier Created");
+    yield put(supplierActions.createSuccess({ supplier: data as ISupplier }));
   } catch (e) {
     openNotificationError("Supplier", (e as Error).message);
     yield put(supplierActions.createFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* createRangeSupplierSaga(action: CreateRangeSupplierRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       supplierRequests.createRange,
       action.payload.suppliers
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("Suppliers Created");
-      yield put(
-        supplierActions.createRangeSuccess({ suppliers: data as ISupplier[] })
-      );
-    }
+    openNotificationSuccess("Suppliers Created");
+    yield put(
+      supplierActions.createRangeSuccess({ suppliers: data as ISupplier[] })
+    );
   } catch (e) {
     openNotificationError("Supplier", (e as Error).message);
     yield put(supplierActions.createRangeFailure());
@@ -111,56 +96,38 @@ function* createRangeSupplierSaga(action: CreateRangeSupplierRequest) {
 function* updateSupplierSaga(action: UpdateSupplierRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       supplierRequests.update,
       action.payload.supplier
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("Supplier Updated");
-      yield put(supplierActions.updateSuccess({ supplier: data as ISupplier }));
-    }
+    openNotificationSuccess("Supplier Updated");
+    yield put(supplierActions.updateSuccess({ supplier: data as ISupplier }));
   } catch (e) {
     openNotificationError("Supplier", (e as Error).message);
     yield put(supplierActions.updateFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* removeSupplierSaga(action: RemoveSupplierRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
-      supplierRequests.remove,
-      action.payload.id
-    );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("Supplier Removed");
-      yield put(supplierActions.removeSuccess({ id: action.payload.id }));
-    }
+    yield call(supplierRequests.remove, action.payload.id);
+    openNotificationSuccess("Supplier Removed");
+    yield put(supplierActions.removeSuccess({ id: action.payload.id }));
   } catch (e) {
     openNotificationError("Supplier", (e as Error).message);
     yield put(supplierActions.removeFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* removeRangeSupplierSaga(action: RemoveRangeSupplierRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
-      supplierRequests.removeRange,
-      action.payload.ids
-    );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("Suppliers Removed");
-      yield put(
-        supplierActions.removeRangeSuccess({ ids: action.payload.ids })
-      );
-    }
+    yield call(supplierRequests.removeRange, action.payload.ids);
+    openNotificationSuccess("Suppliers Removed");
+    yield put(supplierActions.removeRangeSuccess({ ids: action.payload.ids }));
   } catch (e) {
     openNotificationError("Supplier", (e as Error).message);
     yield put(supplierActions.removeRangeFailure());
@@ -169,9 +136,6 @@ function* removeRangeSupplierSaga(action: RemoveRangeSupplierRequest) {
 }
 
 function* suppliersaga() {
-  // yield all([
-  //   takeLatest(supplierConst.FETCH_SUPPLIERS_REQUEST, fetchSuppliersSaga),
-  // ]);
   yield takeEvery(supplierConst.FETCH_SUPPLIERS_REQUEST, fetchSuppliersSaga);
   yield takeEvery(supplierConst.FETCH_SUPPLIER_REQUEST, fetchSupplierSaga);
   yield takeEvery(supplierConst.CREATE_SUPPLIER_REQUEST, createSupplierSaga);
@@ -186,10 +150,5 @@ function* suppliersaga() {
     removeRangeSupplierSaga
   );
 }
-// function* budgetItemSaga() {
-//   yield takeEvery(budgetItemConst.fetchList, listBudgetITem);
-//   yield takeEvery(budgetItemConst.fetchSave,saveBudgetITem);
-//   yield takeEvery(budgetItemConst.fetchUpdate,updateBudgetITem);
-// }
 
 export default suppliersaga;

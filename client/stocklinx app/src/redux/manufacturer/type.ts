@@ -1,34 +1,34 @@
 import { IManufacturer } from "../../interfaces/serverInterfaces";
 import { manufacturerConst } from "./constant";
 
-export interface ManufacturerState {
+export type ManufacturerState = {
   manufacturer: IManufacturer | null;
   manufacturers: IManufacturer[];
-}
-export interface ManufacturerRequestPayload {
+};
+export type ManufacturerRequestPayload = {
   id: string;
-}
-export interface ManufacturerPayload {
+};
+export type ManufacturerPayload = {
   manufacturer: IManufacturer;
-}
-export interface ManufacturersPayload {
+};
+export type ManufacturersPayload = {
   manufacturers: IManufacturer[];
-}
-export interface ManufacturerRemoveRangePayload {
+};
+export type ManufacturerRemoveRangePayload = {
   ids: string[];
-}
-export interface ManufacturerRemovePayload {
+};
+export type ManufacturerRemovePayload = {
   id: string;
-}
-export interface ManufacturerPagedRequestPayload {
+};
+export type ManufacturerPagedRequestPayload = {
   skip: number;
   take: number;
-}
+};
 
 //GET
-export interface FetchManufacturersRequest {
+export type FetchManufacturersRequest = {
   type: typeof manufacturerConst.FETCH_MANUFACTURERS_REQUEST;
-}
+};
 export type FetchManufacturersSuccess = {
   type: typeof manufacturerConst.FETCH_MANUFACTURERS_SUCCESS;
   payload: ManufacturersPayload;
@@ -38,10 +38,10 @@ export type FetchManufacturersFailure = {
 };
 
 //PAGED
-export interface FetchManufacturersPagedRequest {
+export type FetchManufacturersPagedRequest = {
   type: typeof manufacturerConst.FETCH_MANUFACTURERS_PAGED_REQUEST;
   payload: ManufacturerPagedRequestPayload;
-}
+};
 export type FetchManufacturersPagedSuccess = {
   type: typeof manufacturerConst.FETCH_MANUFACTURERS_PAGED_SUCCESS;
   payload: ManufacturersPayload;
@@ -51,10 +51,10 @@ export type FetchManufacturersPagedFailure = {
 };
 
 //GET:/ID
-export interface FetchManufacturerRequest {
+export type FetchManufacturerRequest = {
   type: typeof manufacturerConst.FETCH_MANUFACTURER_REQUEST;
   payload: ManufacturerRequestPayload;
-}
+};
 export type FetchManufacturerSuccess = {
   type: typeof manufacturerConst.FETCH_MANUFACTURER_SUCCESS;
   payload: ManufacturerPayload;
@@ -63,10 +63,10 @@ export type FetchManufacturerFailure = {
   type: typeof manufacturerConst.FETCH_MANUFACTURER_FAILURE;
 };
 //POST
-export interface CreateManufacturerRequest {
+export type CreateManufacturerRequest = {
   type: typeof manufacturerConst.CREATE_MANUFACTURER_REQUEST;
   payload: ManufacturerPayload;
-}
+};
 export type CreateManufacturerSuccess = {
   type: typeof manufacturerConst.CREATE_MANUFACTURER_SUCCESS;
   payload: ManufacturerPayload;
@@ -75,10 +75,10 @@ export type CreateManufacturerFailure = {
   type: typeof manufacturerConst.CREATE_MANUFACTURER_FAILURE;
 };
 //POST RANGE
-export interface CreateRangeManufacturerRequest {
+export type CreateRangeManufacturerRequest = {
   type: typeof manufacturerConst.CREATE_RANGE_MANUFACTURER_REQUEST;
   payload: ManufacturersPayload;
-}
+};
 export type CreateRangeManufacturerSuccess = {
   type: typeof manufacturerConst.CREATE_RANGE_MANUFACTURER_SUCCESS;
   payload: ManufacturersPayload;
@@ -87,10 +87,10 @@ export type CreateRangeManufacturerFailure = {
   type: typeof manufacturerConst.CREATE_RANGE_MANUFACTURER_FAILURE;
 };
 //PUT
-export interface UpdateManufacturerRequest {
+export type UpdateManufacturerRequest = {
   type: typeof manufacturerConst.UPDATE_MANUFACTURER_REQUEST;
   payload: ManufacturerPayload;
-}
+};
 export type UpdateManufacturerSuccess = {
   type: typeof manufacturerConst.UPDATE_MANUFACTURER_SUCCESS;
   payload: ManufacturerPayload;
@@ -99,10 +99,10 @@ export type UpdateManufacturerFailure = {
   type: typeof manufacturerConst.UPDATE_MANUFACTURER_FAILURE;
 };
 //REMOVE
-export interface RemoveManufacturerRequest {
+export type RemoveManufacturerRequest = {
   type: typeof manufacturerConst.REMOVE_MANUFACTURER_REQUEST;
   payload: ManufacturerRemovePayload;
-}
+};
 export type RemoveManufacturerSuccess = {
   type: typeof manufacturerConst.REMOVE_MANUFACTURER_SUCCESS;
   payload: ManufacturerRemovePayload;
@@ -111,10 +111,10 @@ export type RemoveManufacturerFailure = {
   type: typeof manufacturerConst.REMOVE_MANUFACTURER_FAILURE;
 };
 //REMOVE RANGE
-export interface RemoveRangeManufacturerRequest {
+export type RemoveRangeManufacturerRequest = {
   type: typeof manufacturerConst.REMOVE_RANGE_MANUFACTURER_REQUEST;
   payload: ManufacturerRemoveRangePayload;
-}
+};
 export type RemoveRangeManufacturerSuccess = {
   type: typeof manufacturerConst.REMOVE_RANGE_MANUFACTURER_SUCCESS;
   payload: ManufacturerRemoveRangePayload;
@@ -124,20 +124,20 @@ export type RemoveRangeManufacturerFailure = {
 };
 
 //CLIENT ACTION TYPES
-export interface SetManufacturer {
+export type SetManufacturer = {
   type: typeof manufacturerConst.SET_MANUFACTURER;
   payload: IManufacturer | null;
-}
-export interface SetManufacturers {
+};
+export type SetManufacturers = {
   type: typeof manufacturerConst.SET_MANUFACTURERS;
   payload: IManufacturer[];
-}
-export interface ClearManufacturer {
+};
+export type ClearManufacturer = {
   type: typeof manufacturerConst.CLEAR_MANUFACTURER;
-}
-export interface ClearManufacturers {
+};
+export type ClearManufacturers = {
   type: typeof manufacturerConst.CLEAR_MANUFACTURERS;
-}
+};
 
 export type ManufacturerActions =
   | FetchManufacturersRequest

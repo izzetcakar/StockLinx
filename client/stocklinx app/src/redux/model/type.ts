@@ -1,30 +1,30 @@
 import { IModel } from "../../interfaces/serverInterfaces";
 import { modelConst } from "./constant";
 
-export interface ModelState {
+export type ModelState = {
   model: IModel | null;
   models: IModel[];
-}
-export interface ModelRequestPayload {
+};
+export type ModelRequestPayload = {
   id: string;
-}
-export interface ModelPayload {
+};
+export type ModelPayload = {
   model: IModel;
-}
-export interface ModelsPayload {
+};
+export type ModelsPayload = {
   models: IModel[];
-}
-export interface ModelRemoveRangePayload {
+};
+export type ModelRemoveRangePayload = {
   ids: string[];
-}
-export interface ModelRemovePayload {
+};
+export type ModelRemovePayload = {
   id: string;
-}
+};
 
 //GET
-export interface FetchModelsRequest {
+export type FetchModelsRequest = {
   type: typeof modelConst.FETCH_MODELS_REQUEST;
-}
+};
 export type FetchModelsSuccess = {
   type: typeof modelConst.FETCH_MODELS_SUCCESS;
   payload: ModelsPayload;
@@ -33,10 +33,10 @@ export type FetchModelsFailure = {
   type: typeof modelConst.FETCH_MODELS_FAILURE;
 };
 //GET:/ID
-export interface FetchModelRequest {
+export type FetchModelRequest = {
   type: typeof modelConst.FETCH_MODEL_REQUEST;
   payload: ModelRequestPayload;
-}
+};
 export type FetchModelSuccess = {
   type: typeof modelConst.FETCH_MODEL_SUCCESS;
   payload: ModelPayload;
@@ -45,10 +45,10 @@ export type FetchModelFailure = {
   type: typeof modelConst.FETCH_MODEL_FAILURE;
 };
 //POST
-export interface CreateModelRequest {
+export type CreateModelRequest = {
   type: typeof modelConst.CREATE_MODEL_REQUEST;
   payload: ModelPayload;
-}
+};
 export type CreateModelSuccess = {
   type: typeof modelConst.CREATE_MODEL_SUCCESS;
   payload: ModelPayload;
@@ -57,10 +57,10 @@ export type CreateModelFailure = {
   type: typeof modelConst.CREATE_MODEL_FAILURE;
 };
 //POST RANGE
-export interface CreateRangeModelRequest {
+export type CreateRangeModelRequest = {
   type: typeof modelConst.CREATE_RANGE_MODEL_REQUEST;
   payload: ModelsPayload;
-}
+};
 export type CreateRangeModelSuccess = {
   type: typeof modelConst.CREATE_RANGE_MODEL_SUCCESS;
   payload: ModelsPayload;
@@ -69,10 +69,10 @@ export type CreateRangeModelFailure = {
   type: typeof modelConst.CREATE_RANGE_MODEL_FAILURE;
 };
 //PUT
-export interface UpdateModelRequest {
+export type UpdateModelRequest = {
   type: typeof modelConst.UPDATE_MODEL_REQUEST;
   payload: ModelPayload;
-}
+};
 export type UpdateModelSuccess = {
   type: typeof modelConst.UPDATE_MODEL_SUCCESS;
 };
@@ -80,10 +80,10 @@ export type UpdateModelFailure = {
   type: typeof modelConst.UPDATE_MODEL_FAILURE;
 };
 //REMOVE
-export interface RemoveModelRequest {
+export type RemoveModelRequest = {
   type: typeof modelConst.REMOVE_MODEL_REQUEST;
   payload: ModelRemovePayload;
-}
+};
 export type RemoveModelSuccess = {
   type: typeof modelConst.REMOVE_MODEL_SUCCESS;
   payload: ModelRemovePayload;
@@ -92,10 +92,10 @@ export type RemoveModelFailure = {
   type: typeof modelConst.REMOVE_MODEL_FAILURE;
 };
 //REMOVE RANGE
-export interface RemoveRangeModelRequest {
+export type RemoveRangeModelRequest = {
   type: typeof modelConst.REMOVE_RANGE_MODEL_REQUEST;
   payload: ModelRemoveRangePayload;
-}
+};
 export type RemoveRangeModelSuccess = {
   type: typeof modelConst.REMOVE_RANGE_MODEL_SUCCESS;
   payload: ModelRemoveRangePayload;
@@ -105,20 +105,20 @@ export type RemoveRangeModelFailure = {
 };
 
 //CLIENT ACTION TYPES
-export interface SetModel {
+export type SetModel = {
   type: typeof modelConst.SET_MODEL;
   payload: IModel | null;
-}
-export interface SetModels {
+};
+export type SetModels = {
   type: typeof modelConst.SET_MODELS;
   payload: IModel[];
-}
-export interface ClearModel {
+};
+export type ClearModel = {
   type: typeof modelConst.CLEAR_MODEL;
-}
-export interface ClearModels {
+};
+export type ClearModels = {
   type: typeof modelConst.CLEAR_MODELS;
-}
+};
 
 export type ModelActions =
   | FetchModelsRequest

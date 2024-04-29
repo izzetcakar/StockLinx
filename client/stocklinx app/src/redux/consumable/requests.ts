@@ -1,4 +1,4 @@
-import { IProductCheckInDto } from "../../interfaces/dtos";
+import { UserProductCheckInPayload } from "../../interfaces/clientInterfaces";
 import { IConsumable } from "../../interfaces/serverInterfaces";
 import { request } from "../../server/api";
 const requestUrl = "Consumable/";
@@ -46,7 +46,7 @@ const removeRange = (ids: string[]) => {
     queryData: ids,
   });
 };
-const checkIn = (checkInDto: IProductCheckInDto) => {
+const checkIn = (checkInDto: UserProductCheckInPayload) => {
   return request<IConsumable>({
     requestUrl: requestUrl + "checkin",
     apiType: "post",

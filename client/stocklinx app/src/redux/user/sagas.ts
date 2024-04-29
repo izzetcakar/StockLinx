@@ -18,157 +18,125 @@ import {
 } from "../../notification/Notification";
 import { genericActions } from "../generic/actions";
 
-interface IResponse {
+type IResponse = {
   data: IUser[] | IUser | null;
   message: string;
   success: boolean;
   status: number;
-}
-interface ISignInResponse {
+};
+type ISignInResponse = {
   data: { token: string } | null;
   message: string;
   success: boolean;
   status: number;
-}
+};
 
 function* fetchUsersaga(action: FetchUserRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
-      userRequests.get,
-      action.payload.id
+    const { data }: IResponse = yield call(userRequests.get, action.payload.id);
+    yield put(
+      userActions.getSuccess({
+        user: data as IUser,
+      })
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      yield put(
-        userActions.getSuccess({
-          user: data as IUser,
-        })
-      );
-    }
   } catch (e) {
     openNotificationError("User", (e as Error).message);
     yield put(userActions.getFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* fetchUsersSaga() {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
-      userRequests.getAll
+    const { data }: IResponse = yield call(userRequests.getAll);
+    yield put(
+      userActions.getAllSuccess({
+        users: data as IUser[],
+      })
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      yield put(
-        userActions.getAllSuccess({
-          users: data as IUser[],
-        })
-      );
-    }
   } catch (e) {
     openNotificationError("User", (e as Error).message);
     yield put(userActions.getAllFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* createUserSaga(action: CreateUserRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       userRequests.create,
       action.payload.user
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      yield put(userActions.createSuccess({ user: data as IUser }));
-      openNotificationSuccess("User Created");
-    }
+    yield put(userActions.createSuccess({ user: data as IUser }));
+    openNotificationSuccess("User Created");
   } catch (e) {
     openNotificationError("User", (e as Error).message);
     yield put(userActions.createFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* createRangeUserSaga(action: CreateRangeUserRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       userRequests.createRange,
       action.payload.users
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      yield put(userActions.createRangeSuccess({ users: data as IUser[] }));
-      openNotificationSuccess("Users Created");
-    }
+    yield put(userActions.createRangeSuccess({ users: data as IUser[] }));
+    openNotificationSuccess("Users Created");
   } catch (e) {
     openNotificationError("User", (e as Error).message);
     yield put(userActions.createRangeFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* updateUserSaga(action: UpdateUserRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       userRequests.update,
       action.payload.user
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("User Updated");
-      yield put(userActions.updateSuccess({ user: data as IUser }));
-    }
+    openNotificationSuccess("User Updated");
+    yield put(userActions.updateSuccess({ user: data as IUser }));
   } catch (e) {
     openNotificationError("User", (e as Error).message);
     yield put(userActions.updateFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* removeUserSaga(action: RemoveUserRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
-      userRequests.remove,
-      action.payload.id
-    );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("User Removed");
-      yield put(userActions.removeSuccess());
-    }
+    yield call(userRequests.remove, action.payload.id);
+    openNotificationSuccess("User Removed");
+    yield put(userActions.removeSuccess());
   } catch (e) {
     openNotificationError("User", (e as Error).message);
     yield put(userActions.removeFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* removeRangeUserSaga(action: RemoveRangeUserRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
-      userRequests.removeRange,
-      action.payload.ids
-    );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("Users Removed");
-      yield put(userActions.removeRangeSuccess({ ids: action.payload.ids }));
-    }
+    yield call(userRequests.removeRange, action.payload.ids);
+    openNotificationSuccess("Users Removed");
+    yield put(userActions.removeRangeSuccess({ ids: action.payload.ids }));
   } catch (e) {
     openNotificationError("User", (e as Error).message);
     yield put(userActions.removeRangeFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* signInSaga(action: SignInRequest) {
   yield put(genericActions.increaseLoading());
   try {
@@ -176,34 +144,25 @@ function* signInSaga(action: SignInRequest) {
       userRequests.signIn,
       action.payload.user
     );
-    if (!response.success) {
-      throw new Error(response.message);
-    } else {
-      localStorage.setItem("token", JSON.stringify(response.data?.token));
-      yield put(userActions.signInSuccess());
-      yield put(userActions.getWithToken());
-    }
+    localStorage.setItem("token", JSON.stringify(response.data?.token));
+    yield put(userActions.signInSuccess());
+    yield put(userActions.getWithToken());
   } catch (e) {
     openNotificationError("User", (e as Error).message);
     yield put(userActions.signInFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* getUserWithTokenSaga() {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
-      userRequests.getWithToken
+    const { data }: IResponse = yield call(userRequests.getWithToken);
+    yield put(
+      userActions.getSuccess({
+        user: data as IUser,
+      })
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      yield put(
-        userActions.getSuccess({
-          user: data as IUser,
-        })
-      );
-    }
   } catch (e) {
     openNotificationError("User", (e as Error).message);
     yield put(userActions.getFailure());
@@ -212,9 +171,6 @@ function* getUserWithTokenSaga() {
 }
 
 function* usersaga() {
-  // yield all([
-  //   takeLatest(userConst.FETCH_USERS_REQUEST, fetchUsersSaga),
-  // ]);
   yield takeEvery(userConst.FETCH_USERS_REQUEST, fetchUsersSaga);
   yield takeEvery(userConst.FETCH_USER_REQUEST, fetchUsersaga);
   yield takeEvery(userConst.SIGN_IN_REQUEST, signInSaga);
@@ -225,10 +181,5 @@ function* usersaga() {
   yield takeEvery(userConst.REMOVE_USER_REQUEST, removeUserSaga);
   yield takeEvery(userConst.REMOVE_RANGE_USER_REQUEST, removeRangeUserSaga);
 }
-// function* budgetItemSaga() {
-//   yield takeEvery(budgetItemConst.fetchList, listBudgetITem);
-//   yield takeEvery(budgetItemConst.fetchSave,saveBudgetITem);
-//   yield takeEvery(budgetItemConst.fetchUpdate,updateBudgetITem);
-// }
 
 export default usersaga;

@@ -1,38 +1,38 @@
-import { IProductCheckInDto } from "../../interfaces/dtos";
-import { IAsset, IDeployedProduct } from "../../interfaces/serverInterfaces";
+import {
+  AssetCheckInPayload,
+  AssetCheckOutPayload,
+} from "../../interfaces/clientInterfaces";
+import { IAsset, IUserProduct } from "../../interfaces/serverInterfaces";
 import { assetConst } from "./constant";
 
-export interface AssetState {
+export type AssetState = {
   asset: IAsset | null;
   assets: IAsset[];
-}
-export interface AssetRequestPayload {
+};
+export type AssetRequestPayload = {
   id: string;
-}
-export interface AssetPayload {
+};
+export type AssetPayload = {
   asset: IAsset;
-}
-export interface AssetsPayload {
+};
+export type AssetsPayload = {
   assets: IAsset[];
-}
-export interface AssetRemoveRangePayload {
+};
+export type AssetRemoveRangePayload = {
   ids: string[];
-}
-export interface AssetRemovePayload {
+};
+export type AssetRemovePayload = {
   id: string;
-}
-export interface CheckInPayload {
-  checkInDto: IProductCheckInDto;
-}
-export interface AssetCheckInSuccessPayload {
+};
+export type AssetCheckInSuccessPayload = {
   asset: IAsset;
-  deployedProduct: IDeployedProduct;
-}
+  userProduct: IUserProduct;
+};
 
 //GET
-export interface FetchAssetsRequest {
+export type FetchAssetsRequest = {
   type: typeof assetConst.FETCH_ASSETS_REQUEST;
-}
+};
 export type FetchAssetsSuccess = {
   type: typeof assetConst.FETCH_ASSETS_SUCCESS;
   payload: AssetsPayload;
@@ -42,10 +42,10 @@ export type FetchAssetsFailure = {
 };
 
 //GET:/ID
-export interface FetchAssetRequest {
+export type FetchAssetRequest = {
   type: typeof assetConst.FETCH_ASSET_REQUEST;
   payload: AssetRequestPayload;
-}
+};
 export type FetchAssetSuccess = {
   type: typeof assetConst.FETCH_ASSET_SUCCESS;
   payload: AssetPayload;
@@ -55,10 +55,10 @@ export type FetchAssetFailure = {
 };
 
 //POST
-export interface CreateAssetRequest {
+export type CreateAssetRequest = {
   type: typeof assetConst.CREATE_ASSET_REQUEST;
   payload: AssetPayload;
-}
+};
 export type CreateAssetSuccess = {
   type: typeof assetConst.CREATE_ASSET_SUCCESS;
   payload: AssetsPayload;
@@ -68,10 +68,10 @@ export type CreateAssetFailure = {
 };
 
 //POST RANGE
-export interface CreateRangeAssetRequest {
+export type CreateRangeAssetRequest = {
   type: typeof assetConst.CREATE_RANGE_ASSET_REQUEST;
   payload: AssetsPayload;
-}
+};
 export type CreateRangeAssetSuccess = {
   type: typeof assetConst.CREATE_RANGE_ASSET_SUCCESS;
   payload: AssetsPayload;
@@ -81,10 +81,10 @@ export type CreateRangeAssetFailure = {
 };
 
 //PUT
-export interface UpdateAssetRequest {
+export type UpdateAssetRequest = {
   type: typeof assetConst.UPDATE_ASSET_REQUEST;
   payload: AssetPayload;
-}
+};
 export type UpdateAssetSuccess = {
   type: typeof assetConst.UPDATE_ASSET_SUCCESS;
   payload: AssetPayload;
@@ -94,10 +94,10 @@ export type UpdateAssetFailure = {
 };
 
 //REMOVE
-export interface RemoveAssetRequest {
+export type RemoveAssetRequest = {
   type: typeof assetConst.REMOVE_ASSET_REQUEST;
   payload: AssetRemovePayload;
-}
+};
 export type RemoveAssetSuccess = {
   type: typeof assetConst.REMOVE_ASSET_SUCCESS;
   payload: AssetRemovePayload;
@@ -107,10 +107,10 @@ export type RemoveAssetFailure = {
 };
 
 //REMOVE RANGE
-export interface RemoveRangeAssetRequest {
+export type RemoveRangeAssetRequest = {
   type: typeof assetConst.REMOVE_RANGE_ASSET_REQUEST;
   payload: AssetRemoveRangePayload;
-}
+};
 export type RemoveRangeAssetSuccess = {
   type: typeof assetConst.REMOVE_RANGE_ASSET_SUCCESS;
   payload: AssetRemoveRangePayload;
@@ -120,46 +120,46 @@ export type RemoveRangeAssetFailure = {
 };
 
 //CHECK IN
-export interface CheckInAssetRequest {
+export type CheckInAssetRequest = {
   type: typeof assetConst.CHECK_IN_ASSET_REQUEST;
-  payload: CheckInPayload;
-}
+  payload: AssetCheckInPayload;
+};
 export type CheckInAssetSuccess = {
   type: typeof assetConst.CHECK_IN_ASSET_SUCCESS;
-  payload: AssetPayload;
+  payload: AssetCheckInPayload;
 };
 export type CheckInAssetFailure = {
   type: typeof assetConst.CHECK_IN_ASSET_FAILURE;
 };
 
 //CHECK OUT
-export interface CheckOutAssetRequest {
+export type CheckOutAssetRequest = {
   type: typeof assetConst.CHECK_OUT_ASSET_REQUEST;
-  payload: AssetRequestPayload;
-}
+  payload: AssetCheckOutPayload;
+};
 export type CheckOutAssetSuccess = {
   type: typeof assetConst.CHECK_OUT_ASSET_SUCCESS;
-  payload: AssetPayload;
+  payload: AssetCheckOutPayload;
 };
 export type CheckOutAssetFailure = {
   type: typeof assetConst.CHECK_OUT_ASSET_FAILURE;
 };
 
 //CLIENT ACTION TYPES
-export interface SetAsset {
+export type SetAsset = {
   type: typeof assetConst.SET_ASSET;
   payload: IAsset | null;
-}
-export interface SetAssets {
+};
+export type SetAssets = {
   type: typeof assetConst.SET_ASSETS;
   payload: IAsset[];
-}
-export interface ClearAsset {
+};
+export type ClearAsset = {
   type: typeof assetConst.CLEAR_ASSET;
-}
-export interface ClearAssets {
+};
+export type ClearAssets = {
   type: typeof assetConst.CLEAR_ASSETS;
-}
+};
 
 export type AssetActions =
   | FetchAssetsRequest

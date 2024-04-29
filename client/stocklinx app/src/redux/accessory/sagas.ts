@@ -1,9 +1,6 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { accessoryActions } from "./actions";
-import {
-  IAccessory,
-  IDeployedProduct,
-} from "../../interfaces/serverInterfaces";
+import { IAccessory, IUserProduct } from "../../interfaces/serverInterfaces";
 import { accessoryConst } from "./constant";
 import {
   CheckInAccessoryRequest,
@@ -21,30 +18,24 @@ import {
   openNotificationError,
   openNotificationSuccess,
 } from "../../notification/Notification";
-import { deployedProductActions } from "../deployedProduct/actions";
+import { userProductActions } from "../userProduct/actions";
 
-interface IResponse {
-  data: IAccessory[] | IAccessory | IDeployedProduct | null;
+type IResponse = {
+  data: IAccessory[] | IAccessory | IUserProduct | null;
   message: string;
   success: boolean;
   status: number;
-}
+};
 
 function* fetchAccessoriesSaga() {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
-      accessoryRequests.getAll
+    const { data }: IResponse = yield call(accessoryRequests.getAll);
+    yield put(
+      accessoryActions.getAllSuccess({
+        accessories: data as IAccessory[],
+      })
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      yield put(
-        accessoryActions.getAllSuccess({
-          accessories: data as IAccessory[],
-        })
-      );
-    }
   } catch (e) {
     openNotificationError("Accessory", (e as Error).message);
     yield put(accessoryActions.getAllFailure());
@@ -55,19 +46,15 @@ function* fetchAccessoriesSaga() {
 function* fetchAccessorySaga(action: FetchAccessoryRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       accessoryRequests.get,
       action.payload.id
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      yield put(
-        accessoryActions.getSuccess({
-          accessory: data as IAccessory,
-        })
-      );
-    }
+    yield put(
+      accessoryActions.getSuccess({
+        accessory: data as IAccessory,
+      })
+    );
   } catch (e) {
     openNotificationError("Accessory", (e as Error).message);
     yield put(accessoryActions.getFailure());
@@ -78,18 +65,14 @@ function* fetchAccessorySaga(action: FetchAccessoryRequest) {
 function* createAccessorySaga(action: CreateAccessoryRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       accessoryRequests.create,
       action.payload.accessory
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("Accessory Created");
-      yield put(
-        accessoryActions.createSuccess({ accessory: data as IAccessory })
-      );
-    }
+    openNotificationSuccess("Accessory Created");
+    yield put(
+      accessoryActions.createSuccess({ accessory: data as IAccessory })
+    );
   } catch (e) {
     openNotificationError("Accessory", (e as Error).message);
     yield put(accessoryActions.createFailure());
@@ -100,20 +83,16 @@ function* createAccessorySaga(action: CreateAccessoryRequest) {
 function* createRangeAccessorySaga(action: CreateRangeAccessoryRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       accessoryRequests.createRange,
       action.payload.accessories
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("Accessories Created");
-      yield put(
-        accessoryActions.createRangeSuccess({
-          accessories: data as IAccessory[],
-        })
-      );
-    }
+    openNotificationSuccess("Accessories Created");
+    yield put(
+      accessoryActions.createRangeSuccess({
+        accessories: data as IAccessory[],
+      })
+    );
   } catch (e) {
     openNotificationError("Accessory", (e as Error).message);
     yield put(accessoryActions.createRangeFailure());
@@ -124,18 +103,14 @@ function* createRangeAccessorySaga(action: CreateRangeAccessoryRequest) {
 function* updateAccessorySaga(action: UpdateAccessoryRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       accessoryRequests.update,
       action.payload.accessory
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("Accessory Updated");
-      yield put(
-        accessoryActions.updateSuccess({ accessory: data as IAccessory })
-      );
-    }
+    openNotificationSuccess("Accessory Updated");
+    yield put(
+      accessoryActions.updateSuccess({ accessory: data as IAccessory })
+    );
   } catch (e) {
     openNotificationError("Accessory", (e as Error).message);
     yield put(accessoryActions.updateFailure());
@@ -146,16 +121,9 @@ function* updateAccessorySaga(action: UpdateAccessoryRequest) {
 function* removeAccessorySaga(action: RemoveAccessoryRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
-      accessoryRequests.remove,
-      action.payload.id
-    );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("Accessory Removed");
-      yield put(accessoryActions.removeSuccess({ id: action.payload.id }));
-    }
+    yield call(accessoryRequests.remove, action.payload.id);
+    openNotificationSuccess("Accessory Removed");
+    yield put(accessoryActions.removeSuccess({ id: action.payload.id }));
   } catch (e) {
     openNotificationError("Accessory", (e as Error).message);
     yield put(accessoryActions.removeFailure());
@@ -166,18 +134,9 @@ function* removeAccessorySaga(action: RemoveAccessoryRequest) {
 function* removeRangeAccessorySaga(action: RemoveRangeAccessoryRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
-      accessoryRequests.removeRange,
-      action.payload.ids
-    );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("Accessories Removed");
-      yield put(
-        accessoryActions.removeRangeSuccess({ ids: action.payload.ids })
-      );
-    }
+    yield call(accessoryRequests.removeRange, action.payload.ids);
+    openNotificationSuccess("Accessories Removed");
+    yield put(accessoryActions.removeRangeSuccess({ ids: action.payload.ids }));
   } catch (e) {
     openNotificationError("Accessory", (e as Error).message);
     yield put(accessoryActions.removeRangeFailure());
@@ -188,53 +147,41 @@ function* removeRangeAccessorySaga(action: RemoveRangeAccessoryRequest) {
 function* checkInAccessorySaga(action: CheckInAccessoryRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       accessoryRequests.checkIn,
-      action.payload.checkInDto
+      action.payload
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("Accessory Checked In");
-      yield put(
-        deployedProductActions.createSuccess({
-          deployedProduct: data as IDeployedProduct,
-        })
-      );
-      yield put(
-        accessoryActions.checkInSuccess({
-          id: action.payload.checkInDto.productId,
-          quantity: action.payload.checkInDto.quantity,
-        })
-      );
-    }
+    openNotificationSuccess("Accessory Checked In");
+    yield put(
+      userProductActions.createSuccess({
+        userProduct: data as IUserProduct,
+      })
+    );
+    yield put(
+      accessoryActions.checkInSuccess({
+        id: action.payload.productId,
+        quantity: action.payload.quantity,
+      })
+    );
   } catch (e) {
     openNotificationError("Accessory", (e as Error).message);
     yield put(accessoryActions.checkInFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* checkOutAccessorySaga(action: CheckOutAccessoryRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
-      accessoryRequests.checkOut,
-      action.payload.id
+    yield call(accessoryRequests.checkOut, action.payload.id);
+    openNotificationSuccess("Accessory Checked Out");
+    yield put(userProductActions.removeSuccess({ id: action.payload.id }));
+    yield put(
+      accessoryActions.checkOutSuccess({
+        id: action.payload.accessoryId as string,
+        quantity: action.payload.quantity,
+      })
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("Accessory Checked Out");
-      yield put(
-        deployedProductActions.removeSuccess({ id: action.payload.id })
-      );
-      yield put(
-        accessoryActions.checkOutSuccess({
-          id: action.payload.accessoryId as string,
-          quantity: action.payload.quantity,
-        })
-      );
-    }
   } catch (e) {
     openNotificationError("Accessory", (e as Error).message);
     yield put(accessoryActions.checkOutFailure());
@@ -243,9 +190,6 @@ function* checkOutAccessorySaga(action: CheckOutAccessoryRequest) {
 }
 
 function* accessorysaga() {
-  // yield all([
-  //   takeLatest(accessoryConst.FETCH_ACCESSORIES_REQUEST, fetchAccessoriesSaga),
-  // ]);
   yield takeEvery(
     accessoryConst.FETCH_ACCESSORIES_REQUEST,
     fetchAccessoriesSaga
@@ -271,10 +215,5 @@ function* accessorysaga() {
     checkOutAccessorySaga
   );
 }
-// function* budgetItemSaga() {
-//   yield takeEvery(budgetItemConst.fetchList, listBudgetITem);
-//   yield takeEvery(budgetItemConst.fetchSave,saveBudgetITem);
-//   yield takeEvery(budgetItemConst.fetchUpdate,updateBudgetITem);
-// }
 
 export default accessorysaga;

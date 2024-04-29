@@ -1,4 +1,8 @@
-import { IConsumable } from "../../interfaces/serverInterfaces";
+import {
+  CheckInOutPayload,
+  UserProductCheckInPayload,
+} from "../../interfaces/clientInterfaces";
+import { IConsumable, IUserProduct } from "../../interfaces/serverInterfaces";
 import { consumableConst } from "./constant";
 import {
   CreateConsumableFailure,
@@ -37,7 +41,6 @@ import {
   CheckOutConsumableRequest,
   CheckOutConsumableSuccess,
   CheckOutConsumableFailure,
-  CheckInPayload,
 } from "./type";
 
 //GET
@@ -147,12 +150,14 @@ const removeRangeFailure = (): RemoveRangeConsumableFailure => ({
 });
 
 //CHECK IN
-const checkIn = (payload: CheckInPayload): CheckInConsumableRequest => ({
+const checkIn = (
+  payload: UserProductCheckInPayload
+): CheckInConsumableRequest => ({
   type: consumableConst.CHECK_IN_CONSUMABLE_REQUEST,
   payload,
 });
 const checkInSuccess = (
-  payload: ConsumablePayload
+  payload: CheckInOutPayload
 ): CheckInConsumableSuccess => ({
   type: consumableConst.CHECK_IN_CONSUMABLE_SUCCESS,
   payload,
@@ -162,14 +167,12 @@ const checkInFailure = (): CheckInConsumableFailure => ({
 });
 
 //CHECK OUT
-const checkOut = (
-  payload: ConsumableRequestPayload
-): CheckOutConsumableRequest => ({
+const checkOut = (payload: IUserProduct): CheckOutConsumableRequest => ({
   type: consumableConst.CHECK_OUT_CONSUMABLE_REQUEST,
   payload,
 });
 const checkOutSuccess = (
-  payload: ConsumablePayload
+  payload: CheckInOutPayload
 ): CheckOutConsumableSuccess => ({
   type: consumableConst.CHECK_OUT_CONSUMABLE_SUCCESS,
   payload,

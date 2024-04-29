@@ -1,7 +1,8 @@
 import {
-  IAccessory,
-  IDeployedProduct,
-} from "../../interfaces/serverInterfaces";
+  CheckInOutPayload,
+  UserProductCheckInPayload,
+} from "../../interfaces/clientInterfaces";
+import { IAccessory, IUserProduct } from "../../interfaces/serverInterfaces";
 import { accessoryConst } from "./constant";
 import {
   CreateAccessoryFailure,
@@ -34,14 +35,12 @@ import {
   RemoveRangeAccessoryFailure,
   AccessoryRemoveRangePayload,
   AccessoryRemovePayload,
-  CheckInPayload,
   CheckInAccessoryRequest,
   CheckInAccessorySuccess,
   CheckInAccessoryFailure,
   CheckOutAccessoryRequest,
   CheckOutAccessorySuccess,
   CheckOutAccessoryFailure,
-  CheckActionPayload
 } from "./type";
 
 //GET
@@ -147,12 +146,14 @@ const removeRangeFailure = (): RemoveRangeAccessoryFailure => ({
 });
 
 //CHECK IN
-const checkIn = (payload: CheckInPayload): CheckInAccessoryRequest => ({
+const checkIn = (
+  payload: UserProductCheckInPayload
+): CheckInAccessoryRequest => ({
   type: accessoryConst.CHECK_IN_ACCESSORY_REQUEST,
   payload,
 });
 const checkInSuccess = (
-  payload: CheckActionPayload
+  payload: CheckInOutPayload
 ): CheckInAccessorySuccess => ({
   type: accessoryConst.CHECK_IN_ACCESSORY_SUCCESS,
   payload,
@@ -162,12 +163,12 @@ const checkInFailure = (): CheckInAccessoryFailure => ({
 });
 
 //CHECK OUT
-const checkOut = (payload: IDeployedProduct): CheckOutAccessoryRequest => ({
+const checkOut = (payload: IUserProduct): CheckOutAccessoryRequest => ({
   type: accessoryConst.CHECK_OUT_ACCESSORY_REQUEST,
   payload,
 });
 const checkOutSuccess = (
-  payload: CheckActionPayload
+  payload: CheckInOutPayload
 ): CheckOutAccessorySuccess => ({
   type: accessoryConst.CHECK_OUT_ACCESSORY_SUCCESS,
   payload,

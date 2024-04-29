@@ -1,4 +1,13 @@
-import { ILicense } from "../../interfaces/serverInterfaces";
+import {
+  AssetProductCheckInPayload,
+  CheckInOutPayload,
+  UserProductCheckInPayload,
+} from "../../interfaces/clientInterfaces";
+import {
+  IAssetProduct,
+  ILicense,
+  IUserProduct,
+} from "../../interfaces/serverInterfaces";
 import { licenseConst } from "./constant";
 import {
   CreateLicenseFailure,
@@ -31,14 +40,18 @@ import {
   RemoveRangeLicenseFailure,
   LicenseRemoveRangePayload,
   LicenseRemovePayload,
-  CheckInLicenseRequest,
-  CheckInLicenseSuccess,
-  CheckInLicenseFailure,
-  CheckOutLicenseRequest,
-  CheckOutLicenseSuccess,
-  CheckOutLicenseFailure,
-  CheckInPayload,
-  LicenseCheckInSuccessPayload,
+  UserCheckInLicenseRequest,
+  UserCheckInLicenseSuccess,
+  UserCheckInLicenseFailure,
+  UserCheckOutLicenseRequest,
+  AssetCheckOutLicenseRequest,
+  AssetCheckOutLicenseSuccess,
+  AssetCheckOutLicenseFailure,
+  AssetCheckInLicenseRequest,
+  AssetCheckInLicenseSuccess,
+  AssetCheckInLicenseFailure,
+  UserCheckOutLicenseSuccess,
+  UserCheckOutLicenseFailure,
 } from "./type";
 
 //GET
@@ -140,31 +153,67 @@ const removeRangeFailure = (): RemoveRangeLicenseFailure => ({
 });
 
 //CHECK IN
-const checkIn = (payload: CheckInPayload): CheckInLicenseRequest => ({
-  type: licenseConst.CHECK_IN_LICENSE_REQUEST,
+const userCheckIn = (
+  payload: UserProductCheckInPayload
+): UserCheckInLicenseRequest => ({
+  type: licenseConst.USER_CHECK_IN_LICENSE_REQUEST,
   payload,
 });
-const checkInSuccess = (
-  payload: LicenseCheckInSuccessPayload
-): CheckInLicenseSuccess => ({
-  type: licenseConst.CHECK_IN_LICENSE_SUCCESS,
+const userCheckInSuccess = (
+  payload: CheckInOutPayload
+): UserCheckInLicenseSuccess => ({
+  type: licenseConst.USER_CHECK_IN_LICENSE_SUCCESS,
   payload,
 });
-const checkInFailure = (): CheckInLicenseFailure => ({
-  type: licenseConst.CHECK_IN_LICENSE_FAILURE,
+const userCheckInFailure = (): UserCheckInLicenseFailure => ({
+  type: licenseConst.USER_CHECK_IN_LICENSE_FAILURE,
+});
+
+const assetCheckIn = (
+  payload: AssetProductCheckInPayload
+): AssetCheckInLicenseRequest => ({
+  type: licenseConst.ASSET_CHECK_IN_LICENSE_REQUEST,
+  payload,
+});
+const assetCheckInSuccess = (
+  payload: CheckInOutPayload
+): AssetCheckInLicenseSuccess => ({
+  type: licenseConst.ASSET_CHECK_IN_LICENSE_SUCCESS,
+  payload,
+});
+const assetCheckInFailure = (): AssetCheckInLicenseFailure => ({
+  type: licenseConst.ASSET_CHECK_IN_LICENSE_FAILURE,
 });
 
 //CHECK OUT
-const checkOut = (payload: LicenseRequestPayload): CheckOutLicenseRequest => ({
-  type: licenseConst.CHECK_OUT_LICENSE_REQUEST,
+const userCheckOut = (payload: IUserProduct): UserCheckOutLicenseRequest => ({
+  type: licenseConst.USER_CHECK_OUT_LICENSE_REQUEST,
   payload,
 });
-const checkOutSuccess = (payload: LicensePayload): CheckOutLicenseSuccess => ({
-  type: licenseConst.CHECK_OUT_LICENSE_SUCCESS,
+const userCheckOutSuccess = (
+  payload: CheckInOutPayload
+): UserCheckOutLicenseSuccess => ({
+  type: licenseConst.USER_CHECK_OUT_LICENSE_SUCCESS,
   payload,
 });
-const checkOutFailure = (): CheckOutLicenseFailure => ({
-  type: licenseConst.CHECK_OUT_LICENSE_FAILURE,
+const userCheckOutFailure = (): UserCheckOutLicenseFailure => ({
+  type: licenseConst.USER_CHECK_OUT_LICENSE_FAILURE,
+});
+
+const assetCheckOut = (
+  payload: IAssetProduct
+): AssetCheckOutLicenseRequest => ({
+  type: licenseConst.ASSET_CHECK_OUT_LICENSE_REQUEST,
+  payload,
+});
+const assetCheckOutSuccess = (
+  payload: CheckInOutPayload
+): AssetCheckOutLicenseSuccess => ({
+  type: licenseConst.ASSET_CHECK_OUT_LICENSE_SUCCESS,
+  payload,
+});
+const assetCheckOutFailure = (): AssetCheckOutLicenseFailure => ({
+  type: licenseConst.ASSET_CHECK_OUT_LICENSE_FAILURE,
 });
 
 //CLIENT ACTIONS
@@ -205,12 +254,18 @@ export const licenseActions = {
   removeRange,
   removeRangeSuccess,
   removeRangeFailure,
-  checkIn,
-  checkInSuccess,
-  checkInFailure,
-  checkOut,
-  checkOutSuccess,
-  checkOutFailure,
+  userCheckIn,
+  userCheckInSuccess,
+  userCheckInFailure,
+  assetCheckIn,
+  assetCheckInSuccess,
+  assetCheckInFailure,
+  assetCheckOut,
+  assetCheckOutSuccess,
+  assetCheckOutFailure,
+  userCheckOut,
+  userCheckOutSuccess,
+  userCheckOutFailure,
   setLicense,
   clearLicense,
   setLicenses,

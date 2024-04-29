@@ -109,40 +109,91 @@ export default (state = initialState, action: LicenseActions) => {
       return {
         ...state,
       };
-    case licenseConst.CHECK_IN_LICENSE_REQUEST:
+    case licenseConst.USER_CHECK_IN_LICENSE_REQUEST:
       return {
         ...state,
       };
-    case licenseConst.CHECK_IN_LICENSE_SUCCESS:
-      console.log("action.payload:", action.payload);
+    case licenseConst.USER_CHECK_IN_LICENSE_SUCCESS:
       return {
         ...state,
         licenses: state.licenses.map((license) => {
-          if (license.id === action.payload.license.id) {
-            return action.payload.license;
-          } else {
-            return license;
-          }
+          license.id === action.payload.id
+            ? {
+                ...license,
+                availableQuantity: license.availableQuantity
+                  ? license.availableQuantity - action.payload.quantity
+                  : 0,
+              }
+            : license;
         }),
       };
-    case licenseConst.CHECK_IN_LICENSE_FAILURE:
+    case licenseConst.USER_CHECK_IN_LICENSE_FAILURE:
       return {
         ...state,
       };
-    case licenseConst.CHECK_OUT_LICENSE_REQUEST:
+    case licenseConst.USER_CHECK_OUT_LICENSE_REQUEST:
       return {
         ...state,
       };
-    case licenseConst.CHECK_OUT_LICENSE_SUCCESS:
+    case licenseConst.USER_CHECK_OUT_LICENSE_SUCCESS:
       return {
         ...state,
         licenses: state.licenses.map((license) =>
-          license.id === action.payload.license.id
-            ? action.payload.license
+          license.id === action.payload.id
+            ? {
+                ...license,
+                availableQuantity: license.availableQuantity
+                  ? license.availableQuantity + action.payload.quantity
+                  : 0,
+              }
             : license
         ),
       };
-    case licenseConst.CHECK_OUT_LICENSE_FAILURE:
+    case licenseConst.USER_CHECK_OUT_LICENSE_FAILURE:
+      return {
+        ...state,
+      };
+    case licenseConst.ASSET_CHECK_IN_LICENSE_REQUEST:
+      return {
+        ...state,
+      };
+    case licenseConst.ASSET_CHECK_IN_LICENSE_SUCCESS:
+      return {
+        ...state,
+        licenses: state.licenses.map((license) => {
+          license.id === action.payload.id
+            ? {
+                ...license,
+                availableQuantity: license.availableQuantity
+                  ? license.availableQuantity - action.payload.quantity
+                  : 0,
+              }
+            : license;
+        }),
+      };
+    case licenseConst.ASSET_CHECK_IN_LICENSE_FAILURE:
+      return {
+        ...state,
+      };
+    case licenseConst.ASSET_CHECK_OUT_LICENSE_REQUEST:
+      return {
+        ...state,
+      };
+    case licenseConst.ASSET_CHECK_OUT_LICENSE_SUCCESS:
+      return {
+        ...state,
+        licenses: state.licenses.map((license) =>
+          license.id === action.payload.id
+            ? {
+                ...license,
+                availableQuantity: license.availableQuantity
+                  ? license.availableQuantity + action.payload.quantity
+                  : action.payload.quantity,
+              }
+            : license
+        ),
+      };
+    case licenseConst.ASSET_CHECK_OUT_LICENSE_FAILURE:
       return {
         ...state,
       };

@@ -1,30 +1,30 @@
 import { ISupplier } from "../../interfaces/serverInterfaces";
 import { supplierConst } from "./constant";
 
-export interface SupplierState {
+export type SupplierState = {
   supplier: ISupplier | null;
   suppliers: ISupplier[];
-}
-export interface SupplierRequestPayload {
+};
+export type SupplierRequestPayload = {
   id: string;
-}
-export interface SupplierPayload {
+};
+export type SupplierPayload = {
   supplier: ISupplier;
-}
-export interface SuppliersPayload {
+};
+export type SuppliersPayload = {
   suppliers: ISupplier[];
-}
-export interface SupplierRemoveRangePayload {
+};
+export type SupplierRemoveRangePayload = {
   ids: string[];
-}
-export interface SupplierRemovePayload {
+};
+export type SupplierRemovePayload = {
   id: string;
-}
+};
 
 //GET
-export interface FetchSuppliersRequest {
+export type FetchSuppliersRequest = {
   type: typeof supplierConst.FETCH_SUPPLIERS_REQUEST;
-}
+};
 export type FetchSuppliersSuccess = {
   type: typeof supplierConst.FETCH_SUPPLIERS_SUCCESS;
   payload: SuppliersPayload;
@@ -33,10 +33,10 @@ export type FetchSuppliersFailure = {
   type: typeof supplierConst.FETCH_SUPPLIERS_FAILURE;
 };
 //GET:/ID
-export interface FetchSupplierRequest {
+export type FetchSupplierRequest = {
   type: typeof supplierConst.FETCH_SUPPLIER_REQUEST;
   payload: SupplierRequestPayload;
-}
+};
 export type FetchSupplierSuccess = {
   type: typeof supplierConst.FETCH_SUPPLIER_SUCCESS;
   payload: SupplierPayload;
@@ -45,10 +45,10 @@ export type FetchSupplierFailure = {
   type: typeof supplierConst.FETCH_SUPPLIER_FAILURE;
 };
 //POST
-export interface CreateSupplierRequest {
+export type CreateSupplierRequest = {
   type: typeof supplierConst.CREATE_SUPPLIER_REQUEST;
   payload: SupplierPayload;
-}
+};
 export type CreateSupplierSuccess = {
   type: typeof supplierConst.CREATE_SUPPLIER_SUCCESS;
   payload: SupplierPayload;
@@ -57,10 +57,10 @@ export type CreateSupplierFailure = {
   type: typeof supplierConst.CREATE_SUPPLIER_FAILURE;
 };
 //POST RANGE
-export interface CreateRangeSupplierRequest {
+export type CreateRangeSupplierRequest = {
   type: typeof supplierConst.CREATE_RANGE_SUPPLIER_REQUEST;
   payload: SuppliersPayload;
-}
+};
 export type CreateRangeSupplierSuccess = {
   type: typeof supplierConst.CREATE_RANGE_SUPPLIER_SUCCESS;
   payload: SuppliersPayload;
@@ -69,10 +69,10 @@ export type CreateRangeSupplierFailure = {
   type: typeof supplierConst.CREATE_RANGE_SUPPLIER_FAILURE;
 };
 //PUT
-export interface UpdateSupplierRequest {
+export type UpdateSupplierRequest = {
   type: typeof supplierConst.UPDATE_SUPPLIER_REQUEST;
   payload: SupplierPayload;
-}
+};
 export type UpdateSupplierSuccess = {
   type: typeof supplierConst.UPDATE_SUPPLIER_SUCCESS;
   payload: SupplierPayload;
@@ -81,10 +81,10 @@ export type UpdateSupplierFailure = {
   type: typeof supplierConst.UPDATE_SUPPLIER_FAILURE;
 };
 //REMOVE
-export interface RemoveSupplierRequest {
+export type RemoveSupplierRequest = {
   type: typeof supplierConst.REMOVE_SUPPLIER_REQUEST;
   payload: SupplierRemovePayload;
-}
+};
 export type RemoveSupplierSuccess = {
   type: typeof supplierConst.REMOVE_SUPPLIER_SUCCESS;
   payload: SupplierRemovePayload;
@@ -93,10 +93,10 @@ export type RemoveSupplierFailure = {
   type: typeof supplierConst.REMOVE_SUPPLIER_FAILURE;
 };
 //REMOVE RANGE
-export interface RemoveRangeSupplierRequest {
+export type RemoveRangeSupplierRequest = {
   type: typeof supplierConst.REMOVE_RANGE_SUPPLIER_REQUEST;
   payload: SupplierRemoveRangePayload;
-}
+};
 export type RemoveRangeSupplierSuccess = {
   type: typeof supplierConst.REMOVE_RANGE_SUPPLIER_SUCCESS;
   payload: SupplierRemoveRangePayload;
@@ -106,20 +106,20 @@ export type RemoveRangeSupplierFailure = {
 };
 
 //CLIENT ACTION TYPES
-export interface SetSupplier {
+export type SetSupplier = {
   type: typeof supplierConst.SET_SUPPLIER;
   payload: ISupplier | null;
-}
-export interface SetSuppliers {
+};
+export type SetSuppliers = {
   type: typeof supplierConst.SET_SUPPLIERS;
   payload: ISupplier[];
-}
-export interface ClearSupplier {
+};
+export type ClearSupplier = {
   type: typeof supplierConst.CLEAR_SUPPLIER;
-}
-export interface ClearSuppliers {
+};
+export type ClearSuppliers = {
   type: typeof supplierConst.CLEAR_SUPPLIERS;
-}
+};
 
 export type SupplierActions =
   | FetchSuppliersRequest

@@ -17,7 +17,7 @@ import {
   openNotificationSuccess,
 } from "../../notification/Notification";
 
-interface IResponse {
+type IResponse = {
   data: IPermission[] | IPermission | null;
   message: string;
   success: boolean;
@@ -27,18 +27,12 @@ interface IResponse {
 function* fetchPermissionsSaga() {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
-      permissionRequests.getAll
+    const { data }: IResponse = yield call(permissionRequests.getAll);
+    yield put(
+      permissionActions.getAllSuccess({
+        permissions: data as IPermission[],
+      })
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      yield put(
-        permissionActions.getAllSuccess({
-          permissions: data as IPermission[],
-        })
-      );
-    }
   } catch (e) {
     openNotificationError("Permission", (e as Error).message);
     yield put(permissionActions.getAllFailure());
@@ -49,19 +43,15 @@ function* fetchPermissionsSaga() {
 function* fetchPermissionSaga(action: FetchPermissionRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       permissionRequests.get,
       action.payload.id
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      yield put(
-        permissionActions.getSuccess({
-          permission: data as IPermission,
-        })
-      );
-    }
+    yield put(
+      permissionActions.getSuccess({
+        permission: data as IPermission,
+      })
+    );
   } catch (e) {
     openNotificationError("Permission", (e as Error).message);
     yield put(permissionActions.getFailure());
@@ -72,18 +62,14 @@ function* fetchPermissionSaga(action: FetchPermissionRequest) {
 function* createPermissionSaga(action: CreatePermissionRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       permissionRequests.create,
       action.payload.permission
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("Permission Created");
-      yield put(
-        permissionActions.createSuccess({ permissions: data as IPermission[] })
-      );
-    }
+    openNotificationSuccess("Permission Created");
+    yield put(
+      permissionActions.createSuccess({ permissions: data as IPermission[] })
+    );
   } catch (e) {
     openNotificationError("Permission", (e as Error).message);
     yield put(permissionActions.createFailure());
@@ -94,20 +80,16 @@ function* createPermissionSaga(action: CreatePermissionRequest) {
 function* createRangePermissionSaga(action: CreateRangePermissionRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       permissionRequests.createRange,
       action.payload.permissions
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("Permissions Created");
-      yield put(
-        permissionActions.createRangeSuccess({
-          permissions: data as IPermission[],
-        })
-      );
-    }
+    openNotificationSuccess("Permissions Created");
+    yield put(
+      permissionActions.createRangeSuccess({
+        permissions: data as IPermission[],
+      })
+    );
   } catch (e) {
     openNotificationError("Permission", (e as Error).message);
     yield put(permissionActions.createRangeFailure());
@@ -118,16 +100,9 @@ function* createRangePermissionSaga(action: CreateRangePermissionRequest) {
 function* removePermissionSaga(action: RemovePermissionRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
-      permissionRequests.remove,
-      action.payload.id
-    );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("Permission Removed");
-      yield put(permissionActions.removeSuccess({ id: action.payload.id }));
-    }
+    yield call(permissionRequests.remove, action.payload.id);
+    openNotificationSuccess("Permission Removed");
+    yield put(permissionActions.removeSuccess({ id: action.payload.id }));
   } catch (e) {
     openNotificationError("Permission", (e as Error).message);
     yield put(permissionActions.removeFailure());
@@ -138,18 +113,11 @@ function* removePermissionSaga(action: RemovePermissionRequest) {
 function* removeRangePermissionSaga(action: RemoveRangePermissionRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
-      permissionRequests.removeRange,
-      action.payload.ids
+    yield call(permissionRequests.removeRange, action.payload.ids);
+    openNotificationSuccess("Permissions Removed");
+    yield put(
+      permissionActions.removeRangeSuccess({ ids: action.payload.ids })
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("Permissions Removed");
-      yield put(
-        permissionActions.removeRangeSuccess({ ids: action.payload.ids })
-      );
-    }
   } catch (e) {
     openNotificationError("Permission", (e as Error).message);
     yield put(permissionActions.removeRangeFailure());
@@ -160,20 +128,13 @@ function* removeRangePermissionSaga(action: RemoveRangePermissionRequest) {
 function* syncPermissionSaga(action: SyncPermissionRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
-      permissionRequests.sync,
-      action.payload.permissions
+    yield call(permissionRequests.sync, action.payload.permissions);
+    openNotificationSuccess("Permissions Synced");
+    yield put(
+      permissionActions.syncSuccess({
+        permissions: action.payload.permissions,
+      })
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("Permissions Synced");
-      yield put(
-        permissionActions.syncSuccess({
-          permissions: action.payload.permissions,
-        })
-      );
-    }
   } catch (e) {
     openNotificationError("Permission", (e as Error).message);
     yield put(permissionActions.syncFailure());
@@ -182,9 +143,6 @@ function* syncPermissionSaga(action: SyncPermissionRequest) {
 }
 
 function* permissionSaga() {
-  // yield all([
-  //   takeLatest(permissionConst.FETCH_PERMISSIONS_REQUEST, fetchPermissionsSaga),
-  // ]);
   yield takeEvery(
     permissionConst.FETCH_PERMISSIONS_REQUEST,
     fetchPermissionsSaga
@@ -211,10 +169,5 @@ function* permissionSaga() {
   );
   yield takeEvery(permissionConst.SYNC_PERMISSION_REQUEST, syncPermissionSaga);
 }
-// function* budgetItemSaga() {
-//   yield takeEvery(budgetItemConst.fetchList, listBudgetITem);
-//   yield takeEvery(budgetItemConst.fetchSave,saveBudgetITem);
-//   yield takeEvery(budgetItemConst.fetchUpdate,updateBudgetITem);
-// }
 
 export default permissionSaga;

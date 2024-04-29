@@ -18,7 +18,7 @@ import {
   openNotificationSuccess,
 } from "../../notification/Notification";
 
-interface IResponse {
+type IResponse = {
   data: IManufacturer[] | IManufacturer | null;
   message: string;
   success: boolean;
@@ -28,41 +28,32 @@ interface IResponse {
 function* fetchManufacturersSaga() {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
-      manufacturerRequests.getAll
+    const { data }: IResponse = yield call(manufacturerRequests.getAll);
+    yield put(
+      manufacturerActions.getAllSuccess({
+        manufacturers: data as IManufacturer[],
+      })
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      yield put(
-        manufacturerActions.getAllSuccess({
-          manufacturers: data as IManufacturer[],
-        })
-      );
-    }
   } catch (e) {
     openNotificationError("Manufacturer", (e as Error).message);
     yield put(manufacturerActions.getAllFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* fetchManufacturersPagedSaga(action: FetchManufacturersPagedRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       manufacturerRequests.getPaged,
       action.payload.skip,
       action.payload.take
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      yield put(
-        manufacturerActions.getPagedSuccess({
-          manufacturers: data as IManufacturer[],
-        })
-      );
-    }
+    yield put(
+      manufacturerActions.getPagedSuccess({
+        manufacturers: data as IManufacturer[],
+      })
+    );
   } catch (e) {
     openNotificationError("Manufacturer", (e as Error).message);
     yield put(manufacturerActions.getPagedFailure());
@@ -73,128 +64,103 @@ function* fetchManufacturersPagedSaga(action: FetchManufacturersPagedRequest) {
 function* fetchManufacturerSaga(action: FetchManufacturerRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       manufacturerRequests.get,
       action.payload.id
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      yield put(
-        manufacturerActions.getSuccess({
-          manufacturer: data as IManufacturer,
-        })
-      );
-    }
+    yield put(
+      manufacturerActions.getSuccess({
+        manufacturer: data as IManufacturer,
+      })
+    );
   } catch (e) {
     openNotificationError("Manufacturer", (e as Error).message);
     yield put(manufacturerActions.getFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* createManufacturerSaga(action: CreateManufacturerRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       manufacturerRequests.create,
       action.payload.manufacturer
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("Manufacturer Created");
-      yield put(
-        manufacturerActions.createSuccess({
-          manufacturer: data as IManufacturer,
-        })
-      );
-    }
+    openNotificationSuccess("Manufacturer Created");
+    yield put(
+      manufacturerActions.createSuccess({
+        manufacturer: data as IManufacturer,
+      })
+    );
   } catch (e) {
     openNotificationError("Manufacturer", (e as Error).message);
     yield put(manufacturerActions.createFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* createRangeManufacturerSaga(action: CreateRangeManufacturerRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       manufacturerRequests.createRange,
       action.payload.manufacturers
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("Manufacturers Created");
-      yield put(
-        manufacturerActions.createRangeSuccess({
-          manufacturers: data as IManufacturer[],
-        })
-      );
-    }
+    openNotificationSuccess("Manufacturers Created");
+    yield put(
+      manufacturerActions.createRangeSuccess({
+        manufacturers: data as IManufacturer[],
+      })
+    );
   } catch (e) {
     openNotificationError("Manufacturer", (e as Error).message);
     yield put(manufacturerActions.createRangeFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* updateManufacturerSaga(action: UpdateManufacturerRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       manufacturerRequests.update,
       action.payload.manufacturer
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("Manufacturer Updated");
-      yield put(
-        manufacturerActions.updateSuccess({
-          manufacturer: data as IManufacturer,
-        })
-      );
-    }
+    openNotificationSuccess("Manufacturer Updated");
+    yield put(
+      manufacturerActions.updateSuccess({
+        manufacturer: data as IManufacturer,
+      })
+    );
   } catch (e) {
     openNotificationError("Manufacturer", (e as Error).message);
     yield put(manufacturerActions.updateFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* removeManufacturerSaga(action: RemoveManufacturerRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
-      manufacturerRequests.remove,
-      action.payload.id
-    );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("Manufacturer Removed");
-      yield put(manufacturerActions.removeSuccess({ id: action.payload.id }));
-    }
+    yield call(manufacturerRequests.remove, action.payload.id);
+    openNotificationSuccess("Manufacturer Removed");
+    yield put(manufacturerActions.removeSuccess({ id: action.payload.id }));
   } catch (e) {
     openNotificationError("Manufacturer", (e as Error).message);
     yield put(manufacturerActions.removeFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* removeRangeManufacturerSaga(action: RemoveRangeManufacturerRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
-      manufacturerRequests.removeRange,
-      action.payload.ids
+    yield call(manufacturerRequests.removeRange, action.payload.ids);
+    openNotificationSuccess("Manufacturers Removed");
+    yield put(
+      manufacturerActions.removeRangeSuccess({ ids: action.payload.ids })
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("Manufacturers Removed");
-      yield put(
-        manufacturerActions.removeRangeSuccess({ ids: action.payload.ids })
-      );
-    }
   } catch (e) {
     openNotificationError("Manufacturer", (e as Error).message);
     yield put(manufacturerActions.removeRangeFailure());
@@ -203,9 +169,6 @@ function* removeRangeManufacturerSaga(action: RemoveRangeManufacturerRequest) {
 }
 
 function* manufacturersaga() {
-  // yield all([
-  //   takeLatest(manufacturerConst.FETCH_MANUFACTURERS_REQUEST, fetchManufacturersSaga),
-  // ]);
   yield takeEvery(
     manufacturerConst.FETCH_MANUFACTURERS_REQUEST,
     fetchManufacturersSaga
@@ -239,10 +202,5 @@ function* manufacturersaga() {
     removeRangeManufacturerSaga
   );
 }
-// function* budgetItemSaga() {
-//   yield takeEvery(budgetItemConst.fetchList, listBudgetITem);
-//   yield takeEvery(budgetItemConst.fetchSave,saveBudgetITem);
-//   yield takeEvery(budgetItemConst.fetchUpdate,updateBudgetITem);
-// }
 
 export default manufacturersaga;

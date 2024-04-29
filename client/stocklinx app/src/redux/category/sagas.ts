@@ -17,90 +17,79 @@ import {
   openNotificationSuccess,
 } from "../../notification/Notification";
 
-interface IResponse {
+type IResponse = {
   data: ICategory[] | ICategory | null;
   message: string;
   success: boolean;
   status: number;
-}
+};
 
 function* fetchCategoriesSaga() {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
-      categoryRequests.getAll
+    const { data }: IResponse = yield call(categoryRequests.getAll);
+
+    yield put(
+      categoryActions.getAllSuccess({
+        categories: data as ICategory[],
+      })
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      yield put(
-        categoryActions.getAllSuccess({
-          categories: data as ICategory[],
-        })
-      );
-    }
   } catch (e) {
     openNotificationError("Category", (e as Error).message);
     yield put(categoryActions.getAllFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* fetchCategorySaga(action: FetchCategoryRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       categoryRequests.get,
       action.payload.id
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      yield put(
-        categoryActions.getSuccess({
-          category: data as ICategory,
-        })
-      );
-    }
+
+    yield put(
+      categoryActions.getSuccess({
+        category: data as ICategory,
+      })
+    );
   } catch (e) {
     openNotificationError("Category", (e as Error).message);
     yield put(categoryActions.getFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* createCategorySaga(action: CreateCategoryRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       categoryRequests.create,
       action.payload.category
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("Category Created");
-      yield put(categoryActions.createSuccess({ category: data as ICategory }));
-    }
+
+    openNotificationSuccess("Category Created");
+    yield put(categoryActions.createSuccess({ category: data as ICategory }));
   } catch (e) {
     openNotificationError("Category", (e as Error).message);
     yield put(categoryActions.createFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* createRangeCategorySaga(action: CreateRangeCategoryRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       categoryRequests.createRange,
       action.payload.categories
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("Categories Created");
-      yield put(
-        categoryActions.createRangeSuccess({ categories: data as ICategory[] })
-      );
-    }
+
+    openNotificationSuccess("Categories Created");
+    yield put(
+      categoryActions.createRangeSuccess({ categories: data as ICategory[] })
+    );
   } catch (e) {
     openNotificationError("Category", (e as Error).message);
     yield put(categoryActions.createRangeFailure());
@@ -111,56 +100,41 @@ function* createRangeCategorySaga(action: CreateRangeCategoryRequest) {
 function* updateCategorySaga(action: UpdateCategoryRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       categoryRequests.update,
       action.payload.category
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("Category Updated");
-      yield put(categoryActions.updateSuccess({ category: data as ICategory }));
-    }
+
+    openNotificationSuccess("Category Updated");
+    yield put(categoryActions.updateSuccess({ category: data as ICategory }));
   } catch (e) {
     openNotificationError("Category", (e as Error).message);
     yield put(categoryActions.updateFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* removeCategorySaga(action: RemoveCategoryRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
-      categoryRequests.remove,
-      action.payload.id
-    );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("Category Removed");
-      yield put(categoryActions.removeSuccess({ id: action.payload.id }));
-    }
+    yield call(categoryRequests.remove, action.payload.id);
+
+    openNotificationSuccess("Category Removed");
+    yield put(categoryActions.removeSuccess({ id: action.payload.id }));
   } catch (e) {
     openNotificationError("Category", (e as Error).message);
     yield put(categoryActions.removeFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* removeRangeCategorySaga(action: RemoveRangeCategoryRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
-      categoryRequests.removeRange,
-      action.payload.ids
-    );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("Categories Removed");
-      yield put(
-        categoryActions.removeRangeSuccess({ ids: action.payload.ids })
-      );
-    }
+    yield call(categoryRequests.removeRange, action.payload.ids);
+
+    openNotificationSuccess("Categories Removed");
+    yield put(categoryActions.removeRangeSuccess({ ids: action.payload.ids }));
   } catch (e) {
     openNotificationError("Category", (e as Error).message);
     yield put(categoryActions.removeRangeFailure());
@@ -169,9 +143,6 @@ function* removeRangeCategorySaga(action: RemoveRangeCategoryRequest) {
 }
 
 function* categorysaga() {
-  // yield all([
-  //   takeLatest(categoryConst.FETCH_CATEGORIES_REQUEST, fetchCategoriesSaga),
-  // ]);
   yield takeEvery(categoryConst.FETCH_CATEGORIES_REQUEST, fetchCategoriesSaga);
   yield takeEvery(categoryConst.FETCH_CATEGORY_REQUEST, fetchCategorySaga);
   yield takeEvery(categoryConst.CREATE_CATEGORY_REQUEST, createCategorySaga);
@@ -186,10 +157,5 @@ function* categorysaga() {
     removeRangeCategorySaga
   );
 }
-// function* budgetItemSaga() {
-//   yield takeEvery(budgetItemConst.fetchList, listBudgetITem);
-//   yield takeEvery(budgetItemConst.fetchSave,saveBudgetITem);
-//   yield takeEvery(budgetItemConst.fetchUpdate,updateBudgetITem);
-// }
 
 export default categorysaga;

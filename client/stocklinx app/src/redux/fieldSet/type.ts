@@ -1,30 +1,30 @@
 import { IFieldSet } from "../../interfaces/serverInterfaces";
 import { fieldSetConst } from "./constant";
 
-export interface FieldSetState {
+export type FieldSetState = {
   fieldSet: IFieldSet | null;
   fieldSets: IFieldSet[];
-}
-export interface FieldSetRequestPayload {
+};
+export type FieldSetRequestPayload = {
   id: string;
-}
-export interface FieldSetPayload {
+};
+export type FieldSetPayload = {
   fieldSet: IFieldSet;
-}
-export interface FieldSetsPayload {
+};
+export type FieldSetsPayload = {
   fieldSets: IFieldSet[];
-}
-export interface FieldSetRemoveRangePayload {
+};
+export type FieldSetRemoveRangePayload = {
   ids: string[];
-}
-export interface FieldSetRemovePayload {
+};
+export type FieldSetRemovePayload = {
   id: string;
-}
+};
 
 //GET
-export interface FetchFieldSetsRequest {
+export type FetchFieldSetsRequest = {
   type: typeof fieldSetConst.FETCH_FIELDSETS_REQUEST;
-}
+};
 export type FetchFieldSetsSuccess = {
   type: typeof fieldSetConst.FETCH_FIELDSETS_SUCCESS;
   payload: FieldSetsPayload;
@@ -33,10 +33,10 @@ export type FetchFieldSetsFailure = {
   type: typeof fieldSetConst.FETCH_FIELDSETS_FAILURE;
 };
 //GET:/ID
-export interface FetchFieldSetRequest {
+export type FetchFieldSetRequest = {
   type: typeof fieldSetConst.FETCH_FIELDSET_REQUEST;
   payload: FieldSetRequestPayload;
-}
+};
 export type FetchFieldSetSuccess = {
   type: typeof fieldSetConst.FETCH_FIELDSET_SUCCESS;
   payload: FieldSetPayload;
@@ -45,10 +45,10 @@ export type FetchFieldSetFailure = {
   type: typeof fieldSetConst.FETCH_FIELDSET_FAILURE;
 };
 //POST
-export interface CreateFieldSetRequest {
+export type CreateFieldSetRequest = {
   type: typeof fieldSetConst.CREATE_FIELDSET_REQUEST;
   payload: FieldSetPayload;
-}
+};
 export type CreateFieldSetSuccess = {
   type: typeof fieldSetConst.CREATE_FIELDSET_SUCCESS;
   payload: FieldSetPayload;
@@ -57,10 +57,10 @@ export type CreateFieldSetFailure = {
   type: typeof fieldSetConst.CREATE_FIELDSET_FAILURE;
 };
 //POST RANGE
-export interface CreateRangeFieldSetRequest {
+export type CreateRangeFieldSetRequest = {
   type: typeof fieldSetConst.CREATE_RANGE_FIELDSET_REQUEST;
   payload: FieldSetsPayload;
-}
+};
 export type CreateRangeFieldSetSuccess = {
   type: typeof fieldSetConst.CREATE_RANGE_FIELDSET_SUCCESS;
   payload: FieldSetsPayload;
@@ -69,10 +69,10 @@ export type CreateRangeFieldSetFailure = {
   type: typeof fieldSetConst.CREATE_RANGE_FIELDSET_FAILURE;
 };
 //PUT
-export interface UpdateFieldSetRequest {
+export type UpdateFieldSetRequest = {
   type: typeof fieldSetConst.UPDATE_FIELDSET_REQUEST;
   payload: FieldSetPayload;
-}
+};
 export type UpdateFieldSetSuccess = {
   type: typeof fieldSetConst.UPDATE_FIELDSET_SUCCESS;
   payload: FieldSetPayload;
@@ -81,10 +81,10 @@ export type UpdateFieldSetFailure = {
   type: typeof fieldSetConst.UPDATE_FIELDSET_FAILURE;
 };
 //REMOVE
-export interface RemoveFieldSetRequest {
+export type RemoveFieldSetRequest = {
   type: typeof fieldSetConst.REMOVE_FIELDSET_REQUEST;
   payload: FieldSetRemovePayload;
-}
+};
 export type RemoveFieldSetSuccess = {
   type: typeof fieldSetConst.REMOVE_FIELDSET_SUCCESS;
   payload: FieldSetRemovePayload;
@@ -93,10 +93,10 @@ export type RemoveFieldSetFailure = {
   type: typeof fieldSetConst.REMOVE_FIELDSET_FAILURE;
 };
 //REMOVE RANGE
-export interface RemoveRangeFieldSetRequest {
+export type RemoveRangeFieldSetRequest = {
   type: typeof fieldSetConst.REMOVE_RANGE_FIELDSET_REQUEST;
   payload: FieldSetRemoveRangePayload;
-}
+};
 export type RemoveRangeFieldSetSuccess = {
   type: typeof fieldSetConst.REMOVE_RANGE_FIELDSET_SUCCESS;
   payload: FieldSetRemoveRangePayload;
@@ -106,20 +106,20 @@ export type RemoveRangeFieldSetFailure = {
 };
 
 //CLIENT ACTION TYPES
-export interface SetFieldSet {
+export type SetFieldSet = {
   type: typeof fieldSetConst.SET_FIELDSET;
   payload: IFieldSet | null;
-}
-export interface SetFieldSets {
+};
+export type SetFieldSets = {
   type: typeof fieldSetConst.SET_FIELDSETS;
   payload: IFieldSet[];
-}
-export interface ClearFieldSet {
+};
+export type ClearFieldSet = {
   type: typeof fieldSetConst.CLEAR_FIELDSET;
-}
-export interface ClearFieldSets {
+};
+export type ClearFieldSets = {
   type: typeof fieldSetConst.CLEAR_FIELDSETS;
-}
+};
 
 export type FieldSetActions =
   | FetchFieldSetsRequest

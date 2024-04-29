@@ -1,30 +1,30 @@
 import { IPermission } from "../../interfaces/serverInterfaces";
 import { permissionConst } from "./constant";
 
-export interface PermissionState {
+export type PermissionState = {
   permission: IPermission | null;
   permissions: IPermission[];
-}
-export interface PermissionRequestPayload {
+};
+export type PermissionRequestPayload = {
   id: string;
-}
-export interface PermissionPayload {
+};
+export type PermissionPayload = {
   permission: IPermission;
-}
-export interface PermissionsPayload {
+};
+export type PermissionsPayload = {
   permissions: IPermission[];
-}
-export interface PermissionRemoveRangePayload {
+};
+export type PermissionRemoveRangePayload = {
   ids: string[];
-}
-export interface PermissionRemovePayload {
+};
+export type PermissionRemovePayload = {
   id: string;
-}
+};
 
 //GET
-export interface FetchPermissionsRequest {
+export type FetchPermissionsRequest = {
   type: typeof permissionConst.FETCH_PERMISSIONS_REQUEST;
-}
+};
 export type FetchPermissionsSuccess = {
   type: typeof permissionConst.FETCH_PERMISSIONS_SUCCESS;
   payload: PermissionsPayload;
@@ -34,10 +34,10 @@ export type FetchPermissionsFailure = {
 };
 
 //GET:/ID
-export interface FetchPermissionRequest {
+export type FetchPermissionRequest = {
   type: typeof permissionConst.FETCH_PERMISSION_REQUEST;
   payload: PermissionRequestPayload;
-}
+};
 export type FetchPermissionSuccess = {
   type: typeof permissionConst.FETCH_PERMISSION_SUCCESS;
   payload: PermissionPayload;
@@ -47,10 +47,10 @@ export type FetchPermissionFailure = {
 };
 
 //POST
-export interface CreatePermissionRequest {
+export type CreatePermissionRequest = {
   type: typeof permissionConst.CREATE_PERMISSION_REQUEST;
   payload: PermissionPayload;
-}
+};
 export type CreatePermissionSuccess = {
   type: typeof permissionConst.CREATE_PERMISSION_SUCCESS;
   payload: PermissionsPayload;
@@ -60,10 +60,10 @@ export type CreatePermissionFailure = {
 };
 
 //POST RANGE
-export interface CreateRangePermissionRequest {
+export type CreateRangePermissionRequest = {
   type: typeof permissionConst.CREATE_RANGE_PERMISSION_REQUEST;
   payload: PermissionsPayload;
-}
+};
 export type CreateRangePermissionSuccess = {
   type: typeof permissionConst.CREATE_RANGE_PERMISSION_SUCCESS;
   payload: PermissionsPayload;
@@ -73,10 +73,10 @@ export type CreateRangePermissionFailure = {
 };
 
 //REMOVE
-export interface RemovePermissionRequest {
+export type RemovePermissionRequest = {
   type: typeof permissionConst.REMOVE_PERMISSION_REQUEST;
   payload: PermissionRemovePayload;
-}
+};
 export type RemovePermissionSuccess = {
   type: typeof permissionConst.REMOVE_PERMISSION_SUCCESS;
   payload: PermissionRemovePayload;
@@ -86,10 +86,10 @@ export type RemovePermissionFailure = {
 };
 
 //REMOVE RANGE
-export interface RemoveRangePermissionRequest {
+export type RemoveRangePermissionRequest = {
   type: typeof permissionConst.REMOVE_RANGE_PERMISSION_REQUEST;
   payload: PermissionRemoveRangePayload;
-}
+};
 export type RemoveRangePermissionSuccess = {
   type: typeof permissionConst.REMOVE_RANGE_PERMISSION_SUCCESS;
   payload: PermissionRemoveRangePayload;
@@ -99,10 +99,10 @@ export type RemoveRangePermissionFailure = {
 };
 
 //SYNC
-export interface SyncPermissionRequest {
+export type SyncPermissionRequest = {
   type: typeof permissionConst.SYNC_PERMISSION_REQUEST;
   payload: PermissionsPayload;
-}
+};
 export type SyncPermissionSuccess = {
   type: typeof permissionConst.SYNC_PERMISSION_SUCCESS;
   payload: PermissionsPayload;
@@ -112,20 +112,20 @@ export type SyncPermissionFailure = {
 };
 
 //CLIENT ACTION TYPES
-export interface SetPermission {
+export type SetPermission = {
   type: typeof permissionConst.SET_PERMISSION;
   payload: IPermission | null;
-}
-export interface SetPermissions {
+};
+export type SetPermissions = {
   type: typeof permissionConst.SET_PERMISSIONS;
   payload: IPermission[];
-}
-export interface ClearPermission {
+};
+export type ClearPermission = {
   type: typeof permissionConst.CLEAR_PERMISSION;
-}
-export interface ClearPermissions {
+};
+export type ClearPermissions = {
   type: typeof permissionConst.CLEAR_PERMISSIONS;
-}
+};
 
 export type PermissionActions =
   | FetchPermissionsRequest

@@ -1,4 +1,8 @@
-import { IComponent } from "../../interfaces/serverInterfaces";
+import {
+  AssetProductCheckInPayload,
+  CheckInOutPayload,
+} from "../../interfaces/clientInterfaces";
+import { IAssetProduct, IComponent } from "../../interfaces/serverInterfaces";
 import { componentConst } from "./constant";
 import {
   CreateComponentFailure,
@@ -37,7 +41,6 @@ import {
   CheckOutComponentRequest,
   CheckOutComponentSuccess,
   CheckOutComponentFailure,
-  CheckInPayload,
 } from "./type";
 
 //GET
@@ -141,12 +144,14 @@ const removeRangeFailure = (): RemoveRangeComponentFailure => ({
 });
 
 //CHECK IN
-const checkIn = (payload: CheckInPayload): CheckInComponentRequest => ({
+const checkIn = (
+  payload: AssetProductCheckInPayload
+): CheckInComponentRequest => ({
   type: componentConst.CHECK_IN_COMPONENT_REQUEST,
   payload,
 });
 const checkInSuccess = (
-  payload: ComponentPayload
+  payload: CheckInOutPayload
 ): CheckInComponentSuccess => ({
   type: componentConst.CHECK_IN_COMPONENT_SUCCESS,
   payload,
@@ -156,14 +161,12 @@ const checkInFailure = (): CheckInComponentFailure => ({
 });
 
 //CHECK OUT
-const checkOut = (
-  payload: ComponentRequestPayload
-): CheckOutComponentRequest => ({
+const checkOut = (payload: IAssetProduct): CheckOutComponentRequest => ({
   type: componentConst.CHECK_OUT_COMPONENT_REQUEST,
   payload,
 });
 const checkOutSuccess = (
-  payload: ComponentPayload
+  payload: CheckInOutPayload
 ): CheckOutComponentSuccess => ({
   type: componentConst.CHECK_OUT_COMPONENT_SUCCESS,
   payload,

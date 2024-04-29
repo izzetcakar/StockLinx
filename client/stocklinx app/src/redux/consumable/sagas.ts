@@ -1,11 +1,10 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { consumableActions } from "./actions";
-import { IConsumable } from "../../interfaces/serverInterfaces";
+import { IConsumable, IUserProduct } from "../../interfaces/serverInterfaces";
 import { consumableConst } from "./constant";
 import {
   CheckInConsumableRequest,
   CheckOutConsumableRequest,
-  ConsumableCheckInSuccessPayload,
   CreateConsumableRequest,
   CreateRangeConsumableRequest,
   FetchConsumableRequest,
@@ -19,208 +18,172 @@ import {
   openNotificationError,
   openNotificationSuccess,
 } from "../../notification/Notification";
-import { deployedProductActions } from "../deployedProduct/actions";
+import { userProductActions } from "../userProduct/actions";
 
-interface IResponse {
-  data: IConsumable[] | IConsumable | ConsumableCheckInSuccessPayload | null;
+type IResponse = {
+  data: IConsumable[] | IConsumable | IUserProduct | null;
   message: string;
   success: boolean;
   status: number;
-}
+};
 
 function* fetchConsumablesSaga() {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
-      consumableRequests.getAll
+    const { data }: IResponse = yield call(consumableRequests.getAll);
+    yield put(
+      consumableActions.getAllSuccess({
+        consumables: data as IConsumable[],
+      })
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      yield put(
-        consumableActions.getAllSuccess({
-          consumables: data as IConsumable[],
-        })
-      );
-    }
   } catch (e) {
     openNotificationError("Consumable", (e as Error).message);
     yield put(consumableActions.getAllFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* fetchConsumableSaga(action: FetchConsumableRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       consumableRequests.get,
       action.payload.id
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      yield put(
-        consumableActions.getSuccess({
-          consumable: data as IConsumable,
-        })
-      );
-    }
+    yield put(
+      consumableActions.getSuccess({
+        consumable: data as IConsumable,
+      })
+    );
   } catch (e) {
     openNotificationError("Consumable", (e as Error).message);
     yield put(consumableActions.getFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* createConsumableSaga(action: CreateConsumableRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       consumableRequests.create,
       action.payload.consumable
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("Consumable Created");
-      yield put(
-        consumableActions.createSuccess({ consumable: data as IConsumable })
-      );
-    }
+    openNotificationSuccess("Consumable Created");
+    yield put(
+      consumableActions.createSuccess({ consumable: data as IConsumable })
+    );
   } catch (e) {
     openNotificationError("Consumable", (e as Error).message);
     yield put(consumableActions.createFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* createRangeConsumableSaga(action: CreateRangeConsumableRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       consumableRequests.createRange,
       action.payload.consumables
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("Consumables Created");
-      yield put(
-        consumableActions.createRangeSuccess({
-          consumables: data as IConsumable[],
-        })
-      );
-    }
+    openNotificationSuccess("Consumables Created");
+    yield put(
+      consumableActions.createRangeSuccess({
+        consumables: data as IConsumable[],
+      })
+    );
   } catch (e) {
     openNotificationError("Consumable", (e as Error).message);
     yield put(consumableActions.createRangeFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* updateConsumableSaga(action: UpdateConsumableRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       consumableRequests.update,
       action.payload.consumable
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("Consumable Updated");
-      yield put(
-        consumableActions.updateSuccess({ consumable: data as IConsumable })
-      );
-    }
+    openNotificationSuccess("Consumable Updated");
+    yield put(
+      consumableActions.updateSuccess({ consumable: data as IConsumable })
+    );
   } catch (e) {
     openNotificationError("Consumable", (e as Error).message);
     yield put(consumableActions.updateFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* removeConsumableSaga(action: RemoveConsumableRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
-      consumableRequests.remove,
-      action.payload.id
-    );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("Consumable Removed");
-      yield put(consumableActions.removeSuccess({ id: action.payload.id }));
-    }
+    yield call(consumableRequests.remove, action.payload.id);
+    openNotificationSuccess("Consumable Removed");
+    yield put(consumableActions.removeSuccess({ id: action.payload.id }));
   } catch (e) {
     openNotificationError("Consumable", (e as Error).message);
     yield put(consumableActions.removeFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* removeRangeConsumableSaga(action: RemoveRangeConsumableRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
-      consumableRequests.removeRange,
-      action.payload.ids
+    yield call(consumableRequests.removeRange, action.payload.ids);
+    openNotificationSuccess("Consumables Removed");
+    yield put(
+      consumableActions.removeRangeSuccess({ ids: action.payload.ids })
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("Consumables Removed");
-      yield put(
-        consumableActions.removeRangeSuccess({ ids: action.payload.ids })
-      );
-    }
   } catch (e) {
     openNotificationError("Consumable", (e as Error).message);
     yield put(consumableActions.removeRangeFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* checkInConsumableSaga(action: CheckInConsumableRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       consumableRequests.checkIn,
-      action.payload.checkInDto
+      action.payload
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("Consumable Checked In");
-      yield put(
-        consumableActions.checkInSuccess({ consumable: data as IConsumable })
-      );
-      yield put(
-        deployedProductActions.createSuccess({
-          deployedProduct: (data as ConsumableCheckInSuccessPayload)
-            .deployedProduct,
-        })
-      );
-    }
+    openNotificationSuccess("Consumable Checked In");
+    yield put(
+      consumableActions.checkInSuccess({
+        id: action.payload.productId,
+        quantity: action.payload.quantity,
+      })
+    );
+    yield put(
+      userProductActions.createSuccess({
+        userProduct: data as IUserProduct,
+      })
+    );
   } catch (e) {
     openNotificationError("Consumable", (e as Error).message);
     yield put(consumableActions.checkInFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* checkOutConsumableSaga(action: CheckOutConsumableRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
-      consumableRequests.checkOut,
-      action.payload.id
+    yield call(consumableRequests.checkOut, action.payload.id);
+    openNotificationSuccess("Consumable Checked Out");
+    yield put(
+      consumableActions.checkOutSuccess({
+        id: action.payload.consumableId as string,
+        quantity: action.payload.quantity,
+      })
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("Consumable Checked Out");
-      yield put(
-        consumableActions.checkOutSuccess({ consumable: data as IConsumable })
-      );
-      yield put(
-        deployedProductActions.removeSuccess({ id: action.payload.id })
-      );
-    }
+    yield put(userProductActions.removeSuccess({ id: action.payload.id }));
   } catch (e) {
     openNotificationError("Consumable", (e as Error).message);
     yield put(consumableActions.checkOutFailure());
@@ -229,9 +192,6 @@ function* checkOutConsumableSaga(action: CheckOutConsumableRequest) {
 }
 
 function* consumablesaga() {
-  // yield all([
-  //   takeLatest(consumableConst.FETCH_CONSUMABLES_REQUEST, fetchConsumablesSaga),
-  // ]);
   yield takeEvery(
     consumableConst.FETCH_CONSUMABLES_REQUEST,
     fetchConsumablesSaga
@@ -269,10 +229,5 @@ function* consumablesaga() {
     checkOutConsumableSaga
   );
 }
-// function* budgetItemSaga() {
-//   yield takeEvery(budgetItemConst.fetchList, listBudgetITem);
-//   yield takeEvery(budgetItemConst.fetchSave,saveBudgetITem);
-//   yield takeEvery(budgetItemConst.fetchUpdate,updateBudgetITem);
-// }
 
 export default consumablesaga;

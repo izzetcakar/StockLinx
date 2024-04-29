@@ -1,41 +1,42 @@
-import { IProductCheckInDto } from "../../interfaces/dtos";
 import {
+  AssetProductCheckInPayload,
+  CheckInOutPayload,
+} from "../../interfaces/clientInterfaces";
+import {
+  IAssetProduct,
   IComponent,
-  IDeployedProduct,
+  IUserProduct,
 } from "../../interfaces/serverInterfaces";
 import { componentConst } from "./constant";
 
-export interface ComponentState {
+export type ComponentState = {
   component: IComponent | null;
   components: IComponent[];
-}
-export interface ComponentRequestPayload {
+};
+export type ComponentRequestPayload = {
   id: string;
-}
-export interface ComponentPayload {
+};
+export type ComponentPayload = {
   component: IComponent;
-}
-export interface ComponentsPayload {
+};
+export type ComponentsPayload = {
   components: IComponent[];
-}
-export interface ComponentRemoveRangePayload {
+};
+export type ComponentRemoveRangePayload = {
   ids: string[];
-}
-export interface ComponentRemovePayload {
+};
+export type ComponentRemovePayload = {
   id: string;
-}
-export interface CheckInPayload {
-  checkInDto: IProductCheckInDto;
-}
-export interface ComponentCheckInSuccessPayload {
+};
+export type ComponentCheckInSuccessPayload = {
   component: IComponent;
-  deployedProduct: IDeployedProduct;
-}
+  userProduct: IUserProduct;
+};
 
 //GET
-export interface FetchComponentsRequest {
+export type FetchComponentsRequest = {
   type: typeof componentConst.FETCH_COMPONENTS_REQUEST;
-}
+};
 export type FetchComponentsSuccess = {
   type: typeof componentConst.FETCH_COMPONENTS_SUCCESS;
   payload: ComponentsPayload;
@@ -45,10 +46,10 @@ export type FetchComponentsFailure = {
 };
 
 //GET:/ID
-export interface FetchComponentRequest {
+export type FetchComponentRequest = {
   type: typeof componentConst.FETCH_COMPONENT_REQUEST;
   payload: ComponentRequestPayload;
-}
+};
 export type FetchComponentSuccess = {
   type: typeof componentConst.FETCH_COMPONENT_SUCCESS;
   payload: ComponentPayload;
@@ -58,10 +59,10 @@ export type FetchComponentFailure = {
 };
 
 //POST
-export interface CreateComponentRequest {
+export type CreateComponentRequest = {
   type: typeof componentConst.CREATE_COMPONENT_REQUEST;
   payload: ComponentPayload;
-}
+};
 export type CreateComponentSuccess = {
   type: typeof componentConst.CREATE_COMPONENT_SUCCESS;
   payload: ComponentPayload;
@@ -71,10 +72,10 @@ export type CreateComponentFailure = {
 };
 
 //POST RANGE
-export interface CreateRangeComponentRequest {
+export type CreateRangeComponentRequest = {
   type: typeof componentConst.CREATE_RANGE_COMPONENT_REQUEST;
   payload: ComponentsPayload;
-}
+};
 export type CreateRangeComponentSuccess = {
   type: typeof componentConst.CREATE_RANGE_COMPONENT_SUCCESS;
   payload: ComponentsPayload;
@@ -84,10 +85,10 @@ export type CreateRangeComponentFailure = {
 };
 
 //PUT
-export interface UpdateComponentRequest {
+export type UpdateComponentRequest = {
   type: typeof componentConst.UPDATE_COMPONENT_REQUEST;
   payload: ComponentPayload;
-}
+};
 export type UpdateComponentSuccess = {
   type: typeof componentConst.UPDATE_COMPONENT_SUCCESS;
   payload: ComponentPayload;
@@ -97,10 +98,10 @@ export type UpdateComponentFailure = {
 };
 
 //REMOVE
-export interface RemoveComponentRequest {
+export type RemoveComponentRequest = {
   type: typeof componentConst.REMOVE_COMPONENT_REQUEST;
   payload: ComponentRemovePayload;
-}
+};
 export type RemoveComponentSuccess = {
   type: typeof componentConst.REMOVE_COMPONENT_SUCCESS;
   payload: ComponentRemovePayload;
@@ -110,10 +111,10 @@ export type RemoveComponentFailure = {
 };
 
 //REMOVE RANGE
-export interface RemoveRangeComponentRequest {
+export type RemoveRangeComponentRequest = {
   type: typeof componentConst.REMOVE_RANGE_COMPONENT_REQUEST;
   payload: ComponentRemoveRangePayload;
-}
+};
 export type RemoveRangeComponentSuccess = {
   type: typeof componentConst.REMOVE_RANGE_COMPONENT_SUCCESS;
   payload: ComponentRemoveRangePayload;
@@ -123,46 +124,46 @@ export type RemoveRangeComponentFailure = {
 };
 
 //CHECK IN
-export interface CheckInComponentRequest {
+export type CheckInComponentRequest = {
   type: typeof componentConst.CHECK_IN_COMPONENT_REQUEST;
-  payload: CheckInPayload;
-}
+  payload: AssetProductCheckInPayload;
+};
 export type CheckInComponentSuccess = {
   type: typeof componentConst.CHECK_IN_COMPONENT_SUCCESS;
-  payload: ComponentPayload;
+  payload: CheckInOutPayload;
 };
 export type CheckInComponentFailure = {
   type: typeof componentConst.CHECK_IN_COMPONENT_FAILURE;
 };
 
 //CHECK OUT
-export interface CheckOutComponentRequest {
+export type CheckOutComponentRequest = {
   type: typeof componentConst.CHECK_OUT_COMPONENT_REQUEST;
-  payload: ComponentRequestPayload;
-}
+  payload: IAssetProduct;
+};
 export type CheckOutComponentSuccess = {
   type: typeof componentConst.CHECK_OUT_COMPONENT_SUCCESS;
-  payload: ComponentPayload;
+  payload: CheckInOutPayload;
 };
 export type CheckOutComponentFailure = {
   type: typeof componentConst.CHECK_OUT_COMPONENT_FAILURE;
 };
 
 //CLIENT ACTION TYPES
-export interface SetComponent {
+export type SetComponent = {
   type: typeof componentConst.SET_COMPONENT;
   payload: IComponent | null;
-}
-export interface SetComponents {
+};
+export type SetComponents = {
   type: typeof componentConst.SET_COMPONENTS;
   payload: IComponent[];
-}
-export interface ClearComponent {
+};
+export type ClearComponent = {
   type: typeof componentConst.CLEAR_COMPONENT;
-}
-export interface ClearComponents {
+};
+export type ClearComponents = {
   type: typeof componentConst.CLEAR_COMPONENTS;
-}
+};
 
 export type ComponentActions =
   | FetchComponentsRequest

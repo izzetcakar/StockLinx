@@ -18,7 +18,7 @@ import {
   openNotificationSuccess,
 } from "../../notification/Notification";
 
-interface IResponse {
+type IResponse = {
   data: IFieldSetCustomField[] | IFieldSetCustomField | null;
   message: string;
   success: boolean;
@@ -28,92 +28,77 @@ interface IResponse {
 function* fetchFieldSetCustomFieldsSaga() {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
-      fieldSetCustomFieldRequests.getAll
+    const { data }: IResponse = yield call(fieldSetCustomFieldRequests.getAll);
+    yield put(
+      fieldSetCustomFieldActions.getAllSuccess({
+        fieldSetCustomFields: data as IFieldSetCustomField[],
+      })
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      yield put(
-        fieldSetCustomFieldActions.getAllSuccess({
-          fieldSetCustomFields: data as IFieldSetCustomField[],
-        })
-      );
-    }
   } catch (e) {
     openNotificationError("FieldSetCustomField", (e as Error).message);
     yield put(fieldSetCustomFieldActions.getAllFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* fetchFieldSetCustomFieldSaga(
   action: FetchFieldSetCustomFieldRequest
 ) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       fieldSetCustomFieldRequests.get,
       action.payload.id
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      yield put(
-        fieldSetCustomFieldActions.getSuccess({
-          fieldSetCustomField: data as IFieldSetCustomField,
-        })
-      );
-    }
+    yield put(
+      fieldSetCustomFieldActions.getSuccess({
+        fieldSetCustomField: data as IFieldSetCustomField,
+      })
+    );
   } catch (e) {
     openNotificationError("FieldSetCustomField", (e as Error).message);
     yield put(fieldSetCustomFieldActions.getFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* createFieldSetCustomFieldSaga(
   action: CreateFieldSetCustomFieldRequest
 ) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       fieldSetCustomFieldRequests.create,
       action.payload.fieldSetCustomField
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("FieldSetCustomField Created");
-      yield put(
-        fieldSetCustomFieldActions.createSuccess({
-          fieldSetCustomField: data as IFieldSetCustomField,
-        })
-      );
-    }
+    openNotificationSuccess("FieldSetCustomField Created");
+    yield put(
+      fieldSetCustomFieldActions.createSuccess({
+        fieldSetCustomField: data as IFieldSetCustomField,
+      })
+    );
   } catch (e) {
     openNotificationError("FieldSetCustomField", (e as Error).message);
     yield put(fieldSetCustomFieldActions.createFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* createRangeFieldSetCustomFieldSaga(
   action: CreateRangeFieldSetCustomFieldRequest
 ) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       fieldSetCustomFieldRequests.createRange,
       action.payload.fieldSetCustomFields
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("FieldSetCustomFields Created");
-      yield put(
-        fieldSetCustomFieldActions.createRangeSuccess({
-          fieldSetCustomFields: data as IFieldSetCustomField[],
-        })
-      );
-    }
+    openNotificationSuccess("FieldSetCustomFields Created");
+    yield put(
+      fieldSetCustomFieldActions.createRangeSuccess({
+        fieldSetCustomFields: data as IFieldSetCustomField[],
+      })
+    );
   } catch (e) {
     openNotificationError("FieldSetCustomField", (e as Error).message);
     yield put(fieldSetCustomFieldActions.createRangeFailure());
@@ -126,88 +111,69 @@ function* updateFieldSetCustomFieldSaga(
 ) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       fieldSetCustomFieldRequests.update,
       action.payload.fieldSetCustomField
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("FieldSetCustomField Updated");
-      yield put(
-        fieldSetCustomFieldActions.updateSuccess({
-          fieldSetCustomField: data as IFieldSetCustomField,
-        })
-      );
-    }
+    openNotificationSuccess("FieldSetCustomField Updated");
+    yield put(
+      fieldSetCustomFieldActions.updateSuccess({
+        fieldSetCustomField: data as IFieldSetCustomField,
+      })
+    );
   } catch (e) {
     openNotificationError("FieldSetCustomField", (e as Error).message);
     yield put(fieldSetCustomFieldActions.updateFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* removeFieldSetCustomFieldSaga(
   action: RemoveFieldSetCustomFieldRequest
 ) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
-      fieldSetCustomFieldRequests.remove,
-      action.payload.id
+    yield call(fieldSetCustomFieldRequests.remove, action.payload.id);
+    openNotificationSuccess("FieldSetCustomField Removed");
+    yield put(
+      fieldSetCustomFieldActions.removeSuccess({ id: action.payload.id })
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("FieldSetCustomField Removed");
-      yield put(
-        fieldSetCustomFieldActions.removeSuccess({ id: action.payload.id })
-      );
-    }
   } catch (e) {
     openNotificationError("FieldSetCustomField", (e as Error).message);
     yield put(fieldSetCustomFieldActions.removeFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* removeRangeFieldSetCustomFieldSaga(
   action: RemoveRangeFieldSetCustomFieldRequest
 ) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
-      fieldSetCustomFieldRequests.removeRange,
-      action.payload.ids
+    yield call(fieldSetCustomFieldRequests.removeRange, action.payload.ids);
+    openNotificationSuccess("FieldSetCustomFields Removed");
+    yield put(
+      fieldSetCustomFieldActions.removeRangeSuccess({
+        ids: action.payload.ids,
+      })
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("FieldSetCustomFields Removed");
-      yield put(
-        fieldSetCustomFieldActions.removeRangeSuccess({
-          ids: action.payload.ids,
-        })
-      );
-    }
   } catch (e) {
     openNotificationError("FieldSetCustomField", (e as Error).message);
     yield put(fieldSetCustomFieldActions.removeRangeFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* scnyronizeFieldSetCustomFieldsSaga(
   action: SynchronizeFieldSetCustomFieldRequest
 ) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
+    yield call(
       fieldSetCustomFieldRequests.synchronize,
       action.payload.fieldSetCustomFields
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      yield put(fieldSetCustomFieldActions.synchronizeSuccess());
-    }
+    yield put(fieldSetCustomFieldActions.synchronizeSuccess());
   } catch (e) {
     openNotificationError("FieldSetCustomField", (e as Error).message);
     yield put(fieldSetCustomFieldActions.synchronizeFailure());
@@ -216,9 +182,6 @@ function* scnyronizeFieldSetCustomFieldsSaga(
 }
 
 function* fieldSetCustomFieldSaga() {
-  // yield all([
-  //   takeLatest(fieldSetCustomFieldConst.FETCH_FIELDSETCUSTOMFIELDS_REQUEST, fetchFieldSetCustomFieldsSaga),
-  // ]);
   yield takeEvery(
     fieldSetCustomFieldConst.FETCH_FIELDSETCUSTOMFIELDS_REQUEST,
     fetchFieldSetCustomFieldsSaga
@@ -252,10 +215,5 @@ function* fieldSetCustomFieldSaga() {
     scnyronizeFieldSetCustomFieldsSaga
   );
 }
-// function* budgetItemSaga() {
-//   yield takeEvery(budgetItemConst.fetchList, listBudgetITem);
-//   yield takeEvery(budgetItemConst.fetchSave,saveBudgetITem);
-//   yield takeEvery(budgetItemConst.fetchUpdate,updateBudgetITem);
-// }
 
 export default fieldSetCustomFieldSaga;

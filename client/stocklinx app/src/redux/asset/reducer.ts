@@ -113,7 +113,12 @@ export default (state = initialState, action: AssetActions) => {
       return {
         ...state,
         assets: state.assets.map((asset) =>
-          asset.id === action.payload.asset.id ? action.payload.asset : asset
+          asset.id === action.payload.assetId
+            ? {
+                ...asset,
+                productStatusId: action.payload.productStatusId,
+              }
+            : asset
         ),
       };
     case assetConst.CHECK_IN_ASSET_FAILURE:
@@ -128,7 +133,12 @@ export default (state = initialState, action: AssetActions) => {
       return {
         ...state,
         assets: state.assets.map((asset) =>
-          asset.id === action.payload.asset.id ? action.payload.asset : asset
+          asset.id === action.payload.assetId
+            ? {
+                ...asset,
+                productStatusId: action.payload.productStatusId,
+              }
+            : asset
         ),
       };
     case assetConst.CHECK_OUT_ASSET_FAILURE:

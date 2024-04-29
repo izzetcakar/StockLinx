@@ -1,8 +1,5 @@
-import { IProductCheckInDto } from "../../interfaces/dtos";
-import {
-  IAccessory,
-  IDeployedProduct,
-} from "../../interfaces/serverInterfaces";
+import { UserProductCheckInPayload } from "../../interfaces/clientInterfaces";
+import { IAccessory, IUserProduct } from "../../interfaces/serverInterfaces";
 import { request } from "../../server/api";
 const requestUrl = "Accessory/";
 
@@ -49,8 +46,8 @@ const removeRange = (ids: string[]) => {
     queryData: ids,
   });
 };
-const checkIn = (checkInDto: IProductCheckInDto) => {
-  return request<IDeployedProduct>({
+const checkIn = (checkInDto: UserProductCheckInPayload) => {
+  return request<IUserProduct>({
     requestUrl: requestUrl + "checkin",
     apiType: "post",
     queryData: checkInDto,

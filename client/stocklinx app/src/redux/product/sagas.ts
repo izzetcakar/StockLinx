@@ -12,7 +12,7 @@ import { genericActions } from "../generic/actions";
 import { openNotificationError } from "../../notification/Notification";
 import { productConst } from "./constant";
 
-interface IResponse {
+type IResponse = {
   data: any;
   message: string;
   success: boolean;
@@ -22,18 +22,12 @@ interface IResponse {
 function* fetchEntityCountsSaga() {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
-      productRequests.getEntityCounts
+    const { data }: IResponse = yield call(productRequests.getEntityCounts);
+    yield put(
+      productActions.getEntityCountsSuccess({
+        entityCounts: data as IEntityCount[],
+      })
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      yield put(
-        productActions.getEntityCountsSuccess({
-          entityCounts: data as IEntityCount[],
-        })
-      );
-    }
   } catch (e) {
     openNotificationError("Entity Counts", (e as Error).message);
     yield put(productActions.getEntityCountsFailure());
@@ -44,18 +38,14 @@ function* fetchEntityCountsSaga() {
 function* fetchProductStatusCountsSaga() {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       productRequests.getProductStatusCounts
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      yield put(
-        productActions.getProductStatusCountsSuccess({
-          productStatusCounts: data as IProductStatusCount[],
-        })
-      );
-    }
+    yield put(
+      productActions.getProductStatusCountsSuccess({
+        productStatusCounts: data as IProductStatusCount[],
+      })
+    );
   } catch (e) {
     openNotificationError("Product Status Counts", (e as Error).message);
     yield put(productActions.getProductStatusCountsFailure());
@@ -66,18 +56,14 @@ function* fetchProductStatusCountsSaga() {
 function* fetchProductLocationCountsSaga() {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       productRequests.getProductLocationCounts
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      yield put(
-        productActions.getProductLocationCountsSuccess({
-          productLocationCounts: data as IProductLocationCount[],
-        })
-      );
-    }
+    yield put(
+      productActions.getProductLocationCountsSuccess({
+        productLocationCounts: data as IProductLocationCount[],
+      })
+    );
   } catch (e) {
     openNotificationError("Product Location Counts", (e as Error).message);
     yield put(productActions.getProductLocationCountsFailure());
@@ -88,18 +74,14 @@ function* fetchProductLocationCountsSaga() {
 function* fetchProductCategoryCountsSaga() {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       productRequests.getProductCategoryCounts
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      yield put(
-        productActions.getProductCategoryCountsSuccess({
-          productCategoryCounts: data as IProductCategoryCount[],
-        })
-      );
-    }
+    yield put(
+      productActions.getProductCategoryCountsSuccess({
+        productCategoryCounts: data as IProductCategoryCount[],
+      })
+    );
   } catch (e) {
     openNotificationError("Product Category Counts", (e as Error).message);
     yield put(productActions.getProductCategoryCountsFailure());
@@ -110,18 +92,12 @@ function* fetchProductCategoryCountsSaga() {
 function* fetchCustomLogsSaga() {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
-      productRequests.getCustomLogs
+    const { data }: IResponse = yield call(productRequests.getCustomLogs);
+    yield put(
+      productActions.getCustomLogsSuccess({
+        customLogs: data as ICustomLog[],
+      })
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      yield put(
-        productActions.getCustomLogsSuccess({
-          customLogs: data as ICustomLog[],
-        })
-      );
-    }
   } catch (e) {
     openNotificationError("Custom Logs", (e as Error).message);
     yield put(productActions.getCustomLogsFailure());

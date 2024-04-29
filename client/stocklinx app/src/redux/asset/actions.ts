@@ -1,3 +1,7 @@
+import {
+  AssetCheckInPayload,
+  AssetCheckOutPayload,
+} from "../../interfaces/clientInterfaces";
 import { IAsset } from "../../interfaces/serverInterfaces";
 import { assetConst } from "./constant";
 import {
@@ -31,7 +35,6 @@ import {
   RemoveRangeAssetFailure,
   AssetRemoveRangePayload,
   AssetRemovePayload,
-  CheckInPayload,
   CheckInAssetRequest,
   CheckInAssetSuccess,
   CheckInAssetFailure,
@@ -137,11 +140,11 @@ const removeRangeFailure = (): RemoveRangeAssetFailure => ({
 });
 
 //CHECK IN
-const checkIn = (payload: CheckInPayload): CheckInAssetRequest => ({
+const checkIn = (payload: AssetCheckInPayload): CheckInAssetRequest => ({
   type: assetConst.CHECK_IN_ASSET_REQUEST,
   payload,
 });
-const checkInSuccess = (payload: AssetPayload): CheckInAssetSuccess => ({
+const checkInSuccess = (payload: AssetCheckInPayload): CheckInAssetSuccess => ({
   type: assetConst.CHECK_IN_ASSET_SUCCESS,
   payload,
 });
@@ -150,11 +153,13 @@ const checkInFailure = (): CheckInAssetFailure => ({
 });
 
 //CHECK OUT
-const checkOut = (payload: AssetRequestPayload): CheckOutAssetRequest => ({
+const checkOut = (payload: AssetCheckOutPayload): CheckOutAssetRequest => ({
   type: assetConst.CHECK_OUT_ASSET_REQUEST,
   payload,
 });
-const checkOutSuccess = (payload: AssetPayload): CheckOutAssetSuccess => ({
+const checkOutSuccess = (
+  payload: AssetCheckOutPayload
+): CheckOutAssetSuccess => ({
   type: assetConst.CHECK_OUT_ASSET_SUCCESS,
   payload,
 });

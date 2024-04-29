@@ -1,30 +1,30 @@
 import { ICompany } from "../../interfaces/serverInterfaces";
 import { companyConst } from "./constant";
 
-export interface CompanyState {
+export type CompanyState = {
   company: ICompany | null;
   companies: ICompany[];
-}
-export interface CompanyRequestPayload {
+};
+export type CompanyRequestPayload = {
   id: string;
-}
-export interface CompanyPayload {
+};
+export type CompanyPayload = {
   company: ICompany;
-}
-export interface CompaniesPayload {
+};
+export type CompaniesPayload = {
   companies: ICompany[];
-}
-export interface CompanyRemovePayload {
+};
+export type CompanyRemovePayload = {
   id: string;
-}
-export interface CompanyRemoveRangePayload {
+};
+export type CompanyRemoveRangePayload = {
   ids: string[];
-}
+};
 
 //GET
-export interface FetchCompaniesRequest {
+export type FetchCompaniesRequest = {
   type: typeof companyConst.FETCH_COMPANIES_REQUEST;
-}
+};
 export type FetchCompaniesSuccess = {
   type: typeof companyConst.FETCH_COMPANIES_SUCCESS;
   payload: CompaniesPayload;
@@ -33,10 +33,10 @@ export type FetchCompaniesFailure = {
   type: typeof companyConst.FETCH_COMPANIES_FAILURE;
 };
 //GET:/ID
-export interface FetchCompanyRequest {
+export type FetchCompanyRequest = {
   type: typeof companyConst.FETCH_COMPANY_REQUEST;
   payload: CompanyRequestPayload;
-}
+};
 export type FetchCompanySuccess = {
   type: typeof companyConst.FETCH_COMPANY_SUCCESS;
   payload: CompanyPayload;
@@ -45,10 +45,10 @@ export type FetchCompanyFailure = {
   type: typeof companyConst.FETCH_COMPANY_FAILURE;
 };
 //POST
-export interface CreateCompanyRequest {
+export type CreateCompanyRequest = {
   type: typeof companyConst.CREATE_COMPANY_REQUEST;
   payload: CompanyPayload;
-}
+};
 export type CreateCompanySuccess = {
   type: typeof companyConst.CREATE_COMPANY_SUCCESS;
   payload: CompanyPayload;
@@ -57,10 +57,10 @@ export type CreateCompanyFailure = {
   type: typeof companyConst.CREATE_COMPANY_FAILURE;
 };
 //POST RANGE
-export interface CreateRangeCompanyRequest {
+export type CreateRangeCompanyRequest = {
   type: typeof companyConst.CREATE_RANGE_COMPANY_REQUEST;
   payload: CompaniesPayload;
-}
+};
 export type CreateRangeCompanySuccess = {
   type: typeof companyConst.CREATE_RANGE_COMPANY_SUCCESS;
   payload: CompaniesPayload;
@@ -69,10 +69,10 @@ export type CreateRangeCompanyFailure = {
   type: typeof companyConst.CREATE_RANGE_COMPANY_FAILURE;
 };
 //PUT
-export interface UpdateCompanyRequest {
+export type UpdateCompanyRequest = {
   type: typeof companyConst.UPDATE_COMPANY_REQUEST;
   payload: CompanyPayload;
-}
+};
 export type UpdateCompanySuccess = {
   type: typeof companyConst.UPDATE_COMPANY_SUCCESS;
   payload: CompanyPayload;
@@ -81,10 +81,10 @@ export type UpdateCompanyFailure = {
   type: typeof companyConst.UPDATE_COMPANY_FAILURE;
 };
 //REMOVE
-export interface RemoveCompanyRequest {
+export type RemoveCompanyRequest = {
   type: typeof companyConst.REMOVE_COMPANY_REQUEST;
   payload: CompanyRemovePayload;
-}
+};
 export type RemoveCompanySuccess = {
   type: typeof companyConst.REMOVE_COMPANY_SUCCESS;
   payload: CompanyRemovePayload;
@@ -93,10 +93,10 @@ export type RemoveCompanyFailure = {
   type: typeof companyConst.REMOVE_COMPANY_FAILURE;
 };
 //REMOVE RANGE
-export interface RemoveRangeCompanyRequest {
+export type RemoveRangeCompanyRequest = {
   type: typeof companyConst.REMOVE_RANGE_COMPANY_REQUEST;
   payload: CompanyRemoveRangePayload;
-}
+};
 export type RemoveRangeCompanySuccess = {
   type: typeof companyConst.REMOVE_RANGE_COMPANY_SUCCESS;
   payload: CompanyRemoveRangePayload;
@@ -106,20 +106,20 @@ export type RemoveRangeCompanyFailure = {
 };
 
 //CLIENT ACTION TYPES
-export interface SetCompany {
+export type SetCompany = {
   type: typeof companyConst.SET_COMPANY;
   payload: ICompany | null;
-}
-export interface SetCompanies {
+};
+export type SetCompanies = {
   type: typeof companyConst.SET_COMPANIES;
   payload: ICompany[];
-}
-export interface ClearCompany {
+};
+export type ClearCompany = {
   type: typeof companyConst.CLEAR_COMPANY;
-}
-export interface ClearCompanies {
+};
+export type ClearCompanies = {
   type: typeof companyConst.CLEAR_COMPANIES;
-}
+};
 
 export type CompanyActions =
   | FetchCompaniesRequest

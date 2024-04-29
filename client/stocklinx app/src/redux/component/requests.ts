@@ -1,4 +1,4 @@
-import { IProductCheckInDto } from "../../interfaces/dtos";
+import { AssetProductCheckInPayload } from "../../interfaces/clientInterfaces";
 import { IComponent } from "../../interfaces/serverInterfaces";
 import { request } from "../../server/api";
 const requestUrl = "Component/";
@@ -46,7 +46,7 @@ const removeRange = (ids: string[]) => {
     queryData: ids,
   });
 };
-const checkIn = (checkInDto: IProductCheckInDto) => {
+const checkIn = (checkInDto: AssetProductCheckInPayload) => {
   return request<IComponent>({
     requestUrl: requestUrl + "checkin",
     apiType: "post",

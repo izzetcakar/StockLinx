@@ -1,4 +1,7 @@
-import { IProductCheckInDto } from "../../interfaces/dtos";
+import {
+  AssetProductCheckInPayload,
+  UserProductCheckInPayload,
+} from "../../interfaces/clientInterfaces";
 import { ILicense } from "../../interfaces/serverInterfaces";
 import { request } from "../../server/api";
 const requestUrl = "License/";
@@ -46,17 +49,35 @@ const removeRange = (ids: string[]) => {
     queryData: ids,
   });
 };
-const checkIn = (checkInDto: IProductCheckInDto) => {
+const userCheckIn = (checkInDto: UserProductCheckInPayload) => {
   return request<ILicense>({
     requestUrl: requestUrl + "checkin",
     apiType: "post",
     queryData: checkInDto,
   });
 };
-const checkOut = (id: string) => {
+
+const assetCheckIn = (checkInDto: AssetProductCheckInPayload) => {
+  return request<ILicense>({
+    requestUrl: requestUrl + "checkin",
+    apiType: "post",
+    queryData: checkInDto,
+  });
+};
+
+const userCheckOut = (id: string) => {
   return request<ILicense>({
     requestUrl: requestUrl + "checkout/" + id,
     apiType: "post",
+    queryData: "USER",
+  });
+};
+
+const assetCheckOut = (id: string) => {
+  return request<ILicense>({
+    requestUrl: requestUrl + "checkout/" + id,
+    apiType: "post",
+    queryData: "ASSET",
   });
 };
 
@@ -68,6 +89,8 @@ export const licenseRequests = {
   update,
   remove,
   removeRange,
-  checkIn,
-  checkOut,
+  userCheckIn,
+  assetCheckIn,
+  userCheckOut,
+  assetCheckOut,
 };

@@ -7,34 +7,34 @@ import {
 } from "../../interfaces/serverInterfaces";
 import { productConst } from "./constant";
 
-export interface ProductState {
+export type ProductState = {
   customLogs: ICustomLog[];
   entityCounts: IEntityCount[];
   productStatusCounts: IProductStatusCount[];
   productLocationCounts: IProductLocationCount[];
   productCategoryCounts: IProductCategoryCount[];
-}
+};
 
-export interface EntityCountsSucccessPayload {
+export type EntityCountsSucccessPayload = {
   entityCounts: IEntityCount[];
-}
-export interface ProductStatusCountsSucccessPayload {
+};
+export type ProductStatusCountsSucccessPayload = {
   productStatusCounts: IProductStatusCount[];
-}
-export interface ProductLocationCountsSucccessPayload {
+};
+export type ProductLocationCountsSucccessPayload = {
   productLocationCounts: IProductLocationCount[];
-}
-export interface ProductCategoryCountsSucccessPayload {
+};
+export type ProductCategoryCountsSucccessPayload = {
   productCategoryCounts: IProductCategoryCount[];
-}
-export interface CustomLogsSucccessPayload {
+};
+export type CustomLogsSucccessPayload = {
   customLogs: ICustomLog[];
-}
+};
 
 //GET ENTITY COUNTS
-export interface FetchEntityCountsRequest {
+export type FetchEntityCountsRequest = {
   type: typeof productConst.FETCH_ENTITY_COUNTS_REQUEST;
-}
+};
 export type FetchEntityCountsSuccess = {
   type: typeof productConst.FETCH_ENTITY_COUNTS_SUCCESS;
   payload: EntityCountsSucccessPayload;
@@ -44,9 +44,9 @@ export type FetchEntityCountsFailure = {
 };
 
 //GET PRODUCT STATUS COUNTS
-export interface FetchProductStatusCountsRequest {
+export type FetchProductStatusCountsRequest = {
   type: typeof productConst.FETCH_PRODUCT_STATUS_COUNTS_REQUEST;
-}
+};
 export type FetchProductStatusCountsSuccess = {
   type: typeof productConst.FETCH_PRODUCT_STATUS_COUNTS_SUCCESS;
   payload: ProductStatusCountsSucccessPayload;
@@ -56,9 +56,9 @@ export type FetchProductStatusCountsFailure = {
 };
 
 //GET PRODUCT LOCATION COUNTS
-export interface FetchProductLocationCountsRequest {
+export type FetchProductLocationCountsRequest = {
   type: typeof productConst.FETCH_PRODUCT_LOCATION_COUNTS_REQUEST;
-}
+};
 export type FetchProductLocationCountsSuccess = {
   type: typeof productConst.FETCH_PRODUCT_LOCATION_COUNTS_SUCCESS;
   payload: ProductLocationCountsSucccessPayload;
@@ -68,9 +68,9 @@ export type FetchProductLocationCountsFailure = {
 };
 
 //GET PRODUCT CATEGORY COUNTS
-export interface FetchProductCategoryCountsRequest {
+export type FetchProductCategoryCountsRequest = {
   type: typeof productConst.FETCH_PRODUCT_CATEGORY_COUNTS_REQUEST;
-}
+};
 export type FetchProductCategoryCountsSuccess = {
   type: typeof productConst.FETCH_PRODUCT_CATEGORY_COUNTS_SUCCESS;
   payload: ProductCategoryCountsSucccessPayload;
@@ -80,9 +80,9 @@ export type FetchProductCategoryCountsFailure = {
 };
 
 //GET CUSTOM LOGS
-export interface FetchCustomLogsRequest {
+export type FetchCustomLogsRequest = {
   type: typeof productConst.FETCH_CUSTOM_LOGS_REQUEST;
-}
+};
 export type FetchCustomLogsSuccess = {
   type: typeof productConst.FETCH_CUSTOM_LOGS_SUCCESS;
   payload: CustomLogsSucccessPayload;

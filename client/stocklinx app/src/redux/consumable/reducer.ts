@@ -117,8 +117,13 @@ export default (state = initialState, action: ConsumableActions) => {
       return {
         ...state,
         consumables: state.consumables.map((consumable) =>
-          consumable.id === action.payload.consumable.id
-            ? action.payload.consumable
+          consumable.id === action.payload.id
+            ? {
+                ...consumable,
+                quantity: consumable.availableQuantity
+                  ? consumable.availableQuantity - action.payload.quantity
+                  : 0,
+              }
             : consumable
         ),
       };
@@ -134,8 +139,13 @@ export default (state = initialState, action: ConsumableActions) => {
       return {
         ...state,
         consumables: state.consumables.map((consumable) =>
-          consumable.id === action.payload.consumable.id
-            ? action.payload.consumable
+          consumable.id === action.payload.id
+            ? {
+                ...consumable,
+                availableQuantity: consumable.availableQuantity
+                  ? consumable.availableQuantity + action.payload.quantity
+                  : action.payload.quantity,
+              }
             : consumable
         ),
       };

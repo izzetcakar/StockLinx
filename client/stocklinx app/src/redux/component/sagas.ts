@@ -19,208 +19,172 @@ import {
   openNotificationError,
   openNotificationSuccess,
 } from "../../notification/Notification";
-import { deployedProductActions } from "../deployedProduct/actions";
+import { userProductActions } from "../userProduct/actions";
+import { assetProductActions } from "../assetProduct/actions";
 
-interface IResponse {
+type IResponse = {
   data: IComponent[] | IComponent | ComponentCheckInSuccessPayload | null;
   message: string;
   success: boolean;
   status: number;
-}
+};
 
 function* fetchComponentsSaga() {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
-      componentRequests.getAll
+    const { data }: IResponse = yield call(componentRequests.getAll);
+    yield put(
+      componentActions.getAllSuccess({
+        components: data as IComponent[],
+      })
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      yield put(
-        componentActions.getAllSuccess({
-          components: data as IComponent[],
-        })
-      );
-    }
   } catch (e) {
     openNotificationError("Component", (e as Error).message);
     yield put(componentActions.getAllFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* fetchComponentSaga(action: FetchComponentRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       componentRequests.get,
       action.payload.id
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      yield put(
-        componentActions.getSuccess({
-          component: data as IComponent,
-        })
-      );
-    }
+    yield put(
+      componentActions.getSuccess({
+        component: data as IComponent,
+      })
+    );
   } catch (e) {
     openNotificationError("Component", (e as Error).message);
     yield put(componentActions.getFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* createComponentSaga(action: CreateComponentRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       componentRequests.create,
       action.payload.component
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("Component Created");
-      yield put(
-        componentActions.createSuccess({ component: data as IComponent })
-      );
-    }
+
+    openNotificationSuccess("Component Created");
+    yield put(
+      componentActions.createSuccess({ component: data as IComponent })
+    );
   } catch (e) {
     openNotificationError("Component", (e as Error).message);
     yield put(componentActions.createFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* createRangeComponentSaga(action: CreateRangeComponentRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       componentRequests.createRange,
       action.payload.components
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("Components Created");
-      yield put(
-        componentActions.createRangeSuccess({
-          components: data as IComponent[],
-        })
-      );
-    }
+    openNotificationSuccess("Components Created");
+    yield put(
+      componentActions.createRangeSuccess({
+        components: data as IComponent[],
+      })
+    );
   } catch (e) {
     openNotificationError("Component", (e as Error).message);
     yield put(componentActions.createRangeFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* updateComponentSaga(action: UpdateComponentRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       componentRequests.update,
       action.payload.component
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("Component Updated");
-      yield put(
-        componentActions.updateSuccess({ component: data as IComponent })
-      );
-    }
+    openNotificationSuccess("Component Updated");
+    yield put(
+      componentActions.updateSuccess({ component: data as IComponent })
+    );
   } catch (e) {
     openNotificationError("Component", (e as Error).message);
     yield put(componentActions.updateFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* removeComponentSaga(action: RemoveComponentRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
-      componentRequests.remove,
-      action.payload.id
-    );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("Component Removed");
-      yield put(componentActions.removeSuccess({ id: action.payload.id }));
-    }
+    yield call(componentRequests.remove, action.payload.id);
+    openNotificationSuccess("Component Removed");
+    yield put(componentActions.removeSuccess({ id: action.payload.id }));
   } catch (e) {
     openNotificationError("Component", (e as Error).message);
     yield put(componentActions.removeFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* removeRangeComponentSaga(action: RemoveRangeComponentRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { message, success }: IResponse = yield call(
-      componentRequests.removeRange,
-      action.payload.ids
-    );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("Components Removed");
-      yield put(
-        componentActions.removeRangeSuccess({ ids: action.payload.ids })
-      );
-    }
+    yield call(componentRequests.removeRange, action.payload.ids);
+    openNotificationSuccess("Components Removed");
+    yield put(componentActions.removeRangeSuccess({ ids: action.payload.ids }));
   } catch (e) {
     openNotificationError("Component", (e as Error).message);
     yield put(componentActions.removeRangeFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* checkInComponentSaga(action: CheckInComponentRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
+    const { data }: IResponse = yield call(
       componentRequests.checkIn,
-      action.payload.checkInDto
+      action.payload
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("Component Checked In");
-      yield put(
-        componentActions.checkInSuccess({ component: data as IComponent })
-      );
-      yield put(
-        deployedProductActions.createSuccess({
-          deployedProduct: (data as ComponentCheckInSuccessPayload)
-            .deployedProduct,
-        })
-      );
-    }
+    openNotificationSuccess("Component Checked In");
+    yield put(
+      componentActions.checkInSuccess({
+        id: action.payload.productId,
+        quantity: action.payload.quantity,
+      })
+    );
+    yield put(
+      userProductActions.createSuccess({
+        userProduct: (data as ComponentCheckInSuccessPayload).userProduct,
+      })
+    );
   } catch (e) {
     openNotificationError("Component", (e as Error).message);
     yield put(componentActions.checkInFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
+
 function* checkOutComponentSaga(action: CheckOutComponentRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    const { data, message, success }: IResponse = yield call(
-      componentRequests.checkOut,
-      action.payload.id
+    yield call(componentRequests.checkOut, action.payload.id);
+    openNotificationSuccess("Component Checked Out");
+    yield put(
+      componentActions.checkOutSuccess({
+        id: action.payload.id,
+        quantity: action.payload.quantity,
+      })
     );
-    if (success !== undefined && !success) {
-      throw new Error(message);
-    } else {
-      openNotificationSuccess("Component Checked Out");
-      yield put(
-        componentActions.checkOutSuccess({ component: data as IComponent })
-      );
-      yield put(
-        deployedProductActions.removeSuccess({ id: action.payload.id })
-      );
-    }
+    yield put(assetProductActions.removeSuccess({ id: action.payload.id }));
   } catch (e) {
     openNotificationError("Component", (e as Error).message);
     yield put(componentActions.checkOutFailure());
@@ -229,9 +193,6 @@ function* checkOutComponentSaga(action: CheckOutComponentRequest) {
 }
 
 function* componentsaga() {
-  // yield all([
-  //   takeLatest(componentConst.FETCH_COMPONENTS_REQUEST, fetchComponentsSaga),
-  // ]);
   yield takeEvery(componentConst.FETCH_COMPONENTS_REQUEST, fetchComponentsSaga);
   yield takeEvery(componentConst.FETCH_COMPONENT_REQUEST, fetchComponentSaga);
   yield takeEvery(componentConst.CREATE_COMPONENT_REQUEST, createComponentSaga);
@@ -254,10 +215,5 @@ function* componentsaga() {
     checkOutComponentSaga
   );
 }
-// function* budgetItemSaga() {
-//   yield takeEvery(budgetItemConst.fetchList, listBudgetITem);
-//   yield takeEvery(budgetItemConst.fetchSave,saveBudgetITem);
-//   yield takeEvery(budgetItemConst.fetchUpdate,updateBudgetITem);
-// }
 
 export default componentsaga;

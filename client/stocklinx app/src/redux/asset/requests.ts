@@ -1,4 +1,7 @@
-import { IProductCheckInDto } from "../../interfaces/dtos";
+import {
+  AssetCheckInPayload,
+  AssetCheckOutPayload,
+} from "../../interfaces/clientInterfaces";
 import { IAsset } from "../../interfaces/serverInterfaces";
 import { request } from "../../server/api";
 const requestUrl = "Asset/";
@@ -46,17 +49,18 @@ const removeRange = (ids: string[]) => {
     queryData: ids,
   });
 };
-const checkIn = (checkInDto: IProductCheckInDto) => {
+const checkIn = (checkInDto: AssetCheckInPayload) => {
   return request<IAsset>({
     requestUrl: requestUrl + "checkin",
     apiType: "post",
     queryData: checkInDto,
   });
 };
-const checkOut = (id: string) => {
+const checkOut = (checkOutDto: AssetCheckOutPayload) => {
   return request<IAsset>({
-    requestUrl: requestUrl + "checkout/" + id,
+    requestUrl: requestUrl + "checkout",
     apiType: "post",
+    queryData: checkOutDto,
   });
 };
 

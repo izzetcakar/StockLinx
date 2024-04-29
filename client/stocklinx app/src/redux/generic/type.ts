@@ -1,35 +1,35 @@
 import { genericConst } from "./constant";
 
-export interface GenericState {
+export type GenericState = {
   loading: number;
   error: string | null;
-}
+};
 
-export interface GenericPayload {
+export type GenericPayload = {
   loading: number;
   error: string | null;
-}
+};
 //CLIENT ACTION TYPES
-export interface SetLoading {
+export type SetLoading = {
   type: typeof genericConst.SET_LOADING;
   payload: number;
-}
-export interface ResetLoading {
+};
+export type ResetLoading = {
   type: typeof genericConst.RESET_LOADING;
-}
-export interface IncreaseLoading {
+};
+export type IncreaseLoading = {
   type: typeof genericConst.INCREASE_LOADING;
-}
-export interface DecreaseLoading {
+};
+export type DecreaseLoading = {
   type: typeof genericConst.DECREASE_LOADING;
-}
-export interface SetError {
+};
+export type SetError = {
   type: typeof genericConst.SET_ERROR;
   payload: string | null;
-}
-export interface ClearError {
+};
+export type ClearError = {
   type: typeof genericConst.CLEAR_ERROR;
-}
+};
 
 export type GenericActions =
   | SetLoading
