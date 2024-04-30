@@ -8,11 +8,13 @@ import {
   CategoryType,
   IUserProduct,
   ILicense,
+  IAssetProduct,
 } from "../../interfaces/serverInterfaces";
 import { licenseActions } from "../../redux/license/actions";
 import uuid4 from "uuid4";
 import { Anchor, Button } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
+import { openCheckInModal } from "../../modals/modals";
 
 export const useColumns = () => {
   const dispatch = useDispatch();
@@ -26,36 +28,60 @@ export const useColumns = () => {
     (state: RootState) => state.category.categories
   );
 
-  const handleCheckIn = (data: IUserProduct) => {
+  const handleUserCheckIn = (userProduct: IUserProduct) => {
     dispatch(
-      licenseActions.checkIn({
-        checkInDto: {
-          productId: data.licenseId,
-          userId: data.userId,
-          notes: data.notes,
-          assaignDate: data.assignDate,
-          quantity: data.quantity,
-        } as IProductCheckInDto,
+      licenseActions.userCheckIn({
+        userId: userProduct.userId,
+        productId: userProduct.licenseId as string,
+        assaignDate: userProduct.assignDate,
+        notes: userProduct.notes,
+        quantity: userProduct.quantity,
       })
     );
   };
+
+  const handleAssetCheckIn = (userProduct: IAssetProduct) => {
+    dispatch(
+      licenseActions.assetCheckIn({
+        assetId: userProduct.assetId as string,
+        productId: userProduct.licenseId as string,
+        assaignDate: userProduct.assignDate,
+        notes: userProduct.notes,
+        quantity: userProduct.quantity,
+      })
+    );
+  };
+
   const checkIn = (id: string) => {
     const newUserProduct: IUserProduct = {
       id: uuid4(),
       userId: "",
-      assetId: null,
       licenseId: id,
+      assetId: null,
       accessoryId: null,
-      componentId: null,
       consumableId: null,
       assignDate: new Date(),
       notes: null,
       productStatusId: null,
       quantity: 1,
     };
-    openCheckInModal(newUserProduct, handleCheckIn);
+    const newAssetProduct: IAssetProduct = {
+      id: uuid4(),
+      assetId: "",
+      licenseId: id,
+      componentId: null,
+      assignDate: new Date(),
+      notes: null,
+      quantity: 1,
+    };
+    openCheckInModal(
+      ["User"],
+      newUserProduct,
+      handleUserCheckIn,
+      newAssetProduct,
+      handleAssetCheckIn
+    );
   };
-
   const columns: BaseColumn[] = [
     {
       caption: "Name",

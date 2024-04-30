@@ -38,9 +38,8 @@ import SupplierForm from "../forms/supplier/SupplierForm";
 import UserForm from "../forms/user/UserForm";
 import FieldSetForm from "../forms/fieldSet/FieldSetForm";
 import CustomFieldForm from "../forms/customField/CustomFieldForm";
-import UserProductCheckInForm from "../forms/checkInOut/UserProductCheckInForm";
 import PermissionForm from "../forms/permission/PermissionForm";
-import AssetProductCheckInForm from "../forms/checkInOut/AssetProductCheckInForm";
+import CheckInForm from "../forms/checkInOut/CheckInForm";
 
 export const genericConfirmModal = (onConfirm: () => void) =>
   modals.openConfirmModal({
@@ -188,34 +187,23 @@ export const openCustomFieldModal = (customField?: ICustomField) => {
     size: "auto",
   });
 };
-export const openUserProductCheckInModal = (
-  userProduct: IUserProduct,
-  handleCheckIn: (data: IUserProduct) => void
+export const openCheckInModal = (
+  segment: string[] = ["User"],
+  userProduct?: IUserProduct,
+  userCheckIn?: (data: IUserProduct) => void,
+  assetProduct?: IAssetProduct,
+  assetCheckIn?: (data: IAssetProduct) => void
 ) => {
   modals.open({
     modalId: "userProduct_checkIn_modal",
     title: "Check In",
     children: (
-      <UserProductCheckInForm
+      <CheckInForm
+        segment={segment}
         userProduct={userProduct}
-        onSubmit={handleCheckIn}
-      />
-    ),
-    xOffset: "auto",
-    size: "auto",
-  });
-};
-export const openAssetProductCheckInModal = (
-  assetProduct: IAssetProduct,
-  handleCheckIn: (data: IAssetProduct) => void
-) => {
-  modals.open({
-    modalId: "assetProduct_checkIn_modal",
-    title: "Check In",
-    children: (
-      <AssetProductCheckInForm
+        userCheckIn={userCheckIn}
         assetProduct={assetProduct}
-        onSubmit={handleCheckIn}
+        assetCheckIn={assetCheckIn}
       />
     ),
     xOffset: "auto",
