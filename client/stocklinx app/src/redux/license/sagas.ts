@@ -231,7 +231,7 @@ function* assetCheckOutLicenseSaga(action: AssetCheckOutLicenseRequest) {
   yield put(genericActions.decreaseLoading());
 }
 
-function* licensesaga() {
+function* licenseSaga() {
   yield takeEvery(licenseConst.FETCH_LICENSES_REQUEST, fetchLicensesSaga);
   yield takeEvery(licenseConst.FETCH_LICENSE_REQUEST, fetchLicenseSaga);
   yield takeEvery(licenseConst.CREATE_LICENSE_REQUEST, createLicenseSaga);
@@ -263,4 +263,4 @@ function* licensesaga() {
   );
 }
 
-export default licensesaga;
+export default licenseSaga;

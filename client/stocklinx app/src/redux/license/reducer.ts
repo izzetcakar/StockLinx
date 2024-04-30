@@ -113,10 +113,14 @@ export default (state = initialState, action: LicenseActions) => {
       return {
         ...state,
       };
+    case licenseConst.USER_CHECK_IN_LICENSE_FAILURE:
+      return {
+        ...state,
+      };
     case licenseConst.USER_CHECK_IN_LICENSE_SUCCESS:
       return {
         ...state,
-        licenses: state.licenses.map((license) => {
+        licenses: state.licenses.map((license) =>
           license.id === action.payload.id
             ? {
                 ...license,
@@ -124,12 +128,8 @@ export default (state = initialState, action: LicenseActions) => {
                   ? license.availableQuantity - action.payload.quantity
                   : 0,
               }
-            : license;
-        }),
-      };
-    case licenseConst.USER_CHECK_IN_LICENSE_FAILURE:
-      return {
-        ...state,
+            : license
+        ),
       };
     case licenseConst.USER_CHECK_OUT_LICENSE_REQUEST:
       return {
@@ -160,16 +160,16 @@ export default (state = initialState, action: LicenseActions) => {
     case licenseConst.ASSET_CHECK_IN_LICENSE_SUCCESS:
       return {
         ...state,
-        licenses: state.licenses.map((license) => {
+        licenses: state.licenses.map((license) =>
           license.id === action.payload.id
             ? {
                 ...license,
                 availableQuantity: license.availableQuantity
-                  ? license.availableQuantity - action.payload.quantity
-                  : 0,
+                  ? license.availableQuantity + action.payload.quantity
+                  : action.payload.quantity,
               }
-            : license;
-        }),
+            : license
+        ),
       };
     case licenseConst.ASSET_CHECK_IN_LICENSE_FAILURE:
       return {
