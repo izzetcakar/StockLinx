@@ -29,7 +29,7 @@ const GridtableContent: React.FC<GridtableProps> = ({
   const [keyfield, setKeyfield] = useState<keyof object>(
     itemKey as keyof object
   );
-  const { gridColumns, selectedKeys } = useGridTableContext();
+  const { visibleColumns, selectedKeys } = useGridTableContext();
 
   const { onBaseColumnsChange } = useColumns(columns);
 
@@ -91,7 +91,7 @@ const GridtableContent: React.FC<GridtableProps> = ({
           {enableEditActions && data.length > 0 ? (
             <td className="gridtable__edit__cell"></td>
           ) : null}
-          {gridColumns.map((vColumn) => (
+          {visibleColumns.map((vColumn) => (
             <td
               key={"$column__cell__" + vColumn.id}
               className="gridtable__column__cell"
@@ -146,7 +146,7 @@ const GridtableContent: React.FC<GridtableProps> = ({
                   />
                 </td>
               ) : null}
-              {gridColumns
+              {visibleColumns
                 .filter((column) => column.visible !== false)
                 .map((column) => (
                   <td

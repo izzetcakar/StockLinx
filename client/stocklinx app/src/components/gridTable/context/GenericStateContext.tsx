@@ -3,6 +3,7 @@ import { createContext } from "react";
 import { Column, Filter } from "../interfaces/interfaces";
 
 interface GridTableContextProps {
+  visibleColumns: Column[];
   filters: Filter[];
   gridColumns: Column[];
   itemPerPage: number;
@@ -20,6 +21,7 @@ interface GridTableContextProps {
 }
 
 const GridTableContext = createContext<GridTableContextProps>({
+  visibleColumns: [],
   filters: [],
   itemPerPage: 10,
   gridColumns: [],
@@ -49,6 +51,10 @@ export const GenericStateProvider: React.FC<{ children: React.ReactNode }> = ({
   //Generic
   const [loading, setLoading] = useState<boolean>(false);
 
+  const visibleColumns = gridColumns.filter(
+    (column) => column.visible !== false
+  );
+
   const clearFilters = () => {
     if (filters.length > 0) setFilters([]);
   };
@@ -68,6 +74,7 @@ export const GenericStateProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const values = {
+    visibleColumns,
     filters,
     itemPerPage,
     selectedKeys,

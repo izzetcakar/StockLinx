@@ -86,8 +86,9 @@ export const GenericProvider: React.FC<GenericProviderProps> = ({
             value={company}
             onChange={(value) => setCompany(value)}
             classNames={filterClasses}
-            comboboxProps={{ position: 'bottom' }}
+            comboboxProps={{ position: "bottom" }}
             nothingFoundMessage="No company found"
+            required
             withAsterisk
           />
           <Select
@@ -99,13 +100,16 @@ export const GenericProvider: React.FC<GenericProviderProps> = ({
               }))}
             label="Branch"
             placeholder="Select Branch"
-            value={branch?.id || ""}
+            value={branch?.id}
             onChange={(value) =>
               dispatch(branchActions.setBranch(findBranchById(value as string)))
             }
             classNames={filterClasses}
-            comboboxProps={{ position: 'bottom' }}
-            nothingFoundMessage={company ? "No branch found" : "Select company first"}
+            comboboxProps={{ position: "bottom" }}
+            nothingFoundMessage={
+              company ? "No branch found" : "Select company first"
+            }
+            required
             withAsterisk
           />
           <LoadingOverlay visible={loading > 0} zIndex={1000} />
