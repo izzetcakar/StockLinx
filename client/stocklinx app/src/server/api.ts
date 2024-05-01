@@ -109,6 +109,7 @@ export const request = async <T>({
     const message: string =
       (error.response?.data.error as string) ?? "Network Error";
     status = error.response?.status ?? 500;
+    throw new Error(message);
 
     switch (status) {
       case 400:

@@ -113,10 +113,6 @@ export default (state = initialState, action: LicenseActions) => {
       return {
         ...state,
       };
-    case licenseConst.USER_CHECK_IN_LICENSE_FAILURE:
-      return {
-        ...state,
-      };
     case licenseConst.USER_CHECK_IN_LICENSE_SUCCESS:
       return {
         ...state,
@@ -130,6 +126,10 @@ export default (state = initialState, action: LicenseActions) => {
               }
             : license
         ),
+      };
+    case licenseConst.USER_CHECK_IN_LICENSE_FAILURE:
+      return {
+        ...state,
       };
     case licenseConst.USER_CHECK_OUT_LICENSE_REQUEST:
       return {
@@ -165,7 +165,7 @@ export default (state = initialState, action: LicenseActions) => {
             ? {
                 ...license,
                 availableQuantity: license.availableQuantity
-                  ? license.availableQuantity + action.payload.quantity
+                  ? license.availableQuantity - action.payload.quantity
                   : action.payload.quantity,
               }
             : license

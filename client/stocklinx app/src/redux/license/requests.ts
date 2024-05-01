@@ -51,7 +51,7 @@ const removeRange = (ids: string[]) => {
 };
 const userCheckIn = (checkInDto: UserProductCheckInPayload) => {
   return request<ILicense>({
-    requestUrl: requestUrl + "checkin",
+    requestUrl: requestUrl + "checkin/user",
     apiType: "post",
     queryData: checkInDto,
   });
@@ -59,7 +59,7 @@ const userCheckIn = (checkInDto: UserProductCheckInPayload) => {
 
 const assetCheckIn = (checkInDto: AssetProductCheckInPayload) => {
   return request<ILicense>({
-    requestUrl: requestUrl + "checkin",
+    requestUrl: requestUrl + "checkin/asset",
     apiType: "post",
     queryData: checkInDto,
   });
@@ -67,7 +67,7 @@ const assetCheckIn = (checkInDto: AssetProductCheckInPayload) => {
 
 const userCheckOut = (id: string) => {
   return request<ILicense>({
-    requestUrl: requestUrl + "checkout/" + id,
+    requestUrl: requestUrl + "checkout/user/" + id,
     apiType: "post",
     queryData: "USER",
   });
@@ -75,7 +75,7 @@ const userCheckOut = (id: string) => {
 
 const assetCheckOut = (id: string) => {
   return request<ILicense>({
-    requestUrl: requestUrl + "checkout/" + id,
+    requestUrl: requestUrl + "checkout/asset/" + id,
     apiType: "post",
     queryData: "ASSET",
   });

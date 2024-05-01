@@ -42,11 +42,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
                 throw new Exception("Product Status not found");
             }
             var assets = await dbContext.Assets.AnyAsync(a => a.ProductStatusId == id);
-            var accessories = await dbContext.Accessories.AnyAsync(a => a.ProductStatusId == id);
-            var components = await dbContext.Components.AnyAsync(c => c.ProductStatusId == id);
-            var consumables = await dbContext.Consumables.AnyAsync(c => c.ProductStatusId == id);
-            var licenses = await dbContext.Licenses.AnyAsync(l => l.ProductStatusId == id);
-            if (assets || accessories || components || consumables || licenses)
+            if (assets)
             {
                 throw new Exception("Product Status is in use");
             }
