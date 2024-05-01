@@ -7,13 +7,13 @@ import {
   NumberInput,
   SegmentedControl,
 } from "@mantine/core";
-import { UseFormReturnType, useForm } from "@mantine/form";
+import { useForm } from "@mantine/form";
 import { IAssetProduct, IUserProduct } from "../../interfaces/serverInterfaces";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import FormSelect from "../mantine/FormSelect";
 
-interface CheckInFormProps {
+interface CheckInOutFormProps {
   userProduct?: IUserProduct;
   assetProduct?: IAssetProduct;
   segment: string[];
@@ -21,7 +21,7 @@ interface CheckInFormProps {
   assetCheckIn?: (data: IAssetProduct) => void;
 }
 
-const CheckInForm: React.FC<CheckInFormProps> = ({
+const CheckInOutForm: React.FC<CheckInOutFormProps> = ({
   userProduct,
   assetProduct,
   segment,
@@ -55,18 +55,18 @@ const CheckInForm: React.FC<CheckInFormProps> = ({
     }
   };
 
-  const getForm = () => {
-    if (type === "User") {
-      return userForm;
-    }
-    return assetForm;
-  };
-
   const getFormInputProps = (input: string) => {
     if (type === "User") {
       return userForm.getInputProps(input);
     }
     return assetForm.getInputProps(input);
+  };
+
+  const getForm = () => {
+    if (type === "User") {
+      return userForm;
+    }
+    return assetForm;
   };
 
   return (
@@ -88,18 +88,21 @@ const CheckInForm: React.FC<CheckInFormProps> = ({
               value: user.id,
               label: user.firstName + " " + user.lastName,
             }))}
-            inputProps={getFormInputProps("userId")}
-            value={(getForm() as UseFormReturnType<IUserProduct>).values.userId}
+            inputProps={userForm.getInputProps("userId")}
+            value={userForm.values.userId}
           />
-        ) : (
-          <select {...getFormInputProps("assetId")}>
-            {assets.map((asset) => (
-              <option key={asset.id} value={asset.id}>
-                {asset.name}
-              </option>
-            ))}
-          </select>
-        )}
+        ) : null}
+        {type === "Asset" ? (
+          <FormSelect
+            label="Asset"
+            data={assets.map((asset) => ({
+              value: asset.id,
+              label: asset.name,
+            }))}
+            inputProps={assetForm.getInputProps("assetId")}
+            value={assetForm.values.assetId}
+          />
+        ) : null}
         {type === "User" ? (
           <NumberInput
             label="Quantity"
@@ -125,4 +128,4 @@ const CheckInForm: React.FC<CheckInFormProps> = ({
   );
 };
 
-export default CheckInForm;
+export default CheckInOutForm;
