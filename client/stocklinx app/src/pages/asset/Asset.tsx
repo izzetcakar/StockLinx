@@ -11,6 +11,7 @@ import { productStatusActions } from "../../redux/productStatus/actions";
 import { Anchor, Tabs } from "@mantine/core";
 import HistoryLogs from "../../components/dataGrid/customLog/HistoryLogs";
 import "../product.scss";
+import { supplierActions } from "../../redux/supplier/actions";
 
 const Asset = () => {
   const { id } = useParams();
@@ -32,6 +33,7 @@ const Asset = () => {
     dispatch(categoryActions.getAll());
     dispatch(modelActions.getAll());
     dispatch(productStatusActions.getAll());
+    dispatch(supplierActions.getAll());
   }, []);
 
   useEffect(() => {

@@ -75,7 +75,7 @@ export const useColumns = () => {
       quantity: 1,
     };
     openCheckInModal(
-      ["User"],
+      ["User", "Asset"],
       newUserProduct,
       handleUserCheckIn,
       newAssetProduct,

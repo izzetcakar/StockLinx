@@ -39,7 +39,7 @@ import UserForm from "../forms/user/UserForm";
 import FieldSetForm from "../forms/fieldSet/FieldSetForm";
 import CustomFieldForm from "../forms/customField/CustomFieldForm";
 import PermissionForm from "../forms/permission/PermissionForm";
-import CheckInForm from "../forms/checkInOut/CheckInForm";
+import CheckInOutForm from "../forms/checkInOut/CheckInOutForm";
 
 export const genericConfirmModal = (onConfirm: () => void) =>
   modals.openConfirmModal({
@@ -198,7 +198,7 @@ export const openCheckInModal = (
     modalId: "userProduct_checkIn_modal",
     title: "Check In",
     children: (
-      <CheckInForm
+      <CheckInOutForm
         segment={segment}
         userProduct={userProduct}
         userCheckIn={userCheckIn}

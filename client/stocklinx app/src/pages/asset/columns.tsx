@@ -9,7 +9,7 @@ import { IAsset, IUserProduct } from "../../interfaces/serverInterfaces";
 import { assetActions } from "../../redux/asset/actions";
 import { useNavigate } from "react-router-dom";
 import { getImage } from "../../functions/Image";
-import { openUserProductCheckInModal } from "../../modals/modals";
+import { openCheckInModal } from "../../modals/modals";
 import { AssetCheckInPayload } from "../../interfaces/clientInterfaces";
 import base_asset from "../../assets/baseProductImages/base_asset.jpg";
 import axios from "axios";
@@ -26,6 +26,8 @@ export const useColumns = () => {
   const userProducts = useSelector(
     (state: RootState) => state.userProduct.userProducts
   );
+  const suppliers = useSelector((state: RootState) => state.supplier.suppliers);
+
   const handleCheckIn = (data: IUserProduct) => {
     dispatch(
       assetActions.checkIn({
@@ -37,6 +39,7 @@ export const useColumns = () => {
       } as AssetCheckInPayload)
     );
   };
+
   const checkIn = (id: string) => {
     const newUserProduct: IUserProduct = {
       id: uuid4(),
@@ -50,7 +53,7 @@ export const useColumns = () => {
       productStatusId: null,
       quantity: 1,
     };
-    openUserProductCheckInModal(newUserProduct, handleCheckIn);
+    openCheckInModal(["User"], newUserProduct, handleCheckIn);
   };
 
   const getTest = async () => {
@@ -219,7 +222,12 @@ export const useColumns = () => {
       dataField: "supplierId",
       caption: "Supplier",
       dataType: "string",
-      visible: false,
+      lookup: {
+        data: suppliers.map((supplier) => ({
+          value: supplier.id,
+          label: supplier.name,
+        })),
+      },
     },
   ];
   const excelColumns: ExcelColumn[] = [

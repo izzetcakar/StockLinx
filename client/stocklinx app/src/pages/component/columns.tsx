@@ -9,7 +9,7 @@ import { Anchor, Button } from "@mantine/core";
 import { IAssetProduct, IComponent } from "../../interfaces/serverInterfaces";
 import { componentActions } from "../../redux/component/actions";
 import { AssetProductCheckInPayload } from "../../interfaces/clientInterfaces";
-import { openAssetProductCheckInModal } from "../../modals/modals";
+import { openCheckInModal } from "../../modals/modals";
 import uuid4 from "uuid4";
 
 export const useColumns = () => {
@@ -42,7 +42,13 @@ export const useColumns = () => {
       notes: null,
       quantity: 1,
     };
-    openAssetProductCheckInModal(newAssetProduct, handleCheckIn);
+    openCheckInModal(
+      ["Asset"],
+      undefined,
+      undefined,
+      newAssetProduct,
+      handleCheckIn
+    );
   };
 
   const columns: BaseColumn[] = [

@@ -13,7 +13,7 @@ import { Anchor, Button, Image } from "@mantine/core";
 import { accessoryActions } from "../../redux/accessory/actions";
 import { useNavigate } from "react-router-dom";
 import { getImage } from "../../functions/Image";
-import { openUserProductCheckInModal } from "../../modals/modals";
+import { openCheckInModal } from "../../modals/modals";
 import base_accessory from "../../assets/baseProductImages/base_accessory.png";
 import uuid4 from "uuid4";
 
@@ -52,7 +52,7 @@ export const useColumns = () => {
       notes: null,
       quantity: 1,
     };
-    openUserProductCheckInModal(newUserProduct, handleCheckIn);
+    openCheckInModal(["User"], newUserProduct, handleCheckIn);
   };
 
   const columns: BaseColumn[] = [
@@ -167,10 +167,7 @@ export const useColumns = () => {
               color={"green"}
               variant="filled"
               size="xs"
-              disabled={
-                accessory?.availableQuantity !== undefined &&
-                accessory?.availableQuantity < 1
-              }
+              disabled={(accessory?.availableQuantity as number) < 1}
               onClick={() => checkIn(accessory.id)}
             >
               Check In
