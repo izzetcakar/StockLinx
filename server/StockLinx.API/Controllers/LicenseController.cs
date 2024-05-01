@@ -116,7 +116,7 @@ namespace StockLinx.API.Controllers
             }
         }
 
-        [HttpPost("checkin")]
+        [HttpPost("checkin/user")]
         public async Task<IActionResult> CheckInLicense(UserProductCheckInDto dto)
         {
             try
@@ -130,7 +130,7 @@ namespace StockLinx.API.Controllers
             }
         }
 
-        [HttpPost("checkin")]
+        [HttpPost("checkin/asset")]
         public async Task<IActionResult> CheckInLicense(AssetProductCheckInDto dto)
         {
             try
@@ -144,17 +144,31 @@ namespace StockLinx.API.Controllers
             }
         }
 
-        [HttpPost("checkout/{id}")]
-        public async Task<IActionResult> CheckOutLicense(Guid id)
+        [HttpPost("checkout/user/{id}")]
+        public async Task<IActionResult> UserCheckOutLicense(Guid id)
         {
             try
             {
-                await _licenseService.CheckOutAsync(id);
+                await _licenseService.UserCheckOutAsync(id);
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
             }
             catch (Exception ex)
             {
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
+        }
+
+        [HttpPost("checkout/asset/{id}")]
+        public async Task<IActionResult> AssetCheckOutLicense(Guid id)
+        {
+            try
+            {
+                await _licenseService.AssetCheckOutAsync(id);
+                return CreateActionResult(CustomResponseDto<NoContentResult>.Success(200));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentResult>.Fail(500, ex.Message));
             }
         }
     }
