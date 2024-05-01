@@ -34,7 +34,7 @@ const UserForm: React.FC<UserFormProps> = ({ user, create }) => {
     branches.find(
       (b) =>
         b.id === departments.find((d) => d.id === user?.departmentId)?.branchId
-    )?.id || ""
+    )?.id
   );
   const [company, setCompany] = React.useState(
     companies
@@ -43,7 +43,7 @@ const UserForm: React.FC<UserFormProps> = ({ user, create }) => {
         label: c.name,
       }))
       .find((c) => c.value === branches.find((b) => b.id === branch)?.companyId)
-      ?.value || ""
+      ?.value
   );
   const { initialValues, isCreate } = useInitial(user, create);
 
@@ -106,6 +106,7 @@ const UserForm: React.FC<UserFormProps> = ({ user, create }) => {
           placeholder="Select Company"
           value={company}
           onChange={(value) => handleCompanyChange(value as string)}
+          required
           withAsterisk
         />
         <Select
@@ -116,6 +117,7 @@ const UserForm: React.FC<UserFormProps> = ({ user, create }) => {
           placeholder="Select Branch"
           value={branch}
           onChange={(value) => handleBranchChange(value as string)}
+          required
           withAsterisk
         />
         <FormSelect
@@ -127,19 +129,21 @@ const UserForm: React.FC<UserFormProps> = ({ user, create }) => {
             }))}
           label="Department"
           inputProps={form.getInputProps("departmentId")}
-          value={form.values.departmentId || ""}
-          withAsterisk
+          value={form.values.departmentId}
+          required
         />
         <TextInput
           label="First Name"
           placeholder="First Name"
           {...form.getInputProps("firstName")}
+          required
           withAsterisk
         />
         <TextInput
           label="Last Name"
           placeholder="Last Name"
           {...form.getInputProps("lastName")}
+          required
           withAsterisk
         />
         <TextInput
@@ -174,6 +178,7 @@ const UserForm: React.FC<UserFormProps> = ({ user, create }) => {
           label="Start Date"
           placeholder="Start Date"
           {...form.getInputProps("startDate")}
+          required
           withAsterisk
         />
         <DateInput

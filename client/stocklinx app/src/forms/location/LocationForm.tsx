@@ -41,6 +41,7 @@ const LocationForm: React.FC<LocationFormProps> = ({ location, create }) => {
           label="Name"
           placeholder="New Name"
           {...form.getInputProps("name")}
+          required
           withAsterisk
         />
         <TextInput

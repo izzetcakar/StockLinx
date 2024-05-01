@@ -4,20 +4,20 @@ import filterClasses from "../../mantineModules/baseFilter.module.scss";
 interface FormSelectProps {
   data: { value: string; label: string }[];
   label: string;
-  value: string;
   inputProps: object;
+  value: string | null;
   clearable?: boolean;
-  withAsterisk?: boolean;
+  required?: boolean;
   onChange?: (value: string | null) => void;
 }
 
 const FormSelect: React.FC<FormSelectProps> = ({
   data,
   label,
-  value,
   inputProps,
+  value,
   clearable,
-  withAsterisk,
+  required,
   onChange,
 }) => {
   return (
@@ -27,7 +27,13 @@ const FormSelect: React.FC<FormSelectProps> = ({
       placeholder={`Select ${label}`}
       {...inputProps}
       value={value}
-      onChange={(value) => onChange && onChange(value)}
+      {...(onChange
+        ? {
+            onChange: (value) => {
+              onChange(value);
+            },
+          }
+        : {})}
       classNames={filterClasses}
       nothingFoundMessage={`No ${label.toLowerCase()} found`}
       comboboxProps={{
@@ -36,7 +42,8 @@ const FormSelect: React.FC<FormSelectProps> = ({
       }}
       maxDropdownHeight={200}
       clearable={clearable}
-      withAsterisk={withAsterisk}
+      required={required}
+      withAsterisk={required}
     />
   );
 };

@@ -49,6 +49,7 @@ const BranchForm: React.FC<BranchFormProps> = ({ branch, create }) => {
           label="Name"
           placeholder="New Name"
           {...form.getInputProps("name")}
+          required
           withAsterisk
         />
         <FormSelect
@@ -58,8 +59,8 @@ const BranchForm: React.FC<BranchFormProps> = ({ branch, create }) => {
           }))}
           label="Company"
           inputProps={form.getInputProps("companyId")}
-          value={form.values.companyId || ""}
-          withAsterisk
+          value={form.values.companyId}
+          required
         />
         <FormSelect
           data={locations.map((location) => ({
@@ -68,7 +69,7 @@ const BranchForm: React.FC<BranchFormProps> = ({ branch, create }) => {
           }))}
           label="Location"
           inputProps={form.getInputProps("locationId")}
-          value={form.values.locationId || ""}
+          value={form.values.locationId}
         />
         <Group mt="md" justify="flex-end">
           <Button type="submit" color="dark">

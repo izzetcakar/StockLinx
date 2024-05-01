@@ -84,6 +84,7 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
           label="Name"
           placeholder="New Name"
           {...form.getInputProps("name")}
+          required
           withAsterisk
         />
         <FormSelect
@@ -95,8 +96,8 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
             }))}
           label="Category"
           inputProps={form.getInputProps("categoryId")}
-          value={form.values.categoryId || ""}
-          withAsterisk
+          value={form.values.categoryId}
+          required
         />
         <FormSelect
           data={suppliers.map((supplier) => ({
@@ -105,7 +106,7 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
           }))}
           label="Supplier"
           inputProps={form.getInputProps("supplierId")}
-          value={form.values.supplierId || ""}
+          value={form.values.supplierId}
           clearable
         />
         <FormSelect
@@ -115,7 +116,7 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
           }))}
           label="Manufacturer"
           inputProps={form.getInputProps("manufacturerId")}
-          value={form.values.manufacturerId || ""}
+          value={form.values.manufacturerId}
           clearable
         />
         <TextInput

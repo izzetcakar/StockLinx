@@ -45,6 +45,7 @@ const FieldSetForm: React.FC<FieldSetFormProps> = ({ fieldSet }) => {
           label="Name"
           placeholder="New Name"
           {...form.getInputProps("name")}
+          required
           withAsterisk
         />
         <Group mt="md" justify="flex-end">

@@ -76,6 +76,7 @@ const SupplierForm: React.FC<SupplierFormProps> = ({ supplier, create }) => {
           label="Name"
           placeholder="New Name"
           {...form.getInputProps("name")}
+          required
           withAsterisk
         />
         <FormSelect
@@ -85,7 +86,7 @@ const SupplierForm: React.FC<SupplierFormProps> = ({ supplier, create }) => {
           }))}
           label="Location"
           inputProps={form.getInputProps("locationId")}
-          value={form.values.locationId || ""}
+          value={form.values.locationId}
           clearable
         />
         <TextInput

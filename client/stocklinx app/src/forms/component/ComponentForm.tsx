@@ -87,8 +87,8 @@ const ComponentForm: React.FC<ComponentFormProps> = ({ component, create }) => {
             }))}
           label="Category"
           inputProps={form.getInputProps("categoryId")}
-          value={form.values.categoryId || ""}
-          withAsterisk
+          value={form.values.categoryId}
+          required
         />
         <NumberInput
           defaultValue={1}
@@ -111,7 +111,7 @@ const ComponentForm: React.FC<ComponentFormProps> = ({ component, create }) => {
           }))}
           label="Supplier"
           inputProps={form.getInputProps("supplierId")}
-          value={form.values.supplierId || ""}
+          value={form.values.supplierId}
           clearable
         />
         <TextInput

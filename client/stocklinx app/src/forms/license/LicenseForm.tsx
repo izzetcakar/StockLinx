@@ -91,14 +91,15 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license, create }) => {
             }))}
           label="Category"
           inputProps={form.getInputProps("categoryId")}
-          value={form.values.categoryId || ""}
-          withAsterisk
+          value={form.values.categoryId}
+          required
         />
         <TextInput
           label="License Key"
           placeholder="License Key"
           {...form.getInputProps("licenseKey")}
-          value={form.values.licenseKey || ""}
+          value={form.values.licenseKey}
+          required
           withAsterisk
         />
         <NumberInput
@@ -117,7 +118,7 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license, create }) => {
           }))}
           label="Manufacturer"
           inputProps={form.getInputProps("manufacturerId")}
-          value={form.values.manufacturerId || ""}
+          value={form.values.manufacturerId}
           clearable
         />
         <TextInput
@@ -144,7 +145,7 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license, create }) => {
           }))}
           label="Supplier"
           inputProps={form.getInputProps("supplierId")}
-          value={form.values.supplierId || ""}
+          value={form.values.supplierId}
           clearable
         />
         <TextInput

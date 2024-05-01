@@ -110,6 +110,7 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory, create }) => {
           label="Name"
           placeholder="New Name"
           {...form.getInputProps("name")}
+          required
           withAsterisk
         />
         <FormSelect
@@ -121,7 +122,7 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory, create }) => {
             }))}
           label="Category"
           inputProps={form.getInputProps("categoryId")}
-          value={form.values.categoryId || ""}
+          value={form.values.categoryId}
         />
         <FormSelect
           data={productStatuses.map((status) => ({
@@ -130,7 +131,7 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory, create }) => {
           }))}
           label="Status"
           inputProps={form.getInputProps("productStatusId")}
-          value={form.values.productStatusId || ""}
+          value={form.values.productStatusId}
         />
         <FormSelect
           data={suppliers.map((supplier) => ({
@@ -138,7 +139,7 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory, create }) => {
             label: supplier.name,
           }))}
           label="Supplier"
-          value={form.values.supplierId || ""}
+          value={form.values.supplierId}
           inputProps={form.getInputProps("supplierId")}
           clearable
         />
@@ -149,14 +150,15 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory, create }) => {
           }))}
           label="Manufacturer"
           inputProps={form.getInputProps("manufacturerId")}
-          value={form.values.manufacturerId || ""}
+          value={form.values.manufacturerId}
           clearable
         />
         <TextInput
           label="Model No"
           placeholder="Model No"
           {...form.getInputProps("modelNo")}
-          value={form.values.modelNo || ""}
+          value={form.values.modelNo}
+          required
           withAsterisk
         />
         <TextInput
@@ -189,6 +191,7 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory, create }) => {
           placeholder="Quantity"
           label="Quantity"
           {...form.getInputProps("quantity")}
+          required
           withAsterisk
           hideControls
         />

@@ -44,6 +44,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ category, create }) => {
           label="Name"
           placeholder="New Name"
           {...form.getInputProps("name")}
+          required
           withAsterisk
         />
         <FormSelect
@@ -56,14 +57,14 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ category, create }) => {
           ]}
           label="Type"
           inputProps={form.getInputProps("type")}
-          value={form.values.type.toString() || ""}
+          value={form.values.type.toString()}
           onChange={(value) =>
             form.setFieldValue(
               "type",
               (value ? parseInt(value) : null) as CategoryType
             )
           }
-          withAsterisk
+          required
         />
       </Flex>
       <Group mt="md" justify="flex-end">

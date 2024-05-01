@@ -53,6 +53,7 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
           label="Name"
           placeholder="New Name"
           {...form.getInputProps("name")}
+          required
           withAsterisk
         />
         <FormSelect
@@ -62,7 +63,7 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
           }))}
           label="Location"
           inputProps={form.getInputProps("locationId")}
-          value={form.values.locationId || ""}
+          value={form.values.locationId}
         />
         <Textarea
           placeholder="Your notes here"

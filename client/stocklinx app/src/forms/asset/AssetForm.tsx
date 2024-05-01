@@ -63,8 +63,9 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
         {...form.getInputProps(`overageAssets.${index}.tagNo`)}
         value={
           form.values.overageAssets?.find((_, arrIndex) => arrIndex === index)
-            ?.tagNo || ""
+            ?.tagNo
         }
+        required
         withAsterisk
       />
       <TextInput
@@ -72,8 +73,9 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
         {...form.getInputProps(`overageAssets.${index}.serialNo`)}
         value={
           form.values.overageAssets?.find((_, arrIndex) => arrIndex === index)
-            ?.serialNo || ""
+            ?.serialNo
         }
+        required
         withAsterisk
       />
       <ActionIcon
@@ -164,7 +166,7 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
           }))}
           label="Model"
           inputProps={form.getInputProps("modelId")}
-          value={form.values.modelId || ""}
+          value={form.values.modelId}
           clearable
         />
         <FormSelect
@@ -174,7 +176,7 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
           }))}
           label="Status"
           inputProps={form.getInputProps("productStatusId")}
-          value={form.values.productStatusId || ""}
+          value={form.values.productStatusId}
           clearable
         />
         <Textarea
@@ -187,6 +189,7 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
           label="Name"
           placeholder="New Name"
           {...form.getInputProps("name")}
+          required
           withAsterisk
         />
         <Accordion
@@ -216,7 +219,7 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
                   }))}
                   label="Supplier"
                   inputProps={form.getInputProps("supplierId")}
-                  value={form.values.supplierId || ""}
+                  value={form.values.supplierId}
                   clearable
                 />
                 <TextInput

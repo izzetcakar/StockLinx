@@ -75,6 +75,7 @@ const ManufacturerForm: React.FC<ManufacturerFormProps> = ({
           label="Name"
           placeholder="New Name"
           {...form.getInputProps("name")}
+          required
           withAsterisk
         />
         <TextInput

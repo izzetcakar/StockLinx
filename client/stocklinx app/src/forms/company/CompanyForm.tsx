@@ -73,6 +73,7 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ company, create }) => {
           label="Name"
           placeholder="New Name"
           {...form.getInputProps("name")}
+          required
           withAsterisk
         />
         <FormSelect
@@ -82,7 +83,7 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ company, create }) => {
           }))}
           label="Location"
           inputProps={form.getInputProps("locationId")}
-          value={form.values.locationId || ""}
+          value={form.values.locationId}
         />
         <TextInput
           label="Email"

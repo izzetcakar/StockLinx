@@ -110,6 +110,7 @@ const CustomFieldForm: React.FC<CustomFieldFormProps> = ({ customField }) => {
           label="Name"
           placeholder="New Name"
           {...form.getInputProps("name")}
+          required
           withAsterisk
         />
         <Select
@@ -118,9 +119,9 @@ const CustomFieldForm: React.FC<CustomFieldFormProps> = ({ customField }) => {
           placeholder="Select Type"
           {...form.getInputProps("type")}
           classNames={filterClasses}
-          comboboxProps={{ position: 'bottom' }}
+          comboboxProps={{ position: "bottom" }}
+          required
           withAsterisk
-          
         />
         <TextInput
           label="Default Value"
@@ -162,9 +163,8 @@ const CustomFieldForm: React.FC<CustomFieldFormProps> = ({ customField }) => {
           onChange={onFieldSetsChange}
           classNames={filterClasses}
           placeholder="Select Field Sets"
-          comboboxProps={{ position: 'bottom' }}
+          comboboxProps={{ position: "bottom" }}
           nothingFoundMessage="No field sets found"
-          
         />
         <Group mt="md" justify="flex-end">
           <Button type="submit" color="dark">

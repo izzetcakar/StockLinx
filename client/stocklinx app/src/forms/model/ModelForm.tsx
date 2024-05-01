@@ -137,9 +137,9 @@ const ModelForm: React.FC<ModelFormProps> = ({ model, create }) => {
     if (!customField) return;
     const label = customField.name;
     const placeholder = customField.name;
-    const description = customField.helpText || "";
-    const error = customField.validationText || "";
-    const defaultValue = customField.defaultValue || "";
+    const description = customField.helpText;
+    const error = customField.validationText;
+    const defaultValue = customField.defaultValue;
 
     switch (customField.type) {
       case "string":
@@ -150,7 +150,10 @@ const ModelForm: React.FC<ModelFormProps> = ({ model, create }) => {
             description={description}
             error={error}
             {...form.getInputProps(`modelFieldData.${index}.value`)}
-            value={form.values.modelFieldData[index].value || defaultValue}
+            value={
+              form.values.modelFieldData[index].value || defaultValue || ""
+            }
+            required={customField.isRequired}
             withAsterisk={customField.isRequired}
           />
         );
@@ -166,8 +169,9 @@ const ModelForm: React.FC<ModelFormProps> = ({ model, create }) => {
             onChange={(e) => {
               form.setFieldValue(`modelFieldData.${index}.value`, e.toString());
             }}
-            hideControls
+            required={customField.isRequired}
             withAsterisk={customField.isRequired}
+            hideControls
           />
         );
       case "boolean":
@@ -200,6 +204,7 @@ const ModelForm: React.FC<ModelFormProps> = ({ model, create }) => {
             error={error}
             {...form.getInputProps(`modelFieldData.${index}.value`)}
             value={new Date(form.values.modelFieldData[index].value)}
+            required={customField.isRequired}
             withAsterisk={customField.isRequired}
           />
         );
@@ -276,8 +281,8 @@ const ModelForm: React.FC<ModelFormProps> = ({ model, create }) => {
             }))}
           label="Category"
           inputProps={form.getInputProps("categoryId")}
-          value={form.values.categoryId || ""}
-          withAsterisk
+          value={form.values.categoryId}
+          required
         />
         <Select
           data={fieldSets.map((fieldSet) => ({
@@ -299,7 +304,7 @@ const ModelForm: React.FC<ModelFormProps> = ({ model, create }) => {
           }))}
           label="Manufacturer"
           inputProps={form.getInputProps("manufacturerId")}
-          value={form.values.manufacturerId || ""}
+          value={form.values.manufacturerId}
         />
         <TextInput
           label="Name"
