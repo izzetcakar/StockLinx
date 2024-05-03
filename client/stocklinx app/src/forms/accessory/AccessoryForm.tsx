@@ -35,9 +35,6 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory, create }) => {
   const categories = useSelector(
     (state: RootState) => state.category.categories
   );
-  const productStatuses = useSelector(
-    (state: RootState) => state.productStatus.productStatuses
-  );
   const { initialValues, isCreate } = useInitial(accessory, create);
 
   const form = useForm<IAccessory>({
@@ -123,15 +120,6 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory, create }) => {
           label="Category"
           inputProps={form.getInputProps("categoryId")}
           value={form.values.categoryId}
-        />
-        <FormSelect
-          data={productStatuses.map((status) => ({
-            value: status.id,
-            label: status.name,
-          }))}
-          label="Status"
-          inputProps={form.getInputProps("productStatusId")}
-          value={form.values.productStatusId}
         />
         <FormSelect
           data={suppliers.map((supplier) => ({

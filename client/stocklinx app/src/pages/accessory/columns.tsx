@@ -13,9 +13,9 @@ import { Anchor, Button, Image } from "@mantine/core";
 import { accessoryActions } from "../../redux/accessory/actions";
 import { useNavigate } from "react-router-dom";
 import { getImage } from "../../functions/Image";
-import { openCheckInModal } from "../../modals/modals";
+import { closeModal, openCheckInModal } from "../../modals/modals";
 import base_accessory from "../../assets/baseProductImages/base_accessory.png";
-import uuid4 from "uuid4";
+import { initialUserProduct } from "../../initials/initials";
 
 export const useColumns = () => {
   const dispatch = useDispatch();
@@ -31,27 +31,21 @@ export const useColumns = () => {
   const handleCheckIn = (data: IUserProduct) => {
     dispatch(
       accessoryActions.checkIn({
-        productId: data.accessoryId as string,
-        userId: data.userId,
-        assaignDate: data.assignDate,
-        notes: data.notes,
-        quantity: data.quantity,
+        checkInDto: {
+          productId: data.accessoryId as string,
+          userId: data.userId,
+          assaignDate: data.assignDate,
+          notes: data.notes,
+          quantity: data.quantity,
+        },
+        onSubmit: () => closeModal("userProduct_checkIn_modal"),
       })
     );
   };
+
   const checkIn = (id: string) => {
-    const newUserProduct: IUserProduct = {
-      id: uuid4(),
-      userId: "",
-      accessoryId: id,
-      assetId: null,
-      licenseId: null,
-      consumableId: null,
-      productStatusId: "",
-      assignDate: new Date(),
-      notes: null,
-      quantity: 1,
-    };
+    const newUserProduct = initialUserProduct;
+    newUserProduct.accessoryId = id;
     openCheckInModal(["User"], newUserProduct, handleCheckIn);
   };
 
@@ -157,7 +151,7 @@ export const useColumns = () => {
     },
     {
       dataField: "id",
-      caption: "Checkin/Checkout",
+      caption: "Checkin",
       dataType: "action",
       renderComponent(e) {
         const accessory = e as IAccessory;

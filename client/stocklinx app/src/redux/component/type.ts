@@ -1,12 +1,9 @@
 import {
   AssetProductCheckInPayload,
+  AssetProductCheckOutPayload,
   CheckInOutPayload,
 } from "../../interfaces/clientInterfaces";
-import {
-  IAssetProduct,
-  IComponent,
-  IUserProduct,
-} from "../../interfaces/serverInterfaces";
+import { IComponent, IUserProduct } from "../../interfaces/serverInterfaces";
 import { componentConst } from "./constant";
 
 export type ComponentState = {
@@ -139,7 +136,7 @@ export type CheckInComponentFailure = {
 //CHECK OUT
 export type CheckOutComponentRequest = {
   type: typeof componentConst.CHECK_OUT_COMPONENT_REQUEST;
-  payload: IAssetProduct;
+  payload: AssetProductCheckOutPayload;
 };
 export type CheckOutComponentSuccess = {
   type: typeof componentConst.CHECK_OUT_COMPONENT_SUCCESS;

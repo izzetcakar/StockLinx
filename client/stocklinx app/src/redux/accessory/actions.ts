@@ -1,8 +1,9 @@
 import {
   CheckInOutPayload,
   UserProductCheckInPayload,
+  UserProductCheckOutPayload,
 } from "../../interfaces/clientInterfaces";
-import { IAccessory, IUserProduct } from "../../interfaces/serverInterfaces";
+import { IAccessory } from "../../interfaces/serverInterfaces";
 import { accessoryConst } from "./constant";
 import {
   CreateAccessoryFailure,
@@ -163,7 +164,9 @@ const checkInFailure = (): CheckInAccessoryFailure => ({
 });
 
 //CHECK OUT
-const checkOut = (payload: IUserProduct): CheckOutAccessoryRequest => ({
+const checkOut = (
+  payload: UserProductCheckOutPayload
+): CheckOutAccessoryRequest => ({
   type: accessoryConst.CHECK_OUT_ACCESSORY_REQUEST,
   payload,
 });

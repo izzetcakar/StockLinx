@@ -1,7 +1,9 @@
 import {
-  AssetProductCheckInPayload,
-  UserProductCheckInPayload,
-} from "../../interfaces/clientInterfaces";
+  AssetProductCheckInDto,
+  AssetProductCheckOutDto,
+  UserProductCheckInDto,
+  UserProductCheckOutDto,
+} from "../../interfaces/dtos";
 import { ILicense } from "../../interfaces/serverInterfaces";
 import { request } from "../../server/api";
 const requestUrl = "License/";
@@ -49,7 +51,7 @@ const removeRange = (ids: string[]) => {
     queryData: ids,
   });
 };
-const userCheckIn = (checkInDto: UserProductCheckInPayload) => {
+const userCheckIn = (checkInDto: UserProductCheckInDto) => {
   return request<ILicense>({
     requestUrl: requestUrl + "checkin/user",
     apiType: "post",
@@ -57,7 +59,7 @@ const userCheckIn = (checkInDto: UserProductCheckInPayload) => {
   });
 };
 
-const assetCheckIn = (checkInDto: AssetProductCheckInPayload) => {
+const assetCheckIn = (checkInDto: AssetProductCheckInDto) => {
   return request<ILicense>({
     requestUrl: requestUrl + "checkin/asset",
     apiType: "post",
@@ -65,19 +67,19 @@ const assetCheckIn = (checkInDto: AssetProductCheckInPayload) => {
   });
 };
 
-const userCheckOut = (id: string) => {
+const userCheckOut = (checkOutDto: UserProductCheckOutDto) => {
   return request<ILicense>({
-    requestUrl: requestUrl + "checkout/user/" + id,
+    requestUrl: requestUrl + "checkout/user",
     apiType: "post",
-    queryData: "USER",
+    queryData: checkOutDto,
   });
 };
 
-const assetCheckOut = (id: string) => {
+const assetCheckOut = (checkOutDto: AssetProductCheckOutDto) => {
   return request<ILicense>({
-    requestUrl: requestUrl + "checkout/asset/" + id,
+    requestUrl: requestUrl + "checkout/asset",
     apiType: "post",
-    queryData: "ASSET",
+    queryData: checkOutDto,
   });
 };
 

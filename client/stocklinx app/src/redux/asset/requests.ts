@@ -1,7 +1,4 @@
-import {
-  AssetCheckInPayload,
-  AssetCheckOutPayload,
-} from "../../interfaces/clientInterfaces";
+import { AssetCheckInDto, AssetCheckOutDto } from "../../interfaces/dtos";
 import { IAsset } from "../../interfaces/serverInterfaces";
 import { request } from "../../server/api";
 const requestUrl = "Asset/";
@@ -49,14 +46,14 @@ const removeRange = (ids: string[]) => {
     queryData: ids,
   });
 };
-const checkIn = (checkInDto: AssetCheckInPayload) => {
+const checkIn = (checkInDto: AssetCheckInDto) => {
   return request<IAsset>({
     requestUrl: requestUrl + "checkin",
     apiType: "post",
     queryData: checkInDto,
   });
 };
-const checkOut = (checkOutDto: AssetCheckOutPayload) => {
+const checkOut = (checkOutDto: AssetCheckOutDto) => {
   return request<IAsset>({
     requestUrl: requestUrl + "checkout",
     apiType: "post",

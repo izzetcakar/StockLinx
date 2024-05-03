@@ -1,13 +1,11 @@
 import {
   AssetProductCheckInPayload,
+  AssetProductCheckOutPayload,
   CheckInOutPayload,
   UserProductCheckInPayload,
+  UserProductCheckOutPayload,
 } from "../../interfaces/clientInterfaces";
-import {
-  IAssetProduct,
-  ILicense,
-  IUserProduct,
-} from "../../interfaces/serverInterfaces";
+import { ILicense } from "../../interfaces/serverInterfaces";
 import { licenseConst } from "./constant";
 
 export type LicenseState = {
@@ -148,7 +146,7 @@ export type AssetCheckInLicenseFailure = {
 //CHECK OUT
 export type UserCheckOutLicenseRequest = {
   type: typeof licenseConst.USER_CHECK_OUT_LICENSE_REQUEST;
-  payload: IUserProduct;
+  payload: UserProductCheckOutPayload;
 };
 export type UserCheckOutLicenseSuccess = {
   type: typeof licenseConst.USER_CHECK_OUT_LICENSE_SUCCESS;
@@ -160,7 +158,7 @@ export type UserCheckOutLicenseFailure = {
 
 export type AssetCheckOutLicenseRequest = {
   type: typeof licenseConst.ASSET_CHECK_OUT_LICENSE_REQUEST;
-  payload: IAssetProduct;
+  payload: AssetProductCheckOutPayload;
 };
 export type AssetCheckOutLicenseSuccess = {
   type: typeof licenseConst.ASSET_CHECK_OUT_LICENSE_SUCCESS;

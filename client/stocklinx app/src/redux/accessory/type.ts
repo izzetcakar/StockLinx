@@ -1,8 +1,9 @@
 import {
   CheckInOutPayload,
   UserProductCheckInPayload,
+  UserProductCheckOutPayload,
 } from "../../interfaces/clientInterfaces";
-import { IAccessory, IUserProduct } from "../../interfaces/serverInterfaces";
+import { IAccessory } from "../../interfaces/serverInterfaces";
 import { accessoryConst } from "./constant";
 
 export type AccessoryState = {
@@ -123,7 +124,7 @@ export type CheckInAccessoryFailure = {
 //CHECKOUT
 export type CheckOutAccessoryRequest = {
   type: typeof accessoryConst.CHECK_OUT_ACCESSORY_REQUEST;
-  payload: IUserProduct;
+  payload: UserProductCheckOutPayload;
 };
 export type CheckOutAccessorySuccess = {
   type: typeof accessoryConst.CHECK_OUT_ACCESSORY_SUCCESS;

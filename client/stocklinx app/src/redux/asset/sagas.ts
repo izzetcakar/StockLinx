@@ -1,9 +1,8 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { assetActions } from "./actions";
-import { IAsset } from "../../interfaces/serverInterfaces";
+import { IAsset, IUserProduct } from "../../interfaces/serverInterfaces";
 import { assetConst } from "./constant";
 import {
-  AssetCheckInSuccessPayload,
   CheckInAssetRequest,
   CheckOutAssetRequest,
   CreateAssetRequest,
@@ -22,7 +21,7 @@ import {
 import { userProductActions } from "../userProduct/actions";
 
 type IResponse = {
-  data: IAsset[] | IAsset | AssetCheckInSuccessPayload | null;
+  data: IAsset[] | IAsset | IUserProduct | null;
   message: string;
   success: boolean;
   status: number;
@@ -142,15 +141,16 @@ function* checkInAssetSaga(action: CheckInAssetRequest) {
   try {
     const { data }: IResponse = yield call(
       assetRequests.checkIn,
-      action.payload
+      action.payload.checkInDto
     );
     openNotificationSuccess("Asset Checked In");
     yield put(assetActions.checkInSuccess(action.payload));
     yield put(
       userProductActions.createSuccess({
-        userProduct: (data as AssetCheckInSuccessPayload).userProduct,
+        userProduct: data as IUserProduct,
       })
     );
+    if (action.payload.onSubmit) action.payload.onSubmit();
   } catch (e) {
     openNotificationError("Asset", (e as Error).message);
     yield put(assetActions.checkInFailure());
@@ -161,12 +161,15 @@ function* checkInAssetSaga(action: CheckInAssetRequest) {
 function* checkOutAssetSaga(action: CheckOutAssetRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    yield call(assetRequests.checkOut, action.payload);
+    yield call(assetRequests.checkOut, action.payload.checkOutDto);
     openNotificationSuccess("Asset Checked Out");
     yield put(assetActions.checkOutSuccess(action.payload));
     yield put(
-      userProductActions.removeSuccess({ id: action.payload.userProductId })
+      userProductActions.removeSuccess({
+        id: action.payload.checkOutDto.userProductId,
+      })
     );
+    if (action.payload.onSubmit) action.payload.onSubmit();
   } catch (e) {
     openNotificationError("Asset", (e as Error).message);
     yield put(assetActions.checkOutFailure());

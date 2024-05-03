@@ -8,9 +8,8 @@ import { useNavigate } from "react-router-dom";
 import { Anchor, Button } from "@mantine/core";
 import { IAssetProduct, IComponent } from "../../interfaces/serverInterfaces";
 import { componentActions } from "../../redux/component/actions";
-import { AssetProductCheckInPayload } from "../../interfaces/clientInterfaces";
-import { openCheckInModal } from "../../modals/modals";
-import uuid4 from "uuid4";
+import { closeModal, openCheckInModal } from "../../modals/modals";
+import { initialAssetProduct } from "../../initials/initials";
 
 export const useColumns = () => {
   const navigate = useNavigate();
@@ -24,24 +23,23 @@ export const useColumns = () => {
   const handleCheckIn = (data: IAssetProduct) => {
     dispatch(
       componentActions.checkIn({
-        assetId: data.assetId,
-        productId: data.componentId,
-        notes: data.notes,
-        assaignDate: data.assignDate,
-        quantity: data.quantity,
-      } as AssetProductCheckInPayload)
+        checkInDto: {
+          assetId: data.assetId,
+          productId: data.componentId as string,
+          notes: data.notes,
+          assaignDate: data.assignDate,
+          quantity: data.quantity,
+        },
+        onSubmit: () => {
+          closeModal("assetProduct_checkIn_modal");
+        },
+      })
     );
   };
+
   const checkIn = (id: string) => {
-    const newAssetProduct: IAssetProduct = {
-      id: uuid4(),
-      componentId: id,
-      assetId: "",
-      licenseId: null,
-      assignDate: new Date(),
-      notes: null,
-      quantity: 1,
-    };
+    const newAssetProduct = initialAssetProduct;
+    newAssetProduct.componentId = id;
     openCheckInModal(
       ["Asset"],
       undefined,
@@ -133,7 +131,7 @@ export const useColumns = () => {
     },
     {
       dataField: "id",
-      caption: "Checkin/Checkout",
+      caption: "Checkin",
       dataType: "action",
       renderComponent(e) {
         const component = e as IComponent;

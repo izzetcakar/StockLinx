@@ -57,7 +57,6 @@ export interface IProductStatus extends BaseEntity {
 }
 export interface IBaseProduct extends BaseEntity {
   branchId: string;
-  productStatusId: string | null;
   supplierId: string | null;
   name: string;
   orderNo: string | null;
@@ -77,6 +76,7 @@ export interface IAccessory extends IBaseProduct {
 }
 export interface IAsset extends IBaseProduct {
   modelId: string | null;
+  productStatusId: string;
   imagePath: string | null;
   tagNo: string | null;
   serialNo: string | null;

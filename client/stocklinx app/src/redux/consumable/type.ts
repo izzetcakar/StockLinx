@@ -1,8 +1,9 @@
 import {
   CheckInOutPayload,
   UserProductCheckInPayload,
+  UserProductCheckOutPayload,
 } from "../../interfaces/clientInterfaces";
-import { IConsumable, IUserProduct } from "../../interfaces/serverInterfaces";
+import { IConsumable } from "../../interfaces/serverInterfaces";
 import { consumableConst } from "./constant";
 
 export type ConsumableState = {
@@ -131,7 +132,7 @@ export type CheckInConsumableFailure = {
 //CHECK OUT
 export type CheckOutConsumableRequest = {
   type: typeof consumableConst.CHECK_OUT_CONSUMABLE_REQUEST;
-  payload: IUserProduct;
+  payload: UserProductCheckOutPayload;
 };
 export type CheckOutConsumableSuccess = {
   type: typeof consumableConst.CHECK_OUT_CONSUMABLE_SUCCESS;

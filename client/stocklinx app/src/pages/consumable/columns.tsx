@@ -1,15 +1,23 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import {
   BaseColumn,
   ExcelColumn,
 } from "../../components/gridTable/interfaces/interfaces";
-import { CategoryType, IConsumable } from "../../interfaces/serverInterfaces";
-import { Anchor } from "@mantine/core";
+import {
+  CategoryType,
+  IConsumable,
+  IUserProduct,
+} from "../../interfaces/serverInterfaces";
+import { Anchor, Button } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
+import { consumableActions } from "../../redux/consumable/actions";
+import { closeModal, openCheckInModal } from "../../modals/modals";
+import { initialUserProduct } from "../../initials/initials";
 
 export const useColumns = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const branches = useSelector((state: RootState) => state.branch.branches);
   const suppliers = useSelector((state: RootState) => state.supplier.suppliers);
   const manufacturers = useSelector(
@@ -18,6 +26,27 @@ export const useColumns = () => {
   const categories = useSelector(
     (state: RootState) => state.category.categories
   );
+
+  const handleCheckIn = (data: IUserProduct) => {
+    dispatch(
+      consumableActions.checkIn({
+        checkInDto: {
+          productId: data.accessoryId as string,
+          userId: data.userId,
+          assaignDate: data.assignDate,
+          notes: data.notes,
+          quantity: data.quantity,
+        },
+        onSubmit: () => closeModal("userProduct_checkIn_modal"),
+      })
+    );
+  };
+
+  const checkIn = (id: string) => {
+    const newUserProduct = initialUserProduct;
+    newUserProduct.accessoryId = id;
+    openCheckInModal(["User"], newUserProduct, handleCheckIn);
+  };
 
   const columns: BaseColumn[] = [
     {
@@ -105,6 +134,30 @@ export const useColumns = () => {
       caption: "Purchase Cost",
       dataField: "purchaseCost",
       dataType: "number",
+    },
+    {
+      dataField: "id",
+      caption: "Checkin",
+      dataType: "action",
+      renderComponent(e) {
+        const consumable = e as IConsumable;
+        return (
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <Button
+              color={"green"}
+              variant="filled"
+              size="xs"
+              disabled={
+                consumable.availableQuantity !== undefined &&
+                consumable?.availableQuantity < 1
+              }
+              onClick={() => checkIn(consumable.id)}
+            >
+              Check In
+            </Button>
+          </div>
+        );
+      },
     },
     // INVISIBLE COLUMNS
     {

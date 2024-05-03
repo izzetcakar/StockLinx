@@ -152,13 +152,13 @@ function* checkInComponentSaga(action: CheckInComponentRequest) {
   try {
     const { data }: IResponse = yield call(
       componentRequests.checkIn,
-      action.payload
+      action.payload.checkInDto
     );
     openNotificationSuccess("Component Checked In");
     yield put(
       componentActions.checkInSuccess({
-        id: action.payload.productId,
-        quantity: action.payload.quantity,
+        id: action.payload.checkInDto.productId,
+        quantity: action.payload.checkInDto.quantity,
       })
     );
     yield put(
@@ -166,6 +166,7 @@ function* checkInComponentSaga(action: CheckInComponentRequest) {
         userProduct: (data as ComponentCheckInSuccessPayload).userProduct,
       })
     );
+    if (action.payload.onSubmit) action.payload.onSubmit();
   } catch (e) {
     openNotificationError("Component", (e as Error).message);
     yield put(componentActions.checkInFailure());
@@ -176,15 +177,20 @@ function* checkInComponentSaga(action: CheckInComponentRequest) {
 function* checkOutComponentSaga(action: CheckOutComponentRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    yield call(componentRequests.checkOut, action.payload.id);
+    yield call(componentRequests.checkOut, action.payload.checkOutDto);
     openNotificationSuccess("Component Checked Out");
     yield put(
       componentActions.checkOutSuccess({
-        id: action.payload.id,
-        quantity: action.payload.quantity,
+        id: action.payload.checkOutDto.productId,
+        quantity: action.payload.checkOutDto.quantity,
       })
     );
-    yield put(assetProductActions.removeSuccess({ id: action.payload.id }));
+    yield put(
+      assetProductActions.removeSuccess({
+        id: action.payload.checkOutDto.assetProductId,
+      })
+    );
+    if (action.payload.onSubmit) action.payload.onSubmit();
   } catch (e) {
     openNotificationError("Component", (e as Error).message);
     yield put(componentActions.checkOutFailure());

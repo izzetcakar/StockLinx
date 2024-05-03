@@ -1,3 +1,10 @@
+import {
+  AssetProductCheckInDto,
+  AssetProductCheckOutDto,
+  UserProductCheckInDto,
+  UserProductCheckOutDto,
+} from "./dtos";
+
 export interface IDropdownData {
   id: number;
   text: string;
@@ -23,31 +30,21 @@ export interface IdentifiableItem {
 export interface CheckInOutPayload {
   id: string;
   quantity: number;
-}
-export interface UserProductCheckInPayload {
-  userId: string;
-  productId: string;
-  assaignDate: Date;
-  notes: string | null;
-  quantity: number;
+  onSubmit?: () => void;
 }
 export interface AssetProductCheckInPayload {
-  assetId: string;
-  productId: string;
-  assaignDate: Date;
-  notes: string | null;
-  quantity: number;
+  checkInDto: AssetProductCheckInDto;
+  onSubmit?: () => void;
 }
-export interface AssetCheckInPayload {
-  assetId: string;
-  userId: string;
-  productStatusId: string;
-  assaignDate: Date;
-  notes: string | null;
+export interface UserProductCheckInPayload {
+  checkInDto: UserProductCheckInDto;
+  onSubmit?: () => void;
 }
-export interface AssetCheckOutPayload {
-  assetId: string;
-  userProductId: string;
-  productStatusId: string;
-  notes: string | null;
+export interface AssetProductCheckOutPayload {
+  checkOutDto: AssetProductCheckOutDto;
+  onSubmit?: () => void;
+}
+export interface UserProductCheckOutPayload {
+  checkOutDto: UserProductCheckOutDto;
+  onSubmit?: () => void;
 }

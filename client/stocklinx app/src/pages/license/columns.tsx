@@ -11,10 +11,13 @@ import {
   IAssetProduct,
 } from "../../interfaces/serverInterfaces";
 import { licenseActions } from "../../redux/license/actions";
-import uuid4 from "uuid4";
 import { Anchor, Button } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
-import { openCheckInModal } from "../../modals/modals";
+import { closeModal, openCheckInModal } from "../../modals/modals";
+import {
+  initialAssetProduct,
+  initialUserProduct,
+} from "../../initials/initials";
 
 export const useColumns = () => {
   const dispatch = useDispatch();
@@ -31,11 +34,14 @@ export const useColumns = () => {
   const handleUserCheckIn = (userProduct: IUserProduct) => {
     dispatch(
       licenseActions.userCheckIn({
-        userId: userProduct.userId,
-        productId: userProduct.licenseId as string,
-        assaignDate: userProduct.assignDate,
-        notes: userProduct.notes,
-        quantity: userProduct.quantity,
+        checkInDto: {
+          userId: userProduct.userId,
+          productId: userProduct.licenseId as string,
+          assaignDate: userProduct.assignDate,
+          notes: userProduct.notes,
+          quantity: userProduct.quantity,
+        },
+        onSubmit: () => closeModal("userProduct_checkIn_modal"),
       })
     );
   };
@@ -43,37 +49,23 @@ export const useColumns = () => {
   const handleAssetCheckIn = (userProduct: IAssetProduct) => {
     dispatch(
       licenseActions.assetCheckIn({
-        assetId: userProduct.assetId as string,
-        productId: userProduct.licenseId as string,
-        assaignDate: userProduct.assignDate,
-        notes: userProduct.notes,
-        quantity: userProduct.quantity,
+        checkInDto: {
+          assetId: userProduct.assetId as string,
+          productId: userProduct.licenseId as string,
+          assaignDate: userProduct.assignDate,
+          notes: userProduct.notes,
+          quantity: userProduct.quantity,
+        },
+        onSubmit: () => closeModal("userProduct_checkIn_modal"),
       })
     );
   };
 
   const checkIn = (id: string) => {
-    const newUserProduct: IUserProduct = {
-      id: uuid4(),
-      userId: "",
-      licenseId: id,
-      assetId: null,
-      accessoryId: null,
-      consumableId: null,
-      assignDate: new Date(),
-      notes: null,
-      productStatusId: null,
-      quantity: 1,
-    };
-    const newAssetProduct: IAssetProduct = {
-      id: uuid4(),
-      assetId: "",
-      licenseId: id,
-      componentId: null,
-      assignDate: new Date(),
-      notes: null,
-      quantity: 1,
-    };
+    const newUserProduct = initialUserProduct;
+    newUserProduct.licenseId = id;
+    const newAssetProduct = initialAssetProduct;
+    newAssetProduct.licenseId = id;
     openCheckInModal(
       ["User", "Asset"],
       newUserProduct,
@@ -153,7 +145,7 @@ export const useColumns = () => {
     },
     {
       dataField: "id",
-      caption: "Checkin/Checkout",
+      caption: "Checkin",
       dataType: "action",
       renderComponent(e) {
         return (

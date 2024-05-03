@@ -13,18 +13,19 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import FormSelect from "../mantine/FormSelect";
 
-interface CheckInOutFormProps {
+interface CheckInFormProps {
+  segment: string[];
+  isAsset?: boolean;
   userProduct?: IUserProduct;
   assetProduct?: IAssetProduct;
-  segment: string[];
   userCheckIn?: (data: IUserProduct) => void;
   assetCheckIn?: (data: IAssetProduct) => void;
 }
 
-const CheckInOutForm: React.FC<CheckInOutFormProps> = ({
+const CheckInForm: React.FC<CheckInFormProps> = ({
+  segment,
   userProduct,
   assetProduct,
-  segment,
   userCheckIn,
   assetCheckIn,
 }) => {
@@ -103,15 +104,13 @@ const CheckInOutForm: React.FC<CheckInOutFormProps> = ({
             value={assetForm.values.assetId}
           />
         ) : null}
-        {type === "User" ? (
-          <NumberInput
-            label="Quantity"
-            placeholder="Quantity"
-            min={1}
-            {...getFormInputProps("quantity")}
-            value={getForm().values.quantity}
-          />
-        ) : null}
+        <NumberInput
+          label="Quantity"
+          placeholder="Quantity"
+          min={1}
+          {...getFormInputProps("quantity")}
+          value={getForm().values.quantity}
+        />
         <Textarea
           label="Notes"
           placeholder="Your notes here"
@@ -120,7 +119,7 @@ const CheckInOutForm: React.FC<CheckInOutFormProps> = ({
         />
         <Group mt="md" justify="flex-end">
           <Button type="submit" color="dark">
-            UserProductCheckIn
+            CheckIn
           </Button>
         </Group>
       </Flex>
@@ -128,4 +127,4 @@ const CheckInOutForm: React.FC<CheckInOutFormProps> = ({
   );
 };
 
-export default CheckInOutForm;
+export default CheckInForm;

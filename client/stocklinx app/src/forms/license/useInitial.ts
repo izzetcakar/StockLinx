@@ -10,7 +10,6 @@ export const useInitial = (license?: ILicense, create?: boolean) => {
   let initialValues: ILicense = {
     id: uuid4(),
     branchId: branch?.id || "",
-    productStatusId: null,
     categoryId: "",
     name: "",
     orderNo: null,

@@ -151,13 +151,13 @@ function* checkInConsumableSaga(action: CheckInConsumableRequest) {
   try {
     const { data }: IResponse = yield call(
       consumableRequests.checkIn,
-      action.payload
+      action.payload.checkInDto
     );
     openNotificationSuccess("Consumable Checked In");
     yield put(
       consumableActions.checkInSuccess({
-        id: action.payload.productId,
-        quantity: action.payload.quantity,
+        id: action.payload.checkInDto.productId,
+        quantity: action.payload.checkInDto.quantity,
       })
     );
     yield put(
@@ -165,6 +165,7 @@ function* checkInConsumableSaga(action: CheckInConsumableRequest) {
         userProduct: data as IUserProduct,
       })
     );
+    if (action.payload.onSubmit) action.payload.onSubmit();
   } catch (e) {
     openNotificationError("Consumable", (e as Error).message);
     yield put(consumableActions.checkInFailure());
@@ -175,15 +176,20 @@ function* checkInConsumableSaga(action: CheckInConsumableRequest) {
 function* checkOutConsumableSaga(action: CheckOutConsumableRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    yield call(consumableRequests.checkOut, action.payload.id);
+    yield call(consumableRequests.checkOut, action.payload.checkOutDto);
     openNotificationSuccess("Consumable Checked Out");
     yield put(
       consumableActions.checkOutSuccess({
-        id: action.payload.consumableId as string,
-        quantity: action.payload.quantity,
+        id: action.payload.checkOutDto.productId,
+        quantity: action.payload.checkOutDto.quantity,
       })
     );
-    yield put(userProductActions.removeSuccess({ id: action.payload.id }));
+    yield put(
+      userProductActions.removeSuccess({
+        id: action.payload.checkOutDto.userProductId,
+      })
+    );
+    if (action.payload.onSubmit) action.payload.onSubmit();
   } catch (e) {
     openNotificationError("Consumable", (e as Error).message);
     yield put(consumableActions.checkOutFailure());

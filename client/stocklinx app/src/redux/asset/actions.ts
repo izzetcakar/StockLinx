@@ -1,7 +1,3 @@
-import {
-  AssetCheckInPayload,
-  AssetCheckOutPayload,
-} from "../../interfaces/clientInterfaces";
 import { IAsset } from "../../interfaces/serverInterfaces";
 import { assetConst } from "./constant";
 import {
@@ -41,6 +37,8 @@ import {
   CheckOutAssetRequest,
   CheckOutAssetSuccess,
   CheckOutAssetFailure,
+  AssetCheckOutPayload,
+  AssetCheckInPayload,
 } from "./type";
 
 //GET

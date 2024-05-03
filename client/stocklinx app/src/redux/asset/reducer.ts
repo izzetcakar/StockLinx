@@ -113,10 +113,10 @@ export default (state = initialState, action: AssetActions) => {
       return {
         ...state,
         assets: state.assets.map((asset) =>
-          asset.id === action.payload.assetId
+          asset.id === action.payload.checkInDto.assetId
             ? {
                 ...asset,
-                productStatusId: action.payload.productStatusId,
+                productStatusId: action.payload.checkInDto.productStatusId,
               }
             : asset
         ),
@@ -133,10 +133,10 @@ export default (state = initialState, action: AssetActions) => {
       return {
         ...state,
         assets: state.assets.map((asset) =>
-          asset.id === action.payload.assetId
+          asset.id === action.payload.checkOutDto.assetId
             ? {
                 ...asset,
-                productStatusId: action.payload.productStatusId,
+                productStatusId: action.payload.checkOutDto.productStatusId,
               }
             : asset
         ),

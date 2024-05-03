@@ -4,7 +4,7 @@ export interface BaseDto {
   updatedDate?: Date | null;
 }
 
-export interface IUserProductDto extends BaseDto {
+export interface UserProductDto extends BaseDto {
   userId: string;
   productId: string;
   productType: string;
@@ -14,7 +14,7 @@ export interface IUserProductDto extends BaseDto {
   notes: string | null;
   quantity: number;
 }
-export interface IAssetProductDto extends BaseDto {
+export interface AssetProductDto extends BaseDto {
   assetId: string;
   productId: string;
   productType: string;
@@ -23,4 +23,43 @@ export interface IAssetProductDto extends BaseDto {
   assignDate: Date;
   notes: string | null;
   quantity: number;
+}
+export interface UserProductCheckOutDto {
+  userProductId: string;
+  productId: string;
+  quantity: number;
+  notes: string | null;
+}
+export interface AssetProductCheckOutDto {
+  assetProductId: string;
+  productId: string;
+  quantity: number;
+  notes: string | null;
+}
+export interface UserProductCheckInDto {
+  userId: string;
+  productId: string;
+  assaignDate: Date;
+  notes: string | null;
+  quantity: number;
+}
+export interface AssetProductCheckInDto {
+  assetId: string;
+  productId: string;
+  assaignDate: Date;
+  notes: string | null;
+  quantity: number;
+}
+export interface AssetCheckInDto {
+  assetId: string;
+  userId: string;
+  productStatusId: string;
+  assaignDate: Date;
+  notes: string | null;
+}
+export interface AssetCheckOutDto {
+  assetId: string;
+  userProductId: string;
+  productStatusId: string;
+  notes: string | null;
 }

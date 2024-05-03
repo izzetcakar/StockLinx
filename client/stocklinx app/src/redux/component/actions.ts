@@ -1,8 +1,9 @@
 import {
   AssetProductCheckInPayload,
+  AssetProductCheckOutPayload,
   CheckInOutPayload,
 } from "../../interfaces/clientInterfaces";
-import { IAssetProduct, IComponent } from "../../interfaces/serverInterfaces";
+import { IComponent } from "../../interfaces/serverInterfaces";
 import { componentConst } from "./constant";
 import {
   CreateComponentFailure,
@@ -161,7 +162,9 @@ const checkInFailure = (): CheckInComponentFailure => ({
 });
 
 //CHECK OUT
-const checkOut = (payload: IAssetProduct): CheckOutComponentRequest => ({
+const checkOut = (
+  payload: AssetProductCheckOutPayload
+): CheckOutComponentRequest => ({
   type: componentConst.CHECK_OUT_COMPONENT_REQUEST,
   payload,
 });

@@ -1,8 +1,5 @@
-import {
-  AssetCheckInPayload,
-  AssetCheckOutPayload,
-} from "../../interfaces/clientInterfaces";
-import { IAsset, IUserProduct } from "../../interfaces/serverInterfaces";
+import { AssetCheckInDto, AssetCheckOutDto } from "../../interfaces/dtos";
+import { IAsset } from "../../interfaces/serverInterfaces";
 import { assetConst } from "./constant";
 
 export type AssetState = {
@@ -24,9 +21,13 @@ export type AssetRemoveRangePayload = {
 export type AssetRemovePayload = {
   id: string;
 };
-export type AssetCheckInSuccessPayload = {
-  asset: IAsset;
-  userProduct: IUserProduct;
+export type AssetCheckInPayload = {
+  checkInDto: AssetCheckInDto;
+  onSubmit?: () => void;
+};
+export type AssetCheckOutPayload = {
+  checkOutDto: AssetCheckOutDto;
+  onSubmit?: () => void;
 };
 
 //GET

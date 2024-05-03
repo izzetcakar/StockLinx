@@ -150,13 +150,13 @@ function* userCheckInLicenseSaga(action: UserCheckInLicenseRequest) {
   try {
     const { data }: IResponse = yield call(
       licenseRequests.userCheckIn,
-      action.payload
+      action.payload.checkInDto
     );
     openNotificationSuccess("License Checked In");
     yield put(
       licenseActions.userCheckInSuccess({
-        id: action.payload.productId,
-        quantity: action.payload.quantity,
+        id: action.payload.checkInDto.productId,
+        quantity: action.payload.checkInDto.quantity,
       })
     );
     yield put(
@@ -174,13 +174,13 @@ function* assetCheckInLicenseSaga(action: AssetCheckInLicenseRequest) {
   try {
     const { data }: IResponse = yield call(
       licenseRequests.assetCheckIn,
-      action.payload
+      action.payload.checkInDto
     );
     openNotificationSuccess("License Checked Out");
     yield put(
       licenseActions.assetCheckInSuccess({
-        id: action.payload.productId,
-        quantity: action.payload.quantity,
+        id: action.payload.checkInDto.productId,
+        quantity: action.payload.checkInDto.quantity,
       })
     );
     yield put(
@@ -196,15 +196,19 @@ function* assetCheckInLicenseSaga(action: AssetCheckInLicenseRequest) {
 function* userCheckOutLicenseSaga(action: UserCheckOutLicenseRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    yield call(licenseRequests.userCheckOut, action.payload.id);
+    yield call(licenseRequests.userCheckOut, action.payload.checkOutDto);
     openNotificationSuccess("License Checked Out");
     yield put(
       licenseActions.userCheckOutSuccess({
-        id: action.payload.licenseId as string,
-        quantity: action.payload.quantity,
+        id: action.payload.checkOutDto.productId,
+        quantity: action.payload.checkOutDto.quantity,
       })
     );
-    yield put(userProductActions.removeSuccess({ id: action.payload.id }));
+    yield put(
+      userProductActions.removeSuccess({
+        id: action.payload.checkOutDto.userProductId,
+      })
+    );
   } catch (e) {
     openNotificationError("License", (e as Error).message);
     yield put(licenseActions.userCheckOutFailure());
@@ -215,15 +219,19 @@ function* userCheckOutLicenseSaga(action: UserCheckOutLicenseRequest) {
 function* assetCheckOutLicenseSaga(action: AssetCheckOutLicenseRequest) {
   yield put(genericActions.increaseLoading());
   try {
-    yield call(licenseRequests.assetCheckOut, action.payload.id);
+    yield call(licenseRequests.assetCheckOut, action.payload.checkOutDto);
     openNotificationSuccess("License Checked Out");
     yield put(
       licenseActions.assetCheckOutSuccess({
-        id: action.payload.licenseId as string,
-        quantity: action.payload.quantity,
+        id: action.payload.checkOutDto.productId,
+        quantity: action.payload.checkOutDto.quantity,
       })
     );
-    yield put(assetProductActions.removeSuccess({ id: action.payload.id }));
+    yield put(
+      assetProductActions.removeSuccess({
+        id: action.payload.checkOutDto.assetProductId,
+      })
+    );
   } catch (e) {
     openNotificationError("License", (e as Error).message);
     yield put(licenseActions.assetCheckOutFailure());

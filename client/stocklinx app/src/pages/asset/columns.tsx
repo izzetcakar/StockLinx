@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import {
   ExcelColumn,
@@ -6,17 +6,16 @@ import {
 } from "../../components/gridTable/interfaces/interfaces";
 import { Anchor, Button, Image } from "@mantine/core";
 import { IAsset, IUserProduct } from "../../interfaces/serverInterfaces";
-import { assetActions } from "../../redux/asset/actions";
 import { useNavigate } from "react-router-dom";
 import { getImage } from "../../functions/Image";
-import { openCheckInModal } from "../../modals/modals";
-import { AssetCheckInPayload } from "../../interfaces/clientInterfaces";
+import {
+  openAssetCheckInModal,
+  openAssetCheckOutModal,
+} from "../../modals/modals";
 import base_asset from "../../assets/baseProductImages/base_asset.jpg";
 import axios from "axios";
-import uuid4 from "uuid4";
 
 export const useColumns = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const models = useSelector((state: RootState) => state.model.models);
   const productStatuses = useSelector(
@@ -28,32 +27,23 @@ export const useColumns = () => {
   );
   const suppliers = useSelector((state: RootState) => state.supplier.suppliers);
 
-  const handleCheckIn = (data: IUserProduct) => {
-    dispatch(
-      assetActions.checkIn({
-        assetId: data.assetId,
-        userId: data.userId,
-        assaignDate: data.assignDate,
-        productStatusId: data.productStatusId,
-        notes: data.notes,
-      } as AssetCheckInPayload)
-    );
+  const checkIn = (asset: IAsset) => {
+    openAssetCheckInModal({
+      userId: "",
+      assetId: asset.id,
+      assaignDate: new Date(),
+      notes: asset.notes,
+      productStatusId: asset.productStatusId,
+    });
   };
 
-  const checkIn = (id: string) => {
-    const newUserProduct: IUserProduct = {
-      id: uuid4(),
-      userId: "",
-      assetId: id,
-      licenseId: null,
-      accessoryId: null,
-      consumableId: null,
-      assignDate: new Date(),
-      notes: null,
-      productStatusId: null,
-      quantity: 1,
-    };
-    openCheckInModal(["User"], newUserProduct, handleCheckIn);
+  const checkOut = (asset: IAsset, userProduct: IUserProduct) => {
+    openAssetCheckOutModal({
+      assetId: asset.id,
+      userProductId: userProduct.id,
+      productStatusId: asset.productStatusId,
+      notes: userProduct.notes,
+    });
   };
 
   const getTest = async () => {
@@ -181,8 +171,9 @@ export const useColumns = () => {
       caption: "Checkin/Checkout",
       dataType: "action",
       renderComponent(e) {
+        const asset = e as IAsset;
         const userProduct = userProducts.find(
-          (userProduct) => userProduct?.assetId === (e as IAsset).id
+          (userProduct) => userProduct?.assetId === asset.id
         );
         return (
           <div style={{ display: "flex", justifyContent: "center" }}>
@@ -190,7 +181,9 @@ export const useColumns = () => {
               color={userProduct ? "red" : "green"}
               variant="filled"
               size="xs"
-              onClick={() => checkIn((e as IAsset).id)}
+              onClick={() => {
+                userProduct ? checkOut(asset, userProduct) : checkIn(asset);
+              }}
             >
               {userProduct ? "Check Out" : "Check In"}
             </Button>

@@ -15,7 +15,6 @@ export const useInitial = (accessory?: IAccessory, create?: boolean) => {
     manufacturerId: null,
     supplierId: null,
     categoryId: null,
-    productStatusId: null,
     modelNo: "",
     quantity: 1,
     orderNo: null,

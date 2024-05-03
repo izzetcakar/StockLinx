@@ -11,7 +11,7 @@ export const useInitial = (asset?: IAsset, create?: boolean) => {
   let initialValues: IAsset = {
     id: uuid4(),
     branchId: branch?.id || "",
-    productStatusId: null,
+    productStatusId: "",
     supplierId: null,
     name: "",
     imagePath: null,

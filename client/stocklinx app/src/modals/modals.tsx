@@ -39,7 +39,19 @@ import UserForm from "../forms/user/UserForm";
 import FieldSetForm from "../forms/fieldSet/FieldSetForm";
 import CustomFieldForm from "../forms/customField/CustomFieldForm";
 import PermissionForm from "../forms/permission/PermissionForm";
-import CheckInOutForm from "../forms/checkInOut/CheckInOutForm";
+import CheckInForm from "../forms/checkInOut/CheckInForm";
+import AssetCheckInForm from "../forms/checkInOut/AssetCheckInForm";
+import {
+  AssetCheckInDto,
+  AssetCheckOutDto,
+  AssetProductCheckOutDto,
+  UserProductCheckOutDto,
+} from "../interfaces/dtos";
+import AssetCheckOutForm from "../forms/checkInOut/AssetCheckOutForm";
+import AssetProductCheckOutForm from "../forms/checkInOut/AssetProductCheckOutForm";
+import UserProductCheckOutForm from "../forms/checkInOut/UserProductCheckOutForm";
+
+export const closeModal = (modalId: string) => modals.close(modalId);
 
 export const genericConfirmModal = (onConfirm: () => void) =>
   modals.openConfirmModal({
@@ -49,6 +61,7 @@ export const genericConfirmModal = (onConfirm: () => void) =>
     onCancel: () => console.log("Cancel"),
     onConfirm: () => onConfirm(),
   });
+
 export const openCategoryModal = (category?: ICategory) =>
   modals.open({
     modalId: "category_modal",
@@ -57,6 +70,7 @@ export const openCategoryModal = (category?: ICategory) =>
     xOffset: "auto",
     size: "auto",
   });
+
 export const openBranchModal = (branch?: IBranch) =>
   modals.open({
     modalId: "branch_modal",
@@ -65,6 +79,7 @@ export const openBranchModal = (branch?: IBranch) =>
     xOffset: "auto",
     size: "auto",
   });
+
 export const openCompanyModal = (company?: ICompany) =>
   modals.open({
     modalId: "company_modal",
@@ -73,6 +88,7 @@ export const openCompanyModal = (company?: ICompany) =>
     xOffset: "auto",
     size: "auto",
   });
+
 export const openDepartmentModal = (department?: IDepartment) =>
   modals.open({
     modalId: "department_modal",
@@ -81,6 +97,7 @@ export const openDepartmentModal = (department?: IDepartment) =>
     xOffset: "auto",
     size: "auto",
   });
+
 export const openLocationModal = (location?: ILocation) =>
   modals.open({
     modalId: "location_modal",
@@ -89,6 +106,7 @@ export const openLocationModal = (location?: ILocation) =>
     xOffset: "auto",
     size: "auto",
   });
+
 export const openManufacturerModal = (manufacturer?: IManufacturer) =>
   modals.open({
     modalId: "manufacturer_modal",
@@ -97,6 +115,7 @@ export const openManufacturerModal = (manufacturer?: IManufacturer) =>
     xOffset: "auto",
     size: "auto",
   });
+
 export const openModelModal = (model?: IModel) =>
   modals.open({
     modalId: "model_modal",
@@ -105,6 +124,7 @@ export const openModelModal = (model?: IModel) =>
     xOffset: "auto",
     size: "auto",
   });
+
 export const openAccessoryModal = (accessory?: IAccessory) =>
   modals.open({
     modalId: "accessory_modal",
@@ -113,6 +133,7 @@ export const openAccessoryModal = (accessory?: IAccessory) =>
     xOffset: "auto",
     size: "auto",
   });
+
 export const openAssetModal = (asset?: IAsset) =>
   modals.open({
     modalId: "asset_modal",
@@ -121,6 +142,7 @@ export const openAssetModal = (asset?: IAsset) =>
     xOffset: "auto",
     size: "auto",
   });
+
 export const openComponentModal = (component?: IComponent) =>
   modals.open({
     modalId: "component_modal",
@@ -129,6 +151,7 @@ export const openComponentModal = (component?: IComponent) =>
     xOffset: "auto",
     size: "auto",
   });
+
 export const openConsumableModal = (consumable?: IConsumable) =>
   modals.open({
     modalId: "consumable_modal",
@@ -137,6 +160,7 @@ export const openConsumableModal = (consumable?: IConsumable) =>
     xOffset: "auto",
     size: "auto",
   });
+
 export const openLicenseModal = (license?: ILicense) =>
   modals.open({
     modalId: "license_modal",
@@ -145,6 +169,7 @@ export const openLicenseModal = (license?: ILicense) =>
     xOffset: "auto",
     size: "auto",
   });
+
 export const openProductStatusModal = (productStatus?: IProductStatus) =>
   modals.open({
     modalId: "productStatus_modal",
@@ -153,6 +178,7 @@ export const openProductStatusModal = (productStatus?: IProductStatus) =>
     xOffset: "auto",
     size: "auto",
   });
+
 export const openSupplierModal = (supplier?: ISupplier) =>
   modals.open({
     modalId: "supplier_modal",
@@ -161,6 +187,7 @@ export const openSupplierModal = (supplier?: ISupplier) =>
     xOffset: "auto",
     size: "auto",
   });
+
 export const openUserModal = (user?: IUser) =>
   modals.open({
     modalId: "user_modal",
@@ -169,6 +196,7 @@ export const openUserModal = (user?: IUser) =>
     xOffset: "auto",
     size: "auto",
   });
+
 export const openFieldSetModal = (fieldSet?: IFieldSet) => {
   modals.open({
     modalId: "fieldSet_modal",
@@ -178,6 +206,7 @@ export const openFieldSetModal = (fieldSet?: IFieldSet) => {
     size: "auto",
   });
 };
+
 export const openCustomFieldModal = (customField?: ICustomField) => {
   modals.open({
     modalId: "customField_modal",
@@ -187,6 +216,7 @@ export const openCustomFieldModal = (customField?: ICustomField) => {
     size: "auto",
   });
 };
+
 export const openCheckInModal = (
   segment: string[] = ["User"],
   userProduct?: IUserProduct,
@@ -195,10 +225,10 @@ export const openCheckInModal = (
   assetCheckIn?: (data: IAssetProduct) => void
 ) => {
   modals.open({
-    modalId: "userProduct_checkIn_modal",
+    modalId: "product_checkIn_modal",
     title: "Check In",
     children: (
-      <CheckInOutForm
+      <CheckInForm
         segment={segment}
         userProduct={userProduct}
         userCheckIn={userCheckIn}
@@ -210,6 +240,73 @@ export const openCheckInModal = (
     size: "auto",
   });
 };
+
+export const openAssetCheckInModal = (checkInDto: AssetCheckInDto) => {
+  modals.open({
+    modalId: "asset_checkIn_modal",
+    title: "Check In",
+    children: (
+      <AssetCheckInForm
+        checkInDto={checkInDto}
+        onSubmit={() => closeModal("asset_checkIn_modal")}
+      />
+    ),
+    xOffset: "auto",
+    size: "auto",
+  });
+};
+
+export const openAssetCheckOutModal = (checkOutDto: AssetCheckOutDto) => {
+  modals.open({
+    modalId: "asset_checkOut_modal",
+    title: "Check Out",
+    children: (
+      <AssetCheckOutForm
+        checkOutDto={checkOutDto}
+        onSubmit={() => closeModal("asset_checkOut_modal")}
+      />
+    ),
+    xOffset: "auto",
+    size: "auto",
+  });
+};
+
+export const openAssetProductCheckOutModal = (
+  checkOutDto: AssetProductCheckOutDto,
+  assetCheckOut: (data: AssetProductCheckOutDto) => void
+) => {
+  modals.open({
+    modalId: "asset_product_checkOut_modal",
+    title: "Check Out",
+    children: (
+      <AssetProductCheckOutForm
+        checkOutDto={checkOutDto}
+        assetCheckOut={assetCheckOut}
+      />
+    ),
+    xOffset: "auto",
+    size: "auto",
+  });
+};
+
+export const openUserProductCheckOutModal = (
+  checkOutDto: UserProductCheckOutDto,
+  userCheckOut: (data: UserProductCheckOutDto) => void
+) => {
+  modals.open({
+    modalId: "user_product_checkOut_modal",
+    title: "Check Out",
+    children: (
+      <UserProductCheckOutForm
+        checkOutDto={checkOutDto}
+        userCheckOut={userCheckOut}
+      />
+    ),
+    xOffset: "auto",
+    size: "auto",
+  });
+};
+
 export const openPermissionModal = (branch: IBranch) => {
   modals.open({
     modalId: "permission_modal",
