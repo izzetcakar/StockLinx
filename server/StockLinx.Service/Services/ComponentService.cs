@@ -201,27 +201,53 @@ namespace StockLinx.Service.Services
                 component.Name,
                 "Asset",
                 asset.Id,
-                asset.Name
+                asset.Name,
+                "Checked In " + checkInDto.Quantity + " units"
             );
             await _unitOfWork.CommitAsync();
             return assetProduct;
         }
 
-        public async Task CheckOutAsync(Guid id)
+        public async Task CheckOutAsync(AssetProductCheckOutDto checkOutDto)
         {
-            AssetProduct assetProduct = await _assetProductRepository.GetByIdAsync(id);
-            Component component = await GetByIdAsync((Guid)assetProduct.ComponentId);
+            AssetProduct assetProduct = await _assetProductRepository.GetByIdAsync(
+                checkOutDto.AssetProductId
+            );
+            Component component = await GetByIdAsync(checkOutDto.ProductId);
             if (assetProduct == null || component == null)
             {
                 throw new Exception("Component product is not found");
             }
-            _assetProductRepository.Remove(assetProduct);
-            await _customLogService.CreateCustomLog(
-                "CheckOut",
-                "Component",
-                component.Id,
-                component.Name
-            );
+            switch (checkOutDto.Quantity - assetProduct.Quantity)
+            {
+                case 0:
+                    _assetProductRepository.Remove(assetProduct);
+                    await _customLogService.CreateCustomLog(
+                        "CheckOut",
+                        "Component",
+                        component.Id,
+                        component.Name,
+                        checkOutDto.Notes ?? "Ckecked Out " + checkOutDto.Quantity + " units"
+                    );
+                    break;
+                case > 0:
+                    throw new Exception(
+                        "Quantity must be less than or equal to the quantity in stock"
+                    );
+                case < 0:
+                    AssetProduct newAssetProduct = assetProduct;
+                    newAssetProduct.Quantity -= checkOutDto.Quantity;
+                    _assetProductRepository.Update(assetProduct, newAssetProduct);
+                    await _customLogService.CreateCustomLog(
+                        "CheckOut",
+                        "Component",
+                        component.Id,
+                        component.Name,
+                        checkOutDto.Notes ?? "Ckecked Out " + checkOutDto.Quantity + " units"
+                    );
+                    break;
+            }
+
             await _unitOfWork.CommitAsync();
         }
     }

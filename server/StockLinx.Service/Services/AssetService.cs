@@ -256,7 +256,13 @@ namespace StockLinx.Service.Services
                 throw new Exception("Deployed product is not found");
             }
             _userProductRepository.Remove(userProduct);
-            await _customLogService.CreateCustomLog("CheckOut", "Asset", asset.Id, asset.Name);
+            await _customLogService.CreateCustomLog(
+                "CheckOut",
+                "Asset",
+                asset.Id,
+                asset.Name,
+                checkOutDto.Notes ?? "Asset is checked out"
+            );
             asset.ProductStatusId = checkOutDto.ProductStatusId;
             _assetRepository.Update(asset, asset);
             await _unitOfWork.CommitAsync();

@@ -12,5 +12,6 @@
         public string ItemController { get; set; }
         public string? TargetController { get; set; }
         public string Action { get; set; }
+        public string? Notes { get; set; }
     }
 }

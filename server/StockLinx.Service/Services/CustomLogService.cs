@@ -77,6 +77,60 @@ namespace StockLinx.Service.Services
             await _customLogRepository.AddAsync(customLog);
         }
 
+        public async Task CreateCustomLog(
+            string action,
+            string itemController,
+            Guid itemId,
+            string item,
+            string targetController,
+            Guid targetId,
+            string target,
+            string notes
+        )
+        {
+            var userService = _serviceProvider.GetRequiredService<IUserService>();
+            var user = await userService.GetCurrentUser();
+            var customLog = new CustomLog
+            {
+                Id = Guid.NewGuid(),
+                Date = DateTime.UtcNow,
+                UserId = user.Id,
+                Action = action,
+                Item = item,
+                ItemController = itemController,
+                ItemId = itemId,
+                Target = target,
+                TargetController = targetController,
+                TargetId = targetId,
+                Notes = notes,
+            };
+            await _customLogRepository.AddAsync(customLog);
+        }
+
+        public async Task CreateCustomLog(
+            string action,
+            string itemController,
+            Guid itemId,
+            string item,
+            string notes
+        )
+        {
+            var userService = _serviceProvider.GetRequiredService<IUserService>();
+            var user = await userService.GetCurrentUser();
+            var customLog = new CustomLog
+            {
+                Id = Guid.NewGuid(),
+                Date = DateTime.UtcNow,
+                UserId = user.Id,
+                Action = action,
+                Item = item,
+                ItemController = itemController,
+                ItemId = itemId,
+                Notes = notes,
+            };
+            await _customLogRepository.AddAsync(customLog);
+        }
+
         public async Task<IEnumerable<CustomLog>> GetAllDtosAsync()
         {
             var customLogs = await _customLogRepository.GetAll().ToListAsync();

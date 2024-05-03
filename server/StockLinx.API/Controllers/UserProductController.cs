@@ -2,6 +2,7 @@
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
+using StockLinx.Core.Entities;
 using StockLinx.Core.Services;
 
 namespace StockLinx.API.Controllers
@@ -22,9 +23,10 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                List<UserProductDto> result = await _userProductService.GetAllDtosAsync();
+                //List<UserProductDto> result = await _userProductService.GetAllDtosAsync();
+                IEnumerable<UserProduct> result = await _userProductService.GetAllAsync();
                 return CreateActionResult(
-                    CustomResponseDto<List<UserProductDto>>.Success(200, result)
+                    CustomResponseDto<List<UserProduct>>.Success(200, result.ToList())
                 );
             }
             catch (Exception ex)
@@ -38,8 +40,13 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                UserProductDto result = await _userProductService.GetDtoAsync(id);
-                return CreateActionResult(CustomResponseDto<UserProductDto>.Success(200, result));
+                //UserProductDto result = await _userProductService.GetDtoAsync(id);
+                var result = await _userProductService.GetByIdAsync(id);
+                if (result == null)
+                {
+                    return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, "User product is not found"));
+                }
+                return CreateActionResult(CustomResponseDto<UserProduct>.Success(200, result));
             }
             catch (Exception ex)
             {

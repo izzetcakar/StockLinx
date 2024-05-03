@@ -193,27 +193,53 @@ namespace StockLinx.Service.Services
                 consumable.Name,
                 "User",
                 user.Id,
-                user.FirstName + user.LastName
+                user.FirstName + user.LastName,
+                "Checked In " + checkInDto.Quantity + " units"
             );
             await _unitOfWork.CommitAsync();
             return userProduct;
         }
 
-        public async Task CheckOutAsync(Guid id)
+        public async Task CheckOutAsync(UserProductCheckOutDto checkOutDto)
         {
-            UserProduct userProduct = await _userProductRepository.GetByIdAsync(id);
-            Consumable consumable = await GetByIdAsync((Guid)userProduct.ConsumableId);
+            UserProduct userProduct = await _userProductRepository.GetByIdAsync(
+                checkOutDto.UserProductId
+            );
+            Consumable consumable = await GetByIdAsync(checkOutDto.ProductId);
             if (userProduct == null || consumable == null)
             {
                 throw new Exception("Consumable product is not found");
             }
-            _userProductRepository.Remove(userProduct);
-            await _customLogService.CreateCustomLog(
-                "CheckOut",
-                "Consumable",
-                consumable.Id,
-                consumable.Name
-            );
+            switch (checkOutDto.Quantity - userProduct.Quantity)
+            {
+                case 0:
+                    _userProductRepository.Remove(userProduct);
+                    await _customLogService.CreateCustomLog(
+                        "CheckOut",
+                        "Consumable",
+                        consumable.Id,
+                        consumable.Name,
+                        checkOutDto.Notes ?? "Checked Out " + checkOutDto.Quantity + " units"
+                    );
+                    break;
+                case > 0:
+                    throw new Exception(
+                        "Quantity must be less than or equal to the quantity in stock"
+                    );
+                default:
+                    UserProduct newUserProduct = userProduct;
+                    newUserProduct.Quantity -= checkOutDto.Quantity;
+                    _userProductRepository.Update(userProduct, newUserProduct);
+                    await _customLogService.CreateCustomLog(
+                        "CheckOut",
+                        "Consumable",
+                        consumable.Id,
+                        consumable.Name,
+                        checkOutDto.Notes ?? "Checked Out " + checkOutDto.Quantity + " units"
+                    );
+                    break;
+            }
+
             await _unitOfWork.CommitAsync();
         }
     }

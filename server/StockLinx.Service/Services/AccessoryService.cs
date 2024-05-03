@@ -240,27 +240,53 @@ namespace StockLinx.Service.Services
                 accessory.Name,
                 "User",
                 user.Id,
-                user.FirstName + user.LastName
+                user.FirstName + user.LastName,
+                "Checked in " + checkInDto.Quantity + " units"
             );
             await _unitOfWork.CommitAsync();
             return userProduct;
         }
 
-        public async Task CheckOutAsync(Guid id)
+        public async Task CheckOutAsync(UserProductCheckOutDto checkOutDto)
         {
-            UserProduct userProduct = await _userProductRepository.GetByIdAsync(id);
-            Accessory accessory = await GetByIdAsync((Guid)userProduct.AccessoryId);
+            UserProduct userProduct = await _userProductRepository.GetByIdAsync(
+                checkOutDto.UserProductId
+            );
+            Accessory accessory = await GetByIdAsync(checkOutDto.ProductId);
             if (userProduct == null || accessory == null)
             {
                 throw new Exception("Accessory product is not found");
             }
-            _userProductRepository.Remove(userProduct);
-            await _customLogService.CreateCustomLog(
-                "CheckOut",
-                "Accessory",
-                accessory.Id,
-                accessory.Name
-            );
+            switch (userProduct.Quantity - checkOutDto.Quantity)
+            {
+                case 0:
+                    _userProductRepository.Remove(userProduct);
+                    await _customLogService.CreateCustomLog(
+                        "CheckOut",
+                        "Accessory",
+                        accessory.Id,
+                        accessory.Name,
+                        checkOutDto.Notes ?? "Checked out " + checkOutDto.Quantity + " units"
+                    );
+                    break;
+                case > 0:
+                    throw new Exception(
+                        "Quantity must be less than or equal to the quantity in stock"
+                    );
+                case < 0:
+                    UserProduct newUserProduct = userProduct;
+                    newUserProduct.Quantity -= checkOutDto.Quantity;
+                    _userProductRepository.Update(userProduct, newUserProduct);
+                    await _customLogService.CreateCustomLog(
+                        "CheckOut",
+                        "Accessory",
+                        accessory.Id,
+                        accessory.Name,
+                        checkOutDto.Notes ?? "Checked out " + checkOutDto.Quantity + " units"
+                    );
+                    break;
+            }
+
             await _unitOfWork.CommitAsync();
         }
     }

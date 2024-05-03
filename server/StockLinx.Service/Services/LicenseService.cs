@@ -187,7 +187,8 @@ namespace StockLinx.Service.Services
                 license.Name,
                 "User",
                 user.Id,
-                user.FirstName + user.LastName
+                user.FirstName + user.LastName,
+                "Checked In " + checkInDto.Quantity + " units"
             );
             await _unitOfWork.CommitAsync();
             return userProduct;
@@ -224,45 +225,95 @@ namespace StockLinx.Service.Services
                 license.Name,
                 "Asset",
                 asset.Id,
-                asset.Name
+                asset.Name,
+                "Checked In " + checkInDto.Quantity + " units"
             );
             await _unitOfWork.CommitAsync();
             return assetProduct;
         }
 
-        public async Task UserCheckOutAsync(Guid id)
+        public async Task UserCheckOutAsync(UserProductCheckOutDto checkOutDto)
         {
-            UserProduct userProduct = await _userProductRepository.GetByIdAsync(id);
-            if (userProduct == null)
+            UserProduct userProduct = await _userProductRepository.GetByIdAsync(
+                checkOutDto.UserProductId
+            );
+            License license = await _licenseRepository.GetByIdAsync(checkOutDto.ProductId);
+            if (userProduct == null || license == null)
             {
                 throw new Exception("UserProduct not found");
             }
-            License license = await _licenseRepository.GetByIdAsync(userProduct.LicenseId);
-            _userProductRepository.Remove(userProduct);
-            await _customLogService.CreateCustomLog(
-                "CheckOut",
-                "License",
-                license.Id,
-                license.Name
-            );
+            switch (checkOutDto.Quantity - userProduct.Quantity)
+            {
+                case 0:
+                    _userProductRepository.Remove(userProduct);
+                    await _customLogService.CreateCustomLog(
+                        "CheckOut",
+                        "License",
+                        license.Id,
+                        license.Name,
+                        checkOutDto.Notes ?? "Checked Out " + checkOutDto.Quantity + " units"
+                    );
+                    break;
+                case > 0:
+                    throw new Exception(
+                        "Quantity must be less than or equal to the quantity in stock"
+                    );
+                case < 0:
+                    UserProduct newUserProduct = userProduct;
+                    newUserProduct.Quantity -= checkOutDto.Quantity;
+                    _userProductRepository.Update(userProduct, newUserProduct);
+                    await _customLogService.CreateCustomLog(
+                        "CheckOut",
+                        "License",
+                        license.Id,
+                        license.Name,
+                        checkOutDto.Notes ?? "Checked Out " + checkOutDto.Quantity + " units"
+                    );
+                    break;
+            }
+
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task AssetCheckOutAsync(Guid id)
+        public async Task AssetCheckOutAsync(AssetProductCheckOutDto checkOutDto)
         {
-            AssetProduct assetProduct = await _assetProductRepository.GetByIdAsync(id);
-            if (assetProduct == null)
+            AssetProduct assetProduct = await _assetProductRepository.GetByIdAsync(
+                checkOutDto.AssetProductId
+            );
+            License license = await _licenseRepository.GetByIdAsync(checkOutDto.ProductId);
+            if (assetProduct == null || license == null)
             {
                 throw new Exception("AssetProduct not found");
             }
-            License license = await _licenseRepository.GetByIdAsync(assetProduct.LicenseId);
-            _assetProductRepository.Remove(assetProduct);
-            await _customLogService.CreateCustomLog(
-                "CheckOut",
-                "License",
-                license.Id,
-                license.Name
-            );
+            switch (checkOutDto.Quantity - assetProduct.Quantity)
+            {
+                case 0:
+                    _assetProductRepository.Remove(assetProduct);
+                    await _customLogService.CreateCustomLog(
+                        "CheckOut",
+                        "License",
+                        license.Id,
+                        license.Name,
+                        checkOutDto.Notes ?? "Checked Out " + checkOutDto.Quantity + " units"
+                    );
+                    break;
+                case > 0:
+                    throw new Exception(
+                        "Quantity must be less than or equal to the quantity in stock"
+                    );
+                case < 0:
+                    AssetProduct newAssetProduct = assetProduct;
+                    newAssetProduct.Quantity -= checkOutDto.Quantity;
+                    _assetProductRepository.Update(assetProduct, newAssetProduct);
+                    await _customLogService.CreateCustomLog(
+                        "CheckOut",
+                        "License",
+                        license.Id,
+                        license.Name,
+                        checkOutDto.Notes ?? "Checked Out " + checkOutDto.Quantity + " units"
+                    );
+                    break;
+            }
             await _unitOfWork.CommitAsync();
         }
     }

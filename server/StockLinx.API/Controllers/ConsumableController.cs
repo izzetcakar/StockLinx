@@ -130,12 +130,12 @@ namespace StockLinx.API.Controllers
             }
         }
 
-        [HttpPost("checkout/{id}")]
-        public async Task<IActionResult> CheckOutConsumable(Guid id)
+        [HttpPost("checkout")]
+        public async Task<IActionResult> CheckOutConsumable(UserProductCheckOutDto dto)
         {
             try
             {
-                await _consumableService.CheckOutAsync(id);
+                await _consumableService.CheckOutAsync(dto);
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
             }
             catch (Exception ex)

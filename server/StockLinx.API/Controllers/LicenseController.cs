@@ -144,12 +144,12 @@ namespace StockLinx.API.Controllers
             }
         }
 
-        [HttpPost("checkout/user/{id}")]
-        public async Task<IActionResult> UserCheckOutLicense(Guid id)
+        [HttpPost("checkout/user")]
+        public async Task<IActionResult> UserCheckOutLicense(UserProductCheckOutDto dto)
         {
             try
             {
-                await _licenseService.UserCheckOutAsync(id);
+                await _licenseService.UserCheckOutAsync(dto);
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
             }
             catch (Exception ex)
@@ -158,12 +158,12 @@ namespace StockLinx.API.Controllers
             }
         }
 
-        [HttpPost("checkout/asset/{id}")]
-        public async Task<IActionResult> AssetCheckOutLicense(Guid id)
+        [HttpPost("checkout/asset")]
+        public async Task<IActionResult> AssetCheckOutLicense(AssetProductCheckOutDto dto)
         {
             try
             {
-                await _licenseService.AssetCheckOutAsync(id);
+                await _licenseService.AssetCheckOutAsync(dto);
                 return CreateActionResult(CustomResponseDto<NoContentResult>.Success(200));
             }
             catch (Exception ex)
