@@ -11,6 +11,7 @@ export const useInitial = (accessory?: IAccessory, create?: boolean) => {
   let initialValues: IAccessory = {
     id: uuid4(),
     branchId: branch?.id || "",
+    tag: "",
     name: "",
     manufacturerId: null,
     supplierId: null,

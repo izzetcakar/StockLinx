@@ -5,7 +5,8 @@
         public Guid? ModelId { get; set; }
         public Guid ProductStatusId { get; set; }
         public string? ImagePath { get; set; }
-        public string? TagNo { get; set; }
         public string? SerialNo { get; set; }
+        public int? CheckinCounter { get; set; }
+        public int? CheckoutCounter { get; set; }
     }
 }

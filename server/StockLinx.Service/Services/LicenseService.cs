@@ -62,6 +62,7 @@ namespace StockLinx.Service.Services
 
         public async Task<LicenseDto> CreateLicenseAsync(LicenseCreateDto dto)
         {
+            await _licenseRepository.CheckTagExistAsync(dto.Tag);
             License license = _mapper.Map<License>(dto);
             license.Id = Guid.NewGuid();
             license.CreatedDate = DateTime.UtcNow;
@@ -75,6 +76,7 @@ namespace StockLinx.Service.Services
             List<LicenseCreateDto> createDtos
         )
         {
+            await _licenseRepository.CheckTagExistAsync(createDtos.Select(dto => dto.Tag).ToList());
             List<License> licenses = new List<License>();
             foreach (LicenseCreateDto createDto in createDtos)
             {
@@ -135,12 +137,8 @@ namespace StockLinx.Service.Services
             List<License> licenses = new List<License>();
             foreach (Guid id in ids)
             {
-                License license = await GetByIdAsync(id);
-                if (license == null)
-                {
-                    throw new Exception($"{id} - License is not found");
-                }
                 bool canDelete = await _licenseRepository.CanDeleteAsync(id);
+                License license = await GetByIdAsync(id);
                 if (canDelete)
                 {
                     licenses.Add(license);

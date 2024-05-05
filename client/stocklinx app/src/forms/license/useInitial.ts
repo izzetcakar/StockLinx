@@ -11,6 +11,7 @@ export const useInitial = (license?: ILicense, create?: boolean) => {
     id: uuid4(),
     branchId: branch?.id || "",
     categoryId: "",
+    tag: "",
     name: "",
     orderNo: null,
     purchaseCost: null,

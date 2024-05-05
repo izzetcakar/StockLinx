@@ -74,5 +74,32 @@ namespace StockLinx.Repository.Repositories.EF_Core
             int availableQuantity = entity.Quantity - userProducts.Sum(up => up.Quantity);
             return availableQuantity;
         }
+
+        public async Task CheckTagExistAsync(string tag)
+        {
+            if (string.IsNullOrWhiteSpace(tag))
+            {
+                throw new Exception("Tag is required.");
+            }
+            bool isExist = await dbContext.Consumables.AnyAsync(d => d.Tag == tag);
+            if (isExist)
+            {
+                throw new Exception($"Tag {tag} already exist.");
+            }
+        }
+
+        public Task CheckTagExistAsync(List<string> tags)
+        {
+            if (tags.Where(d => string.IsNullOrWhiteSpace(d)).Any())
+            {
+                throw new Exception("Tag is required.");
+            }
+            if (tags.Count != tags.Distinct().Count())
+            {
+                throw new Exception("Duplicate tags.");
+            }
+            var existingTags = dbContext.Consumables.Where(d => tags.Contains(d.Tag)).Select(d => d.Tag).ToList();
+            throw new Exception($"Tags {string.Join("\n", existingTags)} already exist.");
+        }
     }
 }

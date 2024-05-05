@@ -2,7 +2,7 @@
 {
     public class OverageAssetDto
     {
-        public string? TagNo { get; set; }
+        public string Tag { get; set; }
         public string? SerialNo { get; set; }
     }
 }

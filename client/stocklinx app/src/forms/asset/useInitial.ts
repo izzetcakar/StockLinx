@@ -13,6 +13,7 @@ export const useInitial = (asset?: IAsset, create?: boolean) => {
     branchId: branch?.id || "",
     productStatusId: "",
     supplierId: null,
+    tag: "",
     name: "",
     imagePath: null,
     serialNo: null,
@@ -21,7 +22,6 @@ export const useInitial = (asset?: IAsset, create?: boolean) => {
     purchaseDate: null,
     notes: null,
     modelId: null,
-    tagNo: null,
     overageAssets: [],
     quantity: 1,
   };

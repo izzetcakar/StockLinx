@@ -41,13 +41,13 @@ namespace StockLinx.Repository.Repositories.EF_Core
 
         public async Task<bool> CanDeleteAsync(Guid id)
         {
-            var entity = dbContext.Accessories.Find(id);
+            var entity = dbContext.Assets.Find(id);
             if (entity == null)
             {
-                throw new Exception("Accessory not found.");
+                throw new Exception("Asset not found.");
             }
             bool userProducts = await dbContext.UserProducts.AnyAsync(d =>
-                d.AccessoryId.HasValue && d.AccessoryId == id
+                d.AssetId.HasValue && d.AssetId == id
             );
             if (userProducts)
             {
@@ -59,6 +59,33 @@ namespace StockLinx.Repository.Repositories.EF_Core
                 throw new Exception("Cannot delete asset because it has products.");
             }
             return true;
+        }
+
+        public async Task CheckTagExistAsync(string tag)
+        {
+            if (string.IsNullOrWhiteSpace(tag))
+            {
+                throw new Exception("Tag is required.");
+            }
+            bool isExist = await dbContext.Assets.AnyAsync(d => d.Tag == tag);
+            if (isExist)
+            {
+                throw new Exception($"Tag {tag} already exist.");
+            }
+        }
+
+        public Task CheckTagExistAsync(List<string> tags)
+        {
+            if (tags.Where(d => string.IsNullOrWhiteSpace(d)).Any())
+            {
+                throw new Exception("Tag is required.");
+            }
+            if (tags.Count != tags.Distinct().Count())
+            {
+                throw new Exception("Duplicate tags.");
+            }
+            var existingTags = dbContext.Assets.Where(d => tags.Contains(d.Tag)).Select(d => d.Tag).ToList();
+            throw new Exception($"Tags {string.Join("\n", existingTags)} already exist.");
         }
     }
 }

@@ -59,6 +59,11 @@ export const useColumns = () => {
 
   const columns: BaseColumn[] = [
     {
+      dataField: "tag",
+      caption: "Tag",
+      dataType: "string",
+    },
+    {
       dataField: "name",
       caption: "Name",
       dataType: "string",
@@ -88,22 +93,6 @@ export const useColumns = () => {
             width="fit-content"
             fit="contain"
           />
-        );
-      },
-    },
-    {
-      dataField: "tagNo",
-      caption: "Asset Tag",
-      dataType: "string",
-      renderComponent(e) {
-        return (
-          <Anchor
-            onClick={() => navigate(`/asset/${(e as IAsset)?.id}`)}
-            target="_blank"
-            underline="always"
-          >
-            {(e as IAsset).tagNo}
-          </Anchor>
         );
       },
     },

@@ -10,6 +10,7 @@ export const useInitial = (consumable?: IConsumable, create?: boolean) => {
   let initialValues: IConsumable = {
     id: uuid4(),
     branchId: branch?.id || "",
+    tag: "",
     name: "",
     categoryId: "",
     manufacturerId: null,

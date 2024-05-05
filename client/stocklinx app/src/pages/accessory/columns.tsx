@@ -51,8 +51,13 @@ export const useColumns = () => {
 
   const columns: BaseColumn[] = [
     {
-      caption: "Name",
+      dataField: "tag",
+      caption: "Accessory",
+      dataType: "string",
+    },
+    {
       dataField: "name",
+      caption: "Name",
       dataType: "string",
       renderComponent(e) {
         return (
@@ -67,8 +72,8 @@ export const useColumns = () => {
       },
     },
     {
-      caption: "Status",
       dataField: "productStatusId",
+      caption: "Status",
       lookup: {
         data: productStatuses.map((status) => ({
           value: status.id,

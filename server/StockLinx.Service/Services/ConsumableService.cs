@@ -56,6 +56,7 @@ namespace StockLinx.Service.Services
 
         public async Task<ConsumableDto> CreateConsumableAsync(ConsumableCreateDto dto)
         {
+            await _consumableRepository.CheckTagExistAsync(dto.Tag);
             Consumable consumable = _mapper.Map<Consumable>(dto);
             consumable.Id = Guid.NewGuid();
             consumable.CreatedDate = DateTime.UtcNow;
@@ -74,6 +75,7 @@ namespace StockLinx.Service.Services
             List<ConsumableCreateDto> createDtos
         )
         {
+            await _consumableRepository.CheckTagExistAsync(createDtos.Select(dto => dto.Tag).ToList());
             List<Consumable> consumables = new List<Consumable>();
             foreach (ConsumableCreateDto createDto in createDtos)
             {

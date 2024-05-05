@@ -51,6 +51,11 @@ export const useColumns = () => {
 
   const columns: BaseColumn[] = [
     {
+      dataField: "tag",
+      caption: "Component",
+      dataType: "string",
+    },
+    {
       caption: "Name",
       dataField: "name",
       dataType: "string",

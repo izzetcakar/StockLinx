@@ -4,6 +4,7 @@
     {
         public Guid BranchId { get; set; }
         public Guid? SupplierId { get; set; }
+        public string Tag { get; set; }
         public string Name { get; set; }
         public string? ImagePath { get; set; }
         public string? OrderNo { get; set; }

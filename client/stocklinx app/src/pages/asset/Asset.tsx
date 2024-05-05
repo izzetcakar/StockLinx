@@ -76,7 +76,7 @@ const Asset = () => {
             </div>
             <div className="product__content">
               <div className="product__content__title">Tag No</div>
-              <div className="product__content__value">{asset?.tagNo}</div>
+              <div className="product__content__value">{asset?.tag}</div>
             </div>
             <div className="product__content">
               <div className="product__content__title">Category</div>

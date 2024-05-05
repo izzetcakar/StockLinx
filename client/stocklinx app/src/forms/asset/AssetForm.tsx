@@ -53,23 +53,33 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
             : "Purchase cost must be a non-negative number";
         }
       },
+      productStatusId: (value: string) =>
+        value === "" ? "Status is required" : null,
+      tag: (value: string) => (value === "" ? "Tag is required" : null),
+      overageAssets: (
+        value: { tag: string; serialNo: string }[] | undefined
+      ) => {
+        if (value && value.length > 0) {
+          return value.every((asset) => asset.tag === "")
+            ? "Tag is required"
+            : null;
+        }
+      },
     },
   });
   const overageAssetFields = form.values?.overageAssets?.map((_, index) => (
     <Group key={index} mt="xs">
-      <Text mah="fit-content">{index + 1}. Asset</Text>
+      <Text mah="fit-content">Asset - {index + 1}</Text>
       <TextInput
-        placeholder="Tag No"
-        {...form.getInputProps(`overageAssets.${index}.tagNo`)}
+        {...form.getInputProps(`overageAssets.${index}.tag`)}
         value={
           form.values.overageAssets?.find((_, arrIndex) => arrIndex === index)
-            ?.tagNo
+            ?.tag
         }
         required
         withAsterisk
       />
       <TextInput
-        placeholder="Serial No"
         {...form.getInputProps(`overageAssets.${index}.serialNo`)}
         value={
           form.values.overageAssets?.find((_, arrIndex) => arrIndex === index)
@@ -133,11 +143,12 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
         />
         <Flex w="100%" gap={10} align={"center"}>
           <TextInput
-            label="Tag No"
-            placeholder="Tag No"
+            label="Asset"
             w={"100%"}
-            {...form.getInputProps("tagNo")}
-            value={form.values.tagNo || ""}
+            {...form.getInputProps("tag")}
+            value={form.values.tag}
+            required
+            withAsterisk
           />
           <ActionIcon
             variant="default"
@@ -145,7 +156,7 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
             onClick={() =>
               form.insertListItem("overageAssets", {
                 serialNo: "",
-                tagNo: "",
+                tag: "",
               })
             }
           >

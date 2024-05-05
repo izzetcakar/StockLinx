@@ -58,6 +58,7 @@ namespace StockLinx.Service.Services
 
         public async Task<AccessoryDto> CreateAccessoryAsync(AccessoryCreateDto dto)
         {
+            await _accessoryRepository.CheckTagExistAsync(dto.Tag);
             Branch branch = await _branchRepository.GetByIdAsync(dto.BranchId);
             Accessory newAccessory = _mapper.Map<Accessory>(dto);
             newAccessory.Id = Guid.NewGuid();
@@ -94,6 +95,7 @@ namespace StockLinx.Service.Services
             List<AccessoryCreateDto> dtos
         )
         {
+            await _accessoryRepository.CheckTagExistAsync(dtos.Select(dto => dto.Tag).ToList());
             Branch branch = await _branchRepository.GetByIdAsync(dtos[0].BranchId);
             List<Accessory> newAccessories = new List<Accessory>();
             foreach (AccessoryCreateDto dto in dtos)

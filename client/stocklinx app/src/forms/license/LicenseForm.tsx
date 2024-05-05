@@ -49,6 +49,7 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license, create }) => {
             : "Purchase cost must be a non-negative number";
         }
       },
+      tag: (value: string) => (value === "" ? "Tag is required" : null),
     },
   });
 
@@ -77,6 +78,13 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license, create }) => {
         px={40}
         pt={20}
       >
+        <TextInput
+          label="Tag"
+          {...form.getInputProps("tag")}
+          value={form.values.tag || ""}
+          required
+          withAsterisk
+        />
         <TextInput
           label="Name"
           placeholder="New Name"

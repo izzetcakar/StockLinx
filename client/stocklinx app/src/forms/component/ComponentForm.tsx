@@ -46,6 +46,7 @@ const ComponentForm: React.FC<ComponentFormProps> = ({ component, create }) => {
             : "Purchase cost must be a non-negative number";
         }
       },
+      tag: (value: string) => (value === "" ? "Tag is required" : null),
     },
   });
   const handleSubmit = (data: object) => {
@@ -73,6 +74,12 @@ const ComponentForm: React.FC<ComponentFormProps> = ({ component, create }) => {
         px={40}
         pt={20}
       >
+        <TextInput
+          label="Tag"
+          {...form.getInputProps("tag")}
+          required
+          withAsterisk
+        />
         <TextInput
           label="Name"
           placeholder="New Name"

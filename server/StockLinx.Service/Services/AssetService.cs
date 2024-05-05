@@ -59,6 +59,14 @@ namespace StockLinx.Service.Services
 
         public async Task<List<AssetDto>> CreateAssetAsync(AssetCreateDto dto)
         {
+            if (dto.OverageAssets != null && dto.OverageAssets.Count > 0)
+            {
+                await _assetRepository.CheckTagExistAsync(dto.OverageAssets.Select(x => x.Tag).Append(dto.Tag).ToList());
+            }
+            else
+            {
+                await _assetRepository.CheckTagExistAsync(dto.Tag);
+            }
             List<Asset> newAssets = new List<Asset>();
             Asset newAsset = _mapper.Map<Asset>(dto);
             Branch branch = await _branchRepository.GetByIdAsync(newAsset.BranchId);
@@ -91,7 +99,7 @@ namespace StockLinx.Service.Services
                     Asset extraAsset = _mapper.Map<Asset>(dto);
                     extraAsset.Id = Guid.NewGuid();
                     extraAsset.SerialNo = overageAsset.SerialNo;
-                    extraAsset.TagNo = overageAsset.TagNo;
+                    extraAsset.Tag = overageAsset.Tag;
                     extraAsset.CreatedDate = DateTime.UtcNow;
                     extraAsset.ImagePath = newAsset.ImagePath;
                     newAssets.Add(extraAsset);
@@ -182,12 +190,8 @@ namespace StockLinx.Service.Services
             List<Asset> assets = new List<Asset>();
             foreach (Guid id in ids)
             {
-                Asset asset = await GetByIdAsync(id);
-                if (asset == null)
-                {
-                    throw new Exception("Asset is not found");
-                }
                 bool canDelete = await _assetRepository.CanDeleteAsync(id);
+                Asset asset = await GetByIdAsync(id);
                 if (canDelete)
                 {
                     assets.Add(asset);

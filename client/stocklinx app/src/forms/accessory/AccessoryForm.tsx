@@ -54,6 +54,7 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory, create }) => {
             : "Purchase cost must be a non-negative number";
         }
       },
+      tag: (value: string) => (value === "" ? "Tag is required" : null),
     },
   });
 
@@ -104,8 +105,13 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory, create }) => {
           onChange={(e) => handleImageChange(e)}
         />
         <TextInput
+          label="Accessory"
+          {...form.getInputProps("tag")}
+          required
+          withAsterisk
+        />
+        <TextInput
           label="Name"
-          placeholder="New Name"
           {...form.getInputProps("name")}
           required
           withAsterisk

@@ -58,6 +58,7 @@ export interface IProductStatus extends BaseEntity {
 export interface IBaseProduct extends BaseEntity {
   branchId: string;
   supplierId: string | null;
+  tag: string;
   name: string;
   orderNo: string | null;
   notes: string | null;
@@ -78,13 +79,12 @@ export interface IAsset extends IBaseProduct {
   modelId: string | null;
   productStatusId: string;
   imagePath: string | null;
-  tagNo: string | null;
   serialNo: string | null;
   overageAssets?: OverageAsset[];
 }
 export interface OverageAsset {
   serialNo: string;
-  tagNo: string;
+  tag: string;
 }
 export interface IComponent extends IBaseProduct {
   categoryId: string | null;

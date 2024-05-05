@@ -9,8 +9,8 @@ namespace StockLinx.Repository.Configurations
         public void Configure(EntityTypeBuilder<Asset> builder)
         {
             builder.HasKey(x => x.Id);
-            builder.Property(x => x.CheckinCounter).HasDefaultValue(0);
-            builder.Property(x => x.CheckoutCounter).HasDefaultValue(0);
+            builder.Property(x => x.Tag).IsRequired().HasMaxLength(10);
+            builder.HasIndex(x => x.Tag).IsUnique();
             builder.Property(x => x.Name).IsRequired();
 
             builder

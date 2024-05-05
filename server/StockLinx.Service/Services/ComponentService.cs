@@ -62,6 +62,7 @@ namespace StockLinx.Service.Services
 
         public async Task<ComponentDto> CreateComponentAsync(ComponentCreateDto dto)
         {
+            await _componentRepository.CheckTagExistAsync(dto.Tag);
             Component component = _mapper.Map<Component>(dto);
             component.Id = Guid.NewGuid();
             component.CreatedDate = DateTime.UtcNow;
@@ -80,6 +81,7 @@ namespace StockLinx.Service.Services
             List<ComponentCreateDto> createDtos
         )
         {
+            await _componentRepository.CheckTagExistAsync(createDtos.Select(x => x.Tag).ToList());
             List<Component> components = new List<Component>();
             foreach (ComponentCreateDto createDto in createDtos)
             {
