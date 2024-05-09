@@ -44,10 +44,6 @@ namespace StockLinx.Service.Services
         public async Task<AccessoryDto> GetDto(Guid id)
         {
             Accessory accessory = await GetByIdAsync(id);
-            if (accessory == null)
-            {
-                throw new Exception("Accessory is not found");
-            }
             return await _accessoryRepository.GetDtoAsync(accessory);
         }
 
@@ -68,7 +64,7 @@ namespace StockLinx.Service.Services
             {
                 if (newAccessory.ImagePath.Contains("base64,"))
                 {
-                    ImageHandler.UploadBase64AsJpg(
+                    ImageUtils.UploadBase64AsJpg(
                         newAccessory.ImagePath,
                         $"{newAccessory.Id}",
                         "Accessories"
@@ -122,11 +118,8 @@ namespace StockLinx.Service.Services
 
         public async Task<AccessoryDto> UpdateAccessoryAsync(AccessoryUpdateDto dto)
         {
+            await _accessoryRepository.CheckExistAsync(dto.Id);
             Accessory accessoryInDb = await GetByIdAsync(dto.Id);
-            if (accessoryInDb == null)
-            {
-                throw new Exception("Accessory is not found");
-            }
             Accessory accessory = _mapper.Map<Accessory>(dto);
             accessory.UpdatedDate = DateTime.UtcNow;
 
@@ -134,7 +127,7 @@ namespace StockLinx.Service.Services
             {
                 if (accessory.ImagePath.Contains("base64,"))
                 {
-                    ImageHandler.UploadBase64AsJpg(
+                    ImageUtils.UploadBase64AsJpg(
                         accessory.ImagePath,
                         $"{accessory.Id}",
                         "Accessories"
@@ -162,12 +155,8 @@ namespace StockLinx.Service.Services
 
         public async Task DeleteAccessoryAsync(Guid id)
         {
+            await _accessoryRepository.CheckExistAsync(id);
             Accessory accessory = await GetByIdAsync(id);
-            if (accessory == null)
-            {
-                throw new Exception("Accessory is not found");
-            }
-
             bool canDelete = await _accessoryRepository.CanDeleteAsync(id);
             if (canDelete)
             {
@@ -187,11 +176,8 @@ namespace StockLinx.Service.Services
             List<Accessory> accessories = new List<Accessory>();
             foreach (Guid id in ids)
             {
+                await _accessoryRepository.CheckExistAsync(id);
                 Accessory accessory = await GetByIdAsync(id);
-                if (accessory == null)
-                {
-                    throw new Exception("Accessory is not found");
-                }
                 accessories.Add(accessory);
             }
             foreach (Accessory accessory in accessories)
@@ -213,12 +199,9 @@ namespace StockLinx.Service.Services
 
         public async Task<UserProduct> CheckInAsync(UserProductCheckInDto checkInDto)
         {
+            await _accessoryRepository.CheckExistAsync(checkInDto.ProductId);
             User user = await _userService.GetByIdAsync(checkInDto.UserId);
             Accessory accessory = await GetByIdAsync(checkInDto.ProductId);
-            if (accessory == null)
-            {
-                throw new Exception("Accessory not found");
-            }
             int availableQuantity = await _accessoryRepository.GetAvaliableQuantityAsync(accessory);
             if (availableQuantity - checkInDto.Quantity < 0)
             {
@@ -255,10 +238,6 @@ namespace StockLinx.Service.Services
                 checkOutDto.UserProductId
             );
             Accessory accessory = await GetByIdAsync(checkOutDto.ProductId);
-            if (userProduct == null || accessory == null)
-            {
-                throw new Exception("Accessory product is not found");
-            }
             switch (userProduct.Quantity - checkOutDto.Quantity)
             {
                 case 0:

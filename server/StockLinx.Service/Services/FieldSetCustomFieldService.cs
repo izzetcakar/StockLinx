@@ -24,10 +24,6 @@ namespace StockLinx.Service.Services
         public async Task<FieldSetCustomFieldDto> GetDtoAsync(Guid id)
         {
             FieldSetCustomField fieldSetCustomField = await GetByIdAsync(id);
-            if (fieldSetCustomField == null)
-            {
-                throw new Exception("FieldSetCustomField is not found");
-            }
             return _repository.GetDto(fieldSetCustomField);
         }
 
@@ -74,10 +70,6 @@ namespace StockLinx.Service.Services
             foreach (Guid id in ids)
             {
                 FieldSetCustomField entity = await GetByIdAsync(id);
-                if (entity == null)
-                {
-                    throw new Exception("FieldSetCustomField is not found");
-                }
                 fieldSetCustomFields.Add(entity);
             }
             _repository.RemoveRange(fieldSetCustomFields);

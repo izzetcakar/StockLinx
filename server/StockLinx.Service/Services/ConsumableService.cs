@@ -42,10 +42,6 @@ namespace StockLinx.Service.Services
         public async Task<ConsumableDto> GetDtoAsync(Guid id)
         {
             Consumable consumable = await GetByIdAsync(id);
-            if (consumable == null)
-            {
-                throw new Exception("Consumable is not found");
-            }
             return await _consumableRepository.GetDtoAsync(consumable);
         }
 
@@ -98,10 +94,6 @@ namespace StockLinx.Service.Services
         public async Task<ConsumableDto> UpdateConsumableAsync(ConsumableUpdateDto dto)
         {
             Consumable consumableInDb = await GetByIdAsync(dto.Id);
-            if (consumableInDb == null)
-            {
-                throw new Exception("Consumable is not found");
-            }
             Consumable consumable = _mapper.Map<Consumable>(dto);
             consumable.UpdatedDate = DateTime.UtcNow;
             _consumableRepository.Update(consumableInDb, consumable);
@@ -118,10 +110,6 @@ namespace StockLinx.Service.Services
         public async Task DeleteConsumableAsync(Guid id)
         {
             Consumable consumable = await GetByIdAsync(id);
-            if (consumable == null)
-            {
-                throw new Exception("Consumable is not found");
-            }
             bool canDelete = await _consumableRepository.CanDeleteAsync(id);
             if (canDelete)
             {
@@ -142,10 +130,6 @@ namespace StockLinx.Service.Services
             foreach (Guid id in ids)
             {
                 Consumable consumable = await GetByIdAsync(id);
-                if (consumable == null)
-                {
-                    throw new Exception($"{id} - Consumable is not found");
-                }
                 bool canDelete = await _consumableRepository.CanDeleteAsync(id);
                 if (canDelete)
                 {
@@ -166,10 +150,6 @@ namespace StockLinx.Service.Services
         {
             User user = await _userService.GetByIdAsync(checkInDto.UserId);
             Consumable consumable = await GetByIdAsync(checkInDto.ProductId);
-            if (consumable == null)
-            {
-                throw new Exception("Consumable not found");
-            }
             int availableQuantity = await _consumableRepository.GetAvaliableQuantityAsync(
                 consumable
             );
@@ -208,10 +188,6 @@ namespace StockLinx.Service.Services
                 checkOutDto.UserProductId
             );
             Consumable consumable = await GetByIdAsync(checkOutDto.ProductId);
-            if (userProduct == null || consumable == null)
-            {
-                throw new Exception("Consumable product is not found");
-            }
             switch (checkOutDto.Quantity - userProduct.Quantity)
             {
                 case 0:

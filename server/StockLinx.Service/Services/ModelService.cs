@@ -34,10 +34,6 @@ namespace StockLinx.Service.Services
         public async Task<ModelDto> GetDtoAsync(Guid id)
         {
             Model model = await GetByIdAsync(id);
-            if (model == null)
-            {
-                throw new Exception("Model is not found");
-            }
             return _modelRepository.GetDto(model);
         }
 
@@ -73,10 +69,6 @@ namespace StockLinx.Service.Services
         public async Task UpdateModelAsync(ModelUpdateDto dto)
         {
             Model modelInDb = await GetByIdAsync(dto.Id);
-            if (modelInDb == null)
-            {
-                throw new Exception("Model is not found");
-            }
             _modelRepository.UpdateModel(dto);
             await _customLogService.CreateCustomLog("Update", "Model", dto.Id, dto.Name);
         }
@@ -84,10 +76,6 @@ namespace StockLinx.Service.Services
         public async Task DeleteModelAsync(Guid id)
         {
             Model model = await GetByIdAsync(id);
-            if (model == null)
-            {
-                throw new Exception("Model is not found");
-            }
             _modelRepository.Remove(model);
             await _customLogService.CreateCustomLog("Delete", "Model", model.Id, model.Name);
             await _unitOfWork.CommitAsync();
@@ -99,10 +87,6 @@ namespace StockLinx.Service.Services
             foreach (Guid id in ids)
             {
                 Model model = await GetByIdAsync(id);
-                if (model == null)
-                {
-                    throw new Exception("Model is not found");
-                }
                 models.Add(model);
                 await _customLogService.CreateCustomLog("Delete", "Model", model.Id, model.Name);
             }

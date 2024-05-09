@@ -37,10 +37,6 @@ namespace StockLinx.Service.Services
         public async Task<BranchDto> GetDtoAsync(Guid id)
         {
             Branch branch = await GetByIdAsync(id);
-            if (branch == null)
-            {
-                throw new Exception("Branch is not found");
-            }
             return _branchRepository.GetDto(branch);
         }
 
@@ -97,10 +93,6 @@ namespace StockLinx.Service.Services
         public async Task<BranchDto> UpdateBranchAsync(BranchUpdateDto dto)
         {
             Branch branchInDb = await GetByIdAsync(dto.Id);
-            if (branchInDb == null)
-            {
-                throw new Exception("Branch is not found");
-            }
             Branch branch = _mapper.Map<Branch>(dto);
             branch.UpdatedDate = DateTime.UtcNow;
             _branchRepository.Update(branchInDb, branch);
@@ -112,10 +104,6 @@ namespace StockLinx.Service.Services
         public async Task DeleteBranchAsync(Guid id)
         {
             Branch branch = await GetByIdAsync(id);
-            if (branch == null)
-            {
-                throw new Exception("Branch is not found");
-            }
             bool canDelete = await _branchRepository.CanDeleteAsync(id);
             if (canDelete)
             {
@@ -131,10 +119,6 @@ namespace StockLinx.Service.Services
             foreach (Guid id in ids)
             {
                 Branch branch = await GetByIdAsync(id);
-                if (branch == null)
-                {
-                    throw new Exception("Branch is not found");
-                }
                 bool canDelete = await _branchRepository.CanDeleteAsync(branch.Id);
                 if (canDelete)
                 {

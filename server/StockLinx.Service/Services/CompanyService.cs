@@ -37,10 +37,6 @@ namespace StockLinx.Service.Services
         public async Task<CompanyDto> GetDtoAsync(Guid id)
         {
             Company company = await GetByIdAsync(id);
-            if (company == null)
-            {
-                throw new Exception("Company is not found");
-            }
             return _companyRepository.GetDto(company);
         }
 
@@ -64,7 +60,7 @@ namespace StockLinx.Service.Services
             {
                 if (company.ImagePath.Contains("base64,"))
                 {
-                    ImageHandler.UploadBase64AsJpg(company.ImagePath, $"{company.Id}", "Companies");
+                    ImageUtils.UploadBase64AsJpg(company.ImagePath, $"{company.Id}", "Companies");
                     company.ImagePath = $"Companies/{company.Id}.jpg";
                 }
             }
@@ -109,10 +105,6 @@ namespace StockLinx.Service.Services
                 throw new Exception("User is not admin");
             }
             Company companyInDb = await GetByIdAsync(dto.Id);
-            if (companyInDb == null)
-            {
-                throw new Exception("Company is not found");
-            }
             Company company = _mapper.Map<Company>(dto);
             company.UpdatedDate = DateTime.UtcNow;
 
@@ -120,7 +112,7 @@ namespace StockLinx.Service.Services
             {
                 if (company.ImagePath.Contains("base64,"))
                 {
-                    ImageHandler.UploadBase64AsJpg(company.ImagePath, $"{company.Id}", "Companies");
+                    ImageUtils.UploadBase64AsJpg(company.ImagePath, $"{company.Id}", "Companies");
                     company.ImagePath = $"Companies/{company.Id}.jpg";
                 }
             }
@@ -139,10 +131,6 @@ namespace StockLinx.Service.Services
                 throw new Exception("User is not admin");
             }
             Company company = await GetByIdAsync(id);
-            if (company == null)
-            {
-                throw new Exception("Company is not found");
-            }
             bool canDelete = await _companyRepository.CanDeleteAsync(id);
             if (canDelete)
             {
@@ -168,10 +156,6 @@ namespace StockLinx.Service.Services
             foreach (Guid id in ids)
             {
                 Company company = await GetByIdAsync(id);
-                if (company == null)
-                {
-                    throw new Exception("Company is not found");
-                }
                 bool canDelete = await _companyRepository.CanDeleteAsync(id);
                 if (canDelete)
                 {

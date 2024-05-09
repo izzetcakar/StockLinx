@@ -34,10 +34,6 @@ namespace StockLinx.Service.Services
         public async Task<ProductStatusDto> GetDtoAsync(Guid id)
         {
             ProductStatus productStatus = await GetByIdAsync(id);
-            if (productStatus == null)
-            {
-                throw new Exception("ProductStatus is not found");
-            }
             return _productStatusRepository.GetDto(productStatus);
         }
 
@@ -88,10 +84,6 @@ namespace StockLinx.Service.Services
         public async Task<ProductStatusDto> UpdateProductStatusAsync(ProductStatusUpdateDto dto)
         {
             ProductStatus productStatusInDb = await GetByIdAsync(dto.Id);
-            if (productStatusInDb == null)
-            {
-                throw new Exception("ProductStatus is not found");
-            }
             ProductStatus productStatus = _mapper.Map<ProductStatus>(dto);
             productStatus.UpdatedDate = DateTime.UtcNow;
             _productStatusRepository.Update(productStatusInDb, productStatus);
@@ -108,10 +100,6 @@ namespace StockLinx.Service.Services
         public async Task DeleteProductStatusAsync(Guid id)
         {
             ProductStatus productStatus = await GetByIdAsync(id);
-            if (productStatus == null)
-            {
-                throw new Exception("ProductStatus is not found");
-            }
             _productStatusRepository.Remove(productStatus);
             await _customLogService.CreateCustomLog(
                 "Delete",
@@ -128,10 +116,6 @@ namespace StockLinx.Service.Services
             foreach (Guid id in ids)
             {
                 ProductStatus productStatus = await GetByIdAsync(id);
-                if (productStatus == null)
-                {
-                    throw new Exception($"{id} - ProductStatus is not found");
-                }
                 productStatuses.Add(productStatus);
                 await _customLogService.CreateCustomLog(
                     "Delete",

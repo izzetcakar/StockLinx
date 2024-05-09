@@ -25,10 +25,6 @@ namespace StockLinx.Service.Services
         public async Task<FieldSetDto> GetDtoAsync(Guid id)
         {
             FieldSet fieldSet = await GetByIdAsync(id);
-            if (fieldSet == null)
-            {
-                throw new Exception("FieldSet is not found");
-            }
             return _fieldSetRepository.GetDto(fieldSet);
         }
 
@@ -64,10 +60,6 @@ namespace StockLinx.Service.Services
         public async Task<FieldSetDto> UpdateFieldSetAsync(FieldSetUpdateDto dto)
         {
             FieldSet fieldSetInDb = await GetByIdAsync(dto.Id);
-            if (fieldSetInDb == null)
-            {
-                throw new Exception("FieldSet is not found");
-            }
             FieldSet updatedFieldSet = _mapper.Map<FieldSet>(dto);
             updatedFieldSet.UpdatedDate = DateTime.UtcNow;
             _fieldSetRepository.Update(fieldSetInDb, updatedFieldSet);
@@ -78,10 +70,6 @@ namespace StockLinx.Service.Services
         public async Task DeleteFieldSetAsync(Guid id)
         {
             FieldSet fieldSet = await GetByIdAsync(id);
-            if (fieldSet == null)
-            {
-                throw new Exception("FieldSet is not found");
-            }
             _fieldSetRepository.Remove(fieldSet);
             await _unitOfWork.CommitAsync();
         }
@@ -92,10 +80,6 @@ namespace StockLinx.Service.Services
             foreach (Guid id in ids)
             {
                 FieldSet fieldSet = await GetByIdAsync(id);
-                if (fieldSet == null)
-                {
-                    throw new Exception("FieldSet is not found");
-                }
                 fieldSets.Add(fieldSet);
             }
             _fieldSetRepository.RemoveRange(fieldSets);

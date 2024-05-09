@@ -10,7 +10,7 @@ namespace StockLinx.API.Controllers
         [HttpGet("{path}")]
         public async Task<IActionResult> Get(string path)
         {
-            var base64Image = ImageHandler.GetBase64FromFilePath(path);
+            var base64Image = ImageUtils.GetBase64FromFilePath(path);
             var imageFile = System.IO.File.OpenRead(base64Image);
             return File(imageFile, "image/jpeg");
             return new ContentResult

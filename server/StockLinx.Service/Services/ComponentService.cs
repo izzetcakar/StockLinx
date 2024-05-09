@@ -48,10 +48,6 @@ namespace StockLinx.Service.Services
         public async Task<ComponentDto> GetDtoAsync(Guid id)
         {
             Component component = await GetByIdAsync(id);
-            if (component == null)
-            {
-                throw new Exception("Component is not found");
-            }
             return await _componentRepository.GetDtoAsync(component);
         }
 
@@ -104,10 +100,6 @@ namespace StockLinx.Service.Services
         public async Task<ComponentDto> UpdateComponentAsync(ComponentUpdateDto dto)
         {
             Component componentInDb = await GetByIdAsync(dto.Id);
-            if (componentInDb == null)
-            {
-                throw new Exception("Component is not found");
-            }
             Component component = _mapper.Map<Component>(dto);
             component.UpdatedDate = DateTime.UtcNow;
             _componentRepository.Update(componentInDb, component);
@@ -124,10 +116,6 @@ namespace StockLinx.Service.Services
         public async Task DeleteComponentAsync(Guid id)
         {
             Component component = await GetByIdAsync(id);
-            if (component == null)
-            {
-                throw new Exception("Component is not found");
-            }
             bool canDelete = await _componentRepository.CanDeleteAsync(id);
             if (canDelete)
             {
@@ -148,10 +136,6 @@ namespace StockLinx.Service.Services
             foreach (Guid id in ids)
             {
                 Component component = await GetByIdAsync(id);
-                if (component == null)
-                {
-                    throw new Exception($"{id} - Component is not found");
-                }
                 bool canDelete = await _componentRepository.CanDeleteAsync(id);
                 if (canDelete)
                 {
@@ -171,15 +155,7 @@ namespace StockLinx.Service.Services
         public async Task<AssetProduct> CheckInAsync(AssetProductCheckInDto checkInDto)
         {
             Asset asset = await _assetRepository.GetByIdAsync(checkInDto.AssetId);
-            if (asset == null)
-            {
-                throw new Exception("Asset not found");
-            }
             Component component = await GetByIdAsync(checkInDto.ProductId);
-            if (component == null)
-            {
-                throw new Exception("Component not found");
-            }
             int availableQuantity = await _componentRepository.GetAvaliableQuantityAsync(component);
             if (availableQuantity - checkInDto.Quantity < 0)
             {
@@ -216,10 +192,6 @@ namespace StockLinx.Service.Services
                 checkOutDto.AssetProductId
             );
             Component component = await GetByIdAsync(checkOutDto.ProductId);
-            if (assetProduct == null || component == null)
-            {
-                throw new Exception("Component product is not found");
-            }
             switch (checkOutDto.Quantity - assetProduct.Quantity)
             {
                 case 0:

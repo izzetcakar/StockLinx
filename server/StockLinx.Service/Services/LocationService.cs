@@ -34,10 +34,6 @@ namespace StockLinx.Service.Services
         public async Task<LocationDto> GetDtoAsync(Guid id)
         {
             Location location = await GetByIdAsync(id);
-            if (location == null)
-            {
-                throw new Exception("Location is not found");
-            }
             return _locationRepository.GetDto(location);
         }
 
@@ -86,10 +82,6 @@ namespace StockLinx.Service.Services
         public async Task<LocationDto> UpdateLocationAsync(LocationUpdateDto dto)
         {
             Location locationInDb = await GetByIdAsync(dto.Id);
-            if (locationInDb == null)
-            {
-                throw new Exception("Location is not found");
-            }
             Location location = _mapper.Map<Location>(dto);
             location.UpdatedDate = DateTime.UtcNow;
             _locationRepository.Update(locationInDb, location);
@@ -106,10 +98,6 @@ namespace StockLinx.Service.Services
         public async Task DeleteLocationAsync(Guid id)
         {
             Location location = await GetByIdAsync(id);
-            if (location == null)
-            {
-                throw new Exception("Location is not found");
-            }
             _locationRepository.Remove(location);
             await _customLogService.CreateCustomLog(
                 "Delete",
@@ -126,10 +114,6 @@ namespace StockLinx.Service.Services
             foreach (Guid id in ids)
             {
                 Location location = await GetByIdAsync(id);
-                if (location == null)
-                {
-                    throw new Exception("Location is not found");
-                }
                 locations.Add(location);
                 await _customLogService.CreateCustomLog(
                     "Delete",

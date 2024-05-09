@@ -10,36 +10,33 @@ namespace StockLinx.Service.Services
 {
     public class AssetProductService : Service<AssetProduct>, IAssetProductService
     {
-        private readonly IAssetProductRepository _AssetProductRepository;
+        private readonly IAssetProductRepository _assetProductRepository;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
         public AssetProductService(
             IRepository<AssetProduct> repository,
-            IAssetProductRepository AssetProductRepository,
+            IAssetProductRepository assetProductRepository,
             IMapper mapper,
             IUnitOfWork unitOfWork
         )
             : base(repository, unitOfWork)
         {
-            _AssetProductRepository = AssetProductRepository;
+            _assetProductRepository = assetProductRepository;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
 
         public async Task<AssetProductDto> GetDtoAsync(Guid id)
         {
+            await _assetProductRepository.CheckExistAsync(id);
             AssetProduct AssetProduct = await GetByIdAsync(id);
-            if (AssetProduct == null)
-            {
-                throw new Exception("AssetProduct is not found");
-            }
-            return await _AssetProductRepository.GetDtoAsync(AssetProduct);
+            return await _assetProductRepository.GetDtoAsync(AssetProduct);
         }
 
         public async Task<List<AssetProductDto>> GetAllDtosAsync()
         {
-            return await _AssetProductRepository.GetAllDtosAsync();
+            return await _assetProductRepository.GetAllDtosAsync();
         }
 
         public async Task<AssetProductDto> CreateAssetProductAsync(AssetProductCreateDto dto)
@@ -47,9 +44,9 @@ namespace StockLinx.Service.Services
             AssetProduct AssetProduct = _mapper.Map<AssetProduct>(dto);
             AssetProduct.Id = Guid.NewGuid();
             AssetProduct.CreatedDate = DateTime.UtcNow;
-            await _AssetProductRepository.AddAsync(AssetProduct);
+            await _assetProductRepository.AddAsync(AssetProduct);
             await _unitOfWork.CommitAsync();
-            return await _AssetProductRepository.GetDtoAsync(AssetProduct);
+            return await _assetProductRepository.GetDtoAsync(AssetProduct);
         }
 
         public async Task<List<AssetProductDto>> CreateRangeAssetProductAsync(
@@ -64,19 +61,16 @@ namespace StockLinx.Service.Services
                 AssetProduct.CreatedDate = DateTime.UtcNow;
                 AssetProducts.Add(AssetProduct);
             }
-            await _AssetProductRepository.AddRangeAsync(AssetProducts);
+            await _assetProductRepository.AddRangeAsync(AssetProducts);
             await _unitOfWork.CommitAsync();
-            return await _AssetProductRepository.GetDtosAsync(AssetProducts);
+            return await _assetProductRepository.GetDtosAsync(AssetProducts);
         }
 
         public async Task DeleteAssetProductAsync(Guid id)
         {
+            await _assetProductRepository.CheckExistAsync(id);
             AssetProduct AssetProduct = await GetByIdAsync(id);
-            if (AssetProduct == null)
-            {
-                throw new Exception("AssetProduct is not found.");
-            }
-            _AssetProductRepository.Remove(AssetProduct);
+            _assetProductRepository.Remove(AssetProduct);
             await _unitOfWork.CommitAsync();
         }
     }

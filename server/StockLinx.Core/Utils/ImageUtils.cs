@@ -1,13 +1,16 @@
 ﻿namespace StockLinx.Core.Entities
 {
-    public class ImageHandler
+    public class ImageUtils
     {
         public static void UploadBase64AsJpg(string base64String, string fileName, string path)
         {
             var base64 = base64String.Split(',')[1];
             byte[] imageBytes = Convert.FromBase64String(base64);
 
-            string uploadDir = Path.Combine(Directory.GetCurrentDirectory(), $"Resources/Images/{path}");
+            string uploadDir = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                $"Resources/Images/{path}"
+            );
             if (!Directory.Exists(uploadDir))
             {
                 Directory.CreateDirectory(uploadDir);

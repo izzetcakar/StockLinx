@@ -34,10 +34,6 @@ namespace StockLinx.Service.Services
         public async Task<CategoryDto> GetDtoAsync(Guid id)
         {
             Category category = await GetByIdAsync(id);
-            if (category == null)
-            {
-                throw new Exception("Category is not found");
-            }
             return _categoryRepository.GetDto(category);
         }
 
@@ -86,10 +82,6 @@ namespace StockLinx.Service.Services
         public async Task<CategoryDto> UpdateCategoryAsync(CategoryUpdateDto dto)
         {
             Category categoryInDb = await GetByIdAsync(dto.Id);
-            if (categoryInDb == null)
-            {
-                throw new Exception("Category is not found");
-            }
             Category category = _mapper.Map<Category>(dto);
             category.UpdatedDate = DateTime.UtcNow;
             _categoryRepository.Update(categoryInDb, category);
@@ -106,10 +98,6 @@ namespace StockLinx.Service.Services
         public async Task DeleteCategoryAsync(Guid id)
         {
             Category category = await GetByIdAsync(id);
-            if (category == null)
-            {
-                throw new Exception("Category is not found");
-            }
             _categoryRepository.Remove(category);
             await _customLogService.CreateCustomLog(
                 "Delete",
@@ -126,10 +114,6 @@ namespace StockLinx.Service.Services
             foreach (Guid id in ids)
             {
                 Category category = await GetByIdAsync(id);
-                if (category == null)
-                {
-                    throw new Exception("Category is not found");
-                }
                 categories.Add(category);
                 await _customLogService.CreateCustomLog(
                     "Delete",

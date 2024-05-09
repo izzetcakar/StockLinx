@@ -45,10 +45,6 @@ namespace StockLinx.Service.Services
         public async Task<AssetDto> GetDtoAsync(Guid id)
         {
             Asset asset = await GetByIdAsync(id);
-            if (asset == null)
-            {
-                throw new Exception("Asset is not found");
-            }
             return _assetRepository.GetDto(asset);
         }
 
@@ -87,7 +83,7 @@ namespace StockLinx.Service.Services
             {
                 if (newAsset.ImagePath.Contains("base64,"))
                 {
-                    ImageHandler.UploadBase64AsJpg(newAsset.ImagePath, $"{newAsset.Id}", "Assets");
+                    ImageUtils.UploadBase64AsJpg(newAsset.ImagePath, $"{newAsset.Id}", "Assets");
                     newAsset.ImagePath = $"Assets/{newAsset.Id}.jpg";
                 }
             }
@@ -147,10 +143,6 @@ namespace StockLinx.Service.Services
         public async Task<AssetDto> UpdateAssetAsync(AssetUpdateDto dto)
         {
             Asset assetInDb = await GetByIdAsync(dto.Id);
-            if (assetInDb == null)
-            {
-                throw new Exception("Asset is not found");
-            }
             Asset asset = _mapper.Map<Asset>(dto);
             asset.UpdatedDate = DateTime.UtcNow;
 
@@ -158,7 +150,7 @@ namespace StockLinx.Service.Services
             {
                 if (asset.ImagePath.Contains("base64,"))
                 {
-                    ImageHandler.UploadBase64AsJpg(asset.ImagePath, $"{asset.Id}", "Assets");
+                    ImageUtils.UploadBase64AsJpg(asset.ImagePath, $"{asset.Id}", "Assets");
                     asset.ImagePath = $"Assets/{asset.Id}.jpg";
                 }
             }
@@ -172,10 +164,6 @@ namespace StockLinx.Service.Services
         public async Task DeleteAssetAsync(Guid id)
         {
             Asset asset = await GetByIdAsync(id);
-            if (asset == null)
-            {
-                throw new Exception("Asset is not found");
-            }
             bool canDelete = await _assetRepository.CanDeleteAsync(id);
             if (canDelete)
             {
@@ -214,10 +202,6 @@ namespace StockLinx.Service.Services
             bool isDeployed = await _userProductRepository
                 .GetAll()
                 .AnyAsync(x => x.AssetId == asset.Id);
-            if (asset == null)
-            {
-                throw new Exception("Asset not found");
-            }
             if (isDeployed)
             {
                 throw new Exception("Asset is already deployed");
@@ -255,10 +239,6 @@ namespace StockLinx.Service.Services
                 checkOutDto.UserProductId
             );
             Asset asset = await GetByIdAsync((Guid)userProduct.AssetId);
-            if (userProduct == null || asset == null)
-            {
-                throw new Exception("Deployed product is not found");
-            }
             _userProductRepository.Remove(userProduct);
             await _customLogService.CreateCustomLog(
                 "CheckOut",

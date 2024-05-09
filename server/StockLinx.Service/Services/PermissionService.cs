@@ -115,10 +115,6 @@ namespace StockLinx.Service.Services
                 throw new Exception("User is not admin");
             }
             Permission permission = await GetByIdAsync(id);
-            if (permission == null)
-            {
-                throw new Exception("Permission is not found");
-            }
             _permissionRepository.Remove(permission);
             await _customLogService.CreateCustomLog(
                 "Permission taken",
@@ -135,10 +131,6 @@ namespace StockLinx.Service.Services
             foreach (Guid id in ids)
             {
                 Permission permission = await GetByIdAsync(id);
-                if (permission == null)
-                {
-                    throw new Exception("Permission is not found");
-                }
                 permissions.Add(permission);
                 await _customLogService.CreateCustomLog(
                     "Permission taken",

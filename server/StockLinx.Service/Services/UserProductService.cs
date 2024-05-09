@@ -30,10 +30,6 @@ namespace StockLinx.Service.Services
         public async Task<UserProductDto> GetDtoAsync(Guid id)
         {
             UserProduct UserProduct = await GetByIdAsync(id);
-            if (UserProduct == null)
-            {
-                throw new Exception("UserProduct is not found");
-            }
             return await _UserProductRepository.GetDtoAsync(UserProduct);
         }
 
@@ -72,10 +68,6 @@ namespace StockLinx.Service.Services
         public async Task DeleteUserProductAsync(Guid id)
         {
             UserProduct UserProduct = await GetByIdAsync(id);
-            if (UserProduct == null)
-            {
-                throw new Exception("UserProduct is not found.");
-            }
             _UserProductRepository.Remove(UserProduct);
             await _unitOfWork.CommitAsync();
         }

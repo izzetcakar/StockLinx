@@ -44,10 +44,6 @@ namespace StockLinx.Service.Services
         public async Task<UserDto> GetDtoAsync(Guid id)
         {
             User user = await GetByIdAsync(id);
-            if (user == null)
-            {
-                throw new Exception("User is not found");
-            }
             return _userRepository.GetDto(user);
         }
 
@@ -79,15 +75,7 @@ namespace StockLinx.Service.Services
         public async Task<User> GetCurrentUser()
         {
             Guid id = GetIdByToken();
-            User user = await GetByIdAsync(id);
-            if (user == null)
-            {
-                throw new Exception("User is not found");
-            }
-            else
-            {
-                return user;
-            }
+            return await GetByIdAsync(id);
         }
 
         public async Task<User> Login(UserLoginDto userLoginDto)
@@ -166,10 +154,6 @@ namespace StockLinx.Service.Services
         public async Task<UserDto> UpdateUserAsync(UserUpdateDto dto)
         {
             User userInDb = await GetByIdAsync(dto.Id);
-            if (userInDb == null)
-            {
-                throw new Exception("User is not found");
-            }
             User user = _mapper.Map<User>(dto);
             user.UpdatedDate = DateTime.UtcNow;
             _userRepository.Update(userInDb, user);
@@ -186,10 +170,6 @@ namespace StockLinx.Service.Services
         public async Task DeleteUserAsync(Guid id)
         {
             User user = await GetByIdAsync(id);
-            if (user == null)
-            {
-                throw new Exception("User is not found");
-            }
             bool canDelete = await _userRepository.CanDeleteAsync(id);
             if (canDelete)
             {
@@ -210,10 +190,6 @@ namespace StockLinx.Service.Services
             foreach (Guid id in ids)
             {
                 User user = await GetByIdAsync(id);
-                if (user == null)
-                {
-                    throw new Exception("User is not found");
-                }
                 bool canDelete = await _userRepository.CanDeleteAsync(id);
                 if (canDelete)
                 {

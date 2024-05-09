@@ -54,11 +54,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
 
         public async Task<bool> CanDeleteAsync(Guid id)
         {
-            var entity = dbContext.Licenses.Find(id);
-            if (entity == null)
-            {
-                throw new Exception("License not found.");
-            }
+            await CheckExistAsync(id);
             bool userProducts = await dbContext.UserProducts.AnyAsync(up =>
                 up.LicenseId.HasValue && up.LicenseId == id
             );
@@ -93,10 +89,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
 
         public async Task CheckTagExistAsync(string tag)
         {
-            if (string.IsNullOrWhiteSpace(tag))
-            {
-                throw new Exception("Tag is required.");
-            }
+            tag = TagUtils.Check(tag);
             bool isExist = await dbContext.Licenses.AnyAsync(d => d.Tag == tag);
             if (isExist)
             {
@@ -106,15 +99,11 @@ namespace StockLinx.Repository.Repositories.EF_Core
 
         public Task CheckTagExistAsync(List<string> tags)
         {
-            if (tags.Where(d => string.IsNullOrWhiteSpace(d)).Any())
-            {
-                throw new Exception("Tag is required.");
-            }
-            if (tags.Count != tags.Distinct().Count())
-            {
-                throw new Exception("Duplicate tags.");
-            }
-            var existingTags = dbContext.Licenses.Where(d => tags.Contains(d.Tag)).Select(d => d.Tag).ToList();
+            tags = TagUtils.Check(tags);
+            var existingTags = dbContext
+                .Licenses.Where(d => tags.Contains(d.Tag))
+                .Select(d => d.Tag)
+                .ToList();
             throw new Exception($"Tags {string.Join("\n", existingTags)} already exist.");
         }
     }

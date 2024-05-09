@@ -34,10 +34,6 @@ namespace StockLinx.Service.Services
         public async Task<SupplierDto> GetDtoAsync(Guid id)
         {
             Supplier supplier = await GetByIdAsync(id);
-            if (supplier == null)
-            {
-                throw new Exception("Supplier is not found");
-            }
             return _supplierRepository.GetDto(supplier);
         }
 
@@ -56,11 +52,7 @@ namespace StockLinx.Service.Services
             {
                 if (supplier.ImagePath.Contains("base64,"))
                 {
-                    ImageHandler.UploadBase64AsJpg(
-                        supplier.ImagePath,
-                        $"{supplier.Id}",
-                        "Suppliers"
-                    );
+                    ImageUtils.UploadBase64AsJpg(supplier.ImagePath, $"{supplier.Id}", "Suppliers");
                     supplier.ImagePath = $"Suppliers/{supplier.Id}.jpg";
                 }
             }
@@ -99,10 +91,6 @@ namespace StockLinx.Service.Services
         public async Task<SupplierDto> UpdateSupplierAsync(SupplierUpdateDto dto)
         {
             Supplier supplierInDb = await GetByIdAsync(dto.Id);
-            if (supplierInDb == null)
-            {
-                throw new Exception("Supplier is not found");
-            }
             Supplier supplier = _mapper.Map<Supplier>(dto);
             supplier.UpdatedDate = DateTime.UtcNow;
 
@@ -110,11 +98,7 @@ namespace StockLinx.Service.Services
             {
                 if (supplier.ImagePath.Contains("base64,"))
                 {
-                    ImageHandler.UploadBase64AsJpg(
-                        supplier.ImagePath,
-                        $"{supplier.Id}",
-                        "Suppliers"
-                    );
+                    ImageUtils.UploadBase64AsJpg(supplier.ImagePath, $"{supplier.Id}", "Suppliers");
                     supplier.ImagePath = $"Suppliers/{supplier.Id}.jpg";
                 }
             }
@@ -133,10 +117,6 @@ namespace StockLinx.Service.Services
         public async Task DeleteSupplierAsync(Guid id)
         {
             Supplier supplier = await GetByIdAsync(id);
-            if (supplier == null)
-            {
-                throw new Exception("Supplier is not found");
-            }
             _supplierRepository.Remove(supplier);
             await _customLogService.CreateCustomLog(
                 "Delete",
@@ -153,10 +133,6 @@ namespace StockLinx.Service.Services
             foreach (Guid id in ids)
             {
                 Supplier supplier = await GetByIdAsync(id);
-                if (supplier == null)
-                {
-                    throw new Exception("Supplier is not found");
-                }
                 suppliers.Add(supplier);
                 await _customLogService.CreateCustomLog(
                     "Delete",

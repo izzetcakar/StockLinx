@@ -34,10 +34,6 @@ namespace StockLinx.Service.Services
         public async Task<CustomFieldDto> GetDtoAsync(Guid id)
         {
             CustomField customField = await GetByIdAsync(id);
-            if (customField == null)
-            {
-                throw new Exception("CustomField is not found");
-            }
             return _customFieldRepository.GetDto(customField);
         }
 
@@ -89,10 +85,6 @@ namespace StockLinx.Service.Services
         public async Task<CustomFieldDto> UpdateCustomFieldAsync(CustomFieldUpdateDto dto)
         {
             CustomField customFieldInDb = await GetByIdAsync(dto.Id);
-            if (customFieldInDb == null)
-            {
-                throw new Exception("CustomField is not found");
-            }
             CustomField customField = _mapper.Map<CustomField>(dto);
             customField.UpdatedDate = DateTime.UtcNow;
             _customFieldRepository.Update(customFieldInDb, customField);
@@ -103,10 +95,6 @@ namespace StockLinx.Service.Services
         public async Task DeleteCustomFieldAsync(Guid id)
         {
             CustomField customField = await GetByIdAsync(id);
-            if (customField == null)
-            {
-                throw new Exception("CustomField is not found");
-            }
             _customFieldRepository.Remove(customField);
             await _unitOfWork.CommitAsync();
         }
@@ -117,10 +105,6 @@ namespace StockLinx.Service.Services
             foreach (Guid id in ids)
             {
                 CustomField customField = await GetByIdAsync(id);
-                if (customField == null)
-                {
-                    throw new Exception("CustomField is not found");
-                }
                 customFields.Add(customField);
             }
             _customFieldRepository.RemoveRange(customFields);

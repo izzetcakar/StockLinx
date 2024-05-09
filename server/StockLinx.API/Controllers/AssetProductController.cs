@@ -41,11 +41,7 @@ namespace StockLinx.API.Controllers
             try
             {
                 //AssetProductDto result = await _assetProductService.GetDtoAsync(id);
-                var result = await _assetProductService.GetByIdAsync(id);
-                if (result == null)
-                {
-                    return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, "UserProduct is not found"));
-                }
+                AssetProduct result = await _assetProductService.GetByIdAsync(id);
                 return CreateActionResult(CustomResponseDto<AssetProduct>.Success(200, result));
             }
             catch (Exception ex)

@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.Repositories;
-using System.Linq.Expressions;
 
 namespace StockLinx.Repository.Repositories.EF_Core
 {
-    public class Repository<T> : IRepository<T> where T : class
+    public class Repository<T> : IRepository<T>
+        where T : class
     {
         protected readonly AppDbContext dbContext;
         private readonly DbSet<T> dbSet;
@@ -30,18 +31,30 @@ namespace StockLinx.Repository.Repositories.EF_Core
             return await dbSet.AnyAsync(expression);
         }
 
+        public async Task CheckExistAsync(Guid id)
+        {
+            bool isExist = await dbSet.AnyAsync(d =>
+                (Guid)dbSet.Entry(d).Property("Id").CurrentValue == id
+            );
+            if (!isExist)
+            {
+                throw new Exception($"{typeof(T).Name} is not found");
+            }
+        }
+
         public IQueryable<T> GetAll()
         {
             return dbSet.AsQueryable().AsNoTracking();
         }
 
-        public async Task<T> GetByIdAsync(Guid? id)
+        public async Task<T> GetByIdAsync(Guid id)
         {
-            if (id.HasValue)
+            var result = await dbSet.FindAsync(id);
+            if (result == null)
             {
-                return await dbSet.FindAsync(id.Value);
+                throw new Exception($"{typeof(T).Name} is not found");
             }
-            return null;
+            return result;
         }
 
         public void Remove(T entity)
@@ -49,7 +62,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
             T result = dbSet.Find(dbSet.Entry(entity).Property("Id").CurrentValue);
             if (result == null)
             {
-                throw new Exception($"{typeof(T).Name} not found");
+                throw new Exception($"{typeof(T).Name} is not found");
             }
             dbSet.Remove(entity);
         }
@@ -59,7 +72,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
             var result = dbSet.Find(entities);
             if (result == null)
             {
-                throw new Exception($"{typeof(T).Name} not found");
+                throw new Exception($"{typeof(T).Name} is not found");
             }
             dbSet.RemoveRange(entities);
         }
@@ -70,7 +83,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
             T newE = dbSet.Find(dbSet.Entry(newEntity).Property("Id").CurrentValue);
             if (oldE == null || newE == null)
             {
-                throw new Exception($"{typeof(T).Name} not found");
+                throw new Exception($"{typeof(T).Name} is not found");
             }
             dbSet.Entry(oldEntity).CurrentValues.SetValues(newEntity);
         }

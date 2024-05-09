@@ -1,6 +1,6 @@
 ﻿namespace StockLinx.Core.Entities
 {
-    public class Generic
+    public class TextUtils
     {
         public static string AddHyphenIfNotEmpty(string input)
         {

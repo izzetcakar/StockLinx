@@ -48,10 +48,6 @@ namespace StockLinx.Service.Services
         public async Task<LicenseDto> GetDtoAsync(Guid id)
         {
             License license = await GetByIdAsync(id);
-            if (license == null)
-            {
-                throw new Exception("License is not found");
-            }
             return await _licenseRepository.GetDtoAsync(license);
         }
 
@@ -99,10 +95,6 @@ namespace StockLinx.Service.Services
         public async Task<LicenseDto> UpdateLicenseAsync(LicenseUpdateDto dto)
         {
             License licenseInDb = await GetByIdAsync(dto.Id);
-            if (licenseInDb == null)
-            {
-                throw new Exception("License is not found");
-            }
             License license = _mapper.Map<License>(dto);
             license.UpdatedDate = DateTime.UtcNow;
             _licenseRepository.Update(licenseInDb, license);
@@ -114,10 +106,6 @@ namespace StockLinx.Service.Services
         public async Task DeleteLicenseAsync(Guid id)
         {
             License license = await GetByIdAsync(id);
-            if (license == null)
-            {
-                throw new Exception("License is not found");
-            }
             bool canDelete = await _licenseRepository.CanDeleteAsync(id);
             if (canDelete)
             {
@@ -158,10 +146,6 @@ namespace StockLinx.Service.Services
         {
             User user = await _userService.GetByIdAsync(checkInDto.UserId);
             License license = await GetByIdAsync(checkInDto.ProductId);
-            if (license == null)
-            {
-                throw new Exception("License not found");
-            }
             int availableQuantity = await _licenseRepository.GetAvaliableQuantityAsync(license);
             if (availableQuantity - checkInDto.Quantity < 0)
             {
@@ -196,10 +180,6 @@ namespace StockLinx.Service.Services
         {
             Asset asset = await _assetRepository.GetByIdAsync(checkInDto.AssetId);
             License license = await GetByIdAsync(checkInDto.ProductId);
-            if (license == null)
-            {
-                throw new Exception("License not found");
-            }
             int availableQuantity = await _licenseRepository.GetAvaliableQuantityAsync(license);
             if (availableQuantity - checkInDto.Quantity < 0)
             {
@@ -236,10 +216,6 @@ namespace StockLinx.Service.Services
                 checkOutDto.UserProductId
             );
             License license = await _licenseRepository.GetByIdAsync(checkOutDto.ProductId);
-            if (userProduct == null || license == null)
-            {
-                throw new Exception("UserProduct not found");
-            }
             switch (checkOutDto.Quantity - userProduct.Quantity)
             {
                 case 0:
@@ -279,10 +255,6 @@ namespace StockLinx.Service.Services
                 checkOutDto.AssetProductId
             );
             License license = await _licenseRepository.GetByIdAsync(checkOutDto.ProductId);
-            if (assetProduct == null || license == null)
-            {
-                throw new Exception("AssetProduct not found");
-            }
             switch (checkOutDto.Quantity - assetProduct.Quantity)
             {
                 case 0:

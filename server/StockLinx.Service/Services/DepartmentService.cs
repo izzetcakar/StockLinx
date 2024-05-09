@@ -34,10 +34,6 @@ namespace StockLinx.Service.Services
         public async Task<DepartmentDto> GetDtoAsync(Guid id)
         {
             Department department = await GetByIdAsync(id);
-            if (department == null)
-            {
-                throw new Exception("Department is not found");
-            }
             return _departmentRepository.GetDto(department);
         }
 
@@ -104,10 +100,6 @@ namespace StockLinx.Service.Services
         public async Task DeleteDepartmentAsync(Guid id)
         {
             Department department = await GetByIdAsync(id);
-            if (department == null)
-            {
-                throw new Exception("Department is not found");
-            }
             _departmentRepository.Remove(department);
             await _customLogService.CreateCustomLog(
                 "Delete",
@@ -124,10 +116,6 @@ namespace StockLinx.Service.Services
             foreach (Guid id in ids)
             {
                 Department department = await GetByIdAsync(id);
-                if (department == null)
-                {
-                    throw new Exception($"{id} - Department is not found");
-                }
                 departments.Add(department);
                 await _customLogService.CreateCustomLog(
                     "Delete",

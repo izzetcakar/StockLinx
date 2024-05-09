@@ -48,11 +48,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
 
         public async Task<bool> CanDeleteAsync(Guid id)
         {
-            var entity = dbContext.Components.Find(id);
-            if (entity == null)
-            {
-                throw new Exception("Component not found.");
-            }
+            await CheckExistAsync(id);
             bool assetProducts = await dbContext.AssetProducts.AnyAsync(d =>
                 d.ComponentId.HasValue && d.ComponentId == id
             );
@@ -77,10 +73,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
 
         public async Task CheckTagExistAsync(string tag)
         {
-            if (string.IsNullOrWhiteSpace(tag))
-            {
-                throw new Exception("Tag is required.");
-            }
+            tag = TagUtils.Check(tag);
             bool isExist = await dbContext.Components.AnyAsync(d => d.Tag == tag);
             if (isExist)
             {
@@ -90,15 +83,11 @@ namespace StockLinx.Repository.Repositories.EF_Core
 
         public Task CheckTagExistAsync(List<string> tags)
         {
-            if (tags.Where(d => string.IsNullOrWhiteSpace(d)).Any())
-            {
-                throw new Exception("Tag is required.");
-            }
-            if (tags.Count != tags.Distinct().Count())
-            {
-                throw new Exception("Duplicate tags.");
-            }
-            var existingTags = dbContext.Components.Where(d => tags.Contains(d.Tag)).Select(d => d.Tag).ToList();
+            tags = TagUtils.Check(tags);
+            var existingTags = dbContext
+                .Components.Where(d => tags.Contains(d.Tag))
+                .Select(d => d.Tag)
+                .ToList();
             throw new Exception($"Tags {string.Join("\n", existingTags)} already exist.");
         }
     }

@@ -1,12 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.Repositories;
 using StockLinx.Core.Services;
 using StockLinx.Core.UnitOfWork;
-using System.Linq.Expressions;
 
 namespace StockLinx.Service.Services
 {
-    public class Service<T> : IService<T> where T : class
+    public class Service<T> : IService<T>
+        where T : class
     {
         private readonly IRepository<T> _repository;
         private readonly IUnitOfWork _unitOfWork;
@@ -36,6 +37,11 @@ namespace StockLinx.Service.Services
             return await _repository.AnyAsync(expression);
         }
 
+        public async Task CheckExistAsync(Guid id)
+        {
+            await _repository.CheckExistAsync(id);
+        }
+
         public async Task<IEnumerable<T>> GetAllAsync()
         {
             return await _repository.GetAll().ToListAsync();
@@ -43,11 +49,6 @@ namespace StockLinx.Service.Services
 
         public async Task<T> GetByIdAsync(Guid id)
         {
-            T result = await _repository.GetByIdAsync(id);
-            if (result == null)
-            {
-                throw new Exception($"{typeof(T).Name} not found");
-            }
             return await _repository.GetByIdAsync(id);
         }
 

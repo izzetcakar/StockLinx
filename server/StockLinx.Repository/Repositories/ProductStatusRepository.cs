@@ -36,11 +36,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
 
         public async Task<bool> CanDeleteAsync(Guid id)
         {
-            var entity = dbContext.ProductStatuses.Find(id);
-            if (entity == null)
-            {
-                throw new Exception("Product Status not found");
-            }
+            await CheckExistAsync(id);
             var assets = await dbContext.Assets.AnyAsync(a => a.ProductStatusId == id);
             if (assets)
             {

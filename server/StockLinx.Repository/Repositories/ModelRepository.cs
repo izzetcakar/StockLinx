@@ -54,13 +54,9 @@ namespace StockLinx.Repository.Repositories.EF_Core
             return GetDtos(entities);
         }
 
-        public void UpdateModel(ModelUpdateDto dto)
+        public async void UpdateModel(ModelUpdateDto dto)
         {
-            var entity = dbContext.Models.SingleOrDefault(x => x.Id == dto.Id);
-            if (entity == null)
-            {
-                throw new Exception("Model not found");
-            }
+            var entity = await GetByIdAsync(dto.Id);
             var updatedEntity = _mapper.Map<Model>(dto);
             updatedEntity.UpdatedDate = DateTime.UtcNow;
             Update(entity, updatedEntity);

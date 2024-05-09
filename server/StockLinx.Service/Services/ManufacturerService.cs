@@ -34,10 +34,6 @@ namespace StockLinx.Service.Services
         public async Task<ManufacturerDto> GetDtoAsync(Guid id)
         {
             Manufacturer manufacturer = await GetByIdAsync(id);
-            if (manufacturer == null)
-            {
-                throw new Exception("Manufacturer is not found");
-            }
             return _manufacturerRepository.GetDto(manufacturer);
         }
 
@@ -56,7 +52,7 @@ namespace StockLinx.Service.Services
             {
                 if (manufacturer.ImagePath.Contains("base64,"))
                 {
-                    ImageHandler.UploadBase64AsJpg(
+                    ImageUtils.UploadBase64AsJpg(
                         manufacturer.ImagePath,
                         $"{manufacturer.Id}",
                         "Manufacturers"
@@ -102,10 +98,6 @@ namespace StockLinx.Service.Services
         public async Task<ManufacturerDto> UpdateManufacturerAsync(ManufacturerUpdateDto dto)
         {
             Manufacturer manufacturerInDb = await GetByIdAsync(dto.Id);
-            if (manufacturerInDb == null)
-            {
-                throw new Exception("Manufacturer is not found");
-            }
             Manufacturer manufacturer = _mapper.Map<Manufacturer>(dto);
             manufacturer.UpdatedDate = DateTime.UtcNow;
 
@@ -113,7 +105,7 @@ namespace StockLinx.Service.Services
             {
                 if (manufacturer.ImagePath.Contains("base64,"))
                 {
-                    ImageHandler.UploadBase64AsJpg(
+                    ImageUtils.UploadBase64AsJpg(
                         manufacturer.ImagePath,
                         $"{manufacturer.Id}",
                         "Manufacturers"
@@ -136,10 +128,6 @@ namespace StockLinx.Service.Services
         public async Task DeleteManufacturerAsync(Guid id)
         {
             Manufacturer manufacturer = await GetByIdAsync(id);
-            if (manufacturer == null)
-            {
-                throw new Exception("Manufacturer is not found");
-            }
             _manufacturerRepository.Remove(manufacturer);
             await _customLogService.CreateCustomLog(
                 "Delete",
@@ -156,10 +144,6 @@ namespace StockLinx.Service.Services
             foreach (Guid id in ids)
             {
                 Manufacturer manufacturer = await GetByIdAsync(id);
-                if (manufacturer == null)
-                {
-                    throw new Exception("Manufacturer is not found");
-                }
                 manufacturers.Add(manufacturer);
                 await _customLogService.CreateCustomLog(
                     "Delete",
