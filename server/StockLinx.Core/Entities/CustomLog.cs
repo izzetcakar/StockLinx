@@ -1,17 +1,17 @@
 ﻿namespace StockLinx.Core.Entities
 {
-    public class CustomLog
+    public record CustomLog
     {
-        public Guid Id { get; set; }
-        public Guid UserId { get; set; }
-        public Guid ItemId { get; set; }
-        public Guid? TargetId { get; set; }
-        public DateTime Date { get; set; }
-        public string Item { get; set; }
-        public string? Target { get; set; }
-        public string ItemController { get; set; }
-        public string? TargetController { get; set; }
-        public string Action { get; set; }
-        public string? Notes { get; set; }
+        public Guid Id { get; init; }
+        public Guid UserId { get; init; }
+        public Guid ItemId { get; init; }
+        public Guid? TargetId { get; init; }
+        public DateTime Date { get; init; }
+        public string Item { get; init; }
+        public string? Target { get; init; }
+        public string ItemController { get; init; }
+        public string? TargetController { get; init; }
+        public string Action { get; init; }
+        public string? Notes { get; init; }
     }
 }

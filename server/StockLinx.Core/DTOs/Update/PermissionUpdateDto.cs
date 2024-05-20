@@ -1,8 +1,10 @@
-﻿namespace StockLinx.Core.DTOs.Update
+﻿using StockLinx.Core.Entities;
+
+namespace StockLinx.Core.DTOs.Update
 {
-    public class PermissionUpdateDto : BaseUpdateDto
+    public record PermissionUpdateDto : BaseRecord
     {
-        public Guid BranchId { get; set; }
-        public Guid UserId { get; set; }
+        public Guid BranchId { get; init; }
+        public Guid UserId { get; init; }
     }
 }

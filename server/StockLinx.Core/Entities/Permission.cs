@@ -1,12 +1,12 @@
 ﻿namespace StockLinx.Core.Entities
 {
-    public class Permission : BaseEntity
+    public record Permission : BaseRecord
     {
-        public Guid BranchId { get; set; }
-        public Guid UserId { get; set; }
+        public Guid BranchId { get; init; }
+        public Guid UserId { get; init; }
 
         //Relates
-        public Branch Branch { get; set; }
-        public User User { get; set; }
+        public Branch Branch { get; init; }
+        public User User { get; init; }
     }
 }

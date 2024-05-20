@@ -2,6 +2,6 @@
 {
     public abstract class BaseCreateDto
     {
-        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedDate { get; init; } = DateTime.UtcNow;
     }
 }

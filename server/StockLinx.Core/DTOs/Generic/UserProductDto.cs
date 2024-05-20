@@ -2,12 +2,12 @@
 {
     public class UserProductDto : BaseDto
     {
-        public Guid UserId { get; set; }
-        public Guid ProductId { get; set; }
-        public DateTime AssignDate { get; set; }
-        public string ProductName { get; set; }
-        public string ProductType { get; set; }
-        public string ProductRoute { get; set; }
+        public Guid UserId { get; init; }
+        public Guid ProductId { get; init; }
+        public DateTime AssignDate { get; init; }
+        public string ProductName { get; init; }
+        public string ProductType { get; init; }
+        public string ProductRoute { get; init; }
         public string? Notes { get; set; }
         public int Quantity { get; set; }
     }

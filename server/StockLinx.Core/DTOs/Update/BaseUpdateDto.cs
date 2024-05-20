@@ -5,8 +5,8 @@ namespace StockLinx.Core.DTOs.Update
     public abstract class BaseUpdateDto
     {
         [Key]
-        public Guid Id { get; set; }
-        public DateTime CreatedDate { get; set; }
+        public Guid Id { get; init; }
+        public DateTime CreatedDate { get; init; }
         public DateTime? UpdatedDate { get; set; }
     }
 }

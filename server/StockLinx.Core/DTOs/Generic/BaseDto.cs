@@ -2,8 +2,8 @@
 {
     public abstract class BaseDto
     {
-        public Guid Id { get; set; }
-        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
+        public Guid Id { get; init; }
+        public DateTime CreatedDate { get; init; } = DateTime.UtcNow;
         public DateTime? UpdatedDate { get; set; }
     }
 }

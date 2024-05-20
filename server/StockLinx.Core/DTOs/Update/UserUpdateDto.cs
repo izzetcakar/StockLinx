@@ -6,7 +6,7 @@
         public string Email { get; set; }
         public string Password { get; set; }
         public string? Language { get; set; }
-        public string EmployeeNo { get; set; }
+        public string EmployeeNo { get; init; }
         public string? JobTitle { get; set; }
         public string? PhoneNo { get; set; }
         public string? Website { get; set; }

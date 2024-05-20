@@ -2,18 +2,18 @@
 {
     public class UserProduct : BaseEntity
     {
-        public Guid UserId { get; set; }
-        public Guid? AccessoryId { get; set; }
-        public Guid? AssetId { get; set; }
-        public Guid? ConsumableId { get; set; }
-        public Guid? LicenseId { get; set; }
-        public DateTime AssignDate { get; set; }
+        public Guid UserId { get; init; }
+        public Guid? AccessoryId { get; init; }
+        public Guid? AssetId { get; init; }
+        public Guid? ConsumableId { get; init; }
+        public Guid? LicenseId { get; init; }
+        public DateTime AssignDate { get; init; }
         public string? Notes { get; set; }
         public int Quantity { get; set; }
-        public User User { get; set; }
-        public Accessory? Accessory { get; set; }
-        public Asset? Asset { get; set; }
-        public Consumable? Consumable { get; set; }
-        public License? License { get; set; }
+        public User User { get; init; }
+        public Accessory? Accessory { get; init; }
+        public Asset? Asset { get; init; }
+        public Consumable? Consumable { get; init; }
+        public License? License { get; init; }
     }
 }
