@@ -49,8 +49,6 @@ namespace StockLinx.Service.Services
         {
             Branch newBranch = _mapper.Map<Branch>(dto);
             Company company = await _companyRepository.GetByIdAsync(newBranch.CompanyId);
-            newBranch.Id = Guid.NewGuid();
-            newBranch.CreatedDate = DateTime.UtcNow;
             await _branchRepository.AddAsync(newBranch);
             await _customLogService.CreateCustomLog(
                 "Create",
@@ -72,8 +70,6 @@ namespace StockLinx.Service.Services
             {
                 Branch branch = _mapper.Map<Branch>(dto);
                 Company company = await _companyRepository.GetByIdAsync(branch.CompanyId);
-                branch.Id = Guid.NewGuid();
-                branch.CreatedDate = DateTime.UtcNow;
                 branches.Add(branch);
                 await _customLogService.CreateCustomLog(
                     "Create",

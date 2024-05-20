@@ -60,8 +60,6 @@ namespace StockLinx.Service.Services
         {
             await _licenseRepository.CheckTagExistAsync(dto.Tag);
             License license = _mapper.Map<License>(dto);
-            license.Id = Guid.NewGuid();
-            license.CreatedDate = DateTime.UtcNow;
             await _licenseRepository.AddAsync(license);
             await _customLogService.CreateCustomLog("Create", "License", license.Id, license.Name);
             await _unitOfWork.CommitAsync();
@@ -77,8 +75,6 @@ namespace StockLinx.Service.Services
             foreach (LicenseCreateDto createDto in createDtos)
             {
                 License license = _mapper.Map<License>(createDto);
-                license.Id = Guid.NewGuid();
-                license.CreatedDate = DateTime.UtcNow;
                 licenses.Add(license);
                 await _customLogService.CreateCustomLog(
                     "Create",

@@ -100,26 +100,41 @@ namespace StockLinx.Repository.Repositories.EF_Core
 
         public ModelDto CreateModel(ModelCreateDto dto)
         {
-            var entity = _mapper.Map<Model>(dto);
-            entity.Id = Guid.NewGuid();
-            entity.CreatedDate = DateTime.UtcNow;
+            Model model = new Model()
+            {
+                Id = Guid.NewGuid(),
+                CreatedDate = DateTime.UtcNow,
+                UpdatedDate = null,
+                CategoryId = dto.CategoryId,
+                FieldSetId = dto.FieldSetId,
+                ImagePath = dto.ImagePath,
+                ManufacturerId = dto.ManufacturerId,
+                ModelNo = dto.ModelNo,
+                Name = dto.Name,
+                Notes = dto.Notes,
+            };
 
             if (dto.ModelFieldData != null && dto.ModelFieldData.Any())
             {
                 var itemsToAdd = new List<ModelFieldData>();
                 foreach (var item in dto.ModelFieldData)
                 {
-                    var modelFieldData = _mapper.Map<ModelFieldData>(item);
-                    modelFieldData.Id = Guid.NewGuid();
-                    modelFieldData.CreatedDate = DateTime.UtcNow;
-                    modelFieldData.ModelId = entity.Id;
+                    ModelFieldData modelFieldData = new ModelFieldData()
+                    {
+                        Id = Guid.NewGuid(),
+                        CreatedDate = DateTime.UtcNow,
+                        UpdatedDate = null,
+                        CustomFieldId = item.CustomFieldId,
+                        ModelId = model.Id,
+                        Value = item.Value,
+                    };
                     itemsToAdd.Add(modelFieldData);
                 }
                 dbContext.ModelFieldDatas.AddRange(itemsToAdd);
             }
-            entity.ModelFieldData = null;
-            dbContext.Models.Add(entity);
-            return GetDto(entity);
+            model.ModelFieldData = null;
+            dbContext.Models.Add(model);
+            return GetDto(model);
         }
     }
 }

@@ -41,8 +41,6 @@ namespace StockLinx.Service.Services
         public async Task<UserProductDto> CreateUserProductAsync(UserProductCreateDto dto)
         {
             UserProduct UserProduct = _mapper.Map<UserProduct>(dto);
-            UserProduct.Id = Guid.NewGuid();
-            UserProduct.CreatedDate = DateTime.UtcNow;
             await _UserProductRepository.AddAsync(UserProduct);
             await _unitOfWork.CommitAsync();
             return await _UserProductRepository.GetDtoAsync(UserProduct);
@@ -56,8 +54,6 @@ namespace StockLinx.Service.Services
             foreach (UserProductCreateDto dto in dtos)
             {
                 UserProduct UserProduct = _mapper.Map<UserProduct>(dto);
-                UserProduct.Id = Guid.NewGuid();
-                UserProduct.CreatedDate = DateTime.UtcNow;
                 UserProducts.Add(UserProduct);
             }
             await _UserProductRepository.AddRangeAsync(UserProducts);

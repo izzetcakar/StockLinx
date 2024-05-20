@@ -46,8 +46,6 @@ namespace StockLinx.Service.Services
         {
             CustomField customField = _mapper.Map<CustomField>(dto);
             List<FieldSetCustomField> fcToAdd = new List<FieldSetCustomField>();
-            customField.Id = Guid.NewGuid();
-            customField.CreatedDate = DateTime.UtcNow;
 
             if (dto.FieldSetCustomFields != null && dto.FieldSetCustomFields.Any())
             {
@@ -56,9 +54,6 @@ namespace StockLinx.Service.Services
                     FieldSetCustomField fieldSetCustomField = _mapper.Map<FieldSetCustomField>(
                         fieldSetCustomFieldDto
                     );
-                    fieldSetCustomField.Id = Guid.NewGuid();
-                    fieldSetCustomField.CreatedDate = DateTime.UtcNow;
-                    fieldSetCustomField.Id = customField.Id;
                     fcToAdd.Add(fieldSetCustomField);
                 }
                 await _fieldSetCustomFieldRepository.AddRangeAsync(fcToAdd);
@@ -74,8 +69,6 @@ namespace StockLinx.Service.Services
             foreach (CustomFieldCreateDto dto in dtos)
             {
                 CustomField customField = _mapper.Map<CustomField>(dto);
-                customField.Id = Guid.NewGuid();
-                customField.CreatedDate = DateTime.UtcNow;
                 customFields.Add(customField);
             }
             await _customFieldRepository.AddRangeAsync(customFields);

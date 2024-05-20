@@ -45,8 +45,6 @@ namespace StockLinx.Service.Services
         public async Task<LocationDto> CreateLocationAsync(LocationCreateDto dto)
         {
             Location location = _mapper.Map<Location>(dto);
-            location.Id = Guid.NewGuid();
-            location.CreatedDate = DateTime.UtcNow;
             await _locationRepository.AddAsync(location);
             await _customLogService.CreateCustomLog(
                 "Create",
@@ -64,8 +62,6 @@ namespace StockLinx.Service.Services
             foreach (LocationCreateDto dto in dtos)
             {
                 Location location = _mapper.Map<Location>(dto);
-                location.Id = Guid.NewGuid();
-                location.CreatedDate = DateTime.UtcNow;
                 locations.Add(location);
                 await _customLogService.CreateCustomLog(
                     "Create",

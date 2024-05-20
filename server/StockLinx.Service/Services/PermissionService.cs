@@ -66,8 +66,6 @@ namespace StockLinx.Service.Services
                 throw new Exception("User is not admin");
             }
             Permission permission = _mapper.Map<Permission>(dto);
-            permission.Id = Guid.NewGuid();
-            permission.CreatedDate = DateTime.UtcNow;
             await _permissionRepository.AddAsync(permission);
             await _customLogService.CreateCustomLog(
                 "Permission Given",
@@ -92,8 +90,6 @@ namespace StockLinx.Service.Services
             foreach (PermissionCreateDto dto in dtos)
             {
                 Permission permission = _mapper.Map<Permission>(dto);
-                permission.Id = Guid.NewGuid();
-                permission.CreatedDate = DateTime.UtcNow;
                 permissions.Add(permission);
                 await _customLogService.CreateCustomLog(
                     "Permission Given",
@@ -175,8 +171,6 @@ namespace StockLinx.Service.Services
                 );
                 if (entityInDb == null)
                 {
-                    entity.Id = Guid.NewGuid();
-                    entity.CreatedDate = DateTime.UtcNow;
                     toAdd.Add(entity);
                     await _customLogService.CreateCustomLog(
                         "Permission Given",

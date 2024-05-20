@@ -45,8 +45,6 @@ namespace StockLinx.Service.Services
         public async Task<CategoryDto> CreateCategoryAsync(CategoryCreateDto dto)
         {
             Category category = _mapper.Map<Category>(dto);
-            category.Id = Guid.NewGuid();
-            category.CreatedDate = DateTime.UtcNow;
             await _categoryRepository.AddAsync(category);
             await _customLogService.CreateCustomLog(
                 "Create",
@@ -64,8 +62,6 @@ namespace StockLinx.Service.Services
             foreach (CategoryCreateDto dto in dtos)
             {
                 Category category = _mapper.Map<Category>(dto);
-                category.Id = Guid.NewGuid();
-                category.CreatedDate = DateTime.UtcNow;
                 categories.Add(category);
                 await _customLogService.CreateCustomLog(
                     "Create",

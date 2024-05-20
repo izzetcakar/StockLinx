@@ -125,16 +125,19 @@ namespace StockLinx.Repository.Repositories.EF_Core
                 );
             }
             dbContext.Departments.AddRange(newDepartments);
-            var newUser = new User();
-            newUser.Id = Guid.NewGuid();
-            newUser.CreatedDate = DateTime.UtcNow;
-            newUser.DepartmentId = newDepartments[0].Id;
-            newUser.Email = "admin@gmail.com";
-            newUser.Password = "123";
-            newUser.FirstName = "adminF";
-            newUser.LastName = "adminL";
-            newUser.EmployeeNo = "111";
-            newUser.StartDate = DateTime.UtcNow;
+            var newUser = new User()
+            {
+                Id = Guid.NewGuid(),
+                CreatedDate = DateTime.UtcNow,
+                DepartmentId = newDepartments[0].Id,
+                Email = "admin@gmail.com",
+                Password = "123",
+                FirstName = "adminF",
+                LastName = "adminL",
+                EmployeeNo = "111",
+                StartDate = DateTime.UtcNow,
+            };
+
             dbContext.Users.Add(newUser);
             var newCategoies = new List<Category>
             {

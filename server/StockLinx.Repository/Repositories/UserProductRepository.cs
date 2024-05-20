@@ -9,55 +9,73 @@ namespace StockLinx.Repository.Repositories.EF_Core
     public class UserProductRepository : Repository<UserProduct>, IUserProductRepository
     {
         private readonly IMapper _mapper;
-        public UserProductRepository(AppDbContext dbContext, IMapper mapper) : base(dbContext)
+        private readonly IAccessoryRepository _accessoryRepository;
+        private readonly IAssetRepository _assetRepository;
+        private readonly IConsumableRepository _consumableRepository;
+        private readonly ILicenseRepository _licenseRepository;
+        public UserProductRepository(AppDbContext dbContext, IMapper mapper, IAccessoryRepository accessoryRepository,
+            IAssetRepository assetRepository, IConsumableRepository consumableRepository, ILicenseRepository licenseRepository) : base(dbContext)
         {
             _mapper = mapper;
+            _accessoryRepository = accessoryRepository;
+            _assetRepository = assetRepository;
+            _consumableRepository = consumableRepository;
+            _licenseRepository = licenseRepository;
         }
 
         public async Task<UserProductDto> GetDtoAsync(UserProduct entity)
         {
-            UserProductDto dto = _mapper.Map<UserProductDto>(entity);
+            Guid productId = Guid.Empty;
+            string productType = string.Empty;
+            string productRoute = string.Empty;
+            string productName = string.Empty;
+
             if (entity.AccessoryId != null)
             {
-                var accessory = await dbContext.Accessories.SingleOrDefaultAsync(a => a.Id == entity.AccessoryId);
-                if (accessory == null) return null;
-                dto.ProductId = accessory.Id;
-                dto.ProductType = "Accessory";
-                dto.ProductRoute = $"/accessory/{accessory.Id}";
-                dto.ProductName = accessory.Name;
-                return dto;
+                Accessory accessory = await _accessoryRepository.GetByIdAsync((Guid)entity.AccessoryId);
+                productId = accessory.Id;
+                productType = "Accessory";
+                productRoute = $"/accessory/{accessory.Id}";
+                productName = accessory.Name;
             }
             else if (entity.AssetId != null)
             {
-                var asset = await dbContext.Assets.SingleOrDefaultAsync(a => a.Id == entity.AssetId);
-                if (asset == null) return null;
-                dto.ProductId = asset.Id;
-                dto.ProductType = "Asset";
-                dto.ProductRoute = $"/asset/{asset.Id}";
-                dto.ProductName = asset.Name;
-                return dto;
+                Asset asset = await _assetRepository.GetByIdAsync((Guid)entity.AssetId);
+                productId = asset.Id;
+                productType = "Asset";
+                productRoute = $"/asset/{asset.Id}";
+                productName = asset.Name;
             }
             else if (entity.ConsumableId != null)
             {
-                var consumable = await dbContext.Consumables.SingleOrDefaultAsync(c => c.Id == entity.ConsumableId);
-                if (consumable == null) return null;
-                dto.ProductId = consumable.Id;
-                dto.ProductType = "Consumable";
-                dto.ProductRoute = $"/consumable/{consumable.Id}";
-                dto.ProductName = consumable.Name;
-                return dto;
+                Consumable consumable = await _consumableRepository.GetByIdAsync((Guid)entity.ConsumableId);
+                productId = consumable.Id;
+                productType = "Consumable";
+                productRoute = $"/consumable/{consumable.Id}";
+                productName = consumable.Name;
             }
             else if (entity.LicenseId != null)
             {
-                var license = await dbContext.Licenses.SingleOrDefaultAsync(l => l.Id == entity.LicenseId);
-                if (license == null) return null;
-                dto.ProductId = license.Id;
-                dto.ProductType = "License";
-                dto.ProductRoute = $"/license/{license.Id}";
-                dto.ProductName = license.Name;
-                return dto;
+                License license = await _licenseRepository.GetByIdAsync((Guid)entity.LicenseId);
+                productId = license.Id;
+                productType = "License";
+                productRoute = $"/license/{license.Id}";
+                productName = license.Name;
             }
-            return dto;
+            return new UserProductDto()
+            {
+                Id = entity.Id,
+                CreatedDate = entity.CreatedDate,
+                UpdatedDate = entity.UpdatedDate,
+                AssignDate = entity.AssignDate,
+                ProductId = productId,
+                ProductType = productType,
+                ProductRoute = productRoute,
+                ProductName = productName,
+                Notes = entity.Notes,
+                Quantity = entity.Quantity,
+                UserId = entity.UserId,
+            };
         }
         public async Task<List<UserProductDto>> GetDtosAsync(List<UserProduct> entities)
         {

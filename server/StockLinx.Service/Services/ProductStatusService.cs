@@ -45,8 +45,6 @@ namespace StockLinx.Service.Services
         public async Task<ProductStatusDto> CreateProductStatusAsync(ProductStatusCreateDto dto)
         {
             ProductStatus productStatus = _mapper.Map<ProductStatus>(dto);
-            productStatus.Id = Guid.NewGuid();
-            productStatus.CreatedDate = DateTime.UtcNow;
             await _productStatusRepository.AddAsync(productStatus);
             await _customLogService.CreateCustomLog(
                 "Create",
@@ -66,8 +64,6 @@ namespace StockLinx.Service.Services
             foreach (ProductStatusCreateDto dto in dtos)
             {
                 ProductStatus productStatus = _mapper.Map<ProductStatus>(dto);
-                productStatus.Id = Guid.NewGuid();
-                productStatus.CreatedDate = DateTime.UtcNow;
                 productStatuses.Add(productStatus);
                 await _customLogService.CreateCustomLog(
                     "Create",

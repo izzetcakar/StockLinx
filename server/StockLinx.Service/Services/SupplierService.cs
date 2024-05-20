@@ -44,10 +44,21 @@ namespace StockLinx.Service.Services
 
         public async Task<SupplierDto> CreateSupplierAsync(SupplierCreateDto dto)
         {
-            Supplier supplier = _mapper.Map<Supplier>(dto);
-            supplier.Id = Guid.NewGuid();
-            supplier.CreatedDate = DateTime.UtcNow;
-
+            Supplier supplier = new Supplier()
+            {
+                Id = Guid.NewGuid(),
+                Name = dto.Name,
+                CreatedDate = DateTime.UtcNow,
+                ImagePath = dto.ImagePath,
+                UpdatedDate = null,
+                ContactEmail = dto.ContactEmail,
+                ContactName = dto.ContactName,
+                ContactPhone = dto.ContactPhone,
+                Fax = dto.Fax,
+                LocationId = dto.LocationId,
+                Notes = dto.Notes,
+                Website = dto.Website,
+            };
             if (supplier.ImagePath != null)
             {
                 if (supplier.ImagePath.Contains("base64,"))
@@ -73,9 +84,21 @@ namespace StockLinx.Service.Services
             List<Supplier> suppliers = new List<Supplier>();
             foreach (SupplierCreateDto dto in dtos)
             {
-                Supplier supplier = _mapper.Map<Supplier>(dto);
-                supplier.Id = Guid.NewGuid();
-                supplier.CreatedDate = DateTime.UtcNow;
+                Supplier supplier = new Supplier()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = dto.Name,
+                    CreatedDate = DateTime.UtcNow,
+                    ImagePath = dto.ImagePath,
+                    UpdatedDate = null,
+                    ContactEmail = dto.ContactEmail,
+                    ContactName = dto.ContactName,
+                    ContactPhone = dto.ContactPhone,
+                    Fax = dto.Fax,
+                    LocationId = dto.LocationId,
+                    Notes = dto.Notes,
+                    Website = dto.Website,
+                };
                 suppliers.Add(supplier);
                 await _customLogService.CreateCustomLog(
                     "Create",

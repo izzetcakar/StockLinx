@@ -45,8 +45,6 @@ namespace StockLinx.Service.Services
         public async Task<DepartmentDto> CreateDepartmentAsync(DepartmentCreateDto dto)
         {
             Department department = _mapper.Map<Department>(dto);
-            department.Id = Guid.NewGuid();
-            department.CreatedDate = DateTime.UtcNow;
             await _departmentRepository.AddAsync(department);
             await _customLogService.CreateCustomLog(
                 "Create",
@@ -66,8 +64,6 @@ namespace StockLinx.Service.Services
             foreach (DepartmentCreateDto dto in dtos)
             {
                 Department department = _mapper.Map<Department>(dto);
-                department.Id = Guid.NewGuid();
-                department.CreatedDate = DateTime.UtcNow;
                 departments.Add(department);
                 await _customLogService.CreateCustomLog(
                     "Create",

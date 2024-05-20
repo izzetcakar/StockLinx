@@ -94,9 +94,6 @@ namespace StockLinx.Service.Services
         {
             User user = _mapper.Map<User>(dto);
             Department department = await _departmentRepository.GetByIdAsync(dto.DepartmentId);
-            user.Id = Guid.NewGuid();
-            user.CreatedDate = DateTime.UtcNow;
-            user.IsAdmin = false;
             bool employeeNoExist = await _userRepository.AnyAsync(x =>
                 x.EmployeeNo == user.EmployeeNo
             );
@@ -125,9 +122,6 @@ namespace StockLinx.Service.Services
             {
                 User user = _mapper.Map<User>(dto);
                 Department department = await _departmentRepository.GetByIdAsync(dto.DepartmentId);
-                user.Id = Guid.NewGuid();
-                user.CreatedDate = DateTime.UtcNow;
-                user.IsAdmin = false;
                 bool employeeNoExist = await _userRepository.AnyAsync(x =>
                     x.EmployeeNo == user.EmployeeNo
                 );

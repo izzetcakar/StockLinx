@@ -53,8 +53,6 @@ namespace StockLinx.Service.Services
                 throw new Exception("User is not admin");
             }
             Company company = _mapper.Map<Company>(dto);
-            company.Id = Guid.NewGuid();
-            company.CreatedDate = DateTime.UtcNow;
 
             if (company.ImagePath != null)
             {
@@ -82,8 +80,6 @@ namespace StockLinx.Service.Services
             foreach (CompanyCreateDto dto in dtos)
             {
                 Company company = _mapper.Map<Company>(dto);
-                company.Id = Guid.NewGuid();
-                company.CreatedDate = DateTime.UtcNow;
                 companies.Add(company);
                 await _customLogService.CreateCustomLog(
                     "Create",

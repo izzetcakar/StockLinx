@@ -60,8 +60,6 @@ namespace StockLinx.Service.Services
         {
             await _componentRepository.CheckTagExistAsync(dto.Tag);
             Component component = _mapper.Map<Component>(dto);
-            component.Id = Guid.NewGuid();
-            component.CreatedDate = DateTime.UtcNow;
             await _componentRepository.AddAsync(component);
             await _customLogService.CreateCustomLog(
                 "Create",
@@ -82,8 +80,6 @@ namespace StockLinx.Service.Services
             foreach (ComponentCreateDto createDto in createDtos)
             {
                 Component component = _mapper.Map<Component>(createDto);
-                component.Id = Guid.NewGuid();
-                component.CreatedDate = DateTime.UtcNow;
                 components.Add(component);
                 await _customLogService.CreateCustomLog(
                     "Create",

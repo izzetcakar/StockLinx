@@ -66,8 +66,6 @@ namespace StockLinx.Service.Services
             List<Asset> newAssets = new List<Asset>();
             Asset newAsset = _mapper.Map<Asset>(dto);
             Branch branch = await _branchRepository.GetByIdAsync(newAsset.BranchId);
-            newAsset.Id = Guid.NewGuid();
-            newAsset.CreatedDate = DateTime.UtcNow;
             newAssets.Add(newAsset);
             await _customLogService.CreateCustomLog(
                 "Create",
@@ -92,12 +90,24 @@ namespace StockLinx.Service.Services
             {
                 foreach (OverageAssetDto overageAsset in dto.OverageAssets)
                 {
-                    Asset extraAsset = _mapper.Map<Asset>(dto);
-                    extraAsset.Id = Guid.NewGuid();
-                    extraAsset.SerialNo = overageAsset.SerialNo;
-                    extraAsset.Tag = overageAsset.Tag;
-                    extraAsset.CreatedDate = DateTime.UtcNow;
-                    extraAsset.ImagePath = newAsset.ImagePath;
+                    Asset extraAsset = new Asset()
+                    {
+                        Id = Guid.NewGuid(),
+                        CreatedDate = DateTime.Now,
+                        UpdatedDate = null,
+                        BranchId = branch.Id,
+                        ImagePath = newAsset.ImagePath,
+                        ModelId = newAsset.ModelId,
+                        Name = newAsset.Name,
+                        Notes = newAsset.Notes,
+                        OrderNo = newAsset.OrderNo,
+                        ProductStatusId = newAsset.ProductStatusId,
+                        PurchaseCost = newAsset.PurchaseCost,
+                        PurchaseDate = newAsset.PurchaseDate,
+                        SerialNo = newAsset.SerialNo,
+                        SupplierId = newAsset.SupplierId,
+                        Tag = overageAsset.Tag,
+                    };
                     newAssets.Add(extraAsset);
                     await _customLogService.CreateCustomLog(
                         "Create",
@@ -122,8 +132,6 @@ namespace StockLinx.Service.Services
             foreach (AssetCreateDto createDto in dtos)
             {
                 Asset newAsset = _mapper.Map<Asset>(createDto);
-                newAsset.Id = Guid.NewGuid();
-                newAsset.CreatedDate = DateTime.UtcNow;
                 newAssets.Add(newAsset);
                 await _customLogService.CreateCustomLog(
                     "Create",

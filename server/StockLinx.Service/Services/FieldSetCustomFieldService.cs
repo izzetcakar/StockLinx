@@ -35,8 +35,6 @@ namespace StockLinx.Service.Services
         public async Task<FieldSetCustomFieldDto> CreateFieldSetCustomFieldAsync(FieldSetCustomFieldDto dto)
         {
             FieldSetCustomField fieldSetCustomField = _mapper.Map<FieldSetCustomField>(dto);
-            fieldSetCustomField.Id = Guid.NewGuid();
-            fieldSetCustomField.CreatedDate = DateTime.UtcNow;
             await _repository.AddAsync(fieldSetCustomField);
             await _unitOfWork.CommitAsync();
             return _repository.GetDto(fieldSetCustomField);
@@ -48,8 +46,6 @@ namespace StockLinx.Service.Services
             foreach (FieldSetCustomFieldDto dto in dtos)
             {
                 FieldSetCustomField fieldSetCustomField = _mapper.Map<FieldSetCustomField>(dto);
-                fieldSetCustomField.Id = Guid.NewGuid();
-                fieldSetCustomField.CreatedDate = DateTime.UtcNow;
                 newEntities.Add(fieldSetCustomField);
             }
             await _repository.AddRangeAsync(newEntities);
@@ -96,9 +92,7 @@ namespace StockLinx.Service.Services
                 .Where(dto => !idsInDb.Contains(dto.Id))
                 .Select(dto =>
                 {
-                    var newItem = _mapper.Map<FieldSetCustomField>(dto);
-                    newItem.Id = Guid.NewGuid();
-                    newItem.CreatedDate = DateTime.UtcNow;
+                    FieldSetCustomField newItem = _mapper.Map<FieldSetCustomField>(dto);
                     return newItem;
                 }));
             await _repository.AddRangeAsync(itemsToAdd);

@@ -39,9 +39,15 @@ namespace StockLinx.Service.Services
 
         public async Task<ModelFieldDataDto> CreateModelFieldDataAsync(ModelFieldDataDto dto)
         {
-            ModelFieldData modelFieldData = _mapper.Map<ModelFieldData>(dto);
-            modelFieldData.Id = Guid.NewGuid();
-            modelFieldData.CreatedDate = DateTime.UtcNow;
+            ModelFieldData modelFieldData = new ModelFieldData()
+            {
+                Id = Guid.NewGuid(),
+                CreatedDate = DateTime.UtcNow,
+                ModelId = dto.ModelId,
+                CustomFieldId = dto.CustomFieldId,
+                UpdatedDate = dto.UpdatedDate,
+                Value = dto.Value,
+            };
             await _modelFieldDataRepository.AddAsync(modelFieldData);
             await _unitOfWork.CommitAsync();
             return _modelFieldDataRepository.GetDto(modelFieldData);
@@ -54,10 +60,15 @@ namespace StockLinx.Service.Services
             List<ModelFieldData> modelFieldDatas = new List<ModelFieldData>();
             foreach (ModelFieldDataDto dto in dtos)
             {
-                ModelFieldData modelFieldData = _mapper.Map<ModelFieldData>(dto);
-                modelFieldData.Id = Guid.NewGuid();
-                modelFieldData.CreatedDate = DateTime.UtcNow;
-                modelFieldDatas.Add(modelFieldData);
+                ModelFieldData modelFieldData = new ModelFieldData()
+                {
+                    Id = Guid.NewGuid(),
+                    CreatedDate = DateTime.UtcNow,
+                    ModelId = dto.ModelId,
+                    CustomFieldId = dto.CustomFieldId,
+                    UpdatedDate = dto.UpdatedDate,
+                    Value = dto.Value,
+                };
             }
             await _modelFieldDataRepository.AddRangeAsync(modelFieldDatas);
             await _unitOfWork.CommitAsync();

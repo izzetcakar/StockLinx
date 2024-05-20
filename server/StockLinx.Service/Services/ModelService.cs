@@ -56,8 +56,6 @@ namespace StockLinx.Service.Services
             foreach (ModelCreateDto dto in dtos)
             {
                 Model model = _mapper.Map<Model>(dto);
-                model.Id = Guid.NewGuid();
-                model.CreatedDate = DateTime.UtcNow;
                 models.Add(model);
                 await _customLogService.CreateCustomLog("Create", "Model", model.Id, model.Name);
             }

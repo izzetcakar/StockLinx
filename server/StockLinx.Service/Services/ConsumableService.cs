@@ -54,8 +54,6 @@ namespace StockLinx.Service.Services
         {
             await _consumableRepository.CheckTagExistAsync(dto.Tag);
             Consumable consumable = _mapper.Map<Consumable>(dto);
-            consumable.Id = Guid.NewGuid();
-            consumable.CreatedDate = DateTime.UtcNow;
             await _consumableRepository.AddAsync(consumable);
             await _customLogService.CreateCustomLog(
                 "Create",
@@ -76,8 +74,6 @@ namespace StockLinx.Service.Services
             foreach (ConsumableCreateDto createDto in createDtos)
             {
                 Consumable consumable = _mapper.Map<Consumable>(createDto);
-                consumable.Id = Guid.NewGuid();
-                consumable.CreatedDate = DateTime.UtcNow;
                 consumables.Add(consumable);
                 await _customLogService.CreateCustomLog(
                     "Create",

@@ -35,8 +35,6 @@ namespace StockLinx.Service.Services
         public async Task<FieldSetDto> CreateFieldSetAsync(FieldSetCreateDto createDto)
         {
             FieldSet fieldSet = _mapper.Map<FieldSet>(createDto);
-            fieldSet.Id = Guid.NewGuid();
-            fieldSet.CreatedDate = DateTime.UtcNow;
             await _fieldSetRepository.AddAsync(fieldSet);
             await _unitOfWork.CommitAsync();
             return _fieldSetRepository.GetDto(fieldSet);
@@ -48,8 +46,6 @@ namespace StockLinx.Service.Services
             foreach (FieldSetCreateDto dto in dtos)
             {
                 FieldSet fieldSet = _mapper.Map<FieldSet>(dto);
-                fieldSet.Id = Guid.NewGuid();
-                fieldSet.CreatedDate = DateTime.UtcNow;
                 newEntities.Add(fieldSet);
             }
             await _fieldSetRepository.AddRangeAsync(newEntities);

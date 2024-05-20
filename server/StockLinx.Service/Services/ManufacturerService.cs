@@ -45,8 +45,6 @@ namespace StockLinx.Service.Services
         public async Task<ManufacturerDto> CreateManufacturerAsync(ManufacturerCreateDto dto)
         {
             Manufacturer manufacturer = _mapper.Map<Manufacturer>(dto);
-            manufacturer.Id = Guid.NewGuid();
-            manufacturer.CreatedDate = DateTime.UtcNow;
 
             if (manufacturer.ImagePath != null)
             {
@@ -80,8 +78,6 @@ namespace StockLinx.Service.Services
             foreach (ManufacturerCreateDto dto in dtos)
             {
                 Manufacturer manufacturer = _mapper.Map<Manufacturer>(dto);
-                manufacturer.Id = Guid.NewGuid();
-                manufacturer.CreatedDate = DateTime.UtcNow;
                 manufacturers.Add(manufacturer);
                 await _customLogService.CreateCustomLog(
                     "Create",

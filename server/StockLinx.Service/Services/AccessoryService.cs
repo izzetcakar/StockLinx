@@ -57,8 +57,6 @@ namespace StockLinx.Service.Services
             await _accessoryRepository.CheckTagExistAsync(dto.Tag);
             Branch branch = await _branchRepository.GetByIdAsync(dto.BranchId);
             Accessory newAccessory = _mapper.Map<Accessory>(dto);
-            newAccessory.Id = Guid.NewGuid();
-            newAccessory.CreatedDate = DateTime.UtcNow;
 
             if (newAccessory.ImagePath != null)
             {
@@ -97,8 +95,6 @@ namespace StockLinx.Service.Services
             foreach (AccessoryCreateDto dto in dtos)
             {
                 Accessory newAccessory = _mapper.Map<Accessory>(dto);
-                newAccessory.Id = Guid.NewGuid();
-                newAccessory.CreatedDate = DateTime.UtcNow;
                 newAccessory.Quantity = 1;
                 newAccessories.Add(newAccessory);
                 await _customLogService.CreateCustomLog(
