@@ -69,9 +69,10 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
   });
   const overageAssetFields = form.values?.overageAssets?.map((_, index) => (
     <Group key={index} mt="xs">
-      <Text mah="fit-content">Asset - {index + 1}</Text>
+      <Text mah="fit-content" mt="lg">Asset - {index + 1}</Text>
       <TextInput
         {...form.getInputProps(`overageAssets.${index}.tag`)}
+        label="Tag"
         value={
           form.values.overageAssets?.find((_, arrIndex) => arrIndex === index)
             ?.tag
@@ -81,6 +82,7 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
       />
       <TextInput
         {...form.getInputProps(`overageAssets.${index}.serialNo`)}
+        label="Serial No"
         value={
           form.values.overageAssets?.find((_, arrIndex) => arrIndex === index)
             ?.serialNo
@@ -90,6 +92,7 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
       />
       <ActionIcon
         color="red"
+        mt="lg"
         onClick={() => form.removeListItem("overageAssets", index)}
       >
         <IconTrash size="1rem" />
@@ -150,18 +153,20 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
             required
             withAsterisk
           />
-          <ActionIcon
-            variant="default"
-            mt={20}
-            onClick={() =>
-              form.insertListItem("overageAssets", {
-                serialNo: "",
-                tag: "",
-              })
-            }
-          >
-            <IconPlus size="1rem" />
-          </ActionIcon>
+          {asset ? null : (
+            <ActionIcon
+              variant="default"
+              mt={20}
+              onClick={() =>
+                form.insertListItem("overageAssets", {
+                  serialNo: "",
+                  tag: "",
+                })
+              }
+            >
+              <IconPlus size="1rem" />
+            </ActionIcon>
+          )}
         </Flex>
         <TextInput
           label="Serial No"
