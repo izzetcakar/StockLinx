@@ -45,6 +45,7 @@ import Permissions from "./pages/permission/Permissions";
 import "./app.scss";
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
+import '@mantine/dates/styles.css';
 
 const Layout = () => {
   const userRedux = useSelector((state: RootState) => state.user.user);
