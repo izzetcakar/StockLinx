@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import "./sidebar.scss";
 import "boxicons";
 import logo from "/logo.png";
-import { useLocation, useNavigate } from "react-router-dom";
-import { checkEmpty } from "../../functions/checkEmpty";
 import icon_barcode from "../../assets/icon_barcode.png";
 import icon_home from "../../assets/icon_home.png";
 import icon_keybord from "../../assets/icon_keyboard.png";
@@ -12,8 +10,10 @@ import icon_disk from "../../assets/icon_disk.png";
 import icon_harddisk from "../../assets/icon_harddisk.png";
 import icon_settings from "../../assets/icon_setting.png";
 import icon_group from "../../assets/icon_group.png";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { userActions } from "../../redux/user/actions";
+import { checkEmpty } from "../../functions/checkEmpty";
 
 interface NavigationSubItem {
   title: string;
@@ -198,8 +198,16 @@ const Sidebar: React.FC = () => {
       })
     );
   };
-  const checkIfSelected = (item: NavigationItem | NavigationSubItem) => {
+
+  const checkIfActive = (item: NavigationItem | NavigationSubItem) => {
     return item.target === location.pathname;
+  };
+
+  const getSelectedClass = (
+    item: NavigationItem | NavigationSubItem,
+    className: string
+  ) => {
+    return checkIfActive(item) ? className + " selected" : className;
   };
 
   return (
@@ -215,41 +223,27 @@ const Sidebar: React.FC = () => {
       {navigationList.map((item, index) => (
         <React.Fragment key={index}>
           <div
-            className={
-              checkIfSelected(item)
-                ? "navigation__item selected"
-                : "navigation__item"
-            }
+            className={getSelectedClass(item, "navigation__item")}
             onClick={
               item.onClick ? item.onClick : () => navigateUser(item, index)
             }
           >
-            <div className="icon">
-              <img
-                src={item.icon}
-                style={{
-                  width: "1.2rem",
-                  height: "1.2rem",
-                }}
-              />
-            </div>
+            <img src={item.icon} className={getSelectedClass(item, "icon")} />
             <div className="title">{item.title}</div>
           </div>
-          {item?.isExpanded && item.subItems
-            ? item.subItems.map((subItem, nestedIndex) => (
+          {item?.isExpanded && item.subItems ? (
+            <div className="navigation__element__container">
+              {item.subItems.map((subItem, nestedIndex) => (
                 <div
-                  className={
-                    checkIfSelected(subItem)
-                      ? "navigation__element selected"
-                      : "navigation__element"
-                  }
+                  className={getSelectedClass(subItem, "navigation__element")}
                   key={`${index}-${nestedIndex}`}
                   onClick={() => navigate(subItem.target)}
                 >
                   <div className="title">{subItem.title}</div>
                 </div>
-              ))
-            : null}
+              ))}
+            </div>
+          ) : null}
         </React.Fragment>
       ))}
     </div>

@@ -76,17 +76,13 @@
 .gridtable__column__cell {
   vertical-align: bottom;
   height: 40px;
-  padding-left: 4px;
-  padding-right: 4px;
+  padding: 4px;
   width: 100vw;
   border-left: none !important;
   border-right: none !important;
   box-shadow: inset -1px 0 0 var(--global-border-color),
     inset 0 -1px 0 var(--global-border-color);
-  // word-wrap: none;
-  // white-space: nowrap;
   overflow: hidden;
-  text-align: left;
 }
 .gridtable__column__cell:last-child {
   box-shadow: none;

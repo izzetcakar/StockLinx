@@ -6,7 +6,7 @@ import { RootState } from "../redux/rootReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { branchActions } from "../redux/branch/actions";
 import { companyActions } from "../redux/company/actions";
-import filterClasses from "../mantineModules/baseFilter.module.scss";
+import filterClasses from "../mantineModules/filter.module.scss";
 
 interface GenericProviderProps {
   children: ReactNode;

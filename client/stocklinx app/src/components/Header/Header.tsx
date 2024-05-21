@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { Button, Menu, rem } from "@mantine/core";
 import { IconChevronDown } from "@tabler/icons-react";
-import filterClasses from "../../mantineModules/baseFilter.module.scss";
+import filterClasses from "../../mantineModules/filter.module.scss";
 import iconSetting from "../../assets/icon_setting.png";
 import "./header.scss";
 

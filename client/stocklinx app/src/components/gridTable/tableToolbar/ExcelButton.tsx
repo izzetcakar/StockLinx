@@ -1,6 +1,6 @@
 import { ActionIcon, Menu } from "@mantine/core";
 import { IconFileSpreadsheet } from "@tabler/icons-react";
-import filterClasses from "../../../mantineModules/baseFilter.module.scss";
+import filterClasses from "../../../mantineModules/filter.module.scss";
 
 interface ExcelButtonProps {
   onDownloadTemplate: () => void;
