@@ -22,7 +22,6 @@ import { assetActions } from "../../redux/asset/actions";
 import { useInitial } from "./useInitial";
 import { toBase64 } from "../../functions/Image";
 import { openNotificationError } from "../../notification/Notification";
-import { IconCaretDownFilled } from "@tabler/icons-react";
 import base_asset from "../../assets/baseProductImages/base_asset.jpg";
 import FormSelect from "../mantine/FormSelect";
 
@@ -55,7 +54,15 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
       },
       productStatusId: (value: string) =>
         value === "" ? "Status is required" : null,
-      tag: (value: string) => (value === "" ? "Tag is required" : null),
+      tag: (value: string) => {
+        if (value === "") {
+          return "Tag is required";
+        }
+        if (value.length < 2) {
+          return "Tag should be at least 2 characters";
+        }
+        return null;
+      },
       overageAssets: (
         value: { tag: string; serialNo: string }[] | undefined
       ) => {
@@ -69,7 +76,9 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
   });
   const overageAssetFields = form.values?.overageAssets?.map((_, index) => (
     <Group key={index} mt="xs">
-      <Text mah="fit-content" mt="lg">Asset - {index + 1}</Text>
+      <Text mah="fit-content" mt="lg">
+        Asset - {index + 1}
+      </Text>
       <TextInput
         {...form.getInputProps(`overageAssets.${index}.tag`)}
         label="Tag"
@@ -77,6 +86,7 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
           form.values.overageAssets?.find((_, arrIndex) => arrIndex === index)
             ?.tag
         }
+        maxLength={10}
         required
         withAsterisk
       />
@@ -149,7 +159,11 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
             label="Asset"
             w={"100%"}
             {...form.getInputProps("tag")}
-            value={form.values.tag}
+            onChange={(e) =>
+              form.setFieldValue("tag", e.target.value.toUpperCase())
+            }
+            maxLength={10}
+            disabled={!isCreate}
             required
             withAsterisk
           />
@@ -208,26 +222,14 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
           required
           withAsterisk
         />
-        <Accordion
-          variant="filled"
-          defaultValue="Apples"
-          chevronPosition="left"
-          chevron={<IconCaretDownFilled />}
-          styles={{
-            root: { backgroundColor: "white" },
-            item: { backgroundColor: "white" },
-            content: { backgroundColor: "white", padding: 0 },
-            label: { fontWeight: "bold" },
-            chevron: { marginLeft: 0, marginRight: 5 },
-          }}
-        >
+        <Accordion>
           <Accordion.Item
             key={"ACCORDION_ASSET_ORDER_RELATED_INFORMATION"}
             value={"ACCORDION_ASSET_ORDER_RELATED_INFORMATION"}
           >
             <Accordion.Control>Order Related Information</Accordion.Control>
             <Accordion.Panel>
-              <Flex direction="column" gap={10}>
+              <Flex direction="column" gap={5}>
                 <FormSelect
                   data={suppliers.map((supplier) => ({
                     value: supplier.id,

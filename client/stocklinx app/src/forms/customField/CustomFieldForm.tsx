@@ -15,7 +15,7 @@ import {
 } from "../../interfaces/serverInterfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { customFieldActions } from "../../redux/customField/actions";
-import filterClasses from "../../mantineModules/baseFilter.module.scss";
+import filterClasses from "../../mantineModules/filter.module.scss";
 import uuid4 from "uuid4";
 import { RootState } from "../../redux/rootReducer";
 import { fieldSetCustomFieldActions } from "../../redux/fieldSetCustomField/actions";

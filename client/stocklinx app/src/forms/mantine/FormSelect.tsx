@@ -1,5 +1,4 @@
 import { Select } from "@mantine/core";
-import filterClasses from "../../mantineModules/baseFilter.module.scss";
 
 interface FormSelectProps {
   data: { value: string; label: string }[];
@@ -34,7 +33,6 @@ const FormSelect: React.FC<FormSelectProps> = ({
             },
           }
         : {})}
-      classNames={filterClasses}
       nothingFoundMessage={`No ${label.toLowerCase()} found`}
       comboboxProps={{
         position: "bottom",

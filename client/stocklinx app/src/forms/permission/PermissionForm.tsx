@@ -3,7 +3,7 @@ import { IBranch } from "../../interfaces/serverInterfaces";
 import { RootState } from "../../redux/rootReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { ActionIcon, Badge, Button, Flex, Select, rem } from "@mantine/core";
-import filterClasses from "../../mantineModules/baseFilter.module.scss";
+import filterClasses from "../../mantineModules/filter.module.scss";
 import { permissionActions } from "../../redux/permission/actions";
 import uuid4 from "uuid4";
 import { IconX } from "@tabler/icons-react";

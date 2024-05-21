@@ -46,7 +46,15 @@ const ComponentForm: React.FC<ComponentFormProps> = ({ component, create }) => {
             : "Purchase cost must be a non-negative number";
         }
       },
-      tag: (value: string) => (value === "" ? "Tag is required" : null),
+      tag: (value: string) => {
+        if (value === "") {
+          return "Tag is required";
+        }
+        if (value.length < 2) {
+          return "Tag should be at least 2 characters";
+        }
+        return null;
+      },
     },
   });
   const handleSubmit = (data: object) => {
@@ -75,8 +83,13 @@ const ComponentForm: React.FC<ComponentFormProps> = ({ component, create }) => {
         pt={20}
       >
         <TextInput
-          label="Tag"
+          label="Component"
           {...form.getInputProps("tag")}
+          onChange={(e) =>
+            form.setFieldValue("tag", e.target.value.toUpperCase())
+          }
+          maxLength={10}
+          disabled={!isCreate}
           required
           withAsterisk
         />

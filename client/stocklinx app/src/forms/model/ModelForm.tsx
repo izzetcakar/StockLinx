@@ -20,7 +20,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { modelActions } from "../../redux/model/actions";
 import uuid4 from "uuid4";
-import filterClasses from "../../mantineModules/baseFilter.module.scss";
+import filterClasses from "../../mantineModules/filter.module.scss";
 import { RootState } from "../../redux/rootReducer";
 import { DateInput } from "@mantine/dates";
 import { modelFieldDataActions } from "../../redux/modelFieldData/actions";
