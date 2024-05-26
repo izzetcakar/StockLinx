@@ -1,13 +1,7 @@
-.color {
-  color: #000000;
-  color: #2a272a;
-  color: #4b4a54;
-  color: #677381;
-  color: #82a0aa;
-  color: #a3cfcd;
-}
+@import "../../base.scss";
+
 .sidebar__container.collapsed {
-  width: 46e px;
+  width: 46px;
   transition: all ease 0.4s;
 
   .navigation__item {
@@ -33,26 +27,22 @@
   user-select: none;
   overflow-y: scroll;
   background-color: white;
-  color: #737373;
 
   .navigation__item {
     display: flex;
-    height: fit-content;
     width: 100%;
+    height: 2rem;
     align-items: center;
     text-align: center;
     cursor: pointer;
-    padding: 0.5rem 0;
-    box-sizing: border-box;
   }
   .navigation__item.selected {
-    background-color: #a5aeb7;
-    color: white;
-    border-right: 5px solid black;
+    background-color: $primary-color-light;
+    border-right: 5px solid $primary-color;
   }
   .navigation__element__container {
     margin-left: 22px;
-    border-left: 1px solid #d9d9d9;
+    border-left: 1px solid $border-color;
     transition: all ease 0.5s;
   }
   .navigation__element {
@@ -69,9 +59,7 @@
     white-space: normal;
   }
   .navigation__element.selected {
-    background-color: #000000;
-    color: white;
-    border-left: 1px solid #d9d9d9;
+    background-color: $primary-color-light;
   }
   .icon {
     width: 1rem;
@@ -81,9 +69,7 @@
     align-items: center;
     justify-content: center;
     object-fit: cover;
-  }
-  .icon.selected {
-    filter: brightness(0) invert(1);
+    opacity: 0.8;
   }
   .logo {
     width: 1.4rem;
@@ -93,8 +79,7 @@
     flex: 1;
     text-align: start;
     font-size: 0.7em;
-    font-weight: 600;
-    overflow: hidden;
+    opacity: 0.8;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
@@ -108,19 +93,10 @@
 }
 
 .sidebar__container .navigation__item:not(:first-child):not(:last-child):hover {
-  background-color: #677381;
-  .title {
-    color: white;
-  }
-  .icon {
-    filter: brightness(0) invert(1);
-  }
+  background-color: $primary-color-light-2;
 }
 .sidebar__container .navigation__element:hover {
-  background-color: #4b4a54;
-  .title {
-    color: white;
-  }
+  background-color: $primary-color-light-2;
 }
 @media screen and (max-width: 450px) {
   .sidebar__container {

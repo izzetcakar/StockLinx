@@ -1,0 +1,79 @@
+// Colors
+$primary-color: #3498db;
+$primary-color-light: #b1e0ff;
+$primary-color-light-2: #cceaff;
+$primary-color-dark: #3b4856;
+$success-color: #2ecc71;
+$error-color: #e74c3c;
+$background-color: #f4f4f4;
+$text-color: #2c3e50;
+$border-color: #d9d9d9;
+
+// Typography
+$font-family: "Roboto", sans-serif;
+$font-size-base: 16px;
+$line-height-base: 1.5;
+
+// Spacing
+$spacing-xs: 0.5rem;
+$spacing-sm: 1rem;
+$spacing-md: 2rem;
+$spacing-lg: 3rem;
+$spacing-xl: 4rem;
+
+//Font Sizes
+$fontsize-xs: 0.5rem;
+$fontsize-sm: 0.75rem;
+$fontsize-md: 1rem;
+$fontsize-lg: 1.25rem;
+$fontsize-xl: 1.5rem;
+
+// Mixins
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin responsive-font($min-size, $max-size) {
+  font-size: $min-size;
+
+  @media (min-width: 600px) {
+    font-size: $max-size;
+  }
+}
+
+// Global Styles
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: $font-family;
+  font-size: $font-size-base;
+  line-height: $line-height-base;
+  background-color: $background-color;
+  border-color: $border-color;
+  color: $text-color;
+  text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: 1.2;
+}
+
+a {
+  color: $primary-color;
+  text-decoration: none;
+
+  &:hover {
+    color: $success-color;
+  }
+}

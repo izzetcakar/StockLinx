@@ -6,6 +6,21 @@
     "module": "ESNext",
     "skipLibCheck": true,
 
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@components/*": ["./src/components/*"],
+      "@pages/*": ["./src/pages/*"],
+      "@forms/*": ["./src/forms/*"],
+      "@assets/*": ["./src/assets/*"],
+      "@interfaces/*": ["./src/interfaces/*"],
+      "@modals": ["./src/modals/modals.tsx"],
+      "@notifications": ["./src/notifications/notification.tsx*"],
+      "@functions/*": ["./src/functions/*"],
+      "@request": ["./src/server/api.ts"],
+      "@style": ["./src/base.scss*"]
+    },
+
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,

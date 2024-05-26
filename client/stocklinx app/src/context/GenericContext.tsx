@@ -6,7 +6,6 @@ import { RootState } from "../redux/rootReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { branchActions } from "../redux/branch/actions";
 import { companyActions } from "../redux/company/actions";
-import filterClasses from "../mantineModules/filter.module.scss";
 
 interface GenericProviderProps {
   children: ReactNode;
@@ -85,7 +84,6 @@ export const GenericProvider: React.FC<GenericProviderProps> = ({
             placeholder="Select Company"
             value={company}
             onChange={(value) => setCompany(value)}
-            classNames={filterClasses}
             comboboxProps={{ position: "bottom" }}
             nothingFoundMessage="No company found"
             required
@@ -104,7 +102,6 @@ export const GenericProvider: React.FC<GenericProviderProps> = ({
             onChange={(value) =>
               dispatch(branchActions.setBranch(findBranchById(value as string)))
             }
-            classNames={filterClasses}
             comboboxProps={{ position: "bottom" }}
             nothingFoundMessage={
               company ? "No branch found" : "Select company first"

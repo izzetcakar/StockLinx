@@ -1,6 +1,5 @@
 import { ActionIcon, Menu } from "@mantine/core";
 import { IconFileSpreadsheet } from "@tabler/icons-react";
-import filterClasses from "../../../mantineModules/filter.module.scss";
 
 interface ExcelButtonProps {
   onDownloadTemplate: () => void;
@@ -18,8 +17,6 @@ const ExcelButton: React.FC<ExcelButtonProps> = ({
       transitionProps={{ transition: "pop-top-right" }}
       position="bottom-end"
       width="auto"
-      
-      classNames={filterClasses}
     >
       <Menu.Target>
         {/* <Button

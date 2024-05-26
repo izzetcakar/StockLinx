@@ -17,13 +17,11 @@ import { checkEmpty } from "../../functions/checkEmpty";
 
 interface NavigationSubItem {
   title: string;
-  color: string;
   target: string;
 }
 interface NavigationItem {
   title: string;
   icon: string;
-  color: string;
   subItems?: NavigationSubItem[];
   isExpanded?: boolean;
   target: string;
@@ -44,108 +42,139 @@ const Sidebar: React.FC = () => {
     {
       title: "Home",
       icon: icon_home,
-      color: "#737373",
       target: "/",
     },
     {
       title: "Assets",
       icon: icon_barcode,
-      color: "#737373",
-      target: "/assets",
+      target: "/*",
+      subItems: [
+        {
+          title: "Assets",
+          target: "/assets",
+        },
+        {
+          title: "Asset",
+          target: "/asset",
+        },
+      ],
     },
     {
       title: "Licenses",
       icon: icon_disk,
-      color: "#737373",
-      target: "/licenses",
+      target: "/*",
+      subItems: [
+        {
+          title: "Licenses",
+          target: "/licenses",
+        },
+        {
+          title: "License",
+          target: "/license",
+        },
+      ],
     },
     {
       title: "Accessories",
       icon: icon_keybord,
-      color: "#737373",
-      target: "/accessories",
+      target: "/*",
+      subItems: [
+        {
+          title: "Accessories",
+          target: "/accessories",
+        },
+        {
+          title: "Accessory",
+          target: "/accessory",
+        },
+      ],
     },
     {
       title: "Consumables",
       icon: icon_drop,
-      color: "#737373",
-      target: "/consumables",
+      target: "/*",
+      subItems: [
+        {
+          title: "Consumables",
+          target: "/consumables",
+        },
+        {
+          title: "Consumable",
+          target: "/consumable",
+        },
+      ],
     },
     {
       title: "Components",
       icon: icon_harddisk,
-      color: "#737373",
-      target: "/components",
+      target: "/*",
+      subItems: [
+        {
+          title: "Components",
+          target: "/components",
+        },
+        {
+          title: "Component",
+          target: "/component",
+        },
+      ],
     },
     {
       title: "Users",
       icon: icon_group,
-      color: "#737373",
       target: "/users",
     },
     {
       title: "Settings",
       icon: icon_settings,
-      color: "#737373",
+
       subItems: [
         {
           title: "Custom Fields",
-          color: "#737373",
           target: "/customfields",
         },
         {
           title: "Status Labels",
-          color: "#737373",
           target: "/productstatuses",
         },
         {
           title: "Asset Models",
-          color: "#737373",
           target: "/models",
         },
         {
           title: "Categories",
-          color: "#737373",
           target: "/categories",
         },
         {
           title: "Manufacturers",
-          color: "#737373",
           target: "/manufacturers",
         },
         {
           title: "Suppliers",
-          color: "#737373",
           target: "/suppliers",
         },
         {
           title: "Companies",
-          color: "#737373",
           target: "/companies",
         },
         {
           title: "Branches",
-          color: "#737373",
           target: "/branches",
         },
         {
           title: "Departments",
-          color: "#737373",
           target: "/departments",
         },
         {
           title: "Locations",
-          color: "#737373",
           target: "/locations",
         },
         {
           title: "Users",
-          color: "#737373",
           target: "/users",
         },
         {
           title: "Permissions",
-          color: "#737373",
           target: "/permissions",
         },
       ],
@@ -155,7 +184,6 @@ const Sidebar: React.FC = () => {
     {
       title: "Logout",
       icon: "log-out",
-      color: "#737373",
       target: "/logout",
       onClick: () => logout(),
     },

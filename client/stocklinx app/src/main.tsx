@@ -1,6 +1,5 @@
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
-import "./index.css";
 import store from "./redux/store";
 import inputClasses from "./mantineModules/input.module.scss";
 import modalClasses from "./mantineModules/modal.module.scss";
@@ -82,6 +81,12 @@ const components = {
       content: accordionClasses.content,
       label: accordionClasses.label,
       chevron: accordionClasses.chevron,
+    },
+  },
+  Anchor: {
+    defaultProps: {
+      c: "#3498db",
+      size: "sm",
     },
   },
 };

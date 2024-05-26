@@ -22,6 +22,7 @@
   max-width: 100%;
   height: 100%;
   border: 1px solid var(--global-border-color);
+  background-color: white;
   border-radius: 4px;
   border-spacing: 0;
   font-size: 12px;
@@ -37,7 +38,6 @@
     max-width: 100%;
   }
   .gridtable__filter__row {
-    background-color: white;
     border-bottom: 1px solid var(--global-border-color);
   }
 }
@@ -51,12 +51,6 @@
     background-color: #e5e5e5;
   }
 }
-.gridtable__row.drawing:hover {
-  background-color: white;
-  .gridtable__edit__cell {
-    background-color: white;
-  }
-}
 .gridtable__row.selected {
   background-color: #ddd;
   .gridtable__edit__cell {
@@ -64,7 +58,6 @@
   }
 }
 .gridtable__column__row {
-  background-color: white;
   border-top: none !important;
   border-bottom: none !important;
   box-shadow: inset 0 0 0 var(--global-border-color),
@@ -127,7 +120,6 @@
 .gridtable__header__row {
   display: flex;
   max-width: 100%;
-  background-color: white;
 }
 .gridtable__header__row__cell {
   width: 100%;
@@ -138,7 +130,6 @@
 .gridtable__footer__row {
   display: flex;
   max-width: 100%;
-  background-color: white;
   position: sticky;
   bottom: 0;
   z-index: 3;

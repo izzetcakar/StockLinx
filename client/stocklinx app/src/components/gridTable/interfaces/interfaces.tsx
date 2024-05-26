@@ -31,10 +31,14 @@ export interface Filter {
   type: FilterType;
   value: string | number | boolean | null;
 }
+export interface AppliedFilter {
+  dataField: string;
+  value: string;
+}
 export interface QueryFilter {
   dataField: string;
   operator: string;
-  value: string | number | boolean | null;
+  value: string | number | boolean;
 }
 export interface ExcelColumn {
   caption: string;
@@ -68,7 +72,7 @@ export interface GridtableProps {
   onRowRemove?: (id: string) => void;
   onRowRemoveRange?: (ids: string[]) => void;
   onExpandData?: (skip: number, top: number) => void;
-  onApplyFilter?: () => QueryFilter[];
+  onApplyFilters?: () => QueryFilter[];
   excelColumns?: ExcelColumn[];
   enableToolbar?: boolean;
   enableEditActions?: boolean;

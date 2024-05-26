@@ -1,53 +1,16 @@
+@import "../../base.scss";
+
 .page__header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-left: 0.5rem;
-  margin: 0rem 0.5rem 0 0.5rem;
-  border-radius: 0.5rem;
-  background-color: #f8f9fa;
-  font-weight: 500;
-  color: black;
-  .page__header__title {
+  padding: $spacing-xs $spacing-sm;
+  font-size: $fontsize-md;
+
+  .page__header__item{
     display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    font-size: 1.5rem;
-  }
-  .page__header__actions {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    .page__header__action {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 0.5rem;
-      // border-radius: 0.5rem;
-      color: black;
-      font-size: 0.5rem;
-      font-weight: 500;
-      cursor: pointer;
-      &:hover {
-        background-color: #ced4da;
-      }
-      .page__header__action__button {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-    }
-    .page__header__action img {
-      width: 20px;
-      height: 20px;
-    }
-  }
-  .test {
-    border: none;
-    padding: 0 1rem;
-    :hover {
-      background-color: #ced4da;
-    }
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $spacing-xs;
   }
 }

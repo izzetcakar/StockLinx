@@ -45,7 +45,8 @@ import Permissions from "./pages/permission/Permissions";
 import "./app.scss";
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
-import '@mantine/dates/styles.css';
+import "@mantine/dates/styles.css";
+import "./base.scss";
 
 const Layout = () => {
   const userRedux = useSelector((state: RootState) => state.user.user);
@@ -146,63 +147,63 @@ const router = createBrowserRouter([
         element: <CustomFields />,
       },
       {
-        path: "/accessory/:id",
+        path: "/accessory",
         element: <Accessory />,
       },
       {
-        path: "/asset/:id",
+        path: "/asset",
         element: <Asset />,
       },
       {
-        path: "/branch/:id",
+        path: "/branch",
         element: <Branch />,
       },
       {
-        path: "/category/:id",
+        path: "/category",
         element: <Category />,
       },
       {
-        path: "/company/:id",
+        path: "/company",
         element: <Company />,
       },
       {
-        path: "/component/:id",
+        path: "/component",
         element: <Component />,
       },
       {
-        path: "/consumable/:id",
+        path: "/consumable",
         element: <Consumable />,
       },
       {
-        path: "/department/:id",
+        path: "/department",
         element: <Department />,
       },
       {
-        path: "/license/:id",
+        path: "/license",
         element: <License />,
       },
       {
-        path: "/location/:id",
+        path: "/location",
         element: <Location />,
       },
       {
-        path: "/manufacturer/:id",
+        path: "/manufacturer",
         element: <Manufacturer />,
       },
       {
-        path: "/model/:id",
+        path: "/model",
         element: <Model />,
       },
       {
-        path: "/productstatus/:id",
+        path: "/productstatus",
         element: <ProductStatus />,
       },
       {
-        path: "/supplier/:id",
+        path: "/supplier",
         element: <Supplier />,
       },
       {
-        path: "/user/:id",
+        path: "/user",
         element: <User />,
       },
       {

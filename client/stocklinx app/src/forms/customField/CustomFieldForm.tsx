@@ -15,7 +15,6 @@ import {
 } from "../../interfaces/serverInterfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { customFieldActions } from "../../redux/customField/actions";
-import filterClasses from "../../mantineModules/filter.module.scss";
 import uuid4 from "uuid4";
 import { RootState } from "../../redux/rootReducer";
 import { fieldSetCustomFieldActions } from "../../redux/fieldSetCustomField/actions";
@@ -118,7 +117,6 @@ const CustomFieldForm: React.FC<CustomFieldFormProps> = ({ customField }) => {
           label="Type"
           placeholder="Select Type"
           {...form.getInputProps("type")}
-          classNames={filterClasses}
           comboboxProps={{ position: "bottom" }}
           required
           withAsterisk
@@ -161,7 +159,6 @@ const CustomFieldForm: React.FC<CustomFieldFormProps> = ({ customField }) => {
             .filter((f) => value.map((x) => x.fieldSetId).includes(f.id))
             .map((f) => f.id)}
           onChange={onFieldSetsChange}
-          classNames={filterClasses}
           placeholder="Select Field Sets"
           comboboxProps={{ position: "bottom" }}
           nothingFoundMessage="No field sets found"

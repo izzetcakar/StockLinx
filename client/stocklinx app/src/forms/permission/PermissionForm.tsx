@@ -3,7 +3,6 @@ import { IBranch } from "../../interfaces/serverInterfaces";
 import { RootState } from "../../redux/rootReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { ActionIcon, Badge, Button, Flex, Select, rem } from "@mantine/core";
-import filterClasses from "../../mantineModules/filter.module.scss";
 import { permissionActions } from "../../redux/permission/actions";
 import uuid4 from "uuid4";
 import { IconX } from "@tabler/icons-react";
@@ -43,11 +42,9 @@ const PermissionForm: React.FC<PermissionFormProps> = ({ branch }) => {
           }))}
           label="User"
           placeholder="Select User"
-          classNames={filterClasses}
-          comboboxProps={{ position: 'bottom' }}
+          comboboxProps={{ position: "bottom" }}
           nothingFoundMessage="No user found"
           onChange={(e) => setUser(e as string)}
-          
         />
         <Button onClick={() => givePermission()}>ADD</Button>
       </Flex>

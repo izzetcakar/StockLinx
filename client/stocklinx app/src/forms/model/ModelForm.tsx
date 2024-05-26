@@ -20,7 +20,6 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { modelActions } from "../../redux/model/actions";
 import uuid4 from "uuid4";
-import filterClasses from "../../mantineModules/filter.module.scss";
 import { RootState } from "../../redux/rootReducer";
 import { DateInput } from "@mantine/dates";
 import { modelFieldDataActions } from "../../redux/modelFieldData/actions";
@@ -292,7 +291,6 @@ const ModelForm: React.FC<ModelFormProps> = ({ model, create }) => {
           label="Field Set"
           placeholder="Select Field Set"
           {...form.getInputProps("fieldSetId")}
-          classNames={filterClasses}
           comboboxProps={{ position: "bottom" }}
           nothingFoundMessage="No field set found"
           onChange={(e) => onFieldIdChange(e as string)}
