@@ -3,6 +3,8 @@ import {
   Filter,
   LookupData,
   Column,
+  QueryFilter,
+  AppliedFilter,
 } from "../interfaces/interfaces";
 import { Loader, NumberInput, Select, TextInput } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
@@ -39,6 +41,7 @@ export const useInputFilter = (filter: Filter) => {
     }
     return newValue;
   };
+
   const onValueChange = (e: any, filter: Filter) => {
     const newValue = getFilterChangedValue(e, filter.type);
     setFilters((prev) =>
@@ -122,7 +125,7 @@ export const useInputFilter = (filter: Filter) => {
 };
 
 export const useFilter = () => {
-  const { setFilters } = useGridTableContext();
+  const { gridColumns, filters, setFilters } = useGridTableContext();
 
   const getTypeByColumn = (column: Column): FilterType => {
     if (!column) return FilterType.TEXT;
@@ -150,7 +153,90 @@ export const useFilter = () => {
     setFilters(newFilters);
   };
 
+  const getCleanedValueByOperator = (value: string, operator: string) => {
+    const trimmedValue = value.trim();
+    switch (operator) {
+      case "startswith":
+        return trimmedValue.slice(1);
+      case "endswith":
+        return trimmedValue.slice(0, -1);
+      case "equals":
+        return trimmedValue.slice(1);
+      case "greaterthan":
+        return trimmedValue.slice(1);
+      case "lessthan":
+        return trimmedValue.slice(1);
+      case "notequals":
+        return trimmedValue.slice(2);
+      case "greaterthanorequal":
+        return trimmedValue.slice(2);
+      case "lessthanorequal":
+        return trimmedValue.slice(2);
+      case "between":
+        return trimmedValue.split("..");
+      default:
+        return trimmedValue;
+    }
+  };
+
+  const handleOperator = (value: string) => {
+    const trimmedValue = value.trim();
+
+    const regexPatterns: { [key: string]: RegExp } = {
+      contains: /^%.*%$/,
+      startswith: /^%[^%]+$/,
+      endswith: /^[^%]+%$/,
+      equals: /^=/,
+      greaterthan: /^>/,
+      lessthan: /^</,
+      notequals: /^!=/,
+      greaterthanorequal: />=/,
+      lessthanorequal: /<=/,
+      between: /\.\./,
+    };
+
+    for (const [operation, pattern] of Object.entries(regexPatterns)) {
+      if (pattern.test(trimmedValue)) {
+        return operation;
+      }
+    }
+    return "contains";
+  };
+
+  const handleMultipleValues = (filter: AppliedFilter) => {
+    if (filter.value.includes(";")) {
+      return filter.value.split(";").map((value) => {
+        return {
+          dataField: filter.dataField,
+          operator: handleOperator(value),
+          value: getCleanedValueByOperator(value, handleOperator(value)),
+        };
+      });
+    }
+    return {
+      dataField: filter.dataField,
+      operator: handleOperator(filter.value),
+      value: getCleanedValueByOperator(
+        filter.value,
+        handleOperator(filter.value)
+      ),
+    };
+  };
+
+  const getQueryFilters = (): QueryFilter[] => {
+    const appliedFilters = filters.filter((filter) => filter.value !== null);
+    const queryFilters = appliedFilters.map((filter) => {
+      return handleMultipleValues({
+        dataField:
+          gridColumns.find((c) => c.id === filter.columnId)?.dataField || "",
+        value: filter.value as string,
+      });
+    });
+    return queryFilters as QueryFilter[];
+  };
+
   return {
     handleFilterAll,
+    getQueryFilters,
   };
 };

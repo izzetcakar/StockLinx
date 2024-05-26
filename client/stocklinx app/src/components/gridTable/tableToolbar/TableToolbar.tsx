@@ -1,8 +1,8 @@
 import React from "react";
 import {
   ExcelColumn,
-  Filter,
   ImportedExcelData,
+  QueryFilter,
   RowError,
 } from "../interfaces/interfaces";
 import icon_plus from "../../.././assets/icon_plus.png";
@@ -18,20 +18,16 @@ import { utils, read } from "xlsx";
 import { FileInput } from "@mantine/core";
 import { openConfirmModal, openExcelModal } from "../modals/modals";
 import { useGridTableContext } from "../context/GenericStateContext";
-import { useInputFilter } from "../customhooks/filter";
 import "./tableToolbar.scss";
-
-const FilterComponent = (filter: Filter) => {
-  const test = useInputFilter(filter).getFilterInput();
-  return test;
-};
+import Filters from "./Filters";
 
 interface TableToolbarProps {
   data: object[];
   excelColumns?: ExcelColumn[];
   itemKey: string;
-  onRowInsert?: () => void;
   onRowRemoveRange: (ids: string[]) => void;
+  applyFilters: (queryFilters: QueryFilter[]) => void;
+  onRowInsert?: () => void;
   refreshData?: () => Promise<void> | void;
   onExpandData?: (skip: number, top: number) => void;
 }
@@ -39,8 +35,9 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
   data,
   excelColumns,
   itemKey,
-  onRowInsert,
   onRowRemoveRange,
+  applyFilters,
+  onRowInsert,
   refreshData,
   onExpandData,
 }) => {
@@ -272,15 +269,7 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
         ) : null}
       </div>
       {filtersVisible ? (
-        <div className="gridtable__toolbar__filter__container">
-          {filters.map((filter) => {
-            return (
-              <div key={filter.columnId}>
-                <FilterComponent {...filter} />
-              </div>
-            );
-          })}
-        </div>
+        <Filters filters={filters} applyFilters={applyFilters} />
       ) : null}
     </div>
   );

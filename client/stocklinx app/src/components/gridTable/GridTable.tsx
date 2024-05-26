@@ -11,21 +11,21 @@ const GridTable: React.ForwardRefRenderFunction<
   GridtableProps
 > = (
   {
-    data = [],
-    columns = [],
-    noDataText = "No Data Found",
+    data,
+    columns,
+    noDataText,
     itemKey,
     excelColumns,
-    enableToolbar = false,
-    enableEditActions = false,
-    enableSelectActions = false,
-    pageSizes = [],
-    onApplyFilter,
+    enableToolbar,
+    enableEditActions,
+    enableSelectActions,
+    pageSizes,
+    onApplyFilters,
     refreshData,
-    onRowInsert = () => console.log("Row insert"),
-    onRowUpdate = (row: object) => console.log(row),
-    onRowRemove = (id: string) => console.log(id),
-    onRowRemoveRange = (ids: string[]) => console.log(ids),
+    onRowInsert,
+    onRowUpdate,
+    onRowRemove,
+    onRowRemoveRange,
     onExpandData,
   },
   ref
@@ -58,7 +58,7 @@ const GridTable: React.ForwardRefRenderFunction<
         onRowRemove={onRowRemove}
         onRowRemoveRange={onRowRemoveRange}
         onExpandData={onExpandData}
-        onApplyFilter={onApplyFilter}
+        onApplyFilters={onApplyFilters}
       />
     </GenericStateProvider>
   );

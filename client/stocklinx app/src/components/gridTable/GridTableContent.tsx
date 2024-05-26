@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import EditComponent from "./edit/EditComponent";
 import TableToolbar from "./tableToolbar/TableToolbar";
-import { GridtableProps } from "./interfaces/interfaces";
+import { GridtableProps, QueryFilter } from "./interfaces/interfaces";
 import { Checkbox } from "@mantine/core";
 import { useSelectRow } from "./customhooks/selectRow";
 import { useCell } from "./customhooks/cell";
@@ -20,6 +20,7 @@ const GridtableContent: React.FC<GridtableProps> = ({
   onRowRemove = (id: string) => console.log(id),
   onRowRemoveRange = (ids: string[]) => console.log(ids),
   onExpandData,
+  onApplyFilters = (queryFilters: QueryFilter[]) => console.log(queryFilters),
   itemKey,
   excelColumns,
   enableToolbar = false,
@@ -58,8 +59,9 @@ const GridtableContent: React.FC<GridtableProps> = ({
                 itemKey={keyfield}
                 data={data}
                 excelColumns={excelColumns}
-                onRowInsert={onRowInsert}
                 onRowRemoveRange={onRowRemoveRange}
+                applyFilters={onApplyFilters}
+                onRowInsert={onRowInsert}
                 refreshData={refreshData}
                 onExpandData={onExpandData}
               />
@@ -100,26 +102,6 @@ const GridtableContent: React.FC<GridtableProps> = ({
             </td>
           ))}
         </tr>
-        {/* <tr className="gridtable__filter__row">
-          {enableSelectActions ? (
-            <td className="gridtable__filter__cell"></td>
-          ) : null}
-          {enableEditActions ? (
-            <td className="gridtable__filter__cell"></td>
-          ) : null}
-          {filters
-            .filter((x) =>
-              visibleColumns.map((v) => v.dataField).includes(x.field)
-            )
-            .map((filter: Filter, filterIndex) => (
-              <td
-                key={filter.field + "__" + filterIndex}
-                className="gridtable__filter__cell"
-              >
-                {getFilterInput(filter)}
-              </td>
-            ))}
-        </tr> */}
         {data.length > 0 ? (
           data.map((obj, rowIndex) => (
             <tr
