@@ -12,7 +12,7 @@ const FilterInput = (filter: Filter) => {
 };
 
 const Filters: React.FC<FiltersProps> = ({ filters, applyFilters }) => {
-  const { getQueryFilters } = useFilter();
+  const { buildQueryFilters } = useFilter();
   return (
     <Flex wrap={"wrap"} gap={10} align={"flex-end"}>
       {filters.map((filter) => {
@@ -25,7 +25,7 @@ const Filters: React.FC<FiltersProps> = ({ filters, applyFilters }) => {
       <Button
         variant="light"
         color="blue"
-        onClick={() => applyFilters(getQueryFilters())}
+        onClick={() => applyFilters(buildQueryFilters())}
       >
         Apply
       </Button>

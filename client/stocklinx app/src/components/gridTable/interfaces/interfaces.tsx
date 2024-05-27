@@ -1,6 +1,13 @@
 export interface Column extends BaseColumn {
   id: string;
 }
+export enum DataType {
+  STRING = "string",
+  NUMBER = "number",
+  BOOLEAN = "boolean",
+  DATE = "date",
+  ACTION = "action",
+}
 export interface BaseColumn {
   dataField: string;
   caption: string;

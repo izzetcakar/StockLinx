@@ -5,7 +5,7 @@ import { useFilter } from "./filter";
 
 export const useColumns = (columns: BaseColumn[]) => {
   const { gridColumns, setGridColumns } = useGridTableContext();
-  const { handleFilterAll } = useFilter();
+  const { applyFiltersToAllColumns } = useFilter();
 
   const onBaseColumnsChange = () => {
     const newColumns = columns.map((column) => {
@@ -15,7 +15,7 @@ export const useColumns = (columns: BaseColumn[]) => {
       };
     });
     setGridColumns(newColumns);
-    handleFilterAll(newColumns);
+    applyFiltersToAllColumns(newColumns);
   };
 
   const onColumnVisibleChange = (columnId: string) => {

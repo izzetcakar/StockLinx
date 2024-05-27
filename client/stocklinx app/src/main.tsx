@@ -19,7 +19,19 @@ const components = {
       label: inputClasses.label,
     },
   },
+  PasswordInput: {
+    defaultProps: defaultInputProps,
+    classNames: {
+      label: inputClasses.label,
+    },
+  },
   Select: {
+    defaultProps: defaultInputProps,
+    classNames: {
+      label: inputClasses.label,
+    },
+  },
+  MultiSelect: {
     defaultProps: defaultInputProps,
     classNames: {
       label: inputClasses.label,

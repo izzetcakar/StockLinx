@@ -6,10 +6,16 @@ import {
   QueryFilter,
   AppliedFilter,
 } from "../interfaces/interfaces";
-import { Loader, NumberInput, Select, TextInput } from "@mantine/core";
+import { Loader, MultiSelect, Select, TextInput } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 import { useGridTableContext } from "../context/GenericStateContext";
 import { useState } from "react";
+
+const checkValidNumberInput = (value: string) => {
+  const pattern = /^(?:\d+|%|<=|>=|!=|<|>|=|;)*$/;
+  if (!pattern.test(value)) return "Invalid";
+  return "";
+};
 
 export const useInputFilter = (filter: Filter) => {
   const { gridColumns, setFilters } = useGridTableContext();
@@ -23,17 +29,21 @@ export const useInputFilter = (filter: Filter) => {
     let newValue: string | number | boolean | null;
     switch (filterType) {
       case FilterType.TEXT:
-        newValue = e.target.value;
+        newValue = e.target.value === "" ? null : e.target.value;
         break;
       case FilterType.NUMBER:
-        newValue = e;
+        newValue = e.target.value.trim() === "" ? null : e.target.value.trim();
         break;
       case FilterType.BOOLEAN:
         // newValue = e.currentTarget.checked;
         newValue = e;
         break;
       case FilterType.LOOKUP:
-        newValue = e;
+        if (e.length === 0) {
+          newValue = null;
+        } else {
+          newValue = e.map((item: string) => item).join(";");
+        }
         break;
       default:
         newValue = e.target.value;
@@ -67,7 +77,7 @@ export const useInputFilter = (filter: Filter) => {
   };
 
   const getFilterInput = () => {
-    const searchIcon = <IconSearch size={16} />;
+    const searchIcon = <IconSearch size={14} />;
     const label = column?.caption || "";
 
     switch (filter.type) {
@@ -77,17 +87,17 @@ export const useInputFilter = (filter: Filter) => {
             label={label}
             value={filter.value ? filter.value.toString() : ""}
             onChange={(e) => onValueChange(e, filter)}
-            leftSection={<IconSearch size={16} />}
+            leftSection={searchIcon}
           />
         );
       case FilterType.NUMBER:
         return (
-          <NumberInput
+          <TextInput
             label={label}
-            value={filter.value ? parseInt(filter.value as string) : ""}
+            value={filter.value ? filter.value.toString() : ""}
             onChange={(e) => onValueChange(e, filter)}
+            error={checkValidNumberInput(filter.value?.toString() || "")}
             leftSection={searchIcon}
-            hideControls
           />
         );
       case FilterType.BOOLEAN:
@@ -99,21 +109,24 @@ export const useInputFilter = (filter: Filter) => {
             data={loading ? [] : filterData}
             onChange={(e) => onValueChange(e, filter)}
             rightSection={loading ? <Loader size={16} /> : null}
-            searchable
-            clearable
           />
         );
       case FilterType.LOOKUP:
         return (
-          <Select
+          <MultiSelect
             label={label}
             placeholder="All"
-            value={filter.value as string}
+            value={
+              filter.value
+                ? (filter.value as string).split(";").map((v) => v.trim())
+                : []
+            }
             data={loading ? [] : filterData}
             onChange={(e) => onValueChange(e, filter)}
             onDropdownOpen={getData}
             rightSection={loading ? <Loader size={16} /> : null}
             maxDropdownHeight={200}
+            multiple
             searchable
             clearable
           />
@@ -127,7 +140,7 @@ export const useInputFilter = (filter: Filter) => {
 export const useFilter = () => {
   const { gridColumns, filters, setFilters } = useGridTableContext();
 
-  const getTypeByColumn = (column: Column): FilterType => {
+  const determineFilterType = (column: Column): FilterType => {
     if (!column) return FilterType.TEXT;
     if (column.lookup) return FilterType.LOOKUP;
     switch (column.dataType) {
@@ -141,21 +154,38 @@ export const useFilter = () => {
     }
   };
 
-  const handleFilterAll = (columns: Column[]) => {
+  const applyFiltersToAllColumns = (columns: Column[]) => {
     const newFilters: Filter[] = columns.map(
       (column) =>
         ({
           columnId: column.id,
-          type: getTypeByColumn(column),
+          type: determineFilterType(column),
           value: null,
         } as Filter)
     );
     setFilters(newFilters);
   };
 
-  const getCleanedValueByOperator = (value: string, operator: string) => {
-    const trimmedValue = value.trim();
+  const convertValueByType = (value: string, type: string) => {
+    switch (type) {
+      case "number":
+        return parseInt(value);
+      case "boolean":
+        return value === "true";
+      case "string":
+        return value;
+      default:
+        return value;
+    }
+  };
+
+  const cleanValueByOperator = (value: string | number, operator: string) => {
+    const trimmedValue = value.toString().trim();
     switch (operator) {
+      case "contains":
+        return trimmedValue.startsWith("%") && trimmedValue.endsWith("%")
+          ? trimmedValue.slice(1, -1)
+          : trimmedValue;
       case "startswith":
         return trimmedValue.slice(1);
       case "endswith":
@@ -172,71 +202,87 @@ export const useFilter = () => {
         return trimmedValue.slice(2);
       case "lessthanorequal":
         return trimmedValue.slice(2);
-      case "between":
-        return trimmedValue.split("..");
       default:
         return trimmedValue;
     }
   };
 
-  const handleOperator = (value: string) => {
+  const identifyOperator = (value: string) => {
     const trimmedValue = value.trim();
 
-    const regexPatterns: { [key: string]: RegExp } = {
+    const operatorPatterns: { [key: string]: RegExp } = {
       contains: /^%.*%$/,
       startswith: /^%[^%]+$/,
       endswith: /^[^%]+%$/,
       equals: /^=/,
-      greaterthan: /^>/,
-      lessthan: /^</,
       notequals: /^!=/,
       greaterthanorequal: />=/,
       lessthanorequal: /<=/,
-      between: /\.\./,
+      greaterthan: /^>/,
+      lessthan: /^</,
     };
 
-    for (const [operation, pattern] of Object.entries(regexPatterns)) {
+    for (const [operator, pattern] of Object.entries(operatorPatterns)) {
       if (pattern.test(trimmedValue)) {
-        return operation;
+        return operator;
       }
     }
     return "contains";
   };
 
-  const handleMultipleValues = (filter: AppliedFilter) => {
-    if (filter.value.includes(";")) {
-      return filter.value.split(";").map((value) => {
-        return {
-          dataField: filter.dataField,
-          operator: handleOperator(value),
-          value: getCleanedValueByOperator(value, handleOperator(value)),
-        };
-      });
+  const processMultipleValues = (filter: AppliedFilter) => {
+    const filterValue = filter.value.toString().trim() as string;
+    const dataType =
+      gridColumns.find((c) => c.dataField === filter.dataField)?.dataType ||
+      "string";
+    if (dataType === "action") return;
+    if (dataType === "number" && isNaN(Number(filter.value))) return;
+    if (filterValue.includes(";")) {
+      return filterValue
+        .split(";")
+        .filter((value) => value !== "")
+        .map((value) => {
+          const operator = identifyOperator(value);
+          return {
+            dataField: filter.dataField,
+            operator: operator,
+            value: convertValueByType(cleanValueByOperator(value, operator), dataType),
+          };
+        });
     }
+    const operator = identifyOperator(filterValue);
     return {
       dataField: filter.dataField,
-      operator: handleOperator(filter.value),
-      value: getCleanedValueByOperator(
-        filter.value,
-        handleOperator(filter.value)
-      ),
+      operator: operator,
+      value: convertValueByType(cleanValueByOperator(filterValue, operator), dataType),
     };
   };
 
-  const getQueryFilters = (): QueryFilter[] => {
-    const appliedFilters = filters.filter((filter) => filter.value !== null);
-    const queryFilters = appliedFilters.map((filter) => {
-      return handleMultipleValues({
-        dataField:
-          gridColumns.find((c) => c.id === filter.columnId)?.dataField || "",
+  const buildQueryFilters = (): QueryFilter[] => {
+    const activeFilters = filters.filter((filter) => filter.value !== null);
+    let queryFilters: QueryFilter[] = [];
+
+    activeFilters.forEach((filter) => {
+      const column = gridColumns.find((c) => c.id === filter.columnId);
+      if (!column) return;
+
+      const processedFilters = processMultipleValues({
+        dataField: column.dataField,
         value: filter.value as string,
       });
+
+      if (Array.isArray(processedFilters)) {
+        queryFilters = queryFilters.concat(processedFilters);
+      } else if (processedFilters) {
+        queryFilters.push(processedFilters);
+      }
     });
-    return queryFilters as QueryFilter[];
+
+    return queryFilters;
   };
 
   return {
-    handleFilterAll,
-    getQueryFilters,
+    applyFiltersToAllColumns,
+    buildQueryFilters,
   };
 };
