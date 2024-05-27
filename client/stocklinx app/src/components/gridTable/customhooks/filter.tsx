@@ -42,7 +42,7 @@ export const useInputFilter = (filter: Filter) => {
         if (e.length === 0) {
           newValue = null;
         } else {
-          newValue = e.map((item: string) => item).join(";");
+          newValue = e.map((item: string) => "=" + item).join(";");
         }
         break;
       default:
@@ -118,7 +118,9 @@ export const useInputFilter = (filter: Filter) => {
             placeholder="All"
             value={
               filter.value
-                ? (filter.value as string).split(";").map((v) => v.trim())
+                ? (filter.value as string)
+                    .split(";")
+                    .map((v) => v.slice(1).trim())
                 : []
             }
             data={loading ? [] : filterData}
@@ -140,7 +142,7 @@ export const useInputFilter = (filter: Filter) => {
 export const useFilter = () => {
   const { gridColumns, filters, setFilters } = useGridTableContext();
 
-  const determineFilterType = (column: Column): FilterType => {
+  const getFilterType = (column: Column): FilterType => {
     if (!column) return FilterType.TEXT;
     if (column.lookup) return FilterType.LOOKUP;
     switch (column.dataType) {
@@ -159,7 +161,7 @@ export const useFilter = () => {
       (column) =>
         ({
           columnId: column.id,
-          type: determineFilterType(column),
+          type: getFilterType(column),
           value: null,
         } as Filter)
     );
@@ -179,7 +181,7 @@ export const useFilter = () => {
     }
   };
 
-  const cleanValueByOperator = (value: string | number, operator: string) => {
+  const trimValueByOperator = (value: string | number, operator: string) => {
     const trimmedValue = value.toString().trim();
     switch (operator) {
       case "contains":
@@ -207,9 +209,8 @@ export const useFilter = () => {
     }
   };
 
-  const identifyOperator = (value: string) => {
+  const getOperator = (value: string) => {
     const trimmedValue = value.trim();
-
     const operatorPatterns: { [key: string]: RegExp } = {
       contains: /^%.*%$/,
       startswith: /^%[^%]+$/,
@@ -230,31 +231,37 @@ export const useFilter = () => {
     return "contains";
   };
 
-  const processMultipleValues = (filter: AppliedFilter) => {
+  const processFilterValues = (filter: AppliedFilter) => {
     const filterValue = filter.value.toString().trim() as string;
     const dataType =
       gridColumns.find((c) => c.dataField === filter.dataField)?.dataType ||
       "string";
     if (dataType === "action") return;
-    if (dataType === "number" && isNaN(Number(filter.value))) return;
+    if (dataType === "number" && checkValidNumberInput(filter.value)) return;
     if (filterValue.includes(";")) {
       return filterValue
         .split(";")
         .filter((value) => value !== "")
         .map((value) => {
-          const operator = identifyOperator(value);
+          const operator = getOperator(value);
           return {
             dataField: filter.dataField,
             operator: operator,
-            value: convertValueByType(cleanValueByOperator(value, operator), dataType),
+            value: convertValueByType(
+              trimValueByOperator(value, operator),
+              dataType
+            ),
           };
         });
     }
-    const operator = identifyOperator(filterValue);
+    const operator = getOperator(filterValue);
     return {
       dataField: filter.dataField,
       operator: operator,
-      value: convertValueByType(cleanValueByOperator(filterValue, operator), dataType),
+      value: convertValueByType(
+        trimValueByOperator(filterValue, operator),
+        dataType
+      ),
     };
   };
 
@@ -266,7 +273,7 @@ export const useFilter = () => {
       const column = gridColumns.find((c) => c.id === filter.columnId);
       if (!column) return;
 
-      const processedFilters = processMultipleValues({
+      const processedFilters = processFilterValues({
         dataField: column.dataField,
         value: filter.value as string,
       });
