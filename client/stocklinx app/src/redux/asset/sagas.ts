@@ -3,6 +3,7 @@ import { assetActions } from "./actions";
 import { IAsset, IUserProduct } from "../../interfaces/serverInterfaces";
 import { assetConst } from "./constant";
 import {
+  AssetFilterRequest,
   CheckInAssetRequest,
   CheckOutAssetRequest,
   CreateAssetRequest,
@@ -177,6 +178,25 @@ function* checkOutAssetSaga(action: CheckOutAssetRequest) {
   yield put(genericActions.decreaseLoading());
 }
 
+function* filterAssetsSaga(action: AssetFilterRequest) {
+  yield put(genericActions.increaseLoading());
+  try {
+    const { data }: IResponse = yield call(
+      assetRequests.filter,
+      action.payload
+    );
+    yield put(
+      assetActions.filterSuccess({
+        assets: data as IAsset[],
+      })
+    );
+  } catch (e) {
+    openNotificationError("Asset", (e as Error).message);
+    yield put(assetActions.filterFailure());
+  }
+  yield put(genericActions.decreaseLoading());
+}
+
 function* assetsaga() {
   yield takeEvery(assetConst.FETCH_ASSETS_REQUEST, fetchAssetsSaga);
   yield takeEvery(assetConst.FETCH_ASSET_REQUEST, fetchAssetSaga);
@@ -187,6 +207,7 @@ function* assetsaga() {
   yield takeEvery(assetConst.REMOVE_RANGE_ASSET_REQUEST, removeRangeAssetSaga);
   yield takeEvery(assetConst.CHECK_IN_ASSET_REQUEST, checkInAssetSaga);
   yield takeEvery(assetConst.CHECK_OUT_ASSET_REQUEST, checkOutAssetSaga);
+  yield takeEvery(assetConst.ASSET_FILTER_REQUEST, filterAssetsSaga);
 }
 
 export default assetsaga;

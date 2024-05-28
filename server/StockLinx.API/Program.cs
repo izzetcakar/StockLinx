@@ -37,6 +37,7 @@ builder.Services.Configure<FormOptions>(o =>
     o.MultipartBodyLengthLimit = int.MaxValue;
     o.MemoryBufferThreshold = int.MaxValue;
 });
+builder.Services.AddSingleton<DapperContext>();
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
@@ -44,6 +45,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped(typeof(IService<>), typeof(Service<>));
+builder.Services.AddScoped(typeof(IFilterService<>), typeof(FilterService<>));
 builder.Services.AddScoped<ICustomLogRepository, CustomLogRepository>();
 builder.Services.AddScoped<ICustomLogService, CustomLogService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -97,6 +99,7 @@ builder.Services.AddAutoMapper(typeof(MapProfile));
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddControllersWithViews().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
 
 builder.Services.AddDbContext<AppDbContext>(x =>
 {

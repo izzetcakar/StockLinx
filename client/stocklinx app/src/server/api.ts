@@ -27,11 +27,13 @@ export const request = async <T>({
   requestUrl,
   apiType,
   queryData,
+  params,
 }: {
   requestUrl: string;
   apiType: "get" | "delete" | "put" | "post";
   // queryData?: T | T[] | string[] | null;
   queryData?: any;
+  params?: any;
 }): Promise<ApiResponse<T>> => {
   let data: T | T[] | null;
   let status: number;
@@ -48,6 +50,7 @@ export const request = async <T>({
       Authorization: `Bearer ${getToken()}`,
     },
     data: queryData,
+    params: params,
   };
   try {
     switch (apiType) {

@@ -145,6 +145,19 @@ export default (state = initialState, action: AssetActions) => {
       return {
         ...state,
       };
+    case assetConst.ASSET_FILTER_REQUEST:
+      return {
+        ...state,
+      };
+    case assetConst.ASSET_FILTER_SUCCESS:
+      return {
+        ...state,
+        assets: action.payload.assets,
+      };
+    case assetConst.ASSET_FILTER_FAILURE:
+      return {
+        ...state,
+      };
     case assetConst.SET_ASSET:
       return {
         ...state,

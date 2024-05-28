@@ -18,6 +18,7 @@ namespace StockLinx.Service.Services
         private readonly IBranchRepository _branchRepository;
         private readonly IUserService _userService;
         private readonly ICustomLogService _customLogService;
+        private readonly IFilterService<Asset> _filterService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
@@ -27,9 +28,10 @@ namespace StockLinx.Service.Services
             IUserProductRepository userProductRepository,
             IBranchRepository branchRepository,
             IUserService userService,
+            ICustomLogService customLogService,
+            IFilterService<Asset> filterService,
             IUnitOfWork unitOfWork,
-            IMapper mapper,
-            ICustomLogService customLogService
+            IMapper mapper
         )
             : base(repository, unitOfWork)
         {
@@ -38,6 +40,7 @@ namespace StockLinx.Service.Services
             _branchRepository = branchRepository;
             _userService = userService;
             _customLogService = customLogService;
+            _filterService = filterService;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
@@ -258,6 +261,12 @@ namespace StockLinx.Service.Services
             asset.ProductStatusId = checkOutDto.ProductStatusId;
             _assetRepository.Update(asset, asset);
             await _unitOfWork.CommitAsync();
+        }
+
+        public async Task<List<AssetDto>> Filter(List<Filter> filters)
+        {
+            var result = await _filterService.FilterAsync(filters);
+            return _assetRepository.GetDtos(result.ToList());
         }
     }
 }

@@ -144,5 +144,19 @@ namespace StockLinx.API.Controllers
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
             }
         }
+
+        [HttpGet("filter")]
+        public async Task<IActionResult> Filter([FromQuery(Name = "filter")] string filter)
+        {
+            try
+            {
+                List<AssetDto> result = await _assetService.Filter(FilterExpression.ParseFilterExpression(filter));
+                return CreateActionResult(CustomResponseDto<List<AssetDto>>.Success(200, result));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
+        }
     }
 }

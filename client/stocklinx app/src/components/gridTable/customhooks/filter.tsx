@@ -5,7 +5,7 @@ import {
   Column,
   QueryFilter,
   AppliedFilter,
-} from "../interfaces/interfaces";
+} from "@interfaces/gridTableInterfaces";
 import { Loader, MultiSelect, Select, TextInput } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 import { useGridTableContext } from "../context/GenericStateContext";
@@ -17,6 +17,30 @@ const checkValidNumberInput = (value: string) => {
   return "";
 };
 
+const checkNumberContainsOperator = (value: string) => {
+  const pattern = /(?:<=|>=|!=|<|>|=)/;
+  return pattern.test(value);
+};
+
+const getFinalValue = (value: string, type: FilterType): string => {
+  value = value.trim();
+  switch (type) {
+    case FilterType.BOOLEAN:
+      return value;
+    case FilterType.TEXT:
+      return value;
+    case FilterType.NUMBER:
+      return checkNumberContainsOperator(value) ? value : "=" + value;
+    case FilterType.LOOKUP:
+      return value
+        .split(";")
+        .map((v) => "=" + v)
+        .join(";");
+    default:
+      return value;
+  }
+};
+
 export const useInputFilter = (filter: Filter) => {
   const { gridColumns, setFilters } = useGridTableContext();
   const column = gridColumns.find((c) => c.id === filter.columnId);
@@ -26,24 +50,20 @@ export const useInputFilter = (filter: Filter) => {
   );
 
   const getFilterChangedValue = (e: any, filterType: FilterType) => {
-    let newValue: string | number | boolean | null;
+    let newValue: string | null;
     switch (filterType) {
       case FilterType.TEXT:
         newValue = e.target.value === "" ? null : e.target.value;
         break;
       case FilterType.NUMBER:
-        newValue = e.target.value.trim() === "" ? null : e.target.value.trim();
+        newValue = e.target.value.trim() === "" ? null : e.target.value;
         break;
       case FilterType.BOOLEAN:
         // newValue = e.currentTarget.checked;
         newValue = e;
         break;
       case FilterType.LOOKUP:
-        if (e.length === 0) {
-          newValue = null;
-        } else {
-          newValue = e.map((item: string) => "=" + item).join(";");
-        }
+        newValue = e.length === 0 ? null : e.join(";");
         break;
       default:
         newValue = e.target.value;
@@ -85,7 +105,7 @@ export const useInputFilter = (filter: Filter) => {
         return (
           <TextInput
             label={label}
-            value={filter.value ? filter.value.toString() : ""}
+            value={filter.value || ""}
             onChange={(e) => onValueChange(e, filter)}
             leftSection={searchIcon}
           />
@@ -94,7 +114,7 @@ export const useInputFilter = (filter: Filter) => {
         return (
           <TextInput
             label={label}
-            value={filter.value ? filter.value.toString() : ""}
+            value={filter.value || ""}
             onChange={(e) => onValueChange(e, filter)}
             error={checkValidNumberInput(filter.value?.toString() || "")}
             leftSection={searchIcon}
@@ -105,7 +125,7 @@ export const useInputFilter = (filter: Filter) => {
           <Select
             label={label}
             placeholder="All"
-            value={filter.value as string}
+            value={filter.value === "true" ? "true" : "false"}
             data={loading ? [] : filterData}
             onChange={(e) => onValueChange(e, filter)}
             rightSection={loading ? <Loader size={16} /> : null}
@@ -116,13 +136,7 @@ export const useInputFilter = (filter: Filter) => {
           <MultiSelect
             label={label}
             placeholder="All"
-            value={
-              filter.value
-                ? (filter.value as string)
-                    .split(";")
-                    .map((v) => v.slice(1).trim())
-                : []
-            }
+            value={filter.value ? (filter.value as string).split(";") : []}
             data={loading ? [] : filterData}
             onChange={(e) => onValueChange(e, filter)}
             onDropdownOpen={getData}
@@ -181,17 +195,17 @@ export const useFilter = () => {
     }
   };
 
-  const trimValueByOperator = (value: string | number, operator: string) => {
-    const trimmedValue = value.toString().trim();
+  const trimValueByOperator = (value: string, operator: string) => {
+    const trimmedValue = value.trim();
     switch (operator) {
       case "contains":
         return trimmedValue.startsWith("%") && trimmedValue.endsWith("%")
           ? trimmedValue.slice(1, -1)
           : trimmedValue;
       case "startswith":
-        return trimmedValue.slice(1);
+        return trimmedValue.slice(0,-1);
       case "endswith":
-        return trimmedValue.slice(0, -1);
+        return trimmedValue.slice(1);
       case "equals":
         return trimmedValue.slice(1);
       case "greaterthan":
@@ -213,8 +227,8 @@ export const useFilter = () => {
     const trimmedValue = value.trim();
     const operatorPatterns: { [key: string]: RegExp } = {
       contains: /^%.*%$/,
-      startswith: /^%[^%]+$/,
-      endswith: /^[^%]+%$/,
+      startswith: /^[^%]+%$/,
+      endswith: /^%[^%]+$/,
       equals: /^=/,
       notequals: /^!=/,
       greaterthanorequal: />=/,
@@ -232,7 +246,7 @@ export const useFilter = () => {
   };
 
   const processFilterValues = (filter: AppliedFilter) => {
-    const filterValue = filter.value.toString().trim() as string;
+    const filterValue = filter.value.toString().trim();
     const dataType =
       gridColumns.find((c) => c.dataField === filter.dataField)?.dataType ||
       "string";
@@ -266,7 +280,12 @@ export const useFilter = () => {
   };
 
   const buildQueryFilters = (): QueryFilter[] => {
-    const activeFilters = filters.filter((filter) => filter.value !== null);
+    const activeFilters = filters.filter(
+      (filter) =>
+        filter.value !== "" &&
+        filter.value !== null &&
+        filter.value !== undefined
+    );
     let queryFilters: QueryFilter[] = [];
 
     activeFilters.forEach((filter) => {
@@ -275,7 +294,7 @@ export const useFilter = () => {
 
       const processedFilters = processFilterValues({
         dataField: column.dataField,
-        value: filter.value as string,
+        value: getFinalValue(filter.value as string, filter.type),
       });
 
       if (Array.isArray(processedFilters)) {

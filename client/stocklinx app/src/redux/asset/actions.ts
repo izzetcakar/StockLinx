@@ -1,3 +1,4 @@
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 import { IAsset } from "../../interfaces/serverInterfaces";
 import { assetConst } from "./constant";
 import {
@@ -39,6 +40,9 @@ import {
   CheckOutAssetFailure,
   AssetCheckOutPayload,
   AssetCheckInPayload,
+  AssetFilterRequest,
+  AssetFilterSuccess,
+  AssetFilterFailure,
 } from "./type";
 
 //GET
@@ -165,6 +169,18 @@ const checkOutFailure = (): CheckOutAssetFailure => ({
   type: assetConst.CHECK_OUT_ASSET_FAILURE,
 });
 
+const filter = (payload: QueryFilter[]): AssetFilterRequest => ({
+  type: assetConst.ASSET_FILTER_REQUEST,
+  payload,
+});
+const filterSuccess = (payload: AssetsPayload): AssetFilterSuccess => ({
+  type: assetConst.ASSET_FILTER_SUCCESS,
+  payload,
+});
+const filterFailure = (): AssetFilterFailure => ({
+  type: assetConst.ASSET_FILTER_FAILURE,
+});
+
 //CLIENT ACTIONS
 const setAsset = (payload: IAsset | null): SetAsset => ({
   type: assetConst.SET_ASSET,
@@ -209,6 +225,9 @@ export const assetActions = {
   checkOut,
   checkOutSuccess,
   checkOutFailure,
+  filter,
+  filterSuccess,
+  filterFailure,
   setAsset,
   clearAsset,
   setAssets,

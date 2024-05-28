@@ -1,6 +1,9 @@
-import { AssetCheckInDto, AssetCheckOutDto } from "../../interfaces/dtos";
-import { IAsset } from "../../interfaces/serverInterfaces";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
+import { AssetCheckInDto, AssetCheckOutDto } from "@interfaces/dtos";
+import { IAsset } from "@interfaces/serverInterfaces";
 import { request } from "../../server/api";
+import { getQueryStringByFilters } from "@/utils/filterUtilts";
+
 const requestUrl = "Asset/";
 
 const getAll = () => {
@@ -60,6 +63,13 @@ const checkOut = (checkOutDto: AssetCheckOutDto) => {
     queryData: checkOutDto,
   });
 };
+const filter = (queryFilters: QueryFilter[]) => {
+  return request<IAsset>({
+    requestUrl: requestUrl + "filter",
+    apiType: "get",
+    params: { filter: getQueryStringByFilters(queryFilters) },
+  });
+};
 
 export const assetRequests = {
   getAll,
@@ -71,4 +81,5 @@ export const assetRequests = {
   removeRange,
   checkIn,
   checkOut,
+  filter,
 };
