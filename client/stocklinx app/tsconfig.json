@@ -16,9 +16,10 @@
       "@interfaces/*": ["./src/interfaces/*"],
       "@modals": ["./src/modals/modals.tsx"],
       "@notifications": ["./src/notifications/notification.tsx*"],
-      "@functions/*": ["./src/functions/*"],
+      "@functions/*": ["src/utils/*"],
       "@request": ["./src/server/api.ts"],
-      "@style": ["./src/base.scss*"]
+      "@style": ["./src/base.scss*"],
+      "@interfaces": ["./src/interfaces/*"],
     },
 
     /* Bundler mode */
