@@ -1,4 +1,4 @@
-import { checkEmpty } from "./functions/checkEmpty";
+import { checkEmpty } from "./utils/checkEmpty";
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "./redux/rootReducer";

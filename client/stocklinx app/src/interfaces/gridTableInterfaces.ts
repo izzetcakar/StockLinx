@@ -36,7 +36,7 @@ export enum FilterType {
 export interface Filter {
   columnId: string;
   type: FilterType;
-  value: string | number | boolean | null;
+  value: string | null;
 }
 export interface AppliedFilter {
   dataField: string;
@@ -79,7 +79,7 @@ export interface GridtableProps {
   onRowRemove?: (id: string) => void;
   onRowRemoveRange?: (ids: string[]) => void;
   onExpandData?: (skip: number, top: number) => void;
-  onApplyFilters?: () => QueryFilter[];
+  onApplyFilters?: (filters: QueryFilter[]) => void;
   excelColumns?: ExcelColumn[];
   enableToolbar?: boolean;
   enableEditActions?: boolean;

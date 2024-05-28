@@ -52,6 +52,7 @@ const Asset = () => {
           dispatch(assetActions.removeRange({ ids: ids }))
         }
         excelColumns={useColumns().excelColumns}
+        onApplyFilters={(filters) => dispatch(assetActions.filter(filters))}
         enableToolbar
         enableEditActions
         enableSelectActions

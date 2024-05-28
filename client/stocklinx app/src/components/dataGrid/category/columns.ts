@@ -1,4 +1,4 @@
-import { BaseColumn } from "../../gridTable/interfaces/interfaces";
+import { BaseColumn } from "@interfaces/gridTableInterfaces";
 import "../customDatagrid.scss";
 
 export const useColumns = () => {

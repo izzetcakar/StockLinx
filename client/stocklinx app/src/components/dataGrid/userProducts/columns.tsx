@@ -1,4 +1,4 @@
-import { BaseColumn } from "../../gridTable/interfaces/interfaces";
+import { BaseColumn } from "@interfaces/gridTableInterfaces";
 import { Anchor } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import { UserProductDto } from "../../../interfaces/dtos";

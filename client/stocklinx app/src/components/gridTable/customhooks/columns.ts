@@ -1,4 +1,4 @@
-import { BaseColumn } from "../interfaces/interfaces";
+import { BaseColumn } from "@interfaces/gridTableInterfaces";
 import { useGridTableContext } from "../context/GenericStateContext";
 import uuid4 from "uuid4";
 import { useFilter } from "./filter";

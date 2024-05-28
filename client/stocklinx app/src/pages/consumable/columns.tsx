@@ -3,7 +3,7 @@ import { RootState } from "../../redux/rootReducer";
 import {
   BaseColumn,
   ExcelColumn,
-} from "../../components/gridTable/interfaces/interfaces";
+} from "@interfaces/gridTableInterfaces";
 import {
   CategoryType,
   IConsumable,

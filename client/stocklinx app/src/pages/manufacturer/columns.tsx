@@ -2,10 +2,10 @@ import { useNavigate } from "react-router-dom";
 import {
   BaseColumn,
   ExcelColumn,
-} from "../../components/gridTable/interfaces/interfaces";
+} from "@interfaces/gridTableInterfaces";
 import { IManufacturer } from "../../interfaces/serverInterfaces";
 import { Anchor, Image } from "@mantine/core";
-import { getImage } from "../../functions/Image";
+import { getImage } from "../../utils/Image";
 
 export const useColumns = () => {
   const navigate = useNavigate();

@@ -2,7 +2,7 @@ import { Anchor } from "@mantine/core";
 import {
   BaseColumn,
   ExcelColumn,
-} from "../../components/gridTable/interfaces/interfaces";
+} from "@interfaces/gridTableInterfaces";
 import { useNavigate } from "react-router-dom";
 import { ILocation } from "../../interfaces/serverInterfaces";
 

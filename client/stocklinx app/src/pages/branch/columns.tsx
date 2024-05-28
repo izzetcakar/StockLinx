@@ -2,7 +2,7 @@ import { Anchor } from "@mantine/core";
 import {
   BaseColumn,
   ExcelColumn,
-} from "../../components/gridTable/interfaces/interfaces";
+} from "@interfaces/gridTableInterfaces";
 import { RootState } from "../../redux/rootReducer";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";

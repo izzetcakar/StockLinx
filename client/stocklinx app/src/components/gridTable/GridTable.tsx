@@ -3,7 +3,7 @@ import {
   GenericStateProvider,
   useGridTableContext,
 } from "./context/GenericStateContext";
-import { GridtableProps, GridtableRef } from "./interfaces/interfaces";
+import { GridtableProps, GridtableRef } from "@interfaces/gridTableInterfaces";
 import GridTableContent from "./GridTableContent";
 
 const GridTable: React.ForwardRefRenderFunction<

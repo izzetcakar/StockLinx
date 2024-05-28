@@ -13,7 +13,7 @@ import icon_group from "../../assets/icon_group.png";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { userActions } from "../../redux/user/actions";
-import { checkEmpty } from "../../functions/checkEmpty";
+import { checkEmpty } from "../../utils/checkEmpty";
 
 interface NavigationSubItem {
   title: string;

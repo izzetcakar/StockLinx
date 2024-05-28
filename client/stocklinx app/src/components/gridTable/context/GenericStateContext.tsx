@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { createContext } from "react";
-import { Column, Filter } from "../interfaces/interfaces";
+import { Column, Filter } from "@interfaces/gridTableInterfaces";
 
 interface GridTableContextProps {
   visibleColumns: Column[];

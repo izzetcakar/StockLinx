@@ -1,9 +1,9 @@
 import { IProductStatus, ProductStatusType } from "../../interfaces/serverInterfaces";
-import { createDataFromEnum } from "../../functions/createDataFromEnum";
+import { createDataFromEnum } from "../../utils/createDataFromEnum";
 import {
   BaseColumn,
   ExcelColumn,
-} from "../../components/gridTable/interfaces/interfaces";
+} from "@interfaces/gridTableInterfaces";
 import { useNavigate } from "react-router-dom";
 import { Anchor } from "@mantine/core";
 

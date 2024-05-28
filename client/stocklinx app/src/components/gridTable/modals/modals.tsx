@@ -1,5 +1,5 @@
 import { modals } from "@mantine/modals";
-import { BaseColumn, RowError } from "../interfaces/interfaces";
+import { BaseColumn, RowError } from "@interfaces/gridTableInterfaces";
 import ExcelTable from "../excel/ExcelTable";
 import { Text } from "@mantine/core";
 

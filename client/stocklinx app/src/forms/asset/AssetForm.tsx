@@ -20,7 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { assetActions } from "../../redux/asset/actions";
 import { useInitial } from "./useInitial";
-import { toBase64 } from "../../functions/Image";
+import { toBase64 } from "../../utils/Image";
 import { openNotificationError } from "../../notification/Notification";
 import base_asset from "../../assets/baseProductImages/base_asset.jpg";
 import FormSelect from "../mantine/FormSelect";

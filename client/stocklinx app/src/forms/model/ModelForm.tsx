@@ -24,7 +24,7 @@ import { RootState } from "../../redux/rootReducer";
 import { DateInput } from "@mantine/dates";
 import { modelFieldDataActions } from "../../redux/modelFieldData/actions";
 import { useInitial } from "./useInitial";
-import { toBase64 } from "../../functions/Image";
+import { toBase64 } from "../../utils/Image";
 import FormSelect from "../mantine/FormSelect";
 interface ModelFormProps {
   model?: IModel;

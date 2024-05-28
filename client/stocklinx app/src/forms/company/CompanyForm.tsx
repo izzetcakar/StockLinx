@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { companyActions } from "../../redux/company/actions";
 import { RootState } from "../../redux/rootReducer";
 import { useInitial } from "./useInitial";
-import { toBase64 } from "../../functions/Image";
+import { toBase64 } from "../../utils/Image";
 import FormSelect from "../mantine/FormSelect";
 interface CompanyFormProps {
   company?: ICompany;

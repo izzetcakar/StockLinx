@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import EditComponent from "./edit/EditComponent";
 import TableToolbar from "./tableToolbar/TableToolbar";
-import { GridtableProps, QueryFilter } from "./interfaces/interfaces";
+import { GridtableProps, QueryFilter } from "@interfaces/gridTableInterfaces";
 import { Checkbox } from "@mantine/core";
 import { useSelectRow } from "./customhooks/selectRow";
 import { useCell } from "./customhooks/cell";

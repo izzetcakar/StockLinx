@@ -1,4 +1,4 @@
-import { Column, LookupData } from "../interfaces/interfaces";
+import { Column, LookupData } from "@interfaces/gridTableInterfaces";
 
 export const useCell = () => {
   const getLookupValue = (value: any, data: LookupData[]) => {

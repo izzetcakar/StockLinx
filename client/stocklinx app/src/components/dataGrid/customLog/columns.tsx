@@ -1,4 +1,4 @@
-import { BaseColumn } from "../../gridTable/interfaces/interfaces";
+import { BaseColumn } from "@interfaces/gridTableInterfaces";
 import icon_delete from "../../../assets/customLog/Delete.png";
 import icon_update from "../../../assets/customLog/Update.png";
 import icon_create from "../../../assets/customLog/Create.png";

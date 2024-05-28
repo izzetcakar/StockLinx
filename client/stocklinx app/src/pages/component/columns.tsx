@@ -3,7 +3,7 @@ import { RootState } from "../../redux/rootReducer";
 import {
   BaseColumn,
   ExcelColumn,
-} from "../../components/gridTable/interfaces/interfaces";
+} from "@interfaces/gridTableInterfaces";
 import { useNavigate } from "react-router-dom";
 import { Anchor, Button } from "@mantine/core";
 import { IAssetProduct, IComponent } from "../../interfaces/serverInterfaces";

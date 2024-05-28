@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
-import { BaseColumn } from "../../components/gridTable/interfaces/interfaces";
+import { BaseColumn } from "@interfaces/gridTableInterfaces";
 import { IUser } from "../../interfaces/serverInterfaces";
 import { useNavigate } from "react-router-dom";
 import { Anchor } from "@mantine/core";

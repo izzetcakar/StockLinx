@@ -2,7 +2,7 @@ import uuid4 from "uuid4";
 import { IAsset } from "../../interfaces/serverInterfaces";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
-import { getImage } from "../../functions/Image";
+import { getImage } from "../../utils/Image";
 
 export const useInitial = (asset?: IAsset, create?: boolean) => {
   const branch = useSelector((state: RootState) => state.branch.branch);

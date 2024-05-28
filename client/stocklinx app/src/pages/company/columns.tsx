@@ -2,12 +2,12 @@ import { useSelector } from "react-redux";
 import {
   BaseColumn,
   ExcelColumn,
-} from "../../components/gridTable/interfaces/interfaces";
+} from "@interfaces/gridTableInterfaces";
 import { RootState } from "../../redux/rootReducer";
 import { Anchor, Image } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import { ICompany } from "../../interfaces/serverInterfaces";
-import { getImage } from "../../functions/Image";
+import { getImage } from "../../utils/Image";
 
 export const useColumns = () => {
   const navigate = useNavigate();

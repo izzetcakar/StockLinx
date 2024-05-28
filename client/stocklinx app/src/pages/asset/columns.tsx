@@ -1,13 +1,10 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
-import {
-  ExcelColumn,
-  BaseColumn,
-} from "../../components/gridTable/interfaces/interfaces";
+import { ExcelColumn, BaseColumn } from "@interfaces/gridTableInterfaces";
 import { Anchor, Button, Image } from "@mantine/core";
 import { IAsset, IUserProduct } from "../../interfaces/serverInterfaces";
 import { useNavigate } from "react-router-dom";
-import { getImage } from "../../functions/Image";
+import { getImage } from "../../utils/Image";
 import {
   openAssetCheckInModal,
   openAssetCheckOutModal,

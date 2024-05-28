@@ -4,7 +4,7 @@ import {
   ImportedExcelData,
   QueryFilter,
   RowError,
-} from "../interfaces/interfaces";
+} from "@interfaces/gridTableInterfaces";
 import icon_plus from "../../.././assets/icon_plus.png";
 import icon_refresh from "../../.././assets/icon_refresh.png";
 import icon_trash from "../../.././assets/icon_trash.png";

@@ -3,11 +3,11 @@ import { RootState } from "../../redux/rootReducer";
 import {
   BaseColumn,
   ExcelColumn,
-} from "../../components/gridTable/interfaces/interfaces";
+} from "@interfaces/gridTableInterfaces";
 import { useNavigate } from "react-router-dom";
 import { Anchor, Image } from "@mantine/core";
 import { ISupplier } from "../../interfaces/serverInterfaces";
-import { getImage } from "../../functions/Image";
+import { getImage } from "../../utils/Image";
 
 export const useColumns = () => {
   const navigate = useNavigate();

@@ -1,5 +1,5 @@
 import icon_barcode from "../../../assets/icon_barcode.png";
-import { BaseColumn } from "../../gridTable/interfaces/interfaces";
+import { BaseColumn } from "@interfaces/gridTableInterfaces";
 
 export const useColumns = () => {
   const columns: BaseColumn[] = [

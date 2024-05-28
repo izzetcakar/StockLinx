@@ -1,6 +1,6 @@
 import React from "react";
 import Gridtable from "../GridTableContent";
-import { BaseColumn, RowError } from "../interfaces/interfaces";
+import { BaseColumn, RowError } from "@interfaces/gridTableInterfaces";
 
 interface ExcelTableProps {
   data: object[];

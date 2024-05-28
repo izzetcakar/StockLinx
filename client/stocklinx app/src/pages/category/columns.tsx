@@ -2,10 +2,10 @@ import { CategoryType, ICategory } from "../../interfaces/serverInterfaces";
 import {
   BaseColumn,
   ExcelColumn,
-} from "../../components/gridTable/interfaces/interfaces";
+} from "@interfaces/gridTableInterfaces";
 import { Anchor } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
-import { createDataFromEnum } from "../../functions/createDataFromEnum";
+import { createDataFromEnum } from "../../utils/createDataFromEnum";
 
 export const useColumns = () => {
   const navigate = useNavigate();

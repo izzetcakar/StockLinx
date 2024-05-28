@@ -1,9 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
-import {
-  ExcelColumn,
-  BaseColumn,
-} from "../../components/gridTable/interfaces/interfaces";
+import { ExcelColumn, BaseColumn } from "@interfaces/gridTableInterfaces";
 import {
   CategoryType,
   IAccessory,
@@ -12,7 +9,7 @@ import {
 import { Anchor, Button, Image } from "@mantine/core";
 import { accessoryActions } from "../../redux/accessory/actions";
 import { useNavigate } from "react-router-dom";
-import { getImage } from "../../functions/Image";
+import { getImage } from "../../utils/Image";
 import { closeModal, openCheckInModal } from "../../modals/modals";
 import base_accessory from "../../assets/baseProductImages/base_accessory.png";
 import { initialUserProduct } from "../../initials/initials";

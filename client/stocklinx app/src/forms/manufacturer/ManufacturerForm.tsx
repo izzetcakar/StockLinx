@@ -13,7 +13,7 @@ import { IManufacturer } from "../../interfaces/serverInterfaces";
 import { useDispatch } from "react-redux";
 import { manufacturerActions } from "../../redux/manufacturer/actions";
 import { useInitial } from "./useInitial";
-import { toBase64 } from "../../functions/Image";
+import { toBase64 } from "../../utils/Image";
 
 interface ManufacturerFormProps {
   manufacturer?: IManufacturer;

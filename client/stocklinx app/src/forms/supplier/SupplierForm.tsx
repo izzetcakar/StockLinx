@@ -15,7 +15,7 @@ import { RootState } from "../../redux/rootReducer";
 import { useDispatch } from "react-redux";
 import { supplierActions } from "../../redux/supplier/actions";
 import { useInitial } from "./useInitial";
-import { toBase64 } from "../../functions/Image";
+import { toBase64 } from "../../utils/Image";
 import FormSelect from "../mantine/FormSelect";
 
 interface SupplierFormProps {
