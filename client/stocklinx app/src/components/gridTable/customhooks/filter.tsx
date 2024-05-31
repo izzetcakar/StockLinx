@@ -170,7 +170,7 @@ export const useFilter = () => {
     }
   };
 
-  const applyFiltersToAllColumns = (columns: Column[]) => {
+  const setBaseFiltersByColumns = (columns: Column[]) => {
     const newFilters: Filter[] = columns.map(
       (column) =>
         ({
@@ -308,7 +308,7 @@ export const useFilter = () => {
   };
 
   return {
-    applyFiltersToAllColumns,
+    setBaseFiltersByColumns,
     buildQueryFilters,
   };
 };

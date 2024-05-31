@@ -1,13 +1,15 @@
 import { BaseColumn } from "@interfaces/gridTableInterfaces";
 import { useGridTableContext } from "../context/GenericStateContext";
-import uuid4 from "uuid4";
 import { useFilter } from "./filter";
+import { useCallback } from "react";
+import uuid4 from "uuid4";
 
 export const useColumns = (columns: BaseColumn[]) => {
   const { gridColumns, setGridColumns } = useGridTableContext();
-  const { applyFiltersToAllColumns } = useFilter();
+  const { setBaseFiltersByColumns } = useFilter();
 
-  const onBaseColumnsChange = () => {
+  const onBaseColumnsChange = useCallback(() => {
+    if (gridColumns.length === columns.length) return;
     const newColumns = columns.map((column) => {
       return {
         ...column,
@@ -15,8 +17,8 @@ export const useColumns = (columns: BaseColumn[]) => {
       };
     });
     setGridColumns(newColumns);
-    applyFiltersToAllColumns(newColumns);
-  };
+    setBaseFiltersByColumns(newColumns);
+  }, [columns]);
 
   const onColumnVisibleChange = (columnId: string) => {
     const newColumns = gridColumns.map((column) => {

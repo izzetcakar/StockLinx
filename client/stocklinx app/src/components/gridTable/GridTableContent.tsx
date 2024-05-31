@@ -21,7 +21,7 @@ const GridtableContent: React.FC<GridtableProps> = ({
   onRowRemoveRange = (ids: string[]) => console.log(ids),
   onExpandData,
   onApplyFilters = (queryFilters: QueryFilter[]) => console.log(queryFilters),
-  itemKey,
+  itemKey = "id",
   excelColumns,
   enableToolbar = false,
   enableEditActions = false,

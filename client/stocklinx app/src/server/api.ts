@@ -1,5 +1,6 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { ApiResponse } from "../interfaces/clientInterfaces";
+import { LookupData } from "@/interfaces/gridTableInterfaces";
 
 const BASE_URL: string = import.meta.env.VITE_REACT_APP_BASE_URL as string;
 
@@ -22,6 +23,63 @@ export interface ClientApiResponse<T> {
   success: boolean;
   status: number;
 }
+export interface ClientLookupResponse<T> {
+  data: T[];
+  message: string;
+  success: boolean;
+  status: number;
+}
+
+export const lookupRequest = async <T>({
+  requestUrl,
+  valueKey,
+  labelKeys,
+}: {
+  requestUrl: string;
+  valueKey: string;
+  labelKeys: string[];
+}): Promise<LookupData[]> => {
+  let data: LookupData[] = [];
+  const axiosConfig: AxiosRequestConfig = {
+    headers: {
+      "Access-Control-Allow-Private-Network": "true",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Credentials": "true",
+      "Access-Control-Allow__headers":
+        "origin, content-type, accept, authorization",
+      "Access-Control-Allow-Methods": "GET,POST,DELETE,PUT",
+      "Content-Type": "application/json; charset=utf-8",
+      Authorization: `Bearer ${getToken()}`,
+    },
+  };
+  try {
+    const response = await axios.get<ClientLookupResponse<T>>(
+      `${BASE_URL}${requestUrl}`,
+      axiosConfig
+    );
+    let backendResponse: { [key: string]: any }[] = response.data.data as {
+      [key: string]: any;
+    }[];
+    backendResponse = backendResponse.filter(
+      (item) => item[valueKey] !== undefined
+    );
+    backendResponse = backendResponse.filter((item) =>
+      labelKeys.every((key) => item[key] !== undefined)
+    );
+    data = backendResponse.map((item) => {
+      return {
+        value: [valueKey],
+        label: labelKeys.map((key) => item[key]).join("-"),
+      };
+    });
+  } catch (error: any) {
+    const message: string =
+      (error.response?.data.error as string) ?? "Network Error";
+    console.log("Error in lookupRequest: ", message);
+    return [];
+  }
+  return data;
+};
 
 export const request = async <T>({
   requestUrl,
