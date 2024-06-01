@@ -10,7 +10,7 @@ import {
   openAssetCheckOutModal,
 } from "../../modals/modals";
 import base_asset from "../../assets/baseProductImages/base_asset.jpg";
-import axios from "axios";
+import { lookupRequests } from "@/server/lookupRequests";
 
 export const useColumns = () => {
   const navigate = useNavigate();
@@ -40,17 +40,6 @@ export const useColumns = () => {
       userProductId: userProduct.id,
       productStatusId: asset.productStatusId,
       notes: userProduct.notes,
-    });
-  };
-
-  const getTest = async () => {
-    const res = await axios.get("https://pokeapi.co/api/v2/pokemon?limit=10");
-    const data = res.data.results;
-    return data.map((item: any) => {
-      return {
-        value: item.url,
-        label: item.name,
-      };
     });
   };
 
@@ -117,6 +106,7 @@ export const useColumns = () => {
           value: model.id,
           label: model.name,
         })),
+        dataSource: lookupRequests().model,
       },
       dataType: "string",
     },
@@ -128,7 +118,7 @@ export const useColumns = () => {
           value: productStatus.id,
           label: productStatus.name,
         })),
-        dataSource: getTest,
+        dataSource: lookupRequests().productStatus,
       },
       dataType: "string",
     },
@@ -145,6 +135,13 @@ export const useColumns = () => {
           if (user) return user.firstName + " " + user.lastName;
         }
         return null;
+      },
+      lookup: {
+        data: users.map((user) => ({
+          value: user.id,
+          label: user.firstName + " " + user.lastName,
+        })),
+        dataSource: lookupRequests().user,
       },
     },
     {
@@ -206,6 +203,7 @@ export const useColumns = () => {
           value: supplier.id,
           label: supplier.name,
         })),
+        dataSource: lookupRequests().supplier,
       },
     },
   ];

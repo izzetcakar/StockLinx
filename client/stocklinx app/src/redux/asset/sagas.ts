@@ -179,6 +179,10 @@ function* checkOutAssetSaga(action: CheckOutAssetRequest) {
 }
 
 function* filterAssetsSaga(action: AssetFilterRequest) {
+  if(action.payload.length === 0) {
+    yield put(assetActions.getAll());
+    return;
+  }
   yield put(genericActions.increaseLoading());
   try {
     const { data }: IResponse = yield call(

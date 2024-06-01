@@ -68,7 +68,7 @@ export const lookupRequest = async <T>({
     );
     data = backendResponse.map((item) => {
       return {
-        value: [valueKey],
+        value: item[valueKey],
         label: labelKeys.map((key) => item[key]).join("-"),
       };
     });

@@ -1,12 +1,27 @@
-import { IAsset } from "@/interfaces/serverInterfaces";
+import {
+  IAccessory,
+  IAsset,
+  IBranch,
+  ICategory,
+  ICompany,
+  IComponent,
+  IDepartment,
+  ILicense,
+  ILocation,
+  IManufacturer,
+  IModel,
+  IProductStatus,
+  ISupplier,
+  IUser,
+} from "@interfaces/serverInterfaces";
 import { lookupRequest } from "./api";
 
 export const lookupRequests = () => {
   const accessory = async () => {
-    return await lookupRequest<IAsset>({
+    return await lookupRequest<IAccessory>({
       labelKeys: ["tag", "name"],
       valueKey: "id",
-      requestUrl: "/accessory",
+      requestUrl: "accessory",
     });
   };
 
@@ -14,103 +29,103 @@ export const lookupRequests = () => {
     return await lookupRequest<IAsset>({
       labelKeys: ["tag", "name"],
       valueKey: "id",
-      requestUrl: "/asset",
+      requestUrl: "asset",
     });
   };
 
   const branch = async () => {
-    return await lookupRequest<IAsset>({
+    return await lookupRequest<IBranch>({
       labelKeys: ["name"],
       valueKey: "id",
-      requestUrl: "/branch",
+      requestUrl: "branch",
     });
   };
 
   const category = async () => {
-    return await lookupRequest<IAsset>({
+    return await lookupRequest<ICategory>({
       labelKeys: ["name"],
       valueKey: "id",
-      requestUrl: "/category",
+      requestUrl: "category",
     });
   };
 
   const company = async () => {
-    return await lookupRequest<IAsset>({
+    return await lookupRequest<ICompany>({
       labelKeys: ["name"],
       valueKey: "id",
-      requestUrl: "/company",
+      requestUrl: "company",
     });
   };
 
   const component = async () => {
-    return await lookupRequest<IAsset>({
+    return await lookupRequest<IComponent>({
       labelKeys: ["tag", "name"],
       valueKey: "id",
-      requestUrl: "/component",
+      requestUrl: "component",
     });
   };
 
   const department = async () => {
-    return await lookupRequest<IAsset>({
+    return await lookupRequest<IDepartment>({
       labelKeys: ["name"],
       valueKey: "id",
-      requestUrl: "/department",
+      requestUrl: "department",
     });
   };
 
   const license = async () => {
-    return await lookupRequest<IAsset>({
+    return await lookupRequest<ILicense>({
       labelKeys: ["tag", "name"],
       valueKey: "id",
-      requestUrl: "/license",
+      requestUrl: "license",
     });
   };
 
   const location = async () => {
-    return await lookupRequest<IAsset>({
+    return await lookupRequest<ILocation>({
       labelKeys: ["name"],
       valueKey: "id",
-      requestUrl: "/location",
+      requestUrl: "location",
     });
   };
 
   const manufacturer = async () => {
-    return await lookupRequest<IAsset>({
+    return await lookupRequest<IManufacturer>({
       labelKeys: ["name"],
       valueKey: "id",
-      requestUrl: "/manufacturer",
+      requestUrl: "manufacturer",
     });
   };
 
   const model = async () => {
-    return await lookupRequest<IAsset>({
+    return await lookupRequest<IModel>({
       labelKeys: ["name"],
       valueKey: "id",
-      requestUrl: "/model",
+      requestUrl: "model",
     });
   };
 
-  const status = async () => {
-    return await lookupRequest<IAsset>({
+  const productStatus = async () => {
+    return await lookupRequest<IProductStatus>({
       labelKeys: ["name"],
       valueKey: "id",
-      requestUrl: "/productStatus",
+      requestUrl: "productStatus",
     });
   };
 
   const supplier = async () => {
-    return await lookupRequest<IAsset>({
+    return await lookupRequest<ISupplier>({
       labelKeys: ["name"],
       valueKey: "id",
-      requestUrl: "/supplier",
+      requestUrl: "supplier",
     });
   };
 
   const user = async () => {
-    return await lookupRequest<IAsset>({
+    return await lookupRequest<IUser>({
       labelKeys: ["firstName", "lastName"],
       valueKey: "id",
-      requestUrl: "/user",
+      requestUrl: "user",
     });
   };
 
@@ -126,7 +141,7 @@ export const lookupRequests = () => {
     location,
     manufacturer,
     model,
-    status,
+    productStatus,
     supplier,
     user,
   };

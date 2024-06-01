@@ -1,11 +1,12 @@
 import { Column, LookupData } from "@interfaces/gridTableInterfaces";
+import { useCallback } from "react";
 
 export const useCell = () => {
   const getLookupValue = (value: any, data: LookupData[]) => {
     return data.find((item: LookupData) => item.value === value)?.label || "";
   };
 
-  const renderCell = (obj: object, column: Column) => {
+  const renderCell = useCallback((obj: object, column: Column) => {
     const value = (
       obj as {
         [key: string | number]: any;
@@ -19,7 +20,7 @@ export const useCell = () => {
     if (column.renderComponent) {
       return column.renderComponent(obj);
     }
-    if (column.lookup) {
+    if (column.lookup?.data) {
       return getLookupValue(value, column.lookup.data);
     }
     if (!value) return "";
@@ -37,7 +38,7 @@ export const useCell = () => {
       return new Date(value).toLocaleDateString();
     }
     return value;
-  };
+  }, []);
 
   const getCellValue = (obj: object, column: Column) => {
     let value = (

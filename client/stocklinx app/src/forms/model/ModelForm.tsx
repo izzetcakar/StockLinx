@@ -127,7 +127,7 @@ const ModelForm: React.FC<ModelFormProps> = ({ model, create }) => {
   };
 
   const getBooleanValue = (value: string) => {
-    if (value.toLowerCase() === "true") return true;
+    if (value === "true") return true;
     else return false;
   };
 

@@ -33,7 +33,7 @@ const FormSelect: React.FC<FormSelectProps> = ({
             },
           }
         : {})}
-      nothingFoundMessage={`No ${label.toLowerCase()} found`}
+      nothingFoundMessage={`No ${label} found`}
       comboboxProps={{
         position: "bottom",
         middlewares: { flip: true, shift: false },
