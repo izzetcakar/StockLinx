@@ -8,7 +8,6 @@ namespace StockLinx.Core.Entities
             {
                 throw new Exception("Tag is required");
             }
-            //remove spaces at start and end
             return tag.Trim();
         }
 

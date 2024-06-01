@@ -10,7 +10,5 @@ namespace StockLinx.Core.Repositories
         Task<List<ComponentDto>> GetAllDtosAsync();
         Task<bool> CanDeleteAsync(Guid id);
         Task<int> GetAvaliableQuantityAsync(Component entity);
-        Task CheckTagExistAsync(string tag);
-        Task CheckTagExistAsync(List<string> tags);
     }
 }

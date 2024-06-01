@@ -9,7 +9,5 @@ namespace StockLinx.Core.Repositories
         List<AssetDto> GetDtos(List<Asset> entities);
         Task<List<AssetDto>> GetAllDtosAsync();
         Task<bool> CanDeleteAsync(Guid id);
-        Task CheckTagExistAsync(string tag);
-        Task CheckTagExistAsync(List<string> tags);
     }
 }

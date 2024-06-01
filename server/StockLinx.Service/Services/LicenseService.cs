@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
@@ -58,7 +57,7 @@ namespace StockLinx.Service.Services
 
         public async Task<LicenseDto> CreateLicenseAsync(LicenseCreateDto dto)
         {
-            await _licenseRepository.CheckTagExistAsync(dto.Tag);
+            await CheckTagExistAsync(dto.Tag);
             License license = _mapper.Map<License>(dto);
             await _licenseRepository.AddAsync(license);
             await _customLogService.CreateCustomLog("Create", "License", license.Id, license.Name);
@@ -70,7 +69,7 @@ namespace StockLinx.Service.Services
             List<LicenseCreateDto> createDtos
         )
         {
-            await _licenseRepository.CheckTagExistAsync(createDtos.Select(dto => dto.Tag).ToList());
+            await CheckTagExistAsync(createDtos.Select(dto => dto.Tag).ToList());
             List<License> licenses = new List<License>();
             foreach (LicenseCreateDto createDto in createDtos)
             {
@@ -281,6 +280,27 @@ namespace StockLinx.Service.Services
                     break;
             }
             await _unitOfWork.CommitAsync();
+        }
+
+        public async Task CheckTagExistAsync(string tag)
+        {
+            tag = TagUtils.Check(tag);
+            bool isExist = await AnyAsync(d => d.Tag == tag);
+            if (isExist)
+            {
+                throw new Exception($"Tag {tag} already exist.");
+            }
+        }
+
+        public async Task CheckTagExistAsync(List<string> tags)
+        {
+            tags = TagUtils.Check(tags);
+            var existingTags = await Where(d => tags.Contains(d.Tag));
+            if (existingTags.Count() > 0)
+            {
+                var existingTagNames = existingTags.Select(x => x.Tag).ToList();
+                throw new Exception($"Tags {string.Join("\n", existingTagNames)} already exist.");
+            }
         }
     }
 }

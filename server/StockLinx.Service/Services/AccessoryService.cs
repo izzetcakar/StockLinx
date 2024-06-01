@@ -54,7 +54,7 @@ namespace StockLinx.Service.Services
 
         public async Task<AccessoryDto> CreateAccessoryAsync(AccessoryCreateDto dto)
         {
-            await _accessoryRepository.CheckTagExistAsync(dto.Tag);
+            await CheckTagExistAsync(dto.Tag);
             Branch branch = await _branchRepository.GetByIdAsync(dto.BranchId);
             Accessory newAccessory = _mapper.Map<Accessory>(dto);
 
@@ -89,7 +89,7 @@ namespace StockLinx.Service.Services
             List<AccessoryCreateDto> dtos
         )
         {
-            await _accessoryRepository.CheckTagExistAsync(dtos.Select(dto => dto.Tag).ToList());
+            await CheckTagExistAsync(dtos.Select(dto => dto.Tag).ToList());
             Branch branch = await _branchRepository.GetByIdAsync(dtos[0].BranchId);
             List<Accessory> newAccessories = new List<Accessory>();
             foreach (AccessoryCreateDto dto in dtos)
@@ -265,6 +265,27 @@ namespace StockLinx.Service.Services
             }
 
             await _unitOfWork.CommitAsync();
+        }
+
+        public async Task CheckTagExistAsync(string tag)
+        {
+            tag = TagUtils.Check(tag);
+            bool isExist = await AnyAsync(d => d.Tag == tag);
+            if (isExist)
+            {
+                throw new Exception($"Tag {tag} already exist.");
+            }
+        }
+
+        public async Task CheckTagExistAsync(List<string> tags)
+        {
+            tags = TagUtils.Check(tags);
+            var existingTags = await Where(d => tags.Contains(d.Tag));
+            if (existingTags.Count() > 0)
+            {
+                var existingTagNames = existingTags.Select(x => x.Tag).ToList();
+                throw new Exception($"Tags {string.Join("\n", existingTagNames)} already exist.");
+            }
         }
     }
 }

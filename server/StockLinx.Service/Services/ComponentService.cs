@@ -58,7 +58,7 @@ namespace StockLinx.Service.Services
 
         public async Task<ComponentDto> CreateComponentAsync(ComponentCreateDto dto)
         {
-            await _componentRepository.CheckTagExistAsync(dto.Tag);
+            await CheckTagExistAsync(dto.Tag);
             Component component = _mapper.Map<Component>(dto);
             await _componentRepository.AddAsync(component);
             await _customLogService.CreateCustomLog(
@@ -75,7 +75,7 @@ namespace StockLinx.Service.Services
             List<ComponentCreateDto> createDtos
         )
         {
-            await _componentRepository.CheckTagExistAsync(createDtos.Select(x => x.Tag).ToList());
+            await CheckTagExistAsync(createDtos.Select(x => x.Tag).ToList());
             List<Component> components = new List<Component>();
             foreach (ComponentCreateDto createDto in createDtos)
             {
@@ -217,8 +217,28 @@ namespace StockLinx.Service.Services
                     );
                     break;
             }
-
             await _unitOfWork.CommitAsync();
+        }
+
+        public async Task CheckTagExistAsync(string tag)
+        {
+            tag = TagUtils.Check(tag);
+            bool isExist = await AnyAsync(d => d.Tag == tag);
+            if (isExist)
+            {
+                throw new Exception($"Tag {tag} already exist.");
+            }
+        }
+
+        public async Task CheckTagExistAsync(List<string> tags)
+        {
+            tags = TagUtils.Check(tags);
+            var existingTags = await Where(d => tags.Contains(d.Tag));
+            if (existingTags.Count() > 0)
+            {
+                var existingTagNames = existingTags.Select(x => x.Tag).ToList();
+                throw new Exception($"Tags {string.Join("\n", existingTagNames)} already exist.");
+            }
         }
     }
 }

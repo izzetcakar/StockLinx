@@ -56,25 +56,5 @@ namespace StockLinx.Repository.Repositories.EF_Core
             }
             return true;
         }
-
-        public async Task CheckTagExistAsync(string tag)
-        {
-            tag = TagUtils.Check(tag);
-            bool isExist = await dbContext.Assets.AnyAsync(d => d.Tag == tag);
-            if (isExist)
-            {
-                throw new Exception($"Tag {tag} already exist.");
-            }
-        }
-
-        public Task CheckTagExistAsync(List<string> tags)
-        {
-            tags = TagUtils.Check(tags);
-            var existingTags = dbContext
-                .Assets.Where(d => tags.Contains(d.Tag))
-                .Select(d => d.Tag)
-                .ToList();
-            throw new Exception($"Tags {string.Join("\n", existingTags)} already exist.");
-        }
     }
 }

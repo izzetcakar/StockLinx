@@ -17,5 +17,7 @@ namespace StockLinx.Core.Services
         Task DeleteRangeAccessoryAsync(List<Guid> ids);
         Task<UserProduct> CheckInAsync(UserProductCheckInDto checkInDto);
         Task CheckOutAsync(UserProductCheckOutDto checkOutDto);
+        Task CheckTagExistAsync(string tag);
+        Task CheckTagExistAsync(List<string> tags);
     }
 }

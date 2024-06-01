@@ -60,11 +60,11 @@ namespace StockLinx.Service.Services
         {
             if (dto.OverageAssets != null && dto.OverageAssets.Count > 0)
             {
-                await _assetRepository.CheckTagExistAsync(dto.OverageAssets.Select(x => x.Tag).Append(dto.Tag).ToList());
+                await CheckTagExistAsync(dto.OverageAssets.Select(x => x.Tag).Append(dto.Tag).ToList());
             }
             else
             {
-                await _assetRepository.CheckTagExistAsync(dto.Tag);
+                await CheckTagExistAsync(dto.Tag);
             }
             List<Asset> newAssets = new List<Asset>();
             Asset newAsset = _mapper.Map<Asset>(dto);
@@ -96,7 +96,7 @@ namespace StockLinx.Service.Services
                     Asset extraAsset = new Asset()
                     {
                         Id = Guid.NewGuid(),
-                        CreatedDate = DateTime.Now,
+                        CreatedDate = DateTime.UtcNow,
                         UpdatedDate = null,
                         BranchId = branch.Id,
                         ImagePath = newAsset.ImagePath,
@@ -267,6 +267,27 @@ namespace StockLinx.Service.Services
         {
             var result = await _filterService.FilterAsync(filters);
             return _assetRepository.GetDtos(result.ToList());
+        }
+
+        public async Task CheckTagExistAsync(string tag)
+        {
+            tag = TagUtils.Check(tag);
+            bool isExist = await AnyAsync(d => d.Tag == tag);
+            if (isExist)
+            {
+                throw new Exception($"Tag {tag} already exist.");
+            }
+        }
+
+        public async Task CheckTagExistAsync(List<string> tags)
+        {
+            tags = TagUtils.Check(tags);
+            var existingTags = await Where(d => tags.Contains(d.Tag));
+            if (existingTags.Count() > 0)
+            {
+                var existingTagNames = existingTags.Select(x => x.Tag).ToList();
+                throw new Exception($"Tags {string.Join("\n", existingTagNames)} already exist.");
+            }
         }
     }
 }
