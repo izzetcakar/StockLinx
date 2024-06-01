@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Services;
@@ -7,30 +8,21 @@ using System.Text;
 
 namespace StockLinx.Service.Services
 {
-    public class FilterService<T> : DapperContext, IFilterService<T> where T : class
+    public class FilterService<T> : AppDbContext, IFilterService<T> where T : class
     {
-        private readonly DapperContext _context;
-        public FilterService(IConfiguration configuration) : base(configuration)
+        private readonly AppDbContext _context;
+        public FilterService(DbContextOptions options) : base(options)
         {
-            _context = new DapperContext(configuration);
+            _context = new AppDbContext(options);
         }
 
-        public async Task<IEnumerable<T>> FilterAsync(List<Filter> filters)
+        public async Task<IEnumerable<T>> FilterAsync(string filterQuery)
         {
-            var query = new StringBuilder();
-            var parameters = new DynamicParameters();
-            foreach (Filter filter in filters)
-            {
-                query.Append(FilterExpression.BuildQuery(filter));
-                parameters.Add(filter.PropertyName, filter.Value);
-            }
-            string className = FilterExpression.GetTableNameByClass(typeof(T).Name);
-            var sql = $"SELECT * FROM \"{className}\" WHERE 1=1{query}";
-            using (var connection = _context.CreateConnection())
-            {
-                var result = await connection.QueryAsync<T>(sql);
-                return result;
-            }
+            IQueryable<T> query = _context.Set<T>();
+            if (string.IsNullOrEmpty(filterQuery))
+                return await query.ToListAsync();
+            query = query.ApplyFilters(filterQuery);
+            return await query.ToListAsync();
         }
     }
 }

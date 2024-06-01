@@ -263,9 +263,9 @@ namespace StockLinx.Service.Services
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task<List<AssetDto>> Filter(List<Filter> filters)
+        public async Task<List<AssetDto>> Filter(string filter)
         {
-            var result = await _filterService.FilterAsync(filters);
+            var result = await _filterService.FilterAsync(filter);
             return _assetRepository.GetDtos(result.ToList());
         }
 

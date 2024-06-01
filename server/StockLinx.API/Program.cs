@@ -37,7 +37,6 @@ builder.Services.Configure<FormOptions>(o =>
     o.MultipartBodyLengthLimit = int.MaxValue;
     o.MemoryBufferThreshold = int.MaxValue;
 });
-builder.Services.AddSingleton<DapperContext>();
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();

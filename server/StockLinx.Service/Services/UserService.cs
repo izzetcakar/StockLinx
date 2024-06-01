@@ -56,7 +56,7 @@ namespace StockLinx.Service.Services
         {
             if (_httpContextAccessor.HttpContext != null)
             {
-                string idString = _httpContextAccessor.HttpContext.User.FindFirstValue("UserId");
+                string idString = _httpContextAccessor.HttpContext.User.FindFirst("UserId").Value;
                 if (Guid.TryParse(idString, out Guid idGuid))
                 {
                     return idGuid;

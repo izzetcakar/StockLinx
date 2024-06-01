@@ -150,7 +150,7 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                List<AssetDto> result = await _assetService.Filter(FilterExpression.ParseFilterExpression(filter));
+                List<AssetDto> result = await _assetService.Filter(filter);
                 return CreateActionResult(CustomResponseDto<List<AssetDto>>.Success(200, result));
             }
             catch (Exception ex)
