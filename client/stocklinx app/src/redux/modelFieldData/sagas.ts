@@ -1,6 +1,6 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { modelFieldDataActions } from "./actions";
-import { IModelFieldData } from "../../interfaces/serverInterfaces";
+import { IModelFieldData } from "@interfaces/serverInterfaces";
 import { modelFieldDataConst } from "./constant";
 import {
   CreateModelFieldDataRequest,
@@ -15,7 +15,7 @@ import { genericActions } from "../generic/actions";
 import {
   openNotificationError,
   openNotificationSuccess,
-} from "../../notification/Notification";
+} from "@/notification/Notification";
 
 type IResponse = {
   data: IModelFieldData[] | IModelFieldData | null;

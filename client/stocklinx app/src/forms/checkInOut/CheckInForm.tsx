@@ -8,7 +8,7 @@ import {
   SegmentedControl,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { IAssetProduct, IUserProduct } from "../../interfaces/serverInterfaces";
+import { IAssetProduct, IUserProduct } from "@interfaces/serverInterfaces";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import FormSelect from "../mantine/FormSelect";

@@ -1,5 +1,6 @@
-import { IDepartment } from "../../interfaces/serverInterfaces";
+import { IDepartment } from "@interfaces/serverInterfaces";
 import { departmentConst } from "./constant";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 export type DepartmentState = {
   department: IDepartment | null;
@@ -32,6 +33,7 @@ export type FetchDepartmentsSuccess = {
 export type FetchDepartmentsFailure = {
   type: typeof departmentConst.FETCH_DEPARTMENTS_FAILURE;
 };
+
 //GET:/ID
 export type FetchDepartmentRequest = {
   type: typeof departmentConst.FETCH_DEPARTMENT_REQUEST;
@@ -44,6 +46,7 @@ export type FetchDepartmentSuccess = {
 export type FetchDepartmentFailure = {
   type: typeof departmentConst.FETCH_DEPARTMENT_FAILURE;
 };
+
 //POST
 export type CreateDepartmentRequest = {
   type: typeof departmentConst.CREATE_DEPARTMENT_REQUEST;
@@ -56,6 +59,7 @@ export type CreateDepartmentSuccess = {
 export type CreateDepartmentFailure = {
   type: typeof departmentConst.CREATE_DEPARTMENT_FAILURE;
 };
+
 //POST RANGE
 export type CreateRangeDepartmentRequest = {
   type: typeof departmentConst.CREATE_RANGE_DEPARTMENT_REQUEST;
@@ -68,6 +72,7 @@ export type CreateRangeDepartmentSuccess = {
 export type CreateRangeDepartmentFailure = {
   type: typeof departmentConst.CREATE_RANGE_DEPARTMENT_FAILURE;
 };
+
 //PUT
 export type UpdateDepartmentRequest = {
   type: typeof departmentConst.UPDATE_DEPARTMENT_REQUEST;
@@ -80,6 +85,7 @@ export type UpdateDepartmentSuccess = {
 export type UpdateDepartmentFailure = {
   type: typeof departmentConst.UPDATE_DEPARTMENT_FAILURE;
 };
+
 //REMOVE
 export type RemoveDepartmentRequest = {
   type: typeof departmentConst.REMOVE_DEPARTMENT_REQUEST;
@@ -92,6 +98,7 @@ export type RemoveDepartmentSuccess = {
 export type RemoveDepartmentFailure = {
   type: typeof departmentConst.REMOVE_DEPARTMENT_FAILURE;
 };
+
 //REMOVE RANGE
 export type RemoveRangeDepartmentRequest = {
   type: typeof departmentConst.REMOVE_RANGE_DEPARTMENT_REQUEST;
@@ -103,6 +110,19 @@ export type RemoveRangeDepartmentSuccess = {
 };
 export type RemoveRangeDepartmentFailure = {
   type: typeof departmentConst.REMOVE_RANGE_DEPARTMENT_FAILURE;
+};
+
+//FILTER
+export type FilterDepartmentsRequest = {
+  type: typeof departmentConst.FILTER_DEPARTMENTS_REQUEST;
+  payload: QueryFilter[];
+};
+export type FilterDepartmentsSuccess = {
+  type: typeof departmentConst.FILTER_DEPARTMENTS_SUCCESS;
+  payload: DepartmentsPayload;
+};
+export type FilterDepartmentsFailure = {
+  type: typeof departmentConst.FILTER_DEPARTMENTS_FAILURE;
 };
 
 //CLIENT ACTION TYPES
@@ -143,6 +163,9 @@ export type DepartmentActions =
   | RemoveRangeDepartmentRequest
   | RemoveRangeDepartmentSuccess
   | RemoveRangeDepartmentFailure
+  | FilterDepartmentsRequest
+  | FilterDepartmentsSuccess
+  | FilterDepartmentsFailure
   | SetDepartment
   | SetDepartments
   | ClearDepartment

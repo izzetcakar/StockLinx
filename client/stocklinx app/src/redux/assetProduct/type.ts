@@ -1,5 +1,6 @@
-import { IAssetProduct } from "../../interfaces/serverInterfaces";
+import { IAssetProduct } from "@interfaces/serverInterfaces";
 import { assetProductConst } from "./constant";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 export type AssetProductState = {
   assetProduct: IAssetProduct | null;
@@ -111,6 +112,19 @@ export type RemoveRangeAssetProductFailure = {
   type: typeof assetProductConst.REMOVE_RANGE_ASSETPRODUCT_FAILURE;
 };
 
+//FILTER
+export type FilterAssetProductsRequest = {
+  type: typeof assetProductConst.FILTER_ASSETPRODUCTS_REQUEST;
+  payload: QueryFilter[];
+};
+export type FilterAssetProductsSuccess = {
+  type: typeof assetProductConst.FILTER_ASSETPRODUCTS_SUCCESS;
+  payload: AssetProductsPayload;
+};
+export type FilterAssetProductsFailure = {
+  type: typeof assetProductConst.FILTER_ASSETPRODUCTS_FAILURE;
+};
+
 //CLIENT ACTION TYPES
 export type SetAssetProduct = {
   type: typeof assetProductConst.SET_ASSETPRODUCT;
@@ -149,6 +163,9 @@ export type AssetProductActions =
   | RemoveRangeAssetProductRequest
   | RemoveRangeAssetProductSuccess
   | RemoveRangeAssetProductFailure
+  | FilterAssetProductsRequest
+  | FilterAssetProductsSuccess
+  | FilterAssetProductsFailure
   | SetAssetProduct
   | SetAssetProducts
   | ClearAssetProduct

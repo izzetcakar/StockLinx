@@ -1,5 +1,6 @@
-import { IModel } from "../../interfaces/serverInterfaces";
+import { IModel } from "@interfaces/serverInterfaces";
 import { modelConst } from "./constant";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 export type ModelState = {
   model: IModel | null;
@@ -32,6 +33,7 @@ export type FetchModelsSuccess = {
 export type FetchModelsFailure = {
   type: typeof modelConst.FETCH_MODELS_FAILURE;
 };
+
 //GET:/ID
 export type FetchModelRequest = {
   type: typeof modelConst.FETCH_MODEL_REQUEST;
@@ -44,6 +46,7 @@ export type FetchModelSuccess = {
 export type FetchModelFailure = {
   type: typeof modelConst.FETCH_MODEL_FAILURE;
 };
+
 //POST
 export type CreateModelRequest = {
   type: typeof modelConst.CREATE_MODEL_REQUEST;
@@ -56,6 +59,7 @@ export type CreateModelSuccess = {
 export type CreateModelFailure = {
   type: typeof modelConst.CREATE_MODEL_FAILURE;
 };
+
 //POST RANGE
 export type CreateRangeModelRequest = {
   type: typeof modelConst.CREATE_RANGE_MODEL_REQUEST;
@@ -68,6 +72,7 @@ export type CreateRangeModelSuccess = {
 export type CreateRangeModelFailure = {
   type: typeof modelConst.CREATE_RANGE_MODEL_FAILURE;
 };
+
 //PUT
 export type UpdateModelRequest = {
   type: typeof modelConst.UPDATE_MODEL_REQUEST;
@@ -79,6 +84,7 @@ export type UpdateModelSuccess = {
 export type UpdateModelFailure = {
   type: typeof modelConst.UPDATE_MODEL_FAILURE;
 };
+
 //REMOVE
 export type RemoveModelRequest = {
   type: typeof modelConst.REMOVE_MODEL_REQUEST;
@@ -91,6 +97,7 @@ export type RemoveModelSuccess = {
 export type RemoveModelFailure = {
   type: typeof modelConst.REMOVE_MODEL_FAILURE;
 };
+
 //REMOVE RANGE
 export type RemoveRangeModelRequest = {
   type: typeof modelConst.REMOVE_RANGE_MODEL_REQUEST;
@@ -102,6 +109,19 @@ export type RemoveRangeModelSuccess = {
 };
 export type RemoveRangeModelFailure = {
   type: typeof modelConst.REMOVE_RANGE_MODEL_FAILURE;
+};
+
+//FILTER
+export type FilterModelsRequest = {
+  type: typeof modelConst.FILTER_MODELS_REQUEST;
+  payload: QueryFilter[];
+};
+export type FilterModelsSuccess = {
+  type: typeof modelConst.FILTER_MODELS_SUCCESS;
+  payload: ModelsPayload;
+};
+export type FilterModelsFailure = {
+  type: typeof modelConst.FILTER_MODELS_FAILURE;
 };
 
 //CLIENT ACTION TYPES
@@ -142,6 +162,9 @@ export type ModelActions =
   | RemoveRangeModelRequest
   | RemoveRangeModelSuccess
   | RemoveRangeModelFailure
+  | FilterModelsRequest
+  | FilterModelsSuccess
+  | FilterModelsFailure
   | SetModel
   | SetModels
   | ClearModel

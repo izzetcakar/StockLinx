@@ -3,8 +3,8 @@ import {
   IProductCategoryCount,
   IProductLocationCount,
   IProductStatusCount,
-} from "../../interfaces/serverInterfaces";
-import { request } from "../../server/api";
+} from "@interfaces/serverInterfaces";
+import { request } from "@request";
 
 const requestUrl = "Generic/";
 

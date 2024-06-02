@@ -2,8 +2,8 @@ import {
   AssetProductCheckInPayload,
   AssetProductCheckOutPayload,
   CheckInOutPayload,
-} from "../../interfaces/clientInterfaces";
-import { IComponent } from "../../interfaces/serverInterfaces";
+} from "@interfaces/clientInterfaces";
+import { IComponent } from "@interfaces/serverInterfaces";
 import { componentConst } from "./constant";
 import {
   CreateComponentFailure,
@@ -42,7 +42,11 @@ import {
   CheckOutComponentRequest,
   CheckOutComponentSuccess,
   CheckOutComponentFailure,
+  FilterComponentsRequest,
+  FilterComponentsSuccess,
+  FilterComponentsFailure,
 } from "./type";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 //GET
 const getAll = (): FetchComponentsRequest => ({
@@ -178,6 +182,21 @@ const checkOutFailure = (): CheckOutComponentFailure => ({
   type: componentConst.CHECK_OUT_COMPONENT_FAILURE,
 });
 
+//FILTER
+const filter = (payload: QueryFilter[]): FilterComponentsRequest => ({
+  type: componentConst.FILTER_COMPONENTS_REQUEST,
+  payload,
+});
+const filterSuccess = (
+  payload: ComponentsPayload
+): FilterComponentsSuccess => ({
+  type: componentConst.FILTER_COMPONENTS_SUCCESS,
+  payload,
+});
+const filterFailure = (): FilterComponentsFailure => ({
+  type: componentConst.FILTER_COMPONENTS_FAILURE,
+});
+
 //CLIENT ACTIONS
 const setComponent = (payload: IComponent | null): SetComponent => ({
   type: componentConst.SET_COMPONENT,
@@ -222,6 +241,9 @@ export const componentActions = {
   checkOut,
   checkOutSuccess,
   checkOutFailure,
+  filter,
+  filterSuccess,
+  filterFailure,
   setComponent,
   clearComponent,
   setComponents,

@@ -1,4 +1,4 @@
-import { IConsumable } from "../../interfaces/serverInterfaces";
+import { IConsumable } from "@interfaces/serverInterfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { companyActions } from "../../redux/company/actions";
@@ -49,6 +49,9 @@ const Consumable = () => {
         onRowRemove={(id) => dispatch(consumableActions.remove({ id: id }))}
         onRowRemoveRange={(ids) =>
           dispatch(consumableActions.removeRange({ ids: ids }))
+        }
+        onApplyFilters={(filters) =>
+          dispatch(consumableActions.filter(filters))
         }
         excelColumns={useColumns().excelColumns}
         enableToolbar

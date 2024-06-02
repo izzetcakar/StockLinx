@@ -1,17 +1,21 @@
-import { IUser, IUserLoginDto } from "../../interfaces/serverInterfaces";
-import { request } from "../../server/api";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
+import { getQueryFilter } from "@/utils/filterUtilts";
+import { IUser, IUserLoginDto } from "@interfaces/serverInterfaces";
+import { request } from "@request";
 
 const requestUrl = "User/";
 
 const getAll = () => {
   return request<IUser>({ requestUrl: requestUrl, apiType: "get" });
 };
+
 const get = (id: string) => {
   return request<IUser>({
     requestUrl: requestUrl + id,
     apiType: "get",
   });
 };
+
 const signIn = (loginDto: IUserLoginDto) => {
   return request<IUserLoginDto>({
     requestUrl: requestUrl + "login",
@@ -19,6 +23,7 @@ const signIn = (loginDto: IUserLoginDto) => {
     apiType: "post",
   });
 };
+
 const getWithToken = () => {
   return request<IUser>({
     requestUrl: requestUrl + "getWithToken",
@@ -32,6 +37,7 @@ const create = (user: IUser) => {
     apiType: "post",
   });
 };
+
 const createRange = (users: IUser[]) => {
   return request<IUser>({
     requestUrl: requestUrl + "range",
@@ -39,6 +45,7 @@ const createRange = (users: IUser[]) => {
     queryData: users,
   });
 };
+
 const update = (user: IUser) => {
   return request<IUser>({
     requestUrl: requestUrl,
@@ -46,17 +53,27 @@ const update = (user: IUser) => {
     apiType: "put",
   });
 };
+
 const remove = (id: string) => {
   return request<IUser>({
     requestUrl: requestUrl + id,
     apiType: "delete",
   });
 };
+
 const removeRange = (ids: string[]) => {
   return request<IUser>({
     requestUrl: requestUrl + "range",
     apiType: "delete",
     queryData: ids,
+  });
+};
+
+const filter = (queryFilters: QueryFilter[]) => {
+  return request<IUser>({
+    requestUrl: requestUrl + "filter",
+    apiType: "get",
+    queryData: getQueryFilter(queryFilters),
   });
 };
 
@@ -70,4 +87,5 @@ export const userRequests = {
   update,
   remove,
   removeRange,
+  filter,
 };

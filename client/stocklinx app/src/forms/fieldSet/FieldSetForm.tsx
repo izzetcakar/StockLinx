@@ -1,7 +1,7 @@
 import React from "react";
 import { TextInput, Button, Group, Flex } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { IFieldSet } from "../../interfaces/serverInterfaces";
+import { IFieldSet } from "@interfaces/serverInterfaces";
 import { useDispatch } from "react-redux";
 import { fieldSetActions } from "../../redux/fieldSet/actions";
 import uuid4 from "uuid4";

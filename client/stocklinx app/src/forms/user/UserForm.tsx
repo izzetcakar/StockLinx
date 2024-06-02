@@ -9,7 +9,7 @@ import {
   PasswordInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { IUser } from "../../interfaces/serverInterfaces";
+import { IUser } from "@interfaces/serverInterfaces";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { useDispatch } from "react-redux";

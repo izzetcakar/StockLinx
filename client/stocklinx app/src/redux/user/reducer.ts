@@ -134,6 +134,20 @@ export default (state = initialState, action: UserActions) => {
         ...state,
         user: null,
       };
+    case userConst.FILTER_USERS_REQUEST:
+      return {
+        ...state,
+      };
+    case userConst.FILTER_USERS_SUCCESS:
+      return {
+        ...state,
+        users: action.payload.users,
+      };
+    case userConst.FILTER_USERS_FAILURE:
+      return {
+        ...state,
+        users: [],
+      };
     default:
       return { ...state };
   }

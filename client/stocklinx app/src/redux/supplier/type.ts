@@ -1,5 +1,6 @@
-import { ISupplier } from "../../interfaces/serverInterfaces";
+import { ISupplier } from "@interfaces/serverInterfaces";
 import { supplierConst } from "./constant";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 export type SupplierState = {
   supplier: ISupplier | null;
@@ -32,6 +33,7 @@ export type FetchSuppliersSuccess = {
 export type FetchSuppliersFailure = {
   type: typeof supplierConst.FETCH_SUPPLIERS_FAILURE;
 };
+
 //GET:/ID
 export type FetchSupplierRequest = {
   type: typeof supplierConst.FETCH_SUPPLIER_REQUEST;
@@ -44,6 +46,7 @@ export type FetchSupplierSuccess = {
 export type FetchSupplierFailure = {
   type: typeof supplierConst.FETCH_SUPPLIER_FAILURE;
 };
+
 //POST
 export type CreateSupplierRequest = {
   type: typeof supplierConst.CREATE_SUPPLIER_REQUEST;
@@ -56,6 +59,7 @@ export type CreateSupplierSuccess = {
 export type CreateSupplierFailure = {
   type: typeof supplierConst.CREATE_SUPPLIER_FAILURE;
 };
+
 //POST RANGE
 export type CreateRangeSupplierRequest = {
   type: typeof supplierConst.CREATE_RANGE_SUPPLIER_REQUEST;
@@ -68,6 +72,7 @@ export type CreateRangeSupplierSuccess = {
 export type CreateRangeSupplierFailure = {
   type: typeof supplierConst.CREATE_RANGE_SUPPLIER_FAILURE;
 };
+
 //PUT
 export type UpdateSupplierRequest = {
   type: typeof supplierConst.UPDATE_SUPPLIER_REQUEST;
@@ -80,6 +85,7 @@ export type UpdateSupplierSuccess = {
 export type UpdateSupplierFailure = {
   type: typeof supplierConst.UPDATE_SUPPLIER_FAILURE;
 };
+
 //REMOVE
 export type RemoveSupplierRequest = {
   type: typeof supplierConst.REMOVE_SUPPLIER_REQUEST;
@@ -92,6 +98,7 @@ export type RemoveSupplierSuccess = {
 export type RemoveSupplierFailure = {
   type: typeof supplierConst.REMOVE_SUPPLIER_FAILURE;
 };
+
 //REMOVE RANGE
 export type RemoveRangeSupplierRequest = {
   type: typeof supplierConst.REMOVE_RANGE_SUPPLIER_REQUEST;
@@ -103,6 +110,19 @@ export type RemoveRangeSupplierSuccess = {
 };
 export type RemoveRangeSupplierFailure = {
   type: typeof supplierConst.REMOVE_RANGE_SUPPLIER_FAILURE;
+};
+
+//FILTER
+export type FilterSuppliersRequest = {
+  type: typeof supplierConst.FILTER_SUPPLIERS_REQUEST;
+  payload: QueryFilter[];
+};
+export type FilterSuppliersSuccess = {
+  type: typeof supplierConst.FILTER_SUPPLIERS_SUCCESS;
+  payload: SuppliersPayload;
+};
+export type FilterSuppliersFailure = {
+  type: typeof supplierConst.FILTER_SUPPLIERS_FAILURE;
 };
 
 //CLIENT ACTION TYPES
@@ -143,6 +163,9 @@ export type SupplierActions =
   | RemoveRangeSupplierRequest
   | RemoveRangeSupplierSuccess
   | RemoveRangeSupplierFailure
+  | FilterSuppliersRequest
+  | FilterSuppliersSuccess
+  | FilterSuppliersFailure
   | SetSupplier
   | SetSuppliers
   | ClearSupplier

@@ -1,4 +1,4 @@
-import { IAssetProduct } from "../../interfaces/serverInterfaces";
+import { IAssetProduct } from "@interfaces/serverInterfaces";
 import { assetProductConst } from "./constant";
 import {
   CreateAssetProductFailure,
@@ -31,7 +31,11 @@ import {
   RemoveRangeAssetProductFailure,
   AssetProductRemoveRangePayload,
   AssetProductRemovePayload,
+  FilterAssetProductsRequest,
+  FilterAssetProductsSuccess,
+  FilterAssetProductsFailure,
 } from "./type";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 //GET
 const getAll = (): FetchAssetProductsRequest => ({
@@ -145,6 +149,22 @@ const removeRangeFailure = (): RemoveRangeAssetProductFailure => ({
   type: assetProductConst.REMOVE_RANGE_ASSETPRODUCT_FAILURE,
 });
 
+//
+const filter = (payload: QueryFilter[]): FilterAssetProductsRequest => ({
+  type: assetProductConst.FILTER_ASSETPRODUCTS_REQUEST,
+  payload,
+});
+
+const filterSuccess = (
+  payload: AssetProductsPayload
+): FilterAssetProductsSuccess => ({
+  type: assetProductConst.FILTER_ASSETPRODUCTS_SUCCESS,
+  payload,
+});
+const filterFailure = (): FilterAssetProductsFailure => ({
+  type: assetProductConst.FILTER_ASSETPRODUCTS_FAILURE,
+});
+
 //CLIENT ACTIONS
 const setAssetProduct = (payload: IAssetProduct | null): SetAssetProduct => ({
   type: assetProductConst.SET_ASSETPRODUCT,
@@ -183,6 +203,9 @@ export const assetProductActions = {
   removeRange,
   removeRangeSuccess,
   removeRangeFailure,
+  filter,
+  filterSuccess,
+  filterFailure,
   setAssetProduct,
   clearAssetProduct,
   setAssetProducts,

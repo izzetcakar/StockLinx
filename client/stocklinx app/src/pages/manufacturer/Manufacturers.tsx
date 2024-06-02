@@ -1,4 +1,4 @@
-import { IManufacturer } from "../../interfaces/serverInterfaces";
+import { IManufacturer } from "@interfaces/serverInterfaces";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
@@ -39,8 +39,8 @@ const Manufacturer = () => {
         onRowRemoveRange={(ids) =>
           dispatch(manufacturerActions.removeRange({ ids: ids }))
         }
-        onExpandData={(skip, take) =>
-          dispatch(manufacturerActions.getPaged({ skip, take }))
+        onApplyFilters={(filters) =>
+          dispatch(manufacturerActions.filter(filters))
         }
         excelColumns={useColumns().excelColumns}
         enableToolbar

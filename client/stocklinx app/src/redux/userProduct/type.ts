@@ -1,5 +1,6 @@
-import { IUserProduct } from "../../interfaces/serverInterfaces";
+import { IUserProduct } from "@interfaces/serverInterfaces";
 import { userProductConst } from "./constant";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 export type UserProductState = {
   userProduct: IUserProduct | null;
@@ -111,6 +112,19 @@ export type RemoveRangeUserProductFailure = {
   type: typeof userProductConst.REMOVE_RANGE_USERPRODUCT_FAILURE;
 };
 
+//FILTER
+export type FilterUserProductsRequest = {
+  type: typeof userProductConst.FILTER_USERPRODUCTS_REQUEST;
+  payload: QueryFilter[];
+};
+export type FilterUserProductsSuccess = {
+  type: typeof userProductConst.FILTER_USERPRODUCTS_SUCCESS;
+  payload: UserProductsPayload;
+};
+export type FilterUserProductsFailure = {
+  type: typeof userProductConst.FILTER_USERPRODUCTS_FAILURE;
+};
+
 //CLIENT ACTION TYPES
 export type SetUserProduct = {
   type: typeof userProductConst.SET_USERPRODUCT;
@@ -149,6 +163,9 @@ export type UserProductActions =
   | RemoveRangeUserProductRequest
   | RemoveRangeUserProductSuccess
   | RemoveRangeUserProductFailure
+  | FilterUserProductsRequest
+  | FilterUserProductsSuccess
+  | FilterUserProductsFailure
   | SetUserProduct
   | SetUserProducts
   | ClearUserProduct

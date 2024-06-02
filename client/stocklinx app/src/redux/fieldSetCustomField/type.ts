@@ -1,4 +1,4 @@
-import { IFieldSetCustomField } from "../../interfaces/serverInterfaces";
+import { IFieldSetCustomField } from "@interfaces/serverInterfaces";
 import { fieldSetCustomFieldConst } from "./constant";
 
 export type FieldSetCustomFieldState = {

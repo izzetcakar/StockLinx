@@ -1,11 +1,12 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { locationActions } from "./actions";
-import { ILocation } from "../../interfaces/serverInterfaces";
+import { ILocation } from "@interfaces/serverInterfaces";
 import { locationConst } from "./constant";
 import {
   CreateLocationRequest,
   CreateRangeLocationRequest,
   FetchLocationRequest,
+  FilterLocationsRequest,
   RemoveLocationRequest,
   RemoveRangeLocationRequest,
   UpdateLocationRequest,
@@ -15,14 +16,14 @@ import { genericActions } from "../generic/actions";
 import {
   openNotificationError,
   openNotificationSuccess,
-} from "../../notification/Notification";
+} from "@/notification/Notification";
 
 type IResponse = {
   data: ILocation[] | ILocation | null;
   message: string;
   success: boolean;
   status: number;
-}
+};
 
 function* fetchLocationsSaga() {
   yield put(genericActions.increaseLoading());
@@ -135,6 +136,25 @@ function* removeRangeLocationSaga(action: RemoveRangeLocationRequest) {
   yield put(genericActions.decreaseLoading());
 }
 
+function* filterLocationsSaga(action: FilterLocationsRequest) {
+  yield put(genericActions.increaseLoading());
+  try {
+    const { data }: IResponse = yield call(
+      locationRequests.filter,
+      action.payload
+    );
+    yield put(
+      locationActions.filterSuccess({
+        locations: data as ILocation[],
+      })
+    );
+  } catch (e) {
+    openNotificationError("Location", (e as Error).message);
+    yield put(locationActions.filterFailure());
+  }
+  yield put(genericActions.decreaseLoading());
+}
+
 function* locationSaga() {
   yield takeEvery(locationConst.FETCH_LOCATIONS_REQUEST, fetchLocationsSaga);
   yield takeEvery(locationConst.FETCH_LOCATION_REQUEST, fetchLocationSaga);
@@ -149,6 +169,7 @@ function* locationSaga() {
     locationConst.REMOVE_RANGE_LOCATION_REQUEST,
     removeRangeLocationSaga
   );
+  yield takeEvery(locationConst.FILTER_LOCATIONS_REQUEST, filterLocationsSaga);
 }
 
 export default locationSaga;

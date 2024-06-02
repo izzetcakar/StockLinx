@@ -1,11 +1,13 @@
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
+import { getQueryFilter } from "@/utils/filterUtilts";
 import {
   AssetProductCheckInDto,
   AssetProductCheckOutDto,
   UserProductCheckInDto,
   UserProductCheckOutDto,
-} from "../../interfaces/dtos";
-import { ILicense } from "../../interfaces/serverInterfaces";
-import { request } from "../../server/api";
+} from "@interfaces/dtos";
+import { ILicense } from "@interfaces/serverInterfaces";
+import { request } from "@request";
 const requestUrl = "License/";
 
 const getAll = () => {
@@ -83,6 +85,14 @@ const assetCheckOut = (checkOutDto: AssetProductCheckOutDto) => {
   });
 };
 
+const filter = (queryFilters: QueryFilter[]) => {
+  return request<ILicense>({
+    requestUrl: requestUrl + "filter",
+    apiType: "get",
+    params: getQueryFilter(queryFilters),
+  });
+};
+
 export const licenseRequests = {
   getAll,
   get,
@@ -95,4 +105,5 @@ export const licenseRequests = {
   assetCheckIn,
   userCheckOut,
   assetCheckOut,
+  filter,
 };

@@ -1,11 +1,12 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { productStatusActions } from "./actions";
-import { IProductStatus } from "../../interfaces/serverInterfaces";
+import { IProductStatus } from "@interfaces/serverInterfaces";
 import { productStatusConst } from "./constant";
 import {
   CreateProductStatusRequest,
   CreateRangeProductStatusRequest,
   FetchProductStatusRequest,
+  FilterProductStatusesRequest,
   RemoveProductStatusRequest,
   RemoveRangeProductStatusRequest,
   UpdateProductStatusRequest,
@@ -15,14 +16,14 @@ import { genericActions } from "../generic/actions";
 import {
   openNotificationError,
   openNotificationSuccess,
-} from "../../notification/Notification";
+} from "@/notification/Notification";
 
 type IResponse = {
   data: IProductStatus[] | IProductStatus | null;
   message: string;
   success: boolean;
   status: number;
-}
+};
 
 function* fetchProductStatusesSaga() {
   yield put(genericActions.increaseLoading());
@@ -151,6 +152,25 @@ function* removeRangeProductStatusSaga(
   yield put(genericActions.decreaseLoading());
 }
 
+function* filterProductStatusesSaga(action: FilterProductStatusesRequest) {
+  yield put(genericActions.increaseLoading());
+  try {
+    const { data }: IResponse = yield call(
+      productStatusRequests.filter,
+      action.payload
+    );
+    yield put(
+      productStatusActions.filterSuccess({
+        productStatuses: data as IProductStatus[],
+      })
+    );
+  } catch (e) {
+    openNotificationError("ProductStatus", (e as Error).message);
+    yield put(productStatusActions.filterFailure());
+  }
+  yield put(genericActions.decreaseLoading());
+}
+
 function* productStatussaga() {
   yield takeEvery(
     productStatusConst.FETCH_PRODUCTSTATUSES_REQUEST,
@@ -179,6 +199,10 @@ function* productStatussaga() {
   yield takeEvery(
     productStatusConst.REMOVE_RANGE_PRODUCTSTATUS_REQUEST,
     removeRangeProductStatusSaga
+  );
+  yield takeEvery(
+    productStatusConst.FILTER_PRODUCTSTATUSES_REQUEST,
+    filterProductStatusesSaga
   );
 }
 

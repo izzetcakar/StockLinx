@@ -1,9 +1,9 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { assetActions } from "./actions";
-import { IAsset, IUserProduct } from "../../interfaces/serverInterfaces";
+import { IAsset, IUserProduct } from "@interfaces/serverInterfaces";
 import { assetConst } from "./constant";
 import {
-  AssetFilterRequest,
+  FilterAssetsRequest,
   CheckInAssetRequest,
   CheckOutAssetRequest,
   CreateAssetRequest,
@@ -18,7 +18,7 @@ import { genericActions } from "../generic/actions";
 import {
   openNotificationError,
   openNotificationSuccess,
-} from "../../notification/Notification";
+} from "@/notification/Notification";
 import { userProductActions } from "../userProduct/actions";
 
 type IResponse = {
@@ -178,11 +178,7 @@ function* checkOutAssetSaga(action: CheckOutAssetRequest) {
   yield put(genericActions.decreaseLoading());
 }
 
-function* filterAssetsSaga(action: AssetFilterRequest) {
-  if(action.payload.length === 0) {
-    yield put(assetActions.getAll());
-    return;
-  }
+function* filterAssetsSaga(action: FilterAssetsRequest) {
   yield put(genericActions.increaseLoading());
   try {
     const { data }: IResponse = yield call(
@@ -211,7 +207,7 @@ function* assetsaga() {
   yield takeEvery(assetConst.REMOVE_RANGE_ASSET_REQUEST, removeRangeAssetSaga);
   yield takeEvery(assetConst.CHECK_IN_ASSET_REQUEST, checkInAssetSaga);
   yield takeEvery(assetConst.CHECK_OUT_ASSET_REQUEST, checkOutAssetSaga);
-  yield takeEvery(assetConst.ASSET_FILTER_REQUEST, filterAssetsSaga);
+  yield takeEvery(assetConst.FILTER_ASSETS_REQUEST, filterAssetsSaga);
 }
 
 export default assetsaga;

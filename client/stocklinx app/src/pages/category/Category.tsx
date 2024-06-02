@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { RootState } from "../../redux/rootReducer";
 import { useEffect } from "react";
 import { categoryActions } from "../../redux/category/actions";
-import { CategoryType } from "../../interfaces/serverInterfaces";
+import { CategoryType } from "@interfaces/serverInterfaces";
 import { Tabs } from "@mantine/core";
 import { productActions } from "../../redux/product/actions";
 import HistoryLogs from "../../components/dataGrid/customLog/HistoryLogs";

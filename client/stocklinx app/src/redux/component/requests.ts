@@ -1,20 +1,24 @@
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
+import { getQueryFilter } from "@/utils/filterUtilts";
 import {
   AssetProductCheckInDto,
   AssetProductCheckOutDto,
-} from "../../interfaces/dtos";
-import { IComponent } from "../../interfaces/serverInterfaces";
-import { request } from "../../server/api";
+} from "@interfaces/dtos";
+import { IComponent } from "@interfaces/serverInterfaces";
+import { request } from "@request";
 const requestUrl = "Component/";
 
 const getAll = () => {
   return request<IComponent>({ requestUrl: requestUrl, apiType: "get" });
 };
+
 const get = (id: string) => {
   return request<IComponent>({
     requestUrl: requestUrl + id,
     apiType: "get",
   });
 };
+
 const create = (component: IComponent) => {
   return request<IComponent>({
     requestUrl: requestUrl,
@@ -22,6 +26,7 @@ const create = (component: IComponent) => {
     queryData: component,
   });
 };
+
 const createRange = (components: IComponent[]) => {
   return request<IComponent>({
     requestUrl: requestUrl + "range",
@@ -29,6 +34,7 @@ const createRange = (components: IComponent[]) => {
     queryData: components,
   });
 };
+
 const update = (component: IComponent) => {
   return request<IComponent>({
     requestUrl: requestUrl,
@@ -36,12 +42,14 @@ const update = (component: IComponent) => {
     queryData: component,
   });
 };
+
 const remove = (id: string) => {
   return request<IComponent>({
     requestUrl: requestUrl + id,
     apiType: "delete",
   });
 };
+
 const removeRange = (ids: string[]) => {
   return request<IComponent>({
     requestUrl: requestUrl + "range",
@@ -49,6 +57,7 @@ const removeRange = (ids: string[]) => {
     queryData: ids,
   });
 };
+
 const checkIn = (checkInDto: AssetProductCheckInDto) => {
   return request<IComponent>({
     requestUrl: requestUrl + "checkin",
@@ -56,11 +65,20 @@ const checkIn = (checkInDto: AssetProductCheckInDto) => {
     queryData: checkInDto,
   });
 };
+
 const checkOut = (checkOutDto: AssetProductCheckOutDto) => {
   return request<IComponent>({
     requestUrl: requestUrl + "checkout",
     apiType: "post",
     queryData: checkOutDto,
+  });
+};
+
+const filter = (queryFilters: QueryFilter[]) => {
+  return request<IComponent>({
+    requestUrl: requestUrl + "filter",
+    apiType: "get",
+    params: getQueryFilter(queryFilters),
   });
 };
 
@@ -74,4 +92,5 @@ export const componentRequests = {
   removeRange,
   checkIn,
   checkOut,
+  filter,
 };

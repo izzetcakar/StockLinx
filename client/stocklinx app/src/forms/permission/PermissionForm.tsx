@@ -1,5 +1,5 @@
 import React from "react";
-import { IBranch } from "../../interfaces/serverInterfaces";
+import { IBranch } from "@interfaces/serverInterfaces";
 import { RootState } from "../../redux/rootReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { ActionIcon, Badge, Button, Flex, Select, rem } from "@mantine/core";

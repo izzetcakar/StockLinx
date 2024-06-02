@@ -2,9 +2,10 @@ import {
   CheckInOutPayload,
   UserProductCheckInPayload,
   UserProductCheckOutPayload,
-} from "../../interfaces/clientInterfaces";
-import { IAccessory } from "../../interfaces/serverInterfaces";
+} from "@/interfaces/clientInterfaces";
+import { IAccessory } from "@/interfaces/serverInterfaces";
 import { accessoryConst } from "./constant";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 export type AccessoryState = {
   accessory: IAccessory | null;
@@ -37,6 +38,7 @@ export type FetchAccessoriesSuccess = {
 export type FetchAccessoriesFailure = {
   type: typeof accessoryConst.FETCH_ACCESSORIES_FAILURE;
 };
+
 //GET:/ID
 export type FetchAccessoryRequest = {
   type: typeof accessoryConst.FETCH_ACCESSORY_REQUEST;
@@ -49,6 +51,7 @@ export type FetchAccessorySuccess = {
 export type FetchAccessoryFailure = {
   type: typeof accessoryConst.FETCH_ACCESSORY_FAILURE;
 };
+
 //POST
 export type CreateAccessoryRequest = {
   type: typeof accessoryConst.CREATE_ACCESSORY_REQUEST;
@@ -61,6 +64,7 @@ export type CreateAccessorySuccess = {
 export type CreateAccessoryFailure = {
   type: typeof accessoryConst.CREATE_ACCESSORY_FAILURE;
 };
+
 //POST RANGE
 export type CreateRangeAccessoryRequest = {
   type: typeof accessoryConst.CREATE_RANGE_ACCESSORY_REQUEST;
@@ -73,6 +77,7 @@ export type CreateRangeAccessorySuccess = {
 export type CreateRangeAccessoryFailure = {
   type: typeof accessoryConst.CREATE_RANGE_ACCESSORY_FAILURE;
 };
+
 //PUT
 export type UpdateAccessoryRequest = {
   type: typeof accessoryConst.UPDATE_ACCESSORY_REQUEST;
@@ -85,6 +90,7 @@ export type UpdateAccessorySuccess = {
 export type UpdateAccessoryFailure = {
   type: typeof accessoryConst.UPDATE_ACCESSORY_FAILURE;
 };
+
 //REMOVE
 export type RemoveAccessoryRequest = {
   type: typeof accessoryConst.REMOVE_ACCESSORY_REQUEST;
@@ -97,6 +103,7 @@ export type RemoveAccessorySuccess = {
 export type RemoveAccessoryFailure = {
   type: typeof accessoryConst.REMOVE_ACCESSORY_FAILURE;
 };
+
 //REMOVE RANGE
 export type RemoveRangeAccessoryRequest = {
   type: typeof accessoryConst.REMOVE_RANGE_ACCESSORY_REQUEST;
@@ -109,6 +116,7 @@ export type RemoveRangeAccessorySuccess = {
 export type RemoveRangeAccessoryFailure = {
   type: typeof accessoryConst.REMOVE_RANGE_ACCESSORY_FAILURE;
 };
+
 //CHECKIN
 export type CheckInAccessoryRequest = {
   type: typeof accessoryConst.CHECK_IN_ACCESSORY_REQUEST;
@@ -121,6 +129,7 @@ export type CheckInAccessorySuccess = {
 export type CheckInAccessoryFailure = {
   type: typeof accessoryConst.CHECK_IN_ACCESSORY_FAILURE;
 };
+
 //CHECKOUT
 export type CheckOutAccessoryRequest = {
   type: typeof accessoryConst.CHECK_OUT_ACCESSORY_REQUEST;
@@ -132,6 +141,19 @@ export type CheckOutAccessorySuccess = {
 };
 export type CheckOutAccessoryFailure = {
   type: typeof accessoryConst.CHECK_OUT_ACCESSORY_FAILURE;
+};
+
+//FILTER
+export type FilterAccessoriesRequest = {
+  type: typeof accessoryConst.FILTER_ACCESSORIES_REQUEST;
+  payload: QueryFilter[];
+};
+export type FilterAccessoriesSuccess = {
+  type: typeof accessoryConst.FILTER_ACCESSORIES_SUCCESS;
+  payload: AccessoriesPayload;
+};
+export type FilterAccessoriesFailure = {
+  type: typeof accessoryConst.FILTER_ACCESSORIES_FAILURE;
 };
 
 //CLIENT ACTION TYPES
@@ -178,6 +200,9 @@ export type AccessoryActions =
   | CheckOutAccessoryRequest
   | CheckOutAccessorySuccess
   | CheckOutAccessoryFailure
+  | FilterAccessoriesRequest
+  | FilterAccessoriesSuccess
+  | FilterAccessoriesFailure
   | SetAccessory
   | SetAccessories
   | ClearAccessory

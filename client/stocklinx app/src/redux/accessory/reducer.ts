@@ -153,6 +153,19 @@ export default (state = initialState, action: AccessoryActions) => {
       return {
         ...state,
       };
+    case accessoryConst.FILTER_ACCESSORIES_REQUEST:
+      return {
+        ...state,
+      };
+    case accessoryConst.FILTER_ACCESSORIES_SUCCESS:
+      return {
+        ...state,
+        accessories: action.payload.accessories,
+      };
+    case accessoryConst.FILTER_ACCESSORIES_FAILURE:
+      return {
+        ...state,
+      };
     case accessoryConst.SET_ACCESSORY:
       return {
         ...state,

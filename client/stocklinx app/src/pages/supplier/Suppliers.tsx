@@ -1,4 +1,4 @@
-import { ISupplier } from "../../interfaces/serverInterfaces";
+import { ISupplier } from "@interfaces/serverInterfaces";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
@@ -37,6 +37,7 @@ const Supplier = () => {
         onRowRemoveRange={(ids) =>
           dispatch(supplierActions.removeRange({ ids: ids }))
         }
+        onApplyFilters={(filters) => dispatch(supplierActions.filter(filters))}
         excelColumns={useColumns().excelColumns}
         enableToolbar
         enableEditActions

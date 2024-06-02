@@ -1,4 +1,4 @@
-import { ILocation } from "../../interfaces/serverInterfaces";
+import { ILocation } from "@interfaces/serverInterfaces";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
@@ -31,6 +31,7 @@ const Location = () => {
         onRowRemoveRange={(ids) =>
           dispatch(locationActions.removeRange({ ids: ids }))
         }
+        onApplyFilters={(filters) => dispatch(locationActions.filter(filters))}
         excelColumns={useColumns().excelColumns}
         enableToolbar
         enableEditActions

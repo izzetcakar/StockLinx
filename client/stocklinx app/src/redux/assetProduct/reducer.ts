@@ -112,6 +112,20 @@ export default (state = initialState, action: AssetProductActions) => {
       return {
         ...state,
       };
+    case assetProductConst.FILTER_ASSETPRODUCTS_REQUEST:
+      return {
+        ...state,
+      };
+    case assetProductConst.FILTER_ASSETPRODUCTS_SUCCESS:
+      return {
+        ...state,
+        assetProducts: action.payload.assetProducts,
+      };
+    case assetProductConst.FILTER_ASSETPRODUCTS_FAILURE:
+      return {
+        ...state,
+        assetProducts: [],
+      };
     case assetProductConst.SET_ASSETPRODUCT:
       return {
         ...state,

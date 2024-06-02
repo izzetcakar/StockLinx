@@ -1,6 +1,6 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { supplierActions } from "./actions";
-import { ISupplier } from "../../interfaces/serverInterfaces";
+import { ISupplier } from "@interfaces/serverInterfaces";
 import { supplierConst } from "./constant";
 import {
   CreateSupplierRequest,
@@ -9,20 +9,21 @@ import {
   RemoveSupplierRequest,
   RemoveRangeSupplierRequest,
   UpdateSupplierRequest,
+  FilterSuppliersRequest,
 } from "./type";
 import { supplierRequests } from "./requests";
 import { genericActions } from "../generic/actions";
 import {
   openNotificationError,
   openNotificationSuccess,
-} from "../../notification/Notification";
+} from "@/notification/Notification";
 
 type IResponse = {
   data: ISupplier[] | ISupplier | null;
   message: string;
   success: boolean;
   status: number;
-}
+};
 
 function* fetchSuppliersSaga() {
   yield put(genericActions.increaseLoading());
@@ -135,6 +136,25 @@ function* removeRangeSupplierSaga(action: RemoveRangeSupplierRequest) {
   yield put(genericActions.decreaseLoading());
 }
 
+function* filterSuppliersSaga(action: FilterSuppliersRequest) {
+  yield put(genericActions.increaseLoading());
+  try {
+    const { data }: IResponse = yield call(
+      supplierRequests.filter,
+      action.payload
+    );
+    yield put(
+      supplierActions.filterSuccess({
+        suppliers: data as ISupplier[],
+      })
+    );
+  } catch (e) {
+    openNotificationError("Supplier", (e as Error).message);
+    yield put(supplierActions.filterFailure());
+  }
+  yield put(genericActions.decreaseLoading());
+}
+
 function* suppliersaga() {
   yield takeEvery(supplierConst.FETCH_SUPPLIERS_REQUEST, fetchSuppliersSaga);
   yield takeEvery(supplierConst.FETCH_SUPPLIER_REQUEST, fetchSupplierSaga);
@@ -149,6 +169,7 @@ function* suppliersaga() {
     supplierConst.REMOVE_RANGE_SUPPLIER_REQUEST,
     removeRangeSupplierSaga
   );
+  yield takeEvery(supplierConst.FILTER_SUPPLIERS_REQUEST, filterSuppliersSaga);
 }
 
 export default suppliersaga;

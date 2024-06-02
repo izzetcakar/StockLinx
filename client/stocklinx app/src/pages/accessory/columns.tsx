@@ -5,7 +5,7 @@ import {
   CategoryType,
   IAccessory,
   IUserProduct,
-} from "../../interfaces/serverInterfaces";
+} from "@interfaces/serverInterfaces";
 import { Anchor, Button, Image } from "@mantine/core";
 import { accessoryActions } from "../../redux/accessory/actions";
 import { useNavigate } from "react-router-dom";

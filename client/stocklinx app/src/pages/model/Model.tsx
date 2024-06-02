@@ -8,7 +8,7 @@ import { fieldSetActions } from "../../redux/fieldSet/actions";
 import { manufacturerActions } from "../../redux/manufacturer/actions";
 import { customFieldActions } from "../../redux/customField/actions";
 import { Anchor, Tabs } from "@mantine/core";
-import { IModelFieldData } from "../../interfaces/serverInterfaces";
+import { IModelFieldData } from "@interfaces/serverInterfaces";
 import HistoryLogs from "../../components/dataGrid/customLog/HistoryLogs";
 import "../product.scss";
 

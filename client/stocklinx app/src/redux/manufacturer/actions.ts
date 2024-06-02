@@ -1,4 +1,4 @@
-import { IManufacturer } from "../../interfaces/serverInterfaces";
+import { IManufacturer } from "@interfaces/serverInterfaces";
 import { manufacturerConst } from "./constant";
 import {
   CreateManufacturerFailure,
@@ -31,11 +31,11 @@ import {
   RemoveRangeManufacturerFailure,
   ManufacturerRemoveRangePayload,
   ManufacturerRemovePayload,
-  ManufacturerPagedRequestPayload,
-  FetchManufacturersPagedRequest,
-  FetchManufacturersPagedSuccess,
-  FetchManufacturersPagedFailure,
+  FilterManufacturersRequest,
+  FilterManufacturersSuccess,
+  FilterManufacturersFailure,
 } from "./type";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 //GET
 const getAll = (): FetchManufacturersRequest => ({
@@ -49,23 +49,6 @@ const getAllSuccess = (
 });
 const getAllFailure = (): FetchManufacturersFailure => ({
   type: manufacturerConst.FETCH_MANUFACTURERS_FAILURE,
-});
-
-//GET:/PAGED
-const getPaged = (
-  payload: ManufacturerPagedRequestPayload
-): FetchManufacturersPagedRequest => ({
-  type: manufacturerConst.FETCH_MANUFACTURERS_PAGED_REQUEST,
-  payload,
-});
-const getPagedSuccess = (
-  payload: ManufacturersPayload
-): FetchManufacturersPagedSuccess => ({
-  type: manufacturerConst.FETCH_MANUFACTURERS_PAGED_SUCCESS,
-  payload,
-});
-const getPagedFailure = (): FetchManufacturersPagedFailure => ({
-  type: manufacturerConst.FETCH_MANUFACTURERS_PAGED_FAILURE,
 });
 
 //GET:/ID
@@ -166,6 +149,21 @@ const removeRangeFailure = (): RemoveRangeManufacturerFailure => ({
   type: manufacturerConst.REMOVE_RANGE_MANUFACTURER_FAILURE,
 });
 
+//FILTER
+const filter = (payload: QueryFilter[]): FilterManufacturersRequest => ({
+  type: manufacturerConst.FILTER_MANUFACTURERS_REQUEST,
+  payload,
+});
+const filterSuccess = (
+  payload: ManufacturersPayload
+): FilterManufacturersSuccess => ({
+  type: manufacturerConst.FILTER_MANUFACTURERS_SUCCESS,
+  payload,
+});
+const filterFailure = (): FilterManufacturersFailure => ({
+  type: manufacturerConst.FILTER_MANUFACTURERS_FAILURE,
+});
+
 //CLIENT ACTIONS
 const setManufacturer = (payload: IManufacturer | null): SetManufacturer => ({
   type: manufacturerConst.SET_MANUFACTURER,
@@ -186,9 +184,6 @@ export const manufacturerActions = {
   getAll,
   getAllSuccess,
   getAllFailure,
-  getPaged,
-  getPagedSuccess,
-  getPagedFailure,
   get,
   getSuccess,
   getFailure,
@@ -207,6 +202,9 @@ export const manufacturerActions = {
   removeRange,
   removeRangeSuccess,
   removeRangeFailure,
+  filter,
+  filterSuccess,
+  filterFailure,
   setManufacturer,
   clearManufacturer,
   setManufacturers,

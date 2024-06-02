@@ -2,7 +2,7 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { companyActions } from "../../redux/company/actions";
-import { ICompany } from "../../interfaces/serverInterfaces";
+import { ICompany } from "@interfaces/serverInterfaces";
 import { useColumns } from "./columns";
 import Gridtable from "../../components/gridTable/GridTable";
 import { openCompanyModal } from "../../modals/modals";
@@ -33,6 +33,7 @@ const Company = () => {
         onRowRemoveRange={(ids) =>
           dispatch(companyActions.removeRange({ ids: ids }))
         }
+        onApplyFilters={(filters) => dispatch(companyActions.filter(filters))}
         excelColumns={useColumns().excelColumns}
         enableToolbar
         enableEditActions

@@ -1,4 +1,4 @@
-import { IModel } from "../../interfaces/serverInterfaces";
+import { IModel } from "@interfaces/serverInterfaces";
 import { modelConst } from "./constant";
 import {
   CreateModelFailure,
@@ -31,7 +31,11 @@ import {
   RemoveRangeModelFailure,
   ModelRemoveRangePayload,
   ModelRemovePayload,
+  FilterModelsRequest,
+  FilterModelsSuccess,
+  FilterModelsFailure,
 } from "./type";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 //GET
 const getAll = (): FetchModelsRequest => ({
@@ -128,6 +132,19 @@ const removeRangeFailure = (): RemoveRangeModelFailure => ({
   type: modelConst.REMOVE_RANGE_MODEL_FAILURE,
 });
 
+//FILTER
+const filter = (payload: QueryFilter[]): FilterModelsRequest => ({
+  type: modelConst.FILTER_MODELS_REQUEST,
+  payload,
+});
+const filterSuccess = (payload: ModelsPayload): FilterModelsSuccess => ({
+  type: modelConst.FILTER_MODELS_SUCCESS,
+  payload,
+});
+const filterFailure = (): FilterModelsFailure => ({
+  type: modelConst.FILTER_MODELS_FAILURE,
+});
+
 //CLIENT ACTIONS
 const setModel = (payload: IModel | null): SetModel => ({
   type: modelConst.SET_MODEL,
@@ -166,6 +183,9 @@ export const modelActions = {
   removeRange,
   removeRangeSuccess,
   removeRangeFailure,
+  filter,
+  filterSuccess,
+  filterFailure,
   setModel,
   clearModel,
   setModels,

@@ -1,5 +1,5 @@
-import { IFieldSet } from "../../interfaces/serverInterfaces";
-import { request } from "../../server/api";
+import { IFieldSet } from "@interfaces/serverInterfaces";
+import { request } from "@request";
 const requestUrl = "FieldSet/";
 
 const getAll = () => {

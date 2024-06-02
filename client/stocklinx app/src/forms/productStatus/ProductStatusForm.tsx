@@ -4,7 +4,7 @@ import { useForm } from "@mantine/form";
 import {
   ProductStatusType,
   IProductStatus,
-} from "../../interfaces/serverInterfaces";
+} from "@interfaces/serverInterfaces";
 import { useDispatch } from "react-redux";
 import { productStatusActions } from "../../redux/productStatus/actions";
 import { useInitial } from "./useInitial";

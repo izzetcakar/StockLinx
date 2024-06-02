@@ -105,6 +105,20 @@ export default (state = initialState, action: PermissionActions) => {
       return {
         ...state,
       };
+    case permissionConst.FILTER_PERMISSIONS_REQUEST:
+      return {
+        ...state,
+      };
+    case permissionConst.FILTER_PERMISSIONS_SUCCESS:
+      return {
+        ...state,
+        permissions: action.payload.permissions,
+      };
+    case permissionConst.FILTER_PERMISSIONS_FAILURE:
+      return {
+        ...state,
+        permissions: [],
+      };
     case permissionConst.SET_PERMISSION:
       return {
         ...state,

@@ -1,4 +1,4 @@
-import { ICustomField } from "../../interfaces/serverInterfaces";
+import { ICustomField } from "@interfaces/serverInterfaces";
 import { customFieldConst } from "./constant";
 
 export type CustomFieldState = {

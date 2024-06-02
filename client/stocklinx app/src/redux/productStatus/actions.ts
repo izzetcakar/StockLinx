@@ -1,4 +1,4 @@
-import { IProductStatus } from "../../interfaces/serverInterfaces";
+import { IProductStatus } from "@interfaces/serverInterfaces";
 import { productStatusConst } from "./constant";
 import {
   CreateProductStatusFailure,
@@ -31,7 +31,11 @@ import {
   RemoveRangeProductStatusFailure,
   ProductStatusRemoveRangePayload,
   ProductStatusRemovePayload,
+  FilterProductStatusesRequest,
+  FilterProductStatusesSuccess,
+  FilterProductStatusesFailure,
 } from "./type";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 //GET
 const getAll = (): FetchProductStatusesRequest => ({
@@ -145,6 +149,21 @@ const removeRangeFailure = (): RemoveRangeProductStatusFailure => ({
   type: productStatusConst.REMOVE_RANGE_PRODUCTSTATUS_FAILURE,
 });
 
+//FILTER
+const filter = (payload: QueryFilter[]): FilterProductStatusesRequest => ({
+  type: productStatusConst.FILTER_PRODUCTSTATUSES_REQUEST,
+  payload,
+});
+const filterSuccess = (
+  payload: ProductStatusesPayload
+): FilterProductStatusesSuccess => ({
+  type: productStatusConst.FILTER_PRODUCTSTATUSES_SUCCESS,
+  payload,
+});
+const filterFailure = (): FilterProductStatusesFailure => ({
+  type: productStatusConst.FILTER_PRODUCTSTATUSES_FAILURE,
+});
+
 //CLIENT ACTIONS
 const setProductStatus = (
   payload: IProductStatus | null
@@ -185,6 +204,9 @@ export const productStatusActions = {
   removeRange,
   removeRangeSuccess,
   removeRangeFailure,
+  filter,
+  filterSuccess,
+  filterFailure,
   setProductStatus,
   clearProductStatus,
   setProductStatuses,

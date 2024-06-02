@@ -1,6 +1,6 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { consumableActions } from "./actions";
-import { IConsumable, IUserProduct } from "../../interfaces/serverInterfaces";
+import { IConsumable, IUserProduct } from "@interfaces/serverInterfaces";
 import { consumableConst } from "./constant";
 import {
   CheckInConsumableRequest,
@@ -8,6 +8,7 @@ import {
   CreateConsumableRequest,
   CreateRangeConsumableRequest,
   FetchConsumableRequest,
+  FilterConsumablesRequest,
   RemoveConsumableRequest,
   RemoveRangeConsumableRequest,
   UpdateConsumableRequest,
@@ -17,7 +18,7 @@ import { genericActions } from "../generic/actions";
 import {
   openNotificationError,
   openNotificationSuccess,
-} from "../../notification/Notification";
+} from "@/notification/Notification";
 import { userProductActions } from "../userProduct/actions";
 
 type IResponse = {
@@ -197,6 +198,25 @@ function* checkOutConsumableSaga(action: CheckOutConsumableRequest) {
   yield put(genericActions.decreaseLoading());
 }
 
+function* filterConsumablesSaga(action: FilterConsumablesRequest) {
+  yield put(genericActions.increaseLoading());
+  try {
+    const { data }: IResponse = yield call(
+      consumableRequests.filter,
+      action.payload
+    );
+    yield put(
+      consumableActions.filterSuccess({
+        consumables: data as IConsumable[],
+      })
+    );
+  } catch (e) {
+    openNotificationError("Consumable", (e as Error).message);
+    yield put(consumableActions.filterFailure());
+  }
+  yield put(genericActions.decreaseLoading());
+}
+
 function* consumablesaga() {
   yield takeEvery(
     consumableConst.FETCH_CONSUMABLES_REQUEST,
@@ -233,6 +253,10 @@ function* consumablesaga() {
   yield takeEvery(
     consumableConst.CHECK_OUT_CONSUMABLE_REQUEST,
     checkOutConsumableSaga
+  );
+  yield takeEvery(
+    consumableConst.FILTER_CONSUMABLES_REQUEST,
+    filterConsumablesSaga
   );
 }
 

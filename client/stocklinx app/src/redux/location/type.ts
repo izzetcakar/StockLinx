@@ -1,5 +1,6 @@
-import { ILocation } from "../../interfaces/serverInterfaces";
+import { ILocation } from "@interfaces/serverInterfaces";
 import { locationConst } from "./constant";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 export type LocationState = {
   location: ILocation | null;
@@ -32,6 +33,7 @@ export type FetchLocationsSuccess = {
 export type FetchLocationsFailure = {
   type: typeof locationConst.FETCH_LOCATIONS_FAILURE;
 };
+
 //GET:/ID
 export type FetchLocationRequest = {
   type: typeof locationConst.FETCH_LOCATION_REQUEST;
@@ -44,6 +46,7 @@ export type FetchLocationSuccess = {
 export type FetchLocationFailure = {
   type: typeof locationConst.FETCH_LOCATION_FAILURE;
 };
+
 //POST
 export type CreateLocationRequest = {
   type: typeof locationConst.CREATE_LOCATION_REQUEST;
@@ -56,6 +59,7 @@ export type CreateLocationSuccess = {
 export type CreateLocationFailure = {
   type: typeof locationConst.CREATE_LOCATION_FAILURE;
 };
+
 //POST RANGE
 export type CreateRangeLocationRequest = {
   type: typeof locationConst.CREATE_RANGE_LOCATION_REQUEST;
@@ -68,6 +72,7 @@ export type CreateRangeLocationSuccess = {
 export type CreateRangeLocationFailure = {
   type: typeof locationConst.CREATE_RANGE_LOCATION_FAILURE;
 };
+
 //PUT
 export type UpdateLocationRequest = {
   type: typeof locationConst.UPDATE_LOCATION_REQUEST;
@@ -80,6 +85,7 @@ export type UpdateLocationSuccess = {
 export type UpdateLocationFailure = {
   type: typeof locationConst.UPDATE_LOCATION_FAILURE;
 };
+
 //REMOVE
 export type RemoveLocationRequest = {
   type: typeof locationConst.REMOVE_LOCATION_REQUEST;
@@ -92,6 +98,7 @@ export type RemoveLocationSuccess = {
 export type RemoveLocationFailure = {
   type: typeof locationConst.REMOVE_LOCATION_FAILURE;
 };
+
 //REMOVE RANGE
 export type RemoveRangeLocationRequest = {
   type: typeof locationConst.REMOVE_RANGE_LOCATION_REQUEST;
@@ -103,6 +110,19 @@ export type RemoveRangeLocationSuccess = {
 };
 export type RemoveRangeLocationFailure = {
   type: typeof locationConst.REMOVE_RANGE_LOCATION_FAILURE;
+};
+
+//FILTER
+export type FilterLocationsRequest = {
+  type: typeof locationConst.FILTER_LOCATIONS_REQUEST;
+  payload: QueryFilter[];
+};
+export type FilterLocationsSuccess = {
+  type: typeof locationConst.FILTER_LOCATIONS_SUCCESS;
+  payload: LocationsPayload;
+};
+export type FilterLocationsFailure = {
+  type: typeof locationConst.FILTER_LOCATIONS_FAILURE;
 };
 
 //CLIENT ACTION TYPES
@@ -143,6 +163,9 @@ export type LocationActions =
   | RemoveRangeLocationRequest
   | RemoveRangeLocationSuccess
   | RemoveRangeLocationFailure
+  | FilterLocationsRequest
+  | FilterLocationsSuccess
+  | FilterLocationsFailure
   | SetLocation
   | SetLocations
   | ClearLocation

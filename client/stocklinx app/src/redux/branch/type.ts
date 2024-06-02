@@ -1,5 +1,6 @@
-import { IBranch } from "../../interfaces/serverInterfaces";
+import { IBranch } from "@interfaces/serverInterfaces";
 import { branchConst } from "./constant";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 export type BranchState = {
   branch: IBranch | null;
@@ -32,6 +33,7 @@ export type FetchBranchesSuccess = {
 export type FetchBranchesFailure = {
   type: typeof branchConst.FETCH_BRANCHES_FAILURE;
 };
+
 //GET:/ID
 export type FetchBranchRequest = {
   type: typeof branchConst.FETCH_BRANCH_REQUEST;
@@ -44,6 +46,7 @@ export type FetchBranchSuccess = {
 export type FetchBranchFailure = {
   type: typeof branchConst.FETCH_BRANCH_FAILURE;
 };
+
 //POST
 export type CreateBranchRequest = {
   type: typeof branchConst.CREATE_BRANCH_REQUEST;
@@ -56,6 +59,7 @@ export type CreateBranchSuccess = {
 export type CreateBranchFailure = {
   type: typeof branchConst.CREATE_BRANCH_FAILURE;
 };
+
 //POST RANGE
 export type CreateRangeBranchRequest = {
   type: typeof branchConst.CREATE_RANGE_BRANCH_REQUEST;
@@ -68,6 +72,7 @@ export type CreateRangeBranchSuccess = {
 export type CreateRangeBranchFailure = {
   type: typeof branchConst.CREATE_RANGE_BRANCH_FAILURE;
 };
+
 //PUT
 export type UpdateBranchRequest = {
   type: typeof branchConst.UPDATE_BRANCH_REQUEST;
@@ -80,6 +85,7 @@ export type UpdateBranchSuccess = {
 export type UpdateBranchFailure = {
   type: typeof branchConst.UPDATE_BRANCH_FAILURE;
 };
+
 //REMOVE
 export type RemoveBranchRequest = {
   type: typeof branchConst.REMOVE_BRANCH_REQUEST;
@@ -92,6 +98,7 @@ export type RemoveBranchSuccess = {
 export type RemoveBranchFailure = {
   type: typeof branchConst.REMOVE_BRANCH_FAILURE;
 };
+
 //REMOVE RANGE
 export type RemoveRangeBranchRequest = {
   type: typeof branchConst.REMOVE_RANGE_BRANCH_REQUEST;
@@ -103,6 +110,19 @@ export type RemoveRangeBranchSuccess = {
 };
 export type RemoveRangeBranchFailure = {
   type: typeof branchConst.REMOVE_RANGE_BRANCH_FAILURE;
+};
+
+//FILTER
+export type FilterBranchesRequest = {
+  type: typeof branchConst.FILTER_BRANCHES_REQUEST;
+  payload: QueryFilter[];
+};
+export type FilterBranchesSuccess = {
+  type: typeof branchConst.FILTER_BRANCHES_SUCCESS;
+  payload: BranchesPayload;
+};
+export type FilterBranchesFailure = {
+  type: typeof branchConst.FILTER_BRANCHES_FAILURE;
 };
 
 //CLIENT ACTION TYPES
@@ -143,6 +163,9 @@ export type BranchActions =
   | RemoveRangeBranchRequest
   | RemoveRangeBranchSuccess
   | RemoveRangeBranchFailure
+  | FilterBranchesRequest
+  | FilterBranchesSuccess
+  | FilterBranchesFailure
   | SetBranch
   | SetBranches
   | ClearBranch

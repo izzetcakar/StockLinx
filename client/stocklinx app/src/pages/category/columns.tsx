@@ -1,4 +1,4 @@
-import { CategoryType, ICategory } from "../../interfaces/serverInterfaces";
+import { CategoryType, ICategory } from "@interfaces/serverInterfaces";
 import {
   BaseColumn,
   ExcelColumn,

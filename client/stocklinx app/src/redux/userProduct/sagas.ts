@@ -1,5 +1,5 @@
 import { call, put, takeEvery } from "redux-saga/effects";
-import { IUserProduct } from "../../interfaces/serverInterfaces";
+import { IUserProduct } from "@interfaces/serverInterfaces";
 import { userProductConst } from "./constant";
 import {
   CreateUserProductRequest,
@@ -8,13 +8,14 @@ import {
   RemoveUserProductRequest,
   RemoveRangeUserProductRequest,
   UpdateUserProductRequest,
+  FilterUserProductsRequest,
 } from "./type";
 import { userProductRequests } from "./requests";
 import { genericActions } from "../generic/actions";
 import {
   openNotificationError,
   openNotificationSuccess,
-} from "../../notification/Notification";
+} from "@/notification/Notification";
 import { userProductActions } from "./actions";
 
 type IResponse = {
@@ -22,7 +23,7 @@ type IResponse = {
   message: string;
   success: boolean;
   status: number;
-}
+};
 
 function* fetchUserProductsSaga() {
   yield put(genericActions.increaseLoading());
@@ -147,6 +148,25 @@ function* removeRangeUserProductSaga(action: RemoveRangeUserProductRequest) {
   yield put(genericActions.decreaseLoading());
 }
 
+function* filterUserProductsSaga(action: FilterUserProductsRequest) {
+  yield put(genericActions.increaseLoading());
+  try {
+    const { data }: IResponse = yield call(
+      userProductRequests.filter,
+      action.payload
+    );
+    yield put(
+      userProductActions.filterSuccess({
+        userProducts: data as IUserProduct[],
+      })
+    );
+  } catch (e) {
+    openNotificationError("UserProduct", (e as Error).message);
+    yield put(userProductActions.filterFailure());
+  }
+  yield put(genericActions.decreaseLoading());
+}
+
 function* userProductSaga() {
   yield takeEvery(
     userProductConst.FETCH_USERPRODUCTS_REQUEST,
@@ -175,6 +195,10 @@ function* userProductSaga() {
   yield takeEvery(
     userProductConst.REMOVE_RANGE_USERPRODUCT_REQUEST,
     removeRangeUserProductSaga
+  );
+  yield takeEvery(
+    userProductConst.FILTER_USERPRODUCTS_REQUEST,
+    filterUserProductsSaga
   );
 }
 

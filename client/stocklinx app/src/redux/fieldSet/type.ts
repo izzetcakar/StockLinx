@@ -1,4 +1,4 @@
-import { IFieldSet } from "../../interfaces/serverInterfaces";
+import { IFieldSet } from "@interfaces/serverInterfaces";
 import { fieldSetConst } from "./constant";
 
 export type FieldSetState = {

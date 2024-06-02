@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { RootState } from "../../redux/rootReducer";
 import { useEffect } from "react";
 import { productStatusActions } from "../../redux/productStatus/actions";
-import { ProductStatusType } from "../../interfaces/serverInterfaces";
+import { ProductStatusType } from "@interfaces/serverInterfaces";
 import { Tabs } from "@mantine/core";
 import HistoryLogs from "../../components/dataGrid/customLog/HistoryLogs";
 import "../product.scss";

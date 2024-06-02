@@ -1,11 +1,12 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { categoryActions } from "./actions";
-import { ICategory } from "../../interfaces/serverInterfaces";
+import { ICategory } from "@interfaces/serverInterfaces";
 import { categoryConst } from "./constant";
 import {
   CreateCategoryRequest,
   CreateRangeCategoryRequest,
   FetchCategoryRequest,
+  FilterCategoriesRequest,
   RemoveCategoryRequest,
   RemoveRangeCategoryRequest,
   UpdateCategoryRequest,
@@ -15,7 +16,7 @@ import { genericActions } from "../generic/actions";
 import {
   openNotificationError,
   openNotificationSuccess,
-} from "../../notification/Notification";
+} from "@/notification/Notification";
 
 type IResponse = {
   data: ICategory[] | ICategory | null;
@@ -142,6 +143,26 @@ function* removeRangeCategorySaga(action: RemoveRangeCategoryRequest) {
   yield put(genericActions.decreaseLoading());
 }
 
+function* filterCategoriesSaga(action: FilterCategoriesRequest) {
+  yield put(genericActions.increaseLoading());
+  try {
+    const { data }: IResponse = yield call(
+      categoryRequests.filter,
+      action.payload
+    );
+
+    yield put(
+      categoryActions.filterSuccess({
+        categories: data as ICategory[],
+      })
+    );
+  } catch (e) {
+    openNotificationError("Category", (e as Error).message);
+    yield put(categoryActions.filterFailure());
+  }
+  yield put(genericActions.decreaseLoading());
+}
+
 function* categorysaga() {
   yield takeEvery(categoryConst.FETCH_CATEGORIES_REQUEST, fetchCategoriesSaga);
   yield takeEvery(categoryConst.FETCH_CATEGORY_REQUEST, fetchCategorySaga);
@@ -155,6 +176,10 @@ function* categorysaga() {
   yield takeEvery(
     categoryConst.REMOVE_RANGE_CATEGORY_REQUEST,
     removeRangeCategorySaga
+  );
+  yield takeEvery(
+    categoryConst.FILTER_CATEGORIES_REQUEST,
+    filterCategoriesSaga
   );
 }
 

@@ -1,5 +1,5 @@
-import { IFieldSetCustomField } from "../../interfaces/serverInterfaces";
-import { request } from "../../server/api";
+import { IFieldSetCustomField } from "@interfaces/serverInterfaces";
+import { request } from "@request";
 const requestUrl = "FieldSetCustomField/";
 
 const getAll = () => {

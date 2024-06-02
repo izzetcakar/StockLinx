@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { TextInput, Button, Group, Flex, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { IDepartment } from "../../interfaces/serverInterfaces";
+import { IDepartment } from "@interfaces/serverInterfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { departmentActions } from "../../redux/department/actions";
 import { RootState } from "../../redux/rootReducer";

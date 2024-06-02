@@ -1,12 +1,12 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { manufacturerActions } from "./actions";
-import { IManufacturer } from "../../interfaces/serverInterfaces";
+import { IManufacturer } from "@interfaces/serverInterfaces";
 import { manufacturerConst } from "./constant";
 import {
   CreateManufacturerRequest,
   CreateRangeManufacturerRequest,
   FetchManufacturerRequest,
-  FetchManufacturersPagedRequest,
+  FilterManufacturersRequest,
   RemoveManufacturerRequest,
   RemoveRangeManufacturerRequest,
   UpdateManufacturerRequest,
@@ -16,14 +16,14 @@ import { genericActions } from "../generic/actions";
 import {
   openNotificationError,
   openNotificationSuccess,
-} from "../../notification/Notification";
+} from "@/notification/Notification";
 
 type IResponse = {
   data: IManufacturer[] | IManufacturer | null;
   message: string;
   success: boolean;
   status: number;
-}
+};
 
 function* fetchManufacturersSaga() {
   yield put(genericActions.increaseLoading());
@@ -37,26 +37,6 @@ function* fetchManufacturersSaga() {
   } catch (e) {
     openNotificationError("Manufacturer", (e as Error).message);
     yield put(manufacturerActions.getAllFailure());
-  }
-  yield put(genericActions.decreaseLoading());
-}
-
-function* fetchManufacturersPagedSaga(action: FetchManufacturersPagedRequest) {
-  yield put(genericActions.increaseLoading());
-  try {
-    const { data }: IResponse = yield call(
-      manufacturerRequests.getPaged,
-      action.payload.skip,
-      action.payload.take
-    );
-    yield put(
-      manufacturerActions.getPagedSuccess({
-        manufacturers: data as IManufacturer[],
-      })
-    );
-  } catch (e) {
-    openNotificationError("Manufacturer", (e as Error).message);
-    yield put(manufacturerActions.getPagedFailure());
   }
   yield put(genericActions.decreaseLoading());
 }
@@ -168,14 +148,29 @@ function* removeRangeManufacturerSaga(action: RemoveRangeManufacturerRequest) {
   yield put(genericActions.decreaseLoading());
 }
 
+function* filterManufacturersSaga(action: FilterManufacturersRequest) {
+  yield put(genericActions.increaseLoading());
+  try {
+    const { data }: IResponse = yield call(
+      manufacturerRequests.filter,
+      action.payload
+    );
+    yield put(
+      manufacturerActions.filterSuccess({
+        manufacturers: data as IManufacturer[],
+      })
+    );
+  } catch (e) {
+    openNotificationError("Manufacturer", (e as Error).message);
+    yield put(manufacturerActions.filterFailure());
+  }
+  yield put(genericActions.decreaseLoading());
+}
+
 function* manufacturersaga() {
   yield takeEvery(
     manufacturerConst.FETCH_MANUFACTURERS_REQUEST,
     fetchManufacturersSaga
-  );
-  yield takeEvery(
-    manufacturerConst.FETCH_MANUFACTURERS_PAGED_REQUEST,
-    fetchManufacturersPagedSaga
   );
   yield takeEvery(
     manufacturerConst.FETCH_MANUFACTURER_REQUEST,
@@ -200,6 +195,10 @@ function* manufacturersaga() {
   yield takeEvery(
     manufacturerConst.REMOVE_RANGE_MANUFACTURER_REQUEST,
     removeRangeManufacturerSaga
+  );
+  yield takeEvery(
+    manufacturerConst.FILTER_MANUFACTURERS_REQUEST,
+    filterManufacturersSaga
   );
 }
 

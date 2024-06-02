@@ -1,4 +1,4 @@
-import { IUserProduct } from "../../interfaces/serverInterfaces";
+import { IUserProduct } from "@interfaces/serverInterfaces";
 import { userProductConst } from "./constant";
 import {
   CreateUserProductFailure,
@@ -31,7 +31,11 @@ import {
   RemoveRangeUserProductFailure,
   UserProductRemoveRangePayload,
   UserProductRemovePayload,
+  FilterUserProductsRequest,
+  FilterUserProductsSuccess,
+  FilterUserProductsFailure,
 } from "./type";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 //GET
 const getAll = (): FetchUserProductsRequest => ({
@@ -48,15 +52,11 @@ const getAllFailure = (): FetchUserProductsFailure => ({
 });
 
 //GET:/ID
-const get = (
-  payload: UserProductRequestPayload
-): FetchUserProductRequest => ({
+const get = (payload: UserProductRequestPayload): FetchUserProductRequest => ({
   type: userProductConst.FETCH_USERPRODUCT_REQUEST,
   payload,
 });
-const getSuccess = (
-  payload: UserProductPayload
-): FetchUserProductSuccess => ({
+const getSuccess = (payload: UserProductPayload): FetchUserProductSuccess => ({
   type: userProductConst.FETCH_USERPRODUCT_SUCCESS,
   payload,
 });
@@ -65,9 +65,7 @@ const getFailure = (): FetchUserProductFailure => ({
 });
 
 //POST
-const create = (
-  payload: UserProductPayload
-): CreateUserProductRequest => ({
+const create = (payload: UserProductPayload): CreateUserProductRequest => ({
   type: userProductConst.CREATE_USERPRODUCT_REQUEST,
   payload,
 });
@@ -99,9 +97,7 @@ const createRangeFailure = (): CreateRangeUserProductFailure => ({
 });
 
 //PUT
-const update = (
-  payload: UserProductPayload
-): UpdateUserProductRequest => ({
+const update = (payload: UserProductPayload): UpdateUserProductRequest => ({
   type: userProductConst.UPDATE_USERPRODUCT_REQUEST,
   payload,
 });
@@ -149,19 +145,30 @@ const removeRangeFailure = (): RemoveRangeUserProductFailure => ({
   type: userProductConst.REMOVE_RANGE_USERPRODUCT_FAILURE,
 });
 
+//FILTER
+const filter = (payload: QueryFilter[]): FilterUserProductsRequest => ({
+  type: userProductConst.FILTER_USERPRODUCTS_REQUEST,
+  payload,
+});
+const filterSuccess = (
+  payload: UserProductsPayload
+): FilterUserProductsSuccess => ({
+  type: userProductConst.FILTER_USERPRODUCTS_SUCCESS,
+  payload,
+});
+const filterFailure = (): FilterUserProductsFailure => ({
+  type: userProductConst.FILTER_USERPRODUCTS_FAILURE,
+});
+
 //CLIENT ACTIONS
-const setUserProduct = (
-  payload: IUserProduct | null
-): SetUserProduct => ({
+const setUserProduct = (payload: IUserProduct | null): SetUserProduct => ({
   type: userProductConst.SET_USERPRODUCT,
   payload,
 });
 const clearUserProduct = (): ClearUserProduct => ({
   type: userProductConst.CLEAR_USERPRODUCT,
 });
-const setUserProducts = (
-  payload: IUserProduct[]
-): SetUserProducts => ({
+const setUserProducts = (payload: IUserProduct[]): SetUserProducts => ({
   type: userProductConst.SET_USERPRODUCTS,
   payload,
 });
@@ -191,6 +198,9 @@ export const userProductActions = {
   removeRange,
   removeRangeSuccess,
   removeRangeFailure,
+  filter,
+  filterSuccess,
+  filterFailure,
   setUserProduct,
   clearUserProduct,
   setUserProducts,

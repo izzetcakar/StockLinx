@@ -109,6 +109,20 @@ export default (state = initialState, action: CompanyActions) => {
       return {
         ...state,
       };
+    case companyConst.FILTER_COMPANIES_REQUEST:
+      return {
+        ...state,
+      };
+    case companyConst.FILTER_COMPANIES_SUCCESS:
+      return {
+        ...state,
+        companies: action.payload.companies,
+      };
+    case companyConst.FILTER_COMPANIES_FAILURE:
+      return {
+        ...state,
+        companies: [],
+      };
     case companyConst.SET_COMPANY:
       return {
         ...state,

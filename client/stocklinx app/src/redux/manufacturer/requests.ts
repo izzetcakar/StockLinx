@@ -1,22 +1,20 @@
-import { IManufacturer } from "../../interfaces/serverInterfaces";
-import { request } from "../../server/api";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
+import { getQueryFilter } from "@/utils/filterUtilts";
+import { IManufacturer } from "@interfaces/serverInterfaces";
+import { request } from "@request";
 const requestUrl = "Manufacturer/";
 
 const getAll = () => {
   return request<IManufacturer>({ requestUrl: requestUrl, apiType: "get" });
 };
+
 const get = (id: string) => {
   return request<IManufacturer>({
     requestUrl: requestUrl + id,
     apiType: "get",
   });
 };
-const getPaged = (skip: number, take: number) => {
-  return request<IManufacturer>({
-    requestUrl: requestUrl + `paged?skip=${skip}&take=${take}`,
-    apiType: "get",
-  });
-};
+
 const create = (manufacturer: IManufacturer) => {
   return request<IManufacturer>({
     requestUrl: requestUrl,
@@ -24,6 +22,7 @@ const create = (manufacturer: IManufacturer) => {
     queryData: manufacturer,
   });
 };
+
 const createRange = (manufacturers: IManufacturer[]) => {
   return request<IManufacturer>({
     requestUrl: requestUrl + "range",
@@ -31,6 +30,7 @@ const createRange = (manufacturers: IManufacturer[]) => {
     queryData: manufacturers,
   });
 };
+
 const update = (manufacturer: IManufacturer) => {
   return request<IManufacturer>({
     requestUrl: requestUrl,
@@ -38,12 +38,14 @@ const update = (manufacturer: IManufacturer) => {
     queryData: manufacturer,
   });
 };
+
 const remove = (id: string) => {
   return request<IManufacturer>({
     requestUrl: requestUrl + id,
     apiType: "delete",
   });
 };
+
 const removeRange = (ids: string[]) => {
   return request<IManufacturer>({
     requestUrl: requestUrl + "range",
@@ -52,13 +54,21 @@ const removeRange = (ids: string[]) => {
   });
 };
 
+const filter = (queryFilters: QueryFilter[]) => {
+  return request<IManufacturer>({
+    requestUrl: requestUrl + "filter",
+    apiType: "get",
+    params: getQueryFilter(queryFilters),
+  });
+};
+
 export const manufacturerRequests = {
   getAll,
-  getPaged,
   get,
   create,
   createRange,
   update,
   remove,
   removeRange,
+  filter,
 };

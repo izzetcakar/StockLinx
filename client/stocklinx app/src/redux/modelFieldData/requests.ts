@@ -1,5 +1,5 @@
-import { IModelFieldData } from "../../interfaces/serverInterfaces";
-import { request } from "../../server/api";
+import { IModelFieldData } from "@interfaces/serverInterfaces";
+import { request } from "@request";
 const requestUrl = "ModelFieldData/";
 
 const getAll = () => {

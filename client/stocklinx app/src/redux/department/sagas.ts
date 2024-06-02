@@ -1,11 +1,12 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { departmentActions } from "./actions";
-import { IDepartment } from "../../interfaces/serverInterfaces";
+import { IDepartment } from "@interfaces/serverInterfaces";
 import { departmentConst } from "./constant";
 import {
   CreateDepartmentRequest,
   CreateRangeDepartmentRequest,
   FetchDepartmentRequest,
+  FilterDepartmentsRequest,
   RemoveDepartmentRequest,
   RemoveRangeDepartmentRequest,
   UpdateDepartmentRequest,
@@ -15,14 +16,14 @@ import { genericActions } from "../generic/actions";
 import {
   openNotificationError,
   openNotificationSuccess,
-} from "../../notification/Notification";
+} from "@/notification/Notification";
 
 type IResponse = {
   data: IDepartment[] | IDepartment | null;
   message: string;
   success: boolean;
   status: number;
-}
+};
 
 function* fetchDepartmentsSaga() {
   yield put(genericActions.increaseLoading());
@@ -144,6 +145,25 @@ function* removeRangeDepartmentSaga(action: RemoveRangeDepartmentRequest) {
   yield put(genericActions.decreaseLoading());
 }
 
+function* filterDepartmentsSaga(action: FilterDepartmentsRequest) {
+  yield put(genericActions.increaseLoading());
+  try {
+    const { data }: IResponse = yield call(
+      departmentRequests.filter,
+      action.payload
+    );
+    yield put(
+      departmentActions.filterSuccess({
+        departments: data as IDepartment[],
+      })
+    );
+  } catch (e) {
+    openNotificationError("Department", (e as Error).message);
+    yield put(departmentActions.filterFailure());
+  }
+  yield put(genericActions.decreaseLoading());
+}
+
 function* departmentsaga() {
   yield takeEvery(
     departmentConst.FETCH_DEPARTMENTS_REQUEST,
@@ -172,6 +192,10 @@ function* departmentsaga() {
   yield takeEvery(
     departmentConst.REMOVE_RANGE_DEPARTMENT_REQUEST,
     removeRangeDepartmentSaga
+  );
+  yield takeEvery(
+    departmentConst.FILTER_DEPARTMENTS_REQUEST,
+    filterDepartmentsSaga
   );
 }
 

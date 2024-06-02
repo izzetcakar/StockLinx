@@ -1,3 +1,4 @@
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 import { userConst } from "./constant";
 import {
   CreateUserFailure,
@@ -34,6 +35,9 @@ import {
   RemoveRangeUserSuccess,
   RemoveRangeUserFailure,
   UserRequestPayload,
+  FilterUsersRequest,
+  FilterUsersSuccess,
+  FilterUsersFailure,
 } from "./type";
 
 //GET
@@ -47,6 +51,8 @@ const getAllSuccess = (payload: UsersPayload): FetchUsersSuccess => ({
 const getAllFailure = (): FetchUsersFailure => ({
   type: userConst.FETCH_USERS_FAILURE,
 });
+
+//GET WITH TOKEN
 const getWithToken = (): GetWithTokenRequest => ({
   type: userConst.GET_WITH_TOKEN_REQUEST,
 });
@@ -84,6 +90,7 @@ const createFailure = (): CreateUserFailure => ({
   type: userConst.CREATE_USER_FAILURE,
 });
 
+//SIGN IN
 const signIn = (payload: SignInRequestPayload): SignInRequest => ({
   type: userConst.SIGN_IN_REQUEST,
   payload,
@@ -150,6 +157,19 @@ const removeRangeFailure = (): RemoveRangeUserFailure => ({
   type: userConst.REMOVE_RANGE_USER_FAILURE,
 });
 
+//FILTER
+const filter = (payload: QueryFilter[]): FilterUsersRequest => ({
+  type: userConst.FILTER_USERS_REQUEST,
+  payload,
+});
+const filterSuccess = (payload: UsersPayload): FilterUsersSuccess => ({
+  type: userConst.FILTER_USERS_SUCCESS,
+  payload,
+});
+const filterFailure = (): FilterUsersFailure => ({
+  type: userConst.FILTER_USERS_FAILURE,
+});
+
 //CLIENT ACTIONS
 const logoutUser = (): LogoutUser => ({
   type: userConst.LOGOUT_USER,
@@ -184,4 +204,7 @@ export const userActions = {
   signInSuccess,
   signInFailure,
   logoutUser,
+  filter,
+  filterSuccess,
+  filterFailure,
 };

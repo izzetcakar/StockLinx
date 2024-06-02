@@ -1,4 +1,4 @@
-import { ISupplier } from "../../interfaces/serverInterfaces";
+import { ISupplier } from "@interfaces/serverInterfaces";
 import { supplierConst } from "./constant";
 import {
   CreateSupplierFailure,
@@ -31,7 +31,11 @@ import {
   RemoveRangeSupplierFailure,
   SupplierRemoveRangePayload,
   SupplierRemovePayload,
+  FilterSuppliersRequest,
+  FilterSuppliersSuccess,
+  FilterSuppliersFailure,
 } from "./type";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 //GET
 const getAll = (): FetchSuppliersRequest => ({
@@ -133,6 +137,19 @@ const removeRangeFailure = (): RemoveRangeSupplierFailure => ({
   type: supplierConst.REMOVE_RANGE_SUPPLIER_FAILURE,
 });
 
+//FILTER
+const filter = (payload: QueryFilter[]): FilterSuppliersRequest => ({
+  type: supplierConst.FILTER_SUPPLIERS_REQUEST,
+  payload,
+});
+const filterSuccess = (payload: SuppliersPayload): FilterSuppliersSuccess => ({
+  type: supplierConst.FILTER_SUPPLIERS_SUCCESS,
+  payload,
+});
+const filterFailure = (): FilterSuppliersFailure => ({
+  type: supplierConst.FILTER_SUPPLIERS_FAILURE,
+});
+
 //CLIENT ACTIONS
 const setSupplier = (payload: ISupplier | null): SetSupplier => ({
   type: supplierConst.SET_SUPPLIER,
@@ -171,6 +188,9 @@ export const supplierActions = {
   removeRange,
   removeRangeSuccess,
   removeRangeFailure,
+  filter,
+  filterSuccess,
+  filterFailure,
   setSupplier,
   clearSupplier,
   setSuppliers,

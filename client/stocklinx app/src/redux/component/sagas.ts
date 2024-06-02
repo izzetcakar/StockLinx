@@ -1,6 +1,6 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { componentActions } from "./actions";
-import { IComponent } from "../../interfaces/serverInterfaces";
+import { IComponent } from "@interfaces/serverInterfaces";
 import { componentConst } from "./constant";
 import {
   CheckInComponentRequest,
@@ -9,6 +9,7 @@ import {
   CreateComponentRequest,
   CreateRangeComponentRequest,
   FetchComponentRequest,
+  FilterComponentsRequest,
   RemoveComponentRequest,
   RemoveRangeComponentRequest,
   UpdateComponentRequest,
@@ -18,7 +19,7 @@ import { genericActions } from "../generic/actions";
 import {
   openNotificationError,
   openNotificationSuccess,
-} from "../../notification/Notification";
+} from "@/notification/Notification";
 import { userProductActions } from "../userProduct/actions";
 import { assetProductActions } from "../assetProduct/actions";
 
@@ -198,6 +199,25 @@ function* checkOutComponentSaga(action: CheckOutComponentRequest) {
   yield put(genericActions.decreaseLoading());
 }
 
+function* filterComponentsSaga(action: FilterComponentsRequest) {
+  yield put(genericActions.increaseLoading());
+  try {
+    const { data }: IResponse = yield call(
+      componentRequests.filter,
+      action.payload
+    );
+    yield put(
+      componentActions.filterSuccess({
+        components: data as IComponent[],
+      })
+    );
+  } catch (e) {
+    openNotificationError("Component", (e as Error).message);
+    yield put(componentActions.filterFailure());
+  }
+  yield put(genericActions.decreaseLoading());
+}
+
 function* componentsaga() {
   yield takeEvery(componentConst.FETCH_COMPONENTS_REQUEST, fetchComponentsSaga);
   yield takeEvery(componentConst.FETCH_COMPONENT_REQUEST, fetchComponentSaga);
@@ -219,6 +239,10 @@ function* componentsaga() {
   yield takeEvery(
     componentConst.CHECK_OUT_COMPONENT_REQUEST,
     checkOutComponentSaga
+  );
+  yield takeEvery(
+    componentConst.FILTER_COMPONENTS_REQUEST,
+    filterComponentsSaga
   );
 }
 

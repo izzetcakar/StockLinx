@@ -1,5 +1,5 @@
 import uuid4 from "uuid4";
-import { IConsumable } from "../../interfaces/serverInterfaces";
+import { IConsumable } from "@interfaces/serverInterfaces";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 

@@ -4,7 +4,7 @@ import {
   IAssetProduct,
   ILicense,
   IUserProduct,
-} from "../../interfaces/serverInterfaces";
+} from "@interfaces/serverInterfaces";
 import { licenseConst } from "./constant";
 import {
   AssetCheckInLicenseRequest,
@@ -12,6 +12,7 @@ import {
   CreateLicenseRequest,
   CreateRangeLicenseRequest,
   FetchLicenseRequest,
+  FilterLicensesRequest,
   RemoveLicenseRequest,
   RemoveRangeLicenseRequest,
   UpdateLicenseRequest,
@@ -23,7 +24,7 @@ import { genericActions } from "../generic/actions";
 import {
   openNotificationError,
   openNotificationSuccess,
-} from "../../notification/Notification";
+} from "@/notification/Notification";
 import { userProductActions } from "../userProduct/actions";
 import { assetProductActions } from "../assetProduct/actions";
 
@@ -239,6 +240,25 @@ function* assetCheckOutLicenseSaga(action: AssetCheckOutLicenseRequest) {
   yield put(genericActions.decreaseLoading());
 }
 
+function* filterLicensesSaga(action: FilterLicensesRequest) {
+  yield put(genericActions.increaseLoading());
+  try {
+    const { data }: IResponse = yield call(
+      licenseRequests.filter,
+      action.payload
+    );
+    yield put(
+      licenseActions.filterSuccess({
+        licenses: data as ILicense[],
+      })
+    );
+  } catch (e) {
+    openNotificationError("License", (e as Error).message);
+    yield put(licenseActions.filterFailure());
+  }
+  yield put(genericActions.decreaseLoading());
+}
+
 function* licenseSaga() {
   yield takeEvery(licenseConst.FETCH_LICENSES_REQUEST, fetchLicensesSaga);
   yield takeEvery(licenseConst.FETCH_LICENSE_REQUEST, fetchLicenseSaga);
@@ -269,6 +289,7 @@ function* licenseSaga() {
     licenseConst.ASSET_CHECK_OUT_LICENSE_REQUEST,
     assetCheckOutLicenseSaga
   );
+  yield takeEvery(licenseConst.FILTER_LICENSES_REQUEST, filterLicensesSaga);
 }
 
 export default licenseSaga;

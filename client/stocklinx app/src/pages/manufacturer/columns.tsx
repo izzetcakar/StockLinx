@@ -3,7 +3,7 @@ import {
   BaseColumn,
   ExcelColumn,
 } from "@interfaces/gridTableInterfaces";
-import { IManufacturer } from "../../interfaces/serverInterfaces";
+import { IManufacturer } from "@interfaces/serverInterfaces";
 import { Anchor, Image } from "@mantine/core";
 import { getImage } from "../../utils/Image";
 

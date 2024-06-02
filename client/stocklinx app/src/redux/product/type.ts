@@ -4,7 +4,7 @@ import {
   IProductCategoryCount,
   IProductLocationCount,
   IProductStatusCount,
-} from "../../interfaces/serverInterfaces";
+} from "@interfaces/serverInterfaces";
 import { productConst } from "./constant";
 
 export type ProductState = {

@@ -197,6 +197,20 @@ export default (state = initialState, action: LicenseActions) => {
       return {
         ...state,
       };
+    case licenseConst.FILTER_LICENSES_REQUEST:
+      return {
+        ...state,
+      };
+    case licenseConst.FILTER_LICENSES_SUCCESS:
+      return {
+        ...state,
+        licenses: action.payload.licenses,
+      };
+    case licenseConst.FILTER_LICENSES_FAILURE:
+      return {
+        ...state,
+        licenses: [],
+      };
     case licenseConst.SET_LICENSE:
       return {
         ...state,

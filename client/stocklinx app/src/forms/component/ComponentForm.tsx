@@ -9,12 +9,12 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { DateInput } from "@mantine/dates";
-import { CategoryType, IComponent } from "../../interfaces/serverInterfaces";
+import { CategoryType, IComponent } from "@interfaces/serverInterfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { componentActions } from "../../redux/component/actions";
 import { RootState } from "../../redux/rootReducer";
 import { useInitial } from "./useInitial";
-import { openNotificationError } from "../../notification/Notification";
+import { openNotificationError } from "@/notification/Notification";
 import FormSelect from "../mantine/FormSelect";
 
 interface ComponentFormProps {

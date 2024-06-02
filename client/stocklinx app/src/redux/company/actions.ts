@@ -1,4 +1,4 @@
-import { ICompany } from "../../interfaces/serverInterfaces";
+import { ICompany } from "@interfaces/serverInterfaces";
 import { companyConst } from "./constant";
 import {
   CreateCompanyFailure,
@@ -31,7 +31,11 @@ import {
   RemoveRangeCompanyFailure,
   CompanyRemoveRangePayload,
   CompanyRemovePayload,
+  FilterCompaniesRequest,
+  FilterCompaniesSuccess,
+  FilterCompaniesFailure,
 } from "./type";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 //GET
 const getAll = (): FetchCompaniesRequest => ({
@@ -131,6 +135,19 @@ const removeRangeFailure = (): RemoveRangeCompanyFailure => ({
   type: companyConst.REMOVE_RANGE_COMPANY_FAILURE,
 });
 
+//FILTER
+const filter = (payload: QueryFilter[]): FilterCompaniesRequest => ({
+  type: companyConst.FILTER_COMPANIES_REQUEST,
+  payload,
+});
+const filterSuccess = (payload: CompaniesPayload): FilterCompaniesSuccess => ({
+  type: companyConst.FILTER_COMPANIES_SUCCESS,
+  payload,
+});
+const filterFailure = (): FilterCompaniesFailure => ({
+  type: companyConst.FILTER_COMPANIES_FAILURE,
+});
+
 //CLIENT ACTIONS
 const setCompany = (payload: ICompany | null): SetCompany => ({
   type: companyConst.SET_COMPANY,
@@ -169,6 +186,9 @@ export const companyActions = {
   removeRange,
   removeRangeSuccess,
   removeRangeFailure,
+  filter,
+  filterSuccess,
+  filterFailure,
   setCompany,
   clearCompany,
   setCompanies,

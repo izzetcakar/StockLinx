@@ -1,5 +1,6 @@
-import { IUser, IUserLoginDto } from "../../interfaces/serverInterfaces";
+import { IUser, IUserLoginDto } from "@interfaces/serverInterfaces";
 import { userConst } from "./constant";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 export type UserState = {
   user: IUser | null;
@@ -39,6 +40,7 @@ export type FetchUsersSuccess = {
 export type FetchUsersFailure = {
   type: typeof userConst.FETCH_USERS_FAILURE;
 };
+
 //GET WITH TOKEN
 export type GetWithTokenRequest = {
   type: typeof userConst.GET_WITH_TOKEN_REQUEST;
@@ -50,6 +52,7 @@ export type GetWithTokenSuccess = {
 export type GetWithTokenFailure = {
   type: typeof userConst.GET_WITH_TOKEN_FAILURE;
 };
+
 //GET:/ID
 export type FetchUserRequest = {
   type: typeof userConst.FETCH_USER_REQUEST;
@@ -62,6 +65,7 @@ export type FetchUsersuccess = {
 export type FetchUserFailure = {
   type: typeof userConst.FETCH_USER_FAILURE;
 };
+
 //POST
 export type CreateUserRequest = {
   type: typeof userConst.CREATE_USER_REQUEST;
@@ -74,6 +78,7 @@ export type CreateUsersuccess = {
 export type CreateUserFailure = {
   type: typeof userConst.CREATE_USER_FAILURE;
 };
+
 //POST RANGE
 export type CreateRangeUserRequest = {
   type: typeof userConst.CREATE_RANGE_USER_REQUEST;
@@ -86,6 +91,7 @@ export type CreateRangeUserSuccess = {
 export type CreateRangeUserFailure = {
   type: typeof userConst.CREATE_RANGE_USER_FAILURE;
 };
+
 //PUT
 export type UpdateUserRequest = {
   type: typeof userConst.UPDATE_USER_REQUEST;
@@ -98,6 +104,7 @@ export type UpdateUsersuccess = {
 export type UpdateUserFailure = {
   type: typeof userConst.UPDATE_USER_FAILURE;
 };
+
 //REMOVE
 export type RemoveUserRequest = {
   type: typeof userConst.REMOVE_USER_REQUEST;
@@ -109,6 +116,7 @@ export type RemoveUsersuccess = {
 export type RemoveUserFailure = {
   type: typeof userConst.REMOVE_USER_FAILURE;
 };
+
 //REMOVE RANGE
 export type RemoveRangeUserRequest = {
   type: typeof userConst.REMOVE_RANGE_USER_REQUEST;
@@ -121,6 +129,7 @@ export type RemoveRangeUserSuccess = {
 export type RemoveRangeUserFailure = {
   type: typeof userConst.REMOVE_RANGE_USER_FAILURE;
 };
+
 //LOGIN
 export type SignInRequest = {
   type: typeof userConst.SIGN_IN_REQUEST;
@@ -132,6 +141,20 @@ export type SignInSuccess = {
 export type SignInFailure = {
   type: typeof userConst.SIGN_IN_FAILURE;
 };
+
+//FILTER
+export type FilterUsersRequest = {
+  type: typeof userConst.FILTER_USERS_REQUEST;
+  payload: QueryFilter[];
+};
+export type FilterUsersSuccess = {
+  type: typeof userConst.FILTER_USERS_SUCCESS;
+  payload: UsersPayload;
+};
+export type FilterUsersFailure = {
+  type: typeof userConst.FILTER_USERS_FAILURE;
+};
+
 //CLIENT ACTION TYPES
 export type LogoutUser = {
   type: typeof userConst.LOGOUT_USER;
@@ -165,4 +188,7 @@ export type UserActions =
   | GetWithTokenRequest
   | GetWithTokenSuccess
   | GetWithTokenFailure
-  | LogoutUser;
+  | LogoutUser
+  | FilterUsersRequest
+  | FilterUsersSuccess
+  | FilterUsersFailure;

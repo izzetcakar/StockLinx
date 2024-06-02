@@ -1,16 +1,20 @@
-import { IAssetProduct } from "../../interfaces/serverInterfaces";
-import { request } from "../../server/api";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
+import { IAssetProduct } from "@/interfaces/serverInterfaces";
+import { request } from "@/server/api";
+import { getQueryFilter } from "@/utils/filterUtilts";
 const requestUrl = "AssetProduct/";
 
 const getAll = () => {
   return request<IAssetProduct>({ requestUrl: requestUrl, apiType: "get" });
 };
+
 const get = (id: string) => {
   return request<IAssetProduct>({
     requestUrl: requestUrl + id,
     apiType: "get",
   });
 };
+
 const create = (assetProduct: IAssetProduct) => {
   return request<IAssetProduct>({
     requestUrl: requestUrl,
@@ -18,6 +22,7 @@ const create = (assetProduct: IAssetProduct) => {
     queryData: assetProduct,
   });
 };
+
 const createRange = (assetProducts: IAssetProduct[]) => {
   return request<IAssetProduct>({
     requestUrl: requestUrl + "range",
@@ -25,6 +30,7 @@ const createRange = (assetProducts: IAssetProduct[]) => {
     queryData: assetProducts,
   });
 };
+
 const update = (assetProduct: IAssetProduct) => {
   return request<IAssetProduct>({
     requestUrl: requestUrl,
@@ -32,17 +38,27 @@ const update = (assetProduct: IAssetProduct) => {
     queryData: assetProduct,
   });
 };
+
 const remove = (id: string) => {
   return request<IAssetProduct>({
     requestUrl: requestUrl + id,
     apiType: "delete",
   });
 };
+
 const removeRange = (ids: string[]) => {
   return request<IAssetProduct>({
     requestUrl: requestUrl + "range",
     apiType: "delete",
     queryData: ids,
+  });
+};
+
+const filter = (queryFilters: QueryFilter[]) => {
+  return request<IAssetProduct>({
+    requestUrl: requestUrl + "filter",
+    apiType: "get",
+    params: getQueryFilter(queryFilters),
   });
 };
 
@@ -54,4 +70,5 @@ export const assetProductRequests = {
   update,
   remove,
   removeRange,
+  filter,
 };

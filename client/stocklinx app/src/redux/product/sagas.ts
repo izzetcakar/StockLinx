@@ -6,10 +6,10 @@ import {
   IProductCategoryCount,
   IProductLocationCount,
   IProductStatusCount,
-} from "../../interfaces/serverInterfaces";
+} from "@interfaces/serverInterfaces";
 import { productRequests } from "./requests";
 import { genericActions } from "../generic/actions";
-import { openNotificationError } from "../../notification/Notification";
+import { openNotificationError } from "@/notification/Notification";
 import { productConst } from "./constant";
 
 type IResponse = {

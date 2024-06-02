@@ -1,4 +1,4 @@
-import { IProductStatus } from "../../interfaces/serverInterfaces";
+import { IProductStatus } from "@interfaces/serverInterfaces";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { useDispatch } from "react-redux";
@@ -38,6 +38,9 @@ const ProductStatus = () => {
         onRowRemove={(id) => dispatch(productStatusActions.remove({ id: id }))}
         onRowRemoveRange={(ids) =>
           dispatch(productStatusActions.removeRange({ ids: ids }))
+        }
+        onApplyFilters={(filters) =>
+          dispatch(productStatusActions.filter(filters))
         }
         excelColumns={useColumns().excelColumns}
         enableToolbar

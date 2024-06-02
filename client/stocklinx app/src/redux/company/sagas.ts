@@ -1,11 +1,12 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { companyActions } from "./actions";
-import { ICompany } from "../../interfaces/serverInterfaces";
+import { ICompany } from "@interfaces/serverInterfaces";
 import { companyConst } from "./constant";
 import {
   CreateCompanyRequest,
   CreateRangeCompanyRequest,
   FetchCompanyRequest,
+  FilterCompaniesRequest,
   RemoveCompanyRequest,
   RemoveRangeCompanyRequest,
   UpdateCompanyRequest,
@@ -15,7 +16,7 @@ import { genericActions } from "../generic/actions";
 import {
   openNotificationError,
   openNotificationSuccess,
-} from "../../notification/Notification";
+} from "@/notification/Notification";
 
 type IResponse = {
   data: ICompany[] | ICompany | null;
@@ -142,6 +143,25 @@ function* removeRangeCompanySaga(action: RemoveRangeCompanyRequest) {
   yield put(genericActions.decreaseLoading());
 }
 
+function* filterCompaniesSaga(action: FilterCompaniesRequest) {
+  yield put(genericActions.increaseLoading());
+  try {
+    const { data }: IResponse = yield call(
+      companyRequests.filter,
+      action.payload
+    );
+    yield put(
+      companyActions.filterSuccess({
+        companies: data as ICompany[],
+      })
+    );
+  } catch (e) {
+    openNotificationError("Company", (e as Error).message);
+    yield put(companyActions.filterFailure());
+  }
+  yield put(genericActions.decreaseLoading());
+}
+
 function* companysaga() {
   yield takeEvery(companyConst.FETCH_COMPANIES_REQUEST, fetchCompaniesSaga);
   yield takeEvery(companyConst.FETCH_COMPANY_REQUEST, fetchCompanySaga);
@@ -156,6 +176,7 @@ function* companysaga() {
     companyConst.REMOVE_RANGE_COMPANY_REQUEST,
     removeRangeCompanySaga
   );
+  yield takeEvery(companyConst.FILTER_COMPANIES_REQUEST, filterCompaniesSaga);
 }
 
 export default companysaga;

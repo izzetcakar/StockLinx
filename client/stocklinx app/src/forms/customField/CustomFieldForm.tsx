@@ -12,7 +12,7 @@ import { useForm } from "@mantine/form";
 import {
   ICustomField,
   IFieldSetCustomField,
-} from "../../interfaces/serverInterfaces";
+} from "@interfaces/serverInterfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { customFieldActions } from "../../redux/customField/actions";
 import uuid4 from "uuid4";

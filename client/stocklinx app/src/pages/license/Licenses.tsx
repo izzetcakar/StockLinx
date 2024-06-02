@@ -1,4 +1,4 @@
-import { ILicense } from "../../interfaces/serverInterfaces";
+import { ILicense } from "@interfaces/serverInterfaces";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
@@ -49,6 +49,7 @@ const License = () => {
         onRowRemoveRange={(ids) =>
           dispatch(licenseActions.removeRange({ ids: ids }))
         }
+        onApplyFilters={(filters) => dispatch(licenseActions.filter(filters))}
         excelColumns={useColumns().excelColumns}
         enableToolbar
         enableEditActions

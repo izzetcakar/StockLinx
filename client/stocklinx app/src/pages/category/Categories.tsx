@@ -1,4 +1,4 @@
-import { ICategory } from "../../interfaces/serverInterfaces";
+import { ICategory } from "@interfaces/serverInterfaces";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { useDispatch } from "react-redux";
@@ -37,6 +37,7 @@ const Category = () => {
         onRowRemoveRange={(ids) =>
           dispatch(categoryActions.removeRange({ ids: ids }))
         }
+        onApplyFilters={(filters) => dispatch(categoryActions.filter(filters))}
         excelColumns={useColumns().excelColumns}
         enableToolbar
         enableEditActions

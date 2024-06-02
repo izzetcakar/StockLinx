@@ -22,26 +22,6 @@ export default (state = initialState, action: ManufacturerActions) => {
         ...state,
         manufacturers: [],
       };
-    case manufacturerConst.FETCH_MANUFACTURERS_PAGED_REQUEST:
-      return {
-        ...state,
-      };
-    case manufacturerConst.FETCH_MANUFACTURERS_PAGED_SUCCESS: {
-      const { manufacturers } = action.payload;
-      const toAdd = manufacturers.filter(
-        (manufacturer) =>
-          !state.manufacturers.find((x) => x.id === manufacturer.id)
-      );
-      return {
-        ...state,
-        manufacturers: [...state.manufacturers, ...toAdd],
-      };
-    }
-    case manufacturerConst.FETCH_MANUFACTURERS_PAGED_FAILURE:
-      return {
-        ...state,
-        manufacturers: [],
-      };
     case manufacturerConst.FETCH_MANUFACTURER_REQUEST:
       return {
         ...state,
@@ -131,6 +111,20 @@ export default (state = initialState, action: ManufacturerActions) => {
     case manufacturerConst.REMOVE_RANGE_MANUFACTURER_FAILURE:
       return {
         ...state,
+      };
+    case manufacturerConst.FILTER_MANUFACTURERS_REQUEST:
+      return {
+        ...state,
+      };
+    case manufacturerConst.FILTER_MANUFACTURERS_SUCCESS:
+      return {
+        ...state,
+        manufacturers: action.payload.manufacturers,
+      };
+    case manufacturerConst.FILTER_MANUFACTURERS_FAILURE:
+      return {
+        ...state,
+        manufacturers: [],
       };
     case manufacturerConst.SET_MANUFACTURER:
       return {

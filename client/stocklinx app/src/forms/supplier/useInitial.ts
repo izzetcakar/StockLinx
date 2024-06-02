@@ -1,5 +1,5 @@
 import uuid4 from "uuid4";
-import { ISupplier } from "../../interfaces/serverInterfaces";
+import { ISupplier } from "@interfaces/serverInterfaces";
 import { getImage } from "../../utils/Image";
 
 export const useInitial = (supplier?: ISupplier, create?: boolean) => {

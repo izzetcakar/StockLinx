@@ -9,7 +9,7 @@ import {
   FileInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { IManufacturer } from "../../interfaces/serverInterfaces";
+import { IManufacturer } from "@interfaces/serverInterfaces";
 import { useDispatch } from "react-redux";
 import { manufacturerActions } from "../../redux/manufacturer/actions";
 import { useInitial } from "./useInitial";

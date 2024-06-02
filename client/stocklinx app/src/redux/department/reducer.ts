@@ -109,6 +109,19 @@ export default (state = initialState, action: DepartmentActions) => {
       return {
         ...state,
       };
+    case departmentConst.FILTER_DEPARTMENTS_REQUEST:
+      return {
+        ...state,
+      };
+    case departmentConst.FILTER_DEPARTMENTS_SUCCESS:
+      return {
+        ...state,
+        departments: action.payload.departments,
+      };
+    case departmentConst.FILTER_DEPARTMENTS_FAILURE:
+      return {
+        ...state,
+      };
     case departmentConst.SET_DEPARTMENT:
       return {
         ...state,

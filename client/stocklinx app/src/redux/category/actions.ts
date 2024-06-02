@@ -1,4 +1,4 @@
-import { ICategory } from "../../interfaces/serverInterfaces";
+import { ICategory } from "@interfaces/serverInterfaces";
 import { categoryConst } from "./constant";
 import {
   CreateCategoryFailure,
@@ -31,7 +31,11 @@ import {
   RemoveRangeCategoryFailure,
   CategoryRemoveRangePayload,
   CategoryRemovePayload,
+  FilterCategoriesRequest,
+  FilterCategoriesSuccess,
+  FilterCategoriesFailure,
 } from "./type";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 //GET
 const getAll = (): FetchCategoriesRequest => ({
@@ -133,6 +137,21 @@ const removeRangeFailure = (): RemoveRangeCategoryFailure => ({
   type: categoryConst.REMOVE_RANGE_CATEGORY_FAILURE,
 });
 
+//FILTER
+const filter = (payload: QueryFilter[]): FilterCategoriesRequest => ({
+  type: categoryConst.FILTER_CATEGORIES_REQUEST,
+  payload,
+});
+const filterSuccess = (
+  payload: CategoriesPayload
+): FilterCategoriesSuccess => ({
+  type: categoryConst.FILTER_CATEGORIES_SUCCESS,
+  payload,
+});
+const filterFailure = (): FilterCategoriesFailure => ({
+  type: categoryConst.FILTER_CATEGORIES_FAILURE,
+});
+
 //CLIENT ACTIONS
 const setCategory = (payload: ICategory | null): SetCategory => ({
   type: categoryConst.SET_CATEGORY,
@@ -171,6 +190,9 @@ export const categoryActions = {
   removeRange,
   removeRangeSuccess,
   removeRangeFailure,
+  filter,
+  filterSuccess,
+  filterFailure,
   setCategory,
   clearCategory,
   setCategories,

@@ -1,7 +1,7 @@
 import React from "react";
 import { TextInput, Button, Group, Flex } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { CategoryType, ICategory } from "../../interfaces/serverInterfaces";
+import { CategoryType, ICategory } from "@interfaces/serverInterfaces";
 import { useDispatch } from "react-redux";
 import { categoryActions } from "../../redux/category/actions";
 import { useInitial } from "./useInitial";

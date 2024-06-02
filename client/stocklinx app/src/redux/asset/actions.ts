@@ -1,5 +1,4 @@
-import { QueryFilter } from "@/interfaces/gridTableInterfaces";
-import { IAsset } from "../../interfaces/serverInterfaces";
+import { IAsset } from "@/interfaces/serverInterfaces";
 import { assetConst } from "./constant";
 import {
   CreateAssetFailure,
@@ -40,10 +39,11 @@ import {
   CheckOutAssetFailure,
   AssetCheckOutPayload,
   AssetCheckInPayload,
-  AssetFilterRequest,
-  AssetFilterSuccess,
-  AssetFilterFailure,
+  FilterAssetsRequest,
+  FilterAssetsSuccess,
+  FilterAssetsFailure,
 } from "./type";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 //GET
 const getAll = (): FetchAssetsRequest => ({
@@ -169,16 +169,17 @@ const checkOutFailure = (): CheckOutAssetFailure => ({
   type: assetConst.CHECK_OUT_ASSET_FAILURE,
 });
 
-const filter = (payload: QueryFilter[]): AssetFilterRequest => ({
-  type: assetConst.ASSET_FILTER_REQUEST,
+//FILTER
+const filter = (payload: QueryFilter[]): FilterAssetsRequest => ({
+  type: assetConst.FILTER_ASSETS_REQUEST,
   payload,
 });
-const filterSuccess = (payload: AssetsPayload): AssetFilterSuccess => ({
-  type: assetConst.ASSET_FILTER_SUCCESS,
+const filterSuccess = (payload: AssetsPayload): FilterAssetsSuccess => ({
+  type: assetConst.FILTER_ASSETS_SUCCESS,
   payload,
 });
-const filterFailure = (): AssetFilterFailure => ({
-  type: assetConst.ASSET_FILTER_FAILURE,
+const filterFailure = (): FilterAssetsFailure => ({
+  type: assetConst.FILTER_ASSETS_FAILURE,
 });
 
 //CLIENT ACTIONS

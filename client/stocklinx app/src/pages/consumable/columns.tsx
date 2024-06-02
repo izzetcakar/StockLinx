@@ -8,7 +8,7 @@ import {
   CategoryType,
   IConsumable,
   IUserProduct,
-} from "../../interfaces/serverInterfaces";
+} from "@interfaces/serverInterfaces";
 import { Anchor, Button } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import { consumableActions } from "../../redux/consumable/actions";

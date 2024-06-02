@@ -1,5 +1,5 @@
 import uuid4 from "uuid4";
-import { ILicense } from "../../interfaces/serverInterfaces";
+import { ILicense } from "@interfaces/serverInterfaces";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 

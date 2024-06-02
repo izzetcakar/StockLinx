@@ -109,6 +109,20 @@ export default (state = initialState, action: CategoryActions) => {
       return {
         ...state,
       };
+    case categoryConst.FILTER_CATEGORIES_REQUEST:
+      return {
+        ...state,
+      };
+    case categoryConst.FILTER_CATEGORIES_SUCCESS:
+      return {
+        ...state,
+        categories: action.payload.categories,
+      };
+    case categoryConst.FILTER_CATEGORIES_FAILURE:
+      return {
+        ...state,
+        categories: [],
+      };
     case categoryConst.SET_CATEGORY:
       return {
         ...state,

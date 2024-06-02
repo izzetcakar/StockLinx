@@ -1,20 +1,24 @@
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
+import { getQueryFilter } from "@/utils/filterUtilts";
 import {
   UserProductCheckInDto,
   UserProductCheckOutDto,
-} from "../../interfaces/dtos";
-import { IConsumable } from "../../interfaces/serverInterfaces";
-import { request } from "../../server/api";
+} from "@interfaces/dtos";
+import { IConsumable } from "@interfaces/serverInterfaces";
+import { request } from "@request";
 const requestUrl = "Consumable/";
 
 const getAll = () => {
   return request<IConsumable>({ requestUrl: requestUrl, apiType: "get" });
 };
+
 const get = (id: string) => {
   return request<IConsumable>({
     requestUrl: requestUrl + id,
     apiType: "get",
   });
 };
+
 const create = (consumable: IConsumable) => {
   return request<IConsumable>({
     requestUrl: requestUrl,
@@ -22,6 +26,7 @@ const create = (consumable: IConsumable) => {
     queryData: consumable,
   });
 };
+
 const createRange = (consumables: IConsumable[]) => {
   return request<IConsumable>({
     requestUrl: requestUrl + "range",
@@ -29,6 +34,7 @@ const createRange = (consumables: IConsumable[]) => {
     queryData: consumables,
   });
 };
+
 const update = (consumable: IConsumable) => {
   return request<IConsumable>({
     requestUrl: requestUrl,
@@ -36,12 +42,14 @@ const update = (consumable: IConsumable) => {
     queryData: consumable,
   });
 };
+
 const remove = (id: string) => {
   return request<IConsumable>({
     requestUrl: requestUrl + id,
     apiType: "delete",
   });
 };
+
 const removeRange = (ids: string[]) => {
   return request<IConsumable>({
     requestUrl: requestUrl + "range",
@@ -49,6 +57,7 @@ const removeRange = (ids: string[]) => {
     queryData: ids,
   });
 };
+
 const checkIn = (checkInDto: UserProductCheckInDto) => {
   return request<IConsumable>({
     requestUrl: requestUrl + "checkin",
@@ -56,11 +65,20 @@ const checkIn = (checkInDto: UserProductCheckInDto) => {
     queryData: checkInDto,
   });
 };
+
 const checkOut = (checkOutDto: UserProductCheckOutDto) => {
   return request<IConsumable>({
     requestUrl: requestUrl + "checkout",
     apiType: "post",
     queryData: checkOutDto,
+  });
+};
+
+const filter = (queryFilters: QueryFilter[]) => {
+  return request<IConsumable>({
+    requestUrl: requestUrl + "filter",
+    apiType: "get",
+    params: getQueryFilter(queryFilters),
   });
 };
 
@@ -74,4 +92,5 @@ export const consumableRequests = {
   removeRange,
   checkIn,
   checkOut,
+  filter,
 };

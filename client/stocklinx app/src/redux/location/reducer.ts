@@ -109,6 +109,20 @@ export default (state = initialState, action: LocationActions) => {
       return {
         ...state,
       };
+    case locationConst.FILTER_LOCATIONS_REQUEST:
+      return {
+        ...state,
+      };
+    case locationConst.FILTER_LOCATIONS_SUCCESS:
+      return {
+        ...state,
+        locations: action.payload.locations,
+      };
+    case locationConst.FILTER_LOCATIONS_FAILURE:
+      return {
+        ...state,
+        locations: [],
+      };
     case locationConst.SET_LOCATION:
       return {
         ...state,

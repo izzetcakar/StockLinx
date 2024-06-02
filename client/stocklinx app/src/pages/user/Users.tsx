@@ -1,4 +1,4 @@
-import { IUser } from "../../interfaces/serverInterfaces";
+import { IUser } from "@interfaces/serverInterfaces";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
@@ -43,6 +43,7 @@ const User = () => {
         onRowRemoveRange={(ids) =>
           dispatch(userActions.removeRange({ ids: ids }))
         }
+        onApplyFilters={(filters) => dispatch(userActions.filter(filters))}
         enableToolbar
         enableEditActions
         enableSelectActions

@@ -1,5 +1,6 @@
-import { ICompany } from "../../interfaces/serverInterfaces";
+import { ICompany } from "@interfaces/serverInterfaces";
 import { companyConst } from "./constant";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 export type CompanyState = {
   company: ICompany | null;
@@ -32,6 +33,7 @@ export type FetchCompaniesSuccess = {
 export type FetchCompaniesFailure = {
   type: typeof companyConst.FETCH_COMPANIES_FAILURE;
 };
+
 //GET:/ID
 export type FetchCompanyRequest = {
   type: typeof companyConst.FETCH_COMPANY_REQUEST;
@@ -44,6 +46,7 @@ export type FetchCompanySuccess = {
 export type FetchCompanyFailure = {
   type: typeof companyConst.FETCH_COMPANY_FAILURE;
 };
+
 //POST
 export type CreateCompanyRequest = {
   type: typeof companyConst.CREATE_COMPANY_REQUEST;
@@ -56,6 +59,7 @@ export type CreateCompanySuccess = {
 export type CreateCompanyFailure = {
   type: typeof companyConst.CREATE_COMPANY_FAILURE;
 };
+
 //POST RANGE
 export type CreateRangeCompanyRequest = {
   type: typeof companyConst.CREATE_RANGE_COMPANY_REQUEST;
@@ -68,6 +72,7 @@ export type CreateRangeCompanySuccess = {
 export type CreateRangeCompanyFailure = {
   type: typeof companyConst.CREATE_RANGE_COMPANY_FAILURE;
 };
+
 //PUT
 export type UpdateCompanyRequest = {
   type: typeof companyConst.UPDATE_COMPANY_REQUEST;
@@ -80,6 +85,7 @@ export type UpdateCompanySuccess = {
 export type UpdateCompanyFailure = {
   type: typeof companyConst.UPDATE_COMPANY_FAILURE;
 };
+
 //REMOVE
 export type RemoveCompanyRequest = {
   type: typeof companyConst.REMOVE_COMPANY_REQUEST;
@@ -92,6 +98,7 @@ export type RemoveCompanySuccess = {
 export type RemoveCompanyFailure = {
   type: typeof companyConst.REMOVE_COMPANY_FAILURE;
 };
+
 //REMOVE RANGE
 export type RemoveRangeCompanyRequest = {
   type: typeof companyConst.REMOVE_RANGE_COMPANY_REQUEST;
@@ -103,6 +110,19 @@ export type RemoveRangeCompanySuccess = {
 };
 export type RemoveRangeCompanyFailure = {
   type: typeof companyConst.REMOVE_RANGE_COMPANY_FAILURE;
+};
+
+//FILTER
+export type FilterCompaniesRequest = {
+  type: typeof companyConst.FILTER_COMPANIES_REQUEST;
+  payload: QueryFilter[];
+};
+export type FilterCompaniesSuccess = {
+  type: typeof companyConst.FILTER_COMPANIES_SUCCESS;
+  payload: CompaniesPayload;
+};
+export type FilterCompaniesFailure = {
+  type: typeof companyConst.FILTER_COMPANIES_FAILURE;
 };
 
 //CLIENT ACTION TYPES
@@ -143,6 +163,9 @@ export type CompanyActions =
   | RemoveRangeCompanyRequest
   | RemoveRangeCompanySuccess
   | RemoveRangeCompanyFailure
+  | FilterCompaniesRequest
+  | FilterCompaniesSuccess
+  | FilterCompaniesFailure
   | SetCompany
   | SetCompanies
   | ClearCompany

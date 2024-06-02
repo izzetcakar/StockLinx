@@ -115,6 +115,20 @@ export default (state = initialState, action: ProductStatusActions) => {
       return {
         ...state,
       };
+    case productStatusConst.FILTER_PRODUCTSTATUSES_REQUEST:
+      return {
+        ...state,
+      };
+    case productStatusConst.FILTER_PRODUCTSTATUSES_SUCCESS:
+      return {
+        ...state,
+        productStatuses: action.payload.productStatuses,
+      };
+    case productStatusConst.FILTER_PRODUCTSTATUSES_FAILURE:
+      return {
+        ...state,
+        productStatuses: [],
+      };
     case productStatusConst.SET_PRODUCTSTATUS:
       return {
         ...state,

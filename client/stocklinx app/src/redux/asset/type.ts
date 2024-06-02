@@ -1,7 +1,7 @@
-import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 import { AssetCheckInDto, AssetCheckOutDto } from "../../interfaces/dtos";
-import { IAsset } from "../../interfaces/serverInterfaces";
+import { IAsset } from "@interfaces/serverInterfaces";
 import { assetConst } from "./constant";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 export type AssetState = {
   asset: IAsset | null;
@@ -147,16 +147,17 @@ export type CheckOutAssetFailure = {
   type: typeof assetConst.CHECK_OUT_ASSET_FAILURE;
 };
 
-export type AssetFilterRequest = {
-  type: typeof assetConst.ASSET_FILTER_REQUEST;
+//FILTER
+export type FilterAssetsRequest = {
+  type: typeof assetConst.FILTER_ASSETS_REQUEST;
   payload: QueryFilter[];
 };
-export type AssetFilterSuccess = {
-  type: typeof assetConst.ASSET_FILTER_SUCCESS;
+export type FilterAssetsSuccess = {
+  type: typeof assetConst.FILTER_ASSETS_SUCCESS;
   payload: AssetsPayload;
 };
-export type AssetFilterFailure = {
-  type: typeof assetConst.ASSET_FILTER_FAILURE;
+export type FilterAssetsFailure = {
+  type: typeof assetConst.FILTER_ASSETS_FAILURE;
 };
 
 //CLIENT ACTION TYPES
@@ -203,9 +204,9 @@ export type AssetActions =
   | CheckOutAssetRequest
   | CheckOutAssetSuccess
   | CheckOutAssetFailure
-  | AssetFilterRequest
-  | AssetFilterSuccess
-  | AssetFilterFailure
+  | FilterAssetsRequest
+  | FilterAssetsSuccess
+  | FilterAssetsFailure
   | SetAsset
   | SetAssets
   | ClearAsset

@@ -1,5 +1,6 @@
-import { ICategory } from "../../interfaces/serverInterfaces";
+import { ICategory } from "@interfaces/serverInterfaces";
 import { categoryConst } from "./constant";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 export type CategoryState = {
   category: ICategory | null;
@@ -32,6 +33,7 @@ export type FetchCategoriesSuccess = {
 export type FetchCategoriesFailure = {
   type: typeof categoryConst.FETCH_CATEGORIES_FAILURE;
 };
+
 //GET:/ID
 export type FetchCategoryRequest = {
   type: typeof categoryConst.FETCH_CATEGORY_REQUEST;
@@ -44,6 +46,7 @@ export type FetchCategorySuccess = {
 export type FetchCategoryFailure = {
   type: typeof categoryConst.FETCH_CATEGORY_FAILURE;
 };
+
 //POST
 export type CreateCategoryRequest = {
   type: typeof categoryConst.CREATE_CATEGORY_REQUEST;
@@ -56,6 +59,7 @@ export type CreateCategorySuccess = {
 export type CreateCategoryFailure = {
   type: typeof categoryConst.CREATE_CATEGORY_FAILURE;
 };
+
 //POST RANGE
 export type CreateRangeCategoryRequest = {
   type: typeof categoryConst.CREATE_RANGE_CATEGORY_REQUEST;
@@ -68,6 +72,7 @@ export type CreateRangeCategorySuccess = {
 export type CreateRangeCategoryFailure = {
   type: typeof categoryConst.CREATE_RANGE_CATEGORY_FAILURE;
 };
+
 //PUT
 export type UpdateCategoryRequest = {
   type: typeof categoryConst.UPDATE_CATEGORY_REQUEST;
@@ -80,6 +85,7 @@ export type UpdateCategorySuccess = {
 export type UpdateCategoryFailure = {
   type: typeof categoryConst.UPDATE_CATEGORY_FAILURE;
 };
+
 //REMOVE
 export type RemoveCategoryRequest = {
   type: typeof categoryConst.REMOVE_CATEGORY_REQUEST;
@@ -92,6 +98,7 @@ export type RemoveCategorySuccess = {
 export type RemoveCategoryFailure = {
   type: typeof categoryConst.REMOVE_CATEGORY_FAILURE;
 };
+
 //REMOVE RANGE
 export type RemoveRangeCategoryRequest = {
   type: typeof categoryConst.REMOVE_RANGE_CATEGORY_REQUEST;
@@ -103,6 +110,19 @@ export type RemoveRangeCategorySuccess = {
 };
 export type RemoveRangeCategoryFailure = {
   type: typeof categoryConst.REMOVE_RANGE_CATEGORY_FAILURE;
+};
+
+//FILTER
+export type FilterCategoriesRequest = {
+  type: typeof categoryConst.FILTER_CATEGORIES_REQUEST;
+  payload: QueryFilter[];
+};
+export type FilterCategoriesSuccess = {
+  type: typeof categoryConst.FILTER_CATEGORIES_SUCCESS;
+  payload: CategoriesPayload;
+};
+export type FilterCategoriesFailure = {
+  type: typeof categoryConst.FILTER_CATEGORIES_FAILURE;
 };
 
 //CLIENT ACTION TYPES
@@ -143,6 +163,9 @@ export type CategoryActions =
   | RemoveRangeCategoryRequest
   | RemoveRangeCategorySuccess
   | RemoveRangeCategoryFailure
+  | FilterCategoriesRequest
+  | FilterCategoriesSuccess
+  | FilterCategoriesFailure
   | SetCategory
   | SetCategories
   | ClearCategory

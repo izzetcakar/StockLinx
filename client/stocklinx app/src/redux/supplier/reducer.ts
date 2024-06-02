@@ -109,6 +109,20 @@ export default (state = initialState, action: SupplierActions) => {
       return {
         ...state,
       };
+    case supplierConst.FILTER_SUPPLIERS_REQUEST:
+      return {
+        ...state,
+      };
+    case supplierConst.FILTER_SUPPLIERS_SUCCESS:
+      return {
+        ...state,
+        suppliers: action.payload.suppliers,
+      };
+    case supplierConst.FILTER_SUPPLIERS_FAILURE:
+      return {
+        ...state,
+        suppliers: [],
+      };
     case supplierConst.SET_SUPPLIER:
       return {
         ...state,

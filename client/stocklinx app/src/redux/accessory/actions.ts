@@ -2,8 +2,8 @@ import {
   CheckInOutPayload,
   UserProductCheckInPayload,
   UserProductCheckOutPayload,
-} from "../../interfaces/clientInterfaces";
-import { IAccessory } from "../../interfaces/serverInterfaces";
+} from "@interfaces/clientInterfaces";
+import { IAccessory } from "@interfaces/serverInterfaces";
 import { accessoryConst } from "./constant";
 import {
   CreateAccessoryFailure,
@@ -42,7 +42,11 @@ import {
   CheckOutAccessoryRequest,
   CheckOutAccessorySuccess,
   CheckOutAccessoryFailure,
+  FilterAccessoriesRequest,
+  FilterAccessoriesSuccess,
+  FilterAccessoriesFailure,
 } from "./type";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 //GET
 const getAll = (): FetchAccessoriesRequest => ({
@@ -180,6 +184,21 @@ const checkOutFailure = (): CheckOutAccessoryFailure => ({
   type: accessoryConst.CHECK_OUT_ACCESSORY_FAILURE,
 });
 
+//FILTER
+const filter = (payload: QueryFilter[]): FilterAccessoriesRequest => ({
+  type: accessoryConst.FILTER_ACCESSORIES_REQUEST,
+  payload,
+});
+const filterSuccess = (
+  payload: AccessoriesPayload
+): FilterAccessoriesSuccess => ({
+  type: accessoryConst.FILTER_ACCESSORIES_SUCCESS,
+  payload,
+});
+const filterFailure = (): FilterAccessoriesFailure => ({
+  type: accessoryConst.FILTER_ACCESSORIES_FAILURE,
+});
+
 //CLIENT ACTIONS
 const setAccessory = (payload: IAccessory | null): SetAccessory => ({
   type: accessoryConst.SET_ACCESSORY,
@@ -224,6 +243,9 @@ export const accessoryActions = {
   checkOut,
   checkOutSuccess,
   checkOutFailure,
+  filter,
+  filterSuccess,
+  filterFailure,
   setAccessory,
   clearAccessory,
   setAccessories,

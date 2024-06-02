@@ -1,4 +1,4 @@
-import { ILocation } from "../../interfaces/serverInterfaces";
+import { ILocation } from "@interfaces/serverInterfaces";
 import { locationConst } from "./constant";
 import {
   CreateLocationFailure,
@@ -31,7 +31,11 @@ import {
   RemoveRangeLocationFailure,
   LocationRemoveRangePayload,
   LocationRemovePayload,
+  FilterLocationsRequest,
+  FilterLocationsSuccess,
+  FilterLocationsFailure,
 } from "./type";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 //GET
 const getAll = (): FetchLocationsRequest => ({
@@ -133,6 +137,19 @@ const removeRangeFailure = (): RemoveRangeLocationFailure => ({
   type: locationConst.REMOVE_RANGE_LOCATION_FAILURE,
 });
 
+//FILTER
+const filter = (payload: QueryFilter[]): FilterLocationsRequest => ({
+  type: locationConst.FILTER_LOCATIONS_REQUEST,
+  payload,
+});
+const filterSuccess = (payload: LocationsPayload): FilterLocationsSuccess => ({
+  type: locationConst.FILTER_LOCATIONS_SUCCESS,
+  payload,
+});
+const filterFailure = (): FilterLocationsFailure => ({
+  type: locationConst.FILTER_LOCATIONS_FAILURE,
+});
+
 //CLIENT ACTIONS
 const setLocation = (payload: ILocation | null): SetLocation => ({
   type: locationConst.SET_LOCATION,
@@ -171,6 +188,9 @@ export const locationActions = {
   removeRange,
   removeRangeSuccess,
   removeRangeFailure,
+  filter,
+  filterSuccess,
+  filterFailure,
   setLocation,
   clearLocation,
   setLocations,

@@ -1,11 +1,12 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { modelActions } from "./actions";
-import { IModel } from "../../interfaces/serverInterfaces";
+import { IModel } from "@interfaces/serverInterfaces";
 import { modelConst } from "./constant";
 import {
   CreateModelRequest,
   CreateRangeModelRequest,
   FetchModelRequest,
+  FilterModelsRequest,
   RemoveModelRequest,
   RemoveRangeModelRequest,
   UpdateModelRequest,
@@ -15,14 +16,14 @@ import { genericActions } from "../generic/actions";
 import {
   openNotificationError,
   openNotificationSuccess,
-} from "../../notification/Notification";
+} from "@/notification/Notification";
 
 type IResponse = {
   data: IModel[] | IModel | null;
   message: string;
   success: boolean;
   status: number;
-}
+};
 
 function* fetchModelsSaga() {
   yield put(genericActions.increaseLoading());
@@ -130,6 +131,25 @@ function* removeRangeModelSaga(action: RemoveRangeModelRequest) {
   yield put(genericActions.decreaseLoading());
 }
 
+function* filterModelsSaga(action: FilterModelsRequest) {
+  yield put(genericActions.increaseLoading());
+  try {
+    const { data }: IResponse = yield call(
+      modelRequests.filter,
+      action.payload
+    );
+    yield put(
+      modelActions.filterSuccess({
+        models: data as IModel[],
+      })
+    );
+  } catch (e) {
+    openNotificationError("Model", (e as Error).message);
+    yield put(modelActions.filterFailure());
+  }
+  yield put(genericActions.decreaseLoading());
+}
+
 function* modelsaga() {
   yield takeEvery(modelConst.FETCH_MODELS_REQUEST, fetchModelsSaga);
   yield takeEvery(modelConst.FETCH_MODEL_REQUEST, fetchModelSaga);
@@ -138,6 +158,7 @@ function* modelsaga() {
   yield takeEvery(modelConst.UPDATE_MODEL_REQUEST, updateModelSaga);
   yield takeEvery(modelConst.REMOVE_MODEL_REQUEST, removeModelSaga);
   yield takeEvery(modelConst.REMOVE_RANGE_MODEL_REQUEST, removeRangeModelSaga);
+  yield takeEvery(modelConst.FILTER_MODELS_REQUEST, filterModelsSaga);
 }
 
 export default modelsaga;

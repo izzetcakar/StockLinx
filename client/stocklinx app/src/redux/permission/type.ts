@@ -1,5 +1,6 @@
-import { IPermission } from "../../interfaces/serverInterfaces";
+import { IPermission } from "@interfaces/serverInterfaces";
 import { permissionConst } from "./constant";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 export type PermissionState = {
   permission: IPermission | null;
@@ -111,6 +112,19 @@ export type SyncPermissionFailure = {
   type: typeof permissionConst.SYNC_PERMISSION_FAILURE;
 };
 
+//FILTER
+export type FilterPermissionsRequest = {
+  type: typeof permissionConst.FILTER_PERMISSIONS_REQUEST;
+  payload: QueryFilter[];
+};
+export type FilterPermissionsSuccess = {
+  type: typeof permissionConst.FILTER_PERMISSIONS_SUCCESS;
+  payload: PermissionsPayload;
+};
+export type FilterPermissionsFailure = {
+  type: typeof permissionConst.FILTER_PERMISSIONS_FAILURE;
+};
+
 //CLIENT ACTION TYPES
 export type SetPermission = {
   type: typeof permissionConst.SET_PERMISSION;
@@ -149,6 +163,9 @@ export type PermissionActions =
   | SyncPermissionRequest
   | SyncPermissionSuccess
   | SyncPermissionFailure
+  | FilterPermissionsRequest
+  | FilterPermissionsSuccess
+  | FilterPermissionsFailure
   | SetPermission
   | SetPermissions
   | ClearPermission

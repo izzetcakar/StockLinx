@@ -4,9 +4,10 @@ import {
   CheckInOutPayload,
   UserProductCheckInPayload,
   UserProductCheckOutPayload,
-} from "../../interfaces/clientInterfaces";
-import { ILicense } from "../../interfaces/serverInterfaces";
+} from "@interfaces/clientInterfaces";
+import { ILicense } from "@interfaces/serverInterfaces";
 import { licenseConst } from "./constant";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 export type LicenseState = {
   license: ILicense | null;
@@ -143,7 +144,7 @@ export type AssetCheckInLicenseFailure = {
   type: typeof licenseConst.ASSET_CHECK_IN_LICENSE_FAILURE;
 };
 
-//CHECK OUT
+//USER CHECK OUT
 export type UserCheckOutLicenseRequest = {
   type: typeof licenseConst.USER_CHECK_OUT_LICENSE_REQUEST;
   payload: UserProductCheckOutPayload;
@@ -156,6 +157,7 @@ export type UserCheckOutLicenseFailure = {
   type: typeof licenseConst.USER_CHECK_OUT_LICENSE_FAILURE;
 };
 
+//ASSET CHECK OUT
 export type AssetCheckOutLicenseRequest = {
   type: typeof licenseConst.ASSET_CHECK_OUT_LICENSE_REQUEST;
   payload: AssetProductCheckOutPayload;
@@ -166,6 +168,19 @@ export type AssetCheckOutLicenseSuccess = {
 };
 export type AssetCheckOutLicenseFailure = {
   type: typeof licenseConst.ASSET_CHECK_OUT_LICENSE_FAILURE;
+};
+
+//FILTER
+export type FilterLicensesRequest = {
+  type: typeof licenseConst.FILTER_LICENSES_REQUEST;
+  payload: QueryFilter[];
+};
+export type FilterLicensesSuccess = {
+  type: typeof licenseConst.FILTER_LICENSES_SUCCESS;
+  payload: LicensesPayload;
+};
+export type FilterLicensesFailure = {
+  type: typeof licenseConst.FILTER_LICENSES_FAILURE;
 };
 
 //CLIENT ACTION TYPES
@@ -218,6 +233,9 @@ export type LicenseActions =
   | AssetCheckOutLicenseRequest
   | AssetCheckOutLicenseSuccess
   | AssetCheckOutLicenseFailure
+  | FilterLicensesRequest
+  | FilterLicensesSuccess
+  | FilterLicensesFailure
   | SetLicense
   | SetLicenses
   | ClearLicense

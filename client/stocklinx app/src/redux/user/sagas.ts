@@ -5,17 +5,18 @@ import {
   CreateRangeUserRequest,
   CreateUserRequest,
   FetchUserRequest,
+  FilterUsersRequest,
   RemoveRangeUserRequest,
   RemoveUserRequest,
   SignInRequest,
   UpdateUserRequest,
 } from "./type";
 import { userRequests } from "./requests";
-import { IUser } from "../../interfaces/serverInterfaces";
+import { IUser } from "@interfaces/serverInterfaces";
 import {
   openNotificationError,
   openNotificationSuccess,
-} from "../../notification/Notification";
+} from "@/notification/Notification";
 import { genericActions } from "../generic/actions";
 
 type IResponse = {
@@ -170,6 +171,22 @@ function* getUserWithTokenSaga() {
   yield put(genericActions.decreaseLoading());
 }
 
+function* filterUsersSaga(action: FilterUsersRequest) {
+  yield put(genericActions.increaseLoading());
+  try {
+    const { data }: IResponse = yield call(userRequests.filter, action.payload);
+    yield put(
+      userActions.filterSuccess({
+        users: data as IUser[],
+      })
+    );
+  } catch (e) {
+    openNotificationError("User", (e as Error).message);
+    yield put(userActions.filterFailure());
+  }
+  yield put(genericActions.decreaseLoading());
+}
+
 function* usersaga() {
   yield takeEvery(userConst.FETCH_USERS_REQUEST, fetchUsersSaga);
   yield takeEvery(userConst.FETCH_USER_REQUEST, fetchUsersaga);
@@ -180,6 +197,7 @@ function* usersaga() {
   yield takeEvery(userConst.UPDATE_USER_REQUEST, updateUserSaga);
   yield takeEvery(userConst.REMOVE_USER_REQUEST, removeUserSaga);
   yield takeEvery(userConst.REMOVE_RANGE_USER_REQUEST, removeRangeUserSaga);
+  yield takeEvery(userConst.FILTER_USERS_REQUEST, filterUsersSaga);
 }
 
 export default usersaga;

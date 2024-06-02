@@ -2,8 +2,8 @@ import {
   CheckInOutPayload,
   UserProductCheckInPayload,
   UserProductCheckOutPayload,
-} from "../../interfaces/clientInterfaces";
-import { IConsumable } from "../../interfaces/serverInterfaces";
+} from "@interfaces/clientInterfaces";
+import { IConsumable } from "@interfaces/serverInterfaces";
 import { consumableConst } from "./constant";
 import {
   CreateConsumableFailure,
@@ -42,7 +42,11 @@ import {
   CheckOutConsumableRequest,
   CheckOutConsumableSuccess,
   CheckOutConsumableFailure,
+  FilterConsumablesRequest,
+  FilterConsumablesSuccess,
+  FilterConsumablesFailure,
 } from "./type";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 //GET
 const getAll = (): FetchConsumablesRequest => ({
@@ -184,6 +188,21 @@ const checkOutFailure = (): CheckOutConsumableFailure => ({
   type: consumableConst.CHECK_OUT_CONSUMABLE_FAILURE,
 });
 
+//FILTER
+const filter = (payload: QueryFilter[]): FilterConsumablesRequest => ({
+  type: consumableConst.FILTER_CONSUMABLES_REQUEST,
+  payload,
+});
+const filterSuccess = (
+  payload: ConsumablesPayload
+): FilterConsumablesSuccess => ({
+  type: consumableConst.FILTER_CONSUMABLES_SUCCESS,
+  payload,
+});
+const filterFailure = (): FilterConsumablesFailure => ({
+  type: consumableConst.FILTER_CONSUMABLES_FAILURE,
+});
+
 //CLIENT ACTIONS
 const setConsumable = (payload: IConsumable | null): SetConsumable => ({
   type: consumableConst.SET_CONSUMABLE,
@@ -228,6 +247,9 @@ export const consumableActions = {
   checkOut,
   checkOutSuccess,
   checkOutFailure,
+  filter,
+  filterSuccess,
+  filterFailure,
   setConsumable,
   clearConsumable,
   setConsumables,

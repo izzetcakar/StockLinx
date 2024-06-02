@@ -1,4 +1,4 @@
-import { IPermission } from "../../interfaces/serverInterfaces";
+import { IPermission } from "@interfaces/serverInterfaces";
 import { permissionConst } from "./constant";
 import {
   CreatePermissionFailure,
@@ -31,7 +31,11 @@ import {
   SyncPermissionRequest,
   SyncPermissionSuccess,
   SyncPermissionFailure,
+  FilterPermissionsRequest,
+  FilterPermissionsSuccess,
+  FilterPermissionsFailure,
 } from "./type";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 //GET
 const getAll = (): FetchPermissionsRequest => ({
@@ -137,6 +141,21 @@ const syncFailure = (): SyncPermissionFailure => ({
   type: permissionConst.SYNC_PERMISSION_FAILURE,
 });
 
+//FILTER
+const filter = (payload: QueryFilter[]): FilterPermissionsRequest => ({
+  type: permissionConst.FILTER_PERMISSIONS_REQUEST,
+  payload,
+});
+const filterSuccess = (
+  payload: PermissionsPayload
+): FilterPermissionsSuccess => ({
+  type: permissionConst.FILTER_PERMISSIONS_SUCCESS,
+  payload,
+});
+const filterFailure = (): FilterPermissionsFailure => ({
+  type: permissionConst.FILTER_PERMISSIONS_FAILURE,
+});
+
 //CLIENT ACTIONS
 const setPermission = (payload: IPermission | null): SetPermission => ({
   type: permissionConst.SET_PERMISSION,
@@ -175,6 +194,9 @@ export const permissionActions = {
   sync,
   syncSuccess,
   syncFailure,
+  filter,
+  filterSuccess,
+  filterFailure,
   setPermission,
   clearPermission,
   setPermissions,

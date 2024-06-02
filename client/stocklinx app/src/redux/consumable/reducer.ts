@@ -153,6 +153,20 @@ export default (state = initialState, action: ConsumableActions) => {
       return {
         ...state,
       };
+    case consumableConst.FILTER_CONSUMABLES_REQUEST:
+      return {
+        ...state,
+      };
+    case consumableConst.FILTER_CONSUMABLES_SUCCESS:
+      return {
+        ...state,
+        consumables: action.payload.consumables,
+      };
+    case consumableConst.FILTER_CONSUMABLES_FAILURE:
+      return {
+        ...state,
+        consumables: [],
+      };
     case consumableConst.SET_CONSUMABLE:
       return {
         ...state,

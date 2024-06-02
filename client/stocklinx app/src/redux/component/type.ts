@@ -2,9 +2,10 @@ import {
   AssetProductCheckInPayload,
   AssetProductCheckOutPayload,
   CheckInOutPayload,
-} from "../../interfaces/clientInterfaces";
-import { IComponent, IUserProduct } from "../../interfaces/serverInterfaces";
+} from "@interfaces/clientInterfaces";
+import { IComponent, IUserProduct } from "@interfaces/serverInterfaces";
 import { componentConst } from "./constant";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 export type ComponentState = {
   component: IComponent | null;
@@ -146,6 +147,19 @@ export type CheckOutComponentFailure = {
   type: typeof componentConst.CHECK_OUT_COMPONENT_FAILURE;
 };
 
+//FILTER
+export type FilterComponentsRequest = {
+  type: typeof componentConst.FILTER_COMPONENTS_REQUEST;
+  payload: QueryFilter[];
+};
+export type FilterComponentsSuccess = {
+  type: typeof componentConst.FILTER_COMPONENTS_SUCCESS;
+  payload: ComponentsPayload;
+};
+export type FilterComponentsFailure = {
+  type: typeof componentConst.FILTER_COMPONENTS_FAILURE;
+};
+
 //CLIENT ACTION TYPES
 export type SetComponent = {
   type: typeof componentConst.SET_COMPONENT;
@@ -190,6 +204,9 @@ export type ComponentActions =
   | CheckOutComponentRequest
   | CheckOutComponentSuccess
   | CheckOutComponentFailure
+  | FilterComponentsRequest
+  | FilterComponentsSuccess
+  | FilterComponentsFailure
   | SetComponent
   | SetComponents
   | ClearComponent

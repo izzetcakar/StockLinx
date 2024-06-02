@@ -102,6 +102,20 @@ export default (state = initialState, action: ModelActions) => {
       return {
         ...state,
       };
+    case modelConst.FILTER_MODELS_REQUEST:
+      return {
+        ...state,
+      };
+    case modelConst.FILTER_MODELS_SUCCESS:
+      return {
+        ...state,
+        models: action.payload.models,
+      };
+    case modelConst.FILTER_MODELS_FAILURE:
+      return {
+        ...state,
+        models: [],
+      };
     case modelConst.SET_MODEL:
       return {
         ...state,

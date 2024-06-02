@@ -1,16 +1,20 @@
-import { IPermission } from "../../interfaces/serverInterfaces";
-import { request } from "../../server/api";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
+import { getQueryFilter } from "@/utils/filterUtilts";
+import { IPermission } from "@interfaces/serverInterfaces";
+import { request } from "@request";
 const requestUrl = "Permission/";
 
 const getAll = () => {
   return request<IPermission>({ requestUrl: requestUrl, apiType: "get" });
 };
+
 const get = (id: string) => {
   return request<IPermission>({
     requestUrl: requestUrl + id,
     apiType: "get",
   });
 };
+
 const create = (permission: IPermission) => {
   return request<IPermission>({
     requestUrl: requestUrl,
@@ -18,6 +22,7 @@ const create = (permission: IPermission) => {
     queryData: permission,
   });
 };
+
 const createRange = (permissions: IPermission[]) => {
   return request<IPermission>({
     requestUrl: requestUrl + "range",
@@ -25,12 +30,14 @@ const createRange = (permissions: IPermission[]) => {
     queryData: permissions,
   });
 };
+
 const remove = (id: string) => {
   return request<IPermission>({
     requestUrl: requestUrl + id,
     apiType: "delete",
   });
 };
+
 const removeRange = (ids: string[]) => {
   return request<IPermission>({
     requestUrl: requestUrl + "range",
@@ -38,11 +45,20 @@ const removeRange = (ids: string[]) => {
     queryData: ids,
   });
 };
+
 const sync = (permissions: IPermission[]) => {
   return request<IPermission>({
     requestUrl: requestUrl + "sync",
     apiType: "post",
     queryData: permissions,
+  });
+};
+
+const filter = (queryFilters: QueryFilter[]) => {
+  return request<IPermission>({
+    requestUrl: requestUrl + "filter",
+    apiType: "get",
+    params: getQueryFilter(queryFilters),
   });
 };
 
@@ -54,4 +70,5 @@ export const permissionRequests = {
   remove,
   removeRange,
   sync,
+  filter,
 };

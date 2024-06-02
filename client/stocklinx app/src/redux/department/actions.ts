@@ -1,4 +1,4 @@
-import { IDepartment } from "../../interfaces/serverInterfaces";
+import { IDepartment } from "@interfaces/serverInterfaces";
 import { departmentConst } from "./constant";
 import {
   CreateDepartmentFailure,
@@ -31,7 +31,11 @@ import {
   RemoveRangeDepartmentFailure,
   DepartmentRemoveRangePayload,
   DepartmentRemovePayload,
+  FilterDepartmentsRequest,
+  FilterDepartmentsSuccess,
+  FilterDepartmentsFailure,
 } from "./type";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 //GET
 const getAll = (): FetchDepartmentsRequest => ({
@@ -139,6 +143,21 @@ const removeRangeFailure = (): RemoveRangeDepartmentFailure => ({
   type: departmentConst.REMOVE_RANGE_DEPARTMENT_FAILURE,
 });
 
+//FILTER
+const filter = (payload: QueryFilter[]): FilterDepartmentsRequest => ({
+  type: departmentConst.FILTER_DEPARTMENTS_REQUEST,
+  payload,
+});
+const filterSuccess = (
+  payload: DepartmentsPayload
+): FilterDepartmentsSuccess => ({
+  type: departmentConst.FILTER_DEPARTMENTS_SUCCESS,
+  payload,
+});
+const filterFailure = (): FilterDepartmentsFailure => ({
+  type: departmentConst.FILTER_DEPARTMENTS_FAILURE,
+});
+
 //CLIENT ACTIONS
 const setDepartment = (payload: IDepartment | null): SetDepartment => ({
   type: departmentConst.SET_DEPARTMENT,
@@ -177,6 +196,9 @@ export const departmentActions = {
   removeRange,
   removeRangeSuccess,
   removeRangeFailure,
+  filter,
+  filterSuccess,
+  filterFailure,
   setDepartment,
   clearDepartment,
   setDepartments,

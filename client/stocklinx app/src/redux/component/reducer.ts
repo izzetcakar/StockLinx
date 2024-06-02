@@ -153,6 +153,20 @@ export default (state = initialState, action: ComponentActions) => {
       return {
         ...state,
       };
+    case componentConst.FILTER_COMPONENTS_REQUEST:
+      return {
+        ...state,
+      };
+    case componentConst.FILTER_COMPONENTS_SUCCESS:
+      return {
+        ...state,
+        components: action.payload.components,
+      };
+    case componentConst.FILTER_COMPONENTS_FAILURE:
+      return {
+        ...state,
+        components: [],
+      };
     case componentConst.SET_COMPONENT:
       return {
         ...state,

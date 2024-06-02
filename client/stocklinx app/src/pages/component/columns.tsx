@@ -6,7 +6,7 @@ import {
 } from "@interfaces/gridTableInterfaces";
 import { useNavigate } from "react-router-dom";
 import { Anchor, Button } from "@mantine/core";
-import { IAssetProduct, IComponent } from "../../interfaces/serverInterfaces";
+import { IAssetProduct, IComponent } from "@interfaces/serverInterfaces";
 import { componentActions } from "../../redux/component/actions";
 import { closeModal, openCheckInModal } from "../../modals/modals";
 import { initialAssetProduct } from "../../initials/initials";

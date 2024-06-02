@@ -6,7 +6,7 @@ import {
 } from "@interfaces/gridTableInterfaces";
 import { useNavigate } from "react-router-dom";
 import { Anchor, Image } from "@mantine/core";
-import { IModel } from "../../interfaces/serverInterfaces";
+import { IModel } from "@interfaces/serverInterfaces";
 import { getImage } from "../../utils/Image";
 
 export const useColumns = () => {

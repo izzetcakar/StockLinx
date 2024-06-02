@@ -145,16 +145,16 @@ export default (state = initialState, action: AssetActions) => {
       return {
         ...state,
       };
-    case assetConst.ASSET_FILTER_REQUEST:
+    case assetConst.FILTER_ASSETS_REQUEST:
       return {
         ...state,
       };
-    case assetConst.ASSET_FILTER_SUCCESS:
+    case assetConst.FILTER_ASSETS_SUCCESS:
       return {
         ...state,
         assets: action.payload.assets,
       };
-    case assetConst.ASSET_FILTER_FAILURE:
+    case assetConst.FILTER_ASSETS_FAILURE:
       return {
         ...state,
       };

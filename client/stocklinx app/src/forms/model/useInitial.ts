@@ -1,5 +1,5 @@
 import uuid4 from "uuid4";
-import { IModel } from "../../interfaces/serverInterfaces";
+import { IModel } from "@interfaces/serverInterfaces";
 import { getImage } from "../../utils/Image";
 
 export const useInitial = (model?: IModel, create?: boolean) => {

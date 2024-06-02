@@ -109,6 +109,20 @@ export default (state = initialState, action: BranchActions) => {
       return {
         ...state,
       };
+    case branchConst.FILTER_BRANCHES_REQUEST:
+      return {
+        ...state,
+      };
+    case branchConst.FILTER_BRANCHES_SUCCESS:
+      return {
+        ...state,
+        branches: action.payload.branches,
+      };
+    case branchConst.FILTER_BRANCHES_FAILURE:
+      return {
+        ...state,
+        branches: [],
+      };
     case branchConst.SET_BRANCH:
       return {
         ...state,

@@ -1,6 +1,6 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { fieldSetActions } from "./actions";
-import { IFieldSet } from "../../interfaces/serverInterfaces";
+import { IFieldSet } from "@interfaces/serverInterfaces";
 import { fieldSetConst } from "./constant";
 import {
   CreateFieldSetRequest,
@@ -15,7 +15,7 @@ import { genericActions } from "../generic/actions";
 import {
   openNotificationError,
   openNotificationSuccess,
-} from "../../notification/Notification";
+} from "@/notification/Notification";
 
 type IResponse = {
   data: IFieldSet[] | IFieldSet | null;

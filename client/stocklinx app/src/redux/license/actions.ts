@@ -5,7 +5,7 @@ import {
   UserProductCheckInPayload,
   UserProductCheckOutPayload,
 } from "../../interfaces/clientInterfaces";
-import { ILicense } from "../../interfaces/serverInterfaces";
+import { ILicense } from "@interfaces/serverInterfaces";
 import { licenseConst } from "./constant";
 import {
   CreateLicenseFailure,
@@ -50,7 +50,11 @@ import {
   AssetCheckInLicenseFailure,
   UserCheckOutLicenseSuccess,
   UserCheckOutLicenseFailure,
+  FilterLicensesRequest,
+  FilterLicensesSuccess,
+  FilterLicensesFailure,
 } from "./type";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 //GET
 const getAll = (): FetchLicensesRequest => ({
@@ -150,7 +154,7 @@ const removeRangeFailure = (): RemoveRangeLicenseFailure => ({
   type: licenseConst.REMOVE_RANGE_LICENSE_FAILURE,
 });
 
-//CHECK IN
+//USER CHECK IN
 const userCheckIn = (
   payload: UserProductCheckInPayload
 ): UserCheckInLicenseRequest => ({
@@ -167,6 +171,7 @@ const userCheckInFailure = (): UserCheckInLicenseFailure => ({
   type: licenseConst.USER_CHECK_IN_LICENSE_FAILURE,
 });
 
+//ASSET CHECK IN
 const assetCheckIn = (
   payload: AssetProductCheckInPayload
 ): AssetCheckInLicenseRequest => ({
@@ -183,7 +188,7 @@ const assetCheckInFailure = (): AssetCheckInLicenseFailure => ({
   type: licenseConst.ASSET_CHECK_IN_LICENSE_FAILURE,
 });
 
-//CHECK OUT
+//USER CHECK OUT
 const userCheckOut = (
   payload: UserProductCheckOutPayload
 ): UserCheckOutLicenseRequest => ({
@@ -200,6 +205,7 @@ const userCheckOutFailure = (): UserCheckOutLicenseFailure => ({
   type: licenseConst.USER_CHECK_OUT_LICENSE_FAILURE,
 });
 
+//ASSET CHECK OUT
 const assetCheckOut = (
   payload: AssetProductCheckOutPayload
 ): AssetCheckOutLicenseRequest => ({
@@ -214,6 +220,19 @@ const assetCheckOutSuccess = (
 });
 const assetCheckOutFailure = (): AssetCheckOutLicenseFailure => ({
   type: licenseConst.ASSET_CHECK_OUT_LICENSE_FAILURE,
+});
+
+//FILTER
+const filter = (payload: QueryFilter[]): FilterLicensesRequest => ({
+  type: licenseConst.FILTER_LICENSES_REQUEST,
+  payload,
+});
+const filterSuccess = (payload: LicensesPayload): FilterLicensesSuccess => ({
+  type: licenseConst.FILTER_LICENSES_SUCCESS,
+  payload,
+});
+const filterFailure = (): FilterLicensesFailure => ({
+  type: licenseConst.FILTER_LICENSES_FAILURE,
 });
 
 //CLIENT ACTIONS
@@ -266,6 +285,9 @@ export const licenseActions = {
   userCheckOut,
   userCheckOutSuccess,
   userCheckOutFailure,
+  filter,
+  filterSuccess,
+  filterFailure,
   setLicense,
   clearLicense,
   setLicenses,

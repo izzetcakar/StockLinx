@@ -1,6 +1,6 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { fieldSetCustomFieldActions } from "./actions";
-import { IFieldSetCustomField } from "../../interfaces/serverInterfaces";
+import { IFieldSetCustomField } from "@interfaces/serverInterfaces";
 import { fieldSetCustomFieldConst } from "./constant";
 import {
   CreateFieldSetCustomFieldRequest,
@@ -16,7 +16,7 @@ import { genericActions } from "../generic/actions";
 import {
   openNotificationError,
   openNotificationSuccess,
-} from "../../notification/Notification";
+} from "@/notification/Notification";
 
 type IResponse = {
   data: IFieldSetCustomField[] | IFieldSetCustomField | null;

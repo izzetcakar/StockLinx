@@ -1,11 +1,12 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { permissionActions } from "./actions";
-import { IPermission } from "../../interfaces/serverInterfaces";
+import { IPermission } from "@interfaces/serverInterfaces";
 import { permissionConst } from "./constant";
 import {
   CreatePermissionRequest,
   CreateRangePermissionRequest,
   FetchPermissionRequest,
+  FilterPermissionsRequest,
   RemovePermissionRequest,
   RemoveRangePermissionRequest,
   SyncPermissionRequest,
@@ -15,14 +16,14 @@ import { genericActions } from "../generic/actions";
 import {
   openNotificationError,
   openNotificationSuccess,
-} from "../../notification/Notification";
+} from "@/notification/Notification";
 
 type IResponse = {
   data: IPermission[] | IPermission | null;
   message: string;
   success: boolean;
   status: number;
-}
+};
 
 function* fetchPermissionsSaga() {
   yield put(genericActions.increaseLoading());
@@ -142,6 +143,25 @@ function* syncPermissionSaga(action: SyncPermissionRequest) {
   yield put(genericActions.decreaseLoading());
 }
 
+function* filterPermissionsSaga(action: FilterPermissionsRequest) {
+  yield put(genericActions.increaseLoading());
+  try {
+    const { data }: IResponse = yield call(
+      permissionRequests.filter,
+      action.payload
+    );
+    yield put(
+      permissionActions.filterSuccess({
+        permissions: data as IPermission[],
+      })
+    );
+  } catch (e) {
+    openNotificationError("Permission", (e as Error).message);
+    yield put(permissionActions.filterFailure());
+  }
+  yield put(genericActions.decreaseLoading());
+}
+
 function* permissionSaga() {
   yield takeEvery(
     permissionConst.FETCH_PERMISSIONS_REQUEST,
@@ -168,6 +188,10 @@ function* permissionSaga() {
     removeRangePermissionSaga
   );
   yield takeEvery(permissionConst.SYNC_PERMISSION_REQUEST, syncPermissionSaga);
+  yield takeEvery(
+    permissionConst.FILTER_PERMISSIONS_REQUEST,
+    filterPermissionsSaga
+  );
 }
 
 export default permissionSaga;

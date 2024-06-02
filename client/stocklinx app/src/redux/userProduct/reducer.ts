@@ -43,10 +43,7 @@ export default (state = initialState, action: UserProductActions) => {
     case userProductConst.CREATE_USERPRODUCT_SUCCESS:
       return {
         ...state,
-        userProducts: [
-          ...state.userProducts,
-          action.payload.userProduct,
-        ],
+        userProducts: [...state.userProducts, action.payload.userProduct],
       };
     case userProductConst.CREATE_USERPRODUCT_FAILURE:
       return {
@@ -59,10 +56,7 @@ export default (state = initialState, action: UserProductActions) => {
     case userProductConst.CREATE_RANGE_USERPRODUCT_SUCCESS:
       return {
         ...state,
-        userProducts: [
-          ...state.userProducts,
-          ...action.payload.userProducts,
-        ],
+        userProducts: [...state.userProducts, ...action.payload.userProducts],
       };
     case userProductConst.CREATE_RANGE_USERPRODUCT_FAILURE:
       return {
@@ -114,6 +108,20 @@ export default (state = initialState, action: UserProductActions) => {
     case userProductConst.REMOVE_RANGE_USERPRODUCT_FAILURE:
       return {
         ...state,
+      };
+    case userProductConst.FILTER_USERPRODUCTS_REQUEST:
+      return {
+        ...state,
+      };
+    case userProductConst.FILTER_USERPRODUCTS_SUCCESS:
+      return {
+        ...state,
+        userProducts: action.payload.userProducts,
+      };
+    case userProductConst.FILTER_USERPRODUCTS_FAILURE:
+      return {
+        ...state,
+        userProducts: [],
       };
     case userProductConst.SET_USERPRODUCT:
       return {

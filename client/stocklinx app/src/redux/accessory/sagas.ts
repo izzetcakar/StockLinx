@@ -1,6 +1,6 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { accessoryActions } from "./actions";
-import { IAccessory, IUserProduct } from "../../interfaces/serverInterfaces";
+import { IAccessory, IUserProduct } from "@interfaces/serverInterfaces";
 import { accessoryConst } from "./constant";
 import {
   CheckInAccessoryRequest,
@@ -8,6 +8,7 @@ import {
   CreateAccessoryRequest,
   CreateRangeAccessoryRequest,
   FetchAccessoryRequest,
+  FilterAccessoriesRequest,
   RemoveAccessoryRequest,
   RemoveRangeAccessoryRequest,
   UpdateAccessoryRequest,
@@ -17,7 +18,7 @@ import { genericActions } from "../generic/actions";
 import {
   openNotificationError,
   openNotificationSuccess,
-} from "../../notification/Notification";
+} from "@/notification/Notification";
 import { userProductActions } from "../userProduct/actions";
 
 type IResponse = {
@@ -195,6 +196,25 @@ function* checkOutAccessorySaga(action: CheckOutAccessoryRequest) {
   yield put(genericActions.decreaseLoading());
 }
 
+function* filterAccessoriesSaga(action: FilterAccessoriesRequest) {
+  yield put(genericActions.increaseLoading());
+  try {
+    const { data }: IResponse = yield call(
+      accessoryRequests.filter,
+      action.payload
+    );
+    yield put(
+      accessoryActions.filterSuccess({
+        accessories: data as IAccessory[],
+      })
+    );
+  } catch (e) {
+    openNotificationError("Accessory", (e as Error).message);
+    yield put(accessoryActions.filterFailure());
+  }
+  yield put(genericActions.decreaseLoading());
+}
+
 function* accessorysaga() {
   yield takeEvery(
     accessoryConst.FETCH_ACCESSORIES_REQUEST,
@@ -219,6 +239,10 @@ function* accessorysaga() {
   yield takeEvery(
     accessoryConst.CHECK_OUT_ACCESSORY_REQUEST,
     checkOutAccessorySaga
+  );
+  yield takeEvery(
+    accessoryConst.FILTER_ACCESSORIES_REQUEST,
+    filterAccessoriesSaga
   );
 }
 

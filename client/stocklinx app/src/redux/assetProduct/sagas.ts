@@ -1,10 +1,11 @@
 import { call, put, takeEvery } from "redux-saga/effects";
-import { IAssetProduct } from "../../interfaces/serverInterfaces";
+import { IAssetProduct } from "@interfaces/serverInterfaces";
 import { assetProductConst } from "./constant";
 import {
   CreateAssetProductRequest,
   CreateRangeAssetProductRequest,
   FetchAssetProductRequest,
+  FilterAssetProductsRequest,
   RemoveAssetProductRequest,
   RemoveRangeAssetProductRequest,
   UpdateAssetProductRequest,
@@ -14,7 +15,7 @@ import { genericActions } from "../generic/actions";
 import {
   openNotificationError,
   openNotificationSuccess,
-} from "../../notification/Notification";
+} from "@/notification/Notification";
 import { assetProductActions } from "./actions";
 
 type IResponse = {
@@ -148,6 +149,25 @@ function* removeRangeAssetProductSaga(action: RemoveRangeAssetProductRequest) {
   yield put(genericActions.decreaseLoading());
 }
 
+function* filterAssetProductsSaga(action: FilterAssetProductsRequest) {
+  yield put(genericActions.increaseLoading());
+  try {
+    const { data }: IResponse = yield call(
+      assetProductRequests.filter,
+      action.payload
+    );
+    yield put(
+      assetProductActions.filterSuccess({
+        assetProducts: data as IAssetProduct[],
+      })
+    );
+  } catch (e) {
+    openNotificationError("AssetProduct", (e as Error).message);
+    yield put(assetProductActions.filterFailure());
+  }
+  yield put(genericActions.decreaseLoading());
+}
+
 function* assetProductSaga() {
   yield takeEvery(
     assetProductConst.FETCH_ASSETPRODUCTS_REQUEST,
@@ -176,6 +196,10 @@ function* assetProductSaga() {
   yield takeEvery(
     assetProductConst.REMOVE_RANGE_ASSETPRODUCT_REQUEST,
     removeRangeAssetProductSaga
+  );
+  yield takeEvery(
+    assetProductConst.FILTER_ASSETPRODUCTS_REQUEST,
+    filterAssetProductsSaga
   );
 }
 

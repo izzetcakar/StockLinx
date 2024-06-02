@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { IAccessory } from "../../interfaces/serverInterfaces";
+import { IAccessory } from "@interfaces/serverInterfaces";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { useDispatch } from "react-redux";
@@ -54,6 +54,7 @@ const Accessory = () => {
         onRowRemoveRange={(ids) =>
           dispatch(accessoryActions.removeRange({ ids: ids }))
         }
+        onApplyFilters={(filters) => dispatch(accessoryActions.filter(filters))}
         excelColumns={useColumns().excelColumns}
         enableToolbar
         enableEditActions

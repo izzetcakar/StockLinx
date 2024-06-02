@@ -1,4 +1,4 @@
-import { IBranch } from "../../interfaces/serverInterfaces";
+import { IBranch } from "@interfaces/serverInterfaces";
 import { branchConst } from "./constant";
 import {
   CreateBranchFailure,
@@ -31,7 +31,11 @@ import {
   RemoveRangeBranchFailure,
   BranchRemoveRangePayload,
   BranchRemovePayload,
+  FilterBranchesRequest,
+  FilterBranchesSuccess,
+  FilterBranchesFailure,
 } from "./type";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 //GET
 const getAll = (): FetchBranchesRequest => ({
@@ -129,6 +133,19 @@ const removeRangeFailure = (): RemoveRangeBranchFailure => ({
   type: branchConst.REMOVE_RANGE_BRANCH_FAILURE,
 });
 
+//FILTER
+const filter = (payload: QueryFilter[]): FilterBranchesRequest => ({
+  type: branchConst.FILTER_BRANCHES_REQUEST,
+  payload,
+});
+const filterSuccess = (payload: BranchesPayload): FilterBranchesSuccess => ({
+  type: branchConst.FILTER_BRANCHES_SUCCESS,
+  payload,
+});
+const filterFailure = (): FilterBranchesFailure => ({
+  type: branchConst.FILTER_BRANCHES_FAILURE,
+});
+
 //CLIENT ACTIONS
 const setBranch = (payload: IBranch | null): SetBranch => ({
   type: branchConst.SET_BRANCH,
@@ -167,6 +184,9 @@ export const branchActions = {
   removeRange,
   removeRangeSuccess,
   removeRangeFailure,
+  filter,
+  filterSuccess,
+  filterFailure,
   setBranch,
   clearBranch,
   setBranches,

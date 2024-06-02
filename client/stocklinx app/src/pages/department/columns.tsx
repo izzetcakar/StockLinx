@@ -5,7 +5,7 @@ import {
   ExcelColumn,
 } from "@interfaces/gridTableInterfaces";
 import { useNavigate } from "react-router-dom";
-import { IDepartment } from "../../interfaces/serverInterfaces";
+import { IDepartment } from "@interfaces/serverInterfaces";
 import { Anchor } from "@mantine/core";
 
 export const useColumns = () => {

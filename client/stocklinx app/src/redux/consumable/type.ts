@@ -2,9 +2,10 @@ import {
   CheckInOutPayload,
   UserProductCheckInPayload,
   UserProductCheckOutPayload,
-} from "../../interfaces/clientInterfaces";
-import { IConsumable } from "../../interfaces/serverInterfaces";
+} from "@interfaces/clientInterfaces";
+import { IConsumable } from "@interfaces/serverInterfaces";
 import { consumableConst } from "./constant";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 export type ConsumableState = {
   consumable: IConsumable | null;
@@ -142,6 +143,19 @@ export type CheckOutConsumableFailure = {
   type: typeof consumableConst.CHECK_OUT_CONSUMABLE_FAILURE;
 };
 
+//FILTER
+export type FilterConsumablesRequest = {
+  type: typeof consumableConst.FILTER_CONSUMABLES_REQUEST;
+  payload: QueryFilter[];
+};
+export type FilterConsumablesSuccess = {
+  type: typeof consumableConst.FILTER_CONSUMABLES_SUCCESS;
+  payload: ConsumablesPayload;
+};
+export type FilterConsumablesFailure = {
+  type: typeof consumableConst.FILTER_CONSUMABLES_FAILURE;
+};
+
 //CLIENT ACTION TYPES
 export type SetConsumable = {
   type: typeof consumableConst.SET_CONSUMABLE;
@@ -186,6 +200,9 @@ export type ConsumableActions =
   | CheckOutConsumableRequest
   | CheckOutConsumableSuccess
   | CheckOutConsumableFailure
+  | FilterConsumablesRequest
+  | FilterConsumablesSuccess
+  | FilterConsumablesFailure
   | SetConsumable
   | SetConsumables
   | ClearConsumable

@@ -1,5 +1,5 @@
 import uuid4 from "uuid4";
-import { IBranch } from "../../interfaces/serverInterfaces";
+import { IBranch } from "@interfaces/serverInterfaces";
 
 export const useInitial = (branch?: IBranch, create?: boolean) => {
   let isCreate = create || false;

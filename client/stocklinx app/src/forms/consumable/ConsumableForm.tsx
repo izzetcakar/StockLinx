@@ -9,11 +9,11 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { DateInput } from "@mantine/dates";
-import { CategoryType, IConsumable } from "../../interfaces/serverInterfaces";
+import { CategoryType, IConsumable } from "@interfaces/serverInterfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { consumableActions } from "../../redux/consumable/actions";
 import { RootState } from "../../redux/rootReducer";
-import { openNotificationError } from "../../notification/Notification";
+import { openNotificationError } from "@/notification/Notification";
 import { useInitial } from "./useInitial";
 import FormSelect from "../mantine/FormSelect";
 
