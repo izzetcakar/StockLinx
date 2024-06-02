@@ -20,17 +20,19 @@ namespace StockLinx.Service.Services
         private readonly IUserRepository _userRepository;
         private readonly IDepartmentRepository _departmentRepository;
         private readonly ICustomLogService _customLogService;
+        private readonly IFilterService<User> _filterService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
         public UserService(
             IRepository<User> repository,
-            IUnitOfWork unitOfWork,
             IUserRepository userRepository,
             IDepartmentRepository departmentRepository,
-            IMapper mapper,
             IHttpContextAccessor httpContextAccessor,
-            ICustomLogService customLogService
+            ICustomLogService customLogService,
+            IFilterService<User> filterService,
+            IMapper mapper,
+            IUnitOfWork unitOfWork
         )
             : base(repository, unitOfWork)
         {
@@ -38,6 +40,7 @@ namespace StockLinx.Service.Services
             _userRepository = userRepository;
             _departmentRepository = departmentRepository;
             _customLogService = customLogService;
+            _filterService = filterService;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
@@ -203,7 +206,7 @@ namespace StockLinx.Service.Services
 
         public async Task<List<UserDto>> FilterAllAsync(string filter)
         {
-            var result = await FilterAsync(filter);
+            var result = await _filterService.FilterAsync(filter);
             return _userRepository.GetDtos(result.ToList());
         }
     }

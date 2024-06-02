@@ -6,7 +6,7 @@ using StockLinx.Core.UnitOfWork;
 
 namespace StockLinx.Service.Services
 {
-    public class Service<T> : IService<T>, IFilterService<T>
+    public class Service<T> : IService<T>
         where T : class
     {
         private readonly IRepository<T> _repository;
@@ -40,11 +40,6 @@ namespace StockLinx.Service.Services
         public async Task CheckExistAsync(Guid id)
         {
             await _repository.CheckExistAsync(id);
-        }
-
-        public async Task<IEnumerable<T>> FilterAsync(string filterQuery)
-        {
-            return await FilterAsync(filterQuery);
         }
 
         public async Task<IEnumerable<T>> GetAllAsync()

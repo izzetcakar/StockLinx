@@ -14,20 +14,23 @@ namespace StockLinx.Service.Services
     {
         private readonly ICategoryRepository _categoryRepository;
         private readonly ICustomLogService _customLogService;
+        private readonly IFilterService<Category> _filterService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
         public CategoryService(
             IRepository<Category> repository,
             ICategoryRepository categoryRepository,
-            IUnitOfWork unitOfWork,
+            IFilterService<Category> filterService,
+            ICustomLogService customLogService,
             IMapper mapper,
-            ICustomLogService customLogService
+            IUnitOfWork unitOfWork
         )
             : base(repository, unitOfWork)
         {
             _categoryRepository = categoryRepository;
             _customLogService = customLogService;
+            _filterService = filterService;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
@@ -125,7 +128,7 @@ namespace StockLinx.Service.Services
 
         public async Task<List<CategoryDto>> FilterAllAsync(string filter)
         {
-            var result = await FilterAsync(filter);
+            var result = await _filterService.FilterAsync(filter);
             return _categoryRepository.GetDtos(result.ToList());
         }
     }

@@ -16,24 +16,27 @@ namespace StockLinx.Service.Services
         private readonly IPermissionRepository _permissionRepository;
         private readonly IUserService _userService;
         private readonly ICustomLogService _customLogService;
+        private readonly IFilterService<Permission> _filterService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
         public PermissionService(
             IRepository<Permission> repository,
-            IUnitOfWork unitOfWork,
-            IMapper mapper,
             IPermissionRepository permissionRepository,
+            IUserService userService,
             ICustomLogService customLogService,
-            IUserService userService
+            IFilterService<Permission> filterService,
+            IMapper mapper,
+            IUnitOfWork unitOfWork
         )
             : base(repository, unitOfWork)
         {
             _permissionRepository = permissionRepository;
+            _userService = userService;
             _customLogService = customLogService;
+            _filterService = filterService;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
-            _userService = userService;
         }
 
         public async Task<PermissionDto> GetDtoAsync(Guid id)
@@ -189,7 +192,7 @@ namespace StockLinx.Service.Services
 
         public async Task<List<PermissionDto>> FilterAllAsync(string filter)
         {
-            var result = await FilterAsync(filter);
+            var result = await _filterService.FilterAsync(filter);
             return _permissionRepository.GetDtos(result.ToList());
         }
     }

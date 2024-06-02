@@ -17,6 +17,7 @@ namespace StockLinx.Service.Services
         private readonly IUserProductRepository _userProductRepository;
         private readonly IUserService _userService;
         private readonly ICustomLogService _customLogService;
+        private readonly IFilterService<Consumable> _filterService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
@@ -25,9 +26,10 @@ namespace StockLinx.Service.Services
             IConsumableRepository consumableRepository,
             IUserProductRepository userProductRepository,
             IUserService userService,
-            IUnitOfWork unitOfWork,
+            ICustomLogService customLogService,
+            IFilterService<Consumable> filterService,
             IMapper mapper,
-            ICustomLogService customLogService
+            IUnitOfWork unitOfWork
         )
             : base(repository, unitOfWork)
         {
@@ -35,6 +37,7 @@ namespace StockLinx.Service.Services
             _userProductRepository = userProductRepository;
             _userService = userService;
             _customLogService = customLogService;
+            _filterService = filterService;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
@@ -215,6 +218,7 @@ namespace StockLinx.Service.Services
             }
             await _unitOfWork.CommitAsync();
         }
+
         public async Task CheckTagExistAsync(string tag)
         {
             tag = TagUtils.Check(tag);
@@ -238,7 +242,7 @@ namespace StockLinx.Service.Services
 
         public async Task<List<ConsumableDto>> FilterAllAsync(string filter)
         {
-            var result = await FilterAsync(filter);
+            var result = await _filterService.FilterAsync(filter);
             return await _consumableRepository.GetDtosAsync(result.ToList());
         }
     }

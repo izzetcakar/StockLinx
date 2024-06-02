@@ -6,20 +6,25 @@ namespace StockLinx.Core.Entities
 {
     public static class FilterExpression
     {
+        private static List<string> appliedFilters = new List<string>();
         public static IQueryable<T> ApplyFilters<T>(this IQueryable<T> query, string filterExpression)
         {
             List<Filter> filters = ParseFilterExpression(filterExpression);
-            List<string> appliedFilters = new List<string>();
             var predicate = PredicateBuilder.New<T>(true);
 
             foreach (var filter in filters)
             {
                 if (appliedFilters.Contains(filter.PropertyName))
-                    predicate = predicate.Or(BuildPredicate<T>(filter));
+                {
+                    predicate = predicate.Or(UpdatePredicate<T>(filter, predicate));
+                }
                 else
+                {
                     predicate = predicate.And(BuildPredicate<T>(filter));
-                appliedFilters.Add(filter.PropertyName);
+                    appliedFilters.Add(filter.PropertyName);
+                }
             }
+            appliedFilters.Clear();
             return query.Where(predicate);
         }
 
@@ -78,6 +83,26 @@ namespace StockLinx.Core.Entities
 
             var conditionExpr = conditionExprBuilder(propertyExpr, valueExpr);
             return Expression.Lambda<Func<T, bool>>(conditionExpr, parameterExpr);
+        }
+
+        private static Expression<Func<T, bool>> UpdatePredicate<T>(Filter filter, Expression<Func<T, bool>> predicate)
+        {
+            var parameterExpr = Expression.Parameter(typeof(T), typeof(T).Name.ToLower());
+            var propertyExpr = Expression.Property(parameterExpr, filter.PropertyName);
+            var targetType = propertyExpr.Type;
+            var convertedValue = TypeUtils.ConvertValueToType(filter.Value, targetType);
+            var valueExpr = Expression.Constant(convertedValue, targetType);
+
+            Func<Expression, Expression, Expression> conditionExprBuilder;
+
+            if (!OperatorMap.TryGetValue(filter.Operator, out conditionExprBuilder))
+            {
+                conditionExprBuilder = OperatorMap["contains"];
+            }
+
+            var conditionExpr = conditionExprBuilder(propertyExpr, valueExpr);
+            var newPredicateBody = Expression.AndAlso(predicate.Body, conditionExpr);
+            return Expression.Lambda<Func<T, bool>>(newPredicateBody, parameterExpr);
         }
     }
 }

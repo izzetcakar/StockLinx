@@ -14,20 +14,23 @@ namespace StockLinx.Service.Services
     {
         private readonly ISupplierRepository _supplierRepository;
         private readonly ICustomLogService _customLogService;
+        private readonly IFilterService<Supplier> _filterService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
         public SupplierService(
             IRepository<Supplier> repository,
             ISupplierRepository supplierRepository,
-            IUnitOfWork unitOfWork,
+            ICustomLogService customLogService,
+            IFilterService<Supplier> filterService,
             IMapper mapper,
-            ICustomLogService customLogService
+            IUnitOfWork unitOfWork
         )
             : base(repository, unitOfWork)
         {
             _supplierRepository = supplierRepository;
             _customLogService = customLogService;
+            _filterService = filterService;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
@@ -171,7 +174,7 @@ namespace StockLinx.Service.Services
 
         public async Task<List<SupplierDto>> FilterAllAsync(string filter)
         {
-            var result = await FilterAsync(filter);
+            var result = await _filterService.FilterAsync(filter);
             return _supplierRepository.GetDtos(result.ToList());
         }
     }

@@ -12,18 +12,21 @@ namespace StockLinx.Service.Services
     public class UserProductService : Service<UserProduct>, IUserProductService
     {
         private readonly IUserProductRepository _UserProductRepository;
+        private readonly IFilterService<UserProduct> _filterService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
         public UserProductService(
             IRepository<UserProduct> repository,
             IUserProductRepository UserProductRepository,
+            IFilterService<UserProduct> filterService,
             IMapper mapper,
             IUnitOfWork unitOfWork
         )
             : base(repository, unitOfWork)
         {
             _UserProductRepository = UserProductRepository;
+            _filterService = filterService;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
@@ -71,7 +74,7 @@ namespace StockLinx.Service.Services
 
         public async Task<List<UserProductDto>> FilterAllAsync(string filter)
         {
-            var result = await FilterAsync(filter);
+            var result = await _filterService.FilterAsync(filter);
             return await _UserProductRepository.GetDtosAsync(result.ToList());
         }
     }

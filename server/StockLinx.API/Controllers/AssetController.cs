@@ -146,11 +146,15 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpGet("filter")]
-        public async Task<IActionResult> Filter([FromQuery(Name = "filter")] string filter)
+        public async Task<IActionResult> Filter([FromQuery] string? filter)
         {
             try
             {
-                List<AssetDto> result = await _assetService.Filter(filter);
+                if (string.IsNullOrEmpty(filter))
+                {
+                    return await All();
+                }
+                List<AssetDto> result = await _assetService.FilterAllAsync(filter);
                 return CreateActionResult(CustomResponseDto<List<AssetDto>>.Success(200, result));
             }
             catch (Exception ex)

@@ -18,6 +18,7 @@ namespace StockLinx.Service.Services
         private readonly IBranchRepository _branchRepository;
         private readonly IUserService _userService;
         private readonly ICustomLogService _customLogService;
+        private readonly IFilterService<Asset> _filterService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
@@ -28,6 +29,7 @@ namespace StockLinx.Service.Services
             IBranchRepository branchRepository,
             IUserService userService,
             ICustomLogService customLogService,
+            IFilterService<Asset> filterService,
             IUnitOfWork unitOfWork,
             IMapper mapper
         )
@@ -38,6 +40,7 @@ namespace StockLinx.Service.Services
             _branchRepository = branchRepository;
             _userService = userService;
             _customLogService = customLogService;
+            _filterService = filterService;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
@@ -57,7 +60,9 @@ namespace StockLinx.Service.Services
         {
             if (dto.OverageAssets != null && dto.OverageAssets.Count > 0)
             {
-                await CheckTagExistAsync(dto.OverageAssets.Select(x => x.Tag).Append(dto.Tag).ToList());
+                await CheckTagExistAsync(
+                    dto.OverageAssets.Select(x => x.Tag).Append(dto.Tag).ToList()
+                );
             }
             else
             {
@@ -262,7 +267,7 @@ namespace StockLinx.Service.Services
 
         public async Task<List<AssetDto>> FilterAllAsync(string filter)
         {
-            var result = await FilterAsync(filter);
+            var result = await _filterService.FilterAsync(filter);
             return _assetRepository.GetDtos(result.ToList());
         }
 

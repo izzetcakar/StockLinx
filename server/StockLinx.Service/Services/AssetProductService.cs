@@ -11,12 +11,14 @@ namespace StockLinx.Service.Services
     public class AssetProductService : Service<AssetProduct>, IAssetProductService
     {
         private readonly IAssetProductRepository _assetProductRepository;
+        private readonly IFilterService<AssetProduct> _filterService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
         public AssetProductService(
             IRepository<AssetProduct> repository,
             IAssetProductRepository assetProductRepository,
+            IFilterService<AssetProduct> filterService,
             IMapper mapper,
             IUnitOfWork unitOfWork
         )
@@ -24,6 +26,7 @@ namespace StockLinx.Service.Services
         {
             _assetProductRepository = assetProductRepository;
             _mapper = mapper;
+            _filterService = filterService;
             _unitOfWork = unitOfWork;
         }
 
@@ -69,9 +72,10 @@ namespace StockLinx.Service.Services
             _assetProductRepository.Remove(AssetProduct);
             await _unitOfWork.CommitAsync();
         }
+
         public async Task<List<AssetProductDto>> FilterAllAsync(string filter)
         {
-            var result = await FilterAsync(filter);
+            var result = await _filterService.FilterAsync(filter);
             return await _assetProductRepository.GetDtosAsync(result.ToList());
         }
     }
