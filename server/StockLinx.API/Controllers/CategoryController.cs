@@ -12,6 +12,7 @@ namespace StockLinx.API.Controllers
     public class CategoryController : CustomBaseController
     {
         private readonly ICategoryService _categoryService;
+
         public CategoryController(ICategoryService categoryService)
         {
             _categoryService = categoryService;
@@ -23,7 +24,9 @@ namespace StockLinx.API.Controllers
             try
             {
                 List<CategoryDto> result = await _categoryService.GetAllDtosAsync();
-                return CreateActionResult(CustomResponseDto<List<CategoryDto>>.Success(200, result));
+                return CreateActionResult(
+                    CustomResponseDto<List<CategoryDto>>.Success(200, result)
+                );
             }
             catch (Exception ex)
             {
@@ -58,13 +61,16 @@ namespace StockLinx.API.Controllers
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
             }
         }
+
         [HttpPost("range")]
         public async Task<IActionResult> AddRange(List<CategoryCreateDto> dtos)
         {
             try
             {
                 List<CategoryDto> result = await _categoryService.CreateRangeCategoryAsync(dtos);
-                return CreateActionResult(CustomResponseDto<List<CategoryDto>>.Success(201, result));
+                return CreateActionResult(
+                    CustomResponseDto<List<CategoryDto>>.Success(201, result)
+                );
             }
             catch (Exception ex)
             {
@@ -99,6 +105,7 @@ namespace StockLinx.API.Controllers
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
             }
         }
+
         [HttpDelete("range")]
         public async Task<IActionResult> DeleteRange(List<Guid> ids)
         {
@@ -106,6 +113,26 @@ namespace StockLinx.API.Controllers
             {
                 await _categoryService.DeleteRangeCategoryAsync(ids);
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
+        }
+
+        [HttpGet("filter")]
+        public async Task<IActionResult> Filter([FromQuery] string? filter)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(filter))
+                {
+                    return await All();
+                }
+                List<CategoryDto> result = await _categoryService.FilterAllAsync(filter);
+                return CreateActionResult(
+                    CustomResponseDto<List<CategoryDto>>.Success(200, result)
+                );
             }
             catch (Exception ex)
             {

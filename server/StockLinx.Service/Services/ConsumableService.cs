@@ -235,5 +235,11 @@ namespace StockLinx.Service.Services
                 throw new Exception($"Tags {string.Join("\n", existingTagNames)} already exist.");
             }
         }
+
+        public async Task<List<ConsumableDto>> FilterAllAsync(string filter)
+        {
+            var result = await FilterAsync(filter);
+            return await _consumableRepository.GetDtosAsync(result.ToList());
+        }
     }
 }

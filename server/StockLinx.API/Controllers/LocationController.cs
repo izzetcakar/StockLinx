@@ -24,7 +24,9 @@ namespace StockLinx.API.Controllers
             try
             {
                 List<LocationDto> result = await _locationService.GetAllDtosAsync();
-                return CreateActionResult(CustomResponseDto<List<LocationDto>>.Success(200, result));
+                return CreateActionResult(
+                    CustomResponseDto<List<LocationDto>>.Success(200, result)
+                );
             }
             catch (Exception ex)
             {
@@ -66,7 +68,9 @@ namespace StockLinx.API.Controllers
             try
             {
                 List<LocationDto> result = await _locationService.CreateRangeLocationAsync(dtos);
-                return CreateActionResult(CustomResponseDto<List<LocationDto>>.Success(201, result));
+                return CreateActionResult(
+                    CustomResponseDto<List<LocationDto>>.Success(201, result)
+                );
             }
             catch (Exception ex)
             {
@@ -109,6 +113,26 @@ namespace StockLinx.API.Controllers
             {
                 await _locationService.DeleteRangeLocationAsync(ids);
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
+        }
+
+        [HttpGet("filter")]
+        public async Task<IActionResult> Filter([FromQuery] string? filter)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(filter))
+                {
+                    return await All();
+                }
+                List<LocationDto> result = await _locationService.FilterAllAsync(filter);
+                return CreateActionResult(
+                    CustomResponseDto<List<LocationDto>>.Success(200, result)
+                );
             }
             catch (Exception ex)
             {

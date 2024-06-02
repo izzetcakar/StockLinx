@@ -12,6 +12,7 @@ namespace StockLinx.API.Controllers
     public class DepartmentController : CustomBaseController
     {
         private readonly IDepartmentService _departmentService;
+
         public DepartmentController(IDepartmentService departmentService)
         {
             _departmentService = departmentService;
@@ -23,7 +24,9 @@ namespace StockLinx.API.Controllers
             try
             {
                 List<DepartmentDto> result = await _departmentService.GetAllDtosAsync();
-                return CreateActionResult(CustomResponseDto<List<DepartmentDto>>.Success(200, result));
+                return CreateActionResult(
+                    CustomResponseDto<List<DepartmentDto>>.Success(200, result)
+                );
             }
             catch (Exception ex)
             {
@@ -64,8 +67,12 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                List<DepartmentDto> result = await _departmentService.CreateRangeDepartmentAsync(dtos);
-                return CreateActionResult(CustomResponseDto<List<DepartmentDto>>.Success(201, result));
+                List<DepartmentDto> result = await _departmentService.CreateRangeDepartmentAsync(
+                    dtos
+                );
+                return CreateActionResult(
+                    CustomResponseDto<List<DepartmentDto>>.Success(201, result)
+                );
             }
             catch (Exception ex)
             {
@@ -108,6 +115,26 @@ namespace StockLinx.API.Controllers
             {
                 await _departmentService.DeleteRangeDepartmentAsync(ids);
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
+        }
+
+        [HttpGet("filter")]
+        public async Task<IActionResult> Filter([FromQuery] string? filter)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(filter))
+                {
+                    return await All();
+                }
+                List<DepartmentDto> result = await _departmentService.FilterAllAsync(filter);
+                return CreateActionResult(
+                    CustomResponseDto<List<DepartmentDto>>.Success(200, result)
+                );
             }
             catch (Exception ex)
             {

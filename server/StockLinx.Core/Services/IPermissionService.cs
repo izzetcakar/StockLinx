@@ -14,5 +14,6 @@ namespace StockLinx.Core.Services
         Task DeletePermissionAsync(Guid id);
         Task DeleteRangePermissionAsync(List<Guid> ids);
         Task<List<PermissionDto>> Scyncronaize(List<PermissionSyncDto> dtos);
+        Task<List<PermissionDto>> FilterAllAsync(string filter);
     }
 }

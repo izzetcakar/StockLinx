@@ -14,5 +14,6 @@ namespace StockLinx.Core.Services
         Task<DepartmentDto> UpdateDepartmentAsync(DepartmentUpdateDto dto);
         Task DeleteDepartmentAsync(Guid id);
         Task DeleteRangeDepartmentAsync(List<Guid> id);
+        Task<List<DepartmentDto>> FilterAllAsync(string filter);
     }
 }

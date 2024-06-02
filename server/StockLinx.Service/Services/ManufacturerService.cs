@@ -6,6 +6,7 @@ using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 using StockLinx.Core.Services;
 using StockLinx.Core.UnitOfWork;
+using StockLinx.Repository.Repositories.EF_Core;
 
 namespace StockLinx.Service.Services
 {
@@ -152,15 +153,10 @@ namespace StockLinx.Service.Services
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task<List<ManufacturerDto>> GetManufacturersPagedAsync(
-            int skip,
-            int take,
-            Dictionary<string, string> filters
-        )
+        public async Task<List<ManufacturerDto>> FilterAllAsync(string filter)
         {
-            List<ManufacturerDto> dtos = new List<ManufacturerDto>();
-            dtos = await _manufacturerRepository.GetManufacturersPagedAsync(skip, take, filters);
-            return dtos;
+            var result = await FilterAsync(filter);
+            return _manufacturerRepository.GetDtos(result.ToList());
         }
     }
 }

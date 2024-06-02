@@ -19,5 +19,6 @@ namespace StockLinx.Core.Services
         Task CheckOutAsync(AssetProductCheckOutDto checkOutDto);
         Task CheckTagExistAsync(string tag);
         Task CheckTagExistAsync(List<string> tags);
+        Task<List<ComponentDto>> FilterAllAsync(string filter);
     }
 }

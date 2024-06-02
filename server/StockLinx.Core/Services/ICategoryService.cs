@@ -14,5 +14,6 @@ namespace StockLinx.Core.Services
         Task<CategoryDto> UpdateCategoryAsync(CategoryUpdateDto dto);
         Task DeleteCategoryAsync(Guid id);
         Task DeleteRangeCategoryAsync(List<Guid> ids);
+        Task<List<CategoryDto>> FilterAllAsync(string filter);
     }
 }

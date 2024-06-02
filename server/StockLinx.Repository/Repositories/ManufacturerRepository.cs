@@ -21,22 +21,6 @@ namespace StockLinx.Repository.Repositories.EF_Core
                 .ToListAsync();
             return GetDtos(manufacturers.ToList());
         }
-        public async Task<List<ManufacturerDto>> GetManufacturersPagedAsync(int skip, int take, Dictionary<string, string> filters)
-        {
-            var query = dbContext.Manufacturers.AsQueryable();
-
-            if (filters != null && filters.Count > 0)
-            {
-                query = ApplyFilters(query, filters);
-            }
-
-            var manufacturers = await query
-                .Skip(skip)
-                .Take(take)
-                .ToListAsync();
-
-            return GetDtos(manufacturers);
-        }
         private IQueryable<Manufacturer> ApplyFilters(IQueryable<Manufacturer> query, Dictionary<string, string> filters)
         {
             foreach (var filter in filters)

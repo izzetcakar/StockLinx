@@ -24,7 +24,9 @@ namespace StockLinx.API.Controllers
             try
             {
                 List<ProductStatusDto> result = await _productStatusService.GetAllDtosAsync();
-                return CreateActionResult(CustomResponseDto<List<ProductStatusDto>>.Success(200, result));
+                return CreateActionResult(
+                    CustomResponseDto<List<ProductStatusDto>>.Success(200, result)
+                );
             }
             catch (Exception ex)
             {
@@ -65,8 +67,11 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                List<ProductStatusDto> result = await _productStatusService.CreateRangeProductStatusAsync(dtos);
-                return CreateActionResult(CustomResponseDto<List<ProductStatusDto>>.Success(201, result));
+                List<ProductStatusDto> result =
+                    await _productStatusService.CreateRangeProductStatusAsync(dtos);
+                return CreateActionResult(
+                    CustomResponseDto<List<ProductStatusDto>>.Success(201, result)
+                );
             }
             catch (Exception ex)
             {
@@ -109,6 +114,26 @@ namespace StockLinx.API.Controllers
             {
                 await _productStatusService.DeleteRangeProductStatusAsync(ids);
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
+        }
+
+        [HttpGet("filter")]
+        public async Task<IActionResult> Filter([FromQuery] string? filter)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(filter))
+                {
+                    return await All();
+                }
+                List<ProductStatusDto> result = await _productStatusService.FilterAllAsync(filter);
+                return CreateActionResult(
+                    CustomResponseDto<List<ProductStatusDto>>.Success(200, result)
+                );
             }
             catch (Exception ex)
             {

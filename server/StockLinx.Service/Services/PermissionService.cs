@@ -7,6 +7,7 @@ using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 using StockLinx.Core.Services;
 using StockLinx.Core.UnitOfWork;
+using StockLinx.Repository.Repositories.EF_Core;
 
 namespace StockLinx.Service.Services
 {
@@ -184,6 +185,12 @@ namespace StockLinx.Service.Services
             await _unitOfWork.CommitAsync();
             List<PermissionDto> dtos = await _permissionRepository.GetAllDtosAsync();
             return dtos;
+        }
+
+        public async Task<List<PermissionDto>> FilterAllAsync(string filter)
+        {
+            var result = await FilterAsync(filter);
+            return _permissionRepository.GetDtos(result.ToList());
         }
     }
 }

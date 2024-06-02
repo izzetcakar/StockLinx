@@ -13,6 +13,7 @@ namespace StockLinx.API.Controllers
     public class AccessoryController : CustomBaseController
     {
         private readonly IAccessoryService _accessoryService;
+
         public AccessoryController(IAccessoryService accessoryService)
         {
             _accessoryService = accessoryService;
@@ -25,7 +26,9 @@ namespace StockLinx.API.Controllers
             {
                 List<AccessoryDto> result = await _accessoryService.GetAllDtos();
 
-                return CreateActionResult(CustomResponseDto<List<AccessoryDto>>.Success(200, result));
+                return CreateActionResult(
+                    CustomResponseDto<List<AccessoryDto>>.Success(200, result)
+                );
             }
             catch (Exception ex)
             {
@@ -69,7 +72,9 @@ namespace StockLinx.API.Controllers
             try
             {
                 List<AccessoryDto> result = await _accessoryService.CreateRangeAccessoryAsync(dtos);
-                return CreateActionResult(CustomResponseDto<List<AccessoryDto>>.Success(201, result));
+                return CreateActionResult(
+                    CustomResponseDto<List<AccessoryDto>>.Success(201, result)
+                );
             }
             catch (Exception ex)
             {
@@ -140,6 +145,26 @@ namespace StockLinx.API.Controllers
             {
                 await _accessoryService.CheckOutAsync(dto);
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
+        }
+
+        [HttpGet("filter")]
+        public async Task<IActionResult> Filter([FromQuery] string? filter)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(filter))
+                {
+                    return await All();
+                }
+                List<AccessoryDto> result = await _accessoryService.FilterAllAsync(filter);
+                return CreateActionResult(
+                    CustomResponseDto<List<AccessoryDto>>.Success(200, result)
+                );
             }
             catch (Exception ex)
             {

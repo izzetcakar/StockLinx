@@ -5,6 +5,7 @@ using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 using StockLinx.Core.Services;
 using StockLinx.Core.UnitOfWork;
+using StockLinx.Repository.Repositories.EF_Core;
 
 namespace StockLinx.Service.Services
 {
@@ -66,6 +67,12 @@ namespace StockLinx.Service.Services
             UserProduct UserProduct = await GetByIdAsync(id);
             _UserProductRepository.Remove(UserProduct);
             await _unitOfWork.CommitAsync();
+        }
+
+        public async Task<List<UserProductDto>> FilterAllAsync(string filter)
+        {
+            var result = await FilterAsync(filter);
+            return await _UserProductRepository.GetDtosAsync(result.ToList());
         }
     }
 }

@@ -24,7 +24,9 @@ namespace StockLinx.API.Controllers
             try
             {
                 List<ManufacturerDto> result = await _manufacturerService.GetAllDtosAsync();
-                return CreateActionResult(CustomResponseDto<List<ManufacturerDto>>.Success(200, result));
+                return CreateActionResult(
+                    CustomResponseDto<List<ManufacturerDto>>.Success(200, result)
+                );
             }
             catch (Exception ex)
             {
@@ -65,8 +67,11 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                List<ManufacturerDto> result = await _manufacturerService.CreateRangeManufacturerAsync(dtos);
-                return CreateActionResult(CustomResponseDto<List<ManufacturerDto>>.Success(201, result));
+                List<ManufacturerDto> result =
+                    await _manufacturerService.CreateRangeManufacturerAsync(dtos);
+                return CreateActionResult(
+                    CustomResponseDto<List<ManufacturerDto>>.Success(201, result)
+                );
             }
             catch (Exception ex)
             {
@@ -109,6 +114,26 @@ namespace StockLinx.API.Controllers
             {
                 await _manufacturerService.DeleteRangeManufacturerAsync(ids);
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
+        }
+
+        [HttpGet("filter")]
+        public async Task<IActionResult> Filter([FromQuery] string? filter)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(filter))
+                {
+                    return await All();
+                }
+                List<ManufacturerDto> result = await _manufacturerService.FilterAllAsync(filter);
+                return CreateActionResult(
+                    CustomResponseDto<List<ManufacturerDto>>.Success(200, result)
+                );
             }
             catch (Exception ex)
             {

@@ -69,5 +69,10 @@ namespace StockLinx.Service.Services
             _assetProductRepository.Remove(AssetProduct);
             await _unitOfWork.CommitAsync();
         }
+        public async Task<List<AssetProductDto>> FilterAllAsync(string filter)
+        {
+            var result = await FilterAsync(filter);
+            return await _assetProductRepository.GetDtosAsync(result.ToList());
+        }
     }
 }

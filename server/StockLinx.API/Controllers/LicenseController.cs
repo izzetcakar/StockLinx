@@ -13,6 +13,7 @@ namespace StockLinx.API.Controllers
     public class LicenseController : CustomBaseController
     {
         private readonly ILicenseService _licenseService;
+
         public LicenseController(ILicenseService licenseService)
         {
             _licenseService = licenseService;
@@ -169,6 +170,24 @@ namespace StockLinx.API.Controllers
             catch (Exception ex)
             {
                 return CreateActionResult(CustomResponseDto<NoContentResult>.Fail(500, ex.Message));
+            }
+        }
+
+        [HttpGet("filter")]
+        public async Task<IActionResult> Filter([FromQuery] string? filter)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(filter))
+                {
+                    return await All();
+                }
+                List<LicenseDto> result = await _licenseService.FilterAllAsync(filter);
+                return CreateActionResult(CustomResponseDto<List<LicenseDto>>.Success(200, result));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
             }
         }
     }

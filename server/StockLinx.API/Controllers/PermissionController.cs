@@ -11,6 +11,7 @@ namespace StockLinx.API.Controllers
     public class PermissionController : CustomBaseController
     {
         private readonly IPermissionService _permissionService;
+
         public PermissionController(IPermissionService permissionService)
         {
             _permissionService = permissionService;
@@ -22,7 +23,9 @@ namespace StockLinx.API.Controllers
             try
             {
                 List<PermissionDto> result = await _permissionService.GetAllDtosAsync();
-                return CreateActionResult(CustomResponseDto<List<PermissionDto>>.Success(200, result));
+                return CreateActionResult(
+                    CustomResponseDto<List<PermissionDto>>.Success(200, result)
+                );
             }
             catch (Exception ex)
             {
@@ -63,8 +66,12 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                List<PermissionDto> result = await _permissionService.CreateRangePermissionAsync(dtos);
-                return CreateActionResult(CustomResponseDto<List<PermissionDto>>.Success(201, result));
+                List<PermissionDto> result = await _permissionService.CreateRangePermissionAsync(
+                    dtos
+                );
+                return CreateActionResult(
+                    CustomResponseDto<List<PermissionDto>>.Success(201, result)
+                );
             }
             catch (Exception ex)
             {
@@ -106,7 +113,29 @@ namespace StockLinx.API.Controllers
             try
             {
                 List<PermissionDto> result = await _permissionService.Scyncronaize(dtos);
-                return CreateActionResult(CustomResponseDto<List<PermissionDto>>.Success(200, result));
+                return CreateActionResult(
+                    CustomResponseDto<List<PermissionDto>>.Success(200, result)
+                );
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
+        }
+
+        [HttpGet("filter")]
+        public async Task<IActionResult> Filter([FromQuery] string? filter)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(filter))
+                {
+                    return await All();
+                }
+                List<PermissionDto> result = await _permissionService.FilterAllAsync(filter);
+                return CreateActionResult(
+                    CustomResponseDto<List<PermissionDto>>.Success(200, result)
+                );
             }
             catch (Exception ex)
             {

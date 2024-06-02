@@ -12,6 +12,7 @@ namespace StockLinx.API.Controllers
     public class CompanyController : CustomBaseController
     {
         private readonly ICompanyService _companyService;
+
         public CompanyController(ICompanyService companyService)
         {
             _companyService = companyService;
@@ -108,6 +109,24 @@ namespace StockLinx.API.Controllers
             {
                 await _companyService.DeleteRangeCompanyAsync(ids);
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
+        }
+
+        [HttpGet("filter")]
+        public async Task<IActionResult> Filter([FromQuery] string? filter)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(filter))
+                {
+                    return await All();
+                }
+                List<CompanyDto> result = await _companyService.FilterAllAsync(filter);
+                return CreateActionResult(CustomResponseDto<List<CompanyDto>>.Success(200, result));
             }
             catch (Exception ex)
             {

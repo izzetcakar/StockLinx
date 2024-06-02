@@ -6,6 +6,7 @@ using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 using StockLinx.Core.Services;
 using StockLinx.Core.UnitOfWork;
+using StockLinx.Repository.Repositories.EF_Core;
 
 namespace StockLinx.Service.Services
 {
@@ -120,6 +121,12 @@ namespace StockLinx.Service.Services
             }
             _categoryRepository.RemoveRange(categories);
             await _unitOfWork.CommitAsync();
+        }
+
+        public async Task<List<CategoryDto>> FilterAllAsync(string filter)
+        {
+            var result = await FilterAsync(filter);
+            return _categoryRepository.GetDtos(result.ToList());
         }
     }
 }

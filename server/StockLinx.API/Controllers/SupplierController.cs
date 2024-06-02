@@ -24,7 +24,9 @@ namespace StockLinx.API.Controllers
             try
             {
                 List<SupplierDto> result = await _supplierService.GetAllDtosAsync();
-                return CreateActionResult(CustomResponseDto<List<SupplierDto>>.Success(200, result));
+                return CreateActionResult(
+                    CustomResponseDto<List<SupplierDto>>.Success(200, result)
+                );
             }
             catch (Exception ex)
             {
@@ -66,7 +68,9 @@ namespace StockLinx.API.Controllers
             try
             {
                 List<SupplierDto> result = await _supplierService.CreateRangeSupplierAsync(dtos);
-                return CreateActionResult(CustomResponseDto<List<SupplierDto>>.Success(201, result));
+                return CreateActionResult(
+                    CustomResponseDto<List<SupplierDto>>.Success(201, result)
+                );
             }
             catch (Exception ex)
             {
@@ -109,6 +113,26 @@ namespace StockLinx.API.Controllers
             {
                 await _supplierService.DeleteRangeSupplierAsync(ids);
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
+        }
+
+        [HttpGet("filter")]
+        public async Task<IActionResult> Filter([FromQuery] string? filter)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(filter))
+                {
+                    return await All();
+                }
+                List<SupplierDto> result = await _supplierService.FilterAllAsync(filter);
+                return CreateActionResult(
+                    CustomResponseDto<List<SupplierDto>>.Success(200, result)
+                );
             }
             catch (Exception ex)
             {

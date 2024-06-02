@@ -14,5 +14,6 @@ namespace StockLinx.Core.Services
         Task<SupplierDto> UpdateSupplierAsync(SupplierUpdateDto dto);
         Task DeleteSupplierAsync(Guid id);
         Task DeleteRangeSupplierAsync(List<Guid> ids);
+        Task<List<SupplierDto>> FilterAllAsync(string filter);
     }
 }

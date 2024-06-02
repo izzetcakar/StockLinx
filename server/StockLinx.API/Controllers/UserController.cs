@@ -1,4 +1,7 @@
-﻿using AutoMapper;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -8,9 +11,6 @@ using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Services;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace StockLinx.API.Controllers
 {
@@ -22,7 +22,11 @@ namespace StockLinx.API.Controllers
         private readonly IConfiguration _configuration;
         private readonly IUserService _userService;
 
-        public UserController(IMapper mapper, IUserService userservice, IConfiguration configuration)
+        public UserController(
+            IMapper mapper,
+            IUserService userservice,
+            IConfiguration configuration
+        )
         {
             _mapper = mapper;
             _userService = userservice;
@@ -42,6 +46,7 @@ namespace StockLinx.API.Controllers
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
             }
         }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
@@ -55,6 +60,7 @@ namespace StockLinx.API.Controllers
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
             }
         }
+
         [HttpPut]
         public async Task<IActionResult> Update(UserUpdateDto dto)
         {
@@ -68,6 +74,7 @@ namespace StockLinx.API.Controllers
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
             }
         }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
@@ -81,6 +88,7 @@ namespace StockLinx.API.Controllers
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
             }
         }
+
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserLoginDto dto)
         {
@@ -93,13 +101,16 @@ namespace StockLinx.API.Controllers
                     token.Token = CreateToken(user);
                     return CreateActionResult(CustomResponseDto<TokenDto>.Success(200, token));
                 }
-                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, "User is not found"));
+                return CreateActionResult(
+                    CustomResponseDto<NoContentDto>.Fail(401, "User is not found")
+                );
             }
             catch (Exception ex)
             {
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
             }
         }
+
         [HttpGet("getWithToken"), Authorize]
         public async Task<IActionResult> GetUser()
         {
@@ -113,7 +124,9 @@ namespace StockLinx.API.Controllers
                 }
                 else
                 {
-                    return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(404, "User is not found"));
+                    return CreateActionResult(
+                        CustomResponseDto<NoContentDto>.Fail(404, "User is not found")
+                    );
                 }
             }
             catch (Exception ex)
@@ -121,22 +134,26 @@ namespace StockLinx.API.Controllers
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
             }
         }
+
         private string CreateToken(User user)
         {
-            List<Claim> claims = new List<Claim>
-            {
-                new Claim("UserId", user.Id.ToString()),
-            };
-            SymmetricSecurityKey key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value));
+            List<Claim> claims = new List<Claim> { new Claim("UserId", user.Id.ToString()), };
+            SymmetricSecurityKey key = new SymmetricSecurityKey(
+                System.Text.Encoding.UTF8.GetBytes(
+                    _configuration.GetSection("AppSettings:Token").Value
+                )
+            );
             SigningCredentials creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             JwtSecurityToken token = new JwtSecurityToken(
                 _configuration["Jwt:Issuer"],
                 _configuration["Jwt:Issuer"],
                 claims,
                 expires: DateTime.Now.AddDays(14),
-                signingCredentials: creds);
+                signingCredentials: creds
+            );
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
         [HttpPost]
         public async Task<IActionResult> Add(UserCreateDto dto)
         {
@@ -150,6 +167,7 @@ namespace StockLinx.API.Controllers
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
             }
         }
+
         [HttpPost("range")]
         public async Task<IActionResult> AddRangeUsers(List<UserCreateDto> dtos)
         {
@@ -171,6 +189,24 @@ namespace StockLinx.API.Controllers
             {
                 await _userService.DeleteRangeUserAsync(ids);
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
+        }
+
+        [HttpGet("filter")]
+        public async Task<IActionResult> Filter([FromQuery] string? filter)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(filter))
+                {
+                    return await All();
+                }
+                List<UserDto> result = await _userService.FilterAllAsync(filter);
+                return CreateActionResult(CustomResponseDto<List<UserDto>>.Success(200, result));
             }
             catch (Exception ex)
             {

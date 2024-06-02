@@ -11,5 +11,6 @@ namespace StockLinx.Core.Services
         Task<UserProductDto> CreateUserProductAsync(UserProductCreateDto dto);
         Task<List<UserProductDto>> CreateRangeUserProductAsync(List<UserProductCreateDto> dtos);
         Task DeleteUserProductAsync(Guid id);
+        Task<List<UserProductDto>> FilterAllAsync(string filter);
     }
 }

@@ -11,5 +11,6 @@ namespace StockLinx.Core.Services
         Task<AssetProductDto> CreateAssetProductAsync(AssetProductCreateDto dto);
         Task<List<AssetProductDto>> CreateRangeAssetProductAsync(List<AssetProductCreateDto> dtos);
         Task DeleteAssetProductAsync(Guid id);
+        Task<List<AssetProductDto>> FilterAllAsync(string filter);
     }
 }

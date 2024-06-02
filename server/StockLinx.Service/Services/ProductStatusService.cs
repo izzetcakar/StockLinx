@@ -6,6 +6,7 @@ using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 using StockLinx.Core.Services;
 using StockLinx.Core.UnitOfWork;
+using StockLinx.Repository.Repositories.EF_Core;
 
 namespace StockLinx.Service.Services
 {
@@ -122,6 +123,12 @@ namespace StockLinx.Service.Services
             }
             _productStatusRepository.RemoveRange(productStatuses);
             await _unitOfWork.CommitAsync();
+        }
+
+        public async Task<List<ProductStatusDto>> FilterAllAsync(string filter)
+        {
+            var result = await FilterAsync(filter);
+            return _productStatusRepository.GetDtos(result.ToList());
         }
     }
 }

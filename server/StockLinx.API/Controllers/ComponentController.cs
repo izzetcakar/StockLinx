@@ -13,6 +13,7 @@ namespace StockLinx.API.Controllers
     public class ComponentController : CustomBaseController
     {
         private readonly IComponentService _componentService;
+
         public ComponentController(IComponentService componentService)
         {
             _componentService = componentService;
@@ -24,7 +25,9 @@ namespace StockLinx.API.Controllers
             try
             {
                 List<ComponentDto> result = await _componentService.GetAllDtosAsync();
-                return CreateActionResult(CustomResponseDto<List<ComponentDto>>.Success(200, result));
+                return CreateActionResult(
+                    CustomResponseDto<List<ComponentDto>>.Success(200, result)
+                );
             }
             catch (Exception ex)
             {
@@ -66,7 +69,9 @@ namespace StockLinx.API.Controllers
             try
             {
                 List<ComponentDto> result = await _componentService.CreateRangeComponentAsync(dtos);
-                return CreateActionResult(CustomResponseDto<List<ComponentDto>>.Success(201, result));
+                return CreateActionResult(
+                    CustomResponseDto<List<ComponentDto>>.Success(201, result)
+                );
             }
             catch (Exception ex)
             {
@@ -137,6 +142,26 @@ namespace StockLinx.API.Controllers
             {
                 await _componentService.CheckOutAsync(dto);
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
+        }
+
+        [HttpGet("filter")]
+        public async Task<IActionResult> Filter([FromQuery] string? filter)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(filter))
+                {
+                    return await All();
+                }
+                List<ComponentDto> result = await _componentService.FilterAllAsync(filter);
+                return CreateActionResult(
+                    CustomResponseDto<List<ComponentDto>>.Success(200, result)
+                );
             }
             catch (Exception ex)
             {

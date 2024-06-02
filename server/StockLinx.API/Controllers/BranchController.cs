@@ -12,6 +12,7 @@ namespace StockLinx.API.Controllers
     public class BranchController : CustomBaseController
     {
         private readonly IBranchService _branchService;
+
         public BranchController(IBranchService branchService)
         {
             _branchService = branchService;
@@ -108,6 +109,24 @@ namespace StockLinx.API.Controllers
             {
                 await _branchService.DeleteRangeBranchAsync(ids);
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
+        }
+
+        [HttpGet("filter")]
+        public async Task<IActionResult> Filter([FromQuery] string? filter)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(filter))
+                {
+                    return await All();
+                }
+                List<BranchDto> result = await _branchService.FilterAllAsync(filter);
+                return CreateActionResult(CustomResponseDto<List<BranchDto>>.Success(200, result));
             }
             catch (Exception ex)
             {

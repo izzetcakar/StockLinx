@@ -14,5 +14,6 @@ namespace StockLinx.Core.Services
         Task UpdateModelAsync(ModelUpdateDto dto);
         Task DeleteModelAsync(Guid id);
         Task DeleteRangeModelAsync(List<Guid> ids);
+        Task<List<ModelDto>> FilterAllAsync(string filter);
     }
 }
