@@ -4,39 +4,48 @@ import { IBranch } from "@interfaces/serverInterfaces";
 import { request } from "@request";
 const requestUrl = "Branch/";
 
-const getAll = () => {
-  return request<IBranch>({ requestUrl: requestUrl, apiType: "get" });
+const getAll = async (): Promise<IBranch[]> => {
+  return (await request<IBranch>({ requestUrl: requestUrl, apiType: "get" }))
+    .data as IBranch[];
 };
 
-const get = (id: string) => {
-  return request<IBranch>({
-    requestUrl: requestUrl + id,
-    apiType: "get",
-  });
+const get = async (id: string): Promise<IBranch> => {
+  return (
+    await request<IBranch>({
+      requestUrl: requestUrl + id,
+      apiType: "get",
+    })
+  ).data as IBranch;
 };
 
-const create = (branch: IBranch) => {
-  return request<IBranch>({
-    requestUrl: requestUrl,
-    apiType: "post",
-    queryData: branch,
-  });
+const create = async (branch: IBranch): Promise<IBranch> => {
+  return (
+    await request<IBranch>({
+      requestUrl: requestUrl,
+      apiType: "post",
+      queryData: branch,
+    })
+  ).data as IBranch;
 };
 
-const createRange = (branches: IBranch[]) => {
-  return request<IBranch>({
-    requestUrl: requestUrl + "range",
-    apiType: "post",
-    queryData: branches,
-  });
+const createRange = async (branches: IBranch[]): Promise<IBranch[]> => {
+  return (
+    await request<IBranch>({
+      requestUrl: requestUrl + "range",
+      apiType: "post",
+      queryData: branches,
+    })
+  ).data as IBranch[];
 };
 
-const update = (branch: IBranch) => {
-  return request<IBranch>({
-    requestUrl: requestUrl,
-    apiType: "put",
-    queryData: branch,
-  });
+const update = async (branch: IBranch): Promise<IBranch> => {
+  return (
+    await request<IBranch>({
+      requestUrl: requestUrl,
+      apiType: "put",
+      queryData: branch,
+    })
+  ).data as IBranch;
 };
 
 const remove = (id: string) => {
@@ -54,12 +63,14 @@ const removeRange = (ids: string[]) => {
   });
 };
 
-const filter = (queryFilters: QueryFilter[]) => {
-  return request<IBranch>({
-    requestUrl: requestUrl + "filter",
-    apiType: "get",
-    params: getQueryFilter(queryFilters),
-  });
+const filter = async (queryFilters: QueryFilter[]): Promise<IBranch[]> => {
+  return (
+    await request<IBranch>({
+      requestUrl: requestUrl + "filter",
+      apiType: "get",
+      params: getQueryFilter(queryFilters),
+    })
+  ).data as IBranch[];
 };
 
 export const branchRequests = {

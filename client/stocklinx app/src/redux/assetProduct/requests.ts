@@ -4,23 +4,29 @@ import { request } from "@/server/api";
 import { getQueryFilter } from "@/utils/filterUtilts";
 const requestUrl = "AssetProduct/";
 
-const getAll = () => {
-  return request<IAssetProduct>({ requestUrl: requestUrl, apiType: "get" });
+const getAll = async (): Promise<IAssetProduct[]> => {
+  return (
+    await request<IAssetProduct>({ requestUrl: requestUrl, apiType: "get" })
+  ).data as IAssetProduct[];
 };
 
-const get = (id: string) => {
-  return request<IAssetProduct>({
-    requestUrl: requestUrl + id,
-    apiType: "get",
-  });
+const get = async (id: string): Promise<IAssetProduct> => {
+  return (
+    await request<IAssetProduct>({
+      requestUrl: requestUrl + id,
+      apiType: "get",
+    })
+  ).data as IAssetProduct;
 };
 
-const create = (assetProduct: IAssetProduct) => {
-  return request<IAssetProduct>({
-    requestUrl: requestUrl,
-    apiType: "post",
-    queryData: assetProduct,
-  });
+const create = async (assetProduct: IAssetProduct): Promise<IAssetProduct> => {
+  return (
+    await request<IAssetProduct>({
+      requestUrl: requestUrl,
+      apiType: "post",
+      queryData: assetProduct,
+    })
+  ).data as IAssetProduct;
 };
 
 const createRange = (assetProducts: IAssetProduct[]) => {
@@ -31,12 +37,14 @@ const createRange = (assetProducts: IAssetProduct[]) => {
   });
 };
 
-const update = (assetProduct: IAssetProduct) => {
-  return request<IAssetProduct>({
-    requestUrl: requestUrl,
-    apiType: "put",
-    queryData: assetProduct,
-  });
+const update = async (assetProduct: IAssetProduct): Promise<IAssetProduct> => {
+  return (
+    await request<IAssetProduct>({
+      requestUrl: requestUrl,
+      apiType: "put",
+      queryData: assetProduct,
+    })
+  ).data as IAssetProduct;
 };
 
 const remove = (id: string) => {
@@ -54,12 +62,16 @@ const removeRange = (ids: string[]) => {
   });
 };
 
-const filter = (queryFilters: QueryFilter[]) => {
-  return request<IAssetProduct>({
-    requestUrl: requestUrl + "filter",
-    apiType: "get",
-    params: getQueryFilter(queryFilters),
-  });
+const filter = async (
+  queryFilters: QueryFilter[]
+): Promise<IAssetProduct[]> => {
+  return (
+    await request<IAssetProduct>({
+      requestUrl: requestUrl + "filter",
+      apiType: "get",
+      params: getQueryFilter(queryFilters),
+    })
+  ).data as IAssetProduct[];
 };
 
 export const assetProductRequests = {

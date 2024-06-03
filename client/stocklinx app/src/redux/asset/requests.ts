@@ -1,44 +1,57 @@
 import { AssetCheckInDto, AssetCheckOutDto } from "@interfaces/dtos";
-import { IAsset } from "@interfaces/serverInterfaces";
+import { IAsset, IUserProduct } from "@interfaces/serverInterfaces";
 import { request } from "@request";
 import { getQueryFilter } from "@/utils/filterUtilts";
 import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 const requestUrl = "Asset/";
 
-const getAll = () => {
-  return request<IAsset>({ requestUrl: requestUrl, apiType: "get" });
+const getAll = async (): Promise<IAsset[]> => {
+  return (
+    await request<IAsset>({
+      requestUrl: requestUrl,
+      apiType: "get",
+    })
+  ).data as IAsset[];
 };
 
-const get = (id: string) => {
-  return request<IAsset>({
-    requestUrl: requestUrl + id,
-    apiType: "get",
-  });
+const get = async (id: string): Promise<IAsset> => {
+  return (
+    await request<IAsset>({
+      requestUrl: requestUrl + id,
+      apiType: "get",
+    })
+  ).data as IAsset;
 };
 
-const create = (asset: IAsset) => {
-  return request<IAsset>({
-    requestUrl: requestUrl,
-    apiType: "post",
-    queryData: asset,
-  });
+const create = async (asset: IAsset): Promise<IAsset> => {
+  return (
+    await request<IAsset>({
+      requestUrl: requestUrl,
+      apiType: "post",
+      queryData: asset,
+    })
+  ).data as IAsset;
 };
 
-const createRange = (assets: IAsset[]) => {
-  return request<IAsset>({
-    requestUrl: requestUrl + "range",
-    apiType: "post",
-    queryData: assets,
-  });
+const createRange = async (assets: IAsset[]): Promise<IAsset[]> => {
+  return (
+    await request<IAsset>({
+      requestUrl: requestUrl + "range",
+      apiType: "post",
+      queryData: assets,
+    })
+  ).data as IAsset[];
 };
 
-const update = (asset: IAsset) => {
-  return request<IAsset>({
-    requestUrl: requestUrl,
-    apiType: "put",
-    queryData: asset,
-  });
+const update = async (asset: IAsset): Promise<IAsset> => {
+  return (
+    await request<IAsset>({
+      requestUrl: requestUrl,
+      apiType: "put",
+      queryData: asset,
+    })
+  ).data as IAsset;
 };
 
 const remove = (id: string) => {
@@ -56,12 +69,14 @@ const removeRange = (ids: string[]) => {
   });
 };
 
-const checkIn = (checkInDto: AssetCheckInDto) => {
-  return request<IAsset>({
-    requestUrl: requestUrl + "checkin",
-    apiType: "post",
-    queryData: checkInDto,
-  });
+const checkIn = async (checkInDto: AssetCheckInDto): Promise<IUserProduct> => {
+  return (
+    await request<IUserProduct>({
+      requestUrl: requestUrl + "checkin",
+      apiType: "post",
+      queryData: checkInDto,
+    })
+  ).data as IUserProduct;
 };
 
 const checkOut = (checkOutDto: AssetCheckOutDto) => {
@@ -72,12 +87,14 @@ const checkOut = (checkOutDto: AssetCheckOutDto) => {
   });
 };
 
-const filter = (queryFilters: QueryFilter[]) => {
-  return request<IAsset>({
-    requestUrl: requestUrl + "filter",
-    apiType: "get",
-    params: getQueryFilter(queryFilters),
-  });
+const filter = async (queryFilters: QueryFilter[]): Promise<IAsset[]> => {
+  return (
+    await request<IAsset>({
+      requestUrl: requestUrl + "filter",
+      apiType: "get",
+      params: getQueryFilter(queryFilters),
+    })
+  ).data as IAsset[];
 };
 
 export const assetRequests = {

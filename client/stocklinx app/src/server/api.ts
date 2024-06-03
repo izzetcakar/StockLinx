@@ -11,12 +11,12 @@ export const getToken = (): string => {
   return user;
 };
 
-export interface BackendResponse<T> {
+export type BackendResponse<T> = {
   data: T | T[] | null;
   error: string | null;
   successMessage: string | null;
-  statusCode: number | null;
-}
+  status: number | null;
+};
 export interface ClientApiResponse<T> {
   data: T | T[] | null;
   message: string;
@@ -156,7 +156,7 @@ export const request = async <T>({
     }
 
     data = backendResponse.data;
-    status = backendResponse.statusCode || 200;
+    status = backendResponse.status || 200;
 
     const successMessage = backendResponse.successMessage;
 
@@ -171,59 +171,5 @@ export const request = async <T>({
       (error.response?.data.error as string) ?? "Network Error";
     status = error.response?.status ?? 500;
     throw new Error(message);
-
-    switch (status) {
-      case 400:
-        return {
-          data: null,
-          message: `${message} - Bad Request. Message: ${
-            error.response?.data ?? ""
-          }`,
-          success: false,
-          status,
-        };
-      case 401:
-        return {
-          data: null,
-          message: `${message} - Unauthorized`,
-          success: false,
-          status,
-        };
-      case 403:
-        return {
-          data: null,
-          message: `${message} - Forbidden`,
-          success: false,
-          status,
-        };
-      case 404:
-        return {
-          data: null,
-          message: `${message} - Page Not Found`,
-          success: false,
-          status,
-        };
-      case 408:
-        return {
-          data: null,
-          message: `${message} - Timeout Error`,
-          success: false,
-          status,
-        };
-      case 409:
-        return {
-          data: null,
-          message: `${message} - Record already exists`,
-          success: false,
-          status,
-        };
-      default:
-        return {
-          data: null,
-          message,
-          success: false,
-          status,
-        };
-    }
   }
 };

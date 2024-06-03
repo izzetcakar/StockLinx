@@ -8,35 +8,49 @@ import { request } from "@request";
 
 const requestUrl = "Generic/";
 
-const getEntityCounts = () => {
-  return request<IEntityCount>({
-    requestUrl: requestUrl + "entityCount",
-    apiType: "get",
-  });
+const getEntityCounts = async (): Promise<IEntityCount[]> => {
+  return (
+    await request<IEntityCount>({
+      requestUrl: requestUrl + "entityCount",
+      apiType: "get",
+    })
+  ).data as IEntityCount[];
 };
-const getProductStatusCounts = () => {
-  return request<IProductStatusCount>({
-    requestUrl: requestUrl + "productStatusCount",
-    apiType: "get",
-  });
+
+const getProductStatusCounts = async (): Promise<IProductStatusCount[]> => {
+  return (
+    await request<IProductStatusCount>({
+      requestUrl: requestUrl + "productStatusCount",
+      apiType: "get",
+    })
+  ).data as IProductStatusCount[];
 };
-const getProductLocationCounts = () => {
-  return request<IProductLocationCount>({
-    requestUrl: requestUrl + "productLocationCount",
-    apiType: "get",
-  });
+
+const getProductLocationCounts = async (): Promise<IProductLocationCount[]> => {
+  return (
+    await request<IProductLocationCount>({
+      requestUrl: requestUrl + "productLocationCount",
+      apiType: "get",
+    })
+  ).data as IProductLocationCount[];
 };
-const getProductCategoryCounts = () => {
-  return request<IProductCategoryCount>({
-    requestUrl: requestUrl + "productCategoryCount",
-    apiType: "get",
-  });
+
+const getProductCategoryCounts = async (): Promise<IProductCategoryCount[]> => {
+  return (
+    await request<IProductCategoryCount>({
+      requestUrl: requestUrl + "productCategoryCount",
+      apiType: "get",
+    })
+  ).data as IProductCategoryCount[];
 };
-const getCustomLogs = () => {
-  return request<IProductCategoryCount>({
-    requestUrl: "CustomLog/",
-    apiType: "get",
-  });
+
+const getCustomLogs = async (): Promise<IProductCategoryCount[]> => {
+  return (
+    await request<IProductCategoryCount>({
+      requestUrl: "CustomLog/",
+      apiType: "get",
+    })
+  ).data as IProductCategoryCount[];
 };
 
 export const productRequests = {

@@ -4,39 +4,48 @@ import { ICompany } from "@interfaces/serverInterfaces";
 import { request } from "@request";
 const requestUrl = "Company/";
 
-const getAll = () => {
-  return request<ICompany>({ requestUrl: requestUrl, apiType: "get" });
+const getAll = async (): Promise<ICompany[]> => {
+  return (await request<ICompany>({ requestUrl: requestUrl, apiType: "get" }))
+    .data as ICompany[];
 };
 
-const get = (id: string) => {
-  return request<ICompany>({
-    requestUrl: requestUrl + id,
-    apiType: "get",
-  });
+const get = async (id: string): Promise<ICompany> => {
+  return (
+    await request<ICompany>({
+      requestUrl: requestUrl + id,
+      apiType: "get",
+    })
+  ).data as ICompany;
 };
 
-const create = (company: ICompany) => {
-  return request<ICompany>({
-    requestUrl: requestUrl,
-    apiType: "post",
-    queryData: company,
-  });
+const create = async (company: ICompany): Promise<ICompany> => {
+  return (
+    await request<ICompany>({
+      requestUrl: requestUrl,
+      apiType: "post",
+      queryData: company,
+    })
+  ).data as ICompany;
 };
 
-const createRange = (companies: ICompany[]) => {
-  return request<ICompany>({
-    requestUrl: requestUrl + "range",
-    apiType: "post",
-    queryData: companies,
-  });
+const createRange = async (companies: ICompany[]): Promise<ICompany[]> => {
+  return (
+    await request<ICompany>({
+      requestUrl: requestUrl + "range",
+      apiType: "post",
+      queryData: companies,
+    })
+  ).data as ICompany[];
 };
 
-const update = (company: ICompany) => {
-  return request<ICompany>({
-    requestUrl: requestUrl,
-    apiType: "put",
-    queryData: company,
-  });
+const update = async (company: ICompany): Promise<ICompany> => {
+  return (
+    await request<ICompany>({
+      requestUrl: requestUrl,
+      apiType: "put",
+      queryData: company,
+    })
+  ).data as ICompany;
 };
 
 const remove = (id: string) => {
@@ -54,12 +63,14 @@ const removeRange = (ids: string[]) => {
   });
 };
 
-const filter = (queryFilters: QueryFilter[]) => {
-  return request<ICompany>({
-    requestUrl: requestUrl + "filter",
-    apiType: "get",
-    params: getQueryFilter(queryFilters),
-  });
+const filter = async (queryFilters: QueryFilter[]): Promise<ICompany[]> => {
+  return (
+    await request<ICompany>({
+      requestUrl: requestUrl + "filter",
+      apiType: "get",
+      params: getQueryFilter(queryFilters),
+    })
+  ).data as ICompany[];
 };
 
 export const companyRequests = {

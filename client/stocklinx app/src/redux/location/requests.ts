@@ -4,39 +4,48 @@ import { ILocation } from "@interfaces/serverInterfaces";
 import { request } from "@request";
 const requestUrl = "Location/";
 
-const getAll = () => {
-  return request<ILocation>({ requestUrl: requestUrl, apiType: "get" });
+const getAll = async (): Promise<ILocation[]> => {
+  return (await request<ILocation>({ requestUrl: requestUrl, apiType: "get" }))
+    .data as ILocation[];
 };
 
-const get = (id: string) => {
-  return request<ILocation>({
-    requestUrl: requestUrl + id,
-    apiType: "get",
-  });
+const get = async (id: string): Promise<ILocation> => {
+  return (
+    await request<ILocation>({
+      requestUrl: requestUrl + id,
+      apiType: "get",
+    })
+  ).data as ILocation;
 };
 
-const create = (location: ILocation) => {
-  return request<ILocation>({
-    requestUrl: requestUrl,
-    apiType: "post",
-    queryData: location,
-  });
+const create = async (consumable: ILocation): Promise<ILocation> => {
+  return (
+    await request<ILocation>({
+      requestUrl: requestUrl,
+      apiType: "post",
+      queryData: consumable,
+    })
+  ).data as ILocation;
 };
 
-const createRange = (locations: ILocation[]) => {
-  return request<ILocation>({
-    requestUrl: requestUrl + "range",
-    apiType: "post",
-    queryData: locations,
-  });
+const createRange = async (consumables: ILocation[]): Promise<ILocation[]> => {
+  return (
+    await request<ILocation>({
+      requestUrl: requestUrl + "range",
+      apiType: "post",
+      queryData: consumables,
+    })
+  ).data as ILocation[];
 };
 
-const update = (location: ILocation) => {
-  return request<ILocation>({
-    requestUrl: requestUrl,
-    apiType: "put",
-    queryData: location,
-  });
+const update = async (consumable: ILocation): Promise<ILocation> => {
+  return (
+    await request<ILocation>({
+      requestUrl: requestUrl,
+      apiType: "put",
+      queryData: consumable,
+    })
+  ).data as ILocation;
 };
 
 const remove = (id: string) => {
@@ -54,12 +63,14 @@ const removeRange = (ids: string[]) => {
   });
 };
 
-const filter = (queryFilters: QueryFilter[]) => {
-  return request<ILocation>({
-    requestUrl: requestUrl + "filter",
-    apiType: "get",
-    params: getQueryFilter(queryFilters),
-  });
+const filter = async (queryFilters: QueryFilter[]): Promise<ILocation[]> => {
+  return (
+    await request<ILocation>({
+      requestUrl: requestUrl + "filter",
+      apiType: "get",
+      params: getQueryFilter(queryFilters),
+    })
+  ).data as ILocation[];
 };
 
 export const locationRequests = {

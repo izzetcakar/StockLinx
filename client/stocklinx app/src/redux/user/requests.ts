@@ -5,17 +5,6 @@ import { request } from "@request";
 
 const requestUrl = "User/";
 
-const getAll = () => {
-  return request<IUser>({ requestUrl: requestUrl, apiType: "get" });
-};
-
-const get = (id: string) => {
-  return request<IUser>({
-    requestUrl: requestUrl + id,
-    apiType: "get",
-  });
-};
-
 const signIn = (loginDto: IUserLoginDto) => {
   return request<IUserLoginDto>({
     requestUrl: requestUrl + "login",
@@ -30,28 +19,48 @@ const getWithToken = () => {
     apiType: "get",
   });
 };
-const create = (user: IUser) => {
-  return request<IUser>({
-    requestUrl: requestUrl,
-    queryData: user,
-    apiType: "post",
-  });
+const getAll = async (): Promise<IUser[]> => {
+  return (await request<IUser>({ requestUrl: requestUrl, apiType: "get" }))
+    .data as IUser[];
 };
 
-const createRange = (users: IUser[]) => {
-  return request<IUser>({
-    requestUrl: requestUrl + "range",
-    apiType: "post",
-    queryData: users,
-  });
+const get = async (id: string): Promise<IUser> => {
+  return (
+    await request<IUser>({
+      requestUrl: requestUrl + id,
+      apiType: "get",
+    })
+  ).data as IUser;
 };
 
-const update = (user: IUser) => {
-  return request<IUser>({
-    requestUrl: requestUrl,
-    queryData: user,
-    apiType: "put",
-  });
+const create = async (consumable: IUser): Promise<IUser> => {
+  return (
+    await request<IUser>({
+      requestUrl: requestUrl,
+      apiType: "post",
+      queryData: consumable,
+    })
+  ).data as IUser;
+};
+
+const createRange = async (consumables: IUser[]): Promise<IUser[]> => {
+  return (
+    await request<IUser>({
+      requestUrl: requestUrl + "range",
+      apiType: "post",
+      queryData: consumables,
+    })
+  ).data as IUser[];
+};
+
+const update = async (consumable: IUser): Promise<IUser> => {
+  return (
+    await request<IUser>({
+      requestUrl: requestUrl,
+      apiType: "put",
+      queryData: consumable,
+    })
+  ).data as IUser;
 };
 
 const remove = (id: string) => {
@@ -69,12 +78,14 @@ const removeRange = (ids: string[]) => {
   });
 };
 
-const filter = (queryFilters: QueryFilter[]) => {
-  return request<IUser>({
-    requestUrl: requestUrl + "filter",
-    apiType: "get",
-    queryData: getQueryFilter(queryFilters),
-  });
+const filter = async (queryFilters: QueryFilter[]): Promise<IUser[]> => {
+  return (
+    await request<IUser>({
+      requestUrl: requestUrl + "filter",
+      apiType: "get",
+      params: getQueryFilter(queryFilters),
+    })
+  ).data as IUser[];
 };
 
 export const userRequests = {

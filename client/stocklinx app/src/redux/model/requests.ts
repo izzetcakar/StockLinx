@@ -4,39 +4,48 @@ import { IModel } from "@interfaces/serverInterfaces";
 import { request } from "@request";
 const requestUrl = "Model/";
 
-const getAll = () => {
-  return request<IModel>({ requestUrl: requestUrl, apiType: "get" });
+const getAll = async (): Promise<IModel[]> => {
+  return (await request<IModel>({ requestUrl: requestUrl, apiType: "get" }))
+    .data as IModel[];
 };
 
-const get = (id: string) => {
-  return request<IModel>({
-    requestUrl: requestUrl + id,
-    apiType: "get",
-  });
+const get = async (id: string): Promise<IModel> => {
+  return (
+    await request<IModel>({
+      requestUrl: requestUrl + id,
+      apiType: "get",
+    })
+  ).data as IModel;
 };
 
-const create = (model: IModel) => {
-  return request<IModel>({
-    requestUrl: requestUrl,
-    apiType: "post",
-    queryData: model,
-  });
+const create = async (consumable: IModel): Promise<IModel> => {
+  return (
+    await request<IModel>({
+      requestUrl: requestUrl,
+      apiType: "post",
+      queryData: consumable,
+    })
+  ).data as IModel;
 };
 
-const createRange = (models: IModel[]) => {
-  return request<IModel>({
-    requestUrl: requestUrl + "range",
-    apiType: "post",
-    queryData: models,
-  });
+const createRange = async (consumables: IModel[]): Promise<IModel[]> => {
+  return (
+    await request<IModel>({
+      requestUrl: requestUrl + "range",
+      apiType: "post",
+      queryData: consumables,
+    })
+  ).data as IModel[];
 };
 
-const update = (model: IModel) => {
-  return request<IModel>({
-    requestUrl: requestUrl,
-    apiType: "put",
-    queryData: model,
-  });
+const update = async (consumable: IModel): Promise<IModel> => {
+  return (
+    await request<IModel>({
+      requestUrl: requestUrl,
+      apiType: "put",
+      queryData: consumable,
+    })
+  ).data as IModel;
 };
 
 const remove = (id: string) => {
@@ -54,12 +63,14 @@ const removeRange = (ids: string[]) => {
   });
 };
 
-const filter = (payload: QueryFilter[]) => {
-  return request<IModel>({
-    requestUrl: requestUrl + "filter",
-    apiType: "get",
-    queryData: getQueryFilter(payload),
-  });
+const filter = async (queryFilters: QueryFilter[]): Promise<IModel[]> => {
+  return (
+    await request<IModel>({
+      requestUrl: requestUrl + "filter",
+      apiType: "get",
+      params: getQueryFilter(queryFilters),
+    })
+  ).data as IModel[];
 };
 
 export const modelRequests = {

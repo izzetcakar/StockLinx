@@ -4,39 +4,51 @@ import { IUserProduct } from "@interfaces/serverInterfaces";
 import { request } from "@request";
 const requestUrl = "UserProduct/";
 
-const getAll = () => {
-  return request<IUserProduct>({ requestUrl: requestUrl, apiType: "get" });
+const getAll = async (): Promise<IUserProduct[]> => {
+  return (
+    await request<IUserProduct>({ requestUrl: requestUrl, apiType: "get" })
+  ).data as IUserProduct[];
 };
 
-const get = (id: string) => {
-  return request<IUserProduct>({
-    requestUrl: requestUrl + id,
-    apiType: "get",
-  });
+const get = async (id: string): Promise<IUserProduct> => {
+  return (
+    await request<IUserProduct>({
+      requestUrl: requestUrl + id,
+      apiType: "get",
+    })
+  ).data as IUserProduct;
 };
 
-const create = (userProduct: IUserProduct) => {
-  return request<IUserProduct>({
-    requestUrl: requestUrl,
-    apiType: "post",
-    queryData: userProduct,
-  });
+const create = async (consumable: IUserProduct): Promise<IUserProduct> => {
+  return (
+    await request<IUserProduct>({
+      requestUrl: requestUrl,
+      apiType: "post",
+      queryData: consumable,
+    })
+  ).data as IUserProduct;
 };
 
-const createRange = (userProducts: IUserProduct[]) => {
-  return request<IUserProduct>({
-    requestUrl: requestUrl + "range",
-    apiType: "post",
-    queryData: userProducts,
-  });
+const createRange = async (
+  consumables: IUserProduct[]
+): Promise<IUserProduct[]> => {
+  return (
+    await request<IUserProduct>({
+      requestUrl: requestUrl + "range",
+      apiType: "post",
+      queryData: consumables,
+    })
+  ).data as IUserProduct[];
 };
 
-const update = (userProduct: IUserProduct) => {
-  return request<IUserProduct>({
-    requestUrl: requestUrl,
-    apiType: "put",
-    queryData: userProduct,
-  });
+const update = async (consumable: IUserProduct): Promise<IUserProduct> => {
+  return (
+    await request<IUserProduct>({
+      requestUrl: requestUrl,
+      apiType: "put",
+      queryData: consumable,
+    })
+  ).data as IUserProduct;
 };
 
 const remove = (id: string) => {
@@ -54,12 +66,14 @@ const removeRange = (ids: string[]) => {
   });
 };
 
-const filter = (payload: QueryFilter[]) => {
-  return request<IUserProduct>({
-    requestUrl: requestUrl + "filter",
-    apiType: "get",
-    queryData: getQueryFilter(payload),
-  });
+const filter = async (queryFilters: QueryFilter[]): Promise<IUserProduct[]> => {
+  return (
+    await request<IUserProduct>({
+      requestUrl: requestUrl + "filter",
+      apiType: "get",
+      params: getQueryFilter(queryFilters),
+    })
+  ).data as IUserProduct[];
 };
 
 export const userProductRequests = {

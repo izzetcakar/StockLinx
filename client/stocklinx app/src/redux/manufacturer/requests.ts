@@ -4,39 +4,51 @@ import { IManufacturer } from "@interfaces/serverInterfaces";
 import { request } from "@request";
 const requestUrl = "Manufacturer/";
 
-const getAll = () => {
-  return request<IManufacturer>({ requestUrl: requestUrl, apiType: "get" });
+const getAll = async (): Promise<IManufacturer[]> => {
+  return (
+    await request<IManufacturer>({ requestUrl: requestUrl, apiType: "get" })
+  ).data as IManufacturer[];
 };
 
-const get = (id: string) => {
-  return request<IManufacturer>({
-    requestUrl: requestUrl + id,
-    apiType: "get",
-  });
+const get = async (id: string): Promise<IManufacturer> => {
+  return (
+    await request<IManufacturer>({
+      requestUrl: requestUrl + id,
+      apiType: "get",
+    })
+  ).data as IManufacturer;
 };
 
-const create = (manufacturer: IManufacturer) => {
-  return request<IManufacturer>({
-    requestUrl: requestUrl,
-    apiType: "post",
-    queryData: manufacturer,
-  });
+const create = async (consumable: IManufacturer): Promise<IManufacturer> => {
+  return (
+    await request<IManufacturer>({
+      requestUrl: requestUrl,
+      apiType: "post",
+      queryData: consumable,
+    })
+  ).data as IManufacturer;
 };
 
-const createRange = (manufacturers: IManufacturer[]) => {
-  return request<IManufacturer>({
-    requestUrl: requestUrl + "range",
-    apiType: "post",
-    queryData: manufacturers,
-  });
+const createRange = async (
+  consumables: IManufacturer[]
+): Promise<IManufacturer[]> => {
+  return (
+    await request<IManufacturer>({
+      requestUrl: requestUrl + "range",
+      apiType: "post",
+      queryData: consumables,
+    })
+  ).data as IManufacturer[];
 };
 
-const update = (manufacturer: IManufacturer) => {
-  return request<IManufacturer>({
-    requestUrl: requestUrl,
-    apiType: "put",
-    queryData: manufacturer,
-  });
+const update = async (consumable: IManufacturer): Promise<IManufacturer> => {
+  return (
+    await request<IManufacturer>({
+      requestUrl: requestUrl,
+      apiType: "put",
+      queryData: consumable,
+    })
+  ).data as IManufacturer;
 };
 
 const remove = (id: string) => {
@@ -54,12 +66,16 @@ const removeRange = (ids: string[]) => {
   });
 };
 
-const filter = (queryFilters: QueryFilter[]) => {
-  return request<IManufacturer>({
-    requestUrl: requestUrl + "filter",
-    apiType: "get",
-    params: getQueryFilter(queryFilters),
-  });
+const filter = async (
+  queryFilters: QueryFilter[]
+): Promise<IManufacturer[]> => {
+  return (
+    await request<IManufacturer>({
+      requestUrl: requestUrl + "filter",
+      apiType: "get",
+      params: getQueryFilter(queryFilters),
+    })
+  ).data as IManufacturer[];
 };
 
 export const manufacturerRequests = {

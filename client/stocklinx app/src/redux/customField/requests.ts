@@ -2,42 +2,60 @@ import { ICustomField } from "@interfaces/serverInterfaces";
 import { request } from "@request";
 const requestUrl = "CustomField/";
 
-const getAll = () => {
-  return request<ICustomField>({ requestUrl: requestUrl, apiType: "get" });
+const getAll = async (): Promise<ICustomField[]> => {
+  return (
+    await request<ICustomField>({ requestUrl: requestUrl, apiType: "get" })
+  ).data as ICustomField[];
 };
-const get = (id: string) => {
-  return request<ICustomField>({
-    requestUrl: requestUrl + id,
-    apiType: "get",
-  });
+
+const get = async (id: string): Promise<ICustomField> => {
+  return (
+    await request<ICustomField>({
+      requestUrl: requestUrl + id,
+      apiType: "get",
+    })
+  ).data as ICustomField;
 };
-const create = (customField: ICustomField) => {
-  return request<ICustomField>({
-    requestUrl: requestUrl,
-    apiType: "post",
-    queryData: customField,
-  });
+
+const create = async (customField: ICustomField): Promise<ICustomField> => {
+  return (
+    await request<ICustomField>({
+      requestUrl: requestUrl,
+      apiType: "post",
+      queryData: customField,
+    })
+  ).data as ICustomField;
 };
-const createRange = (customFields: ICustomField[]) => {
-  return request<ICustomField>({
-    requestUrl: requestUrl + "range",
-    apiType: "post",
-    queryData: customFields,
-  });
+
+const createRange = async (
+  customFields: ICustomField[]
+): Promise<ICustomField[]> => {
+  return (
+    await request<ICustomField>({
+      requestUrl: requestUrl + "range",
+      apiType: "post",
+      queryData: customFields,
+    })
+  ).data as ICustomField[];
 };
-const update = (customField: ICustomField) => {
-  return request<ICustomField>({
-    requestUrl: requestUrl,
-    apiType: "put",
-    queryData: customField,
-  });
+
+const update = async (customField: ICustomField): Promise<ICustomField> => {
+  return (
+    await request<ICustomField>({
+      requestUrl: requestUrl,
+      apiType: "put",
+      queryData: customField,
+    })
+  ).data as ICustomField;
 };
+
 const remove = (id: string) => {
   return request<ICustomField>({
     requestUrl: requestUrl + id,
     apiType: "delete",
   });
 };
+
 const removeRange = (ids: string[]) => {
   return request<ICustomField>({
     requestUrl: requestUrl + "range",

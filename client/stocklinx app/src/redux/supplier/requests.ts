@@ -4,39 +4,48 @@ import { ISupplier } from "@interfaces/serverInterfaces";
 import { request } from "@request";
 const requestUrl = "Supplier/";
 
-const getAll = () => {
-  return request<ISupplier>({ requestUrl: requestUrl, apiType: "get" });
+const getAll = async (): Promise<ISupplier[]> => {
+  return (await request<ISupplier>({ requestUrl: requestUrl, apiType: "get" }))
+    .data as ISupplier[];
 };
 
-const get = (id: string) => {
-  return request<ISupplier>({
-    requestUrl: requestUrl + id,
-    apiType: "get",
-  });
+const get = async (id: string): Promise<ISupplier> => {
+  return (
+    await request<ISupplier>({
+      requestUrl: requestUrl + id,
+      apiType: "get",
+    })
+  ).data as ISupplier;
 };
 
-const create = (supplier: ISupplier) => {
-  return request<ISupplier>({
-    requestUrl: requestUrl,
-    apiType: "post",
-    queryData: supplier,
-  });
+const create = async (consumable: ISupplier): Promise<ISupplier> => {
+  return (
+    await request<ISupplier>({
+      requestUrl: requestUrl,
+      apiType: "post",
+      queryData: consumable,
+    })
+  ).data as ISupplier;
 };
 
-const createRange = (suppliers: ISupplier[]) => {
-  return request<ISupplier>({
-    requestUrl: requestUrl + "range",
-    apiType: "post",
-    queryData: suppliers,
-  });
+const createRange = async (consumables: ISupplier[]): Promise<ISupplier[]> => {
+  return (
+    await request<ISupplier>({
+      requestUrl: requestUrl + "range",
+      apiType: "post",
+      queryData: consumables,
+    })
+  ).data as ISupplier[];
 };
 
-const update = (supplier: ISupplier) => {
-  return request<ISupplier>({
-    requestUrl: requestUrl,
-    apiType: "put",
-    queryData: supplier,
-  });
+const update = async (consumable: ISupplier): Promise<ISupplier> => {
+  return (
+    await request<ISupplier>({
+      requestUrl: requestUrl,
+      apiType: "put",
+      queryData: consumable,
+    })
+  ).data as ISupplier;
 };
 
 const remove = (id: string) => {
@@ -54,12 +63,14 @@ const removeRange = (ids: string[]) => {
   });
 };
 
-const filter = (payload: QueryFilter[]) => {
-  return request<ISupplier>({
-    requestUrl: requestUrl + "filter",
-    apiType: "get",
-    queryData: getQueryFilter(payload),
-  });
+const filter = async (queryFilters: QueryFilter[]): Promise<ISupplier[]> => {
+  return (
+    await request<ISupplier>({
+      requestUrl: requestUrl + "filter",
+      apiType: "get",
+      params: getQueryFilter(queryFilters),
+    })
+  ).data as ISupplier[];
 };
 
 export const supplierRequests = {

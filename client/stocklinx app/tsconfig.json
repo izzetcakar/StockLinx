@@ -19,7 +19,7 @@
       "@functions/*": ["src/utils/*"],
       "@request": ["./src/server/api.ts"],
       "@style": ["./src/base.scss*"],
-      "@interfaces": ["./src/interfaces/*"],
+      "@interfaces": ["./src/interfaces/*"]
     },
 
     /* Bundler mode */
@@ -36,6 +36,7 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
+  "filesGlob": ["src/**/*.ts", "src/**/*.tsx"],
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

@@ -9,39 +9,50 @@ import { request } from "@/server/api";
 import { getQueryFilter } from "@/utils/filterUtilts";
 const requestUrl = "Accessory/";
 
-const getAll = () => {
-  return request<IAccessory>({ requestUrl: requestUrl, apiType: "get" });
+const getAll = async (): Promise<IAccessory[]> => {
+  return (await request<IAccessory>({ requestUrl: requestUrl, apiType: "get" }))
+    .data as IAccessory[];
 };
 
-const get = (id: string) => {
-  return request<IAccessory>({
-    requestUrl: requestUrl + id,
-    apiType: "get",
-  });
+const get = async (id: string): Promise<IAccessory> => {
+  return (
+    await request<IAccessory>({
+      requestUrl: requestUrl + id,
+      apiType: "get",
+    })
+  ).data as IAccessory;
 };
 
-const create = (accessory: IAccessory) => {
-  return request<IAccessory>({
-    requestUrl: requestUrl,
-    apiType: "post",
-    queryData: accessory,
-  });
+const create = async (accessory: IAccessory): Promise<IAccessory> => {
+  return (
+    await request<IAccessory>({
+      requestUrl: requestUrl,
+      apiType: "post",
+      queryData: accessory,
+    })
+  ).data as IAccessory;
 };
 
-const createRange = (accessories: IAccessory[]) => {
-  return request<IAccessory>({
-    requestUrl: requestUrl + "range",
-    apiType: "post",
-    queryData: accessories,
-  });
+const createRange = async (
+  accessories: IAccessory[]
+): Promise<IAccessory[]> => {
+  return (
+    await request<IAccessory>({
+      requestUrl: requestUrl + "range",
+      apiType: "post",
+      queryData: accessories,
+    })
+  ).data as IAccessory[];
 };
 
-const update = (accessory: IAccessory) => {
-  return request<IAccessory>({
-    requestUrl: requestUrl,
-    apiType: "put",
-    queryData: accessory,
-  });
+const update = async (accessory: IAccessory): Promise<IAccessory> => {
+  return (
+    await request<IAccessory>({
+      requestUrl: requestUrl,
+      apiType: "put",
+      queryData: accessory,
+    })
+  ).data as IAccessory;
 };
 
 const remove = (id: string) => {
@@ -59,12 +70,16 @@ const removeRange = (ids: string[]) => {
   });
 };
 
-const checkIn = (checkInDto: UserProductCheckInDto) => {
-  return request<IUserProduct>({
-    requestUrl: requestUrl + "checkin",
-    apiType: "post",
-    queryData: checkInDto,
-  });
+const checkIn = async (
+  checkInDto: UserProductCheckInDto
+): Promise<IUserProduct> => {
+  return (
+    await request<IUserProduct>({
+      requestUrl: requestUrl + "checkin",
+      apiType: "post",
+      queryData: checkInDto,
+    })
+  ).data as IUserProduct;
 };
 
 const checkOut = (checkOutDto: UserProductCheckOutDto) => {
@@ -75,12 +90,14 @@ const checkOut = (checkOutDto: UserProductCheckOutDto) => {
   });
 };
 
-const filter = (queryFilters: QueryFilter[]) => {
-  return request<IAccessory>({
-    requestUrl: requestUrl + "filter",
-    apiType: "get",
-    params: getQueryFilter(queryFilters),
-  });
+const filter = async (queryFilters: QueryFilter[]): Promise<IAccessory[]> => {
+  return (
+    await request<IAccessory>({
+      requestUrl: requestUrl + "filter",
+      apiType: "get",
+      params: getQueryFilter(queryFilters),
+    })
+  ).data as IAccessory[];
 };
 
 export const accessoryRequests = {

@@ -2,42 +2,57 @@ import { IFieldSet } from "@interfaces/serverInterfaces";
 import { request } from "@request";
 const requestUrl = "FieldSet/";
 
-const getAll = () => {
-  return request<IFieldSet>({ requestUrl: requestUrl, apiType: "get" });
+const getAll = async (): Promise<IFieldSet[]> => {
+  return (await request<IFieldSet>({ requestUrl: requestUrl, apiType: "get" }))
+    .data as IFieldSet[];
 };
-const get = (id: string) => {
-  return request<IFieldSet>({
-    requestUrl: requestUrl + id,
-    apiType: "get",
-  });
+
+const get = async (id: string): Promise<IFieldSet> => {
+  return (
+    await request<IFieldSet>({
+      requestUrl: requestUrl + id,
+      apiType: "get",
+    })
+  ).data as IFieldSet;
 };
-const create = (fieldSet: IFieldSet) => {
-  return request<IFieldSet>({
-    requestUrl: requestUrl,
-    apiType: "post",
-    queryData: fieldSet,
-  });
+
+const create = async (consumable: IFieldSet): Promise<IFieldSet> => {
+  return (
+    await request<IFieldSet>({
+      requestUrl: requestUrl,
+      apiType: "post",
+      queryData: consumable,
+    })
+  ).data as IFieldSet;
 };
-const createRange = (fieldSets: IFieldSet[]) => {
-  return request<IFieldSet>({
-    requestUrl: requestUrl + "range",
-    apiType: "post",
-    queryData: fieldSets,
-  });
+
+const createRange = async (consumables: IFieldSet[]): Promise<IFieldSet[]> => {
+  return (
+    await request<IFieldSet>({
+      requestUrl: requestUrl + "range",
+      apiType: "post",
+      queryData: consumables,
+    })
+  ).data as IFieldSet[];
 };
-const update = (fieldSet: IFieldSet) => {
-  return request<IFieldSet>({
-    requestUrl: requestUrl,
-    apiType: "put",
-    queryData: fieldSet,
-  });
+
+const update = async (consumable: IFieldSet): Promise<IFieldSet> => {
+  return (
+    await request<IFieldSet>({
+      requestUrl: requestUrl,
+      apiType: "put",
+      queryData: consumable,
+    })
+  ).data as IFieldSet;
 };
+
 const remove = (id: string) => {
   return request<IFieldSet>({
     requestUrl: requestUrl + id,
     apiType: "delete",
   });
 };
+
 const removeRange = (ids: string[]) => {
   return request<IFieldSet>({
     requestUrl: requestUrl + "range",

@@ -4,39 +4,51 @@ import { IDepartment } from "@interfaces/serverInterfaces";
 import { request } from "@request";
 const requestUrl = "Department/";
 
-const getAll = () => {
-  return request<IDepartment>({ requestUrl: requestUrl, apiType: "get" });
+const getAll = async (): Promise<IDepartment[]> => {
+  return (
+    await request<IDepartment>({ requestUrl: requestUrl, apiType: "get" })
+  ).data as IDepartment[];
 };
 
-const get = (id: string) => {
-  return request<IDepartment>({
-    requestUrl: requestUrl + id,
-    apiType: "get",
-  });
+const get = async (id: string): Promise<IDepartment> => {
+  return (
+    await request<IDepartment>({
+      requestUrl: requestUrl + id,
+      apiType: "get",
+    })
+  ).data as IDepartment;
 };
 
-const create = (department: IDepartment) => {
-  return request<IDepartment>({
-    requestUrl: requestUrl,
-    apiType: "post",
-    queryData: department,
-  });
+const create = async (consumable: IDepartment): Promise<IDepartment> => {
+  return (
+    await request<IDepartment>({
+      requestUrl: requestUrl,
+      apiType: "post",
+      queryData: consumable,
+    })
+  ).data as IDepartment;
 };
 
-const createRange = (departments: IDepartment[]) => {
-  return request<IDepartment>({
-    requestUrl: requestUrl + "range",
-    apiType: "post",
-    queryData: departments,
-  });
+const createRange = async (
+  consumables: IDepartment[]
+): Promise<IDepartment[]> => {
+  return (
+    await request<IDepartment>({
+      requestUrl: requestUrl + "range",
+      apiType: "post",
+      queryData: consumables,
+    })
+  ).data as IDepartment[];
 };
 
-const update = (department: IDepartment) => {
-  return request<IDepartment>({
-    requestUrl: requestUrl,
-    apiType: "put",
-    queryData: department,
-  });
+const update = async (consumable: IDepartment): Promise<IDepartment> => {
+  return (
+    await request<IDepartment>({
+      requestUrl: requestUrl,
+      apiType: "put",
+      queryData: consumable,
+    })
+  ).data as IDepartment;
 };
 
 const remove = (id: string) => {
@@ -54,12 +66,14 @@ const removeRange = (ids: string[]) => {
   });
 };
 
-const filter = (queryFilters: QueryFilter[]) => {
-  return request<IDepartment>({
-    requestUrl: requestUrl + "filter",
-    apiType: "get",
-    params: getQueryFilter(queryFilters),
-  });
+const filter = async (queryFilters: QueryFilter[]): Promise<IDepartment[]> => {
+  return (
+    await request<IDepartment>({
+      requestUrl: requestUrl + "filter",
+      apiType: "get",
+      params: getQueryFilter(queryFilters),
+    })
+  ).data as IDepartment[];
 };
 
 export const departmentRequests = {

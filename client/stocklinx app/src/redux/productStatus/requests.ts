@@ -4,39 +4,51 @@ import { IProductStatus } from "@interfaces/serverInterfaces";
 import { request } from "@request";
 const requestUrl = "ProductStatus/";
 
-const getAll = () => {
-  return request<IProductStatus>({ requestUrl: requestUrl, apiType: "get" });
+const getAll = async (): Promise<IProductStatus[]> => {
+  return (
+    await request<IProductStatus>({ requestUrl: requestUrl, apiType: "get" })
+  ).data as IProductStatus[];
 };
 
-const get = (id: string) => {
-  return request<IProductStatus>({
-    requestUrl: requestUrl + id,
-    apiType: "get",
-  });
+const get = async (id: string): Promise<IProductStatus> => {
+  return (
+    await request<IProductStatus>({
+      requestUrl: requestUrl + id,
+      apiType: "get",
+    })
+  ).data as IProductStatus;
 };
 
-const create = (productStatus: IProductStatus) => {
-  return request<IProductStatus>({
-    requestUrl: requestUrl,
-    apiType: "post",
-    queryData: productStatus,
-  });
+const create = async (consumable: IProductStatus): Promise<IProductStatus> => {
+  return (
+    await request<IProductStatus>({
+      requestUrl: requestUrl,
+      apiType: "post",
+      queryData: consumable,
+    })
+  ).data as IProductStatus;
 };
 
-const createRange = (productStatuses: IProductStatus[]) => {
-  return request<IProductStatus>({
-    requestUrl: requestUrl + "range",
-    apiType: "post",
-    queryData: productStatuses,
-  });
+const createRange = async (
+  consumables: IProductStatus[]
+): Promise<IProductStatus[]> => {
+  return (
+    await request<IProductStatus>({
+      requestUrl: requestUrl + "range",
+      apiType: "post",
+      queryData: consumables,
+    })
+  ).data as IProductStatus[];
 };
 
-const update = (productStatus: IProductStatus) => {
-  return request<IProductStatus>({
-    requestUrl: requestUrl,
-    apiType: "put",
-    queryData: productStatus,
-  });
+const update = async (consumable: IProductStatus): Promise<IProductStatus> => {
+  return (
+    await request<IProductStatus>({
+      requestUrl: requestUrl,
+      apiType: "put",
+      queryData: consumable,
+    })
+  ).data as IProductStatus;
 };
 
 const remove = (id: string) => {
@@ -54,12 +66,16 @@ const removeRange = (ids: string[]) => {
   });
 };
 
-const filter = (payload: QueryFilter[]) => {
-  return request<IProductStatus>({
-    requestUrl: requestUrl + "filter",
-    apiType: "get",
-    queryData: getQueryFilter(payload),
-  });
+const filter = async (
+  queryFilters: QueryFilter[]
+): Promise<IProductStatus[]> => {
+  return (
+    await request<IProductStatus>({
+      requestUrl: requestUrl + "filter",
+      apiType: "get",
+      params: getQueryFilter(queryFilters),
+    })
+  ).data as IProductStatus[];
 };
 
 export const productStatusRequests = {
