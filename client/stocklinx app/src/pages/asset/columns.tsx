@@ -1,8 +1,13 @@
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux/rootReducer";
 import { ExcelColumn, BaseColumn } from "@interfaces/gridTableInterfaces";
 import { Anchor, Button, Image } from "@mantine/core";
-import { IAsset, IUserProduct } from "@interfaces/serverInterfaces";
+import {
+  IAsset,
+  IModel,
+  IProductStatus,
+  ISupplier,
+  IUser,
+  IUserProduct,
+} from "@interfaces/serverInterfaces";
 import { useNavigate } from "react-router-dom";
 import { getImage } from "../../utils/Image";
 import {
@@ -11,18 +16,40 @@ import {
 } from "../../modals/modals";
 import base_asset from "../../assets/baseProductImages/base_asset.jpg";
 import { lookupRequests } from "@/server/lookupRequests";
+import { modelRequests } from "@/redux/model/requests";
+import { useQuery } from "react-query";
+import { productStatusRequests } from "@/redux/productStatus/requests";
+import { userRequests } from "@/redux/user/requests";
+import { userProductRequests } from "@/redux/userProduct/requests";
+import { supplierRequests } from "@/redux/supplier/requests";
 
 export const useColumns = () => {
   const navigate = useNavigate();
-  const models = useSelector((state: RootState) => state.model.models);
-  const productStatuses = useSelector(
-    (state: RootState) => state.productStatus.productStatuses
-  );
-  const users = useSelector((state: RootState) => state.user.users);
-  const userProducts = useSelector(
-    (state: RootState) => state.userProduct.userProducts
-  );
-  const suppliers = useSelector((state: RootState) => state.supplier.suppliers);
+  const models =
+    useQuery<IModel[]>({
+      queryKey: "model_getAll",
+      queryFn: modelRequests.getAll,
+    }).data || [];
+  const productStatuses =
+    useQuery<IProductStatus[]>({
+      queryKey: "productstatus_getAll",
+      queryFn: productStatusRequests.getAll,
+    }).data || [];
+  const users =
+    useQuery<IUser[]>({
+      queryKey: "user_getAll",
+      queryFn: userRequests.getAll,
+    }).data || [];
+  const userProducts =
+    useQuery<IUserProduct[]>({
+      queryKey: "userproduct_getAll",
+      queryFn: userProductRequests.getAll,
+    }).data || [];
+  const suppliers =
+    useQuery<ISupplier[]>({
+      queryKey: "supplier_getAll",
+      queryFn: supplierRequests.getAll,
+    }).data || [];
 
   const checkIn = (asset: IAsset) => {
     openAssetCheckInModal({
@@ -130,11 +157,9 @@ export const useColumns = () => {
         const userProduct = userProducts.find(
           (userProduct) => userProduct?.assetId === (e as IAsset).id
         );
-        if (userProduct) {
-          const user = users.find((user) => user.id === userProduct.userId);
-          if (user) return user.firstName + " " + user.lastName;
-        }
-        return null;
+        if (!userProduct) return null;
+        const user = users.find((user) => user.id === userProduct.userId);
+        if (user) return user.firstName + " " + user.lastName;
       },
       lookup: {
         data: users.map((user) => ({

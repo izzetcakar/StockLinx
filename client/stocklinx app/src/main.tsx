@@ -11,6 +11,7 @@ import { MantineProvider, ScrollArea } from "@mantine/core";
 import { GenericProvider } from "./context/GenericContext.tsx";
 import { defaultInputProps } from "./mantineModules/defaultInputProps.ts";
 import { IconCaretDownFilled, IconCalendar } from "@tabler/icons-react";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 const components = {
   TextInput: {
@@ -103,6 +104,14 @@ const components = {
   },
 };
 
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+});
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <MantineProvider
     theme={{
@@ -131,7 +140,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <GenericProvider>
         <ModalsProvider>
           <Notifications w={"fit-content"} position="top-right" />
-          <App />
+          <QueryClientProvider client={queryClient}>
+            <App />
+          </QueryClientProvider>
         </ModalsProvider>
       </GenericProvider>
     </Provider>

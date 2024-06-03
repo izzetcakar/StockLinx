@@ -1,38 +1,22 @@
 import { IAsset } from "../../interfaces/serverInterfaces";
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux/rootReducer";
 import { useDispatch } from "react-redux";
-import { companyActions } from "../../redux/company/actions";
-import { categoryActions } from "../../redux/category/actions";
-import { modelActions } from "../../redux/model/actions";
 import { useColumns } from "./columns";
-import Gridtable from "../../components/gridTable/GridTable";
 import { assetActions } from "../../redux/asset/actions";
-import { branchActions } from "../../redux/branch/actions";
-import { productStatusActions } from "../../redux/productStatus/actions";
 import { openAssetModal } from "../../modals/modals";
-import { supplierActions } from "../../redux/supplier/actions";
-import { userProductActions } from "../../redux/userProduct/actions";
-import { userActions } from "../../redux/user/actions";
 import { useContext } from "react";
+import { useQuery } from "react-query";
+import { assetRequests } from "@/redux/asset/requests";
+import Gridtable from "../../components/gridTable/GridTable";
 import GenericContext from "../../context/GenericContext";
 
 const Asset = () => {
   const dispatch = useDispatch();
-  const assets = useSelector((state: RootState) => state.asset.assets);
   const { drawerBadge } = useContext(GenericContext);
 
-  const refreshData = () => {
-    dispatch(assetActions.getAll());
-    dispatch(categoryActions.getAll());
-    dispatch(modelActions.getAll());
-    dispatch(companyActions.getAll());
-    dispatch(branchActions.getAll());
-    dispatch(productStatusActions.getAll());
-    dispatch(supplierActions.getAll());
-    dispatch(userProductActions.getAll());
-    dispatch(userActions.getAll());
-  };
+  const { data: assets, refetch } = useQuery<IAsset[], Error>({
+    queryKey: "assets",
+    queryFn: assetRequests.getAll,
+  });
 
   return (
     <>
@@ -41,10 +25,10 @@ const Asset = () => {
         {drawerBadge()}
       </div>
       <Gridtable
-        data={assets}
+        data={assets || []}
         itemKey="id"
         columns={useColumns().columns}
-        refreshData={refreshData}
+        refreshData={refetch}
         onRowUpdate={(asset) => openAssetModal(asset as IAsset)}
         onRowInsert={() => openAssetModal()}
         onRowRemove={(id) => dispatch(assetActions.remove({ id: id }))}
