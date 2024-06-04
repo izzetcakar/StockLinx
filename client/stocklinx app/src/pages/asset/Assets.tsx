@@ -3,20 +3,18 @@ import { useDispatch } from "react-redux";
 import { useColumns } from "./columns";
 import { assetActions } from "../../redux/asset/actions";
 import { openAssetModal } from "../../modals/modals";
-import { useContext } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { useQuery } from "react-query";
 import { assetRequests } from "@/redux/asset/requests";
 import Gridtable from "../../components/gridTable/GridTable";
 import GenericContext from "../../context/GenericContext";
+import { useAssets, useFilterAssets } from "@/queryhooks/asset";
 
 const Asset = () => {
   const dispatch = useDispatch();
   const { drawerBadge } = useContext(GenericContext);
-
-  const { data: assets, refetch } = useQuery<IAsset[], Error>({
-    queryKey: "assets",
-    queryFn: assetRequests.getAll,
-  });
+  const { data, refetch } = useAssets();
+  const ref = useRef<any>(null);
 
   return (
     <>
@@ -25,7 +23,7 @@ const Asset = () => {
         {drawerBadge()}
       </div>
       <Gridtable
-        data={assets || []}
+        data={data || []}
         itemKey="id"
         columns={useColumns().columns}
         refreshData={refetch}
@@ -36,7 +34,8 @@ const Asset = () => {
           dispatch(assetActions.removeRange({ ids: ids }))
         }
         excelColumns={useColumns().excelColumns}
-        onApplyFilters={(filters) => dispatch(assetActions.filter(filters))}
+        onApplyFilters={() => console.log(ref.current || "ref is null")}
+        ref={ref}
         enableToolbar
         enableEditActions
         enableSelectActions

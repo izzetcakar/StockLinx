@@ -203,7 +203,7 @@ export const useFilter = () => {
           ? trimmedValue.slice(1, -1)
           : trimmedValue;
       case "startswith":
-        return trimmedValue.slice(0,-1);
+        return trimmedValue.slice(0, -1);
       case "endswith":
         return trimmedValue.slice(1);
       case "equals":
@@ -279,7 +279,7 @@ export const useFilter = () => {
     };
   };
 
-  const buildQueryFilters = (): QueryFilter[] => {
+  const getQueryFilters = (): QueryFilter[] => {
     const activeFilters = filters.filter(
       (filter) =>
         filter.value !== "" &&
@@ -309,6 +309,6 @@ export const useFilter = () => {
 
   return {
     setBaseFiltersByColumns,
-    buildQueryFilters,
+    getQueryFilters,
   };
 };

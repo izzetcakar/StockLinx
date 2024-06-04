@@ -18,40 +18,29 @@ enum queryKeys {
   FILTER_ASSETS = "FILTER_ASSETS",
 }
 
-export const useAssets = async (): Promise<IAsset[]> => {
-  return (
-    (await useQuery<IAsset[]>(queryKeys.FETCH_ASSETS, assetRequests.getAll)
-      .data) || []
-  );
+export const useAssets = () => {
+  return useQuery<IAsset[]>(queryKeys.FETCH_ASSETS, assetRequests.getAll);
 };
 
-export const useAsset = async (id: string): Promise<IAsset | null> => {
-  return (
-    (
-      await useQuery<IAsset>({
-        queryKey: [queryKeys.FETCH_ASSET, id],
-        queryFn: () => assetRequests.get(id),
-      })
-    ).data || null
-  );
+export const useAsset = async (id: string) => {
+  return useQuery<IAsset>({
+    queryKey: [queryKeys.FETCH_ASSET, id],
+    queryFn: () => assetRequests.get(id),
+  });
 };
 
-export const useCreateAsset = async (asset: IAsset): Promise<IAsset | null> => {
-  return (
-    (
-      await useMutation<IAsset>({
-        mutationKey: queryKeys.CREATE_ASSET,
-        mutationFn: () => assetRequests.create(asset),
-        onSuccess: () => {
-          queryClient.setQueryData<IAsset[]>(queryKeys.CREATE_ASSET, (old) => {
-            return old ? [...old, asset] : [asset];
-          });
-          queryClient.invalidateQueries(queryKeys.FETCH_ASSETS);
-          queryClient.invalidateQueries(queryKeys.FETCH_ASSET);
-        },
-      })
-    ).data || null
-  );
+export const useCreateAsset = async (asset: IAsset) => {
+  useMutation<IAsset>({
+    mutationKey: queryKeys.CREATE_ASSET,
+    mutationFn: () => assetRequests.create(asset),
+    onSuccess: () => {
+      queryClient.setQueryData<IAsset[]>(queryKeys.CREATE_ASSET, (old) => {
+        return old ? [...old, asset] : [asset];
+      });
+      queryClient.invalidateQueries(queryKeys.FETCH_ASSETS);
+      queryClient.invalidateQueries(queryKeys.FETCH_ASSET);
+    },
+  });
 };
 
 export const useUpdateAsset = (asset: IAsset) => {
@@ -123,5 +112,29 @@ export const useFilterAssets = (filters: QueryFilter[]) => {
   return useQuery({
     queryKey: queryKeys.FILTER_ASSETS,
     queryFn: () => assetRequests.filter(filters),
+  });
+};
+
+export const useCheckInAsset = (dto: AssetCheckInDto) => {
+  useMutation({
+    mutationKey: queryKeys.CHECK_IN_ASSET,
+    mutationFn: () => assetRequests.checkIn(dto),
+    onSuccess: () => {
+      queryClient.invalidateQueries(queryKeys.CHECK_IN_ASSET);
+      queryClient.invalidateQueries(queryKeys.FETCH_ASSETS);
+      queryClient.invalidateQueries([queryKeys.FETCH_ASSET, dto.assetId]);
+    },
+  });
+};
+
+export const useCheckOutAsset = (dto: AssetCheckOutDto) => {
+  useMutation({
+    mutationKey: queryKeys.CHECK_OUT_ASSET,
+    mutationFn: () => assetRequests.checkOut(dto),
+    onSuccess: () => {
+      queryClient.invalidateQueries(queryKeys.CHECK_OUT_ASSET);
+      queryClient.invalidateQueries(queryKeys.FETCH_ASSETS);
+      queryClient.invalidateQueries([queryKeys.FETCH_ASSET, dto.assetId]);
+    },
   });
 };

@@ -1,10 +1,11 @@
-import React, { forwardRef, useImperativeHandle } from "react";
+import React, { forwardRef, useImperativeHandle, useMemo } from "react";
 import {
   GenericStateProvider,
   useGridTableContext,
 } from "./context/GenericStateContext";
 import { GridtableProps, GridtableRef } from "@interfaces/gridTableInterfaces";
 import GridTableContent from "./GridTableContent";
+import { useFilter } from "./customhooks/filter";
 
 const GridTable: React.ForwardRefRenderFunction<
   GridtableRef,
@@ -30,14 +31,18 @@ const GridTable: React.ForwardRefRenderFunction<
   },
   ref
 ) => {
-  const { selectedKeys } = useGridTableContext();
+  const { selectedKeys, filters } = useGridTableContext();
+  const { getQueryFilters } = useFilter();
+
+  const queryFilters = useMemo(() => getQueryFilters(), [filters]);
 
   useImperativeHandle(
     ref,
     () => ({
       selectedRowKeys: selectedKeys,
+      queryFilters: queryFilters,
     }),
-    [selectedKeys]
+    [selectedKeys, queryFilters]
   );
 
   return (
@@ -64,4 +69,5 @@ const GridTable: React.ForwardRefRenderFunction<
   );
 };
 
-export default forwardRef(GridTable);
+const Gridtable = forwardRef(GridTable);
+export default Gridtable;

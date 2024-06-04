@@ -88,4 +88,5 @@ export interface GridtableProps {
 }
 export interface GridtableRef {
   selectedRowKeys: string[];
+  queryFilters: QueryFilter[];
 }
