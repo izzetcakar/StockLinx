@@ -108,10 +108,13 @@ export const useDeleteRangeAsset = (ids: string[]) => {
   });
 };
 
-export const useFilterAssets = (filters: QueryFilter[]) => {
-  return useQuery({
-    queryKey: queryKeys.FILTER_ASSETS,
-    queryFn: () => assetRequests.filter(filters),
+export const useFilterAssets = () => {
+  return useMutation({
+    mutationKey: queryKeys.FILTER_ASSETS,
+    mutationFn: (filters: QueryFilter[]) => assetRequests.filter(filters),
+    onSuccess(data) {
+      queryClient.setQueryData<IAsset[]>(queryKeys.FILTER_ASSETS, data);
+    },
   });
 };
 

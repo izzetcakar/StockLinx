@@ -1,8 +1,5 @@
 import React, { forwardRef, useImperativeHandle, useMemo } from "react";
-import {
-  GenericStateProvider,
-  useGridTableContext,
-} from "./context/GenericStateContext";
+import { useGridTableContext } from "./context/GenericStateContext";
 import { GridtableProps, GridtableRef } from "@interfaces/gridTableInterfaces";
 import GridTableContent from "./GridTableContent";
 import { useFilter } from "./customhooks/filter";
@@ -38,34 +35,34 @@ const GridTable: React.ForwardRefRenderFunction<
 
   useImperativeHandle(
     ref,
-    () => ({
-      selectedRowKeys: selectedKeys,
-      queryFilters: queryFilters,
-    }),
+    () => {
+      return {
+        selectedRowKeys: selectedKeys,
+        queryFilters,
+      };
+    },
     [selectedKeys, queryFilters]
   );
 
   return (
-    <GenericStateProvider>
-      <GridTableContent
-        data={data}
-        columns={columns}
-        itemKey={itemKey}
-        excelColumns={excelColumns}
-        enableToolbar={enableToolbar}
-        enableEditActions={enableEditActions}
-        enableSelectActions={enableSelectActions}
-        pageSizes={pageSizes}
-        noDataText={noDataText}
-        refreshData={refreshData}
-        onRowInsert={onRowInsert}
-        onRowUpdate={onRowUpdate}
-        onRowRemove={onRowRemove}
-        onRowRemoveRange={onRowRemoveRange}
-        onExpandData={onExpandData}
-        onApplyFilters={onApplyFilters}
-      />
-    </GenericStateProvider>
+    <GridTableContent
+      data={data}
+      columns={columns}
+      itemKey={itemKey}
+      excelColumns={excelColumns}
+      enableToolbar={enableToolbar}
+      enableEditActions={enableEditActions}
+      enableSelectActions={enableSelectActions}
+      pageSizes={pageSizes}
+      noDataText={noDataText}
+      refreshData={refreshData}
+      onRowInsert={onRowInsert}
+      onRowUpdate={onRowUpdate}
+      onRowRemove={onRowRemove}
+      onRowRemoveRange={onRowRemoveRange}
+      onExpandData={onExpandData}
+      onApplyFilters={onApplyFilters}
+    />
   );
 };
 

@@ -12,6 +12,7 @@ import { GenericProvider } from "./context/GenericContext.tsx";
 import { defaultInputProps } from "./mantineModules/defaultInputProps.ts";
 import { IconCaretDownFilled, IconCalendar } from "@tabler/icons-react";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { GenericStateProvider } from "./components/gridTable/context/GenericStateContext.tsx";
 
 const components = {
   TextInput: {
@@ -138,12 +139,14 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   >
     <Provider store={store}>
       <GenericProvider>
-        <ModalsProvider>
-          <Notifications w={"fit-content"} position="top-right" />
-          <QueryClientProvider client={queryClient}>
-            <App />
-          </QueryClientProvider>
-        </ModalsProvider>
+        <GenericStateProvider>
+          <ModalsProvider>
+            <Notifications w={"fit-content"} position="top-right" />
+            <QueryClientProvider client={queryClient}>
+              <App />
+            </QueryClientProvider>
+          </ModalsProvider>
+        </GenericStateProvider>
       </GenericProvider>
     </Provider>
   </MantineProvider>
