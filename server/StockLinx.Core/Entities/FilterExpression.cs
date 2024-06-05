@@ -9,21 +9,22 @@ namespace StockLinx.Core.Entities
         private static List<string> appliedFilters = new List<string>();
         public static IQueryable<T> ApplyFilters<T>(this IQueryable<T> query, string filterExpression)
         {
-            List<Filter> filters = ParseFilterExpression(filterExpression);
+            List<Filter> filters = ParseFilterExpression(filterExpression).OrderBy(f => f.PropertyName).ToList();
             var predicate = PredicateBuilder.New<T>(true);
 
             foreach (var filter in filters)
             {
                 if (appliedFilters.Contains(filter.PropertyName))
                 {
-                    predicate = predicate.Or(UpdatePredicate<T>(filter, predicate));
+                    predicate.Or(BuildPredicate<T>(filter));
                 }
                 else
                 {
-                    predicate = predicate.And(BuildPredicate<T>(filter));
+                    predicate.And(BuildPredicate<T>(filter));
                     appliedFilters.Add(filter.PropertyName);
                 }
             }
+
             appliedFilters.Clear();
             return query.Where(predicate);
         }
@@ -101,8 +102,7 @@ namespace StockLinx.Core.Entities
             }
 
             var conditionExpr = conditionExprBuilder(propertyExpr, valueExpr);
-            var newPredicateBody = Expression.AndAlso(predicate.Body, conditionExpr);
-            return Expression.Lambda<Func<T, bool>>(newPredicateBody, parameterExpr);
+            return Expression.Lambda<Func<T, bool>>(conditionExpr, parameterExpr);
         }
     }
 }
