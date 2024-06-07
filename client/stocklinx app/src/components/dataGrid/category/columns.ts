@@ -1,8 +1,8 @@
-import { BaseColumn } from "@interfaces/gridTableInterfaces";
+import { DataColumn } from "@interfaces/gridTableInterfaces";
 import "../customDatagrid.scss";
 
 export const useColumns = () => {
-  const columns: BaseColumn[] = [
+  const columns: DataColumn[] = [
     {
       dataField: "categoryName",
       caption: "Name",

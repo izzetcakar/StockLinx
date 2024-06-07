@@ -1,6 +1,6 @@
 import { Button, Flex } from "@mantine/core";
-import { useFilter, useInputFilter } from "../customhooks/filter";
 import { Filter, QueryFilter } from "@interfaces/gridTableInterfaces";
+import { filterHooks } from "../customhooks/filter";
 
 interface FiltersProps {
   filters: Filter[];
@@ -8,11 +8,11 @@ interface FiltersProps {
 }
 
 const FilterInput = (filter: Filter) => {
-  return useInputFilter(filter).getFilterInput();
+  return filterHooks.useInputFilter(filter).getFilterInput();
 };
 
 const Filters: React.FC<FiltersProps> = ({ filters, applyFilters }) => {
-  const { getQueryFilters } = useFilter();
+  const { getQueryFilters } = filterHooks.useFilter();
   return (
     <Flex wrap={"wrap"} gap={10} align={"flex-end"}>
       {filters.map((filter) => {

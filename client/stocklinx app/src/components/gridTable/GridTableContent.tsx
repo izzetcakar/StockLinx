@@ -32,7 +32,7 @@ const GridtableContent: React.FC<GridtableProps> = ({
   );
   const { visibleColumns, selectedKeys } = useGridTableContext();
 
-  const { onBaseColumnsChange } = useColumns(columns);
+  const { onDataColumnsChange } = useColumns(columns);
 
   const { expandData } = usePaging(data.length, onExpandData);
 
@@ -46,8 +46,8 @@ const GridtableContent: React.FC<GridtableProps> = ({
   }, [itemKey]);
 
   useEffect(() => {
-    onBaseColumnsChange();
-  }, [columns]);
+    onDataColumnsChange();
+  }, [columns.length]);
 
   return (
     <table className="gridtable">
@@ -128,16 +128,14 @@ const GridtableContent: React.FC<GridtableProps> = ({
                   />
                 </td>
               ) : null}
-              {visibleColumns
-                .filter((column) => column.visible !== false)
-                .map((column) => (
-                  <td
-                    key={`$row__cell__${column.id}__${rowIndex}`}
-                    className="gridtable__row__cell"
-                  >
-                    {renderCell(obj, column)}
-                  </td>
-                ))}
+              {visibleColumns.map((column) => (
+                <td
+                  key={`$row__cell__${column.id}__${rowIndex}`}
+                  className="gridtable__row__cell"
+                >
+                  {renderCell(obj, column)}
+                </td>
+              ))}
             </tr>
           ))
         ) : (

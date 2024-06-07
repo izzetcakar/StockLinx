@@ -1,4 +1,4 @@
-import { BaseColumn } from "@interfaces/gridTableInterfaces";
+import { DataColumn } from "@interfaces/gridTableInterfaces";
 import { Anchor } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import { UserProductDto } from "../../../interfaces/dtos";
@@ -6,7 +6,7 @@ import { UserProductDto } from "../../../interfaces/dtos";
 export const useColumns = () => {
   const navigate = useNavigate();
 
-  const columns: BaseColumn[] = [
+  const columns: DataColumn[] = [
     {
       dataField: "productType",
       caption: "Product Type",

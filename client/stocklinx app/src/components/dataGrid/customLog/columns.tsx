@@ -1,4 +1,4 @@
-import { BaseColumn } from "@interfaces/gridTableInterfaces";
+import { DataColumn } from "@interfaces/gridTableInterfaces";
 import icon_delete from "../../../assets/customLog/Delete.png";
 import icon_update from "../../../assets/customLog/Update.png";
 import icon_create from "../../../assets/customLog/Create.png";
@@ -29,7 +29,7 @@ const getActionIcon = (action: string) => {
 export const useColumns = () => {
   const navigate = useNavigate();
   const users = useSelector((state: RootState) => state.user.users);
-  const columns: BaseColumn[] = [
+  const columns: DataColumn[] = [
     {
       dataField: "action",
       caption: "Action",

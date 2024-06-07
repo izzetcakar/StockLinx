@@ -10,67 +10,23 @@ import { Loader, MultiSelect, Select, TextInput } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 import { useGridTableContext } from "../context/GenericStateContext";
 import { useState } from "react";
+import {
+  checkValidNumberInput,
+  convertValueByType,
+  getFilterChangedValue,
+  getFilterTypeByColumn,
+  getFinalValue,
+  getOperator,
+  trimValueByOperator,
+} from "@/utils/filterUtilts";
 
-const checkValidNumberInput = (value: string) => {
-  const pattern = /^(?:\d+|%|<=|>=|!=|<|>|=|;)*$/;
-  if (!pattern.test(value)) return "Invalid";
-  return "";
-};
-
-const checkNumberContainsOperator = (value: string) => {
-  const pattern = /(?:<=|>=|!=|<|>|=)/;
-  return pattern.test(value);
-};
-
-const getFinalValue = (value: string, type: FilterType): string => {
-  value = value.trim();
-  switch (type) {
-    case FilterType.BOOLEAN:
-      return value;
-    case FilterType.TEXT:
-      return value;
-    case FilterType.NUMBER:
-      return checkNumberContainsOperator(value) ? value : "=" + value;
-    case FilterType.LOOKUP:
-      return value
-        .split(";")
-        .map((v) => "=" + v)
-        .join(";");
-    default:
-      return value;
-  }
-};
-
-export const useInputFilter = (filter: Filter) => {
+const useInputFilter = (filter: Filter) => {
   const { gridColumns, setFilters } = useGridTableContext();
   const column = gridColumns.find((c) => c.id === filter.columnId);
   const [loading, setLoading] = useState(false);
   const [filterData, setFilterData] = useState<LookupData[]>(
     column?.lookup?.data || []
   );
-
-  const getFilterChangedValue = (e: any, filterType: FilterType) => {
-    let newValue: string | null;
-    switch (filterType) {
-      case FilterType.TEXT:
-        newValue = e.target.value === "" ? null : e.target.value;
-        break;
-      case FilterType.NUMBER:
-        newValue = e.target.value.trim() === "" ? null : e.target.value;
-        break;
-      case FilterType.BOOLEAN:
-        // newValue = e.currentTarget.checked;
-        newValue = e;
-        break;
-      case FilterType.LOOKUP:
-        newValue = e.length === 0 ? null : e.join(";");
-        break;
-      default:
-        newValue = e.target.value;
-        break;
-    }
-    return newValue;
-  };
 
   const onValueChange = (e: any, filter: Filter) => {
     const newValue = getFilterChangedValue(e, filter.type);
@@ -153,96 +109,19 @@ export const useInputFilter = (filter: Filter) => {
   return { getFilterInput };
 };
 
-export const useFilter = () => {
+const useFilter = () => {
   const { gridColumns, filters, setFilters } = useGridTableContext();
-
-  const getFilterType = (column: Column): FilterType => {
-    if (!column) return FilterType.TEXT;
-    if (column.lookup) return FilterType.LOOKUP;
-    switch (column.dataType) {
-      case "number":
-        return FilterType.NUMBER;
-      case "boolean":
-        return FilterType.BOOLEAN;
-      case "string":
-      default:
-        return FilterType.TEXT;
-    }
-  };
 
   const setBaseFiltersByColumns = (columns: Column[]) => {
     const newFilters: Filter[] = columns.map(
       (column) =>
         ({
           columnId: column.id,
-          type: getFilterType(column),
+          type: getFilterTypeByColumn(column),
           value: null,
         } as Filter)
     );
     setFilters(newFilters);
-  };
-
-  const convertValueByType = (value: string, type: string) => {
-    switch (type) {
-      case "number":
-        return parseInt(value);
-      case "boolean":
-        return value === "true";
-      case "string":
-        return value;
-      default:
-        return value;
-    }
-  };
-
-  const trimValueByOperator = (value: string, operator: string) => {
-    const trimmedValue = value.trim();
-    switch (operator) {
-      case "contains":
-        return trimmedValue.startsWith("%") && trimmedValue.endsWith("%")
-          ? trimmedValue.slice(1, -1)
-          : trimmedValue;
-      case "startswith":
-        return trimmedValue.slice(0, -1);
-      case "endswith":
-        return trimmedValue.slice(1);
-      case "equals":
-        return trimmedValue.slice(1);
-      case "greaterthan":
-        return trimmedValue.slice(1);
-      case "lessthan":
-        return trimmedValue.slice(1);
-      case "notequals":
-        return trimmedValue.slice(2);
-      case "greaterthanorequal":
-        return trimmedValue.slice(2);
-      case "lessthanorequal":
-        return trimmedValue.slice(2);
-      default:
-        return trimmedValue;
-    }
-  };
-
-  const getOperator = (value: string) => {
-    const trimmedValue = value.trim();
-    const operatorPatterns: { [key: string]: RegExp } = {
-      contains: /^%.*%$/,
-      startswith: /^[^%]+%$/,
-      endswith: /^%[^%]+$/,
-      equals: /^=/,
-      notequals: /^!=/,
-      greaterthanorequal: />=/,
-      lessthanorequal: /<=/,
-      greaterthan: /^>/,
-      lessthan: /^</,
-    };
-
-    for (const [operator, pattern] of Object.entries(operatorPatterns)) {
-      if (pattern.test(trimmedValue)) {
-        return operator;
-      }
-    }
-    return "contains";
   };
 
   const processFilterValues = (filter: AppliedFilter) => {
@@ -311,4 +190,9 @@ export const useFilter = () => {
     setBaseFiltersByColumns,
     getQueryFilters,
   };
+};
+
+export const filterHooks = {
+  useInputFilter,
+  useFilter,
 };

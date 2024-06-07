@@ -1,4 +1,4 @@
-import { ExcelColumn, BaseColumn } from "@interfaces/gridTableInterfaces";
+import { ExcelColumn, DataColumn } from "@interfaces/gridTableInterfaces";
 import { Anchor, Button, Image } from "@mantine/core";
 import {
   IAsset,
@@ -70,7 +70,7 @@ export const useColumns = () => {
     });
   };
 
-  const columns: BaseColumn[] = [
+  const columns: DataColumn[] = [
     {
       dataField: "tag",
       caption: "Tag",
@@ -198,26 +198,25 @@ export const useColumns = () => {
           </div>
         );
       },
-      selectable: false,
     },
     // INVISIBLE COLUMNS
     {
       dataField: "notes",
       caption: "Notes",
       dataType: "string",
-      visible: false,
+      allowVisible: false,
     },
     {
       dataField: "orderNo",
       caption: "Order No",
       dataType: "string",
-      visible: false,
+      allowVisible: false,
     },
     {
       dataField: "purchaseDate",
       caption: "Purchase Date",
       dataType: "date",
-      visible: false,
+      allowVisible: false,
     },
     {
       dataField: "supplierId",

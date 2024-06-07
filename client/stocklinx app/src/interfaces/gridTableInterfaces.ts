@@ -1,4 +1,4 @@
-export interface Column extends BaseColumn {
+export interface Column extends DataColumn {
   id: string;
 }
 export enum DataType {
@@ -8,15 +8,15 @@ export enum DataType {
   DATE = "date",
   ACTION = "action",
 }
-export interface BaseColumn {
+export interface DataColumn {
   dataField: string;
   caption: string;
   renderComponent?: (e: object) => any;
   renderHeader?: () => any;
   lookup?: Lookup;
   dataType: "string" | "number" | "boolean" | "date" | "action";
-  visible?: boolean;
-  selectable?: boolean;
+  allowVisible?: boolean;
+  allowFiltering?: boolean;
 }
 export interface LookupData {
   value: any;
@@ -70,7 +70,7 @@ export interface RowError {
 export interface GridtableProps {
   itemKey: string;
   data: object[];
-  columns: BaseColumn[];
+  columns: DataColumn[];
   noDataText?: string;
   pageSizes?: number[];
   refreshData?: () => void;

@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import {
-  BaseColumn,
+  DataColumn,
   ExcelColumn,
 } from "@interfaces/gridTableInterfaces";
 import {
@@ -74,7 +74,7 @@ export const useColumns = () => {
       handleAssetCheckIn
     );
   };
-  const columns: BaseColumn[] = [
+  const columns: DataColumn[] = [
     {
       dataField: "tag",
       caption: "License",
@@ -179,25 +179,25 @@ export const useColumns = () => {
         })),
       },
       dataType: "string",
-      visible: false,
+      allowVisible: false,
     },
     {
       caption: "Order No",
       dataField: "orderNo",
       dataType: "string",
-      visible: false,
+      allowVisible: false,
     },
     {
       caption: "Purchase Date",
       dataField: "purchaseDate",
       dataType: "date",
-      visible: false,
+      allowVisible: false,
     },
     {
       caption: "Purchase Cost",
       dataField: "purchaseCost",
       dataType: "number",
-      visible: false,
+      allowVisible: false,
     },
     {
       caption: "Supplier",
@@ -209,7 +209,7 @@ export const useColumns = () => {
         })),
       },
       dataType: "string",
-      visible: false,
+      allowVisible: false,
     },
     {
       caption: "Category",
@@ -223,37 +223,37 @@ export const useColumns = () => {
           })),
       },
       dataType: "string",
-      visible: false,
+      allowVisible: false,
     },
     {
       caption: "Maintained",
       dataField: "maintained",
       dataType: "boolean",
-      visible: false,
+      allowVisible: false,
     },
     {
       caption: "Reassignable",
       dataField: "reassignable",
       dataType: "boolean",
-      visible: false,
+      allowVisible: false,
     },
     {
       caption: "Termination Date",
       dataField: "terminationDate",
       dataType: "date",
-      visible: false,
+      allowVisible: false,
     },
     {
       dataField: "imagePath",
       caption: "Image",
       dataType: "string",
-      visible: false,
+      allowVisible: false,
     },
     {
       caption: "Notes",
       dataField: "notes",
       dataType: "string",
-      visible: false,
+      allowVisible: false,
     },
   ];
 

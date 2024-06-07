@@ -20,6 +20,7 @@ import { openConfirmModal, openExcelModal } from "../modals/modals";
 import { useGridTableContext } from "../context/GenericStateContext";
 import "./tableToolbar.scss";
 import Filters from "./Filters";
+import DropDown from "./Dropdown";
 
 interface TableToolbarProps {
   data: object[];
@@ -227,7 +228,7 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
   return (
     <div className="gridtable__toolbar">
       <div className="gridtable__toolbar__actions">
-        {/* <Dropdown onChange={onVisibleColumnsChange} /> */}
+        <DropDown />
         {
           <ActionIconBtn
             action={() => setFiltersVisible((prev) => !prev)}

@@ -1,6 +1,6 @@
 import { Anchor } from "@mantine/core";
 import {
-  BaseColumn,
+  DataColumn,
   ExcelColumn,
 } from "@interfaces/gridTableInterfaces";
 import { RootState } from "../../redux/rootReducer";
@@ -12,7 +12,7 @@ export const useColumns = () => {
   const navigate = useNavigate();
   const companies = useSelector((state: RootState) => state.company.companies);
   const locations = useSelector((state: RootState) => state.location.locations);
-  const columns: BaseColumn[] = [
+  const columns: DataColumn[] = [
     {
       dataField: "companyId",
       caption: "Company",

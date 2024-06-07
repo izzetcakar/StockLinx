@@ -1,6 +1,6 @@
 import { CategoryType, ICategory } from "@interfaces/serverInterfaces";
 import {
-  BaseColumn,
+  DataColumn,
   ExcelColumn,
 } from "@interfaces/gridTableInterfaces";
 import { Anchor } from "@mantine/core";
@@ -10,7 +10,7 @@ import { createDataFromEnum } from "../../utils/createDataFromEnum";
 export const useColumns = () => {
   const navigate = useNavigate();
 
-  const columns: BaseColumn[] = [
+  const columns: DataColumn[] = [
     {
       dataField: "name",
       caption: "Name",

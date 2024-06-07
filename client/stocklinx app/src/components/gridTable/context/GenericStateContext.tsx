@@ -14,6 +14,7 @@ interface GridTableContextProps {
   setItemPerPage: React.Dispatch<React.SetStateAction<number>>;
   setGridColumns: React.Dispatch<React.SetStateAction<Column[]>>;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setVisibleColumns: React.Dispatch<React.SetStateAction<Column[]>>;
   clearFilters: () => void;
   clearRowSelection: () => void;
   clearColumnVisibility: () => void;
@@ -32,6 +33,7 @@ const GridTableContext = createContext<GridTableContextProps>({
   setItemPerPage: () => {},
   setGridColumns: () => {},
   setLoading: () => {},
+  setVisibleColumns: () => {},
   clearFilters: () => {},
   clearRowSelection: () => {},
   clearColumnVisibility: () => {},
@@ -50,9 +52,8 @@ export const GenericStateProvider: React.FC<{ children: React.ReactNode }> = ({
   const [gridColumns, setGridColumns] = useState<Column[]>([]);
   //Generic
   const [loading, setLoading] = useState<boolean>(false);
-
-  const visibleColumns = gridColumns.filter(
-    (column) => column.visible !== false
+  const [visibleColumns, setVisibleColumns] = useState<Column[]>(
+    gridColumns.filter((column) => column.allowVisible !== false)
   );
 
   const clearFilters = () => {
@@ -85,6 +86,7 @@ export const GenericStateProvider: React.FC<{ children: React.ReactNode }> = ({
     setSelectedKeys,
     setGridColumns,
     setLoading,
+    setVisibleColumns,
     clearFilters,
     clearRowSelection,
     clearColumnVisibility,

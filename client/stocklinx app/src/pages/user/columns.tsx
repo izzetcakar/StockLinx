@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
-import { BaseColumn } from "@interfaces/gridTableInterfaces";
+import { DataColumn } from "@interfaces/gridTableInterfaces";
 import { IUser } from "@interfaces/serverInterfaces";
 import { useNavigate } from "react-router-dom";
 import { Anchor } from "@mantine/core";
@@ -12,7 +12,7 @@ export const useColumns = () => {
     (state: RootState) => state.department.departments
   );
 
-  const columns: BaseColumn[] = [
+  const columns: DataColumn[] = [
     {
       dataField: "branchId",
       caption: "Branch",

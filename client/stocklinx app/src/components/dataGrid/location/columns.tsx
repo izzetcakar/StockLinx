@@ -1,8 +1,8 @@
 import icon_barcode from "../../../assets/icon_barcode.png";
-import { BaseColumn } from "@interfaces/gridTableInterfaces";
+import { DataColumn } from "@interfaces/gridTableInterfaces";
 
 export const useColumns = () => {
-  const columns: BaseColumn[] = [
+  const columns: DataColumn[] = [
     {
       dataField: "locationName",
       caption: "Name",

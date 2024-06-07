@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import {
-  BaseColumn,
+  DataColumn,
   ExcelColumn,
 } from "@interfaces/gridTableInterfaces";
 import { IManufacturer } from "@interfaces/serverInterfaces";
@@ -10,7 +10,7 @@ import { getImage } from "../../utils/Image";
 export const useColumns = () => {
   const navigate = useNavigate();
 
-  const columns: BaseColumn[] = [
+  const columns: DataColumn[] = [
     {
       dataField: "name",
       caption: "Name",
@@ -72,7 +72,7 @@ export const useColumns = () => {
       dataField: "notes",
       caption: "Notes",
       dataType: "string",
-      visible: false,
+      allowVisible: false,
     },
   ];
 

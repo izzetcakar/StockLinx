@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
-import { ExcelColumn, BaseColumn } from "@interfaces/gridTableInterfaces";
+import { ExcelColumn, DataColumn } from "@interfaces/gridTableInterfaces";
 import {
   CategoryType,
   IAccessory,
@@ -46,7 +46,7 @@ export const useColumns = () => {
     openCheckInModal(["User"], newUserProduct, handleCheckIn);
   };
 
-  const columns: BaseColumn[] = [
+  const columns: DataColumn[] = [
     {
       dataField: "tag",
       caption: "Accessory",
@@ -177,7 +177,7 @@ export const useColumns = () => {
       caption: "Notes",
       dataField: "notes",
       dataType: "string",
-      visible: false,
+      allowVisible: false,
     },
   ];
 

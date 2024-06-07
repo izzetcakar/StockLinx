@@ -1,7 +1,7 @@
 import { IProductStatus, ProductStatusType } from "@interfaces/serverInterfaces";
 import { createDataFromEnum } from "../../utils/createDataFromEnum";
 import {
-  BaseColumn,
+  DataColumn,
   ExcelColumn,
 } from "@interfaces/gridTableInterfaces";
 import { useNavigate } from "react-router-dom";
@@ -10,7 +10,7 @@ import { Anchor } from "@mantine/core";
 export const useColumns = () => {
   const navigate = useNavigate();
 
-  const columns: BaseColumn[] = [
+  const columns: DataColumn[] = [
     {
       dataField: "name",
       caption: "Name",

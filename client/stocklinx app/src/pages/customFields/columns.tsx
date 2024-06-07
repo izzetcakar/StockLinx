@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
-import { BaseColumn } from "@interfaces/gridTableInterfaces";
+import { DataColumn } from "@interfaces/gridTableInterfaces";
 import { ICustomField } from "@interfaces/serverInterfaces";
 
 export const useColumns = () => {
@@ -9,7 +9,7 @@ export const useColumns = () => {
     (state: RootState) => state.fieldSetCustomField.fieldSetCustomFields
   );
 
-  const fieldSetColumns: BaseColumn[] = [
+  const fieldSetColumns: DataColumn[] = [
     {
       caption: "Name",
       dataField: "name",
@@ -17,7 +17,7 @@ export const useColumns = () => {
     },
   ];
 
-  const customFieldColumns: BaseColumn[] = [
+  const customFieldColumns: DataColumn[] = [
     {
       caption: "FieldSets",
       dataField: "id",

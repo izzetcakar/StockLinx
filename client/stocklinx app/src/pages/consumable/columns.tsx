@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import {
-  BaseColumn,
+  DataColumn,
   ExcelColumn,
 } from "@interfaces/gridTableInterfaces";
 import {
@@ -48,7 +48,7 @@ export const useColumns = () => {
     openCheckInModal(["User"], newUserProduct, handleCheckIn);
   };
 
-  const columns: BaseColumn[] = [
+  const columns: DataColumn[] = [
     {
       dataField: "tag",
       caption: "Consumable",
@@ -175,7 +175,7 @@ export const useColumns = () => {
         })),
       },
       dataType: "string",
-      visible: false,
+      allowVisible: false,
     },
     {
       caption: "Supplier",
@@ -187,7 +187,7 @@ export const useColumns = () => {
         })),
       },
       dataType: "string",
-      visible: false,
+      allowVisible: false,
     },
     {
       caption: "Manufacturer",
@@ -199,19 +199,19 @@ export const useColumns = () => {
         })),
       },
       dataType: "string",
-      visible: false,
+      allowVisible: false,
     },
     {
       dataField: "imagePath",
       caption: "Image",
       dataType: "string",
-      visible: false,
+      allowVisible: false,
     },
     {
       caption: "Notes",
       dataField: "notes",
       dataType: "string",
-      visible: false,
+      allowVisible: false,
     },
   ];
 
