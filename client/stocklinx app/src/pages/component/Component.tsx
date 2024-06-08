@@ -1,39 +1,18 @@
-import { useEffect, useLayoutEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { RootState } from "../../redux/rootReducer";
-import { companyActions } from "../../redux/company/actions";
-import { branchActions } from "../../redux/branch/actions";
-import { categoryActions } from "../../redux/category/actions";
-import { componentActions } from "../../redux/component/actions";
-import { supplierActions } from "../../redux/supplier/actions";
 import { Anchor, Tabs } from "@mantine/core";
-import HistoryLogs from "../../components/dataGrid/customLog/HistoryLogs";
-import "../product.scss";
+import { useComponent } from "@/queryhooks/component";
+import { useBranch } from "@/queryhooks/branch";
+import { useCategory } from "@/queryhooks/category";
+import { useSupplier } from "@/queryhooks/supplier";
+import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
 
 const Component = () => {
   const { id } = useParams();
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const component = useSelector(
-    (state: RootState) => state.component.component
-  );
-  const branches = useSelector((state: RootState) => state.branch.branches);
-  const categories = useSelector(
-    (state: RootState) => state.category.categories
-  );
-  const suppliers = useSelector((state: RootState) => state.supplier.suppliers);
-
-  useLayoutEffect(() => {
-    dispatch(companyActions.getAll());
-    dispatch(branchActions.getAll());
-    dispatch(categoryActions.getAll());
-    dispatch(supplierActions.getAll());
-  }, []);
-
-  useEffect(() => {
-    dispatch(componentActions.get({ id: id as string }));
-  }, [id]);
+  const { data: component } = useComponent.Get(id as string);
+  const { data: branches } = useBranch.GetAll();
+  const { data: categories } = useCategory.GetAll();
+  const { data: suppliers } = useSupplier.GetAll();
 
   return (
     <div className="product__container">
@@ -51,7 +30,7 @@ const Component = () => {
               <div className="product__content__title">Branch</div>
               <div className="product__content__value">
                 {
-                  branches.find((branch) => branch.id === component?.branchId)
+                  branches?.find((branch) => branch.id === component?.branchId)
                     ?.name
                 }
               </div>
@@ -64,7 +43,7 @@ const Component = () => {
               <div className="product__content__title">Category</div>
               <div className="product__content__value">
                 {
-                  categories.find(
+                  categories?.find(
                     (category) => category.id === component?.categoryId
                   )?.name
                 }
@@ -79,7 +58,7 @@ const Component = () => {
                   underline="always"
                 >
                   {
-                    suppliers.find(
+                    suppliers?.find(
                       (supplier) => supplier.id === component?.supplierId
                     )?.name
                   }

@@ -11,7 +11,7 @@ import { accessoryActions } from "../../redux/accessory/actions";
 import { useNavigate } from "react-router-dom";
 import { getImage } from "../../utils/Image";
 import { closeModal, openCheckInModal } from "../../modals/modals";
-import base_accessory from "../../assets/baseProductImages/base_accessory.png";
+import base_accessory from "@assets/baseProductImages/base_accessory.png";
 import { initialUserProduct } from "../../initials/initials";
 
 export const useColumns = () => {

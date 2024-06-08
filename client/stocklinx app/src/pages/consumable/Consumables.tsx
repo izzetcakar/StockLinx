@@ -8,7 +8,7 @@ import { consumableActions } from "../../redux/consumable/actions";
 import { locationActions } from "../../redux/location/actions";
 import { productStatusActions } from "../../redux/productStatus/actions";
 import { branchActions } from "../../redux/branch/actions";
-import Gridtable from "../../components/gridTable/GridTable";
+import Gridtable from "@components/gridTable/GridTable";
 import { openConsumableModal } from "../../modals/modals";
 import { manufacturerActions } from "../../redux/manufacturer/actions";
 import { useContext } from "react";

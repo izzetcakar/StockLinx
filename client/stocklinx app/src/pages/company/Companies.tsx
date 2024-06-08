@@ -4,7 +4,7 @@ import { RootState } from "../../redux/rootReducer";
 import { companyActions } from "../../redux/company/actions";
 import { ICompany } from "@interfaces/serverInterfaces";
 import { useColumns } from "./columns";
-import Gridtable from "../../components/gridTable/GridTable";
+import Gridtable from "@components/gridTable/GridTable";
 import { openCompanyModal } from "../../modals/modals";
 import { locationActions } from "../../redux/location/actions";
 

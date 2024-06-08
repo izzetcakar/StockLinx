@@ -1,8 +1,3 @@
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../redux/rootReducer";
-import { companyActions } from "../../redux/company/actions";
-import "./permission.scss";
-
 interface CompanyCardProps {
   companyId: string;
   companyName: string;
@@ -12,26 +7,13 @@ interface CompanyCardProps {
 }
 
 const CompanyCard: React.FC<CompanyCardProps> = ({
-  companyId,
   branchCount,
   companyName,
   permissionCount,
   userCount,
 }) => {
-  const dispatch = useDispatch();
-  const companies = useSelector((state: RootState) => state.company.companies);
-
   return (
-    <div
-      className="company__card"
-      onClick={() =>
-        dispatch(
-          companyActions.setCompany(
-            companies.find((company) => company.id === companyId) || null
-          )
-        )
-      }
-    >
+    <div className="company__card">
       <div className="company__card__header">
         <h3>{companyName}</h3>
       </div>

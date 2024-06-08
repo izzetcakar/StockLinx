@@ -1,20 +1,11 @@
-import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { RootState } from "../../redux/rootReducer";
-import { useEffect } from "react";
-import { locationActions } from "../../redux/location/actions";
 import { Tabs } from "@mantine/core";
-import HistoryLogs from "../../components/dataGrid/customLog/HistoryLogs";
-import "../product.scss";
+import { useLocation } from "@/queryhooks/location";
+import HistoryLogs from "@components/dataGrid/customLog/HistoryLogs";
 
 const Location = () => {
   const { id } = useParams();
-  const dispatch = useDispatch();
-  const location = useSelector((state: RootState) => state.location.location);
-
-  useEffect(() => {
-    dispatch(locationActions.get({ id: id as string }));
-  }, [id]);
+  const { data: location } = useLocation.Get(id as string);
 
   return (
     <div className="product__container">

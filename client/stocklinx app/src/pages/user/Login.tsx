@@ -1,32 +1,25 @@
-import { useEffect, useState } from "react";
-import logo from "/logo.png";
-import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import { useForm } from "@mantine/form";
 import { IUserLoginDto } from "@interfaces/serverInterfaces";
 import {
   Button,
   Flex,
   Image,
-  LoadingOverlay,
   Paper,
   PasswordInput,
   TextInput,
 } from "@mantine/core";
 import { IconKey, IconMail } from "@tabler/icons-react";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux/rootReducer";
-import { userActions } from "../../redux/user/actions";
+import { useUser } from "@/queryhooks/user";
+import logo from "/logo.png";
 import ReCAPTCHA from "react-google-recaptcha";
 import "./user.scss";
 
 const Login = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
   const captchaSiteKey = import.meta.env.VITE_CAPTCHA_SITE_KEY;
   const [recaptcha, setRecaptcha] = useState(false);
-  const user = useSelector((state: RootState) => state.user.user);
-  const loading = useSelector((state: RootState) => state.generic.loading);
+  const { mutate: signIn } = useUser.SignIn();
   const signForm = useForm<IUserLoginDto>({
     initialValues: {
       email: "",
@@ -38,22 +31,13 @@ const Login = () => {
         value.length < 2 ? "Password must have at least 2 letters" : null,
     },
   });
-  useEffect(() => {
-    dispatch(userActions.getWithToken());
-  }, []);
 
-  useEffect(() => {
-    if (user) {
-      navigate("/");
-    }
-  }, [user]);
   const handleSignIn = () => {
-    dispatch(userActions.signIn({ user: signForm.values }));
+    signIn(signForm.values);
   };
 
   return (
     <Flex w="100%" h="100vh" justify={"center"} align={"center"} bg={"#f4f0f0"}>
-      <LoadingOverlay visible={loading > 0} />
       <Paper shadow="xs" py="md" px={40} mah="90%" maw="90%">
         <Flex direction="column" gap={10} mah="100%" maw="100%" bg={"white"}>
           <Image alt="..." src={logo} h={100} fit="contain" />

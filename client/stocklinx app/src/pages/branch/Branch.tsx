@@ -1,27 +1,15 @@
-import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { RootState } from "../../redux/rootReducer";
-import { useEffect, useLayoutEffect } from "react";
-import { branchActions } from "../../redux/branch/actions";
-import { locationActions } from "../../redux/location/actions";
 import { Tabs } from "@mantine/core";
-import HistoryLogs from "../../components/dataGrid/customLog/HistoryLogs";
-import "../product.scss";
+import { useBranch } from "@/queryhooks/branch";
+import { useCompany } from "@/queryhooks/company";
+import { useLocation } from "@/queryhooks/location";
+import HistoryLogs from "@components/dataGrid/customLog/HistoryLogs";
 
 const Branch = () => {
   const { id } = useParams();
-  const dispatch = useDispatch();
-  const branch = useSelector((state: RootState) => state.branch.branch);
-  const companies = useSelector((state: RootState) => state.company.companies);
-  const locations = useSelector((state: RootState) => state.location.locations);
-
-  useLayoutEffect(() => {
-    dispatch(locationActions.getAll());
-  }, []);
-
-  useEffect(() => {
-    dispatch(branchActions.get({ id: id as string }));
-  }, [id]);
+  const { data: branch } = useBranch.Get(id as string);
+  const { data: companies } = useCompany.GetAll();
+  const { data: locations } = useLocation.GetAll();
 
   return (
     <div className="product__container">
@@ -37,7 +25,7 @@ const Branch = () => {
               <div className="product__content__title">Company</div>
               <div className="product__content__value">
                 {
-                  companies.find((company) => company.id === branch?.companyId)
+                  companies?.find((company) => company.id === branch?.companyId)
                     ?.name
                 }
               </div>
@@ -50,7 +38,7 @@ const Branch = () => {
               <div className="product__content__title">Location</div>
               <div className="product__content__value">
                 {
-                  locations.find(
+                  locations?.find(
                     (location) => location.id === branch?.locationId
                   )?.name
                 }

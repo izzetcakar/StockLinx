@@ -1,44 +1,20 @@
-import { useEffect, useLayoutEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { consumableActions } from "../../redux/consumable/actions";
-import { RootState } from "../../redux/rootReducer";
-import { companyActions } from "../../redux/company/actions";
-import { branchActions } from "../../redux/branch/actions";
-import { manufacturerActions } from "../../redux/manufacturer/actions";
-import { supplierActions } from "../../redux/supplier/actions";
-import { categoryActions } from "../../redux/category/actions";
 import { Anchor, Tabs } from "@mantine/core";
-import HistoryLogs from "../../components/dataGrid/customLog/HistoryLogs";
-import "../product.scss";
+import { useConsumable } from "@/queryhooks/consumable";
+import { useBranch } from "@/queryhooks/branch";
+import { useCategory } from "@/queryhooks/category";
+import { useManufacturer } from "@/queryhooks/manufacturer";
+import { useSupplier } from "@/queryhooks/supplier";
+import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
 
 const Consumable = () => {
   const { id } = useParams();
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const consumable = useSelector(
-    (state: RootState) => state.consumable.consumable
-  );
-  const branches = useSelector((state: RootState) => state.branch.branches);
-  const manufacturers = useSelector(
-    (state: RootState) => state.manufacturer.manufacturers
-  );
-  const suppliers = useSelector((state: RootState) => state.supplier.suppliers);
-  const categories = useSelector(
-    (state: RootState) => state.category.categories
-  );
-
-  useLayoutEffect(() => {
-    dispatch(companyActions.getAll());
-    dispatch(branchActions.getAll());
-    dispatch(manufacturerActions.getAll());
-    dispatch(supplierActions.getAll());
-    dispatch(categoryActions.getAll());
-  }, []);
-
-  useEffect(() => {
-    dispatch(consumableActions.get({ id: id as string }));
-  }, [id]);
+  const { data: consumable } = useConsumable.Get(id as string);
+  const { data: branches } = useBranch.GetAll();
+  const { data: categories } = useCategory.GetAll();
+  const { data: manufacturers } = useManufacturer.GetAll();
+  const { data: suppliers } = useSupplier.GetAll();
 
   return (
     <div className="product__container">
@@ -56,7 +32,7 @@ const Consumable = () => {
               <div className="product__content__title">Branch</div>
               <div className="product__content__value">
                 {
-                  branches.find((branch) => branch.id === consumable?.branchId)
+                  branches?.find((branch) => branch.id === consumable?.branchId)
                     ?.name
                 }
               </div>
@@ -69,7 +45,7 @@ const Consumable = () => {
               <div className="product__content__title">Category</div>
               <div className="product__content__value">
                 {
-                  categories.find(
+                  categories?.find(
                     (category) => category.id === consumable?.categoryId
                   )?.name
                 }
@@ -86,7 +62,7 @@ const Consumable = () => {
                   underline="always"
                 >
                   {
-                    manufacturers.find(
+                    manufacturers?.find(
                       (manufacturer) =>
                         manufacturer.id === consumable?.manufacturerId
                     )?.name
@@ -105,7 +81,7 @@ const Consumable = () => {
                   underline="always"
                 >
                   {
-                    suppliers.find(
+                    suppliers?.find(
                       (supplier) => supplier.id === consumable?.supplierId
                     )?.name
                   }

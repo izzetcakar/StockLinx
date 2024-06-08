@@ -6,7 +6,7 @@ import { fieldSetActions } from "../../redux/fieldSet/actions";
 import { openFieldSetModal, openCustomFieldModal } from "../../modals/modals";
 import { fieldSetCustomFieldActions } from "../../redux/fieldSetCustomField/actions";
 import { ICustomField } from "@interfaces/serverInterfaces";
-import GridTable from "../../components/gridTable/GridTable";
+import GridTable from "@components/gridTable/GridTable";
 
 const CustomFields = () => {
   const dispatch = useDispatch();

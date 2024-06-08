@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { useColumns } from "./columns";
-import Gridtable from "../../components/gridTable/GridTable";
+import Gridtable from "@components/gridTable/GridTable";
 import { locationActions } from "../../redux/location/actions";
 import { openLocationModal } from "../../modals/modals";
 

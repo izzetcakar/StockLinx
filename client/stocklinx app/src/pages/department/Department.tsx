@@ -1,35 +1,18 @@
-import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { RootState } from "../../redux/rootReducer";
-import { useEffect, useLayoutEffect } from "react";
-import { departmentActions } from "../../redux/department/actions";
 import { Anchor, Tabs } from "@mantine/core";
-import { companyActions } from "../../redux/company/actions";
-import { branchActions } from "../../redux/branch/actions";
-import { locationActions } from "../../redux/location/actions";
-import HistoryLogs from "../../components/dataGrid/customLog/HistoryLogs";
-import "../product.scss";
+import { useDepartment } from "@/queryhooks/department";
+import { useBranch } from "@/queryhooks/branch";
+import { useCompany } from "@/queryhooks/company";
+import { useLocation } from "@/queryhooks/location";
+import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
 
 const Department = () => {
   const { id } = useParams();
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const department = useSelector(
-    (state: RootState) => state.department.department
-  );
-  const companies = useSelector((state: RootState) => state.company.companies);
-  const branches = useSelector((state: RootState) => state.branch.branches);
-  const locations = useSelector((state: RootState) => state.location.locations);
-
-  useLayoutEffect(() => {
-    dispatch(companyActions.getAll());
-    dispatch(branchActions.getAll());
-    dispatch(locationActions.getAll());
-  }, []);
-
-  useEffect(() => {
-    dispatch(departmentActions.get({ id: id as string }));
-  }, [id]);
+  const { data: department } = useDepartment.Get(id as string);
+  const { data: branches } = useBranch.GetAll();
+  const { data: companies } = useCompany.GetAll();
+  const { data: locations } = useLocation.GetAll();
 
   return (
     <div className="product__container">
@@ -60,7 +43,7 @@ const Department = () => {
                   underline="always"
                 >
                   {
-                    companies.find(
+                    companies?.find(
                       (company) =>
                         company.id ===
                         branches?.find(
@@ -80,7 +63,7 @@ const Department = () => {
                   underline="always"
                 >
                   {
-                    branches.find(
+                    branches?.find(
                       (branch) => branch.id === department?.branchId
                     )?.name
                   }
@@ -102,7 +85,7 @@ const Department = () => {
                   underline="always"
                 >
                   {
-                    locations.find(
+                    locations?.find(
                       (location) => location.id === department?.locationId
                     )?.name
                   }

@@ -1,44 +1,21 @@
-import { useEffect, useLayoutEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { accessoryActions } from "../../redux/accessory/actions";
-import { RootState } from "../../redux/rootReducer";
-import { companyActions } from "../../redux/company/actions";
-import { branchActions } from "../../redux/branch/actions";
-import { manufacturerActions } from "../../redux/manufacturer/actions";
-import { supplierActions } from "../../redux/supplier/actions";
-import { categoryActions } from "../../redux/category/actions";
 import { Anchor, Tabs } from "@mantine/core";
-import HistoryLogs from "../../components/dataGrid/customLog/HistoryLogs";
+import HistoryLogs from "@components/dataGrid/customLog/HistoryLogs";
 import "../product.scss";
+import { useAccessory } from "@/queryhooks/accessory";
+import { useBranch } from "@/queryhooks/branch";
+import { useCategory } from "@/queryhooks/category";
+import { useManufacturer } from "@/queryhooks/manufacturer";
+import { useSupplier } from "@/queryhooks/supplier";
 
 const Accessory = () => {
   const { id } = useParams();
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const accessory = useSelector(
-    (state: RootState) => state.accessory.accessory
-  );
-  const branches = useSelector((state: RootState) => state.branch.branches);
-  const manufacturers = useSelector(
-    (state: RootState) => state.manufacturer.manufacturers
-  );
-  const suppliers = useSelector((state: RootState) => state.supplier.suppliers);
-  const categories = useSelector(
-    (state: RootState) => state.category.categories
-  );
-
-  useLayoutEffect(() => {
-    dispatch(companyActions.getAll());
-    dispatch(branchActions.getAll());
-    dispatch(manufacturerActions.getAll());
-    dispatch(supplierActions.getAll());
-    dispatch(categoryActions.getAll());
-  }, []);
-
-  useEffect(() => {
-    dispatch(accessoryActions.get({ id: id as string }));
-  }, [id]);
+  const { data: accessory } = useAccessory.Get(id as string);
+  const { data: branches } = useBranch.GetAll();
+  const { data: categories } = useCategory.GetAll();
+  const { data: manufacturers } = useManufacturer.GetAll();
+  const { data: suppliers } = useSupplier.GetAll();
 
   return (
     <div className="product__container">
@@ -56,7 +33,7 @@ const Accessory = () => {
               <div className="product__content__title">Branch</div>
               <div className="product__content__value">
                 {
-                  branches.find((branch) => branch.id === accessory?.branchId)
+                  branches?.find((branch) => branch.id === accessory?.branchId)
                     ?.name
                 }
               </div>
@@ -69,7 +46,7 @@ const Accessory = () => {
               <div className="product__content__title">Category</div>
               <div className="product__content__value">
                 {
-                  categories.find(
+                  categories?.find(
                     (category) => category.id === accessory?.categoryId
                   )?.name
                 }
@@ -86,7 +63,7 @@ const Accessory = () => {
                   underline="always"
                 >
                   {
-                    manufacturers.find(
+                    manufacturers?.find(
                       (manufacturer) =>
                         manufacturer.id === accessory?.manufacturerId
                     )?.name
@@ -103,7 +80,7 @@ const Accessory = () => {
                   underline="always"
                 >
                   {
-                    suppliers.find(
+                    suppliers?.find(
                       (supplier) => supplier.id === accessory?.supplierId
                     )?.name
                   }

@@ -1,22 +1,11 @@
-import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { RootState } from "../../redux/rootReducer";
-import { useEffect } from "react";
-import { manufacturerActions } from "../../redux/manufacturer/actions";
 import { Tabs } from "@mantine/core";
-import HistoryLogs from "../../components/dataGrid/customLog/HistoryLogs";
-import "../product.scss";
+import { useManufacturer } from "@/queryhooks/manufacturer";
+import HistoryLogs from "@components/dataGrid/customLog/HistoryLogs";
 
 const Manufacturer = () => {
   const { id } = useParams();
-  const dispatch = useDispatch();
-  const manufacturer = useSelector(
-    (state: RootState) => state.manufacturer.manufacturer
-  );
-
-  useEffect(() => {
-    dispatch(manufacturerActions.get({ id: id as string }));
-  }, [id]);
+  const { data: manufacturer } = useManufacturer.Get(id as string);
 
   return (
     <div className="product__container">

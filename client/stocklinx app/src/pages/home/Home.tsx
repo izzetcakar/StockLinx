@@ -1,37 +1,23 @@
-import ProductCard from "../../components/product/ProductCard";
-import "./home.scss";
-import icon_disk from "../../assets/icon_disk.png";
-import icon_barcode from "../../assets/icon_barcode.png";
-import icon_keyboard from "../../assets/icon_keyboard.png";
-import icon_drop from "../../assets/icon_drop.png";
-import icon_harddisk from "../../assets/icon_harddisk.png";
-import icon_group from "../../assets/icon_group.png";
-import { useLayoutEffect, useState } from "react";
-import icon_minus from "../../assets/icon_minus.png";
-import LocationsCounts from "../../components/dataGrid/location/LocationsCounts";
-import CategoryCounts from "../../components/dataGrid/category/CategoryCounts";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../redux/rootReducer";
-import { productActions } from "../../redux/product/actions";
+import { useState } from "react";
+import { useProduct } from "@/queryhooks/product";
 import { Pie } from "react-chartjs-2";
+import icon_disk from "@assets/icon_disk.png";
+import icon_barcode from "@assets/icon_barcode.png";
+import icon_keyboard from "@assets/icon_keyboard.png";
+import icon_drop from "@assets/icon_drop.png";
+import icon_harddisk from "@assets/icon_harddisk.png";
+import icon_group from "@assets/icon_group.png";
+import icon_minus from "@assets/icon_minus.png";
+import ProductCard from "@components/product/ProductCard";
+import LocationsCounts from "@components/dataGrid/location/LocationsCounts";
+import CategoryCounts from "@components/dataGrid/category/CategoryCounts";
+import CustomLogs from "@components/dataGrid/customLog/CustomLogs";
 import "chart.js/auto";
-import CustomLogs from "../../components/dataGrid/customLog/CustomLogs";
+import "./home.scss";
 
 const Home = () => {
-  const dispatch = useDispatch();
-  const entityCounts = useSelector(
-    (state: RootState) => state.product.entityCounts
-  );
-  const productStatusCounts = useSelector(
-    (state: RootState) => state.product.productStatusCounts
-  );
-
-  useLayoutEffect(() => {
-    dispatch(productActions.getEntityCounts());
-    dispatch(productActions.getProductStatusCounts());
-    dispatch(productActions.getProductLocationCounts());
-    dispatch(productActions.getProductCategoryCounts());
-  }, []);
+  const { data: entityCounts } = useProduct.GetEntityCounts();
+  const { data: productStatusCounts } = useProduct.GetProductStatusCounts();
 
   const entityData = [
     {
@@ -85,7 +71,7 @@ const Home = () => {
   ];
   const handleProductCardData = () => {
     return entityData.map((item) => {
-      const newCount = entityCounts.find((e) => e.entityName === item.entity);
+      const newCount = entityCounts?.find((e) => e.entityName === item.entity);
       return {
         ...item,
         count: newCount ? newCount.count : 0,
@@ -152,10 +138,10 @@ const Home = () => {
           >
             <Pie
               data={{
-                labels: productStatusCounts.map((item) => item.status),
+                labels: productStatusCounts?.map((item) => item.status),
                 datasets: [
                   {
-                    data: productStatusCounts.map((item) => item.count),
+                    data: productStatusCounts?.map((item) => item.count),
                     backgroundColor: [
                       "#36A2EB",
                       "#8542b2",

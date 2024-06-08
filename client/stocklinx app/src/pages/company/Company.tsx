@@ -1,27 +1,14 @@
-import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { RootState } from "../../redux/rootReducer";
-import { useEffect, useLayoutEffect } from "react";
-import { companyActions } from "../../redux/company/actions";
-import { locationActions } from "../../redux/location/actions";
 import { Anchor, Tabs } from "@mantine/core";
-import HistoryLogs from "../../components/dataGrid/customLog/HistoryLogs";
-import "../product.scss";
+import { useCompany } from "@/queryhooks/company";
+import { useLocation } from "@/queryhooks/location";
+import HistoryLogs from "@components/dataGrid/customLog/HistoryLogs";
 
 const Company = () => {
   const { id } = useParams();
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const company = useSelector((state: RootState) => state.company.company);
-  const locations = useSelector((state: RootState) => state.location.locations);
-
-  useLayoutEffect(() => {
-    dispatch(locationActions.getAll());
-  }, []);
-
-  useEffect(() => {
-    dispatch(companyActions.get({ id: id as string }));
-  }, [id]);
+  const { data: company } = useCompany.Get(id as string);
+  const { data: locations } = useLocation.GetAll();
 
   return (
     <div className="product__container">
@@ -46,7 +33,7 @@ const Company = () => {
                   underline="always"
                 >
                   {
-                    locations.find(
+                    locations?.find(
                       (location) => location.id === company?.locationId
                     )?.name
                   }

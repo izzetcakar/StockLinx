@@ -1,23 +1,12 @@
-import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { RootState } from "../../redux/rootReducer";
-import { useEffect } from "react";
-import { categoryActions } from "../../redux/category/actions";
 import { CategoryType } from "@interfaces/serverInterfaces";
 import { Tabs } from "@mantine/core";
-import { productActions } from "../../redux/product/actions";
-import HistoryLogs from "../../components/dataGrid/customLog/HistoryLogs";
-import "../product.scss";
+import HistoryLogs from "@components/dataGrid/customLog/HistoryLogs";
+import { useCategory } from "@/queryhooks/category";
 
 const Category = () => {
   const { id } = useParams();
-  const dispatch = useDispatch();
-  const category = useSelector((state: RootState) => state.category.category);
-
-  useEffect(() => {
-    dispatch(categoryActions.get({ id: id as string }));
-    dispatch(productActions.getCustomLogs());
-  }, [id]);
+  const { data: category } = useCategory.Get(id as string);
 
   return (
     <div className="product__container">

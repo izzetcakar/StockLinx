@@ -1,43 +1,21 @@
-import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { RootState } from "../../redux/rootReducer";
-import { useEffect, useLayoutEffect } from "react";
-import { modelActions } from "../../redux/model/actions";
-import { categoryActions } from "../../redux/category/actions";
-import { fieldSetActions } from "../../redux/fieldSet/actions";
-import { manufacturerActions } from "../../redux/manufacturer/actions";
-import { customFieldActions } from "../../redux/customField/actions";
 import { Anchor, Tabs } from "@mantine/core";
 import { IModelFieldData } from "@interfaces/serverInterfaces";
-import HistoryLogs from "../../components/dataGrid/customLog/HistoryLogs";
-import "../product.scss";
+import { useModel } from "@/queryhooks/model";
+import { useCategory } from "@/queryhooks/category";
+import { useManufacturer } from "@/queryhooks/manufacturer";
+import { useFieldSet } from "@/queryhooks/fieldSet";
+import { useCustomField } from "@/queryhooks/customField";
+import HistoryLogs from "@components/dataGrid/customLog/HistoryLogs";
 
 const Model = () => {
   const { id } = useParams();
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const model = useSelector((state: RootState) => state.model.model);
-  const categories = useSelector(
-    (state: RootState) => state.category.categories
-  );
-  const fieldSets = useSelector((state: RootState) => state.fieldSet.fieldSets);
-  const manufacturers = useSelector(
-    (state: RootState) => state.manufacturer.manufacturers
-  );
-  const customFields = useSelector(
-    (state: RootState) => state.customField.customFields
-  );
-
-  useLayoutEffect(() => {
-    dispatch(categoryActions.getAll());
-    dispatch(fieldSetActions.getAll());
-    dispatch(manufacturerActions.getAll());
-    dispatch(customFieldActions.getAll());
-  }, []);
-
-  useEffect(() => {
-    dispatch(modelActions.get({ id: id as string }));
-  }, [id]);
+  const { data: model } = useModel.Get(id as string);
+  const { data: categories } = useCategory.GetAll();
+  const { data: manufacturers } = useManufacturer.GetAll();
+  const { data: fieldSets } = useFieldSet.GetAll();
+  const { data: customFields } = useCustomField.GetAll();
 
   return (
     <div className="product__container">
@@ -62,7 +40,7 @@ const Model = () => {
                   underline="always"
                 >
                   {
-                    categories.find(
+                    categories?.find(
                       (category) => category.id === model?.categoryId
                     )?.name
                   }
@@ -80,7 +58,7 @@ const Model = () => {
                   underline="always"
                 >
                   {
-                    manufacturers.find(
+                    manufacturers?.find(
                       (manufacturer) =>
                         manufacturer.id === model?.manufacturerId
                     )?.name
@@ -96,7 +74,7 @@ const Model = () => {
               <div className="product__content__title">FieldSet</div>
               <div className="product__content__value">
                 {
-                  fieldSets.find(
+                  fieldSets?.find(
                     (fieldSet) => fieldSet.id === model?.fieldSetId
                   )?.name
                 }
@@ -106,7 +84,7 @@ const Model = () => {
               <div className="product__content" key={modelFieldData.id}>
                 <div className="product__content__title">
                   {
-                    customFields.find(
+                    customFields?.find(
                       (customField) =>
                         customField.id === modelFieldData.customFieldId
                     )?.name

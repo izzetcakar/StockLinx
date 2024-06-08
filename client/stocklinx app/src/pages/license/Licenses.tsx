@@ -9,7 +9,7 @@ import { licenseActions } from "../../redux/license/actions";
 import { supplierActions } from "../../redux/supplier/actions";
 import { locationActions } from "../../redux/location/actions";
 import { branchActions } from "../../redux/branch/actions";
-import Gridtable from "../../components/gridTable/GridTable";
+import Gridtable from "@components/gridTable/GridTable";
 import { openLicenseModal } from "../../modals/modals";
 import { manufacturerActions } from "../../redux/manufacturer/actions";
 import { userActions } from "../../redux/user/actions";

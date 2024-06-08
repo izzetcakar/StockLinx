@@ -1,23 +1,12 @@
-import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { RootState } from "../../redux/rootReducer";
-import { useEffect } from "react";
-import { productStatusActions } from "../../redux/productStatus/actions";
 import { ProductStatusType } from "@interfaces/serverInterfaces";
+import { useProductStatus } from "@/queryhooks/productStatus";
 import { Tabs } from "@mantine/core";
-import HistoryLogs from "../../components/dataGrid/customLog/HistoryLogs";
-import "../product.scss";
+import HistoryLogs from "@components/dataGrid/customLog/HistoryLogs";
 
 const ProductStatus = () => {
   const { id } = useParams();
-  const dispatch = useDispatch();
-  const productStatus = useSelector(
-    (state: RootState) => state.productStatus.productStatus
-  );
-
-  useEffect(() => {
-    dispatch(productStatusActions.get({ id: id as string }));
-  }, [id]);
+  const { data: productStatus } = useProductStatus.Get(id as string);
 
   return (
     <div className="product__container">

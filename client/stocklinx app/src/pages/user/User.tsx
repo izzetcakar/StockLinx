@@ -1,49 +1,32 @@
-import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { RootState } from "../../redux/rootReducer";
-import { useEffect, useLayoutEffect } from "react";
-import { userActions } from "../../redux/user/actions";
 import { Anchor, Tabs } from "@mantine/core";
-import { companyActions } from "../../redux/company/actions";
-import { branchActions } from "../../redux/branch/actions";
-import { departmentActions } from "../../redux/department/actions";
-import HistoryLogs from "../../components/dataGrid/customLog/HistoryLogs";
-import "../product.scss";
-import UserProductsPage from "../../components/dataGrid/userProducts/UserProducts";
+import { useUser } from "@/queryhooks/user";
+import { useDepartment } from "@/queryhooks/department";
+import { useBranch } from "@/queryhooks/branch";
+import { useCompany } from "@/queryhooks/company";
+import HistoryLogs from "@components/dataGrid/customLog/HistoryLogs";
+import UserProductsPage from "@components/dataGrid/userProducts/UserProducts";
 
 const User = () => {
   const { id } = useParams();
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const user = useSelector((state: RootState) => state.user.user);
-  const companies = useSelector((state: RootState) => state.company.companies);
-  const branches = useSelector((state: RootState) => state.branch.branches);
-  const departments = useSelector(
-    (state: RootState) => state.department.departments
-  );
-
-  useLayoutEffect(() => {
-    dispatch(companyActions.getAll());
-    dispatch(branchActions.getAll());
-    dispatch(departmentActions.getAll());
-  }, []);
-
-  useEffect(() => {
-    dispatch(userActions.get({ id: id as string }));
-  }, [id]);
+  const { data: user } = useUser.Get(id as string);
+  const { data: departments } = useDepartment.GetAll();
+  const { data: branches } = useBranch.GetAll();
+  const { data: companies } = useCompany.GetAll();
 
   const getBranch = () => {
-    const department = departments.find(
+    const department = departments?.find(
       (department) => department.id === user?.departmentId
     );
-    const branch = branches.find(
+    const branch = branches?.find(
       (branch) => branch.id === department?.branchId
     );
     return branch;
   };
   const getCompany = () => {
     const branch = getBranch();
-    const company = companies.find(
+    const company = companies?.find(
       (company) => company.id === branch?.companyId
     );
     return company;
@@ -98,7 +81,7 @@ const User = () => {
               <div className="product__content__title">Department</div>
               <div className="product__content__value">
                 {
-                  departments.find(
+                  departments?.find(
                     (department) => department.id === user?.departmentId
                   )?.name
                 }

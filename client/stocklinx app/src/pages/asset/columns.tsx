@@ -1,55 +1,27 @@
 import { ExcelColumn, DataColumn } from "@interfaces/gridTableInterfaces";
 import { Anchor, Button, Image } from "@mantine/core";
-import {
-  IAsset,
-  IModel,
-  IProductStatus,
-  ISupplier,
-  IUser,
-  IUserProduct,
-} from "@interfaces/serverInterfaces";
+import { IAsset, IUserProduct } from "@interfaces/serverInterfaces";
 import { useNavigate } from "react-router-dom";
 import { getImage } from "../../utils/Image";
 import {
   openAssetCheckInModal,
   openAssetCheckOutModal,
 } from "../../modals/modals";
-import base_asset from "../../assets/baseProductImages/base_asset.jpg";
+import base_asset from "@assets/baseProductImages/base_asset.jpg";
 import { lookupRequests } from "@/server/lookupRequests";
-import { modelRequests } from "@/redux/model/requests";
-import { useQuery } from "react-query";
-import { productStatusRequests } from "@/redux/productStatus/requests";
-import { userRequests } from "@/redux/user/requests";
-import { userProductRequests } from "@/redux/userProduct/requests";
-import { supplierRequests } from "@/redux/supplier/requests";
+import { useModel } from "@/queryhooks/model";
+import { useUserProduct } from "@/queryhooks/userProduct";
+import { useUser } from "@/queryhooks/user";
+import { useSupplier } from "@/queryhooks/supplier";
+import { useProductStatus } from "@/queryhooks/productStatus";
 
 export const useColumns = () => {
   const navigate = useNavigate();
-  const models =
-    useQuery<IModel[]>({
-      queryKey: "model_getAll",
-      queryFn: modelRequests.getAll,
-    }).data || [];
-  const productStatuses =
-    useQuery<IProductStatus[]>({
-      queryKey: "productstatus_getAll",
-      queryFn: productStatusRequests.getAll,
-    }).data || [];
-  const users =
-    useQuery<IUser[]>({
-      queryKey: "user_getAll",
-      queryFn: userRequests.getAll,
-    }).data || [];
-  const userProducts =
-    useQuery<IUserProduct[]>({
-      queryKey: "userproduct_getAll",
-      queryFn: userProductRequests.getAll,
-    }).data || [];
-  const suppliers =
-    useQuery<ISupplier[]>({
-      queryKey: "supplier_getAll",
-      queryFn: supplierRequests.getAll,
-    }).data || [];
+  const { data: models } = useModel.GetAll();
+  const { data: userProducts } = useUserProduct.GetAll();
+  const { data: users } = useUser.GetAll();
+  const { data: suppliers } = useSupplier.GetAll();
+  const { data: productStatuses } = useProductStatus.GetAll();
 
   const checkIn = (asset: IAsset) => {
     openAssetCheckInModal({
@@ -129,10 +101,11 @@ export const useColumns = () => {
       dataField: "modelId",
       caption: "Model",
       lookup: {
-        data: models.map((model) => ({
-          value: model.id,
-          label: model.name,
-        })),
+        data:
+          models?.map((model) => ({
+            value: model.id,
+            label: model.name,
+          })) || [],
         dataSource: lookupRequests().model,
       },
       dataType: "string",
@@ -141,10 +114,11 @@ export const useColumns = () => {
       dataField: "productStatusId",
       caption: "Status",
       lookup: {
-        data: productStatuses.map((productStatus) => ({
-          value: productStatus.id,
-          label: productStatus.name,
-        })),
+        data:
+          productStatuses?.map((productStatus) => ({
+            value: productStatus.id,
+            label: productStatus.name,
+          })) || [],
         dataSource: lookupRequests().productStatus,
       },
       dataType: "string",
@@ -154,18 +128,19 @@ export const useColumns = () => {
       caption: "Checked Out To",
       dataType: "string",
       renderComponent(e) {
-        const userProduct = userProducts.find(
+        const userProduct = userProducts?.find(
           (userProduct) => userProduct?.assetId === (e as IAsset).id
         );
         if (!userProduct) return null;
-        const user = users.find((user) => user.id === userProduct.userId);
+        const user = users?.find((user) => user.id === userProduct.userId);
         if (user) return user.firstName + " " + user.lastName;
       },
       lookup: {
-        data: users.map((user) => ({
-          value: user.id,
-          label: user.firstName + " " + user.lastName,
-        })),
+        data:
+          users?.map((user) => ({
+            value: user.id,
+            label: user.firstName + " " + user.lastName,
+          })) || [],
         dataSource: lookupRequests().user,
       },
     },
@@ -180,13 +155,14 @@ export const useColumns = () => {
       dataType: "action",
       renderComponent(e) {
         const asset = e as IAsset;
-        const userProduct = userProducts.find(
-          (userProduct) => userProduct?.assetId === asset.id
+        const userProduct = userProducts?.find(
+          (userProduct) => userProduct?.assetId === (e as IAsset).id
         );
+        const user = users?.find((user) => user.id === userProduct?.userId);
         return (
           <div style={{ display: "flex", justifyContent: "center" }}>
             <Button
-              color={userProduct ? "red" : "green"}
+              color={user ? "red" : "green"}
               variant="filled"
               size="xs"
               onClick={() => {
@@ -223,10 +199,11 @@ export const useColumns = () => {
       caption: "Supplier",
       dataType: "string",
       lookup: {
-        data: suppliers.map((supplier) => ({
-          value: supplier.id,
-          label: supplier.name,
-        })),
+        data:
+          suppliers?.map((supplier) => ({
+            value: supplier.id,
+            label: supplier.name,
+          })) || [],
         dataSource: lookupRequests().supplier,
       },
     },

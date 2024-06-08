@@ -4,15 +4,15 @@ import { useColumns } from "./columns";
 import { assetActions } from "../../redux/asset/actions";
 import { openAssetModal } from "../../modals/modals";
 import { useContext, useRef } from "react";
-import { useFilterAssets } from "@/queryhooks/asset";
-import Gridtable from "../../components/gridTable/GridTable";
+import Gridtable from "@components/gridTable/GridTable";
 import GenericContext from "../../context/GenericContext";
+import { useAsset } from "@/queryhooks/asset";
 
 const Asset = () => {
   const dispatch = useDispatch();
   const { drawerBadge } = useContext(GenericContext);
   const ref = useRef<any>(null);
-  const { data, mutate: filterAssets } = useFilterAssets();
+  const { data, mutate: filterAssets } = useAsset.Filter();
 
   const applyFilters = () => {
     filterAssets(ref.current?.queryFilters);
