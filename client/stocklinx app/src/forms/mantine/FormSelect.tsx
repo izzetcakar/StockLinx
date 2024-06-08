@@ -1,13 +1,14 @@
-import { Select } from "@mantine/core";
+import { Loader, Select } from "@mantine/core";
 
 interface FormSelectProps {
-  data: { value: string; label: string }[];
+  data?: { value: string; label: string }[] | undefined;
   label: string;
   inputProps: object;
   value: string | null;
-  clearable?: boolean;
   required?: boolean;
+  loading?: boolean;
   onChange?: (value: string | null) => void;
+  fetchData?: () => void;
 }
 
 const FormSelect: React.FC<FormSelectProps> = ({
@@ -15,13 +16,14 @@ const FormSelect: React.FC<FormSelectProps> = ({
   label,
   inputProps,
   value,
-  clearable,
   required,
+  loading,
+  fetchData,
   onChange,
 }) => {
   return (
     <Select
-      data={data}
+      data={loading || !data ? [] : data}
       label={label}
       placeholder={`Select ${label}`}
       {...inputProps}
@@ -38,10 +40,13 @@ const FormSelect: React.FC<FormSelectProps> = ({
         position: "bottom",
         middlewares: { flip: true, shift: false },
       }}
+      onDropdownOpen={fetchData}
+      rightSection={loading ? <Loader size={16} /> : null}
       maxDropdownHeight={200}
-      clearable={clearable}
       required={required}
       withAsterisk={required}
+      clearable
+      searchable
     />
   );
 };

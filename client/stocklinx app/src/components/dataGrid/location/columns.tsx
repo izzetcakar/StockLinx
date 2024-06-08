@@ -1,4 +1,4 @@
-import icon_barcode from "../../../assets/icon_barcode.png";
+import icon_barcode from "../@assets/icon_barcode.png";
 import { DataColumn } from "@interfaces/gridTableInterfaces";
 
 export const useColumns = () => {

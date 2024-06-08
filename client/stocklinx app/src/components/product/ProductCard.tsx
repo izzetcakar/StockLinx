@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-// import icon_next from "../../assets/icon_next.png";
+// import icon_next from "@assets/icon_next.png";
 import "./product.scss";
 
 interface ProductCardProps {

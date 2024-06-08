@@ -245,12 +245,7 @@ export const openAssetCheckInModal = (checkInDto: AssetCheckInDto) => {
   modals.open({
     modalId: "asset_checkIn_modal",
     title: "Check In",
-    children: (
-      <AssetCheckInForm
-        checkInDto={checkInDto}
-        onSubmit={() => closeModal("asset_checkIn_modal")}
-      />
-    ),
+    children: <AssetCheckInForm checkInDto={checkInDto} />,
     xOffset: "auto",
     size: "auto",
   });

@@ -1,5 +1,5 @@
 import { Anchor, Breadcrumbs, Menu } from "@mantine/core";
-import iconSetting from "../../assets/icon_setting.png";
+import iconSetting from "@assets/icon_setting.png";
 import "./header.scss";
 
 const Header = () => {

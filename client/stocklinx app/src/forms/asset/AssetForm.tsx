@@ -22,7 +22,7 @@ import { assetActions } from "../../redux/asset/actions";
 import { useInitial } from "./useInitial";
 import { toBase64 } from "../../utils/Image";
 import { openNotificationError } from "@/notification/Notification";
-import base_asset from "../../assets/baseProductImages/base_asset.jpg";
+import base_asset from "@assets/baseProductImages/base_asset.jpg";
 import FormSelect from "../mantine/FormSelect";
 
 interface AssetFormProps {
@@ -197,7 +197,6 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
           label="Model"
           inputProps={form.getInputProps("modelId")}
           value={form.values.modelId}
-          clearable
         />
         <FormSelect
           data={productStatuses.map((status) => ({
@@ -207,7 +206,6 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
           label="Status"
           inputProps={form.getInputProps("productStatusId")}
           value={form.values.productStatusId}
-          clearable
         />
         <Textarea
           placeholder="Your notes here"
@@ -238,7 +236,6 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
                   label="Supplier"
                   inputProps={form.getInputProps("supplierId")}
                   value={form.values.supplierId}
-                  clearable
                 />
                 <TextInput
                   label="Order No"

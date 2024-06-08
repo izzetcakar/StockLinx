@@ -127,7 +127,6 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
           label="Supplier"
           inputProps={form.getInputProps("supplierId")}
           value={form.values.supplierId}
-          clearable
         />
         <FormSelect
           data={manufacturers.map((manufacturer) => ({
@@ -137,7 +136,6 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
           label="Manufacturer"
           inputProps={form.getInputProps("manufacturerId")}
           value={form.values.manufacturerId}
-          clearable
         />
         <TextInput
           label="Model No"

@@ -1,10 +1,8 @@
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
-import store from "./redux/store";
 import inputClasses from "./mantineModules/input.module.scss";
 import modalClasses from "./mantineModules/modal.module.scss";
 import accordionClasses from "./mantineModules/accordion.module.scss";
-import { Provider } from "react-redux";
 import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
 import { MantineProvider, ScrollArea } from "@mantine/core";
@@ -13,6 +11,7 @@ import { defaultInputProps } from "./mantineModules/defaultInputProps.ts";
 import { IconCaretDownFilled, IconCalendar } from "@tabler/icons-react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { GenericStateProvider } from "./components/gridTable/context/GenericStateContext.tsx";
+import { openNotificationError } from "./notification/Notification.tsx";
 
 const components = {
   TextInput: {
@@ -110,44 +109,47 @@ export const queryClient = new QueryClient({
     queries: {
       refetchOnWindowFocus: false,
     },
+    mutations: {
+      onError(err) {
+        openNotificationError("Error", (err as Error).message);
+      },
+    },
   },
 });
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <MantineProvider
-    theme={{
-      primaryShade: 9,
-      primaryColor: "gray",
-      cursorType: "pointer",
-      defaultRadius: "md",
-      radius: {
-        xs: "0.125rem",
-        sm: "0.25rem",
-        md: "0.5rem",
-        lg: "1rem",
-        xl: "2rem",
-      },
-      fontSizes: {
-        xs: "0.5rem",
-        sm: "0.75rem",
-        md: "1rem",
-        lg: "1.25rem",
-        xl: "1.5rem",
-      },
-      components,
-    }}
-  >
-    <Provider store={store}>
+  <QueryClientProvider client={queryClient}>
+    <MantineProvider
+      theme={{
+        primaryShade: 9,
+        primaryColor: "gray",
+        cursorType: "pointer",
+        defaultRadius: "md",
+        radius: {
+          xs: "0.125rem",
+          sm: "0.25rem",
+          md: "0.5rem",
+          lg: "1rem",
+          xl: "2rem",
+        },
+        fontSizes: {
+          xs: "0.5rem",
+          sm: "0.75rem",
+          md: "1rem",
+          lg: "1.25rem",
+          xl: "1.5rem",
+        },
+        components,
+      }}
+    >
       <GenericProvider>
         <GenericStateProvider>
           <ModalsProvider>
             <Notifications w={"fit-content"} position="top-right" />
-            <QueryClientProvider client={queryClient}>
-              <App />
-            </QueryClientProvider>
+            <App />
           </ModalsProvider>
         </GenericStateProvider>
       </GenericProvider>
-    </Provider>
-  </MantineProvider>
+    </MantineProvider>
+  </QueryClientProvider>
 );

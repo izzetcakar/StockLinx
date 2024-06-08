@@ -1,5 +1,5 @@
 import React from "react";
-import icon_edit from "../../../assets/icon_pen.png";
+import icon_edit from "../@assets/icon_pen.png";
 import icon_delete from "../../.././assets/icon_trash.png";
 import { openConfirmModal } from "../modals/modals";
 import "./editComponent.scss";

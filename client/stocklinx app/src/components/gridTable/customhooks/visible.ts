@@ -8,7 +8,6 @@ export const useVisible = () => {
   const onVisibleChange = (columnId: string) => {
     const column = gridColumns.find((c) => c.id === columnId);
     if (!column) return;
-    if (column.allowVisible === false) return;
     const isVisible = visibleColumns.find((c) => c.id === columnId);
     const newVisibleColumns = isVisible
       ? visibleColumns.filter((column) => column.id !== columnId)

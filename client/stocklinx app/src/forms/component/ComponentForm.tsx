@@ -132,7 +132,6 @@ const ComponentForm: React.FC<ComponentFormProps> = ({ component, create }) => {
           label="Supplier"
           inputProps={form.getInputProps("supplierId")}
           value={form.values.supplierId}
-          clearable
         />
         <TextInput
           label="Order No"

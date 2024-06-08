@@ -139,7 +139,6 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license, create }) => {
           label="Manufacturer"
           inputProps={form.getInputProps("manufacturerId")}
           value={form.values.manufacturerId}
-          clearable
         />
         <TextInput
           label="Licensed To"
@@ -166,7 +165,6 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license, create }) => {
           label="Supplier"
           inputProps={form.getInputProps("supplierId")}
           value={form.values.supplierId}
-          clearable
         />
         <TextInput
           label="Order No"
