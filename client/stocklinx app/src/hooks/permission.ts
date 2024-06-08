@@ -25,14 +25,14 @@ const GetAll = () => {
   );
 };
 
-const Get =(id: string) => {
+const Get = (id: string) => {
   return useQuery<IPermission>({
     queryKey: [queryKeys.FETCH_PERMISSION, id],
     queryFn: () => permissionRequests.get(id),
   });
 };
 
-const Create =(permission: IPermission) => {
+const Create = (permission: IPermission) => {
   return useMutation<IPermission>({
     mutationKey: queryKeys.CREATE_PERMISSION,
     mutationFn: () => permissionRequests.create(permission),
@@ -114,7 +114,7 @@ const Filter = () => {
 };
 
 const Sync = () => {
-  return useMutation<IPermission[]>({
+  return useMutation({
     mutationKey: queryKeys.SYNC_PERMISSIONS,
     mutationFn: (permissions: IPermission[]) =>
       permissionRequests.sync(permissions),

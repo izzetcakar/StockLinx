@@ -1,76 +1,38 @@
 import { QueryFilter } from "@/interfaces/gridTableInterfaces";
-import { getQueryFilter } from "@/utils/filterUtilts";
 import { ILocation } from "@interfaces/serverInterfaces";
-import { request } from "@request";
+import { baseRequests } from "@/utils/requestUtils";
 const requestUrl = "Location/";
 
-const getAll = async (): Promise<ILocation[]> => {
-  return (await request<ILocation>({ requestUrl: requestUrl, apiType: "get" }))
-    .data as ILocation[];
+const getAll = () => {
+  return baseRequests.getAll<ILocation>(requestUrl);
 };
 
-const get = async (id: string): Promise<ILocation> => {
-  return (
-    await request<ILocation>({
-      requestUrl: requestUrl + id,
-      apiType: "get",
-    })
-  ).data as ILocation;
+const get = (id: string) => {
+  return baseRequests.get<ILocation>(requestUrl, id);
 };
 
-const create = async (consumable: ILocation): Promise<ILocation> => {
-  return (
-    await request<ILocation>({
-      requestUrl: requestUrl,
-      apiType: "post",
-      queryData: consumable,
-    })
-  ).data as ILocation;
+const create = (location: ILocation) => {
+  return baseRequests.create<ILocation>(requestUrl, location);
 };
 
-const createRange = async (consumables: ILocation[]): Promise<ILocation[]> => {
-  return (
-    await request<ILocation>({
-      requestUrl: requestUrl + "range",
-      apiType: "post",
-      queryData: consumables,
-    })
-  ).data as ILocation[];
+const createRange = (locations: ILocation[]) => {
+  return baseRequests.createRange<ILocation>(requestUrl, locations);
 };
 
-const update = async (consumable: ILocation): Promise<ILocation> => {
-  return (
-    await request<ILocation>({
-      requestUrl: requestUrl,
-      apiType: "put",
-      queryData: consumable,
-    })
-  ).data as ILocation;
+const update = (location: ILocation) => {
+  return baseRequests.update<ILocation>(requestUrl, location);
 };
 
 const remove = (id: string) => {
-  return request<ILocation>({
-    requestUrl: requestUrl + id,
-    apiType: "delete",
-  });
+  return baseRequests.remove(requestUrl, id);
 };
 
 const removeRange = (ids: string[]) => {
-  return request<ILocation>({
-    requestUrl: requestUrl + "range",
-    apiType: "delete",
-    queryData: ids,
-  });
+  return baseRequests.removeRange(requestUrl, ids);
 };
 
-const filter = async (queryFilters: QueryFilter[]): Promise<ILocation[]> => {
-  return (
-    await request<ILocation>({
-      requestUrl: requestUrl + "filter",
-      apiType: "get",
-      params: getQueryFilter(queryFilters),
-    })
-  ).data as ILocation[];
+const filter = (queryFilters: QueryFilter[]) => {
+  return baseRequests.filter<ILocation>(requestUrl, queryFilters);
 };
 
 export const locationRequests = {

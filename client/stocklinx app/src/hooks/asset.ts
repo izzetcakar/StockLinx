@@ -23,14 +23,14 @@ const GetAll = () => {
   return useQuery<IAsset[]>(queryKeys.FETCH_ASSETS, assetRequests.getAll);
 };
 
-const Get =(id: string) => {
+const Get = (id: string) => {
   return useQuery<IAsset>({
     queryKey: [queryKeys.FETCH_ASSET, id],
     queryFn: () => assetRequests.get(id),
   });
 };
 
-const Create =(asset: IAsset) => {
+const Create = (asset: IAsset) => {
   return useMutation<IAsset>({
     mutationKey: queryKeys.CREATE_ASSET,
     mutationFn: () => assetRequests.create(asset),
@@ -44,12 +44,12 @@ const Create =(asset: IAsset) => {
   });
 };
 
-const CreateRange = (assets: IAsset[]) => {
-  return useMutation<IAsset[]>({
+const CreateRange = () => {
+  return useMutation({
     mutationKey: queryKeys.CREATE_RANGE_ASSET,
-    mutationFn: () => assetRequests.createRange(assets),
-    onSuccess: () => {
-      queryClient.setQueriesData<IAsset[]>(
+    mutationFn: (assets: IAsset[]) => assetRequests.createRange(assets),
+    onSuccess: (assets: IAsset[]) => {
+      queryClient.setQueryData<IAsset[]>(
         queryKeys.CREATE_RANGE_ASSET,
         (old) => {
           return old ? [...old, ...assets] : assets;

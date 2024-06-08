@@ -1,9 +1,41 @@
 import { QueryFilter } from "@/interfaces/gridTableInterfaces";
-import { getQueryFilter } from "@/utils/filterUtilts";
 import { IUser, IUserLoginDto } from "@interfaces/serverInterfaces";
 import { request } from "@request";
+import { baseRequests } from "@/utils/requestUtils";
 
 const requestUrl = "User/";
+
+const getAll = () => {
+  return baseRequests.getAll<IUser>(requestUrl);
+};
+
+const get = (id: string) => {
+  return baseRequests.get<IUser>(requestUrl, id);
+};
+
+const create = (user: IUser) => {
+  return baseRequests.create<IUser>(requestUrl, user);
+};
+
+const createRange = (users: IUser[]) => {
+  return baseRequests.createRange<IUser>(requestUrl, users);
+};
+
+const update = (user: IUser) => {
+  return baseRequests.update<IUser>(requestUrl, user);
+};
+
+const remove = (id: string) => {
+  return baseRequests.remove(requestUrl, id);
+};
+
+const removeRange = (ids: string[]) => {
+  return baseRequests.removeRange(requestUrl, ids);
+};
+
+const filter = (queryFilters: QueryFilter[]) => {
+  return baseRequests.filter<IUser>(requestUrl, queryFilters);
+};
 
 const signIn = (loginDto: IUserLoginDto) => {
   return request<IUserLoginDto>({
@@ -18,74 +50,6 @@ const getWithToken = () => {
     requestUrl: requestUrl + "getWithToken",
     apiType: "get",
   });
-};
-const getAll = async (): Promise<IUser[]> => {
-  return (await request<IUser>({ requestUrl: requestUrl, apiType: "get" }))
-    .data as IUser[];
-};
-
-const get = async (id: string): Promise<IUser> => {
-  return (
-    await request<IUser>({
-      requestUrl: requestUrl + id,
-      apiType: "get",
-    })
-  ).data as IUser;
-};
-
-const create = async (consumable: IUser): Promise<IUser> => {
-  return (
-    await request<IUser>({
-      requestUrl: requestUrl,
-      apiType: "post",
-      queryData: consumable,
-    })
-  ).data as IUser;
-};
-
-const createRange = async (consumables: IUser[]): Promise<IUser[]> => {
-  return (
-    await request<IUser>({
-      requestUrl: requestUrl + "range",
-      apiType: "post",
-      queryData: consumables,
-    })
-  ).data as IUser[];
-};
-
-const update = async (consumable: IUser): Promise<IUser> => {
-  return (
-    await request<IUser>({
-      requestUrl: requestUrl,
-      apiType: "put",
-      queryData: consumable,
-    })
-  ).data as IUser;
-};
-
-const remove = (id: string) => {
-  return request<IUser>({
-    requestUrl: requestUrl + id,
-    apiType: "delete",
-  });
-};
-
-const removeRange = (ids: string[]) => {
-  return request<IUser>({
-    requestUrl: requestUrl + "range",
-    apiType: "delete",
-    queryData: ids,
-  });
-};
-
-const filter = async (queryFilters: QueryFilter[]): Promise<IUser[]> => {
-  return (
-    await request<IUser>({
-      requestUrl: requestUrl + "filter",
-      apiType: "get",
-      params: getQueryFilter(queryFilters),
-    })
-  ).data as IUser[];
 };
 
 export const userRequests = {

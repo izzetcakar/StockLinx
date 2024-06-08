@@ -24,7 +24,7 @@ const GetAll = () => {
 };
 
 const GetWithToken = () => {
-  return useQuery<IUser>(queryKeys.GET_WITH_TOKEN, userRequests.getWithToken);
+  return useQuery(queryKeys.GET_WITH_TOKEN, userRequests.getWithToken);
 };
 
 const Get = (id: string) => {

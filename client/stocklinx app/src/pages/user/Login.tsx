@@ -11,7 +11,7 @@ import {
   TextInput,
 } from "@mantine/core";
 import { IconKey, IconMail } from "@tabler/icons-react";
-import { useUser } from "@/queryhooks/user";
+import { useUser } from "@/hooks/user";
 import logo from "/logo.png";
 import ReCAPTCHA from "react-google-recaptcha";
 import "./user.scss";

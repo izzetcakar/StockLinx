@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useProduct } from "@/queryhooks/product";
+import { useProduct } from "@/hooks/product";
 import { Pie } from "react-chartjs-2";
 import icon_disk from "@assets/icon_disk.png";
 import icon_barcode from "@assets/icon_barcode.png";

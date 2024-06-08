@@ -1,5 +1,4 @@
 import { QueryFilter } from "@/interfaces/gridTableInterfaces";
-import { getQueryFilter } from "@/utils/filterUtilts";
 import {
   AssetProductCheckInDto,
   AssetProductCheckOutDto,
@@ -12,65 +11,40 @@ import {
   IUserProduct,
 } from "@interfaces/serverInterfaces";
 import { request } from "@request";
+import { baseRequests } from "@/utils/requestUtils";
+
 const requestUrl = "License/";
 
-const getAll = async (): Promise<ILicense[]> => {
-  return (await request<ILicense>({ requestUrl: requestUrl, apiType: "get" }))
-    .data as ILicense[];
+const getAll = () => {
+  return baseRequests.getAll<ILicense>(requestUrl);
 };
 
-const get = async (id: string): Promise<ILicense> => {
-  return (
-    await request<ILicense>({
-      requestUrl: requestUrl + id,
-      apiType: "get",
-    })
-  ).data as ILicense;
+const get = (id: string) => {
+  return baseRequests.get<ILicense>(requestUrl, id);
 };
 
-const create = async (consumable: ILicense): Promise<ILicense> => {
-  return (
-    await request<ILicense>({
-      requestUrl: requestUrl,
-      apiType: "post",
-      queryData: consumable,
-    })
-  ).data as ILicense;
+const create = (license: ILicense) => {
+  return baseRequests.create<ILicense>(requestUrl, license);
 };
 
-const createRange = async (consumables: ILicense[]): Promise<ILicense[]> => {
-  return (
-    await request<ILicense>({
-      requestUrl: requestUrl + "range",
-      apiType: "post",
-      queryData: consumables,
-    })
-  ).data as ILicense[];
+const createRange = (licenses: ILicense[]) => {
+  return baseRequests.createRange<ILicense>(requestUrl, licenses);
 };
 
-const update = async (consumable: ILicense): Promise<ILicense> => {
-  return (
-    await request<ILicense>({
-      requestUrl: requestUrl,
-      apiType: "put",
-      queryData: consumable,
-    })
-  ).data as ILicense;
+const update = (license: ILicense) => {
+  return baseRequests.update<ILicense>(requestUrl, license);
 };
 
 const remove = (id: string) => {
-  return request<ILicense>({
-    requestUrl: requestUrl + id,
-    apiType: "delete",
-  });
+  return baseRequests.remove(requestUrl, id);
 };
 
 const removeRange = (ids: string[]) => {
-  return request<ILicense>({
-    requestUrl: requestUrl + "range",
-    apiType: "delete",
-    queryData: ids,
-  });
+  return baseRequests.removeRange(requestUrl, ids);
+};
+
+const filter = (queryFilters: QueryFilter[]) => {
+  return baseRequests.filter<ILicense>(requestUrl, queryFilters);
 };
 
 const userCheckIn = async (
@@ -111,16 +85,6 @@ const assetCheckOut = (checkOutDto: AssetProductCheckOutDto) => {
     apiType: "post",
     queryData: checkOutDto,
   });
-};
-
-const filter = async (queryFilters: QueryFilter[]): Promise<ILicense[]> => {
-  return (
-    await request<ILicense>({
-      requestUrl: requestUrl + "filter",
-      apiType: "get",
-      params: getQueryFilter(queryFilters),
-    })
-  ).data as ILicense[];
 };
 
 export const licenseRequests = {

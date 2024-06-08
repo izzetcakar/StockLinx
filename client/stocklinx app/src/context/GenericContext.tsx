@@ -1,8 +1,8 @@
 import React, { ReactNode } from "react";
 import { Badge, Drawer, Select } from "@mantine/core";
 import { createContext } from "react";
-import { useBranch } from "@/queryhooks/branch";
-import { useCompany } from "@/queryhooks/company";
+import { useBranch } from "@/hooks/branch";
+import { useCompany } from "@/hooks/company";
 import { IBranch, ICompany } from "@/interfaces/serverInterfaces";
 import { useDisclosure } from "@mantine/hooks";
 

@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { ProductStatusType } from "@interfaces/serverInterfaces";
-import { useProductStatus } from "@/queryhooks/productStatus";
+import { useProductStatus } from "@/hooks/productStatus";
 import { Tabs } from "@mantine/core";
 import HistoryLogs from "@components/dataGrid/customLog/HistoryLogs";
 

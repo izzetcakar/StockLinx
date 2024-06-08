@@ -1,8 +1,8 @@
 import { useContext } from "react";
-import { useBranch } from "@/queryhooks/branch";
-import { usePermission } from "@/queryhooks/permission";
-import { useUser } from "@/queryhooks/user";
-import { useDepartment } from "@/queryhooks/department";
+import { useBranch } from "@/hooks/branch";
+import { usePermission } from "@/hooks/permission";
+import { useUser } from "@/hooks/user";
+import { useDepartment } from "@/hooks/department";
 import GenericContext from "@/context/GenericContext";
 import BranchCard from "./BranchCard";
 

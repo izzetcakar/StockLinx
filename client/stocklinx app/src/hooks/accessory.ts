@@ -22,10 +22,7 @@ enum queryKeys {
 }
 
 const GetAll = () => {
-  return useQuery<IAccessory[]>(
-    queryKeys.FETCH_ACCESSORIES,
-    accessoryRequests.getAll
-  );
+  return useQuery(queryKeys.FETCH_ACCESSORIES, accessoryRequests.getAll);
 };
 
 const Get = (id: string) => {
@@ -35,89 +32,77 @@ const Get = (id: string) => {
   });
 };
 
-const Create = (accessory: IAccessory) => {
-  return useMutation<IAccessory>({
+const Create = () => {
+  return useMutation({
     mutationKey: queryKeys.CREATE_ACCESSORY,
-    mutationFn: () => accessoryRequests.create(accessory),
-    onSuccess: () => {
+    mutationFn: (accessory: IAccessory) => accessoryRequests.create(accessory),
+    onSuccess: (accessory) => {
+      queryClient.invalidateQueries(queryKeys.FETCH_ACCESSORY);
       queryClient.setQueryData<IAccessory[]>(
-        queryKeys.CREATE_ACCESSORY,
+        queryKeys.FETCH_ACCESSORIES,
         (old) => {
           return old ? [...old, accessory] : [accessory];
         }
       );
-      queryClient.invalidateQueries(queryKeys.FETCH_ACCESSORIES);
-      queryClient.invalidateQueries(queryKeys.FETCH_ACCESSORY);
     },
   });
 };
 
-const CreateRange = (accessorıes: IAccessory[]) => {
-  return useMutation<IAccessory[]>({
+const CreateRange = () => {
+  return useMutation({
     mutationKey: queryKeys.CREATE_RANGE_ACCESSORY,
-    mutationFn: () => accessoryRequests.createRange(accessorıes),
-    onSuccess: () => {
-      queryClient.setQueriesData<IAccessory[]>(
-        queryKeys.CREATE_RANGE_ACCESSORY,
-        (old) => {
-          return old ? [...old, ...accessorıes] : accessorıes;
-        }
-      );
-      queryClient.invalidateQueries(queryKeys.CREATE_RANGE_ACCESSORY);
-      queryClient.invalidateQueries(queryKeys.FETCH_ACCESSORIES);
-    },
-  });
-};
-
-const Update = (accessory: IAccessory) => {
-  return useMutation<IAccessory>({
-    mutationKey: queryKeys.UPDATE_ACCESSORY,
-    mutationFn: () => accessoryRequests.update(accessory),
-    onSuccess: () => {
+    mutationFn: (accessorıes: IAccessory[]) =>
+      accessoryRequests.createRange(accessorıes),
+    onSuccess: (accessories) => {
       queryClient.setQueryData<IAccessory[]>(
-        queryKeys.UPDATE_ACCESSORY,
+        queryKeys.FETCH_ACCESSORIES,
         (old) => {
-          return old
-            ? old.map((item) => (item.id === accessory.id ? accessory : item))
-            : [];
+          return old ? [...old, ...accessories] : accessories;
         }
       );
-      queryClient.invalidateQueries(queryKeys.UPDATE_ACCESSORY);
-      queryClient.invalidateQueries(queryKeys.FETCH_ACCESSORIES);
-      queryClient.invalidateQueries([queryKeys.FETCH_ACCESSORY, accessory.id]);
     },
   });
 };
 
-const Remove = (id: string) => {
+const Update = () => {
+  return useMutation({
+    mutationKey: queryKeys.UPDATE_ACCESSORY,
+    mutationFn: (accessory: IAccessory) => accessoryRequests.update(accessory),
+    onSuccess: (accesory) => {
+      queryClient.setQueryData<IAccessory[]>(
+        queryKeys.FETCH_ACCESSORIES,
+        (old) => {
+          if (old) {
+            const index = old.findIndex((x) => x.id === accesory.id);
+            old[index] = accesory;
+            return [...old];
+          }
+          return [accesory];
+        }
+      );
+      queryClient.setQueryData<IAccessory>(
+        [queryKeys.FETCH_ACCESSORY, accesory.id],
+        accesory
+      );
+    },
+  });
+};
+
+const Remove = () => {
   return useMutation({
     mutationKey: queryKeys.DELETE_ACCESSORY,
-    mutationFn: () => accessoryRequests.remove(id),
+    mutationFn: (id: string) => accessoryRequests.remove(id),
     onSuccess: () => {
-      queryClient.setQueryData<IAccessory[]>(
-        queryKeys.DELETE_ACCESSORY,
-        (old) => {
-          return old ? old.filter((item) => item.id !== id) : [];
-        }
-      );
-      queryClient.invalidateQueries(queryKeys.DELETE_ACCESSORY);
       queryClient.invalidateQueries(queryKeys.FETCH_ACCESSORIES);
     },
   });
 };
 
-const RemoveRange = (ids: string[]) => {
+const RemoveRange = () => {
   return useMutation({
     mutationKey: queryKeys.DELETE_RANGE_ACCESSORY,
-    mutationFn: () => accessoryRequests.removeRange(ids),
+    mutationFn: (ids: string[]) => accessoryRequests.removeRange(ids),
     onSuccess: () => {
-      queryClient.setQueryData<IAccessory[]>(
-        queryKeys.DELETE_RANGE_ACCESSORY,
-        (old) => {
-          return old ? old.filter((item) => !ids.includes(item.id)) : [];
-        }
-      );
-      queryClient.invalidateQueries(queryKeys.DELETE_RANGE_ACCESSORY);
       queryClient.invalidateQueries(queryKeys.FETCH_ACCESSORIES);
     },
   });
@@ -128,10 +113,7 @@ const Filter = () => {
     mutationKey: queryKeys.FILTER_ACCESSORIES,
     mutationFn: (filters: QueryFilter[]) => accessoryRequests.filter(filters),
     onSuccess(data) {
-      queryClient.setQueryData<IAccessory[]>(
-        queryKeys.FILTER_ACCESSORIES,
-        data
-      );
+      queryClient.setQueryData<IAccessory[]>(queryKeys.FETCH_ACCESSORIES, data);
     },
   });
 };
@@ -140,9 +122,11 @@ const CheckIn = () => {
   useMutation({
     mutationKey: queryKeys.CHECK_IN_ACCESSORY,
     mutationFn: (dto: UserProductCheckInDto) => accessoryRequests.checkIn(dto),
-    onSuccess: () => {
-      queryClient.invalidateQueries(queryKeys.CHECK_IN_ACCESSORY);
-      queryClient.invalidateQueries(queryKeys.FETCH_ACCESSORIES);
+    onSuccess: (dto) => {
+      queryClient.invalidateQueries([
+        queryKeys.FETCH_ACCESSORY,
+        dto.accessoryId,
+      ]);
     },
   });
 };
@@ -153,7 +137,7 @@ const CheckOut = () => {
     mutationFn: (dto: UserProductCheckOutDto) =>
       accessoryRequests.checkOut(dto),
     onSuccess: () => {
-      queryClient.invalidateQueries(queryKeys.CHECK_OUT_ACCESSORY);
+      queryClient.invalidateQueries(queryKeys.FETCH_ACCESSORY);
       queryClient.invalidateQueries(queryKeys.FETCH_ACCESSORIES);
     },
   });

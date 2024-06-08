@@ -3,7 +3,7 @@ import { useColumns } from "./columns";
 import { Column } from "@/interfaces/gridTableInterfaces";
 import FilterPanel from "@/components/generic/FilterPanel";
 import uuid4 from "uuid4";
-import { useAsset } from "@/queryhooks/asset";
+import { useAsset } from "@/hooks/asset";
 
 const Asset = () => {
   const columns = useColumns().columns;

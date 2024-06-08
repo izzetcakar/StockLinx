@@ -1,79 +1,39 @@
 import { QueryFilter } from "@/interfaces/gridTableInterfaces";
-import { getQueryFilter } from "@/utils/filterUtilts";
 import { IDepartment } from "@interfaces/serverInterfaces";
-import { request } from "@request";
+import { baseRequests } from "@/utils/requestUtils";
+
 const requestUrl = "Department/";
 
-const getAll = async (): Promise<IDepartment[]> => {
-  return (
-    await request<IDepartment>({ requestUrl: requestUrl, apiType: "get" })
-  ).data as IDepartment[];
+const getAll = () => {
+  return baseRequests.getAll<IDepartment>(requestUrl);
 };
 
-const get = async (id: string): Promise<IDepartment> => {
-  return (
-    await request<IDepartment>({
-      requestUrl: requestUrl + id,
-      apiType: "get",
-    })
-  ).data as IDepartment;
+const get = (id: string) => {
+  return baseRequests.get<IDepartment>(requestUrl, id);
 };
 
-const create = async (consumable: IDepartment): Promise<IDepartment> => {
-  return (
-    await request<IDepartment>({
-      requestUrl: requestUrl,
-      apiType: "post",
-      queryData: consumable,
-    })
-  ).data as IDepartment;
+const create = (department: IDepartment) => {
+  return baseRequests.create<IDepartment>(requestUrl, department);
 };
 
-const createRange = async (
-  consumables: IDepartment[]
-): Promise<IDepartment[]> => {
-  return (
-    await request<IDepartment>({
-      requestUrl: requestUrl + "range",
-      apiType: "post",
-      queryData: consumables,
-    })
-  ).data as IDepartment[];
+const createRange = (departments: IDepartment[]) => {
+  return baseRequests.createRange<IDepartment>(requestUrl, departments);
 };
 
-const update = async (consumable: IDepartment): Promise<IDepartment> => {
-  return (
-    await request<IDepartment>({
-      requestUrl: requestUrl,
-      apiType: "put",
-      queryData: consumable,
-    })
-  ).data as IDepartment;
+const update = (department: IDepartment) => {
+  return baseRequests.update<IDepartment>(requestUrl, department);
 };
 
 const remove = (id: string) => {
-  return request<IDepartment>({
-    requestUrl: requestUrl + id,
-    apiType: "delete",
-  });
+  return baseRequests.remove(requestUrl, id);
 };
 
 const removeRange = (ids: string[]) => {
-  return request<IDepartment>({
-    requestUrl: requestUrl + "range",
-    apiType: "delete",
-    queryData: ids,
-  });
+  return baseRequests.removeRange(requestUrl, ids);
 };
 
-const filter = async (queryFilters: QueryFilter[]): Promise<IDepartment[]> => {
-  return (
-    await request<IDepartment>({
-      requestUrl: requestUrl + "filter",
-      apiType: "get",
-      params: getQueryFilter(queryFilters),
-    })
-  ).data as IDepartment[];
+const filter = (queryFilters: QueryFilter[]) => {
+  return baseRequests.filter<IDepartment>(requestUrl, queryFilters);
 };
 
 export const departmentRequests = {

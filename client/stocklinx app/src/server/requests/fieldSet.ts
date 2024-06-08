@@ -1,64 +1,34 @@
 import { IFieldSet } from "@interfaces/serverInterfaces";
-import { request } from "@request";
+import { baseRequests } from "@/utils/requestUtils";
+
 const requestUrl = "FieldSet/";
 
-const getAll = async (): Promise<IFieldSet[]> => {
-  return (await request<IFieldSet>({ requestUrl: requestUrl, apiType: "get" }))
-    .data as IFieldSet[];
+const getAll = () => {
+  return baseRequests.getAll<IFieldSet>(requestUrl);
 };
 
-const get = async (id: string): Promise<IFieldSet> => {
-  return (
-    await request<IFieldSet>({
-      requestUrl: requestUrl + id,
-      apiType: "get",
-    })
-  ).data as IFieldSet;
+const get = (id: string) => {
+  return baseRequests.get<IFieldSet>(requestUrl, id);
 };
 
-const create = async (consumable: IFieldSet): Promise<IFieldSet> => {
-  return (
-    await request<IFieldSet>({
-      requestUrl: requestUrl,
-      apiType: "post",
-      queryData: consumable,
-    })
-  ).data as IFieldSet;
+const create = (fieldSet: IFieldSet) => {
+  return baseRequests.create<IFieldSet>(requestUrl, fieldSet);
 };
 
-const createRange = async (consumables: IFieldSet[]): Promise<IFieldSet[]> => {
-  return (
-    await request<IFieldSet>({
-      requestUrl: requestUrl + "range",
-      apiType: "post",
-      queryData: consumables,
-    })
-  ).data as IFieldSet[];
+const createRange = (fieldSets: IFieldSet[]) => {
+  return baseRequests.createRange<IFieldSet>(requestUrl, fieldSets);
 };
 
-const update = async (consumable: IFieldSet): Promise<IFieldSet> => {
-  return (
-    await request<IFieldSet>({
-      requestUrl: requestUrl,
-      apiType: "put",
-      queryData: consumable,
-    })
-  ).data as IFieldSet;
+const update = (fieldSet: IFieldSet) => {
+  return baseRequests.update<IFieldSet>(requestUrl, fieldSet);
 };
 
 const remove = (id: string) => {
-  return request<IFieldSet>({
-    requestUrl: requestUrl + id,
-    apiType: "delete",
-  });
+  return baseRequests.remove(requestUrl, id);
 };
 
 const removeRange = (ids: string[]) => {
-  return request<IFieldSet>({
-    requestUrl: requestUrl + "range",
-    apiType: "delete",
-    queryData: ids,
-  });
+  return baseRequests.removeRange(requestUrl, ids);
 };
 
 export const fieldSetRequests = {

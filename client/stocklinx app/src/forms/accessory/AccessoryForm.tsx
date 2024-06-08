@@ -19,10 +19,10 @@ import { openNotificationError } from "@/notification/Notification";
 import base_accessory from "@assets/baseProductImages/base_accessory.png";
 import FormSelect from "../mantine/FormSelect";
 import GenericContext from "@/context/GenericContext";
-import { useCategory } from "@/queryhooks/category";
-import { useSupplier } from "@/queryhooks/supplier";
-import { useManufacturer } from "@/queryhooks/manufacturer";
-import { useAccessory } from "@/queryhooks/accessory";
+import { useCategory } from "@/hooks/category";
+import { useSupplier } from "@/hooks/supplier";
+import { useManufacturer } from "@/hooks/manufacturer";
+import { useAccessory } from "@/hooks/accessory";
 
 interface AccessoryFormProps {
   accessory?: IAccessory;

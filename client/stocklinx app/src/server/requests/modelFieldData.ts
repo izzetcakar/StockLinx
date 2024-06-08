@@ -1,71 +1,37 @@
 import { IModelFieldData } from "@interfaces/serverInterfaces";
-import { request } from "@request";
+import { baseRequests } from "@/utils/requestUtils";
+
 const requestUrl = "ModelFieldData/";
 
-const getAll = async (): Promise<IModelFieldData[]> => {
-  return (
-    await request<IModelFieldData>({ requestUrl: requestUrl, apiType: "get" })
-  ).data as IModelFieldData[];
+const getAll = () => {
+  return baseRequests.getAll<IModelFieldData>(requestUrl);
 };
 
-const get = async (id: string): Promise<IModelFieldData> => {
-  return (
-    await request<IModelFieldData>({
-      requestUrl: requestUrl + id,
-      apiType: "get",
-    })
-  ).data as IModelFieldData;
+const get = (id: string) => {
+  return baseRequests.get<IModelFieldData>(requestUrl, id);
 };
 
-const create = async (
-  consumable: IModelFieldData
-): Promise<IModelFieldData> => {
-  return (
-    await request<IModelFieldData>({
-      requestUrl: requestUrl,
-      apiType: "post",
-      queryData: consumable,
-    })
-  ).data as IModelFieldData;
+const create = (modelFieldData: IModelFieldData) => {
+  return baseRequests.create<IModelFieldData>(requestUrl, modelFieldData);
 };
 
-const createRange = async (
-  consumables: IModelFieldData[]
-): Promise<IModelFieldData[]> => {
-  return (
-    await request<IModelFieldData>({
-      requestUrl: requestUrl + "range",
-      apiType: "post",
-      queryData: consumables,
-    })
-  ).data as IModelFieldData[];
+const createRange = (modelFieldDatas: IModelFieldData[]) => {
+  return baseRequests.createRange<IModelFieldData>(
+    requestUrl,
+    modelFieldDatas
+  );
 };
 
-const update = async (
-  consumable: IModelFieldData
-): Promise<IModelFieldData> => {
-  return (
-    await request<IModelFieldData>({
-      requestUrl: requestUrl,
-      apiType: "put",
-      queryData: consumable,
-    })
-  ).data as IModelFieldData;
+const update = (modelFieldData: IModelFieldData) => {
+  return baseRequests.update<IModelFieldData>(requestUrl, modelFieldData);
 };
 
 const remove = (id: string) => {
-  return request<IModelFieldData>({
-    requestUrl: requestUrl + id,
-    apiType: "delete",
-  });
+  return baseRequests.remove(requestUrl, id);
 };
 
 const removeRange = (ids: string[]) => {
-  return request<IModelFieldData>({
-    requestUrl: requestUrl + "range",
-    apiType: "delete",
-    queryData: ids,
-  });
+  return baseRequests.removeRange(requestUrl, ids);
 };
 
 export const modelFieldDataRequests = {

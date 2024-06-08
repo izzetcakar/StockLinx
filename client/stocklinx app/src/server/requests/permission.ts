@@ -1,69 +1,35 @@
 import { QueryFilter } from "@/interfaces/gridTableInterfaces";
-import { getQueryFilter } from "@/utils/filterUtilts";
 import { IPermission } from "@interfaces/serverInterfaces";
 import { request } from "@request";
+import { baseRequests } from "@/utils/requestUtils";
 const requestUrl = "Permission/";
 
-const getAll = async (): Promise<IPermission[]> => {
-  return (
-    await request<IPermission>({ requestUrl: requestUrl, apiType: "get" })
-  ).data as IPermission[];
+const getAll = () => {
+  return baseRequests.getAll<IPermission>(requestUrl);
 };
 
-const get = async (id: string): Promise<IPermission> => {
-  return (
-    await request<IPermission>({
-      requestUrl: requestUrl + id,
-      apiType: "get",
-    })
-  ).data as IPermission;
+const get = (id: string) => {
+  return baseRequests.get<IPermission>(requestUrl, id);
 };
 
-const create = async (consumable: IPermission): Promise<IPermission> => {
-  return (
-    await request<IPermission>({
-      requestUrl: requestUrl,
-      apiType: "post",
-      queryData: consumable,
-    })
-  ).data as IPermission;
+const create = (permission: IPermission) => {
+  return baseRequests.create<IPermission>(requestUrl, permission);
 };
 
-const createRange = async (
-  consumables: IPermission[]
-): Promise<IPermission[]> => {
-  return (
-    await request<IPermission>({
-      requestUrl: requestUrl + "range",
-      apiType: "post",
-      queryData: consumables,
-    })
-  ).data as IPermission[];
+const createRange = (permissions: IPermission[]) => {
+  return baseRequests.createRange<IPermission>(requestUrl, permissions);
 };
 
 const remove = (id: string) => {
-  return request<IPermission>({
-    requestUrl: requestUrl + id,
-    apiType: "delete",
-  });
+  return baseRequests.remove(requestUrl, id);
 };
 
 const removeRange = (ids: string[]) => {
-  return request<IPermission>({
-    requestUrl: requestUrl + "range",
-    apiType: "delete",
-    queryData: ids,
-  });
+  return baseRequests.removeRange(requestUrl, ids);
 };
 
-const filter = async (queryFilters: QueryFilter[]): Promise<IPermission[]> => {
-  return (
-    await request<IPermission>({
-      requestUrl: requestUrl + "filter",
-      apiType: "get",
-      params: getQueryFilter(queryFilters),
-    })
-  ).data as IPermission[];
+const filter = (queryFilters: QueryFilter[]) => {
+  return baseRequests.filter<IPermission>(requestUrl, queryFilters);
 };
 
 const sync = async (permissions: IPermission[]): Promise<IPermission[]> => {

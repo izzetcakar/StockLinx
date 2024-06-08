@@ -2,9 +2,9 @@ import React from "react";
 import { Button, Group, Flex, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { AssetCheckInDto } from "../../interfaces/dtos";
-import { useUser } from "@/queryhooks/user";
-import { useProductStatus } from "@/queryhooks/productStatus";
-import { useAsset } from "@/queryhooks/asset";
+import { useUser } from "@/hooks/user";
+import { useProductStatus } from "@/hooks/productStatus";
+import { useAsset } from "@/hooks/asset";
 import FormSelect from "../mantine/FormSelect";
 
 interface AssetCheckInFormProps {

@@ -1,73 +1,44 @@
 import { QueryFilter } from "@/interfaces/gridTableInterfaces";
-import { getQueryFilter } from "@/utils/filterUtilts";
 import {
   UserProductCheckInDto,
   UserProductCheckOutDto,
 } from "@interfaces/dtos";
 import { IConsumable, IUserProduct } from "@interfaces/serverInterfaces";
 import { request } from "@request";
+import { baseRequests } from "@/utils/requestUtils";
+
 const requestUrl = "Consumable/";
 
-const getAll = async (): Promise<IConsumable[]> => {
-  return (
-    await request<IConsumable>({ requestUrl: requestUrl, apiType: "get" })
-  ).data as IConsumable[];
+const getAll = () => {
+  return baseRequests.getAll<IConsumable>(requestUrl);
 };
 
-const get = async (id: string): Promise<IConsumable> => {
-  return (
-    await request<IConsumable>({
-      requestUrl: requestUrl + id,
-      apiType: "get",
-    })
-  ).data as IConsumable;
+const get = (id: string) => {
+  return baseRequests.get<IConsumable>(requestUrl, id);
 };
 
-const create = async (consumable: IConsumable): Promise<IConsumable> => {
-  return (
-    await request<IConsumable>({
-      requestUrl: requestUrl,
-      apiType: "post",
-      queryData: consumable,
-    })
-  ).data as IConsumable;
+const create = (consumable: IConsumable) => {
+  return baseRequests.create<IConsumable>(requestUrl, consumable);
 };
 
-const createRange = async (
-  consumables: IConsumable[]
-): Promise<IConsumable[]> => {
-  return (
-    await request<IConsumable>({
-      requestUrl: requestUrl + "range",
-      apiType: "post",
-      queryData: consumables,
-    })
-  ).data as IConsumable[];
+const createRange = (consumables: IConsumable[]) => {
+  return baseRequests.createRange<IConsumable>(requestUrl, consumables);
 };
 
-const update = async (consumable: IConsumable): Promise<IConsumable> => {
-  return (
-    await request<IConsumable>({
-      requestUrl: requestUrl,
-      apiType: "put",
-      queryData: consumable,
-    })
-  ).data as IConsumable;
+const update = (consumable: IConsumable) => {
+  return baseRequests.update<IConsumable>(requestUrl, consumable);
 };
 
 const remove = (id: string) => {
-  return request<IConsumable>({
-    requestUrl: requestUrl + id,
-    apiType: "delete",
-  });
+  return baseRequests.remove(requestUrl, id);
 };
 
 const removeRange = (ids: string[]) => {
-  return request<IConsumable>({
-    requestUrl: requestUrl + "range",
-    apiType: "delete",
-    queryData: ids,
-  });
+  return baseRequests.removeRange(requestUrl, ids);
+};
+
+const filter = (queryFilters: QueryFilter[]) => {
+  return baseRequests.filter<IConsumable>(requestUrl, queryFilters);
 };
 
 const checkIn = async (
@@ -88,16 +59,6 @@ const checkOut = (checkOutDto: UserProductCheckOutDto) => {
     apiType: "post",
     queryData: checkOutDto,
   });
-};
-
-const filter = async (queryFilters: QueryFilter[]): Promise<IConsumable[]> => {
-  return (
-    await request<IConsumable>({
-      requestUrl: requestUrl + "filter",
-      apiType: "get",
-      params: getQueryFilter(queryFilters),
-    })
-  ).data as IConsumable[];
 };
 
 export const consumableRequests = {

@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { Anchor, Tabs } from "@mantine/core";
-import { useCompany } from "@/queryhooks/company";
-import { useLocation } from "@/queryhooks/location";
+import { useCompany } from "@/hooks/company";
+import { useLocation } from "@/hooks/location";
 import HistoryLogs from "@components/dataGrid/customLog/HistoryLogs";
 
 const Company = () => {

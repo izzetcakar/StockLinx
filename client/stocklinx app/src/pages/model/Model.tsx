@@ -1,11 +1,11 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { Anchor, Tabs } from "@mantine/core";
 import { IModelFieldData } from "@interfaces/serverInterfaces";
-import { useModel } from "@/queryhooks/model";
-import { useCategory } from "@/queryhooks/category";
-import { useManufacturer } from "@/queryhooks/manufacturer";
-import { useFieldSet } from "@/queryhooks/fieldSet";
-import { useCustomField } from "@/queryhooks/customField";
+import { useModel } from "@/hooks/model";
+import { useCategory } from "@/hooks/category";
+import { useManufacturer } from "@/hooks/manufacturer";
+import { useFieldSet } from "@/hooks/fieldSet";
+import { useCustomField } from "@/hooks/customField";
 import HistoryLogs from "@components/dataGrid/customLog/HistoryLogs";
 
 const Model = () => {

@@ -1,70 +1,44 @@
 import { QueryFilter } from "@/interfaces/gridTableInterfaces";
-import { getQueryFilter } from "@/utils/filterUtilts";
 import {
   AssetProductCheckInDto,
   AssetProductCheckOutDto,
 } from "@interfaces/dtos";
 import { IAssetProduct, IComponent } from "@interfaces/serverInterfaces";
 import { request } from "@request";
+import { baseRequests } from "@/utils/requestUtils";
+
 const requestUrl = "Component/";
 
-const getAll = async (): Promise<IComponent[]> => {
-  return (await request<IComponent>({ requestUrl: requestUrl, apiType: "get" }))
-    .data as IComponent[];
+const getAll = () => {
+  return baseRequests.getAll<IComponent>(requestUrl);
 };
 
-const get = async (id: string): Promise<IComponent> => {
-  return (
-    await request<IComponent>({
-      requestUrl: requestUrl + id,
-      apiType: "get",
-    })
-  ).data as IComponent;
+const get = (id: string) => {
+  return baseRequests.get<IComponent>(requestUrl, id);
 };
 
-const create = async (component: IComponent): Promise<IComponent> => {
-  return (
-    await request<IComponent>({
-      requestUrl: requestUrl,
-      apiType: "post",
-      queryData: component,
-    })
-  ).data as IComponent;
+const create = (component: IComponent) => {
+  return baseRequests.create<IComponent>(requestUrl, component);
 };
 
-const createRange = async (components: IComponent[]): Promise<IComponent[]> => {
-  return (
-    await request<IComponent>({
-      requestUrl: requestUrl + "range",
-      apiType: "post",
-      queryData: components,
-    })
-  ).data as IComponent[];
+const createRange = (components: IComponent[]) => {
+  return baseRequests.createRange<IComponent>(requestUrl, components);
 };
 
-const update = async (component: IComponent): Promise<IComponent> => {
-  return (
-    await request<IComponent>({
-      requestUrl: requestUrl,
-      apiType: "put",
-      queryData: component,
-    })
-  ).data as IComponent;
+const update = (component: IComponent) => {
+  return baseRequests.update<IComponent>(requestUrl, component);
 };
 
 const remove = (id: string) => {
-  return request<IComponent>({
-    requestUrl: requestUrl + id,
-    apiType: "delete",
-  });
+  return baseRequests.remove(requestUrl, id);
 };
 
 const removeRange = (ids: string[]) => {
-  return request<IComponent>({
-    requestUrl: requestUrl + "range",
-    apiType: "delete",
-    queryData: ids,
-  });
+  return baseRequests.removeRange(requestUrl, ids);
+};
+
+const filter = (queryFilters: QueryFilter[]) => {
+  return baseRequests.filter<IComponent>(requestUrl, queryFilters);
 };
 
 const checkIn = async (
@@ -85,16 +59,6 @@ const checkOut = (checkOutDto: AssetProductCheckOutDto) => {
     apiType: "post",
     queryData: checkOutDto,
   });
-};
-
-const filter = async (queryFilters: QueryFilter[]): Promise<IComponent[]> => {
-  return (
-    await request<IComponent>({
-      requestUrl: requestUrl + "filter",
-      apiType: "get",
-      params: getQueryFilter(queryFilters),
-    })
-  ).data as IComponent[];
 };
 
 export const componentRequests = {

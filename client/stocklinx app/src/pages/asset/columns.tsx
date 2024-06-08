@@ -9,11 +9,11 @@ import {
 } from "../../modals/modals";
 import base_asset from "@assets/baseProductImages/base_asset.jpg";
 import { lookupRequests } from "@/server/lookupRequests";
-import { useModel } from "@/queryhooks/model";
-import { useUserProduct } from "@/queryhooks/userProduct";
-import { useUser } from "@/queryhooks/user";
-import { useSupplier } from "@/queryhooks/supplier";
-import { useProductStatus } from "@/queryhooks/productStatus";
+import { useModel } from "@/hooks/model";
+import { useUserProduct } from "@/hooks/userProduct";
+import { useUser } from "@/hooks/user";
+import { useSupplier } from "@/hooks/supplier";
+import { useProductStatus } from "@/hooks/productStatus";
 
 export const useColumns = () => {
   const navigate = useNavigate();

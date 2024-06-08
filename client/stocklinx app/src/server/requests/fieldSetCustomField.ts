@@ -1,74 +1,44 @@
 import { IFieldSetCustomField } from "@interfaces/serverInterfaces";
 import { request } from "@request";
+import { baseRequests } from "@/utils/requestUtils";
+
 const requestUrl = "FieldSetCustomField/";
 
-const getAll = async (): Promise<IFieldSetCustomField[]> => {
-  return (
-    await request<IFieldSetCustomField>({
-      requestUrl: requestUrl,
-      apiType: "get",
-    })
-  ).data as IFieldSetCustomField[];
+const getAll = () => {
+  return baseRequests.getAll<IFieldSetCustomField>(requestUrl);
 };
 
-const get = async (id: string): Promise<IFieldSetCustomField> => {
-  return (
-    await request<IFieldSetCustomField>({
-      requestUrl: requestUrl + id,
-      apiType: "get",
-    })
-  ).data as IFieldSetCustomField;
+const get = (id: string) => {
+  return baseRequests.get<IFieldSetCustomField>(requestUrl, id);
 };
 
-const create = async (
-  consumable: IFieldSetCustomField
-): Promise<IFieldSetCustomField> => {
-  return (
-    await request<IFieldSetCustomField>({
-      requestUrl: requestUrl,
-      apiType: "post",
-      queryData: consumable,
-    })
-  ).data as IFieldSetCustomField;
+const create = (fieldSetCustomField: IFieldSetCustomField) => {
+  return baseRequests.create<IFieldSetCustomField>(
+    requestUrl,
+    fieldSetCustomField
+  );
 };
 
-const createRange = async (
-  consumables: IFieldSetCustomField[]
-): Promise<IFieldSetCustomField[]> => {
-  return (
-    await request<IFieldSetCustomField>({
-      requestUrl: requestUrl + "range",
-      apiType: "post",
-      queryData: consumables,
-    })
-  ).data as IFieldSetCustomField[];
+const createRange = (fieldSetCustomFields: IFieldSetCustomField[]) => {
+  return baseRequests.createRange<IFieldSetCustomField>(
+    requestUrl,
+    fieldSetCustomFields
+  );
 };
 
-const update = async (
-  consumable: IFieldSetCustomField
-): Promise<IFieldSetCustomField> => {
-  return (
-    await request<IFieldSetCustomField>({
-      requestUrl: requestUrl,
-      apiType: "put",
-      queryData: consumable,
-    })
-  ).data as IFieldSetCustomField;
+const update = (fieldSetCustomField: IFieldSetCustomField) => {
+  return baseRequests.update<IFieldSetCustomField>(
+    requestUrl,
+    fieldSetCustomField
+  );
 };
 
 const remove = (id: string) => {
-  return request<IFieldSetCustomField>({
-    requestUrl: requestUrl + id,
-    apiType: "delete",
-  });
+  return baseRequests.remove(requestUrl, id);
 };
 
 const removeRange = (ids: string[]) => {
-  return request<IFieldSetCustomField>({
-    requestUrl: requestUrl + "range",
-    apiType: "delete",
-    queryData: ids,
-  });
+  return baseRequests.removeRange(requestUrl, ids);
 };
 
 const synchronize = (fieldSetCustomFields: IFieldSetCustomField[]) => {

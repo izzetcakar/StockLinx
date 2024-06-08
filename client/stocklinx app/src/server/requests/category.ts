@@ -1,76 +1,39 @@
 import { QueryFilter } from "@/interfaces/gridTableInterfaces";
-import { getQueryFilter } from "@/utils/filterUtilts";
 import { ICategory } from "@interfaces/serverInterfaces";
-import { request } from "@request";
+import { baseRequests } from "@/utils/requestUtils";
+
 const requestUrl = "Category/";
 
-const getAll = async (): Promise<ICategory[]> => {
-  return (await request<ICategory>({ requestUrl: requestUrl, apiType: "get" }))
-    .data as ICategory[];
+const getAll = () => {
+  return baseRequests.getAll<ICategory>(requestUrl);
 };
 
-const get = async (id: string): Promise<ICategory> => {
-  return (
-    await request<ICategory>({
-      requestUrl: requestUrl + id,
-      apiType: "get",
-    })
-  ).data as ICategory;
+const get = (id: string) => {
+  return baseRequests.get<ICategory>(requestUrl, id);
 };
 
-const create = async (category: ICategory): Promise<ICategory> => {
-  return (
-    await request<ICategory>({
-      requestUrl: requestUrl,
-      apiType: "post",
-      queryData: category,
-    })
-  ).data as ICategory;
+const create = (category: ICategory) => {
+  return baseRequests.create<ICategory>(requestUrl, category);
 };
 
-const createRange = async (categories: ICategory[]): Promise<ICategory[]> => {
-  return (
-    await request<ICategory>({
-      requestUrl: requestUrl + "range",
-      apiType: "post",
-      queryData: categories,
-    })
-  ).data as ICategory[];
+const createRange = (categories: ICategory[]) => {
+  return baseRequests.createRange<ICategory>(requestUrl, categories);
 };
 
-const update = async (category: ICategory): Promise<ICategory> => {
-  return (
-    await request<ICategory>({
-      requestUrl: requestUrl,
-      apiType: "put",
-      queryData: category,
-    })
-  ).data as ICategory;
+const update = (category: ICategory) => {
+  return baseRequests.update<ICategory>(requestUrl, category);
 };
 
 const remove = (id: string) => {
-  return request<ICategory>({
-    requestUrl: requestUrl + id,
-    apiType: "delete",
-  });
+  return baseRequests.remove(requestUrl, id);
 };
 
 const removeRange = (ids: string[]) => {
-  return request<ICategory>({
-    requestUrl: requestUrl + "range",
-    apiType: "delete",
-    queryData: ids,
-  });
+  return baseRequests.removeRange(requestUrl, ids);
 };
 
-const filter = async (queryFilters: QueryFilter[]): Promise<ICategory[]> => {
-  return (
-    await request<ICategory>({
-      requestUrl: requestUrl + "filter",
-      apiType: "get",
-      params: getQueryFilter(queryFilters),
-    })
-  ).data as ICategory[];
+const filter = (queryFilters: QueryFilter[]) => {
+  return baseRequests.filter<ICategory>(requestUrl, queryFilters);
 };
 
 export const categoryRequests = {

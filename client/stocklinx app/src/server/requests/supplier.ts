@@ -1,76 +1,39 @@
 import { QueryFilter } from "@/interfaces/gridTableInterfaces";
-import { getQueryFilter } from "@/utils/filterUtilts";
 import { ISupplier } from "@interfaces/serverInterfaces";
-import { request } from "@request";
+import { baseRequests } from "@/utils/requestUtils";
+
 const requestUrl = "Supplier/";
 
-const getAll = async (): Promise<ISupplier[]> => {
-  return (await request<ISupplier>({ requestUrl: requestUrl, apiType: "get" }))
-    .data as ISupplier[];
+const getAll = () => {
+  return baseRequests.getAll<ISupplier>(requestUrl);
 };
 
-const get = async (id: string): Promise<ISupplier> => {
-  return (
-    await request<ISupplier>({
-      requestUrl: requestUrl + id,
-      apiType: "get",
-    })
-  ).data as ISupplier;
+const get = (id: string) => {
+  return baseRequests.get<ISupplier>(requestUrl, id);
 };
 
-const create = async (consumable: ISupplier): Promise<ISupplier> => {
-  return (
-    await request<ISupplier>({
-      requestUrl: requestUrl,
-      apiType: "post",
-      queryData: consumable,
-    })
-  ).data as ISupplier;
+const create = (supplier: ISupplier) => {
+  return baseRequests.create<ISupplier>(requestUrl, supplier);
 };
 
-const createRange = async (consumables: ISupplier[]): Promise<ISupplier[]> => {
-  return (
-    await request<ISupplier>({
-      requestUrl: requestUrl + "range",
-      apiType: "post",
-      queryData: consumables,
-    })
-  ).data as ISupplier[];
+const createRange = (suppliers: ISupplier[]) => {
+  return baseRequests.createRange<ISupplier>(requestUrl, suppliers);
 };
 
-const update = async (consumable: ISupplier): Promise<ISupplier> => {
-  return (
-    await request<ISupplier>({
-      requestUrl: requestUrl,
-      apiType: "put",
-      queryData: consumable,
-    })
-  ).data as ISupplier;
+const update = (supplier: ISupplier) => {
+  return baseRequests.update<ISupplier>(requestUrl, supplier);
 };
 
 const remove = (id: string) => {
-  return request<ISupplier>({
-    requestUrl: requestUrl + id,
-    apiType: "delete",
-  });
+  return baseRequests.remove(requestUrl, id);
 };
 
 const removeRange = (ids: string[]) => {
-  return request<ISupplier>({
-    requestUrl: requestUrl + "range",
-    apiType: "delete",
-    queryData: ids,
-  });
+  return baseRequests.removeRange(requestUrl, ids);
 };
 
-const filter = async (queryFilters: QueryFilter[]): Promise<ISupplier[]> => {
-  return (
-    await request<ISupplier>({
-      requestUrl: requestUrl + "filter",
-      apiType: "get",
-      params: getQueryFilter(queryFilters),
-    })
-  ).data as ISupplier[];
+const filter = (queryFilters: QueryFilter[]) => {
+  return baseRequests.filter<ISupplier>(requestUrl, queryFilters);
 };
 
 export const supplierRequests = {

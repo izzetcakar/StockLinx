@@ -1,8 +1,8 @@
 import { useParams } from "react-router-dom";
 import { Tabs } from "@mantine/core";
-import { useBranch } from "@/queryhooks/branch";
-import { useCompany } from "@/queryhooks/company";
-import { useLocation } from "@/queryhooks/location";
+import { useBranch } from "@/hooks/branch";
+import { useCompany } from "@/hooks/company";
+import { useLocation } from "@/hooks/location";
 import HistoryLogs from "@components/dataGrid/customLog/HistoryLogs";
 
 const Branch = () => {

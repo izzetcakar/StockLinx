@@ -1,76 +1,39 @@
 import { QueryFilter } from "@/interfaces/gridTableInterfaces";
-import { getQueryFilter } from "@/utils/filterUtilts";
 import { ICompany } from "@interfaces/serverInterfaces";
-import { request } from "@request";
+import { baseRequests } from "@/utils/requestUtils";
+
 const requestUrl = "Company/";
 
-const getAll = async (): Promise<ICompany[]> => {
-  return (await request<ICompany>({ requestUrl: requestUrl, apiType: "get" }))
-    .data as ICompany[];
+const getAll = () => {
+  return baseRequests.getAll<ICompany>(requestUrl);
 };
 
-const get = async (id: string): Promise<ICompany> => {
-  return (
-    await request<ICompany>({
-      requestUrl: requestUrl + id,
-      apiType: "get",
-    })
-  ).data as ICompany;
+const get = (id: string) => {
+  return baseRequests.get<ICompany>(requestUrl, id);
 };
 
-const create = async (company: ICompany): Promise<ICompany> => {
-  return (
-    await request<ICompany>({
-      requestUrl: requestUrl,
-      apiType: "post",
-      queryData: company,
-    })
-  ).data as ICompany;
+const create = (company: ICompany) => {
+  return baseRequests.create<ICompany>(requestUrl, company);
 };
 
-const createRange = async (companies: ICompany[]): Promise<ICompany[]> => {
-  return (
-    await request<ICompany>({
-      requestUrl: requestUrl + "range",
-      apiType: "post",
-      queryData: companies,
-    })
-  ).data as ICompany[];
+const createRange = (companies: ICompany[]) => {
+  return baseRequests.createRange<ICompany>(requestUrl, companies);
 };
 
-const update = async (company: ICompany): Promise<ICompany> => {
-  return (
-    await request<ICompany>({
-      requestUrl: requestUrl,
-      apiType: "put",
-      queryData: company,
-    })
-  ).data as ICompany;
+const update = (company: ICompany) => {
+  return baseRequests.update<ICompany>(requestUrl, company);
 };
 
 const remove = (id: string) => {
-  return request<ICompany>({
-    requestUrl: requestUrl + id,
-    apiType: "delete",
-  });
+  return baseRequests.remove(requestUrl, id);
 };
 
 const removeRange = (ids: string[]) => {
-  return request<ICompany>({
-    requestUrl: requestUrl + "range",
-    apiType: "delete",
-    queryData: ids,
-  });
+  return baseRequests.removeRange(requestUrl, ids);
 };
 
-const filter = async (queryFilters: QueryFilter[]): Promise<ICompany[]> => {
-  return (
-    await request<ICompany>({
-      requestUrl: requestUrl + "filter",
-      apiType: "get",
-      params: getQueryFilter(queryFilters),
-    })
-  ).data as ICompany[];
+const filter = (queryFilters: QueryFilter[]) => {
+  return baseRequests.filter<ICompany>(requestUrl, queryFilters);
 };
 
 export const companyRequests = {

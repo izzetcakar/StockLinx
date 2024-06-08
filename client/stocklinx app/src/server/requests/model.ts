@@ -1,76 +1,39 @@
 import { QueryFilter } from "@/interfaces/gridTableInterfaces";
-import { getQueryFilter } from "@/utils/filterUtilts";
 import { IModel } from "@interfaces/serverInterfaces";
-import { request } from "@request";
+import { baseRequests } from "@/utils/requestUtils";
+
 const requestUrl = "Model/";
 
-const getAll = async (): Promise<IModel[]> => {
-  return (await request<IModel>({ requestUrl: requestUrl, apiType: "get" }))
-    .data as IModel[];
+const getAll = () => {
+  return baseRequests.getAll<IModel>(requestUrl);
 };
 
-const get = async (id: string): Promise<IModel> => {
-  return (
-    await request<IModel>({
-      requestUrl: requestUrl + id,
-      apiType: "get",
-    })
-  ).data as IModel;
+const get = (id: string) => {
+  return baseRequests.get<IModel>(requestUrl, id);
 };
 
-const create = async (consumable: IModel): Promise<IModel> => {
-  return (
-    await request<IModel>({
-      requestUrl: requestUrl,
-      apiType: "post",
-      queryData: consumable,
-    })
-  ).data as IModel;
+const create = (model: IModel) => {
+  return baseRequests.create<IModel>(requestUrl, model);
 };
 
-const createRange = async (consumables: IModel[]): Promise<IModel[]> => {
-  return (
-    await request<IModel>({
-      requestUrl: requestUrl + "range",
-      apiType: "post",
-      queryData: consumables,
-    })
-  ).data as IModel[];
+const createRange = (models: IModel[]) => {
+  return baseRequests.createRange<IModel>(requestUrl, models);
 };
 
-const update = async (consumable: IModel): Promise<IModel> => {
-  return (
-    await request<IModel>({
-      requestUrl: requestUrl,
-      apiType: "put",
-      queryData: consumable,
-    })
-  ).data as IModel;
+const update = (model: IModel) => {
+  return baseRequests.update<IModel>(requestUrl, model);
 };
 
 const remove = (id: string) => {
-  return request<IModel>({
-    requestUrl: requestUrl + id,
-    apiType: "delete",
-  });
+  return baseRequests.remove(requestUrl, id);
 };
 
 const removeRange = (ids: string[]) => {
-  return request<IModel>({
-    requestUrl: requestUrl + "range",
-    apiType: "delete",
-    queryData: ids,
-  });
+  return baseRequests.removeRange(requestUrl, ids);
 };
 
-const filter = async (queryFilters: QueryFilter[]): Promise<IModel[]> => {
-  return (
-    await request<IModel>({
-      requestUrl: requestUrl + "filter",
-      apiType: "get",
-      params: getQueryFilter(queryFilters),
-    })
-  ).data as IModel[];
+const filter = (queryFilters: QueryFilter[]) => {
+  return baseRequests.filter<IModel>(requestUrl, queryFilters);
 };
 
 export const modelRequests = {

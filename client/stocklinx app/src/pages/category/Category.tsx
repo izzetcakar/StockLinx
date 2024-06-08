@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { CategoryType } from "@interfaces/serverInterfaces";
 import { Tabs } from "@mantine/core";
 import HistoryLogs from "@components/dataGrid/customLog/HistoryLogs";
-import { useCategory } from "@/queryhooks/category";
+import { useCategory } from "@/hooks/category";
 
 const Category = () => {
   const { id } = useParams();

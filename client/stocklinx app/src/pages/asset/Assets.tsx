@@ -6,7 +6,7 @@ import { openAssetModal } from "../../modals/modals";
 import { useContext, useRef } from "react";
 import Gridtable from "@components/gridTable/GridTable";
 import GenericContext from "../../context/GenericContext";
-import { useAsset } from "@/queryhooks/asset";
+import { useAsset } from "@/hooks/asset";
 
 const Asset = () => {
   const dispatch = useDispatch();

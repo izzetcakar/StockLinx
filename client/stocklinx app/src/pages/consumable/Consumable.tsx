@@ -1,10 +1,10 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { Anchor, Tabs } from "@mantine/core";
-import { useConsumable } from "@/queryhooks/consumable";
-import { useBranch } from "@/queryhooks/branch";
-import { useCategory } from "@/queryhooks/category";
-import { useManufacturer } from "@/queryhooks/manufacturer";
-import { useSupplier } from "@/queryhooks/supplier";
+import { useConsumable } from "@/hooks/consumable";
+import { useBranch } from "@/hooks/branch";
+import { useCategory } from "@/hooks/category";
+import { useManufacturer } from "@/hooks/manufacturer";
+import { useSupplier } from "@/hooks/supplier";
 import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
 
 const Consumable = () => {
