@@ -7,7 +7,7 @@ import { useSelectRow } from "./customhooks/selectRow";
 import { useGridTableContext } from "./context/GenericStateContext";
 import { useColumns } from "./customhooks/columns";
 import { usePaging } from "./customhooks/paging";
-import { renderCell } from "./utils/cellUtils";
+import { RenderCell } from "./utils/cellUtils";
 import "./gridtable.scss";
 
 const GridtableContent: React.FC<GridtableProps> = ({
@@ -131,7 +131,7 @@ const GridtableContent: React.FC<GridtableProps> = ({
                   key={`$row__cell__${column.id}__${rowIndex}`}
                   className="gridtable__row__cell"
                 >
-                  {renderCell(obj, column)}
+                  <RenderCell obj={obj} column={column} />
                 </td>
               ))}
             </tr>
