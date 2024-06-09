@@ -1,35 +1,22 @@
-import { useDispatch, useSelector } from "react-redux";
 import { useColumns } from "./columns";
-import { RootState } from "../../../redux/rootReducer";
-import { useEffect, useRef } from "react";
-import { userProductActions } from "../../../redux/userProduct/actions";
+import { useRef } from "react";
 import { openSubmissionModal } from "../../../utils/exportSubmissionForm";
+import { useUserProduct } from "@/hooks/userProduct";
 import Gridtable from "../../gridTable/GridTable";
 
 interface UserProductsPageProps {
   userId: string;
 }
 const UserProductsPage: React.FC<UserProductsPageProps> = ({ userId }) => {
-  const dispatch = useDispatch();
-  const userProducts = useSelector(
-    (state: RootState) => state.userProduct.userProducts
-  );
   const gridtableRef: any = useRef();
-
-  const refreshData = () => {
-    dispatch(userProductActions.getAll());
-  };
-
-  useEffect(() => {
-    refreshData();
-  }, [userId]);
+  const { data: userProducts } = useUserProduct.GetAll();
 
   return (
     <>
       <Gridtable
         itemKey="id"
         ref={gridtableRef}
-        data={userProducts.filter((dp) => dp.userId === userId)}
+        data={userProducts?.filter((dp) => dp.userId === userId) || []}
         columns={useColumns()}
         enableSelectActions
       />

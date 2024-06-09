@@ -1,11 +1,11 @@
 import uuid4 from "uuid4";
 import { IAccessory } from "@interfaces/serverInterfaces";
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux/rootReducer";
 import { getImage } from "../../utils/Image";
+import { useContext } from "react";
+import GenericContext from "@/context/GenericContext";
 
 export const useInitial = (accessory?: IAccessory, create?: boolean) => {
-  const branch = useSelector((state: RootState) => state.branch.branch);
+  const { branch } = useContext(GenericContext);
   let isCreate = create || false;
 
   let initialValues: IAccessory = {

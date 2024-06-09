@@ -17,39 +17,33 @@ import {
   IModel,
   IModelFieldData,
 } from "@interfaces/serverInterfaces";
-import { useDispatch, useSelector } from "react-redux";
-import { modelActions } from "../../redux/model/actions";
-import uuid4 from "uuid4";
-import { RootState } from "../../redux/rootReducer";
 import { DateInput } from "@mantine/dates";
-import { modelFieldDataActions } from "../../redux/modelFieldData/actions";
 import { useInitial } from "./useInitial";
 import { toBase64 } from "../../utils/Image";
 import FormSelect from "../mantine/FormSelect";
+import uuid4 from "uuid4";
+import { useCategory } from "@/hooks/category";
+import { useModel } from "@/hooks/model";
+import { useFieldSet } from "@/hooks/fieldSet";
+import { useManufacturer } from "@/hooks/manufacturer";
+import { useCustomField } from "@/hooks/customField";
+import { useModelFieldData } from "@/hooks/modelFieldData";
+import { useFieldSetCustomField } from "@/hooks/fieldSetCustomField";
 interface ModelFormProps {
   model?: IModel;
   create?: boolean;
 }
 
 const ModelForm: React.FC<ModelFormProps> = ({ model, create }) => {
-  const dispatch = useDispatch();
-  const categories = useSelector(
-    (state: RootState) => state.category.categories
-  );
-  const fieldSets = useSelector((state: RootState) => state.fieldSet.fieldSets);
-  const customFields = useSelector(
-    (state: RootState) => state.customField.customFields
-  );
-  const fieldSetCustomFields = useSelector(
-    (state: RootState) => state.fieldSetCustomField.fieldSetCustomFields
-  );
-  const manufacturers = useSelector(
-    (state: RootState) => state.manufacturer.manufacturers
-  );
-  const modelFieldDatas = useSelector(
-    (state: RootState) => state.modelFieldData.modelFieldDatas
-  );
   const { initialValues, isCreate } = useInitial(model, create);
+  const { mutate: createModel } = useModel.Create();
+  const { mutate: updateModel } = useModel.Update();
+  const { data: categories } = useCategory.GetAll();
+  const { data: modelFieldDatas } = useModelFieldData.GetAll();
+  const { data: fieldSetCustomFields } = useFieldSetCustomField.GetAll();
+  const { data: customFields } = useCustomField.GetAll();
+  const { data: fieldSetLookup } = useFieldSet.Lookup();
+  const { data: manufacturerLookup } = useManufacturer.Lookup();
 
   const form = useForm<IModel>({
     validateInputOnChange: ["name", `modelFieldData.${FORM_INDEX}.value`],
@@ -84,22 +78,22 @@ const ModelForm: React.FC<ModelFormProps> = ({ model, create }) => {
     modelId: string,
     fieldSetId: string
   ): IModelFieldData[] => {
-    const oldModelFieldData = modelFieldDatas.filter(
+    const oldModelFieldData = modelFieldDatas?.filter(
       (m) => m.modelId === modelId
     );
-    const filteredFc = fieldSetCustomFields.filter(
+    const filteredFc = fieldSetCustomFields?.filter(
       (f) => f.fieldSetId === fieldSetId
     );
-    if (filteredFc.length === 0) return [];
-    const cfIds = filteredFc.map((fc) => fc.customFieldId);
-    const notExist = cfIds.filter(
-      (item) => !oldModelFieldData.map((x) => x.customFieldId).includes(item)
+    if (filteredFc?.length === 0) return [];
+    const cfIds = filteredFc?.map((fc) => fc.customFieldId);
+    const notExist = cfIds?.filter(
+      (item) => !oldModelFieldData?.map((x) => x.customFieldId).includes(item)
     );
-    const extra = oldModelFieldData.filter(
-      (item) => !cfIds.includes(item.customFieldId)
+    const extra = oldModelFieldData?.filter(
+      (item) => !cfIds?.includes(item.customFieldId)
     );
-    const newArray = [...oldModelFieldData];
-    notExist.forEach((element) => {
+    const newArray = [...(oldModelFieldData || [])];
+    notExist?.forEach((element) => {
       newArray.push({
         id: uuid4(),
         modelId: modelId,
@@ -107,7 +101,7 @@ const ModelForm: React.FC<ModelFormProps> = ({ model, create }) => {
         value: getCustomField(element)?.defaultValue || "",
       });
     });
-    extra.forEach((element) => {
+    extra?.forEach((element) => {
       newArray.splice(newArray.indexOf(element), 1);
     });
     return newArray;
@@ -121,7 +115,7 @@ const ModelForm: React.FC<ModelFormProps> = ({ model, create }) => {
   };
 
   const getCustomField = (id: string) => {
-    const customField = customFields.find((c) => c.id === id);
+    const customField = customFields?.find((c) => c.id === id);
     if (!customField) return;
     return customField;
   };
@@ -132,7 +126,7 @@ const ModelForm: React.FC<ModelFormProps> = ({ model, create }) => {
   };
 
   const getCustomFieldInput = (customFieldId: string, index: number) => {
-    const customField = getCustomField(customFieldId);
+    const { data: customField } = useCustomField.Get(customFieldId);
     if (!customField) return;
     const label = customField.name;
     const placeholder = customField.name;
@@ -234,17 +228,8 @@ const ModelForm: React.FC<ModelFormProps> = ({ model, create }) => {
   const handleSubmit = (data: IModel) => {
     const newModelFieldData = convertValuesToString();
     isCreate
-      ? dispatch(
-          modelActions.create({
-            model: { ...data, modelFieldData: newModelFieldData },
-          })
-        )
-      : dispatch(
-          modelActions.update({
-            model: { ...data, modelFieldData: newModelFieldData },
-          })
-        );
-    dispatch(modelFieldDataActions.getAll());
+      ? createModel({ ...data, modelFieldData: newModelFieldData })
+      : updateModel({ ...data, modelFieldData: newModelFieldData });
   };
 
   return (
@@ -273,7 +258,7 @@ const ModelForm: React.FC<ModelFormProps> = ({ model, create }) => {
         />
         <FormSelect
           data={categories
-            .filter((c) => c.type === CategoryType.ASSET)
+            ?.filter((c) => c.type === CategoryType.ASSET)
             .map((category) => ({
               value: category.id,
               label: category.name,
@@ -284,10 +269,7 @@ const ModelForm: React.FC<ModelFormProps> = ({ model, create }) => {
           required
         />
         <Select
-          data={fieldSets.map((fieldSet) => ({
-            value: fieldSet.id,
-            label: fieldSet.name,
-          }))}
+          data={fieldSetLookup}
           label="Field Set"
           placeholder="Select Field Set"
           {...form.getInputProps("fieldSetId")}
@@ -296,10 +278,7 @@ const ModelForm: React.FC<ModelFormProps> = ({ model, create }) => {
           onChange={(e) => onFieldIdChange(e as string)}
         />
         <FormSelect
-          data={manufacturers.map((manufacturer) => ({
-            value: manufacturer.id,
-            label: manufacturer.name,
-          }))}
+          data={manufacturerLookup}
           label="Manufacturer"
           inputProps={form.getInputProps("manufacturerId")}
           value={form.values.manufacturerId}

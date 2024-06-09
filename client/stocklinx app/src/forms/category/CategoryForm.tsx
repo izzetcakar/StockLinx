@@ -2,9 +2,8 @@ import React from "react";
 import { TextInput, Button, Group, Flex } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { CategoryType, ICategory } from "@interfaces/serverInterfaces";
-import { useDispatch } from "react-redux";
-import { categoryActions } from "../../redux/category/actions";
 import { useInitial } from "./useInitial";
+import { useCategory } from "@/hooks/category";
 import FormSelect from "../mantine/FormSelect";
 interface CategoryFormProps {
   category?: ICategory;
@@ -12,8 +11,9 @@ interface CategoryFormProps {
 }
 
 const CategoryForm: React.FC<CategoryFormProps> = ({ category, create }) => {
-  const dispatch = useDispatch();
   const { initialValues, isCreate } = useInitial(category, create);
+  const { mutate: createCategory } = useCategory.Create();
+  const { mutate: updateCategory } = useCategory.Update();
 
   const form = useForm<ICategory>({
     initialValues: initialValues,
@@ -24,9 +24,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ category, create }) => {
   });
 
   const handleSubmit = (data: ICategory) => {
-    isCreate
-      ? dispatch(categoryActions.create({ category: data }))
-      : dispatch(categoryActions.update({ category: data }));
+    isCreate ? createCategory(data) : updateCategory(data);
   };
 
   return (

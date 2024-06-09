@@ -10,13 +10,11 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { ISupplier } from "@interfaces/serverInterfaces";
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux/rootReducer";
-import { useDispatch } from "react-redux";
-import { supplierActions } from "../../redux/supplier/actions";
 import { useInitial } from "./useInitial";
 import { toBase64 } from "../../utils/Image";
 import FormSelect from "../mantine/FormSelect";
+import { useSupplier } from "@/hooks/supplier";
+import { useLocation } from "@/hooks/location";
 
 interface SupplierFormProps {
   supplier?: ISupplier;
@@ -24,9 +22,10 @@ interface SupplierFormProps {
 }
 
 const SupplierForm: React.FC<SupplierFormProps> = ({ supplier, create }) => {
-  const dispatch = useDispatch();
-  const locations = useSelector((state: RootState) => state.location.locations);
   const { initialValues, isCreate } = useInitial(supplier, create);
+  const { mutate: createSupplier } = useSupplier.Create();
+  const { mutate: updateSupplier } = useSupplier.Update();
+  const { data: locationLookup } = useLocation.Lookup();
 
   const form = useForm<ISupplier>({
     initialValues: initialValues,
@@ -43,9 +42,7 @@ const SupplierForm: React.FC<SupplierFormProps> = ({ supplier, create }) => {
   };
 
   const handleSubmit = (data: ISupplier) => {
-    isCreate
-      ? dispatch(supplierActions.create({ supplier: data }))
-      : dispatch(supplierActions.update({ supplier: data }));
+    isCreate ? createSupplier(data) : updateSupplier(data);
   };
 
   return (
@@ -80,10 +77,7 @@ const SupplierForm: React.FC<SupplierFormProps> = ({ supplier, create }) => {
           withAsterisk
         />
         <FormSelect
-          data={locations.map((location) => ({
-            value: location.id,
-            label: location.name,
-          }))}
+          data={locationLookup}
           label="Location"
           inputProps={form.getInputProps("locationId")}
           value={form.values.locationId}

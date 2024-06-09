@@ -1,30 +1,12 @@
-import { useDispatch, useSelector } from "react-redux";
 import { useColumns } from "./columns";
-import { RootState } from "../../../redux/rootReducer";
-import { useLayoutEffect } from "react";
-import { productActions } from "../../../redux/product/actions";
 import Gridtable from "../../gridTable/GridTable";
+import { useProduct } from "@/hooks/product";
 
 const LocationCounts = () => {
-  const dispatch = useDispatch();
-  const productLocationCounts = useSelector(
-    (state: RootState) => state.product.productLocationCounts
-  );
-
-  const refreshData = () => {
-    dispatch(productActions.getProductLocationCounts());
-  };
-
-  useLayoutEffect(() => {
-    refreshData();
-  }, []);
+  const { data } = useProduct.GetProductLocationCounts();
 
   return (
-    <Gridtable
-      itemKey="locationId"
-      data={productLocationCounts}
-      columns={useColumns()}
-    />
+    <Gridtable itemKey="locationId" data={data || []} columns={useColumns()} />
   );
 };
 

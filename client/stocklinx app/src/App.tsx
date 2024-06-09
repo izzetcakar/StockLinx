@@ -1,9 +1,5 @@
-import { checkEmpty } from "./utils/checkEmpty";
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { RootState } from "./redux/rootReducer";
-import { LoadingOverlay } from "@mantine/core";
-import { useContext } from "react";
+import { useUser } from "./hooks/user";
 import Accessories from "./pages/accessory/Accessories";
 import Assets from "./pages/asset/Assets";
 import Components from "./pages/component/Components";
@@ -25,7 +21,6 @@ import Login from "./pages/user/Login";
 import Header from "./components/Header/Header";
 import Sidebar from "./components/sidebar/Sidebar";
 import Generic from "./pages/generic/Generic";
-import GenericContext from "./context/GenericContext";
 import Accessory from "./pages/accessory/Accessory";
 import Asset from "./pages/asset/Asset";
 import Branch from "./pages/branch/Branch";
@@ -42,18 +37,17 @@ import ProductStatus from "./pages/productStatus/ProductStatus";
 import Supplier from "./pages/supplier/Supplier";
 import User from "./pages/user/User";
 import Permissions from "./pages/permission/Permissions";
-import "./app.scss";
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
 import "@mantine/dates/styles.css";
+import "./app.scss";
 import "./base.scss";
 
 const Layout = () => {
-  const userRedux = useSelector((state: RootState) => state.user.user);
-  const loading = useSelector((state: RootState) => state.generic.loading);
-  const { drawerOpened } = useContext(GenericContext);
+  const { data: user } = useUser.GetWithToken();
+  // const { drawerOpened } = useContext(GenericContext);
 
-  if (checkEmpty(userRedux)) {
+  if (user) {
     return (
       <div className="main__container">
         <div>
@@ -65,7 +59,7 @@ const Layout = () => {
             <Outlet />
           </div>
         </div>
-        <LoadingOverlay visible={loading > 0 && !drawerOpened} zIndex={1000} />
+        {/* <LoadingOverlay visible={loading > 0 && !drawerOpened} zIndex={1000} /> */}
       </div>
     );
   } else {

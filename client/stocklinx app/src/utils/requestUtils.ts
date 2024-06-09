@@ -1,6 +1,6 @@
-import { request } from "@/server/api";
+import { lookupRequest, request } from "@/server/api";
 import { getQueryFilter } from "./filterUtilts";
-import { QueryFilter } from "@/interfaces/gridTableInterfaces";
+import { LookupData, QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 const getAll = async <T>(requestUrl: string): Promise<T[]> => {
   const response = await request<T[]>({
@@ -77,6 +77,18 @@ const filter = async <T>(
   return response.data as T[];
 };
 
+const lookup = async <T>(
+  requestUrl: string,
+  labelKeys = ["name"],
+  valueKey = "id"
+): Promise<LookupData[]> => {
+  return await lookupRequest<T[]>({
+    requestUrl: requestUrl,
+    labelKeys,
+    valueKey,
+  });
+};
+
 export const baseRequests = {
   getAll,
   get,
@@ -86,4 +98,5 @@ export const baseRequests = {
   remove,
   removeRange,
   filter,
+  lookup,
 };

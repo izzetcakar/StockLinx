@@ -9,21 +9,21 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { ICompany } from "@interfaces/serverInterfaces";
-import { useDispatch, useSelector } from "react-redux";
-import { companyActions } from "../../redux/company/actions";
-import { RootState } from "../../redux/rootReducer";
 import { useInitial } from "./useInitial";
 import { toBase64 } from "../../utils/Image";
 import FormSelect from "../mantine/FormSelect";
+import { useCompany } from "@/hooks/company";
+import { useLocation } from "@/hooks/location";
 interface CompanyFormProps {
   company?: ICompany;
   create?: boolean;
 }
 
 const CompanyForm: React.FC<CompanyFormProps> = ({ company, create }) => {
-  const dispatch = useDispatch();
-  const locations = useSelector((state: RootState) => state.location.locations);
   const { initialValues, isCreate } = useInitial(company, create);
+  const { mutate: createCompany } = useCompany.Create();
+  const { mutate: updateCompany } = useCompany.Update();
+  const { data: locationLookup } = useLocation.Lookup();
 
   const form = useForm<ICompany>({
     initialValues: initialValues,
@@ -40,9 +40,7 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ company, create }) => {
   };
 
   const handleSubmit = (data: ICompany) => {
-    isCreate
-      ? dispatch(companyActions.create({ company: data }))
-      : dispatch(companyActions.update({ company: data }));
+    isCreate ? createCompany(data) : updateCompany(data);
   };
 
   return (
@@ -77,10 +75,7 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ company, create }) => {
           withAsterisk
         />
         <FormSelect
-          data={locations.map((l) => ({
-            value: l.id,
-            label: l.name,
-          }))}
+          data={locationLookup}
           label="Location"
           inputProps={form.getInputProps("locationId")}
           value={form.values.locationId}

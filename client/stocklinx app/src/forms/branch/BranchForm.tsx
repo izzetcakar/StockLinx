@@ -2,10 +2,10 @@ import React from "react";
 import { TextInput, Button, Group, Flex } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IBranch } from "@interfaces/serverInterfaces";
-import { useDispatch, useSelector } from "react-redux";
-import { branchActions } from "../../redux/branch/actions";
-import { RootState } from "../../redux/rootReducer";
 import { useInitial } from "./useInitial";
+import { useBranch } from "@/hooks/branch";
+import { useCompany } from "@/hooks/company";
+import { useLocation } from "@/hooks/location";
 import FormSelect from "../mantine/FormSelect";
 interface BranchFormProps {
   branch?: IBranch;
@@ -13,10 +13,11 @@ interface BranchFormProps {
 }
 
 const BranchForm: React.FC<BranchFormProps> = ({ branch, create }) => {
-  const companies = useSelector((state: RootState) => state.company.companies);
-  const locations = useSelector((state: RootState) => state.location.locations);
-  const dispatch = useDispatch();
   const { initialValues, isCreate } = useInitial(branch, create);
+  const { mutate: updateBranch } = useBranch.Update();
+  const { mutate: createBranch } = useBranch.Create();
+  const { data: companyLookup } = useCompany.Lookup();
+  const { data: locationLookup } = useLocation.Lookup();
 
   const form = useForm<IBranch>({
     initialValues: initialValues,
@@ -29,9 +30,7 @@ const BranchForm: React.FC<BranchFormProps> = ({ branch, create }) => {
   });
 
   const handleSubmit = (data: IBranch) => {
-    isCreate
-      ? dispatch(branchActions.create({ branch: data }))
-      : dispatch(branchActions.update({ branch: data }));
+    isCreate ? createBranch(data) : updateBranch(data);
   };
 
   return (
@@ -53,20 +52,14 @@ const BranchForm: React.FC<BranchFormProps> = ({ branch, create }) => {
           withAsterisk
         />
         <FormSelect
-          data={companies.map((company) => ({
-            value: company.id,
-            label: company.name,
-          }))}
+          data={companyLookup}
           label="Company"
           inputProps={form.getInputProps("companyId")}
           value={form.values.companyId}
           required
         />
         <FormSelect
-          data={locations.map((location) => ({
-            value: location.id,
-            label: location.name,
-          }))}
+          data={locationLookup}
           label="Location"
           inputProps={form.getInputProps("locationId")}
           value={form.values.locationId}

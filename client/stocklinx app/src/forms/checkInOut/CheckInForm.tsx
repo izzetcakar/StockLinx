@@ -9,8 +9,8 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IAssetProduct, IUserProduct } from "@interfaces/serverInterfaces";
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux/rootReducer";
+import { useUser } from "@/hooks/user";
+import { useAsset } from "@/hooks/asset";
 import FormSelect from "../mantine/FormSelect";
 
 interface CheckInFormProps {
@@ -29,8 +29,8 @@ const CheckInForm: React.FC<CheckInFormProps> = ({
   userCheckIn,
   assetCheckIn,
 }) => {
-  const users = useSelector((state: RootState) => state.user.users);
-  const assets = useSelector((state: RootState) => state.asset.assets);
+  const { data: userLookup } = useUser.Lookup();
+  const { data: assetLookup } = useAsset.Lookup();
   const [type, setType] = useState(segment[0]);
 
   const userForm = useForm<IUserProduct>({
@@ -85,10 +85,7 @@ const CheckInForm: React.FC<CheckInFormProps> = ({
         {type === "User" ? (
           <FormSelect
             label="User"
-            data={users.map((user) => ({
-              value: user.id,
-              label: user.firstName + " " + user.lastName,
-            }))}
+            data={userLookup}
             inputProps={userForm.getInputProps("userId")}
             value={userForm.values.userId}
           />
@@ -96,10 +93,7 @@ const CheckInForm: React.FC<CheckInFormProps> = ({
         {type === "Asset" ? (
           <FormSelect
             label="Asset"
-            data={assets.map((asset) => ({
-              value: asset.id,
-              label: asset.name,
-            }))}
+            data={assetLookup}
             inputProps={assetForm.getInputProps("assetId")}
             value={assetForm.values.assetId}
           />

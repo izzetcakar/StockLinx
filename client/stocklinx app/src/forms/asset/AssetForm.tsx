@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import {
   TextInput,
   Button,
@@ -16,14 +16,16 @@ import { useForm } from "@mantine/form";
 import { DateInput } from "@mantine/dates";
 import { IconPlus, IconTrash } from "@tabler/icons-react";
 import { IAsset } from "@interfaces/serverInterfaces";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../redux/rootReducer";
-import { assetActions } from "../../redux/asset/actions";
 import { useInitial } from "./useInitial";
 import { toBase64 } from "../../utils/Image";
 import { openNotificationError } from "@/notification/Notification";
+import { useAsset } from "@/hooks/asset";
 import base_asset from "@assets/baseProductImages/base_asset.jpg";
 import FormSelect from "../mantine/FormSelect";
+import GenericContext from "@/context/GenericContext";
+import { useModel } from "@/hooks/model";
+import { useSupplier } from "@/hooks/supplier";
+import { useProductStatus } from "@/hooks/productStatus";
 
 interface AssetFormProps {
   asset?: IAsset;
@@ -31,14 +33,13 @@ interface AssetFormProps {
 }
 
 const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
-  const dispatch = useDispatch();
-  const branch = useSelector((state: RootState) => state.branch.branch);
-  const models = useSelector((state: RootState) => state.model.models);
-  const productStatuses = useSelector(
-    (state: RootState) => state.productStatus.productStatuses
-  );
-  const suppliers = useSelector((state: RootState) => state.supplier.suppliers);
   const { initialValues, isCreate } = useInitial(asset, create);
+  const { branch } = useContext(GenericContext);
+  const { mutate: createAsset } = useAsset.Create();
+  const { mutate: updateAsset } = useAsset.Update();
+  const { data: modelLookup } = useModel.Lookup();
+  const { data: supplierLookup } = useSupplier.Lookup();
+  const { data: productStatusLookup } = useProductStatus.Lookup();
 
   const form = useForm<IAsset>({
     initialValues: initialValues,
@@ -125,9 +126,7 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
       openNotificationError("Error", "Please select a branch first");
       return;
     }
-    isCreate
-      ? dispatch(assetActions.create({ asset: data }))
-      : dispatch(assetActions.update({ asset: data }));
+    isCreate ? createAsset(data) : updateAsset(data);
   };
 
   return (
@@ -190,19 +189,13 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
         />
         {overageAssetFields}
         <FormSelect
-          data={models.map((model) => ({
-            value: model.id,
-            label: model.name,
-          }))}
+          data={modelLookup}
           label="Model"
           inputProps={form.getInputProps("modelId")}
           value={form.values.modelId}
         />
         <FormSelect
-          data={productStatuses.map((status) => ({
-            value: status.id,
-            label: status.name,
-          }))}
+          data={productStatusLookup}
           label="Status"
           inputProps={form.getInputProps("productStatusId")}
           value={form.values.productStatusId}
@@ -229,10 +222,7 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
             <Accordion.Panel>
               <Flex direction="column" gap={5}>
                 <FormSelect
-                  data={suppliers.map((supplier) => ({
-                    value: supplier.id,
-                    label: supplier.name,
-                  }))}
+                  data={supplierLookup}
                   label="Supplier"
                   inputProps={form.getInputProps("supplierId")}
                   value={form.values.supplierId}

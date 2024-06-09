@@ -2,17 +2,17 @@ import React from "react";
 import { TextInput, Flex, Textarea, Group, Button } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { ILocation } from "@interfaces/serverInterfaces";
-import { locationActions } from "../../redux/location/actions";
-import { useDispatch } from "react-redux";
 import { useInitial } from "./useInitial";
+import { useLocation } from "@/hooks/location";
 interface LocationFormProps {
   location?: ILocation;
   create?: boolean;
 }
 
 const LocationForm: React.FC<LocationFormProps> = ({ location, create }) => {
-  const dispatch = useDispatch();
   const { initialValues, isCreate } = useInitial(location, create);
+  const { mutate: createLocation } = useLocation.Create();
+  const { mutate: updateLocation } = useLocation.Update();
 
   const form = useForm<ILocation>({
     initialValues: initialValues,
@@ -22,9 +22,7 @@ const LocationForm: React.FC<LocationFormProps> = ({ location, create }) => {
     },
   });
   const handleSubmit = (data: ILocation) => {
-    isCreate
-      ? dispatch(locationActions.create({ location: data }))
-      : dispatch(locationActions.update({ location: data }));
+    isCreate ? createLocation(data) : updateLocation(data);
   };
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>

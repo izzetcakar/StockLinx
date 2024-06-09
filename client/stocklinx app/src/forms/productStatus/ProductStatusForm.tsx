@@ -5,10 +5,9 @@ import {
   ProductStatusType,
   IProductStatus,
 } from "@interfaces/serverInterfaces";
-import { useDispatch } from "react-redux";
-import { productStatusActions } from "../../redux/productStatus/actions";
 import { useInitial } from "./useInitial";
 import FormSelect from "../mantine/FormSelect";
+import { useProductStatus } from "@/hooks/productStatus";
 interface ProductStatusFormProps {
   productStatus?: IProductStatus;
   create?: boolean;
@@ -18,8 +17,9 @@ const ProductStatusForm: React.FC<ProductStatusFormProps> = ({
   productStatus,
   create,
 }) => {
-  const dispatch = useDispatch();
   const { initialValues, isCreate } = useInitial(productStatus, create);
+  const { mutate: createProductStatus } = useProductStatus.Create();
+  const { mutate: updateProductStatus } = useProductStatus.Update();
 
   const form = useForm<IProductStatus>({
     initialValues: initialValues,
@@ -30,9 +30,7 @@ const ProductStatusForm: React.FC<ProductStatusFormProps> = ({
   });
 
   const handleSubmit = (data: IProductStatus) => {
-    isCreate
-      ? dispatch(productStatusActions.create({ productStatus: data }))
-      : dispatch(productStatusActions.update({ productStatus: data }));
+    isCreate ? createProductStatus(data) : updateProductStatus(data);
   };
 
   return (

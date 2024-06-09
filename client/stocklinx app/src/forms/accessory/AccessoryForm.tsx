@@ -12,17 +12,16 @@ import {
 import { useForm } from "@mantine/form";
 import { DateInput } from "@mantine/dates";
 import { CategoryType, IAccessory } from "@interfaces/serverInterfaces";
-import { accessoryActions } from "../../redux/accessory/actions";
 import { useInitial } from "./useInitial";
 import { toBase64 } from "../../utils/Image";
 import { openNotificationError } from "@/notification/Notification";
-import base_accessory from "@assets/baseProductImages/base_accessory.png";
-import FormSelect from "../mantine/FormSelect";
-import GenericContext from "@/context/GenericContext";
 import { useCategory } from "@/hooks/category";
 import { useSupplier } from "@/hooks/supplier";
 import { useManufacturer } from "@/hooks/manufacturer";
 import { useAccessory } from "@/hooks/accessory";
+import base_accessory from "@assets/baseProductImages/base_accessory.png";
+import FormSelect from "../mantine/FormSelect";
+import GenericContext from "@/context/GenericContext";
 
 interface AccessoryFormProps {
   accessory?: IAccessory;
@@ -31,10 +30,11 @@ interface AccessoryFormProps {
 const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory, create }) => {
   const { initialValues, isCreate } = useInitial(accessory, create);
   const { branch } = useContext(GenericContext);
+  const { mutate: createAccessory } = useAccessory.Create();
+  const { mutate: updateAccessory } = useAccessory.Update();
   const { data: categories } = useCategory.GetAll();
-  const { data: suppliers } = useSupplier.GetAll();
-  const { data: manufacturers } = useManufacturer.GetAll();
-  const {} = useAccessory.Update();
+  const { data: supplierLk } = useSupplier.Lookup();
+  const { data: manufacturerLk } = useManufacturer.Lookup();
 
   const form = useForm<IAccessory>({
     initialValues: initialValues,
@@ -82,9 +82,7 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory, create }) => {
       openNotificationError("Error", "Please select a branch first");
       return;
     }
-    isCreate
-      ? dispatch(accessoryActions.create({ accessory: data }))
-      : dispatch(accessoryActions.update({ accessory: data }));
+    isCreate ? createAccessory(data) : updateAccessory(data);
   };
 
   return (
@@ -140,19 +138,13 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory, create }) => {
           value={form.values.categoryId}
         />
         <FormSelect
-          data={suppliers?.map((supplier) => ({
-            value: supplier.id,
-            label: supplier.name,
-          }))}
+          data={supplierLk}
           label="Supplier"
           value={form.values.supplierId}
           inputProps={form.getInputProps("supplierId")}
         />
         <FormSelect
-          data={manufacturers?.map((manufacturer) => ({
-            value: manufacturer.id,
-            label: manufacturer.name,
-          }))}
+          data={manufacturerLk}
           label="Manufacturer"
           inputProps={form.getInputProps("manufacturerId")}
           value={form.values.manufacturerId}

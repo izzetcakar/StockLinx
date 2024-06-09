@@ -1,12 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { TextInput, Button, Group, Flex, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IDepartment } from "@interfaces/serverInterfaces";
-import { useDispatch, useSelector } from "react-redux";
-import { departmentActions } from "../../redux/department/actions";
-import { RootState } from "../../redux/rootReducer";
 import { useInitial } from "./useInitial";
+import { useLocation } from "@/hooks/location";
+import { useDepartment } from "@/hooks/department";
 import FormSelect from "../mantine/FormSelect";
+import GenericContext from "@/context/GenericContext";
 interface DepartmentFormProps {
   department?: IDepartment;
   create?: boolean;
@@ -16,10 +16,11 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
   department,
   create,
 }) => {
-  const dispatch = useDispatch();
-  const branch = useSelector((state: RootState) => state.branch.branch);
-  const locations = useSelector((state: RootState) => state.location.locations);
   const { initialValues, isCreate } = useInitial(department, create);
+  const { branch } = useContext(GenericContext);
+  const { mutate: createDepartment } = useDepartment.Create();
+  const { mutate: updateDepartment } = useDepartment.Update();
+  const { data: locationLookup } = useLocation.Lookup();
 
   const form = useForm<IDepartment>({
     initialValues: initialValues,
@@ -29,9 +30,7 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
     },
   });
   const handleSubmit = (data: IDepartment) => {
-    isCreate
-      ? dispatch(departmentActions.create({ department: data }))
-      : dispatch(departmentActions.update({ department: data }));
+    isCreate ? createDepartment(data) : updateDepartment(data);
   };
 
   useEffect(() => {
@@ -57,10 +56,7 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
           withAsterisk
         />
         <FormSelect
-          data={locations.map((location) => ({
-            value: location.id,
-            label: location.name,
-          }))}
+          data={locationLookup}
           label="Location"
           inputProps={form.getInputProps("locationId")}
           value={form.values.locationId}

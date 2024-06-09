@@ -2,35 +2,26 @@ import React from "react";
 import { Button, Group, Flex, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { AssetCheckOutDto } from "../../interfaces/dtos";
-import { useDispatch, useSelector } from "react-redux";
-import { assetActions } from "../../redux/asset/actions";
-import { RootState } from "../../redux/rootReducer";
 import FormSelect from "../mantine/FormSelect";
+import { useAsset } from "@/hooks/asset";
+import { useProductStatus } from "@/hooks/productStatus";
 
 interface AssetCheckOutFormProps {
   checkOutDto: AssetCheckOutDto;
-  onSubmit: () => void;
 }
 
 const AssetCheckOutForm: React.FC<AssetCheckOutFormProps> = ({
   checkOutDto,
-  onSubmit,
 }) => {
-  const dispatch = useDispatch();
-  const productStatuses = useSelector(
-    (state: RootState) => state.productStatus.productStatuses
-  );
+  const { mutate: checkOut } = useAsset.CheckOut();
+  const { data: productStatusLookup } = useProductStatus.Lookup();
+
   const form = useForm<AssetCheckOutDto>({
     initialValues: checkOutDto,
   });
 
   const handleSubmit = (data: AssetCheckOutDto) => {
-    dispatch(
-      assetActions.checkOut({
-        checkOutDto: data,
-        onSubmit,
-      })
-    );
+    checkOut(data);
   };
 
   return (
@@ -46,10 +37,7 @@ const AssetCheckOutForm: React.FC<AssetCheckOutFormProps> = ({
       >
         <FormSelect
           label="Product Status"
-          data={productStatuses.map((status) => ({
-            value: status.id,
-            label: status.name,
-          }))}
+          data={productStatusLookup}
           inputProps={form.getInputProps("productStatusId")}
           value={form.values.productStatusId}
         />

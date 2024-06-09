@@ -13,26 +13,27 @@ import {
   ICustomField,
   IFieldSetCustomField,
 } from "@interfaces/serverInterfaces";
-import { useDispatch, useSelector } from "react-redux";
-import { customFieldActions } from "../../redux/customField/actions";
 import uuid4 from "uuid4";
-import { RootState } from "../../redux/rootReducer";
-import { fieldSetCustomFieldActions } from "../../redux/fieldSetCustomField/actions";
+import { useFieldSet } from "@/hooks/fieldSet";
+import { useFieldSetCustomField } from "@/hooks/fieldSetCustomField";
+import { useCustomField } from "@/hooks/customField";
 interface CustomFieldFormProps {
   customField?: ICustomField;
 }
 
 const CustomFieldForm: React.FC<CustomFieldFormProps> = ({ customField }) => {
-  const dispatch = useDispatch();
-  const fieldSets = useSelector((state: RootState) => state.fieldSet.fieldSets);
-  const fieldSetCustomFields = useSelector(
-    (state: RootState) => state.fieldSetCustomField.fieldSetCustomFields
-  );
+  const { data: fieldSets } = useFieldSet.GetAll();
+  const { data: fieldSetCustomFields } = useFieldSetCustomField.GetAll();
   const [value, setValue] = useState<IFieldSetCustomField[]>(
     customField
-      ? fieldSetCustomFields.filter((fc) => fc.customFieldId === customField.id)
+      ? fieldSetCustomFields?.filter(
+          (fc) => fc.customFieldId === customField.id
+        ) || []
       : []
   );
+  const { mutate: createFSCF } = useFieldSetCustomField.Create();
+  const { mutate: updateFSCF } = useFieldSetCustomField.Update();
+  const { mutate: updateCF } = useCustomField.Update();
 
   const form = useForm<ICustomField>({
     initialValues: customField
@@ -54,28 +55,28 @@ const CustomFieldForm: React.FC<CustomFieldFormProps> = ({ customField }) => {
   });
   const handleSubmit = (data: ICustomField) => {
     if (customField) {
-      dispatch(
-        customFieldActions.update({
-          customField: data,
-        })
-      );
-      dispatch(
-        fieldSetCustomFieldActions.synchronize({ fieldSetCustomFields: value })
-      );
-    } else {
-      dispatch(
-        customFieldActions.create({
-          customField: { ...data, fieldSetCustomFields: value },
-        })
-      );
+      updateCF(data);
+      value.forEach((v) => {
+        if (!fieldSets?.map((f) => f.id).includes(v.fieldSetId)) {
+          updateFSCF(v);
+        }
+      });
+      fieldSets?.forEach((f) => {
+        const exist = value.some((v) => v.fieldSetId === f.id);
+        if (!exist) {
+          createFSCF({
+            id: uuid4(),
+            fieldSetId: f.id,
+            customFieldId: data.id,
+          });
+        }
+      });
     }
-    dispatch(customFieldActions.getAll());
-    dispatch(fieldSetCustomFieldActions.getAll());
   };
   const onFieldSetsChange = (e: any[]) => {
     const filteredValue = value.filter((v) => e.includes(v.fieldSetId));
     e.forEach((element) => {
-      const fieldSet = fieldSets.find((f) => f.id === element);
+      const fieldSet = fieldSets?.find((f) => f.id === element);
       if (fieldSet) {
         const exist = filteredValue.some(
           (v) =>
@@ -154,9 +155,9 @@ const CustomFieldForm: React.FC<CustomFieldFormProps> = ({ customField }) => {
         />
         <MultiSelect
           label="Field Sets"
-          data={fieldSets.map((f) => ({ value: f.id, label: f.name })) || []}
+          data={fieldSets?.map((f) => ({ value: f.id, label: f.name })) || []}
           value={fieldSets
-            .filter((f) => value.map((x) => x.fieldSetId).includes(f.id))
+            ?.filter((f) => value.map((x) => x.fieldSetId).includes(f.id))
             .map((f) => f.id)}
           onChange={onFieldSetsChange}
           placeholder="Select Field Sets"

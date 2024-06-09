@@ -10,10 +10,9 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IManufacturer } from "@interfaces/serverInterfaces";
-import { useDispatch } from "react-redux";
-import { manufacturerActions } from "../../redux/manufacturer/actions";
 import { useInitial } from "./useInitial";
 import { toBase64 } from "../../utils/Image";
+import { useManufacturer } from "@/hooks/manufacturer";
 
 interface ManufacturerFormProps {
   manufacturer?: IManufacturer;
@@ -24,8 +23,9 @@ const ManufacturerForm: React.FC<ManufacturerFormProps> = ({
   manufacturer,
   create,
 }) => {
-  const dispatch = useDispatch();
   const { initialValues, isCreate } = useInitial(manufacturer, create);
+  const { mutate: createManufacturer } = useManufacturer.Create();
+  const { mutate: updateManufacturer } = useManufacturer.Update();
 
   const form = useForm<IManufacturer>({
     initialValues: initialValues,
@@ -42,9 +42,7 @@ const ManufacturerForm: React.FC<ManufacturerFormProps> = ({
   };
 
   const handleSubmit = (data: IManufacturer) => {
-    isCreate
-      ? dispatch(manufacturerActions.create({ manufacturer: data }))
-      : dispatch(manufacturerActions.update({ manufacturer: data }));
+    isCreate ? createManufacturer(data) : updateManufacturer(data);
   };
 
   return (

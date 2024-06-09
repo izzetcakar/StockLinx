@@ -10,13 +10,13 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IUser } from "@interfaces/serverInterfaces";
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux/rootReducer";
-import { useDispatch } from "react-redux";
-import { userActions } from "../../redux/user/actions";
 import { DateInput } from "@mantine/dates";
 import { useInitial } from "./useInitial";
 import FormSelect from "../mantine/FormSelect";
+import { useCompany } from "@/hooks/company";
+import { useBranch } from "@/hooks/branch";
+import { useDepartment } from "@/hooks/department";
+import { useUser } from "@/hooks/user";
 
 interface UserFormProps {
   user?: IUser;
@@ -24,28 +24,23 @@ interface UserFormProps {
 }
 
 const UserForm: React.FC<UserFormProps> = ({ user, create }) => {
-  const dispatch = useDispatch();
-  const companies = useSelector((state: RootState) => state.company.companies);
-  const branches = useSelector((state: RootState) => state.branch.branches);
-  const departments = useSelector(
-    (state: RootState) => state.department.departments
-  );
+  const { initialValues, isCreate } = useInitial(user, create);
+  const { mutate: createUser } = useUser.Create();
+  const { mutate: updateUser } = useUser.Update();
+  const { data: companyLookup } = useCompany.Lookup();
+  const { data: branches } = useBranch.GetAll();
+  const { data: departments } = useDepartment.GetAll();
   const [branch, setBranch] = React.useState(
-    branches.find(
+    branches?.find(
       (b) =>
-        b.id === departments.find((d) => d.id === user?.departmentId)?.branchId
+        b.id === departments?.find((d) => d.id === user?.departmentId)?.branchId
     )?.id
   );
   const [company, setCompany] = React.useState(
-    companies
-      .map((c) => ({
-        value: c.id,
-        label: c.name,
-      }))
-      .find((c) => c.value === branches.find((b) => b.id === branch)?.companyId)
-      ?.value
+    companyLookup?.find(
+      (c) => c.value === branches?.find((b) => b.id === branch)?.companyId
+    )?.value
   );
-  const { initialValues, isCreate } = useInitial(user, create);
 
   const form = useForm<IUser>({
     initialValues: initialValues,
@@ -71,9 +66,7 @@ const UserForm: React.FC<UserFormProps> = ({ user, create }) => {
     },
   });
   const handleSubmit = (data: IUser) => {
-    isCreate
-      ? dispatch(userActions.create({ user: data }))
-      : dispatch(userActions.update({ user: data }));
+    isCreate ? createUser(data) : updateUser(data);
   };
 
   const handleCompanyChange = (value: string) => {
@@ -98,10 +91,7 @@ const UserForm: React.FC<UserFormProps> = ({ user, create }) => {
         pt={20}
       >
         <Select
-          data={companies.map((company) => ({
-            value: company.id,
-            label: company.name,
-          }))}
+          data={companyLookup}
           label="Company"
           placeholder="Select Company"
           value={company}
@@ -111,7 +101,7 @@ const UserForm: React.FC<UserFormProps> = ({ user, create }) => {
         />
         <Select
           data={branches
-            .filter((branch) => branch.companyId === company)
+            ?.filter((branch) => branch.companyId === company)
             .map((branch) => ({ value: branch.id, label: branch.name }))}
           label="Branch"
           placeholder="Select Branch"
@@ -122,7 +112,7 @@ const UserForm: React.FC<UserFormProps> = ({ user, create }) => {
         />
         <FormSelect
           data={departments
-            .filter((department) => department.branchId === branch)
+            ?.filter((department) => department.branchId === branch)
             .map((department) => ({
               value: department.id,
               label: department.name,

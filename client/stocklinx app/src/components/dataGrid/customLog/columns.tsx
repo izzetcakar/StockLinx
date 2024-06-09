@@ -5,10 +5,9 @@ import icon_create from "../@assets/customLog/Create.png";
 import icon_checkIn from "../@assets/customLog/CheckIn.png";
 import icon_checkOut from "../@assets/customLog/CheckOut.png";
 import { ICustomLog } from "../../../interfaces/serverInterfaces";
-import { RootState } from "../../../redux/rootReducer";
-import { useSelector } from "react-redux";
 import { Anchor } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "@/hooks/user";
 
 const getActionIcon = (action: string) => {
   switch (action) {
@@ -28,7 +27,6 @@ const getActionIcon = (action: string) => {
 };
 export const useColumns = () => {
   const navigate = useNavigate();
-  const users = useSelector((state: RootState) => state.user.users);
   const columns: DataColumn[] = [
     {
       dataField: "action",
@@ -54,7 +52,8 @@ export const useColumns = () => {
       caption: "User",
       dataType: "string",
       renderComponent(e) {
-        const user = users.find((user) => user.id === (e as ICustomLog).userId);
+        const customLog = e as ICustomLog;
+        const { data: user } = useUser.Get(customLog.userId);
         if (!user) {
           return "Unknown";
         }

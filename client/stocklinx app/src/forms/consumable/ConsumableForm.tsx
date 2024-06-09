@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import {
   TextInput,
   Button,
@@ -10,12 +10,14 @@ import {
 import { useForm } from "@mantine/form";
 import { DateInput } from "@mantine/dates";
 import { CategoryType, IConsumable } from "@interfaces/serverInterfaces";
-import { useDispatch, useSelector } from "react-redux";
-import { consumableActions } from "../../redux/consumable/actions";
-import { RootState } from "../../redux/rootReducer";
 import { openNotificationError } from "@/notification/Notification";
 import { useInitial } from "./useInitial";
+import { useCategory } from "@/hooks/category";
+import { useSupplier } from "@/hooks/supplier";
+import { useManufacturer } from "@/hooks/manufacturer";
+import { useConsumable } from "@/hooks/consumable";
 import FormSelect from "../mantine/FormSelect";
+import GenericContext from "@/context/GenericContext";
 
 interface ConsumableFormProps {
   consumable?: IConsumable;
@@ -26,16 +28,13 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
   consumable,
   create,
 }) => {
-  const dispatch = useDispatch();
-  const branch = useSelector((state: RootState) => state.branch.branch);
-  const categories = useSelector(
-    (state: RootState) => state.category.categories
-  );
-  const suppliers = useSelector((state: RootState) => state.supplier.suppliers);
-  const manufacturers = useSelector(
-    (state: RootState) => state.manufacturer.manufacturers
-  );
   const { initialValues, isCreate } = useInitial(consumable, create);
+  const { branch } = useContext(GenericContext);
+  const { data: categories } = useCategory.GetAll();
+  const { mutate: createConsumable } = useConsumable.Create();
+  const { mutate: updateConsumable } = useConsumable.Update();
+  const { data: supplierLookup } = useSupplier.Lookup();
+  const { data: manufacturerLookup } = useManufacturer.Lookup();
 
   const form = useForm<IConsumable>({
     initialValues: initialValues,
@@ -68,14 +67,12 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
     if (isCreate) form.setFieldValue("branchId", branch?.id || "");
   }, [branch]);
 
-  const handleSubmit = (data: object) => {
+  const handleSubmit = (data: IConsumable) => {
     if (form.values.branchId === "") {
       openNotificationError("Error", "Please select a branch first");
       return;
     }
-    isCreate
-      ? dispatch(consumableActions.create({ consumable: data as IConsumable }))
-      : dispatch(consumableActions.update({ consumable: data as IConsumable }));
+    isCreate ? createConsumable(data) : updateConsumable(data);
   };
 
   return (
@@ -109,7 +106,7 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
         />
         <FormSelect
           data={categories
-            .filter((category) => category.type === CategoryType.CONSUMABLE)
+            ?.filter((category) => category.type === CategoryType.CONSUMABLE)
             .map((category) => ({
               value: category.id,
               label: category.name,
@@ -120,19 +117,13 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
           required
         />
         <FormSelect
-          data={suppliers.map((supplier) => ({
-            value: supplier.id,
-            label: supplier.name,
-          }))}
+          data={supplierLookup}
           label="Supplier"
           inputProps={form.getInputProps("supplierId")}
           value={form.values.supplierId}
         />
         <FormSelect
-          data={manufacturers.map((manufacturer) => ({
-            value: manufacturer.id,
-            label: manufacturer.name,
-          }))}
+          data={manufacturerLookup}
           label="Manufacturer"
           inputProps={form.getInputProps("manufacturerId")}
           value={form.values.manufacturerId}

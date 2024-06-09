@@ -2,15 +2,15 @@ import React from "react";
 import { TextInput, Button, Group, Flex } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IFieldSet } from "@interfaces/serverInterfaces";
-import { useDispatch } from "react-redux";
-import { fieldSetActions } from "../../redux/fieldSet/actions";
+import { useFieldSet } from "@/hooks/fieldSet";
 import uuid4 from "uuid4";
 interface FieldSetFormProps {
   fieldSet?: IFieldSet;
 }
 
 const FieldSetForm: React.FC<FieldSetFormProps> = ({ fieldSet }) => {
-  const dispatch = useDispatch();
+  const { mutate: createFieldSet } = useFieldSet.Create();
+  const { mutate: updateFieldSet } = useFieldSet.Update();
 
   const form = useForm<IFieldSet>({
     initialValues: fieldSet
@@ -25,9 +25,7 @@ const FieldSetForm: React.FC<FieldSetFormProps> = ({ fieldSet }) => {
     },
   });
   const handleSubmit = (data: IFieldSet) => {
-    fieldSet
-      ? dispatch(fieldSetActions.update({ fieldSet: data }))
-      : dispatch(fieldSetActions.create({ fieldSet: data }));
+    fieldSet ? updateFieldSet(data) : createFieldSet(data);
   };
 
   return (

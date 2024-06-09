@@ -1,10 +1,10 @@
 import uuid4 from "uuid4";
-import { useSelector } from "react-redux";
 import { IDepartment } from "@interfaces/serverInterfaces";
-import { RootState } from "../../redux/rootReducer";
+import GenericContext from "@/context/GenericContext";
+import { useContext } from "react";
 
 export const useInitial = (department?: IDepartment, create?: boolean) => {
-  const branch = useSelector((state: RootState) => state.branch.branch);
+  const { branch } = useContext(GenericContext);
   let isCreate = create || false;
 
   let initialValues: IDepartment = {

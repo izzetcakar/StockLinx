@@ -11,8 +11,6 @@ import icon_harddisk from "@assets/icon_harddisk.png";
 import icon_settings from "@assets/icon_setting.png";
 import icon_group from "@assets/icon_group.png";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { userActions } from "../../redux/user/actions";
 import { checkEmpty } from "../../utils/checkEmpty";
 
 interface NavigationSubItem {
@@ -30,12 +28,9 @@ interface NavigationItem {
 
 const Sidebar: React.FC = () => {
   const location = useLocation();
-  const dispatch = useDispatch();
 
   const logout = () => {
     localStorage.removeItem("token");
-    dispatch(userActions.logoutUser());
-    navigate("/login");
   };
 
   const [navigationList, setNavigationList] = useState<NavigationItem[]>([

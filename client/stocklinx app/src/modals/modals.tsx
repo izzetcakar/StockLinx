@@ -255,12 +255,7 @@ export const openAssetCheckOutModal = (checkOutDto: AssetCheckOutDto) => {
   modals.open({
     modalId: "asset_checkOut_modal",
     title: "Check Out",
-    children: (
-      <AssetCheckOutForm
-        checkOutDto={checkOutDto}
-        onSubmit={() => closeModal("asset_checkOut_modal")}
-      />
-    ),
+    children: <AssetCheckOutForm checkOutDto={checkOutDto} />,
     xOffset: "auto",
     size: "auto",
   });

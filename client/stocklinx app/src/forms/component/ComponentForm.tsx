@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import {
   TextInput,
   Button,
@@ -10,12 +10,13 @@ import {
 import { useForm } from "@mantine/form";
 import { DateInput } from "@mantine/dates";
 import { CategoryType, IComponent } from "@interfaces/serverInterfaces";
-import { useDispatch, useSelector } from "react-redux";
-import { componentActions } from "../../redux/component/actions";
-import { RootState } from "../../redux/rootReducer";
 import { useInitial } from "./useInitial";
 import { openNotificationError } from "@/notification/Notification";
 import FormSelect from "../mantine/FormSelect";
+import GenericContext from "@/context/GenericContext";
+import { useCategory } from "@/hooks/category";
+import { useSupplier } from "@/hooks/supplier";
+import { useComponent } from "@/hooks/component";
 
 interface ComponentFormProps {
   component?: IComponent;
@@ -23,13 +24,12 @@ interface ComponentFormProps {
 }
 
 const ComponentForm: React.FC<ComponentFormProps> = ({ component, create }) => {
-  const dispatch = useDispatch();
-  const branch = useSelector((state: RootState) => state.branch.branch);
-  const categories = useSelector(
-    (state: RootState) => state.category.categories
-  );
-  const suppliers = useSelector((state: RootState) => state.supplier.suppliers);
   const { initialValues, isCreate } = useInitial(component, create);
+  const { branch } = useContext(GenericContext);
+  const { mutate: createComponent } = useComponent.Create();
+  const { mutate: updateComponent } = useComponent.Update();
+  const { data: categories } = useCategory.GetAll();
+  const { data: supplierLookup } = useSupplier.Lookup();
 
   const form = useForm<IComponent>({
     initialValues: initialValues,
@@ -57,14 +57,12 @@ const ComponentForm: React.FC<ComponentFormProps> = ({ component, create }) => {
       },
     },
   });
-  const handleSubmit = (data: object) => {
+  const handleSubmit = (data: IComponent) => {
     if (form.values.branchId === "") {
       openNotificationError("Error", "Please select a branch first");
       return;
     }
-    isCreate
-      ? dispatch(componentActions.create({ component: data as IComponent }))
-      : dispatch(componentActions.update({ component: data as IComponent }));
+    isCreate ? createComponent(data) : updateComponent(data);
   };
 
   useEffect(() => {
@@ -100,7 +98,7 @@ const ComponentForm: React.FC<ComponentFormProps> = ({ component, create }) => {
         />
         <FormSelect
           data={categories
-            .filter((category) => category.type === CategoryType.COMPONENT)
+            ?.filter((category) => category.type === CategoryType.COMPONENT)
             .map((category) => ({
               value: category.id,
               label: category.name,
@@ -125,10 +123,7 @@ const ComponentForm: React.FC<ComponentFormProps> = ({ component, create }) => {
           value={form.values.serialNo || ""}
         />
         <FormSelect
-          data={suppliers.map((supplier) => ({
-            value: supplier.id,
-            label: supplier.name,
-          }))}
+          data={supplierLookup}
           label="Supplier"
           inputProps={form.getInputProps("supplierId")}
           value={form.values.supplierId}

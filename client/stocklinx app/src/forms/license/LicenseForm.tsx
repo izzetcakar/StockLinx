@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import {
   TextInput,
   Button,
@@ -11,12 +11,14 @@ import {
 import { useForm } from "@mantine/form";
 import { DateInput } from "@mantine/dates";
 import { CategoryType, ILicense } from "@interfaces/serverInterfaces";
-import { useDispatch, useSelector } from "react-redux";
-import { licenseActions } from "../../redux/license/actions";
-import { RootState } from "../../redux/rootReducer";
 import { useInitial } from "./useInitial";
 import { openNotificationError } from "@/notification/Notification";
+import { useCategory } from "@/hooks/category";
+import { useManufacturer } from "@/hooks/manufacturer";
+import { useSupplier } from "@/hooks/supplier";
+import { useLicense } from "@/hooks/license";
 import FormSelect from "../mantine/FormSelect";
+import GenericContext from "@/context/GenericContext";
 
 interface LicenseFormProps {
   license?: ILicense;
@@ -24,16 +26,13 @@ interface LicenseFormProps {
 }
 
 const LicenseForm: React.FC<LicenseFormProps> = ({ license, create }) => {
-  const dispatch = useDispatch();
-  const manufacturers = useSelector(
-    (state: RootState) => state.manufacturer.manufacturers
-  );
-  const suppliers = useSelector((state: RootState) => state.supplier.suppliers);
-  const branch = useSelector((state: RootState) => state.branch.branch);
-  const categories = useSelector(
-    (state: RootState) => state.category.categories
-  );
   const { initialValues, isCreate } = useInitial(license, create);
+  const { branch } = useContext(GenericContext);
+  const { mutate: createLicense } = useLicense.Create();
+  const { mutate: updateLicense } = useLicense.Update();
+  const { data: categories } = useCategory.GetAll();
+  const { data: manufacturerLookup } = useManufacturer.Lookup();
+  const { data: supplierLookup } = useSupplier.Lookup();
 
   const form = useForm<ILicense>({
     initialValues: initialValues,
@@ -70,9 +69,7 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license, create }) => {
       openNotificationError("Error", "Please select a branch first");
       return;
     }
-    isCreate
-      ? dispatch(licenseActions.create({ license: data }))
-      : dispatch(licenseActions.update({ license: data }));
+    isCreate ? createLicense(data) : updateLicense(data);
   };
 
   return (
@@ -104,7 +101,7 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license, create }) => {
         />
         <FormSelect
           data={categories
-            .filter((category) => category.type === CategoryType.LICENSE)
+            ?.filter((category) => category.type === CategoryType.LICENSE)
             .map((category) => ({
               value: category.id,
               label: category.name,
@@ -132,10 +129,7 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license, create }) => {
           hideControls
         />
         <FormSelect
-          data={manufacturers.map((manufacturer) => ({
-            value: manufacturer.id,
-            label: manufacturer.name,
-          }))}
+          data={manufacturerLookup}
           label="Manufacturer"
           inputProps={form.getInputProps("manufacturerId")}
           value={form.values.manufacturerId}
@@ -158,10 +152,7 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license, create }) => {
           checked={form.values.reassignable}
         />
         <FormSelect
-          data={suppliers.map((supplier) => ({
-            value: supplier.id,
-            label: supplier.name,
-          }))}
+          data={supplierLookup}
           label="Supplier"
           inputProps={form.getInputProps("supplierId")}
           value={form.values.supplierId}

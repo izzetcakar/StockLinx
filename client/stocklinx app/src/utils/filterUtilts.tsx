@@ -281,7 +281,7 @@ export const useFilter = (
     }
   };
 
-  const setfiltersByColumns = (columns: Column[]) => {
+  const setBaseFiltersByColumns = (columns: Column[]) => {
     const newFilters: Filter[] = columns.map(
       (column) =>
         ({
@@ -419,7 +419,7 @@ export const useFilter = (
   };
 
   return {
-    setfiltersByColumns,
+    setBaseFiltersByColumns,
     getQueryFilters,
   };
 };
