@@ -1,22 +1,17 @@
 import { IAsset } from "../../interfaces/serverInterfaces";
-import { useDispatch } from "react-redux";
 import { useColumns } from "./columns";
-import { assetActions } from "../../redux/asset/actions";
 import { openAssetModal } from "../../modals/modals";
-import { useContext, useRef } from "react";
-import Gridtable from "@components/gridTable/GridTable";
-import GenericContext from "../../context/GenericContext";
+import { useContext } from "react";
 import { useAsset } from "@/hooks/asset";
+import GenericContext from "../../context/GenericContext";
+import Gridtable from "@components/gridTable/GridTable";
 
 const Asset = () => {
-  const dispatch = useDispatch();
   const { drawerBadge } = useContext(GenericContext);
-  const ref = useRef<any>(null);
-  const { data, mutate: filterAssets } = useAsset.Filter();
-
-  const applyFilters = () => {
-    filterAssets(ref.current?.queryFilters);
-  };
+  const { data, mutate: filter } = useAsset.Filter();
+  const { mutate: remove } = useAsset.Remove();
+  const { mutate: removeRange } = useAsset.RemoveRange();
+  const { data: assets, refetch: fetch } = useAsset.GetAll();
 
   return (
     <>
@@ -24,21 +19,17 @@ const Asset = () => {
         <div className="page__content__header__title">Assets</div>
         {drawerBadge()}
       </div>
-      <button onClick={() => console.log(ref.current)}>show</button>
       <Gridtable
-        ref={ref}
-        data={data || []}
+        data={assets || []}
         itemKey="id"
         columns={useColumns().columns}
-        refreshData={() => applyFilters()}
+        refreshData={() => fetch()}
         onRowUpdate={(asset) => openAssetModal(asset as IAsset)}
         onRowInsert={() => openAssetModal()}
-        onRowRemove={(id) => dispatch(assetActions.remove({ id: id }))}
-        onRowRemoveRange={(ids) =>
-          dispatch(assetActions.removeRange({ ids: ids }))
-        }
+        onRowRemove={(id) => remove(id)}
+        onRowRemoveRange={(ids) => removeRange(ids)}
         excelColumns={useColumns().excelColumns}
-        onApplyFilters={() => applyFilters()}
+        onApplyFilters={(filters) => filter(filters)}
         enableToolbar
         enableEditActions
         enableSelectActions

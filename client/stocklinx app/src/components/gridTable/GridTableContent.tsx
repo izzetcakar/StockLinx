@@ -4,10 +4,10 @@ import TableToolbar from "./tableToolbar/TableToolbar";
 import { GridtableProps, QueryFilter } from "@interfaces/gridTableInterfaces";
 import { Checkbox } from "@mantine/core";
 import { useSelectRow } from "./customhooks/selectRow";
-import { useCell } from "./customhooks/cell";
 import { useGridTableContext } from "./context/GenericStateContext";
 import { useColumns } from "./customhooks/columns";
 import { usePaging } from "./customhooks/paging";
+import { renderCell } from "./utils/cellUtils";
 import "./gridtable.scss";
 
 const GridtableContent: React.FC<GridtableProps> = ({
@@ -38,8 +38,6 @@ const GridtableContent: React.FC<GridtableProps> = ({
 
   const { handleSelectRow, handleSelectAll, getSelectedRowClass } =
     useSelectRow(data, keyfield);
-
-  const { renderCell } = useCell();
 
   useEffect(() => {
     setKeyfield(itemKey as keyof object);

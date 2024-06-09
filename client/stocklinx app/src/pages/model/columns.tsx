@@ -1,23 +1,17 @@
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux/rootReducer";
-import {
-  DataColumn,
-  ExcelColumn,
-} from "@interfaces/gridTableInterfaces";
+import { DataColumn, ExcelColumn } from "@interfaces/gridTableInterfaces";
 import { useNavigate } from "react-router-dom";
 import { Anchor, Image } from "@mantine/core";
 import { IModel } from "@interfaces/serverInterfaces";
 import { getImage } from "../../utils/Image";
+import { useCategory } from "@/hooks/category";
+import { useManufacturer } from "@/hooks/manufacturer";
+import { useFieldSet } from "@/hooks/fieldSet";
 
 export const useColumns = () => {
   const navigate = useNavigate();
-  const cateogries = useSelector(
-    (state: RootState) => state.category.categories
-  );
-  const manufacturers = useSelector(
-    (state: RootState) => state.manufacturer.manufacturers
-  );
-  const fieldSets = useSelector((state: RootState) => state.fieldSet.fieldSets);
+  const { data: categoryLookup } = useCategory.Lookup();
+  const { data: manufacturerLookup } = useManufacturer.Lookup();
+  const { data: fieldSetLookup } = useFieldSet.Lookup();
 
   const columns: DataColumn[] = [
     {
@@ -59,23 +53,18 @@ export const useColumns = () => {
       caption: "Category",
       dataType: "string",
       lookup: {
-        data: cateogries.map((category) => ({
-          value: category.id,
-          label: category.name,
-        })),
+        data: categoryLookup || [],
       },
       renderComponent(e) {
+        const model = e as IModel;
+        const { data: category } = useCategory.Get(model.categoryId || "");
         return (
           <Anchor
             onClick={() => navigate(`/category/${(e as IModel)?.categoryId}`)}
             target="_blank"
             underline="always"
           >
-            {
-              cateogries.find(
-                (category) => category.id === (e as IModel)?.categoryId
-              )?.name
-            }
+            {category?.name}
           </Anchor>
         );
       },
@@ -85,12 +74,13 @@ export const useColumns = () => {
       caption: "Manufacturer",
       dataType: "string",
       lookup: {
-        data: manufacturers.map((manufacturer) => ({
-          value: manufacturer.id,
-          label: manufacturer.name,
-        })),
+        data: manufacturerLookup || [],
       },
       renderComponent(e) {
+        const model = e as IModel;
+        const { data: manufacturer } = useManufacturer.Get(
+          model.manufacturerId || ""
+        );
         return (
           <Anchor
             onClick={() =>
@@ -99,12 +89,7 @@ export const useColumns = () => {
             target="_blank"
             underline="always"
           >
-            {
-              manufacturers.find(
-                (manufacturer) =>
-                  manufacturer.id === (e as IModel)?.manufacturerId
-              )?.name
-            }
+            {manufacturer?.name}
           </Anchor>
         );
       },
@@ -118,10 +103,7 @@ export const useColumns = () => {
       dataField: "fieldSetId",
       caption: "FieldSet",
       lookup: {
-        data: fieldSets.map((fieldSet) => ({
-          value: fieldSet.id,
-          label: fieldSet.name,
-        })),
+        data: fieldSetLookup || [],
       },
       dataType: "string",
     },

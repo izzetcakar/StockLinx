@@ -1,5 +1,3 @@
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../redux/rootReducer";
 import { ExcelColumn, DataColumn } from "@interfaces/gridTableInterfaces";
 import {
   CategoryType,
@@ -7,43 +5,39 @@ import {
   IUserProduct,
 } from "@interfaces/serverInterfaces";
 import { Anchor, Button, Image } from "@mantine/core";
-import { accessoryActions } from "../../redux/accessory/actions";
 import { useNavigate } from "react-router-dom";
 import { getImage } from "../../utils/Image";
-import { closeModal, openCheckInModal } from "../../modals/modals";
-import base_accessory from "@assets/baseProductImages/base_accessory.png";
+import { openCheckInModal } from "../../modals/modals";
 import { initialUserProduct } from "../../initials/initials";
+import { useAccessory } from "@/hooks/accessory";
+import { useCategory } from "@/hooks/category";
+import { useLocation } from "@/hooks/location";
+import { useProductStatus } from "@/hooks/productStatus";
+import base_accessory from "@assets/baseProductImages/base_accessory.png";
 
 export const useColumns = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const locations = useSelector((state: RootState) => state.location.locations);
-  const categories = useSelector(
-    (state: RootState) => state.category.categories
-  );
-  const productStatuses = useSelector(
-    (state: RootState) => state.productStatus.productStatuses
-  );
+  const { mutate: checkIn } = useAccessory.CheckIn();
+  // const { mutate: checkOut } = useAccessory.CheckOut();
+  const { data: categories } = useCategory.GetAll();
+  const { data: locationLookup } = useLocation.Lookup();
+  const { data: productStatusLookup, refetch: fetchProductStatus } =
+    useProductStatus.Lookup();
 
-  const handleCheckIn = (data: IUserProduct) => {
-    dispatch(
-      accessoryActions.checkIn({
-        checkInDto: {
-          productId: data.accessoryId as string,
-          userId: data.userId,
-          assaignDate: data.assignDate,
-          notes: data.notes,
-          quantity: data.quantity,
-        },
-        onSubmit: () => closeModal("userProduct_checkIn_modal"),
-      })
-    );
+  const onCheckInHandler = (data: IUserProduct) => {
+    checkIn({
+      productId: data.accessoryId as string,
+      userId: data.userId,
+      assaignDate: data.assignDate,
+      notes: data.notes,
+      quantity: data.quantity,
+    });
   };
 
-  const checkIn = (id: string) => {
+  const onHeadToModal = (id: string) => {
     const newUserProduct = initialUserProduct;
     newUserProduct.accessoryId = id;
-    openCheckInModal(["User"], newUserProduct, handleCheckIn);
+    openCheckInModal(["User"], newUserProduct, onCheckInHandler);
   };
 
   const columns: DataColumn[] = [
@@ -72,10 +66,8 @@ export const useColumns = () => {
       dataField: "productStatusId",
       caption: "Status",
       lookup: {
-        data: productStatuses.map((status) => ({
-          value: status.id,
-          label: status.name,
-        })),
+        data: productStatusLookup || [],
+        dataSource: fetchProductStatus,
       },
       dataType: "string",
     },
@@ -101,12 +93,13 @@ export const useColumns = () => {
       dataField: "categoryId",
       dataType: "string",
       lookup: {
-        data: categories
-          .filter((category) => category.type === CategoryType.ACCESSORY)
-          .map((category) => ({
-            value: category.id,
-            label: category.name,
-          })),
+        data:
+          categories
+            ?.filter((category) => category.type === CategoryType.ACCESSORY)
+            .map((category) => ({
+              value: category.id,
+              label: category.name,
+            })) || [],
       },
     },
     {
@@ -129,10 +122,7 @@ export const useColumns = () => {
       caption: "Location",
       dataField: "locationId",
       lookup: {
-        data: locations.map((location) => ({
-          value: location.id,
-          label: location.name,
-        })),
+        data: locationLookup || [],
       },
       dataType: "string",
     },
@@ -164,7 +154,7 @@ export const useColumns = () => {
               variant="filled"
               size="xs"
               disabled={(accessory?.availableQuantity as number) < 1}
-              onClick={() => checkIn(accessory.id)}
+              onClick={() => onHeadToModal(accessory.id)}
             >
               Check In
             </Button>

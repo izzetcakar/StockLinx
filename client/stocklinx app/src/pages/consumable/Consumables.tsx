@@ -1,35 +1,16 @@
-import { IConsumable } from "@interfaces/serverInterfaces";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../redux/rootReducer";
-import { companyActions } from "../../redux/company/actions";
+import { IConsumable } from "../../interfaces/serverInterfaces";
 import { useColumns } from "./columns";
-import { categoryActions } from "../../redux/category/actions";
-import { consumableActions } from "../../redux/consumable/actions";
-import { locationActions } from "../../redux/location/actions";
-import { productStatusActions } from "../../redux/productStatus/actions";
-import { branchActions } from "../../redux/branch/actions";
-import Gridtable from "@components/gridTable/GridTable";
 import { openConsumableModal } from "../../modals/modals";
-import { manufacturerActions } from "../../redux/manufacturer/actions";
 import { useContext } from "react";
+import { useConsumable } from "@/hooks/consumable";
 import GenericContext from "../../context/GenericContext";
+import Gridtable from "@components/gridTable/GridTable";
 
 const Consumable = () => {
-  const dispatch = useDispatch();
-  const consumables = useSelector(
-    (state: RootState) => state.consumable.consumables
-  );
   const { drawerBadge } = useContext(GenericContext);
-
-  const refreshData = () => {
-    dispatch(consumableActions.getAll());
-    dispatch(categoryActions.getAll());
-    dispatch(locationActions.getAll());
-    dispatch(productStatusActions.getAll());
-    dispatch(companyActions.getAll());
-    dispatch(branchActions.getAll());
-    dispatch(manufacturerActions.getAll());
-  };
+  const { data, mutate: filter } = useConsumable.Filter();
+  const { mutate: remove } = useConsumable.Remove();
+  const { mutate: removeRange } = useConsumable.RemoveRange();
 
   return (
     <>
@@ -38,22 +19,18 @@ const Consumable = () => {
         {drawerBadge()}
       </div>
       <Gridtable
-        data={consumables}
+        data={data || []}
         itemKey="id"
         columns={useColumns().columns}
-        refreshData={refreshData}
+        refreshData={() => filter([])}
         onRowUpdate={(consumable) =>
           openConsumableModal(consumable as IConsumable)
         }
         onRowInsert={() => openConsumableModal()}
-        onRowRemove={(id) => dispatch(consumableActions.remove({ id: id }))}
-        onRowRemoveRange={(ids) =>
-          dispatch(consumableActions.removeRange({ ids: ids }))
-        }
-        onApplyFilters={(filters) =>
-          dispatch(consumableActions.filter(filters))
-        }
+        onRowRemove={(id) => remove(id)}
+        onRowRemoveRange={(ids) => removeRange(ids)}
         excelColumns={useColumns().excelColumns}
+        onApplyFilters={(filters) => filter(filters)}
         enableToolbar
         enableEditActions
         enableSelectActions

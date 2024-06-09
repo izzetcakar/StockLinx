@@ -1,13 +1,11 @@
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux/rootReducer";
+import { useFieldSet } from "@/hooks/fieldSet";
+import { useFieldSetCustomField } from "@/hooks/fieldSetCustomField";
 import { DataColumn } from "@interfaces/gridTableInterfaces";
 import { ICustomField } from "@interfaces/serverInterfaces";
 
 export const useColumns = () => {
-  const fieldSets = useSelector((state: RootState) => state.fieldSet.fieldSets);
-  const fieldSetCustomFields = useSelector(
-    (state: RootState) => state.fieldSetCustomField.fieldSetCustomFields
-  );
+  const { data: fieldSets } = useFieldSet.GetAll();
+  const { data: fieldSetCustomFields } = useFieldSetCustomField.GetAll();
 
   const fieldSetColumns: DataColumn[] = [
     {
@@ -23,11 +21,11 @@ export const useColumns = () => {
       dataField: "id",
       dataType: "action",
       renderComponent(e) {
-        return fieldSets.map((f) => {
-          const foundFc = fieldSetCustomFields.find(
+        return fieldSets?.map((f) => {
+          const foundFc = fieldSetCustomFields?.find(
             (fc) => fc.fieldSetId === (e as ICustomField).id
           );
-          if (foundFc !== undefined) {
+          if (foundFc) {
             return <div key={f.id}>{f.name}</div>;
           }
         });

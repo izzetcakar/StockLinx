@@ -8,7 +8,6 @@ import {
   openAssetCheckOutModal,
 } from "../../modals/modals";
 import base_asset from "@assets/baseProductImages/base_asset.jpg";
-import { lookupRequests } from "@/server/lookupRequests";
 import { useModel } from "@/hooks/model";
 import { useUserProduct } from "@/hooks/userProduct";
 import { useUser } from "@/hooks/user";
@@ -17,11 +16,13 @@ import { useProductStatus } from "@/hooks/productStatus";
 
 export const useColumns = () => {
   const navigate = useNavigate();
-  const { data: models } = useModel.GetAll();
   const { data: userProducts } = useUserProduct.GetAll();
-  const { data: users } = useUser.GetAll();
-  const { data: suppliers } = useSupplier.GetAll();
-  const { data: productStatuses } = useProductStatus.GetAll();
+  const { data: modelLookup } = useModel.Lookup();
+  const { data: userLookup } = useUser.Lookup();
+  const { data: supplierLookup } = useSupplier.Lookup();
+  const { data: productStatusLookup } = useProductStatus.Lookup();
+
+
 
   const checkIn = (asset: IAsset) => {
     openAssetCheckInModal({
@@ -101,12 +102,7 @@ export const useColumns = () => {
       dataField: "modelId",
       caption: "Model",
       lookup: {
-        data:
-          models?.map((model) => ({
-            value: model.id,
-            label: model.name,
-          })) || [],
-        dataSource: lookupRequests().model,
+        data: modelLookup || [],
       },
       dataType: "string",
     },
@@ -114,12 +110,7 @@ export const useColumns = () => {
       dataField: "productStatusId",
       caption: "Status",
       lookup: {
-        data:
-          productStatuses?.map((productStatus) => ({
-            value: productStatus.id,
-            label: productStatus.name,
-          })) || [],
-        dataSource: lookupRequests().productStatus,
+        data: productStatusLookup || [],
       },
       dataType: "string",
     },
@@ -132,16 +123,13 @@ export const useColumns = () => {
           (userProduct) => userProduct?.assetId === (e as IAsset).id
         );
         if (!userProduct) return null;
-        const user = users?.find((user) => user.id === userProduct.userId);
-        if (user) return user.firstName + " " + user.lastName;
+        const user = userLookup?.find(
+          (user) => user.value === userProduct.userId
+        );
+        return user?.label;
       },
       lookup: {
-        data:
-          users?.map((user) => ({
-            value: user.id,
-            label: user.firstName + " " + user.lastName,
-          })) || [],
-        dataSource: lookupRequests().user,
+        data: userLookup || [],
       },
     },
     {
@@ -158,7 +146,9 @@ export const useColumns = () => {
         const userProduct = userProducts?.find(
           (userProduct) => userProduct?.assetId === (e as IAsset).id
         );
-        const user = users?.find((user) => user.id === userProduct?.userId);
+        const user = userLookup?.find(
+          (user) => user.value === userProduct?.userId
+        );
         return (
           <div style={{ display: "flex", justifyContent: "center" }}>
             <Button
@@ -199,12 +189,7 @@ export const useColumns = () => {
       caption: "Supplier",
       dataType: "string",
       lookup: {
-        data:
-          suppliers?.map((supplier) => ({
-            value: supplier.id,
-            label: supplier.name,
-          })) || [],
-        dataSource: lookupRequests().supplier,
+        data: supplierLookup || [],
       },
     },
   ];

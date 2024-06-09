@@ -1,42 +1,34 @@
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux/rootReducer";
-import { IBranch } from "@interfaces/serverInterfaces";
+import { IBranch } from "../../interfaces/serverInterfaces";
 import { useColumns } from "./columns";
-import { companyActions } from "../../redux/company/actions";
-import Gridtable from "@components/gridTable/GridTable";
-import { branchActions } from "../../redux/branch/actions";
 import { openBranchModal } from "../../modals/modals";
-import { locationActions } from "../../redux/location/actions";
+import { useContext } from "react";
+import { useBranch } from "@/hooks/branch";
+import GenericContext from "../../context/GenericContext";
+import Gridtable from "@components/gridTable/GridTable";
 
 const Branch = () => {
-  const dispatch = useDispatch();
-  const branches = useSelector((state: RootState) => state.branch.branches);
-
-  const refreshData = () => {
-    dispatch(companyActions.getAll());
-    dispatch(branchActions.getAll());
-    dispatch(locationActions.getAll());
-  };
+  const { drawerBadge } = useContext(GenericContext);
+  const { data, mutate: filter } = useBranch.Filter();
+  const { mutate: remove } = useBranch.Remove();
+  const { mutate: removeRange } = useBranch.RemoveRange();
 
   return (
     <>
       <div className="page__content__header">
         <div className="page__content__header__title">Branches</div>
+        {drawerBadge()}
       </div>
       <Gridtable
-        data={branches}
+        data={data || []}
         itemKey="id"
         columns={useColumns().columns}
-        refreshData={refreshData}
+        refreshData={() => filter([])}
         onRowUpdate={(branch) => openBranchModal(branch as IBranch)}
         onRowInsert={() => openBranchModal()}
-        onRowRemove={(id) => dispatch(branchActions.remove({ id: id }))}
-        onRowRemoveRange={(ids) =>
-          dispatch(branchActions.removeRange({ ids: ids }))
-        }
-        onApplyFilters={(filters) => dispatch(branchActions.filter(filters))}
+        onRowRemove={(id) => remove(id)}
+        onRowRemoveRange={(ids) => removeRange(ids)}
         excelColumns={useColumns().excelColumns}
+        onApplyFilters={(filters) => filter(filters)}
         enableToolbar
         enableEditActions
         enableSelectActions

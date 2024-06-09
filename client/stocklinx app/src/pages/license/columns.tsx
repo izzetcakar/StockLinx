@@ -1,67 +1,53 @@
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../redux/rootReducer";
-import {
-  DataColumn,
-  ExcelColumn,
-} from "@interfaces/gridTableInterfaces";
+import { DataColumn, ExcelColumn } from "@interfaces/gridTableInterfaces";
 import {
   CategoryType,
   IUserProduct,
   ILicense,
   IAssetProduct,
 } from "@interfaces/serverInterfaces";
-import { licenseActions } from "../../redux/license/actions";
 import { Anchor, Button } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
-import { closeModal, openCheckInModal } from "../../modals/modals";
+import { openCheckInModal } from "../../modals/modals";
 import {
   initialAssetProduct,
   initialUserProduct,
 } from "../../initials/initials";
+import { useManufacturer } from "@/hooks/manufacturer";
+import { useBranch } from "@/hooks/branch";
+import { useCategory } from "@/hooks/category";
+import { useLicense } from "@/hooks/license";
+import { useSupplier } from "@/hooks/supplier";
 
 export const useColumns = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const branches = useSelector((state: RootState) => state.branch.branches);
-  const manufacturers = useSelector(
-    (state: RootState) => state.manufacturer.manufacturers
-  );
-  const suppliers = useSelector((state: RootState) => state.supplier.suppliers);
-  const categories = useSelector(
-    (state: RootState) => state.category.categories
-  );
+  const { mutate: userCheckIn } = useLicense.UserCheckIn();
+  const { mutate: assetCheckIn } = useLicense.AssetCheckIn();
+  const { data: categories } = useCategory.GetAll();
+  const { data: branchLookup } = useBranch.Lookup();
+  const { data: manufacturerLookup } = useManufacturer.Lookup();
+  const { data: supplierLookup } = useSupplier.Lookup();
 
-  const handleUserCheckIn = (userProduct: IUserProduct) => {
-    dispatch(
-      licenseActions.userCheckIn({
-        checkInDto: {
-          userId: userProduct.userId,
-          productId: userProduct.licenseId as string,
-          assaignDate: userProduct.assignDate,
-          notes: userProduct.notes,
-          quantity: userProduct.quantity,
-        },
-        onSubmit: () => closeModal("userProduct_checkIn_modal"),
-      })
-    );
+  const onUserCheckInHandler = (userProduct: IUserProduct) => {
+    userCheckIn({
+      userId: userProduct.userId,
+      productId: userProduct.licenseId as string,
+      assaignDate: userProduct.assignDate,
+      notes: userProduct.notes,
+      quantity: userProduct.quantity,
+    });
   };
 
-  const handleAssetCheckIn = (userProduct: IAssetProduct) => {
-    dispatch(
-      licenseActions.assetCheckIn({
-        checkInDto: {
-          assetId: userProduct.assetId as string,
-          productId: userProduct.licenseId as string,
-          assaignDate: userProduct.assignDate,
-          notes: userProduct.notes,
-          quantity: userProduct.quantity,
-        },
-        onSubmit: () => closeModal("userProduct_checkIn_modal"),
-      })
-    );
+  const onAssetCheckInHandler = (userProduct: IAssetProduct) => {
+    assetCheckIn({
+      assetId: userProduct.assetId as string,
+      productId: userProduct.licenseId as string,
+      assaignDate: userProduct.assignDate,
+      notes: userProduct.notes,
+      quantity: userProduct.quantity,
+    });
   };
 
-  const checkIn = (id: string) => {
+  const onHeadToModal = (id: string) => {
     const newUserProduct = initialUserProduct;
     newUserProduct.licenseId = id;
     const newAssetProduct = initialAssetProduct;
@@ -69,9 +55,9 @@ export const useColumns = () => {
     openCheckInModal(
       ["User", "Asset"],
       newUserProduct,
-      handleUserCheckIn,
+      onUserCheckInHandler,
       newAssetProduct,
-      handleAssetCheckIn
+      onAssetCheckInHandler
     );
   };
   const columns: DataColumn[] = [
@@ -131,10 +117,7 @@ export const useColumns = () => {
       caption: "Manufacturer",
       dataField: "manufacturerId",
       lookup: {
-        data: manufacturers.map((manufacturer) => ({
-          value: manufacturer.id,
-          label: manufacturer.name,
-        })),
+        data: manufacturerLookup || [],
       },
       dataType: "string",
     },
@@ -159,7 +142,7 @@ export const useColumns = () => {
               color={"green"}
               variant="filled"
               size="xs"
-              onClick={() => checkIn((e as ILicense).id)}
+              onClick={() => onHeadToModal((e as ILicense).id)}
               disabled={(e as ILicense).availableQuantity === 0}
             >
               Check In
@@ -173,10 +156,7 @@ export const useColumns = () => {
       caption: "Branch",
       dataField: "branchId",
       lookup: {
-        data: branches.map((branch) => ({
-          value: branch.id,
-          label: branch.name,
-        })),
+        data: branchLookup || [],
       },
       dataType: "string",
       allowVisible: false,
@@ -203,10 +183,7 @@ export const useColumns = () => {
       caption: "Supplier",
       dataField: "supplierId",
       lookup: {
-        data: suppliers.map((supplier) => ({
-          value: supplier.id,
-          label: supplier.name,
-        })),
+        data: supplierLookup || [],
       },
       dataType: "string",
       allowVisible: false,
@@ -215,12 +192,13 @@ export const useColumns = () => {
       caption: "Category",
       dataField: "categoryId",
       lookup: {
-        data: categories
-          .filter((c) => c.type === CategoryType.LICENSE)
-          .map((category) => ({
-            value: category.id,
-            label: category.name,
-          })),
+        data:
+          categories
+            ?.filter((c) => c.type === CategoryType.LICENSE)
+            .map((category) => ({
+              value: category.id,
+              label: category.name,
+            })) || [],
       },
       dataType: "string",
       allowVisible: false,

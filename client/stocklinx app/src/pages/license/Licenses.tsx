@@ -1,36 +1,16 @@
-import { ILicense } from "@interfaces/serverInterfaces";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux/rootReducer";
-import { companyActions } from "../../redux/company/actions";
+import { ILicense } from "../../interfaces/serverInterfaces";
 import { useColumns } from "./columns";
-import { categoryActions } from "../../redux/category/actions";
-import { licenseActions } from "../../redux/license/actions";
-import { supplierActions } from "../../redux/supplier/actions";
-import { locationActions } from "../../redux/location/actions";
-import { branchActions } from "../../redux/branch/actions";
-import Gridtable from "@components/gridTable/GridTable";
 import { openLicenseModal } from "../../modals/modals";
-import { manufacturerActions } from "../../redux/manufacturer/actions";
-import { userActions } from "../../redux/user/actions";
-import GenericContext from "../../context/GenericContext";
 import { useContext } from "react";
+import { useLicense } from "@/hooks/license";
+import GenericContext from "../../context/GenericContext";
+import Gridtable from "@components/gridTable/GridTable";
 
 const License = () => {
-  const dispatch = useDispatch();
-  const licenses = useSelector((state: RootState) => state.license.licenses);
   const { drawerBadge } = useContext(GenericContext);
-
-  const refreshData = () => {
-    dispatch(supplierActions.getAll());
-    dispatch(licenseActions.getAll());
-    dispatch(categoryActions.getAll());
-    dispatch(locationActions.getAll());
-    dispatch(companyActions.getAll());
-    dispatch(branchActions.getAll());
-    dispatch(manufacturerActions.getAll());
-    dispatch(userActions.getAll());
-  };
+  const { data, mutate: filter } = useLicense.Filter();
+  const { mutate: remove } = useLicense.Remove();
+  const { mutate: removeRange } = useLicense.RemoveRange();
 
   return (
     <>
@@ -39,18 +19,16 @@ const License = () => {
         {drawerBadge()}
       </div>
       <Gridtable
-        data={licenses}
+        data={data || []}
         itemKey="id"
         columns={useColumns().columns}
-        refreshData={refreshData}
+        refreshData={() => filter([])}
         onRowUpdate={(license) => openLicenseModal(license as ILicense)}
         onRowInsert={() => openLicenseModal()}
-        onRowRemove={(id) => dispatch(licenseActions.remove({ id: id }))}
-        onRowRemoveRange={(ids) =>
-          dispatch(licenseActions.removeRange({ ids: ids }))
-        }
-        onApplyFilters={(filters) => dispatch(licenseActions.filter(filters))}
+        onRowRemove={(id) => remove(id)}
+        onRowRemoveRange={(ids) => removeRange(ids)}
         excelColumns={useColumns().excelColumns}
+        onApplyFilters={(filters) => filter(filters)}
         enableToolbar
         enableEditActions
         enableSelectActions

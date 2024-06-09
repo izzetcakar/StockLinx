@@ -1,52 +1,34 @@
-import { IModel } from "@interfaces/serverInterfaces";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux/rootReducer";
+import { IModel } from "../../interfaces/serverInterfaces";
 import { useColumns } from "./columns";
-import Gridtable from "@components/gridTable/GridTable";
-import { modelActions } from "../../redux/model/actions";
-import { branchActions } from "../../redux/branch/actions";
 import { openModelModal } from "../../modals/modals";
-import { categoryActions } from "../../redux/category/actions";
-import { fieldSetActions } from "../../redux/fieldSet/actions";
-import { fieldSetCustomFieldActions } from "../../redux/fieldSetCustomField/actions";
-import { customFieldActions } from "../../redux/customField/actions";
-import { modelFieldDataActions } from "../../redux/modelFieldData/actions";
-import { manufacturerActions } from "../../redux/manufacturer/actions";
+import { useContext } from "react";
+import { useModel } from "@/hooks/model";
+import GenericContext from "../../context/GenericContext";
+import Gridtable from "@components/gridTable/GridTable";
 
 const Model = () => {
-  const dispatch = useDispatch();
-  const models = useSelector((state: RootState) => state.model.models);
-
-  const refreshData = () => {
-    dispatch(modelActions.getAll());
-    dispatch(branchActions.getAll());
-    dispatch(categoryActions.getAll());
-    dispatch(fieldSetActions.getAll());
-    dispatch(fieldSetCustomFieldActions.getAll());
-    dispatch(customFieldActions.getAll());
-    dispatch(modelFieldDataActions.getAll());
-    dispatch(manufacturerActions.getAll());
-  };
+  const { drawerBadge } = useContext(GenericContext);
+  const { data, mutate: filter } = useModel.Filter();
+  const { mutate: remove } = useModel.Remove();
+  const { mutate: removeRange } = useModel.RemoveRange();
 
   return (
     <>
       <div className="page__content__header">
         <div className="page__content__header__title">Models</div>
+        {drawerBadge()}
       </div>
       <Gridtable
-        data={models}
+        data={data || []}
         itemKey="id"
         columns={useColumns().columns}
-        refreshData={refreshData}
+        refreshData={() => filter([])}
         onRowUpdate={(model) => openModelModal(model as IModel)}
         onRowInsert={() => openModelModal()}
-        onRowRemove={(id) => dispatch(modelActions.remove({ id: id }))}
-        onRowRemoveRange={(ids) =>
-          dispatch(modelActions.removeRange({ ids: ids }))
-        }
-        onApplyFilters={(filters) => dispatch(modelActions.filter(filters))}
+        onRowRemove={(id) => remove(id)}
+        onRowRemoveRange={(ids) => removeRange(ids)}
         excelColumns={useColumns().excelColumns}
+        onApplyFilters={(filters) => filter(filters)}
         enableToolbar
         enableEditActions
         enableSelectActions

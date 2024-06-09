@@ -1,32 +1,16 @@
-import { IComponent } from "@interfaces/serverInterfaces";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux/rootReducer";
-import { companyActions } from "../../redux/company/actions";
+import { IComponent } from "../../interfaces/serverInterfaces";
 import { useColumns } from "./columns";
-import Gridtable from "@components/gridTable/GridTable";
-import { categoryActions } from "../../redux/category/actions";
-import { componentActions } from "../../redux/component/actions";
-import { locationActions } from "../../redux/location/actions";
-import { branchActions } from "../../redux/branch/actions";
 import { openComponentModal } from "../../modals/modals";
 import { useContext } from "react";
+import { useComponent } from "@/hooks/component";
 import GenericContext from "../../context/GenericContext";
+import Gridtable from "@components/gridTable/GridTable";
 
 const Component = () => {
-  const dispatch = useDispatch();
-  const components = useSelector(
-    (state: RootState) => state.component.components
-  );
   const { drawerBadge } = useContext(GenericContext);
-
-  const refreshData = () => {
-    dispatch(componentActions.getAll());
-    dispatch(categoryActions.getAll());
-    dispatch(locationActions.getAll());
-    dispatch(companyActions.getAll());
-    dispatch(branchActions.getAll());
-  };
+  const { data, mutate: filter } = useComponent.Filter();
+  const { mutate: remove } = useComponent.Remove();
+  const { mutate: removeRange } = useComponent.RemoveRange();
 
   return (
     <>
@@ -35,18 +19,16 @@ const Component = () => {
         {drawerBadge()}
       </div>
       <Gridtable
-        data={components}
+        data={data || []}
         itemKey="id"
         columns={useColumns().columns}
-        refreshData={refreshData}
+        refreshData={() => filter([])}
         onRowUpdate={(component) => openComponentModal(component as IComponent)}
         onRowInsert={() => openComponentModal()}
-        onRowRemove={(id) => dispatch(componentActions.remove({ id: id }))}
-        onRowRemoveRange={(ids) =>
-          dispatch(componentActions.removeRange({ ids: ids }))
-        }
-        onApplyFilters={(filters) => dispatch(componentActions.filter(filters))}
+        onRowRemove={(id) => remove(id)}
+        onRowRemoveRange={(ids) => removeRange(ids)}
         excelColumns={useColumns().excelColumns}
+        onApplyFilters={(filters) => filter(filters)}
         enableToolbar
         enableEditActions
         enableSelectActions

@@ -1,18 +1,16 @@
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux/rootReducer";
-import {
-  DataColumn,
-  ExcelColumn,
-} from "@interfaces/gridTableInterfaces";
+import { DataColumn, ExcelColumn } from "@interfaces/gridTableInterfaces";
 import { useNavigate } from "react-router-dom";
 import { IDepartment } from "@interfaces/serverInterfaces";
 import { Anchor } from "@mantine/core";
+import { useBranch } from "@/hooks/branch";
+import { useLocation } from "@/hooks/location";
+import { useUser } from "@/hooks/user";
 
 export const useColumns = () => {
   const navigate = useNavigate();
-  const branches = useSelector((state: RootState) => state.branch.branches);
-  const locations = useSelector((state: RootState) => state.location.locations);
-  const users = useSelector((state: RootState) => state.user.users);
+  const { data: branchLookup } = useBranch.Lookup();
+  const { data: locationLookup } = useLocation.Lookup();
+  const { data: userLookup } = useUser.Lookup();
 
   const columns: DataColumn[] = [
     {
@@ -20,23 +18,18 @@ export const useColumns = () => {
       caption: "Branch",
       dataType: "string",
       lookup: {
-        data: branches.map((branch) => ({
-          value: branch.id,
-          label: branch.name,
-        })),
+        data: branchLookup || [],
       },
       renderComponent(e) {
+        const department = e as IDepartment;
+        const { data: branch } = useBranch.Get(department.branchId);
         return (
           <Anchor
             onClick={() => navigate(`/branch/${(e as IDepartment)?.branchId}`)}
             target="_blank"
             underline="always"
           >
-            {
-              branches.find(
-                (branch) => branch.id === (e as IDepartment)?.branchId
-              )?.name
-            }
+            {branch?.name}
           </Anchor>
         );
       },
@@ -62,12 +55,11 @@ export const useColumns = () => {
       caption: "Location",
       dataType: "string",
       lookup: {
-        data: locations.map((location) => ({
-          value: location.id,
-          label: location.name,
-        })),
+        data: locationLookup || [],
       },
       renderComponent(e) {
+        const department = e as IDepartment;
+        const { data: location } = useLocation.Get(department.locationId || "");
         return (
           <Anchor
             onClick={() =>
@@ -76,11 +68,7 @@ export const useColumns = () => {
             target="_blank"
             underline="always"
           >
-            {
-              locations.find(
-                (location) => location.id === (e as IDepartment)?.locationId
-              )?.name
-            }
+            {location?.name}
           </Anchor>
         );
       },
@@ -90,22 +78,18 @@ export const useColumns = () => {
       caption: "Manager",
       dataType: "string",
       lookup: {
-        data: users.map((user) => ({
-          value: user.id,
-          label: user.firstName + " " + user.lastName,
-        })),
+        data: userLookup || [],
       },
       renderComponent(e) {
+        const department = e as IDepartment;
+        const { data: user } = useUser.Get(department.managerId || "");
         return (
           <Anchor
             onClick={() => navigate(`/user/${(e as IDepartment)?.managerId}`)}
             target="_blank"
             underline="always"
           >
-            {
-              users.find((user) => user.id === (e as IDepartment)?.managerId)
-                ?.firstName
-            }
+            {user?.firstName + " " + user?.lastName}
           </Anchor>
         );
       },

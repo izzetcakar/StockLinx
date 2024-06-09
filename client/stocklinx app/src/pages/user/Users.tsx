@@ -1,30 +1,16 @@
-import { IUser } from "@interfaces/serverInterfaces";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux/rootReducer";
+import { IUser } from "../../interfaces/serverInterfaces";
 import { useColumns } from "./columns";
-import Gridtable from "@components/gridTable/GridTable";
-import { userActions } from "../../redux/user/actions";
-import { companyActions } from "../../redux/company/actions";
-import { locationActions } from "../../redux/location/actions";
-import { branchActions } from "../../redux/branch/actions";
-import { departmentActions } from "../../redux/department/actions";
 import { openUserModal } from "../../modals/modals";
-import GenericContext from "../../context/GenericContext";
 import { useContext } from "react";
+import { useUser } from "@/hooks/user";
+import GenericContext from "../../context/GenericContext";
+import Gridtable from "@components/gridTable/GridTable";
 
 const User = () => {
-  const dispatch = useDispatch();
-  const users = useSelector((state: RootState) => state.user.users);
   const { drawerBadge } = useContext(GenericContext);
-
-  const refreshData = () => {
-    dispatch(userActions.getAll());
-    dispatch(locationActions.getAll());
-    dispatch(companyActions.getAll());
-    dispatch(branchActions.getAll());
-    dispatch(departmentActions.getAll());
-  };
+  const { data, mutate: filter } = useUser.Filter();
+  const { mutate: remove } = useUser.Remove();
+  const { mutate: removeRange } = useUser.RemoveRange();
 
   return (
     <>
@@ -33,17 +19,15 @@ const User = () => {
         {drawerBadge()}
       </div>
       <Gridtable
-        data={users}
+        data={data || []}
         itemKey="id"
         columns={useColumns().columns}
-        refreshData={refreshData}
+        refreshData={() => filter([])}
         onRowUpdate={(user) => openUserModal(user as IUser)}
         onRowInsert={() => openUserModal()}
-        onRowRemove={(id) => dispatch(userActions.remove({ id: id }))}
-        onRowRemoveRange={(ids) =>
-          dispatch(userActions.removeRange({ ids: ids }))
-        }
-        onApplyFilters={(filters) => dispatch(userActions.filter(filters))}
+        onRowRemove={(id) => remove(id)}
+        onRowRemoveRange={(ids) => removeRange(ids)}
+        onApplyFilters={(filters) => filter(filters)}
         enableToolbar
         enableEditActions
         enableSelectActions

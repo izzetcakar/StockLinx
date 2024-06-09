@@ -1,16 +1,14 @@
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux/rootReducer";
 import { DataColumn } from "@interfaces/gridTableInterfaces";
 import { IUser } from "@interfaces/serverInterfaces";
 import { useNavigate } from "react-router-dom";
 import { Anchor } from "@mantine/core";
+import { useBranch } from "@/hooks/branch";
+import { useDepartment } from "@/hooks/department";
 
 export const useColumns = () => {
   const navigate = useNavigate();
-  const branches = useSelector((state: RootState) => state.branch.branches);
-  const departments = useSelector(
-    (state: RootState) => state.department.departments
-  );
+  const { data: branchLookup } = useBranch.Lookup();
+  const { data: departmentLookup } = useDepartment.Lookup();
 
   const columns: DataColumn[] = [
     {
@@ -18,40 +16,21 @@ export const useColumns = () => {
       caption: "Branch",
       dataType: "string",
       lookup: {
-        data: branches.map((branch) => ({
-          value: branch.id,
-          label: branch.name,
-        })),
+        data: branchLookup || [],
       },
       renderComponent(e) {
+        const user = e as IUser;
+        const { data: department } = useDepartment.Get(user.departmentId);
+        const branch = branchLookup?.find(
+          (branch) => branch.value === department?.branchId
+        );
         return (
           <Anchor
-            onClick={() =>
-              navigate(
-                `/branch/${
-                  branches.find(
-                    (branch) =>
-                      branch.id ===
-                      departments.find(
-                        (department) =>
-                          department.id === (e as IUser).departmentId
-                      )?.branchId
-                  )?.id
-                }`
-              )
-            }
+            onClick={() => navigate(`/branch/${branch?.value}`)}
             target="_blank"
             underline="always"
           >
-            {
-              branches.find(
-                (branch) =>
-                  branch.id ===
-                  departments.find(
-                    (department) => department.id === (e as IUser).departmentId
-                  )?.branchId
-              )?.name
-            }
+            {branch?.label}
           </Anchor>
         );
       },
@@ -61,31 +40,18 @@ export const useColumns = () => {
       caption: "Department",
       dataType: "string",
       lookup: {
-        data: departments.map((department) => ({
-          value: department.id,
-          label: department.name,
-        })),
+        data: departmentLookup || [],
       },
       renderComponent(e) {
+        const user = e as IUser;
+        const { data: department } = useDepartment.Get(user.departmentId);
         return (
           <Anchor
-            onClick={() =>
-              navigate(
-                `/department/${
-                  departments.find(
-                    (department) => department.id === (e as IUser).departmentId
-                  )?.id
-                }`
-              )
-            }
+            onClick={() => navigate(`/department/${department?.id}`)}
             target="_blank"
             underline="always"
           >
-            {
-              departments.find(
-                (department) => department.id === (e as IUser).departmentId
-              )?.name
-            }
+            {department?.name}
           </Anchor>
         );
       },

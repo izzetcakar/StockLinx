@@ -124,7 +124,7 @@ const Lookup = () => {
 };
 
 const CheckIn = () => {
-  useMutation({
+  return useMutation({
     mutationKey: queryKeys.CHECK_IN_ACCESSORY,
     mutationFn: (dto: UserProductCheckInDto) => accessoryRequests.checkIn(dto),
     onSuccess: (dto) => {
@@ -137,13 +137,12 @@ const CheckIn = () => {
 };
 
 const CheckOut = () => {
-  useMutation({
+  return useMutation({
     mutationKey: queryKeys.CHECK_OUT_ACCESSORY,
     mutationFn: (dto: UserProductCheckOutDto) =>
       accessoryRequests.checkOut(dto),
     onSuccess: () => {
       queryClient.invalidateQueries(queryKeys.FETCH_ACCESSORY);
-      queryClient.invalidateQueries(queryKeys.FETCH_ACCESSORIES);
     },
   });
 };

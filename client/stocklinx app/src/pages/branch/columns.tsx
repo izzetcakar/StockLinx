@@ -1,40 +1,32 @@
 import { Anchor } from "@mantine/core";
-import {
-  DataColumn,
-  ExcelColumn,
-} from "@interfaces/gridTableInterfaces";
-import { RootState } from "../../redux/rootReducer";
-import { useSelector } from "react-redux";
+import { DataColumn, ExcelColumn } from "@interfaces/gridTableInterfaces";
 import { useNavigate } from "react-router-dom";
 import { IBranch } from "@interfaces/serverInterfaces";
+import { useCompany } from "@/hooks/company";
+import { useLocation } from "@/hooks/location";
 
 export const useColumns = () => {
   const navigate = useNavigate();
-  const companies = useSelector((state: RootState) => state.company.companies);
-  const locations = useSelector((state: RootState) => state.location.locations);
+  const { data: companyLookup } = useCompany.Lookup();
+  const { data: locationLookup } = useLocation.Lookup();
+
   const columns: DataColumn[] = [
     {
       dataField: "companyId",
       caption: "Company",
       dataType: "action",
       lookup: {
-        data: companies.map((company) => ({
-          value: company.id,
-          label: company.name,
-        })),
+        data: companyLookup || [],
       },
       renderComponent(e) {
+        const { data: company } = useCompany.Get((e as IBranch)?.companyId);
         return (
           <Anchor
             onClick={() => navigate(`/company/${(e as IBranch)?.companyId}`)}
             target="_blank"
             underline="always"
           >
-            {
-              companies.find(
-                (company) => company.id === (e as IBranch)?.companyId
-              )?.name
-            }
+            {company?.name || ""}
           </Anchor>
         );
       },
@@ -59,24 +51,18 @@ export const useColumns = () => {
       dataField: "locationId",
       caption: "Location",
       dataType: "string",
-      lookup: {
-        data: locations.map((location) => ({
-          value: location.id,
-          label: location.name,
-        })),
-      },
+      lookup: { data: locationLookup || [] },
       renderComponent(e) {
+        const { data: location } = useLocation.Get(
+          (e as IBranch)?.locationId || ""
+        );
         return (
           <Anchor
             onClick={() => navigate(`/location/${(e as IBranch)?.locationId}`)}
             target="_blank"
             underline="always"
           >
-            {
-              locations.find(
-                (location) => location.id === (e as IBranch)?.locationId
-              )?.name
-            }
+            {location?.name || ""}
           </Anchor>
         );
       },

@@ -1,43 +1,36 @@
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../redux/rootReducer";
-import {
-  DataColumn,
-  ExcelColumn,
-} from "@interfaces/gridTableInterfaces";
+import { DataColumn, ExcelColumn } from "@interfaces/gridTableInterfaces";
 import { useNavigate } from "react-router-dom";
 import { Anchor, Button } from "@mantine/core";
-import { IAssetProduct, IComponent } from "@interfaces/serverInterfaces";
-import { componentActions } from "../../redux/component/actions";
-import { closeModal, openCheckInModal } from "../../modals/modals";
+import {
+  CategoryType,
+  IAssetProduct,
+  IComponent,
+} from "@interfaces/serverInterfaces";
+import { openCheckInModal } from "../../modals/modals";
 import { initialAssetProduct } from "../../initials/initials";
+import { useCategory } from "@/hooks/category";
+import { useBranch } from "@/hooks/branch";
+import { useLocation } from "@/hooks/location";
+import { useComponent } from "@/hooks/component";
 
 export const useColumns = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const branches = useSelector((state: RootState) => state.branch.branches);
-  const locations = useSelector((state: RootState) => state.location.locations);
-  const categories = useSelector(
-    (state: RootState) => state.category.categories
-  );
+  const { mutate: checkIn } = useComponent.CheckIn();
+  const { data: categories } = useCategory.GetAll();
+  const { data: branchLookup } = useBranch.Lookup();
+  const { data: locationLookup } = useLocation.Lookup();
 
-  const handleCheckIn = (data: IAssetProduct) => {
-    dispatch(
-      componentActions.checkIn({
-        checkInDto: {
-          assetId: data.assetId,
-          productId: data.componentId as string,
-          notes: data.notes,
-          assaignDate: data.assignDate,
-          quantity: data.quantity,
-        },
-        onSubmit: () => {
-          closeModal("assetProduct_checkIn_modal");
-        },
-      })
-    );
+  const onCheckInHandler = (data: IAssetProduct) => {
+    checkIn({
+      assetId: data.assetId,
+      productId: data.componentId as string,
+      notes: data.notes,
+      assaignDate: data.assignDate,
+      quantity: data.quantity,
+    });
   };
 
-  const checkIn = (id: string) => {
+  const onHeadToModal = (id: string) => {
     const newAssetProduct = initialAssetProduct;
     newAssetProduct.componentId = id;
     openCheckInModal(
@@ -45,7 +38,7 @@ export const useColumns = () => {
       undefined,
       undefined,
       newAssetProduct,
-      handleCheckIn
+      onCheckInHandler
     );
   };
 
@@ -91,10 +84,13 @@ export const useColumns = () => {
       caption: "Category",
       dataField: "categoryId",
       lookup: {
-        data: categories.map((category) => ({
-          value: category.id,
-          label: category.name,
-        })),
+        data:
+          categories
+            ?.filter((category) => category.type === CategoryType.COMPONENT)
+            .map((category) => ({
+              value: category.id,
+              label: category.name,
+            })) || [],
       },
       dataType: "string",
     },
@@ -112,10 +108,7 @@ export const useColumns = () => {
       caption: "Location",
       dataField: "locationId",
       lookup: {
-        data: locations.map((location) => ({
-          value: location.id,
-          label: location.name,
-        })),
+        data: locationLookup || [],
       },
       dataType: "string",
     },
@@ -150,7 +143,7 @@ export const useColumns = () => {
                 component.availableQuantity !== undefined &&
                 component?.availableQuantity < 1
               }
-              onClick={() => checkIn(component.id)}
+              onClick={() => onHeadToModal(component.id)}
             >
               Check In
             </Button>
@@ -163,10 +156,7 @@ export const useColumns = () => {
       caption: "Branch",
       dataField: "branchId",
       lookup: {
-        data: branches.map((branch) => ({
-          value: branch.id,
-          label: branch.name,
-        })),
+        data: branchLookup || [],
       },
       dataType: "string",
       allowVisible: false,

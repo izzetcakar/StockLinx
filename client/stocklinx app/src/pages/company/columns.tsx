@@ -1,17 +1,13 @@
-import { useSelector } from "react-redux";
-import {
-  DataColumn,
-  ExcelColumn,
-} from "@interfaces/gridTableInterfaces";
-import { RootState } from "../../redux/rootReducer";
+import { DataColumn, ExcelColumn } from "@interfaces/gridTableInterfaces";
 import { Anchor, Image } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import { ICompany } from "@interfaces/serverInterfaces";
 import { getImage } from "../../utils/Image";
+import { useLocation } from "@/hooks/location";
 
 export const useColumns = () => {
   const navigate = useNavigate();
-  const locations = useSelector((state: RootState) => state.location.locations);
+  const { data: locationLookup } = useLocation.Lookup();
 
   const columns: DataColumn[] = [
     {
@@ -53,23 +49,19 @@ export const useColumns = () => {
       dataField: "locationId",
       dataType: "string",
       lookup: {
-        data: locations.map((location) => ({
-          value: location.id,
-          label: location.name,
-        })),
+        data: locationLookup || [],
       },
       renderComponent(e) {
+        const { data: location } = useLocation.Get(
+          (e as ICompany)?.locationId || ""
+        );
         return (
           <Anchor
             onClick={() => navigate(`/location/${(e as ICompany)?.locationId}`)}
             target="_blank"
             underline="always"
           >
-            {
-              locations.find(
-                (location) => location.id === (e as ICompany)?.locationId
-              )?.name
-            }
+            {location?.name || ""}
           </Anchor>
         );
       },

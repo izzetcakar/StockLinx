@@ -1,38 +1,34 @@
-import { ILocation } from "@interfaces/serverInterfaces";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux/rootReducer";
+import { ILocation } from "../../interfaces/serverInterfaces";
 import { useColumns } from "./columns";
-import Gridtable from "@components/gridTable/GridTable";
-import { locationActions } from "../../redux/location/actions";
 import { openLocationModal } from "../../modals/modals";
+import { useContext } from "react";
+import { useLocation } from "@/hooks/location";
+import GenericContext from "../../context/GenericContext";
+import Gridtable from "@components/gridTable/GridTable";
 
 const Location = () => {
-  const dispatch = useDispatch();
-  const locations = useSelector((state: RootState) => state.location.locations);
-
-  const refreshData = () => {
-    dispatch(locationActions.getAll());
-  };
+  const { drawerBadge } = useContext(GenericContext);
+  const { data, mutate: filter } = useLocation.Filter();
+  const { mutate: remove } = useLocation.Remove();
+  const { mutate: removeRange } = useLocation.RemoveRange();
 
   return (
     <>
       <div className="page__content__header">
         <div className="page__content__header__title">Locations</div>
+        {drawerBadge()}
       </div>
       <Gridtable
-        data={locations}
+        data={data || []}
         itemKey="id"
         columns={useColumns().columns}
-        refreshData={refreshData}
+        refreshData={() => filter([])}
         onRowUpdate={(location) => openLocationModal(location as ILocation)}
         onRowInsert={() => openLocationModal()}
-        onRowRemove={(id) => dispatch(locationActions.remove({ id: id }))}
-        onRowRemoveRange={(ids) =>
-          dispatch(locationActions.removeRange({ ids: ids }))
-        }
-        onApplyFilters={(filters) => dispatch(locationActions.filter(filters))}
+        onRowRemove={(id) => remove(id)}
+        onRowRemoveRange={(ids) => removeRange(ids)}
         excelColumns={useColumns().excelColumns}
+        onApplyFilters={(filters) => filter(filters)}
         enableToolbar
         enableEditActions
         enableSelectActions

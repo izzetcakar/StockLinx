@@ -124,7 +124,7 @@ const Filter = () => {
 };
 
 const Lookup = () => {
-  return useQuery(queryKeys.LOOKUP_DEPARTMENTS, departmentRequests.getAll);
+  return useQuery(queryKeys.LOOKUP_DEPARTMENTS, departmentRequests.lookup);
 };
 
 export const useDepartment = {

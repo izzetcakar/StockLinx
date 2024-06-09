@@ -1,44 +1,34 @@
-import { ISupplier } from "@interfaces/serverInterfaces";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux/rootReducer";
+import { ISupplier } from "../../interfaces/serverInterfaces";
 import { useColumns } from "./columns";
-import Gridtable from "@components/gridTable/GridTable";
-import { companyActions } from "../../redux/company/actions";
-import { supplierActions } from "../../redux/supplier/actions";
-import { locationActions } from "../../redux/location/actions";
-import { branchActions } from "../../redux/branch/actions";
 import { openSupplierModal } from "../../modals/modals";
+import { useContext } from "react";
+import { useSupplier } from "@/hooks/supplier";
+import GenericContext from "../../context/GenericContext";
+import Gridtable from "@components/gridTable/GridTable";
 
 const Supplier = () => {
-  const dispatch = useDispatch();
-  const suppliers = useSelector((state: RootState) => state.supplier.suppliers);
-
-  const refreshData = () => {
-    dispatch(supplierActions.getAll());
-    dispatch(locationActions.getAll());
-    dispatch(companyActions.getAll());
-    dispatch(branchActions.getAll());
-  };
+  const { drawerBadge } = useContext(GenericContext);
+  const { data, mutate: filter } = useSupplier.Filter();
+  const { mutate: remove } = useSupplier.Remove();
+  const { mutate: removeRange } = useSupplier.RemoveRange();
 
   return (
     <>
       <div className="page__content__header">
         <div className="page__content__header__title">Suppliers</div>
+        {drawerBadge()}
       </div>
       <Gridtable
-        data={suppliers}
+        data={data || []}
         itemKey="id"
         columns={useColumns().columns}
-        refreshData={refreshData}
+        refreshData={() => filter([])}
         onRowUpdate={(supplier) => openSupplierModal(supplier as ISupplier)}
         onRowInsert={() => openSupplierModal()}
-        onRowRemove={(id) => dispatch(supplierActions.remove({ id: id }))}
-        onRowRemoveRange={(ids) =>
-          dispatch(supplierActions.removeRange({ ids: ids }))
-        }
-        onApplyFilters={(filters) => dispatch(supplierActions.filter(filters))}
+        onRowRemove={(id) => remove(id)}
+        onRowRemoveRange={(ids) => removeRange(ids)}
         excelColumns={useColumns().excelColumns}
+        onApplyFilters={(filters) => filter(filters)}
         enableToolbar
         enableEditActions
         enableSelectActions

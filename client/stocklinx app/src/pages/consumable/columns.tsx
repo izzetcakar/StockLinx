@@ -1,9 +1,4 @@
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../redux/rootReducer";
-import {
-  DataColumn,
-  ExcelColumn,
-} from "@interfaces/gridTableInterfaces";
+import { DataColumn, ExcelColumn } from "@interfaces/gridTableInterfaces";
 import {
   CategoryType,
   IConsumable,
@@ -11,41 +6,36 @@ import {
 } from "@interfaces/serverInterfaces";
 import { Anchor, Button } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
-import { consumableActions } from "../../redux/consumable/actions";
-import { closeModal, openCheckInModal } from "../../modals/modals";
+import { openCheckInModal } from "../../modals/modals";
 import { initialUserProduct } from "../../initials/initials";
+import { useConsumable } from "@/hooks/consumable";
+import { useCategory } from "@/hooks/category";
+import { useBranch } from "@/hooks/branch";
+import { useSupplier } from "@/hooks/supplier";
+import { useManufacturer } from "@/hooks/manufacturer";
 
 export const useColumns = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const branches = useSelector((state: RootState) => state.branch.branches);
-  const suppliers = useSelector((state: RootState) => state.supplier.suppliers);
-  const manufacturers = useSelector(
-    (state: RootState) => state.manufacturer.manufacturers
-  );
-  const categories = useSelector(
-    (state: RootState) => state.category.categories
-  );
+  const { mutate: checkIn } = useConsumable.CheckIn();
+  const { data: categories } = useCategory.GetAll();
+  const { data: branchLookup } = useBranch.Lookup();
+  const { data: supplierLookup } = useSupplier.Lookup();
+  const { data: manufacturerLookup } = useManufacturer.Lookup();
 
-  const handleCheckIn = (data: IUserProduct) => {
-    dispatch(
-      consumableActions.checkIn({
-        checkInDto: {
-          productId: data.accessoryId as string,
-          userId: data.userId,
-          assaignDate: data.assignDate,
-          notes: data.notes,
-          quantity: data.quantity,
-        },
-        onSubmit: () => closeModal("userProduct_checkIn_modal"),
-      })
-    );
+  const onCheckInHandler = (data: IUserProduct) => {
+    checkIn({
+      productId: data.accessoryId as string,
+      userId: data.userId,
+      assaignDate: data.assignDate,
+      notes: data.notes,
+      quantity: data.quantity,
+    });
   };
 
-  const checkIn = (id: string) => {
+  const onHeadToModal = (id: string) => {
     const newUserProduct = initialUserProduct;
     newUserProduct.accessoryId = id;
-    openCheckInModal(["User"], newUserProduct, handleCheckIn);
+    openCheckInModal(["User"], newUserProduct, onCheckInHandler);
   };
 
   const columns: DataColumn[] = [
@@ -74,12 +64,13 @@ export const useColumns = () => {
       caption: "Category",
       dataField: "categoryId",
       lookup: {
-        data: categories
-          .filter((category) => category.type === CategoryType.CONSUMABLE)
-          .map((category) => ({
-            value: category.id,
-            label: category.name,
-          })),
+        data:
+          categories
+            ?.filter((category) => category.type === CategoryType.CONSUMABLE)
+            .map((category) => ({
+              value: category.id,
+              label: category.name,
+            })) || [],
       },
       dataType: "string",
     },
@@ -156,7 +147,7 @@ export const useColumns = () => {
                 consumable.availableQuantity !== undefined &&
                 consumable?.availableQuantity < 1
               }
-              onClick={() => checkIn(consumable.id)}
+              onClick={() => onHeadToModal(consumable.id)}
             >
               Check In
             </Button>
@@ -169,10 +160,7 @@ export const useColumns = () => {
       caption: "Branch",
       dataField: "branchId",
       lookup: {
-        data: branches.map((branch) => ({
-          value: branch.id,
-          label: branch.name,
-        })),
+        data: branchLookup || [],
       },
       dataType: "string",
       allowVisible: false,
@@ -181,10 +169,7 @@ export const useColumns = () => {
       caption: "Supplier",
       dataField: "supplierId",
       lookup: {
-        data: suppliers.map((supplier) => ({
-          value: supplier.id,
-          label: supplier.name,
-        })),
+        data: supplierLookup || [],
       },
       dataType: "string",
       allowVisible: false,
@@ -193,10 +178,7 @@ export const useColumns = () => {
       caption: "Manufacturer",
       dataField: "manufacturerId",
       lookup: {
-        data: manufacturers.map((manufacturer) => ({
-          value: manufacturer.id,
-          label: manufacturer.name,
-        })),
+        data: manufacturerLookup || [],
       },
       dataType: "string",
       allowVisible: false,
