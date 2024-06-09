@@ -35,6 +35,10 @@ const filter = (queryFilters: QueryFilter[]) => {
   return baseRequests.filter<ILocation>(requestUrl, queryFilters);
 };
 
+const lookup = () => {
+  return baseRequests.lookup(requestUrl);
+};
+
 export const locationRequests = {
   getAll,
   get,
@@ -44,4 +48,5 @@ export const locationRequests = {
   remove,
   removeRange,
   filter,
+  lookup,
 };

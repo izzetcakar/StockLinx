@@ -19,6 +19,7 @@ enum queryKeys {
   CHECK_IN_ACCESSORY = "CHECK_IN_ACCESSORY",
   CHECK_OUT_ACCESSORY = "CHECK_OUT_ACCESSORY",
   FILTER_ACCESSORIES = "FILTER_ACCESSORIES",
+  LOOKUP_ACCESSORIES = "LOOKUP_ACCESSORIES",
 }
 
 const GetAll = () => {
@@ -51,8 +52,8 @@ const Create = () => {
 const CreateRange = () => {
   return useMutation({
     mutationKey: queryKeys.CREATE_RANGE_ACCESSORY,
-    mutationFn: (accessorıes: IAccessory[]) =>
-      accessoryRequests.createRange(accessorıes),
+    mutationFn: (accessories: IAccessory[]) =>
+      accessoryRequests.createRange(accessories),
     onSuccess: (accessories) => {
       queryClient.setQueryData<IAccessory[]>(
         queryKeys.FETCH_ACCESSORIES,
@@ -68,21 +69,21 @@ const Update = () => {
   return useMutation({
     mutationKey: queryKeys.UPDATE_ACCESSORY,
     mutationFn: (accessory: IAccessory) => accessoryRequests.update(accessory),
-    onSuccess: (accesory) => {
+    onSuccess: (accessory) => {
       queryClient.setQueryData<IAccessory[]>(
         queryKeys.FETCH_ACCESSORIES,
         (old) => {
           if (old) {
-            const index = old.findIndex((x) => x.id === accesory.id);
-            old[index] = accesory;
+            const index = old.findIndex((x) => x.id === accessory.id);
+            old[index] = accessory;
             return [...old];
           }
-          return [accesory];
+          return [accessory];
         }
       );
       queryClient.setQueryData<IAccessory>(
-        [queryKeys.FETCH_ACCESSORY, accesory.id],
-        accesory
+        [queryKeys.FETCH_ACCESSORY, accessory.id],
+        accessory
       );
     },
   });
@@ -116,6 +117,10 @@ const Filter = () => {
       queryClient.setQueryData<IAccessory[]>(queryKeys.FETCH_ACCESSORIES, data);
     },
   });
+};
+
+const Lookup = () => {
+  return useQuery(queryKeys.LOOKUP_ACCESSORIES, accessoryRequests.lookup);
 };
 
 const CheckIn = () => {
@@ -152,6 +157,7 @@ export const useAccessory = {
   Remove,
   RemoveRange,
   Filter,
+  Lookup,
   CheckIn,
   CheckOut,
 };

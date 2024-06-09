@@ -15,6 +15,7 @@ enum queryKeys {
   CHECK_IN_CATEGORY = "CHECK_IN_CATEGORY",
   CHECK_OUT_CATEGORY = "CHECK_OUT_CATEGORY",
   FILTER_CATEGORIES = "FILTER_CATEGORIES",
+  LOOKUP_CATEGORIES = "LOOKUP_CATEGORIES",
 }
 
 const GetAll = () => {
@@ -24,96 +25,84 @@ const GetAll = () => {
   );
 };
 
-const Get =(id: string) => {
+const Get = (id: string) => {
   return useQuery<ICategory>({
     queryKey: [queryKeys.FETCH_CATEGORY, id],
     queryFn: () => categoryRequests.get(id),
   });
 };
 
-const Create =(category: ICategory) => {
-  return useMutation<ICategory>({
+const Create = () => {
+  return useMutation({
     mutationKey: queryKeys.CREATE_CATEGORY,
-    mutationFn: () => categoryRequests.create(category),
-    onSuccess: () => {
+    mutationFn: (category: ICategory) => categoryRequests.create(category),
+    onSuccess: (category) => {
+      queryClient.invalidateQueries(queryKeys.FETCH_CATEGORY);
       queryClient.setQueryData<ICategory[]>(
-        queryKeys.CREATE_CATEGORY,
+        queryKeys.FETCH_CATEGORIES,
         (old) => {
           return old ? [...old, category] : [category];
         }
       );
-      queryClient.invalidateQueries(queryKeys.FETCH_CATEGORIES);
-      queryClient.invalidateQueries(queryKeys.FETCH_CATEGORY);
     },
   });
 };
 
-const CreateRange = (categories: ICategory[]) => {
-  return useMutation<ICategory[]>({
+const CreateRange = () => {
+  return useMutation({
     mutationKey: queryKeys.CREATE_RANGE_CATEGORY,
-    mutationFn: () => categoryRequests.createRange(categories),
-    onSuccess: () => {
-      queryClient.setQueriesData<ICategory[]>(
-        queryKeys.CREATE_RANGE_CATEGORY,
+    mutationFn: (categories: ICategory[]) =>
+      categoryRequests.createRange(categories),
+    onSuccess: (categories) => {
+      queryClient.setQueryData<ICategory[]>(
+        queryKeys.FETCH_CATEGORIES,
         (old) => {
           return old ? [...old, ...categories] : categories;
         }
       );
-      queryClient.invalidateQueries(queryKeys.CREATE_RANGE_CATEGORY);
-      queryClient.invalidateQueries(queryKeys.FETCH_CATEGORIES);
     },
   });
 };
 
-const Update = (category: ICategory) => {
-  return useMutation<ICategory>({
+const Update = () => {
+  return useMutation({
     mutationKey: queryKeys.UPDATE_CATEGORY,
-    mutationFn: () => categoryRequests.update(category),
-    onSuccess: () => {
+    mutationFn: (category: ICategory) => categoryRequests.update(category),
+    onSuccess: (category) => {
       queryClient.setQueryData<ICategory[]>(
-        queryKeys.UPDATE_CATEGORY,
+        queryKeys.FETCH_CATEGORIES,
         (old) => {
-          return old
-            ? old.map((item) => (item.id === category.id ? category : item))
-            : [];
+          if (old) {
+            const index = old.findIndex((x) => x.id === category.id);
+            old[index] = category;
+            return [...old];
+          }
+          return [category];
         }
       );
-      queryClient.invalidateQueries(queryKeys.UPDATE_CATEGORY);
-      queryClient.invalidateQueries(queryKeys.FETCH_CATEGORIES);
-      queryClient.invalidateQueries([queryKeys.FETCH_CATEGORY, category.id]);
+      queryClient.setQueryData<ICategory>(
+        [queryKeys.FETCH_CATEGORY, category.id],
+        category
+      );
     },
   });
 };
 
-const Remove = (id: string) => {
+const Remove = () => {
   return useMutation({
     mutationKey: queryKeys.DELETE_CATEGORY,
-    mutationFn: () => categoryRequests.remove(id),
+    mutationFn: (id: string) => categoryRequests.remove(id),
     onSuccess: () => {
-      queryClient.setQueryData<ICategory[]>(
-        queryKeys.DELETE_CATEGORY,
-        (old) => {
-          return old ? old.filter((item) => item.id !== id) : [];
-        }
-      );
-      queryClient.invalidateQueries(queryKeys.DELETE_CATEGORY);
       queryClient.invalidateQueries(queryKeys.FETCH_CATEGORIES);
     },
   });
 };
 
-const RemoveRange = (ids: string[]) => {
+const RemoveRange = () => {
   return useMutation({
     mutationKey: queryKeys.DELETE_RANGE_CATEGORY,
-    mutationFn: () => categoryRequests.removeRange(ids),
+    mutationFn: (ids: string[]) => categoryRequests.removeRange(ids),
     onSuccess: () => {
-      queryClient.setQueryData<ICategory[]>(
-        queryKeys.DELETE_RANGE_CATEGORY,
-        (old) => {
-          return old ? old.filter((item) => !ids.includes(item.id)) : [];
-        }
-      );
-      queryClient.invalidateQueries(queryKeys.DELETE_RANGE_CATEGORY);
       queryClient.invalidateQueries(queryKeys.FETCH_CATEGORIES);
     },
   });
@@ -129,6 +118,10 @@ const Filter = () => {
   });
 };
 
+const Lookup = () => {
+  return useQuery(queryKeys.LOOKUP_CATEGORIES, categoryRequests.lookup);
+};
+
 export const useCategory = {
   GetAll,
   Get,
@@ -138,4 +131,5 @@ export const useCategory = {
   Remove,
   RemoveRange,
   Filter,
+  Lookup,
 };

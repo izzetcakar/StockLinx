@@ -19,6 +19,7 @@ enum queryKeys {
   CHECK_IN_CONSUMABLE = "CHECK_IN_CONSUMABLE",
   CHECK_OUT_CONSUMABLE = "CHECK_OUT_CONSUMABLE",
   FILTER_CONSUMABLES = "FILTER_CONSUMABLES",
+  LOOKUP_CONSUMABLES = "LOOKUP_CONSUMABLES",
 }
 
 const GetAll = () => {
@@ -28,99 +29,86 @@ const GetAll = () => {
   );
 };
 
-const Get =(id: string) => {
+const Get = (id: string) => {
   return useQuery<IConsumable>({
     queryKey: [queryKeys.FETCH_CONSUMABLE, id],
     queryFn: () => consumableRequests.get(id),
   });
 };
 
-const Create =(consumable: IConsumable) => {
-  return useMutation<IConsumable>({
+const Create = () => {
+  return useMutation({
     mutationKey: queryKeys.CREATE_CONSUMABLE,
-    mutationFn: () => consumableRequests.create(consumable),
-    onSuccess: () => {
+    mutationFn: (consumable: IConsumable) =>
+      consumableRequests.create(consumable),
+    onSuccess: (consumable) => {
+      queryClient.invalidateQueries(queryKeys.FETCH_CONSUMABLE);
       queryClient.setQueryData<IConsumable[]>(
-        queryKeys.CREATE_CONSUMABLE,
+        queryKeys.FETCH_CONSUMABLES,
         (old) => {
           return old ? [...old, consumable] : [consumable];
         }
       );
-      queryClient.invalidateQueries(queryKeys.FETCH_CONSUMABLES);
-      queryClient.invalidateQueries(queryKeys.FETCH_CONSUMABLE);
     },
   });
 };
 
-const CreateRange = (consumables: IConsumable[]) => {
-  return useMutation<IConsumable[]>({
+const CreateRange = () => {
+  return useMutation({
     mutationKey: queryKeys.CREATE_RANGE_CONSUMABLE,
-    mutationFn: () => consumableRequests.createRange(consumables),
-    onSuccess: () => {
-      queryClient.setQueriesData<IConsumable[]>(
-        queryKeys.CREATE_RANGE_CONSUMABLE,
+    mutationFn: (consumables: IConsumable[]) =>
+      consumableRequests.createRange(consumables),
+    onSuccess: (consumables) => {
+      queryClient.setQueryData<IConsumable[]>(
+        queryKeys.FETCH_CONSUMABLES,
         (old) => {
           return old ? [...old, ...consumables] : consumables;
         }
       );
-      queryClient.invalidateQueries(queryKeys.CREATE_RANGE_CONSUMABLE);
-      queryClient.invalidateQueries(queryKeys.FETCH_CONSUMABLES);
     },
   });
 };
 
-const Update = (consumable: IConsumable) => {
-  return useMutation<IConsumable>({
+const Update = () => {
+  return useMutation({
     mutationKey: queryKeys.UPDATE_CONSUMABLE,
-    mutationFn: () => consumableRequests.update(consumable),
-    onSuccess: () => {
+    mutationFn: (consumable: IConsumable) =>
+      consumableRequests.update(consumable),
+    onSuccess: (consumable) => {
       queryClient.setQueryData<IConsumable[]>(
-        queryKeys.UPDATE_CONSUMABLE,
+        queryKeys.FETCH_CONSUMABLES,
         (old) => {
-          return old
-            ? old.map((item) => (item.id === consumable.id ? consumable : item))
-            : [];
+          if (old) {
+            const index = old.findIndex((x) => x.id === consumable.id);
+            old[index] = consumable;
+            return [...old];
+          }
+          return [consumable];
         }
       );
-      queryClient.invalidateQueries(queryKeys.UPDATE_CONSUMABLE);
-      queryClient.invalidateQueries(queryKeys.FETCH_CONSUMABLES);
-      queryClient.invalidateQueries([
-        queryKeys.FETCH_CONSUMABLE,
-        consumable.id,
-      ]);
+      queryClient.setQueryData<IConsumable>(
+        [queryKeys.FETCH_CONSUMABLE, consumable.id],
+        consumable
+      );
     },
   });
 };
 
-const Remove = (id: string) => {
+const Remove = () => {
   return useMutation({
     mutationKey: queryKeys.DELETE_CONSUMABLE,
-    mutationFn: () => consumableRequests.remove(id),
+    mutationFn: (id: string) => consumableRequests.remove(id),
     onSuccess: () => {
-      queryClient.setQueryData<IConsumable[]>(
-        queryKeys.DELETE_CONSUMABLE,
-        (old) => {
-          return old ? old.filter((item) => item.id !== id) : [];
-        }
-      );
-      queryClient.invalidateQueries(queryKeys.DELETE_CONSUMABLE);
       queryClient.invalidateQueries(queryKeys.FETCH_CONSUMABLES);
     },
   });
 };
 
-const RemoveRange = (ids: string[]) => {
+const RemoveRange = () => {
   return useMutation({
     mutationKey: queryKeys.DELETE_RANGE_CONSUMABLE,
-    mutationFn: () => consumableRequests.removeRange(ids),
+    mutationFn: (ids: string[]) => consumableRequests.removeRange(ids),
     onSuccess: () => {
-      queryClient.setQueryData<IConsumable[]>(
-        queryKeys.DELETE_RANGE_CONSUMABLE,
-        (old) => {
-          return old ? old.filter((item) => !ids.includes(item.id)) : [];
-        }
-      );
-      queryClient.invalidateQueries(queryKeys.DELETE_RANGE_CONSUMABLE);
       queryClient.invalidateQueries(queryKeys.FETCH_CONSUMABLES);
     },
   });
@@ -137,6 +125,10 @@ const Filter = () => {
       );
     },
   });
+};
+
+const Lookup = () => {
+  return useQuery(queryKeys.LOOKUP_CONSUMABLES, consumableRequests.lookup);
 };
 
 const CheckIn = () => {
@@ -171,6 +163,7 @@ export const useConsumable = {
   Remove,
   RemoveRange,
   Filter,
+  Lookup,
   CheckIn,
   CheckOut,
 };

@@ -36,6 +36,10 @@ const filter = (queryFilters: QueryFilter[]) => {
   return baseRequests.filter<IModel>(requestUrl, queryFilters);
 };
 
+const lookup = () => {
+  return baseRequests.lookup(requestUrl);
+};
+
 export const modelRequests = {
   getAll,
   get,
@@ -45,4 +49,5 @@ export const modelRequests = {
   remove,
   removeRange,
   filter,
+  lookup,
 };

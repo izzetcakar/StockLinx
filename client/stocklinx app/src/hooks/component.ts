@@ -19,6 +19,7 @@ enum queryKeys {
   CHECK_IN_COMPONENT = "CHECK_IN_COMPONENT",
   CHECK_OUT_COMPONENT = "CHECK_OUT_COMPONENT",
   FILTER_COMPONENTS = "FILTER_COMPONENTS",
+  LOOKUP_COMPONENTS = "LOOKUP_COMPONENTS",
 }
 
 const GetAll = () => {
@@ -28,96 +29,84 @@ const GetAll = () => {
   );
 };
 
-const Get =(id: string) => {
+const Get = (id: string) => {
   return useQuery<IComponent>({
     queryKey: [queryKeys.FETCH_COMPONENT, id],
     queryFn: () => componentRequests.get(id),
   });
 };
 
-const Create =(component: IComponent) => {
-  return useMutation<IComponent>({
+const Create = () => {
+  return useMutation({
     mutationKey: queryKeys.CREATE_COMPONENT,
-    mutationFn: () => componentRequests.create(component),
-    onSuccess: () => {
+    mutationFn: (component: IComponent) => componentRequests.create(component),
+    onSuccess: (component) => {
+      queryClient.invalidateQueries(queryKeys.FETCH_COMPONENT);
       queryClient.setQueryData<IComponent[]>(
-        queryKeys.CREATE_COMPONENT,
+        queryKeys.FETCH_COMPONENTS,
         (old) => {
           return old ? [...old, component] : [component];
         }
       );
-      queryClient.invalidateQueries(queryKeys.FETCH_COMPONENTS);
-      queryClient.invalidateQueries(queryKeys.FETCH_COMPONENT);
     },
   });
 };
 
-const CreateRange = (components: IComponent[]) => {
-  return useMutation<IComponent[]>({
+const CreateRange = () => {
+  return useMutation({
     mutationKey: queryKeys.CREATE_RANGE_COMPONENT,
-    mutationFn: () => componentRequests.createRange(components),
-    onSuccess: () => {
-      queryClient.setQueriesData<IComponent[]>(
-        queryKeys.CREATE_RANGE_COMPONENT,
+    mutationFn: (components: IComponent[]) =>
+      componentRequests.createRange(components),
+    onSuccess: (components) => {
+      queryClient.setQueryData<IComponent[]>(
+        queryKeys.FETCH_COMPONENTS,
         (old) => {
           return old ? [...old, ...components] : components;
         }
       );
-      queryClient.invalidateQueries(queryKeys.CREATE_RANGE_COMPONENT);
-      queryClient.invalidateQueries(queryKeys.FETCH_COMPONENTS);
     },
   });
 };
 
-const Update = (component: IComponent) => {
-  return useMutation<IComponent>({
+const Update = () => {
+  return useMutation({
     mutationKey: queryKeys.UPDATE_COMPONENT,
-    mutationFn: () => componentRequests.update(component),
-    onSuccess: () => {
+    mutationFn: (component: IComponent) => componentRequests.update(component),
+    onSuccess: (component) => {
       queryClient.setQueryData<IComponent[]>(
-        queryKeys.UPDATE_COMPONENT,
+        queryKeys.FETCH_COMPONENTS,
         (old) => {
-          return old
-            ? old.map((item) => (item.id === component.id ? component : item))
-            : [];
+          if (old) {
+            const index = old.findIndex((x) => x.id === component.id);
+            old[index] = component;
+            return [...old];
+          }
+          return [component];
         }
       );
-      queryClient.invalidateQueries(queryKeys.UPDATE_COMPONENT);
-      queryClient.invalidateQueries(queryKeys.FETCH_COMPONENTS);
-      queryClient.invalidateQueries([queryKeys.FETCH_COMPONENT, component.id]);
+      queryClient.setQueryData<IComponent>(
+        [queryKeys.FETCH_COMPONENT, component.id],
+        component
+      );
     },
   });
 };
 
-const Remove = (id: string) => {
+const Remove = () => {
   return useMutation({
     mutationKey: queryKeys.DELETE_COMPONENT,
-    mutationFn: () => componentRequests.remove(id),
+    mutationFn: (id: string) => componentRequests.remove(id),
     onSuccess: () => {
-      queryClient.setQueryData<IComponent[]>(
-        queryKeys.DELETE_COMPONENT,
-        (old) => {
-          return old ? old.filter((item) => item.id !== id) : [];
-        }
-      );
-      queryClient.invalidateQueries(queryKeys.DELETE_COMPONENT);
       queryClient.invalidateQueries(queryKeys.FETCH_COMPONENTS);
     },
   });
 };
 
-const RemoveRange = (ids: string[]) => {
+const RemoveRange = () => {
   return useMutation({
     mutationKey: queryKeys.DELETE_RANGE_COMPONENT,
-    mutationFn: () => componentRequests.removeRange(ids),
+    mutationFn: (ids: string[]) => componentRequests.removeRange(ids),
     onSuccess: () => {
-      queryClient.setQueryData<IComponent[]>(
-        queryKeys.DELETE_RANGE_COMPONENT,
-        (old) => {
-          return old ? old.filter((item) => !ids.includes(item.id)) : [];
-        }
-      );
-      queryClient.invalidateQueries(queryKeys.DELETE_RANGE_COMPONENT);
       queryClient.invalidateQueries(queryKeys.FETCH_COMPONENTS);
     },
   });
@@ -131,6 +120,10 @@ const Filter = () => {
       queryClient.setQueryData<IComponent[]>(queryKeys.FILTER_COMPONENTS, data);
     },
   });
+};
+
+const Lookup = () => {
+  return useQuery(queryKeys.LOOKUP_COMPONENTS, componentRequests.lookup);
 };
 
 const CheckIn = () => {
@@ -165,6 +158,7 @@ export const useComponent = {
   Remove,
   RemoveRange,
   Filter,
+  Lookup,
   CheckIn,
   CheckOut,
 };

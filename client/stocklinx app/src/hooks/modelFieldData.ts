@@ -23,101 +23,86 @@ const GetAll = () => {
   );
 };
 
-const Get =(id: string) => {
+const Get = (id: string) => {
   return useQuery<IModelFieldData>({
     queryKey: [queryKeys.FETCH_MODELFIELDDATA, id],
     queryFn: () => modelFieldDataRequests.get(id),
   });
 };
 
-const Create =(modelFieldData: IModelFieldData) => {
-  return useMutation<IModelFieldData>({
+const Create = () => {
+  return useMutation({
     mutationKey: queryKeys.CREATE_MODELFIELDDATA,
-    mutationFn: () => modelFieldDataRequests.create(modelFieldData),
-    onSuccess: () => {
+    mutationFn: (modelFieldData: IModelFieldData) =>
+      modelFieldDataRequests.create(modelFieldData),
+    onSuccess: (modelFieldData) => {
+      queryClient.invalidateQueries(queryKeys.FETCH_MODELFIELDDATA);
       queryClient.setQueryData<IModelFieldData[]>(
-        queryKeys.CREATE_MODELFIELDDATA,
+        queryKeys.FETCH_MODELFIELDDATAS,
         (old) => {
           return old ? [...old, modelFieldData] : [modelFieldData];
         }
       );
-      queryClient.invalidateQueries(queryKeys.FETCH_MODELFIELDDATAS);
-      queryClient.invalidateQueries(queryKeys.FETCH_MODELFIELDDATA);
     },
   });
 };
 
-const CreateRange = (modelFieldDatas: IModelFieldData[]) => {
-  return useMutation<IModelFieldData[]>({
+const CreateRange = () => {
+  return useMutation({
     mutationKey: queryKeys.CREATE_RANGE_MODELFIELDDATA,
-    mutationFn: () => modelFieldDataRequests.createRange(modelFieldDatas),
-    onSuccess: () => {
-      queryClient.setQueriesData<IModelFieldData[]>(
-        queryKeys.CREATE_RANGE_MODELFIELDDATA,
+    mutationFn: (modelFieldDatas: IModelFieldData[]) =>
+      modelFieldDataRequests.createRange(modelFieldDatas),
+    onSuccess: (modelFieldDatas) => {
+      queryClient.setQueryData<IModelFieldData[]>(
+        queryKeys.FETCH_MODELFIELDDATAS,
         (old) => {
           return old ? [...old, ...modelFieldDatas] : modelFieldDatas;
         }
       );
-      queryClient.invalidateQueries(queryKeys.CREATE_RANGE_MODELFIELDDATA);
-      queryClient.invalidateQueries(queryKeys.FETCH_MODELFIELDDATAS);
     },
   });
 };
 
-const Update = (modelFieldData: IModelFieldData) => {
-  return useMutation<IModelFieldData>({
+const Update = () => {
+  return useMutation({
     mutationKey: queryKeys.UPDATE_MODELFIELDDATA,
-    mutationFn: () => modelFieldDataRequests.update(modelFieldData),
-    onSuccess: () => {
+    mutationFn: (modelFieldData: IModelFieldData) =>
+      modelFieldDataRequests.update(modelFieldData),
+    onSuccess: (modelFieldData) => {
       queryClient.setQueryData<IModelFieldData[]>(
-        queryKeys.UPDATE_MODELFIELDDATA,
+        queryKeys.FETCH_MODELFIELDDATAS,
         (old) => {
-          return old
-            ? old.map((item) =>
-                item.id === modelFieldData.id ? modelFieldData : item
-              )
-            : [];
+          if (old) {
+            const index = old.findIndex((x) => x.id === modelFieldData.id);
+            old[index] = modelFieldData;
+            return [...old];
+          }
+          return [modelFieldData];
         }
       );
-      queryClient.invalidateQueries(queryKeys.UPDATE_MODELFIELDDATA);
-      queryClient.invalidateQueries(queryKeys.FETCH_MODELFIELDDATAS);
-      queryClient.invalidateQueries([
-        queryKeys.FETCH_MODELFIELDDATA,
-        modelFieldData.id,
-      ]);
+      queryClient.setQueryData<IModelFieldData>(
+        [queryKeys.FETCH_MODELFIELDDATA, modelFieldData.id],
+        modelFieldData
+      );
     },
   });
 };
 
-const Remove = (id: string) => {
+const Remove = () => {
   return useMutation({
     mutationKey: queryKeys.DELETE_MODELFIELDDATA,
-    mutationFn: () => modelFieldDataRequests.remove(id),
+    mutationFn: (id: string) => modelFieldDataRequests.remove(id),
     onSuccess: () => {
-      queryClient.setQueryData<IModelFieldData[]>(
-        queryKeys.DELETE_MODELFIELDDATA,
-        (old) => {
-          return old ? old.filter((item) => item.id !== id) : [];
-        }
-      );
-      queryClient.invalidateQueries(queryKeys.DELETE_MODELFIELDDATA);
       queryClient.invalidateQueries(queryKeys.FETCH_MODELFIELDDATAS);
     },
   });
 };
 
-const RemoveRange = (ids: string[]) => {
+const RemoveRange = () => {
   return useMutation({
     mutationKey: queryKeys.DELETE_RANGE_MODELFIELDDATA,
-    mutationFn: () => modelFieldDataRequests.removeRange(ids),
+    mutationFn: (ids: string[]) => modelFieldDataRequests.removeRange(ids),
     onSuccess: () => {
-      queryClient.setQueryData<IModelFieldData[]>(
-        queryKeys.DELETE_RANGE_MODELFIELDDATA,
-        (old) => {
-          return old ? old.filter((item) => !ids.includes(item.id)) : [];
-        }
-      );
-      queryClient.invalidateQueries(queryKeys.DELETE_RANGE_MODELFIELDDATA);
       queryClient.invalidateQueries(queryKeys.FETCH_MODELFIELDDATAS);
     },
   });

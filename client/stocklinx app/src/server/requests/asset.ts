@@ -38,6 +38,10 @@ const filter = (queryFilters: QueryFilter[]) => {
   return baseRequests.filter<IAsset>(requestUrl, queryFilters);
 };
 
+const lookup = () => {
+  return baseRequests.lookup(requestUrl, ["tag", "name"]);
+};
+
 const checkIn = async (checkInDto: AssetCheckInDto): Promise<IUserProduct> => {
   return (
     await request<IUserProduct>({
@@ -64,7 +68,8 @@ export const assetRequests = {
   update,
   remove,
   removeRange,
+  filter,
+  lookup,
   checkIn,
   checkOut,
-  filter,
 };

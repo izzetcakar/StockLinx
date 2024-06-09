@@ -31,6 +31,10 @@ const removeRange = (ids: string[]) => {
   return baseRequests.removeRange(requestUrl, ids);
 };
 
+const lookup = () => {
+  return baseRequests.lookup(requestUrl);
+};
+
 export const fieldSetRequests = {
   getAll,
   get,
@@ -39,4 +43,5 @@ export const fieldSetRequests = {
   update,
   remove,
   removeRange,
+  lookup,
 };

@@ -14,6 +14,7 @@ enum queryKeys {
   CHECK_IN_FIELDSET = "CHECK_IN_FIELDSET",
   CHECK_OUT_FIELDSET = "CHECK_OUT_FIELDSET",
   FILTER_FIELDSETS = "FILTER_FIELDSETS",
+  LOOKUP_FIELDSETS = "LOOKUP_FIELDSETS",
 }
 
 const GetAll = () => {
@@ -23,99 +24,91 @@ const GetAll = () => {
   );
 };
 
-const Get =(id: string) => {
+const Get = (id: string) => {
   return useQuery<IFieldSet>({
     queryKey: [queryKeys.FETCH_FIELDSET, id],
     queryFn: () => fieldSetRequests.get(id),
   });
 };
 
-const Create =(fieldSet: IFieldSet) => {
-  return useMutation<IFieldSet>({
+const Create = () => {
+  return useMutation({
     mutationKey: queryKeys.CREATE_FIELDSET,
-    mutationFn: () => fieldSetRequests.create(fieldSet),
-    onSuccess: () => {
+    mutationFn: (fieldSet: IFieldSet) => fieldSetRequests.create(fieldSet),
+    onSuccess: (fieldSet) => {
+      queryClient.invalidateQueries(queryKeys.FETCH_FIELDSET);
       queryClient.setQueryData<IFieldSet[]>(
-        queryKeys.CREATE_FIELDSET,
+        queryKeys.FETCH_FIELDSETS,
         (old) => {
           return old ? [...old, fieldSet] : [fieldSet];
         }
       );
-      queryClient.invalidateQueries(queryKeys.FETCH_FIELDSETS);
-      queryClient.invalidateQueries(queryKeys.FETCH_FIELDSET);
     },
   });
 };
 
-const CreateRange = (fieldSets: IFieldSet[]) => {
-  return useMutation<IFieldSet[]>({
+const CreateRange = () => {
+  return useMutation({
     mutationKey: queryKeys.CREATE_RANGE_FIELDSET,
-    mutationFn: () => fieldSetRequests.createRange(fieldSets),
-    onSuccess: () => {
-      queryClient.setQueriesData<IFieldSet[]>(
-        queryKeys.CREATE_RANGE_FIELDSET,
+    mutationFn: (fieldSets: IFieldSet[]) =>
+      fieldSetRequests.createRange(fieldSets),
+    onSuccess: (fieldSets) => {
+      queryClient.setQueryData<IFieldSet[]>(
+        queryKeys.FETCH_FIELDSETS,
         (old) => {
           return old ? [...old, ...fieldSets] : fieldSets;
         }
       );
-      queryClient.invalidateQueries(queryKeys.CREATE_RANGE_FIELDSET);
-      queryClient.invalidateQueries(queryKeys.FETCH_FIELDSETS);
     },
   });
 };
 
-const Update = (fieldSet: IFieldSet) => {
-  return useMutation<IFieldSet>({
+const Update = () => {
+  return useMutation({
     mutationKey: queryKeys.UPDATE_FIELDSET,
-    mutationFn: () => fieldSetRequests.update(fieldSet),
-    onSuccess: () => {
+    mutationFn: (fieldSet: IFieldSet) => fieldSetRequests.update(fieldSet),
+    onSuccess: (fieldSet) => {
       queryClient.setQueryData<IFieldSet[]>(
-        queryKeys.UPDATE_FIELDSET,
+        queryKeys.FETCH_FIELDSETS,
         (old) => {
-          return old
-            ? old.map((item) => (item.id === fieldSet.id ? fieldSet : item))
-            : [];
+          if (old) {
+            const index = old.findIndex((x) => x.id === fieldSet.id);
+            old[index] = fieldSet;
+            return [...old];
+          }
+          return [fieldSet];
         }
       );
-      queryClient.invalidateQueries(queryKeys.UPDATE_FIELDSET);
-      queryClient.invalidateQueries(queryKeys.FETCH_FIELDSETS);
-      queryClient.invalidateQueries([queryKeys.FETCH_FIELDSET, fieldSet.id]);
+      queryClient.setQueryData<IFieldSet>(
+        [queryKeys.FETCH_FIELDSET, fieldSet.id],
+        fieldSet
+      );
     },
   });
 };
 
-const Remove = (id: string) => {
+const Remove = () => {
   return useMutation({
     mutationKey: queryKeys.DELETE_FIELDSET,
-    mutationFn: () => fieldSetRequests.remove(id),
+    mutationFn: (id: string) => fieldSetRequests.remove(id),
     onSuccess: () => {
-      queryClient.setQueryData<IFieldSet[]>(
-        queryKeys.DELETE_FIELDSET,
-        (old) => {
-          return old ? old.filter((item) => item.id !== id) : [];
-        }
-      );
-      queryClient.invalidateQueries(queryKeys.DELETE_FIELDSET);
       queryClient.invalidateQueries(queryKeys.FETCH_FIELDSETS);
     },
   });
 };
 
-const RemoveRange = (ids: string[]) => {
+const RemoveRange = () => {
   return useMutation({
     mutationKey: queryKeys.DELETE_RANGE_FIELDSET,
-    mutationFn: () => fieldSetRequests.removeRange(ids),
+    mutationFn: (ids: string[]) => fieldSetRequests.removeRange(ids),
     onSuccess: () => {
-      queryClient.setQueryData<IFieldSet[]>(
-        queryKeys.DELETE_RANGE_FIELDSET,
-        (old) => {
-          return old ? old.filter((item) => !ids.includes(item.id)) : [];
-        }
-      );
-      queryClient.invalidateQueries(queryKeys.DELETE_RANGE_FIELDSET);
       queryClient.invalidateQueries(queryKeys.FETCH_FIELDSETS);
     },
   });
+};
+
+const Lookup = () => {
+  return useQuery(queryKeys.LOOKUP_FIELDSETS, fieldSetRequests.lookup);
 };
 
 export const useFieldSet = {
@@ -126,4 +119,5 @@ export const useFieldSet = {
   Update,
   Remove,
   RemoveRange,
+  Lookup,
 };

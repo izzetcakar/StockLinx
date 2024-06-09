@@ -15,6 +15,7 @@ enum queryKeys {
   CHECK_IN_PRODUCTSTATUS = "CHECK_IN_PRODUCTSTATUS",
   CHECK_OUT_PRODUCTSTATUS = "CHECK_OUT_PRODUCTSTATUS",
   FILTER_PRODUCTSTATUSS = "FILTER_PRODUCTSTATUSS",
+  LOOKUP_PRODUCTSTATUSS = "LOOKUP_PRODUCTSTATUSS",
 }
 
 const GetAll = () => {
@@ -24,101 +25,86 @@ const GetAll = () => {
   );
 };
 
-const Get =(id: string) => {
+const Get = (id: string) => {
   return useQuery<IProductStatus>({
     queryKey: [queryKeys.FETCH_PRODUCTSTATUS, id],
     queryFn: () => productStatusRequests.get(id),
   });
 };
 
-const Create =(productStatus: IProductStatus) => {
-  return useMutation<IProductStatus>({
+const Create = () => {
+  return useMutation({
     mutationKey: queryKeys.CREATE_PRODUCTSTATUS,
-    mutationFn: () => productStatusRequests.create(productStatus),
-    onSuccess: () => {
+    mutationFn: (productStatus: IProductStatus) =>
+      productStatusRequests.create(productStatus),
+    onSuccess: (productStatus) => {
+      queryClient.invalidateQueries(queryKeys.FETCH_PRODUCTSTATUS);
       queryClient.setQueryData<IProductStatus[]>(
-        queryKeys.CREATE_PRODUCTSTATUS,
+        queryKeys.FETCH_PRODUCTSTATUSS,
         (old) => {
           return old ? [...old, productStatus] : [productStatus];
         }
       );
-      queryClient.invalidateQueries(queryKeys.FETCH_PRODUCTSTATUSS);
-      queryClient.invalidateQueries(queryKeys.FETCH_PRODUCTSTATUS);
     },
   });
 };
 
-const CreateRange = (productStatuss: IProductStatus[]) => {
-  return useMutation<IProductStatus[]>({
+const CreateRange = () => {
+  return useMutation({
     mutationKey: queryKeys.CREATE_RANGE_PRODUCTSTATUS,
-    mutationFn: () => productStatusRequests.createRange(productStatuss),
-    onSuccess: () => {
-      queryClient.setQueriesData<IProductStatus[]>(
-        queryKeys.CREATE_RANGE_PRODUCTSTATUS,
+    mutationFn: (productStatuss: IProductStatus[]) =>
+      productStatusRequests.createRange(productStatuss),
+    onSuccess: (productStatuss) => {
+      queryClient.setQueryData<IProductStatus[]>(
+        queryKeys.FETCH_PRODUCTSTATUSS,
         (old) => {
           return old ? [...old, ...productStatuss] : productStatuss;
         }
       );
-      queryClient.invalidateQueries(queryKeys.CREATE_RANGE_PRODUCTSTATUS);
-      queryClient.invalidateQueries(queryKeys.FETCH_PRODUCTSTATUSS);
     },
   });
 };
 
-const Update = (productStatus: IProductStatus) => {
-  return useMutation<IProductStatus>({
+const Update = () => {
+  return useMutation({
     mutationKey: queryKeys.UPDATE_PRODUCTSTATUS,
-    mutationFn: () => productStatusRequests.update(productStatus),
-    onSuccess: () => {
+    mutationFn: (productStatus: IProductStatus) =>
+      productStatusRequests.update(productStatus),
+    onSuccess: (productStatus) => {
       queryClient.setQueryData<IProductStatus[]>(
-        queryKeys.UPDATE_PRODUCTSTATUS,
+        queryKeys.FETCH_PRODUCTSTATUSS,
         (old) => {
-          return old
-            ? old.map((item) =>
-                item.id === productStatus.id ? productStatus : item
-              )
-            : [];
+          if (old) {
+            const index = old.findIndex((x) => x.id === productStatus.id);
+            old[index] = productStatus;
+            return [...old];
+          }
+          return [productStatus];
         }
       );
-      queryClient.invalidateQueries(queryKeys.UPDATE_PRODUCTSTATUS);
-      queryClient.invalidateQueries(queryKeys.FETCH_PRODUCTSTATUSS);
-      queryClient.invalidateQueries([
-        queryKeys.FETCH_PRODUCTSTATUS,
-        productStatus.id,
-      ]);
+      queryClient.setQueryData<IProductStatus>(
+        [queryKeys.FETCH_PRODUCTSTATUS, productStatus.id],
+        productStatus
+      );
     },
   });
 };
 
-const Remove = (id: string) => {
+const Remove = () => {
   return useMutation({
     mutationKey: queryKeys.DELETE_PRODUCTSTATUS,
-    mutationFn: () => productStatusRequests.remove(id),
+    mutationFn: (id: string) => productStatusRequests.remove(id),
     onSuccess: () => {
-      queryClient.setQueryData<IProductStatus[]>(
-        queryKeys.DELETE_PRODUCTSTATUS,
-        (old) => {
-          return old ? old.filter((item) => item.id !== id) : [];
-        }
-      );
-      queryClient.invalidateQueries(queryKeys.DELETE_PRODUCTSTATUS);
       queryClient.invalidateQueries(queryKeys.FETCH_PRODUCTSTATUSS);
     },
   });
 };
 
-const RemoveRange = (ids: string[]) => {
+const RemoveRange = () => {
   return useMutation({
     mutationKey: queryKeys.DELETE_RANGE_PRODUCTSTATUS,
-    mutationFn: () => productStatusRequests.removeRange(ids),
+    mutationFn: (ids: string[]) => productStatusRequests.removeRange(ids),
     onSuccess: () => {
-      queryClient.setQueryData<IProductStatus[]>(
-        queryKeys.DELETE_RANGE_PRODUCTSTATUS,
-        (old) => {
-          return old ? old.filter((item) => !ids.includes(item.id)) : [];
-        }
-      );
-      queryClient.invalidateQueries(queryKeys.DELETE_RANGE_PRODUCTSTATUS);
       queryClient.invalidateQueries(queryKeys.FETCH_PRODUCTSTATUSS);
     },
   });
@@ -138,6 +124,13 @@ const Filter = () => {
   });
 };
 
+const Lookup = () => {
+  return useQuery(
+    queryKeys.LOOKUP_PRODUCTSTATUSS,
+    productStatusRequests.lookup
+  );
+};
+
 export const useProductStatus = {
   GetAll,
   Get,
@@ -147,4 +140,5 @@ export const useProductStatus = {
   Remove,
   RemoveRange,
   Filter,
+  Lookup,
 };

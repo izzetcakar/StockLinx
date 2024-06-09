@@ -15,6 +15,7 @@ enum queryKeys {
   CHECK_IN_MANUFACTURER = "CHECK_IN_MANUFACTURER",
   CHECK_OUT_MANUFACTURER = "CHECK_OUT_MANUFACTURER",
   FILTER_MANUFACTURERS = "FILTER_MANUFACTURERS",
+  LOOKUP_MANUFACTURERS = "LOOKUP_MANUFACTURERS",
 }
 
 const GetAll = () => {
@@ -24,101 +25,86 @@ const GetAll = () => {
   );
 };
 
-const Get =(id: string) => {
+const Get = (id: string) => {
   return useQuery<IManufacturer>({
     queryKey: [queryKeys.FETCH_MANUFACTURER, id],
     queryFn: () => manufacturerRequests.get(id),
   });
 };
 
-const Create =(manufacturer: IManufacturer) => {
-  return useMutation<IManufacturer>({
+const Create = () => {
+  return useMutation({
     mutationKey: queryKeys.CREATE_MANUFACTURER,
-    mutationFn: () => manufacturerRequests.create(manufacturer),
-    onSuccess: () => {
+    mutationFn: (manufacturer: IManufacturer) =>
+      manufacturerRequests.create(manufacturer),
+    onSuccess: (manufacturer) => {
+      queryClient.invalidateQueries(queryKeys.FETCH_MANUFACTURER);
       queryClient.setQueryData<IManufacturer[]>(
-        queryKeys.CREATE_MANUFACTURER,
+        queryKeys.FETCH_MANUFACTURERS,
         (old) => {
           return old ? [...old, manufacturer] : [manufacturer];
         }
       );
-      queryClient.invalidateQueries(queryKeys.FETCH_MANUFACTURERS);
-      queryClient.invalidateQueries(queryKeys.FETCH_MANUFACTURER);
     },
   });
 };
 
-const CreateRange = (manufacturers: IManufacturer[]) => {
-  return useMutation<IManufacturer[]>({
+const CreateRange = () => {
+  return useMutation({
     mutationKey: queryKeys.CREATE_RANGE_MANUFACTURER,
-    mutationFn: () => manufacturerRequests.createRange(manufacturers),
-    onSuccess: () => {
-      queryClient.setQueriesData<IManufacturer[]>(
-        queryKeys.CREATE_RANGE_MANUFACTURER,
+    mutationFn: (manufacturers: IManufacturer[]) =>
+      manufacturerRequests.createRange(manufacturers),
+    onSuccess: (manufacturers) => {
+      queryClient.setQueryData<IManufacturer[]>(
+        queryKeys.FETCH_MANUFACTURERS,
         (old) => {
           return old ? [...old, ...manufacturers] : manufacturers;
         }
       );
-      queryClient.invalidateQueries(queryKeys.CREATE_RANGE_MANUFACTURER);
-      queryClient.invalidateQueries(queryKeys.FETCH_MANUFACTURERS);
     },
   });
 };
 
-const Update = (manufacturer: IManufacturer) => {
-  return useMutation<IManufacturer>({
+const Update = () => {
+  return useMutation({
     mutationKey: queryKeys.UPDATE_MANUFACTURER,
-    mutationFn: () => manufacturerRequests.update(manufacturer),
-    onSuccess: () => {
+    mutationFn: (manufacturer: IManufacturer) =>
+      manufacturerRequests.update(manufacturer),
+    onSuccess: (manufacturer) => {
       queryClient.setQueryData<IManufacturer[]>(
-        queryKeys.UPDATE_MANUFACTURER,
+        queryKeys.FETCH_MANUFACTURERS,
         (old) => {
-          return old
-            ? old.map((item) =>
-                item.id === manufacturer.id ? manufacturer : item
-              )
-            : [];
+          if (old) {
+            const index = old.findIndex((x) => x.id === manufacturer.id);
+            old[index] = manufacturer;
+            return [...old];
+          }
+          return [manufacturer];
         }
       );
-      queryClient.invalidateQueries(queryKeys.UPDATE_MANUFACTURER);
-      queryClient.invalidateQueries(queryKeys.FETCH_MANUFACTURERS);
-      queryClient.invalidateQueries([
-        queryKeys.FETCH_MANUFACTURER,
-        manufacturer.id,
-      ]);
+      queryClient.setQueryData<IManufacturer>(
+        [queryKeys.FETCH_MANUFACTURER, manufacturer.id],
+        manufacturer
+      );
     },
   });
 };
 
-const Remove = (id: string) => {
+const Remove = () => {
   return useMutation({
     mutationKey: queryKeys.DELETE_MANUFACTURER,
-    mutationFn: () => manufacturerRequests.remove(id),
+    mutationFn: (id: string) => manufacturerRequests.remove(id),
     onSuccess: () => {
-      queryClient.setQueryData<IManufacturer[]>(
-        queryKeys.DELETE_MANUFACTURER,
-        (old) => {
-          return old ? old.filter((item) => item.id !== id) : [];
-        }
-      );
-      queryClient.invalidateQueries(queryKeys.DELETE_MANUFACTURER);
       queryClient.invalidateQueries(queryKeys.FETCH_MANUFACTURERS);
     },
   });
 };
 
-const RemoveRange = (ids: string[]) => {
+const RemoveRange = () => {
   return useMutation({
     mutationKey: queryKeys.DELETE_RANGE_MANUFACTURER,
-    mutationFn: () => manufacturerRequests.removeRange(ids),
+    mutationFn: (ids: string[]) => manufacturerRequests.removeRange(ids),
     onSuccess: () => {
-      queryClient.setQueryData<IManufacturer[]>(
-        queryKeys.DELETE_RANGE_MANUFACTURER,
-        (old) => {
-          return old ? old.filter((item) => !ids.includes(item.id)) : [];
-        }
-      );
-      queryClient.invalidateQueries(queryKeys.DELETE_RANGE_MANUFACTURER);
       queryClient.invalidateQueries(queryKeys.FETCH_MANUFACTURERS);
     },
   });
@@ -138,6 +124,10 @@ const Filter = () => {
   });
 };
 
+const Lookup = () => {
+  return useQuery(queryKeys.LOOKUP_MANUFACTURERS, manufacturerRequests.lookup);
+};
+
 export const useManufacturer = {
   GetAll,
   Get,
@@ -147,4 +137,5 @@ export const useManufacturer = {
   Remove,
   RemoveRange,
   Filter,
+  Lookup,
 };

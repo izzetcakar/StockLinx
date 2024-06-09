@@ -37,6 +37,10 @@ const filter = (queryFilters: QueryFilter[]) => {
   return baseRequests.filter<IUser>(requestUrl, queryFilters);
 };
 
+const lookup = () => {
+  return baseRequests.lookup(requestUrl, ["firstName", "lastName"]);
+};
+
 const signIn = (loginDto: IUserLoginDto) => {
   return request<IUserLoginDto>({
     requestUrl: requestUrl + "login",
@@ -63,4 +67,5 @@ export const userRequests = {
   remove,
   removeRange,
   filter,
+  lookup,
 };

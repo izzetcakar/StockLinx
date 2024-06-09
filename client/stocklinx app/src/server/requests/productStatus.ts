@@ -17,10 +17,7 @@ const create = (productStatus: IProductStatus) => {
 };
 
 const createRange = (productStatuss: IProductStatus[]) => {
-  return baseRequests.createRange<IProductStatus>(
-    requestUrl,
-    productStatuss
-  );
+  return baseRequests.createRange<IProductStatus>(requestUrl, productStatuss);
 };
 
 const update = (productStatus: IProductStatus) => {
@@ -39,6 +36,10 @@ const filter = (queryFilters: QueryFilter[]) => {
   return baseRequests.filter<IProductStatus>(requestUrl, queryFilters);
 };
 
+const lookup = () => {
+  return baseRequests.lookup(requestUrl);
+};
+
 export const productStatusRequests = {
   getAll,
   get,
@@ -48,4 +49,5 @@ export const productStatusRequests = {
   remove,
   removeRange,
   filter,
+  lookup,
 };

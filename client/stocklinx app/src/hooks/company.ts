@@ -15,6 +15,7 @@ enum queryKeys {
   CHECK_IN_COMPANY = "CHECK_IN_COMPANY",
   CHECK_OUT_COMPANY = "CHECK_OUT_COMPANY",
   FILTER_COMPANIES = "FILTER_COMPANIES",
+  LOOKUP_COMPANIES = "LOOKUP_COMPANIES",
 }
 
 const GetAll = () => {
@@ -24,87 +25,75 @@ const GetAll = () => {
   );
 };
 
-const Get =(id: string) => {
+const Get = (id: string) => {
   return useQuery<ICompany>({
     queryKey: [queryKeys.FETCH_COMPANY, id],
     queryFn: () => companyRequests.get(id),
   });
 };
 
-const Create =(company: ICompany) => {
-  return useMutation<ICompany>({
+const Create = () => {
+  return useMutation({
     mutationKey: queryKeys.CREATE_COMPANY,
-    mutationFn: () => companyRequests.create(company),
-    onSuccess: () => {
-      queryClient.setQueryData<ICompany[]>(queryKeys.CREATE_COMPANY, (old) => {
+    mutationFn: (company: ICompany) => companyRequests.create(company),
+    onSuccess: (company) => {
+      queryClient.invalidateQueries(queryKeys.FETCH_COMPANY);
+      queryClient.setQueryData<ICompany[]>(queryKeys.FETCH_COMPANIES, (old) => {
         return old ? [...old, company] : [company];
       });
-      queryClient.invalidateQueries(queryKeys.FETCH_COMPANIES);
-      queryClient.invalidateQueries(queryKeys.FETCH_COMPANY);
     },
   });
 };
 
-const CreateRange = (companies: ICompany[]) => {
-  return useMutation<ICompany[]>({
+const CreateRange = () => {
+  return useMutation({
     mutationKey: queryKeys.CREATE_RANGE_COMPANY,
-    mutationFn: () => companyRequests.createRange(companies),
-    onSuccess: () => {
-      queryClient.setQueriesData<ICompany[]>(
-        queryKeys.CREATE_RANGE_COMPANY,
-        (old) => {
-          return old ? [...old, ...companies] : companies;
-        }
-      );
-      queryClient.invalidateQueries(queryKeys.CREATE_RANGE_COMPANY);
-      queryClient.invalidateQueries(queryKeys.FETCH_COMPANIES);
-    },
-  });
-};
-
-const Update = (company: ICompany) => {
-  return useMutation<ICompany>({
-    mutationKey: queryKeys.UPDATE_COMPANY,
-    mutationFn: () => companyRequests.update(company),
-    onSuccess: () => {
-      queryClient.setQueryData<ICompany[]>(queryKeys.UPDATE_COMPANY, (old) => {
-        return old
-          ? old.map((item) => (item.id === company.id ? company : item))
-          : [];
+    mutationFn: (companies: ICompany[]) =>
+      companyRequests.createRange(companies),
+    onSuccess: (companies) => {
+      queryClient.setQueryData<ICompany[]>(queryKeys.FETCH_COMPANIES, (old) => {
+        return old ? [...old, ...companies] : companies;
       });
-      queryClient.invalidateQueries(queryKeys.UPDATE_COMPANY);
-      queryClient.invalidateQueries(queryKeys.FETCH_COMPANIES);
-      queryClient.invalidateQueries([queryKeys.FETCH_COMPANY, company.id]);
     },
   });
 };
 
-const Remove = (id: string) => {
+const Update = () => {
+  return useMutation({
+    mutationKey: queryKeys.UPDATE_COMPANY,
+    mutationFn: (company: ICompany) => companyRequests.update(company),
+    onSuccess: (company) => {
+      queryClient.setQueryData<ICompany[]>(queryKeys.FETCH_COMPANIES, (old) => {
+        if (old) {
+          const index = old.findIndex((x) => x.id === company.id);
+          old[index] = company;
+          return [...old];
+        }
+        return [company];
+      });
+      queryClient.setQueryData<ICompany>(
+        [queryKeys.FETCH_COMPANY, company.id],
+        company
+      );
+    },
+  });
+};
+
+const Remove = () => {
   return useMutation({
     mutationKey: queryKeys.DELETE_COMPANY,
-    mutationFn: () => companyRequests.remove(id),
+    mutationFn: (id: string) => companyRequests.remove(id),
     onSuccess: () => {
-      queryClient.setQueryData<ICompany[]>(queryKeys.DELETE_COMPANY, (old) => {
-        return old ? old.filter((item) => item.id !== id) : [];
-      });
-      queryClient.invalidateQueries(queryKeys.DELETE_COMPANY);
       queryClient.invalidateQueries(queryKeys.FETCH_COMPANIES);
     },
   });
 };
 
-const RemoveRange = (ids: string[]) => {
+const RemoveRange = () => {
   return useMutation({
     mutationKey: queryKeys.DELETE_RANGE_COMPANY,
-    mutationFn: () => companyRequests.removeRange(ids),
+    mutationFn: (ids: string[]) => companyRequests.removeRange(ids),
     onSuccess: () => {
-      queryClient.setQueryData<ICompany[]>(
-        queryKeys.DELETE_RANGE_COMPANY,
-        (old) => {
-          return old ? old.filter((item) => !ids.includes(item.id)) : [];
-        }
-      );
-      queryClient.invalidateQueries(queryKeys.DELETE_RANGE_COMPANY);
       queryClient.invalidateQueries(queryKeys.FETCH_COMPANIES);
     },
   });
@@ -120,6 +109,10 @@ const Filter = () => {
   });
 };
 
+const Lookup = () => {
+  return useQuery(queryKeys.LOOKUP_COMPANIES, companyRequests.lookup);
+};
+
 export const useCompany = {
   GetAll,
   Get,
@@ -129,4 +122,5 @@ export const useCompany = {
   Remove,
   RemoveRange,
   Filter,
+  Lookup,
 };

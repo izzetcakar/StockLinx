@@ -41,6 +41,10 @@ const filter = (queryFilters: QueryFilter[]) => {
   return baseRequests.filter<IAccessory>(requestUrl, queryFilters);
 };
 
+const lookup = () => {
+  return baseRequests.lookup(requestUrl, ["tag", "name"]);
+};
+
 const checkIn = async (
   checkInDto: UserProductCheckInDto
 ): Promise<IUserProduct> => {
@@ -69,7 +73,8 @@ export const accessoryRequests = {
   update,
   remove,
   removeRange,
+  filter,
+  lookup,
   checkIn,
   checkOut,
-  filter,
 };

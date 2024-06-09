@@ -16,7 +16,7 @@ enum queryKeys {
   CHECK_IN_ASSET = "CHECK_IN_ASSET",
   CHECK_OUT_ASSET = "CHECK_OUT_ASSET",
   FILTER_ASSETS = "FILTER_ASSETS",
-  CHEDKED_USER = "CHECKED_USER",
+  LOOKUP_ASSETS = "LOOKUP_ASSETS",
 }
 
 const GetAll = () => {
@@ -30,16 +30,15 @@ const Get = (id: string) => {
   });
 };
 
-const Create = (asset: IAsset) => {
-  return useMutation<IAsset>({
+const Create = () => {
+  return useMutation({
     mutationKey: queryKeys.CREATE_ASSET,
-    mutationFn: () => assetRequests.create(asset),
-    onSuccess: () => {
-      queryClient.setQueryData<IAsset[]>(queryKeys.CREATE_ASSET, (old) => {
+    mutationFn: (asset: IAsset) => assetRequests.create(asset),
+    onSuccess: (asset) => {
+      queryClient.invalidateQueries(queryKeys.FETCH_ASSET);
+      queryClient.setQueryData<IAsset[]>(queryKeys.FETCH_ASSETS, (old) => {
         return old ? [...old, asset] : [asset];
       });
-      queryClient.invalidateQueries(queryKeys.FETCH_ASSETS);
-      queryClient.invalidateQueries(queryKeys.FETCH_ASSET);
     },
   });
 };
@@ -48,62 +47,50 @@ const CreateRange = () => {
   return useMutation({
     mutationKey: queryKeys.CREATE_RANGE_ASSET,
     mutationFn: (assets: IAsset[]) => assetRequests.createRange(assets),
-    onSuccess: (assets: IAsset[]) => {
-      queryClient.setQueryData<IAsset[]>(
-        queryKeys.CREATE_RANGE_ASSET,
-        (old) => {
-          return old ? [...old, ...assets] : assets;
-        }
-      );
-      queryClient.invalidateQueries(queryKeys.CREATE_RANGE_ASSET);
-      queryClient.invalidateQueries(queryKeys.FETCH_ASSETS);
-    },
-  });
-};
-
-const Update = (asset: IAsset) => {
-  return useMutation<IAsset>({
-    mutationKey: queryKeys.UPDATE_ASSET,
-    mutationFn: () => assetRequests.update(asset),
-    onSuccess: () => {
-      queryClient.setQueryData<IAsset[]>(queryKeys.UPDATE_ASSET, (old) => {
-        return old
-          ? old.map((item) => (item.id === asset.id ? asset : item))
-          : [];
+    onSuccess: (assets) => {
+      queryClient.setQueryData<IAsset[]>(queryKeys.FETCH_ASSETS, (old) => {
+        return old ? [...old, ...assets] : assets;
       });
-      queryClient.invalidateQueries(queryKeys.UPDATE_ASSET);
-      queryClient.invalidateQueries(queryKeys.FETCH_ASSETS);
-      queryClient.invalidateQueries([queryKeys.FETCH_ASSET, asset.id]);
     },
   });
 };
 
-const Remove = (id: string) => {
+const Update = () => {
+  return useMutation({
+    mutationKey: queryKeys.UPDATE_ASSET,
+    mutationFn: (asset: IAsset) => assetRequests.update(asset),
+    onSuccess: (asset) => {
+      queryClient.setQueryData<IAsset[]>(queryKeys.FETCH_ASSETS, (old) => {
+        if (old) {
+          const index = old.findIndex((x) => x.id === asset.id);
+          old[index] = asset;
+          return [...old];
+        }
+        return [asset];
+      });
+      queryClient.setQueryData<IAsset>(
+        [queryKeys.FETCH_ASSET, asset.id],
+        asset
+      );
+    },
+  });
+};
+
+const Remove = () => {
   return useMutation({
     mutationKey: queryKeys.DELETE_ASSET,
-    mutationFn: () => assetRequests.remove(id),
+    mutationFn: (id: string) => assetRequests.remove(id),
     onSuccess: () => {
-      queryClient.setQueryData<IAsset[]>(queryKeys.DELETE_ASSET, (old) => {
-        return old ? old.filter((item) => item.id !== id) : [];
-      });
-      queryClient.invalidateQueries(queryKeys.DELETE_ASSET);
       queryClient.invalidateQueries(queryKeys.FETCH_ASSETS);
     },
   });
 };
 
-const RemoveRange = (ids: string[]) => {
+const RemoveRange = () => {
   return useMutation({
     mutationKey: queryKeys.DELETE_RANGE_ASSET,
-    mutationFn: () => assetRequests.removeRange(ids),
+    mutationFn: (ids: string[]) => assetRequests.removeRange(ids),
     onSuccess: () => {
-      queryClient.setQueryData<IAsset[]>(
-        queryKeys.DELETE_RANGE_ASSET,
-        (old) => {
-          return old ? old.filter((item) => !ids.includes(item.id)) : [];
-        }
-      );
-      queryClient.invalidateQueries(queryKeys.DELETE_RANGE_ASSET);
       queryClient.invalidateQueries(queryKeys.FETCH_ASSETS);
     },
   });
@@ -119,6 +106,10 @@ const Filter = () => {
   });
 };
 
+const Lookup = () => {
+  return useQuery(queryKeys.LOOKUP_ASSETS, assetRequests.lookup);
+};
+
 const CheckIn = () => {
   return useMutation({
     mutationKey: queryKeys.CHECK_IN_ASSET,
@@ -131,7 +122,7 @@ const CheckIn = () => {
 };
 
 const CheckOut = () => {
-  useMutation({
+  return useMutation({
     mutationKey: queryKeys.CHECK_OUT_ASSET,
     mutationFn: (dto: AssetCheckOutDto) => assetRequests.checkOut(dto),
     onSuccess: () => {
@@ -150,6 +141,7 @@ export const useAsset = {
   Remove,
   RemoveRange,
   Filter,
+  Lookup,
   CheckIn,
   CheckOut,
 };

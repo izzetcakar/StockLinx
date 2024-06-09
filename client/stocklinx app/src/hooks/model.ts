@@ -15,93 +15,81 @@ enum queryKeys {
   CHECK_IN_MODEL = "CHECK_IN_MODEL",
   CHECK_OUT_MODEL = "CHECK_OUT_MODEL",
   FILTER_MODELS = "FILTER_MODELS",
+  LOOKUP_MODELS = "LOOKUP_MODELS",
 }
 
 const GetAll = () => {
   return useQuery<IModel[]>(queryKeys.FETCH_MODELS, modelRequests.getAll);
 };
 
-const Get =(id: string) => {
+const Get = (id: string) => {
   return useQuery<IModel>({
     queryKey: [queryKeys.FETCH_MODEL, id],
     queryFn: () => modelRequests.get(id),
   });
 };
 
-const Create =(model: IModel) => {
-  return useMutation<IModel>({
+const Create = () => {
+  return useMutation({
     mutationKey: queryKeys.CREATE_MODEL,
-    mutationFn: () => modelRequests.create(model),
-    onSuccess: () => {
-      queryClient.setQueryData<IModel[]>(queryKeys.CREATE_MODEL, (old) => {
+    mutationFn: (model: IModel) => modelRequests.create(model),
+    onSuccess: (model) => {
+      queryClient.invalidateQueries(queryKeys.FETCH_MODEL);
+      queryClient.setQueryData<IModel[]>(queryKeys.FETCH_MODELS, (old) => {
         return old ? [...old, model] : [model];
       });
-      queryClient.invalidateQueries(queryKeys.FETCH_MODELS);
-      queryClient.invalidateQueries(queryKeys.FETCH_MODEL);
     },
   });
 };
 
-const CreateRange = (models: IModel[]) => {
-  return useMutation<IModel[]>({
+const CreateRange = () => {
+  return useMutation({
     mutationKey: queryKeys.CREATE_RANGE_MODEL,
-    mutationFn: () => modelRequests.createRange(models),
-    onSuccess: () => {
-      queryClient.setQueriesData<IModel[]>(
-        queryKeys.CREATE_RANGE_MODEL,
-        (old) => {
-          return old ? [...old, ...models] : models;
-        }
-      );
-      queryClient.invalidateQueries(queryKeys.CREATE_RANGE_MODEL);
-      queryClient.invalidateQueries(queryKeys.FETCH_MODELS);
-    },
-  });
-};
-
-const Update = (model: IModel) => {
-  return useMutation<IModel>({
-    mutationKey: queryKeys.UPDATE_MODEL,
-    mutationFn: () => modelRequests.update(model),
-    onSuccess: () => {
-      queryClient.setQueryData<IModel[]>(queryKeys.UPDATE_MODEL, (old) => {
-        return old
-          ? old.map((item) => (item.id === model.id ? model : item))
-          : [];
+    mutationFn: (models: IModel[]) => modelRequests.createRange(models),
+    onSuccess: (models) => {
+      queryClient.setQueryData<IModel[]>(queryKeys.FETCH_MODELS, (old) => {
+        return old ? [...old, ...models] : models;
       });
-      queryClient.invalidateQueries(queryKeys.UPDATE_MODEL);
-      queryClient.invalidateQueries(queryKeys.FETCH_MODELS);
-      queryClient.invalidateQueries([queryKeys.FETCH_MODEL, model.id]);
     },
   });
 };
 
-const Remove = (id: string) => {
+const Update = () => {
+  return useMutation({
+    mutationKey: queryKeys.UPDATE_MODEL,
+    mutationFn: (model: IModel) => modelRequests.update(model),
+    onSuccess: (model) => {
+      queryClient.setQueryData<IModel[]>(queryKeys.FETCH_MODELS, (old) => {
+        if (old) {
+          const index = old.findIndex((x) => x.id === model.id);
+          old[index] = model;
+          return [...old];
+        }
+        return [model];
+      });
+      queryClient.setQueryData<IModel>(
+        [queryKeys.FETCH_MODEL, model.id],
+        model
+      );
+    },
+  });
+};
+
+const Remove = () => {
   return useMutation({
     mutationKey: queryKeys.DELETE_MODEL,
-    mutationFn: () => modelRequests.remove(id),
+    mutationFn: (id: string) => modelRequests.remove(id),
     onSuccess: () => {
-      queryClient.setQueryData<IModel[]>(queryKeys.DELETE_MODEL, (old) => {
-        return old ? old.filter((item) => item.id !== id) : [];
-      });
-      queryClient.invalidateQueries(queryKeys.DELETE_MODEL);
       queryClient.invalidateQueries(queryKeys.FETCH_MODELS);
     },
   });
 };
 
-const RemoveRange = (ids: string[]) => {
+const RemoveRange = () => {
   return useMutation({
     mutationKey: queryKeys.DELETE_RANGE_MODEL,
-    mutationFn: () => modelRequests.removeRange(ids),
+    mutationFn: (ids: string[]) => modelRequests.removeRange(ids),
     onSuccess: () => {
-      queryClient.setQueryData<IModel[]>(
-        queryKeys.DELETE_RANGE_MODEL,
-        (old) => {
-          return old ? old.filter((item) => !ids.includes(item.id)) : [];
-        }
-      );
-      queryClient.invalidateQueries(queryKeys.DELETE_RANGE_MODEL);
       queryClient.invalidateQueries(queryKeys.FETCH_MODELS);
     },
   });
@@ -117,6 +105,10 @@ const Filter = () => {
   });
 };
 
+const Lookup = () => {
+  return useQuery(queryKeys.LOOKUP_MODELS, modelRequests.lookup);
+};
+
 export const useModel = {
   GetAll,
   Get,
@@ -126,4 +118,5 @@ export const useModel = {
   Remove,
   RemoveRange,
   Filter,
+  Lookup,
 };

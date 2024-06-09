@@ -15,6 +15,7 @@ enum queryKeys {
   CHECK_IN_LOCATION = "CHECK_IN_LOCATION",
   CHECK_OUT_LOCATION = "CHECK_OUT_LOCATION",
   FILTER_LOCATIONS = "FILTER_LOCATIONS",
+  LOOKUP_LOCATIONS = "LOOKUP_LOCATIONS",
 }
 
 const GetAll = () => {
@@ -24,96 +25,84 @@ const GetAll = () => {
   );
 };
 
-const Get =(id: string) => {
+const Get = (id: string) => {
   return useQuery<ILocation>({
     queryKey: [queryKeys.FETCH_LOCATION, id],
     queryFn: () => locationRequests.get(id),
   });
 };
 
-const Create =(location: ILocation) => {
-  return useMutation<ILocation>({
+const Create = () => {
+  return useMutation({
     mutationKey: queryKeys.CREATE_LOCATION,
-    mutationFn: () => locationRequests.create(location),
-    onSuccess: () => {
+    mutationFn: (location: ILocation) => locationRequests.create(location),
+    onSuccess: (location) => {
+      queryClient.invalidateQueries(queryKeys.FETCH_LOCATION);
       queryClient.setQueryData<ILocation[]>(
-        queryKeys.CREATE_LOCATION,
+        queryKeys.FETCH_LOCATIONS,
         (old) => {
           return old ? [...old, location] : [location];
         }
       );
-      queryClient.invalidateQueries(queryKeys.FETCH_LOCATIONS);
-      queryClient.invalidateQueries(queryKeys.FETCH_LOCATION);
     },
   });
 };
 
-const CreateRange = (locations: ILocation[]) => {
-  return useMutation<ILocation[]>({
+const CreateRange = () => {
+  return useMutation({
     mutationKey: queryKeys.CREATE_RANGE_LOCATION,
-    mutationFn: () => locationRequests.createRange(locations),
-    onSuccess: () => {
-      queryClient.setQueriesData<ILocation[]>(
-        queryKeys.CREATE_RANGE_LOCATION,
+    mutationFn: (locations: ILocation[]) =>
+      locationRequests.createRange(locations),
+    onSuccess: (locations) => {
+      queryClient.setQueryData<ILocation[]>(
+        queryKeys.FETCH_LOCATIONS,
         (old) => {
           return old ? [...old, ...locations] : locations;
         }
       );
-      queryClient.invalidateQueries(queryKeys.CREATE_RANGE_LOCATION);
-      queryClient.invalidateQueries(queryKeys.FETCH_LOCATIONS);
     },
   });
 };
 
-const Update = (location: ILocation) => {
-  return useMutation<ILocation>({
+const Update = () => {
+  return useMutation({
     mutationKey: queryKeys.UPDATE_LOCATION,
-    mutationFn: () => locationRequests.update(location),
-    onSuccess: () => {
+    mutationFn: (location: ILocation) => locationRequests.update(location),
+    onSuccess: (location) => {
       queryClient.setQueryData<ILocation[]>(
-        queryKeys.UPDATE_LOCATION,
+        queryKeys.FETCH_LOCATIONS,
         (old) => {
-          return old
-            ? old.map((item) => (item.id === location.id ? location : item))
-            : [];
+          if (old) {
+            const index = old.findIndex((x) => x.id === location.id);
+            old[index] = location;
+            return [...old];
+          }
+          return [location];
         }
       );
-      queryClient.invalidateQueries(queryKeys.UPDATE_LOCATION);
-      queryClient.invalidateQueries(queryKeys.FETCH_LOCATIONS);
-      queryClient.invalidateQueries([queryKeys.FETCH_LOCATION, location.id]);
+      queryClient.setQueryData<ILocation>(
+        [queryKeys.FETCH_LOCATION, location.id],
+        location
+      );
     },
   });
 };
 
-const Remove = (id: string) => {
+const Remove = () => {
   return useMutation({
     mutationKey: queryKeys.DELETE_LOCATION,
-    mutationFn: () => locationRequests.remove(id),
+    mutationFn: (id: string) => locationRequests.remove(id),
     onSuccess: () => {
-      queryClient.setQueryData<ILocation[]>(
-        queryKeys.DELETE_LOCATION,
-        (old) => {
-          return old ? old.filter((item) => item.id !== id) : [];
-        }
-      );
-      queryClient.invalidateQueries(queryKeys.DELETE_LOCATION);
       queryClient.invalidateQueries(queryKeys.FETCH_LOCATIONS);
     },
   });
 };
 
-const RemoveRange = (ids: string[]) => {
+const RemoveRange = () => {
   return useMutation({
     mutationKey: queryKeys.DELETE_RANGE_LOCATION,
-    mutationFn: () => locationRequests.removeRange(ids),
+    mutationFn: (ids: string[]) => locationRequests.removeRange(ids),
     onSuccess: () => {
-      queryClient.setQueryData<ILocation[]>(
-        queryKeys.DELETE_RANGE_LOCATION,
-        (old) => {
-          return old ? old.filter((item) => !ids.includes(item.id)) : [];
-        }
-      );
-      queryClient.invalidateQueries(queryKeys.DELETE_RANGE_LOCATION);
       queryClient.invalidateQueries(queryKeys.FETCH_LOCATIONS);
     },
   });
@@ -129,6 +118,10 @@ const Filter = () => {
   });
 };
 
+const Lookup = () => {
+  return useQuery(queryKeys.LOOKUP_LOCATIONS, locationRequests.lookup);
+};
+
 export const useLocation = {
   GetAll,
   Get,
@@ -138,4 +131,5 @@ export const useLocation = {
   Remove,
   RemoveRange,
   Filter,
+  Lookup,
 };

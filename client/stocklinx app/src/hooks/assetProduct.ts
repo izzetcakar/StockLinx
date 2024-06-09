@@ -5,7 +5,7 @@ import { assetProductRequests } from "@/server/requests/assetProduct";
 import { useMutation, useQuery } from "react-query";
 
 enum queryKeys {
-  FETCH_ACCESSORIES = "FETCH_ACCESSORIES",
+  FETCH_ASSETPRODUCTS = "FETCH_ASSETPRODUCTS",
   FETCH_ASSETPRODUCT = "FETCH_ASSETPRODUCT",
   CREATE_ASSETPRODUCT = "CREATE_ASSETPRODUCT",
   UPDATE_ASSETPRODUCT = "UPDATE_ASSETPRODUCT",
@@ -14,119 +14,109 @@ enum queryKeys {
   DELETE_RANGE_ASSETPRODUCT = "DELETE_RANGE_ASSETPRODUCT",
   CHECK_IN_ASSETPRODUCT = "CHECK_IN_ASSETPRODUCT",
   CHECK_OUT_ASSETPRODUCT = "CHECK_OUT_ASSETPRODUCT",
-  FILTER_ACCESSORIES = "FILTER_ACCESSORIES",
+  FILTER_ASSETPRODUCTS = "FILTER_ASSETPRODUCTS",
 }
 
 const GetAll = () => {
   return useQuery<IAssetProduct[]>(
-    queryKeys.FETCH_ACCESSORIES,
+    queryKeys.FETCH_ASSETPRODUCTS,
     assetProductRequests.getAll
   );
 };
 
-const Get =(id: string) => {
+const Get = (id: string) => {
   return useQuery<IAssetProduct>({
     queryKey: [queryKeys.FETCH_ASSETPRODUCT, id],
     queryFn: () => assetProductRequests.get(id),
   });
 };
 
-const Create =(assetProduct: IAssetProduct) => {
-  return useMutation<IAssetProduct>({
+const Create = () => {
+  return useMutation({
     mutationKey: queryKeys.CREATE_ASSETPRODUCT,
-    mutationFn: () => assetProductRequests.create(assetProduct),
-    onSuccess: () => {
+    mutationFn: (assetProduct: IAssetProduct) =>
+      assetProductRequests.create(assetProduct),
+    onSuccess: (assetProduct) => {
+      queryClient.invalidateQueries(queryKeys.FETCH_ASSETPRODUCT);
       queryClient.setQueryData<IAssetProduct[]>(
-        queryKeys.CREATE_ASSETPRODUCT,
+        queryKeys.FETCH_ASSETPRODUCTS,
         (old) => {
           return old ? [...old, assetProduct] : [assetProduct];
         }
       );
-      queryClient.invalidateQueries(queryKeys.FETCH_ASSETPRODUCT);
     },
   });
 };
 
-const CreateRange = (assetProducts: IAssetProduct[]) => {
-  return useMutation<IAssetProduct[]>({
+const CreateRange = () => {
+  return useMutation({
     mutationKey: queryKeys.CREATE_RANGE_ASSETPRODUCT,
-    mutationFn: () => assetProductRequests.createRange(assetProducts),
-    onSuccess: () => {
-      queryClient.setQueriesData<IAssetProduct[]>(
-        queryKeys.CREATE_RANGE_ASSETPRODUCT,
+    mutationFn: (assetProducts: IAssetProduct[]) =>
+      assetProductRequests.createRange(assetProducts),
+    onSuccess: (assetProducts) => {
+      queryClient.setQueryData<IAssetProduct[]>(
+        queryKeys.FETCH_ASSETPRODUCTS,
         (old) => {
           return old ? [...old, ...assetProducts] : assetProducts;
         }
       );
-      queryClient.invalidateQueries(queryKeys.CREATE_RANGE_ASSETPRODUCT);
     },
   });
 };
 
-const Update = (assetProduct: IAssetProduct) => {
-  return useMutation<IAssetProduct>({
+const Update = () => {
+  return useMutation({
     mutationKey: queryKeys.UPDATE_ASSETPRODUCT,
-    mutationFn: () => assetProductRequests.update(assetProduct),
-    onSuccess: () => {
+    mutationFn: (assetProduct: IAssetProduct) =>
+      assetProductRequests.update(assetProduct),
+    onSuccess: (assetProduct) => {
       queryClient.setQueryData<IAssetProduct[]>(
-        queryKeys.UPDATE_ASSETPRODUCT,
+        queryKeys.FETCH_ASSETPRODUCTS,
         (old) => {
-          return old
-            ? old.map((item) =>
-                item.id === assetProduct.id ? assetProduct : item
-              )
-            : [];
+          if (old) {
+            const index = old.findIndex((x) => x.id === assetProduct.id);
+            old[index] = assetProduct;
+            return [...old];
+          }
+          return [assetProduct];
         }
       );
-      queryClient.invalidateQueries(queryKeys.UPDATE_ASSETPRODUCT);
-      queryClient.invalidateQueries([
-        queryKeys.FETCH_ASSETPRODUCT,
-        assetProduct.id,
-      ]);
+      queryClient.setQueryData<IAssetProduct>(
+        [queryKeys.FETCH_ASSETPRODUCT, assetProduct.id],
+        assetProduct
+      );
     },
   });
 };
 
-const Remove = (id: string) => {
+const Remove = () => {
   return useMutation({
     mutationKey: queryKeys.DELETE_ASSETPRODUCT,
-    mutationFn: () => assetProductRequests.remove(id),
+    mutationFn: (id: string) => assetProductRequests.remove(id),
     onSuccess: () => {
-      queryClient.setQueryData<IAssetProduct[]>(
-        queryKeys.DELETE_ASSETPRODUCT,
-        (old) => {
-          return old ? old.filter((item) => item.id !== id) : [];
-        }
-      );
-      queryClient.invalidateQueries(queryKeys.DELETE_ASSETPRODUCT);
+      queryClient.invalidateQueries(queryKeys.FETCH_ASSETPRODUCTS);
     },
   });
 };
 
-const RemoveRange = (ids: string[]) => {
+const RemoveRange = () => {
   return useMutation({
     mutationKey: queryKeys.DELETE_RANGE_ASSETPRODUCT,
-    mutationFn: () => assetProductRequests.removeRange(ids),
+    mutationFn: (ids: string[]) => assetProductRequests.removeRange(ids),
     onSuccess: () => {
-      queryClient.setQueryData<IAssetProduct[]>(
-        queryKeys.DELETE_RANGE_ASSETPRODUCT,
-        (old) => {
-          return old ? old.filter((item) => !ids.includes(item.id)) : [];
-        }
-      );
-      queryClient.invalidateQueries(queryKeys.DELETE_RANGE_ASSETPRODUCT);
+      queryClient.invalidateQueries(queryKeys.FETCH_ASSETPRODUCTS);
     },
   });
 };
 
 const Filter = () => {
   return useMutation({
-    mutationKey: queryKeys.FILTER_ACCESSORIES,
+    mutationKey: queryKeys.FILTER_ASSETPRODUCTS,
     mutationFn: (filters: QueryFilter[]) =>
       assetProductRequests.filter(filters),
     onSuccess(data) {
       queryClient.setQueryData<IAssetProduct[]>(
-        queryKeys.FILTER_ACCESSORIES,
+        queryKeys.FILTER_ASSETPRODUCTS,
         data
       );
     },

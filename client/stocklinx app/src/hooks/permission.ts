@@ -32,69 +32,54 @@ const Get = (id: string) => {
   });
 };
 
-const Create = (permission: IPermission) => {
-  return useMutation<IPermission>({
+const Create = () => {
+  return useMutation({
     mutationKey: queryKeys.CREATE_PERMISSION,
-    mutationFn: () => permissionRequests.create(permission),
-    onSuccess: () => {
+    mutationFn: (permission: IPermission) =>
+      permissionRequests.create(permission),
+    onSuccess: (permission) => {
+      queryClient.invalidateQueries(queryKeys.FETCH_PERMISSION);
       queryClient.setQueryData<IPermission[]>(
-        queryKeys.CREATE_PERMISSION,
+        queryKeys.FETCH_PERMISSIONS,
         (old) => {
           return old ? [...old, permission] : [permission];
         }
       );
-      queryClient.invalidateQueries(queryKeys.FETCH_PERMISSIONS);
-      queryClient.invalidateQueries(queryKeys.FETCH_PERMISSION);
     },
   });
 };
 
-const CreateRange = (permissions: IPermission[]) => {
-  return useMutation<IPermission[]>({
+const CreateRange = () => {
+  return useMutation({
     mutationKey: queryKeys.CREATE_RANGE_PERMISSION,
-    mutationFn: () => permissionRequests.createRange(permissions),
-    onSuccess: () => {
-      queryClient.setQueriesData<IPermission[]>(
-        queryKeys.CREATE_RANGE_PERMISSION,
+    mutationFn: (permissions: IPermission[]) =>
+      permissionRequests.createRange(permissions),
+    onSuccess: (permissions) => {
+      queryClient.setQueryData<IPermission[]>(
+        queryKeys.FETCH_PERMISSIONS,
         (old) => {
           return old ? [...old, ...permissions] : permissions;
         }
       );
-      queryClient.invalidateQueries(queryKeys.CREATE_RANGE_PERMISSION);
-      queryClient.invalidateQueries(queryKeys.FETCH_PERMISSIONS);
     },
   });
 };
 
-const Remove = (id: string) => {
+const Remove = () => {
   return useMutation({
     mutationKey: queryKeys.DELETE_PERMISSION,
-    mutationFn: () => permissionRequests.remove(id),
+    mutationFn: (id: string) => permissionRequests.remove(id),
     onSuccess: () => {
-      queryClient.setQueryData<IPermission[]>(
-        queryKeys.DELETE_PERMISSION,
-        (old) => {
-          return old ? old.filter((item) => item.id !== id) : [];
-        }
-      );
-      queryClient.invalidateQueries(queryKeys.DELETE_PERMISSION);
       queryClient.invalidateQueries(queryKeys.FETCH_PERMISSIONS);
     },
   });
 };
 
-const RemoveRange = (ids: string[]) => {
+const RemoveRange = () => {
   return useMutation({
     mutationKey: queryKeys.DELETE_RANGE_PERMISSION,
-    mutationFn: () => permissionRequests.removeRange(ids),
+    mutationFn: (ids: string[]) => permissionRequests.removeRange(ids),
     onSuccess: () => {
-      queryClient.setQueryData<IPermission[]>(
-        queryKeys.DELETE_RANGE_PERMISSION,
-        (old) => {
-          return old ? old.filter((item) => !ids.includes(item.id)) : [];
-        }
-      );
-      queryClient.invalidateQueries(queryKeys.DELETE_RANGE_PERMISSION);
       queryClient.invalidateQueries(queryKeys.FETCH_PERMISSIONS);
     },
   });

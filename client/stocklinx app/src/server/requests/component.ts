@@ -41,6 +41,10 @@ const filter = (queryFilters: QueryFilter[]) => {
   return baseRequests.filter<IComponent>(requestUrl, queryFilters);
 };
 
+const lookup = () => {
+  return baseRequests.lookup(requestUrl, ["tag", "name"]);
+};
+
 const checkIn = async (
   checkInDto: AssetProductCheckInDto
 ): Promise<IAssetProduct> => {
@@ -69,7 +73,8 @@ export const componentRequests = {
   update,
   remove,
   removeRange,
+  filter,
+  lookup,
   checkIn,
   checkOut,
-  filter,
 };

@@ -24,109 +24,93 @@ const GetAll = () => {
   );
 };
 
-const Get =(id: string) => {
+const Get = (id: string) => {
   return useQuery<IFieldSetCustomField>({
     queryKey: [queryKeys.FETCH_FIELDSETCUSTOMFIELD, id],
     queryFn: () => fieldSetCustomFieldRequests.get(id),
   });
 };
 
-const Create =(fieldSetCustomField: IFieldSetCustomField) => {
-  return useMutation<IFieldSetCustomField>({
+const Create = () => {
+  return useMutation({
     mutationKey: queryKeys.CREATE_FIELDSETCUSTOMFIELD,
-    mutationFn: () => fieldSetCustomFieldRequests.create(fieldSetCustomField),
-    onSuccess: () => {
+    mutationFn: (fieldSetCustomField: IFieldSetCustomField) =>
+      fieldSetCustomFieldRequests.create(fieldSetCustomField),
+    onSuccess: (fieldSetCustomField) => {
+      queryClient.invalidateQueries(queryKeys.FETCH_FIELDSETCUSTOMFIELD);
       queryClient.setQueryData<IFieldSetCustomField[]>(
-        queryKeys.CREATE_FIELDSETCUSTOMFIELD,
+        queryKeys.FETCH_FIELDSETCUSTOMFIELDS,
         (old) => {
           return old ? [...old, fieldSetCustomField] : [fieldSetCustomField];
         }
       );
-      queryClient.invalidateQueries(queryKeys.FETCH_FIELDSETCUSTOMFIELDS);
-      queryClient.invalidateQueries(queryKeys.FETCH_FIELDSETCUSTOMFIELD);
     },
   });
 };
 
-const CreateRange = (fieldSetCustomFields: IFieldSetCustomField[]) => {
-  return useMutation<IFieldSetCustomField[]>({
+const CreateRange = () => {
+  return useMutation({
     mutationKey: queryKeys.CREATE_RANGE_FIELDSETCUSTOMFIELD,
-    mutationFn: () =>
+    mutationFn: (fieldSetCustomFields: IFieldSetCustomField[]) =>
       fieldSetCustomFieldRequests.createRange(fieldSetCustomFields),
-    onSuccess: () => {
-      queryClient.setQueriesData<IFieldSetCustomField[]>(
-        queryKeys.CREATE_RANGE_FIELDSETCUSTOMFIELD,
+    onSuccess: (fieldSetCustomFields) => {
+      queryClient.setQueryData<IFieldSetCustomField[]>(
+        queryKeys.FETCH_FIELDSETCUSTOMFIELDS,
         (old) => {
           return old ? [...old, ...fieldSetCustomFields] : fieldSetCustomFields;
         }
       );
-      queryClient.invalidateQueries(queryKeys.CREATE_RANGE_FIELDSETCUSTOMFIELD);
-      queryClient.invalidateQueries(queryKeys.FETCH_FIELDSETCUSTOMFIELDS);
     },
   });
 };
 
-const Update = (fieldSetCustomField: IFieldSetCustomField) => {
-  return useMutation<IFieldSetCustomField>({
+const Update = () => {
+  return useMutation({
     mutationKey: queryKeys.UPDATE_FIELDSETCUSTOMFIELD,
-    mutationFn: () => fieldSetCustomFieldRequests.update(fieldSetCustomField),
-    onSuccess: () => {
+    mutationFn: (fieldSetCustomField: IFieldSetCustomField) =>
+      fieldSetCustomFieldRequests.update(fieldSetCustomField),
+    onSuccess: (fieldSetCustomField) => {
       queryClient.setQueryData<IFieldSetCustomField[]>(
-        queryKeys.UPDATE_FIELDSETCUSTOMFIELD,
+        queryKeys.FETCH_FIELDSETCUSTOMFIELDS,
         (old) => {
-          return old
-            ? old.map((item) =>
-                item.id === fieldSetCustomField.id ? fieldSetCustomField : item
-              )
-            : [];
+          if (old) {
+            const index = old.findIndex((x) => x.id === fieldSetCustomField.id);
+            old[index] = fieldSetCustomField;
+            return [...old];
+          }
+          return [fieldSetCustomField];
         }
       );
-      queryClient.invalidateQueries(queryKeys.UPDATE_FIELDSETCUSTOMFIELD);
-      queryClient.invalidateQueries(queryKeys.FETCH_FIELDSETCUSTOMFIELDS);
-      queryClient.invalidateQueries([
-        queryKeys.FETCH_FIELDSETCUSTOMFIELD,
-        fieldSetCustomField.id,
-      ]);
+      queryClient.setQueryData<IFieldSetCustomField>(
+        [queryKeys.FETCH_FIELDSETCUSTOMFIELD, fieldSetCustomField.id],
+        fieldSetCustomField
+      );
     },
   });
 };
 
-const Remove = (id: string) => {
+const Remove = () => {
   return useMutation({
     mutationKey: queryKeys.DELETE_FIELDSETCUSTOMFIELD,
-    mutationFn: () => fieldSetCustomFieldRequests.remove(id),
+    mutationFn: (id: string) => fieldSetCustomFieldRequests.remove(id),
     onSuccess: () => {
-      queryClient.setQueryData<IFieldSetCustomField[]>(
-        queryKeys.DELETE_FIELDSETCUSTOMFIELD,
-        (old) => {
-          return old ? old.filter((item) => item.id !== id) : [];
-        }
-      );
-      queryClient.invalidateQueries(queryKeys.DELETE_FIELDSETCUSTOMFIELD);
       queryClient.invalidateQueries(queryKeys.FETCH_FIELDSETCUSTOMFIELDS);
     },
   });
 };
 
-const RemoveRange = (ids: string[]) => {
+const RemoveRange = () => {
   return useMutation({
     mutationKey: queryKeys.DELETE_RANGE_FIELDSETCUSTOMFIELD,
-    mutationFn: () => fieldSetCustomFieldRequests.removeRange(ids),
+    mutationFn: (ids: string[]) => fieldSetCustomFieldRequests.removeRange(ids),
     onSuccess: () => {
-      queryClient.setQueryData<IFieldSetCustomField[]>(
-        queryKeys.DELETE_RANGE_FIELDSETCUSTOMFIELD,
-        (old) => {
-          return old ? old.filter((item) => !ids.includes(item.id)) : [];
-        }
-      );
-      queryClient.invalidateQueries(queryKeys.DELETE_RANGE_FIELDSETCUSTOMFIELD);
       queryClient.invalidateQueries(queryKeys.FETCH_FIELDSETCUSTOMFIELDS);
     },
   });
 };
 
 const Sync = (fieldSetCustomFields: IFieldSetCustomField[]) => {
-  return useMutation<IFieldSetCustomField[]>({
+  return useMutation({
     mutationKey: queryKeys.SYNC_FIELDSETCUSTOMFIELDS,
     mutationFn: () =>
       fieldSetCustomFieldRequests.synchronize(fieldSetCustomFields),

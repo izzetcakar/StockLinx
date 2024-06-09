@@ -14,6 +14,7 @@ enum queryKeys {
   CHECK_IN_CUSTOMFIELD = "CHECK_IN_CUSTOMFIELD",
   CHECK_OUT_CUSTOMFIELD = "CHECK_OUT_CUSTOMFIELD",
   FILTER_CUSTOMFIELDS = "FILTER_CUSTOMFIELDS",
+  LOOKUP_CUSTOMFIELDS = "LOOKUP_CUSTOMFIELDS",
 }
 
 const GetAll = () => {
@@ -23,104 +24,93 @@ const GetAll = () => {
   );
 };
 
-const Get =(id: string) => {
+const Get = (id: string) => {
   return useQuery<ICustomField>({
     queryKey: [queryKeys.FETCH_CUSTOMFIELD, id],
     queryFn: () => customFieldRequests.get(id),
   });
 };
 
-const Create =(customField: ICustomField) => {
-  return useMutation<ICustomField>({
+const Create = () => {
+  return useMutation({
     mutationKey: queryKeys.CREATE_CUSTOMFIELD,
-    mutationFn: () => customFieldRequests.create(customField),
-    onSuccess: () => {
+    mutationFn: (customField: ICustomField) =>
+      customFieldRequests.create(customField),
+    onSuccess: (customField) => {
+      queryClient.invalidateQueries(queryKeys.FETCH_CUSTOMFIELD);
       queryClient.setQueryData<ICustomField[]>(
-        queryKeys.CREATE_CUSTOMFIELD,
+        queryKeys.FETCH_CUSTOMFIELDS,
         (old) => {
           return old ? [...old, customField] : [customField];
         }
       );
-      queryClient.invalidateQueries(queryKeys.FETCH_CUSTOMFIELDS);
-      queryClient.invalidateQueries(queryKeys.FETCH_CUSTOMFIELD);
     },
   });
 };
 
-const CreateRange = (customFields: ICustomField[]) => {
-  return useMutation<ICustomField[]>({
+const CreateRange = () => {
+  return useMutation({
     mutationKey: queryKeys.CREATE_RANGE_CUSTOMFIELD,
-    mutationFn: () => customFieldRequests.createRange(customFields),
-    onSuccess: () => {
-      queryClient.setQueriesData<ICustomField[]>(
-        queryKeys.CREATE_RANGE_CUSTOMFIELD,
+    mutationFn: (customFields: ICustomField[]) =>
+      customFieldRequests.createRange(customFields),
+    onSuccess: (customFields) => {
+      queryClient.setQueryData<ICustomField[]>(
+        queryKeys.FETCH_CUSTOMFIELDS,
         (old) => {
           return old ? [...old, ...customFields] : customFields;
         }
       );
-      queryClient.invalidateQueries(queryKeys.CREATE_RANGE_CUSTOMFIELD);
-      queryClient.invalidateQueries(queryKeys.FETCH_CUSTOMFIELDS);
     },
   });
 };
 
-const Update = (customField: ICustomField) => {
-  return useMutation<ICustomField>({
+const Update = () => {
+  return useMutation({
     mutationKey: queryKeys.UPDATE_CUSTOMFIELD,
-    mutationFn: () => customFieldRequests.update(customField),
-    onSuccess: () => {
+    mutationFn: (customField: ICustomField) =>
+      customFieldRequests.update(customField),
+    onSuccess: (customField) => {
       queryClient.setQueryData<ICustomField[]>(
-        queryKeys.UPDATE_CUSTOMFIELD,
+        queryKeys.FETCH_CUSTOMFIELDS,
         (old) => {
-          return old
-            ? old.map((item) =>
-                item.id === customField.id ? customField : item
-              )
-            : [];
+          if (old) {
+            const index = old.findIndex((x) => x.id === customField.id);
+            old[index] = customField;
+            return [...old];
+          }
+          return [customField];
         }
       );
-      queryClient.invalidateQueries(queryKeys.UPDATE_CUSTOMFIELD);
-      queryClient.invalidateQueries(queryKeys.FETCH_CUSTOMFIELDS);
-      queryClient.invalidateQueries([
-        queryKeys.FETCH_CUSTOMFIELD,
-        customField.id,
-      ]);
+      queryClient.setQueryData<ICustomField>(
+        [queryKeys.FETCH_CUSTOMFIELD, customField.id],
+        customField
+      );
     },
   });
 };
 
-const Remove = (id: string) => {
+const Remove = () => {
   return useMutation({
     mutationKey: queryKeys.DELETE_CUSTOMFIELD,
-    mutationFn: () => customFieldRequests.remove(id),
+    mutationFn: (id: string) => customFieldRequests.remove(id),
     onSuccess: () => {
-      queryClient.setQueryData<ICustomField[]>(
-        queryKeys.DELETE_CUSTOMFIELD,
-        (old) => {
-          return old ? old.filter((item) => item.id !== id) : [];
-        }
-      );
-      queryClient.invalidateQueries(queryKeys.DELETE_CUSTOMFIELD);
       queryClient.invalidateQueries(queryKeys.FETCH_CUSTOMFIELDS);
     },
   });
 };
 
-const RemoveRange = (ids: string[]) => {
+const RemoveRange = () => {
   return useMutation({
     mutationKey: queryKeys.DELETE_RANGE_CUSTOMFIELD,
-    mutationFn: () => customFieldRequests.removeRange(ids),
+    mutationFn: (ids: string[]) => customFieldRequests.removeRange(ids),
     onSuccess: () => {
-      queryClient.setQueryData<ICustomField[]>(
-        queryKeys.DELETE_RANGE_CUSTOMFIELD,
-        (old) => {
-          return old ? old.filter((item) => !ids.includes(item.id)) : [];
-        }
-      );
-      queryClient.invalidateQueries(queryKeys.DELETE_RANGE_CUSTOMFIELD);
       queryClient.invalidateQueries(queryKeys.FETCH_CUSTOMFIELDS);
     },
   });
+};
+
+const Lookup = () => {
+  return useQuery(queryKeys.LOOKUP_CUSTOMFIELDS, customFieldRequests.lookup);
 };
 
 export const useCustomField = {
@@ -131,4 +121,5 @@ export const useCustomField = {
   Update,
   Remove,
   RemoveRange,
+  Lookup,
 };

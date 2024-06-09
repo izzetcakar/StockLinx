@@ -23,93 +23,81 @@ enum queryKeys {
   ASSET_CHECK_IN_LICENSE = "ASSET_CHECK_IN_LICENSE",
   ASSET_CHECK_OUT_LICENSE = "ASSET_CHECK_OUT_LICENSE",
   FILTER_LICENSES = "FILTER_LICENSES",
+  LOOKUP_LICENSES = "LOOKUP_LICENSES",
 }
 
 const GetAll = () => {
   return useQuery<ILicense[]>(queryKeys.FETCH_LICENSES, licenseRequests.getAll);
 };
 
-const Get =(id: string) => {
+const Get = (id: string) => {
   return useQuery<ILicense>({
     queryKey: [queryKeys.FETCH_LICENSE, id],
     queryFn: () => licenseRequests.get(id),
   });
 };
 
-const Create =(license: ILicense) => {
-  return useMutation<ILicense>({
+const Create = () => {
+  return useMutation({
     mutationKey: queryKeys.CREATE_LICENSE,
-    mutationFn: () => licenseRequests.create(license),
-    onSuccess: () => {
-      queryClient.setQueryData<ILicense[]>(queryKeys.CREATE_LICENSE, (old) => {
+    mutationFn: (license: ILicense) => licenseRequests.create(license),
+    onSuccess: (license) => {
+      queryClient.invalidateQueries(queryKeys.FETCH_LICENSE);
+      queryClient.setQueryData<ILicense[]>(queryKeys.FETCH_LICENSES, (old) => {
         return old ? [...old, license] : [license];
       });
-      queryClient.invalidateQueries(queryKeys.FETCH_LICENSES);
-      queryClient.invalidateQueries(queryKeys.FETCH_LICENSE);
     },
   });
 };
 
-const CreateRange = (licenses: ILicense[]) => {
-  return useMutation<ILicense[]>({
+const CreateRange = () => {
+  return useMutation({
     mutationKey: queryKeys.CREATE_RANGE_LICENSE,
-    mutationFn: () => licenseRequests.createRange(licenses),
-    onSuccess: () => {
-      queryClient.setQueriesData<ILicense[]>(
-        queryKeys.CREATE_RANGE_LICENSE,
-        (old) => {
-          return old ? [...old, ...licenses] : licenses;
-        }
-      );
-      queryClient.invalidateQueries(queryKeys.CREATE_RANGE_LICENSE);
-      queryClient.invalidateQueries(queryKeys.FETCH_LICENSES);
-    },
-  });
-};
-
-const Update = (license: ILicense) => {
-  return useMutation<ILicense>({
-    mutationKey: queryKeys.UPDATE_LICENSE,
-    mutationFn: () => licenseRequests.update(license),
-    onSuccess: () => {
-      queryClient.setQueryData<ILicense[]>(queryKeys.UPDATE_LICENSE, (old) => {
-        return old
-          ? old.map((item) => (item.id === license.id ? license : item))
-          : [];
+    mutationFn: (licenses: ILicense[]) => licenseRequests.createRange(licenses),
+    onSuccess: (licenses) => {
+      queryClient.setQueryData<ILicense[]>(queryKeys.FETCH_LICENSES, (old) => {
+        return old ? [...old, ...licenses] : licenses;
       });
-      queryClient.invalidateQueries(queryKeys.UPDATE_LICENSE);
-      queryClient.invalidateQueries(queryKeys.FETCH_LICENSES);
-      queryClient.invalidateQueries([queryKeys.FETCH_LICENSE, license.id]);
     },
   });
 };
 
-const Remove = (id: string) => {
+const Update = () => {
+  return useMutation({
+    mutationKey: queryKeys.UPDATE_LICENSE,
+    mutationFn: (license: ILicense) => licenseRequests.update(license),
+    onSuccess: (license) => {
+      queryClient.setQueryData<ILicense[]>(queryKeys.FETCH_LICENSES, (old) => {
+        if (old) {
+          const index = old.findIndex((x) => x.id === license.id);
+          old[index] = license;
+          return [...old];
+        }
+        return [license];
+      });
+      queryClient.setQueryData<ILicense>(
+        [queryKeys.FETCH_LICENSE, license.id],
+        license
+      );
+    },
+  });
+};
+
+const Remove = () => {
   return useMutation({
     mutationKey: queryKeys.DELETE_LICENSE,
-    mutationFn: () => licenseRequests.remove(id),
+    mutationFn: (id: string) => licenseRequests.remove(id),
     onSuccess: () => {
-      queryClient.setQueryData<ILicense[]>(queryKeys.DELETE_LICENSE, (old) => {
-        return old ? old.filter((item) => item.id !== id) : [];
-      });
-      queryClient.invalidateQueries(queryKeys.DELETE_LICENSE);
       queryClient.invalidateQueries(queryKeys.FETCH_LICENSES);
     },
   });
 };
 
-const RemoveRange = (ids: string[]) => {
+const RemoveRange = () => {
   return useMutation({
     mutationKey: queryKeys.DELETE_RANGE_LICENSE,
-    mutationFn: () => licenseRequests.removeRange(ids),
+    mutationFn: (ids: string[]) => licenseRequests.removeRange(ids),
     onSuccess: () => {
-      queryClient.setQueryData<ILicense[]>(
-        queryKeys.DELETE_RANGE_LICENSE,
-        (old) => {
-          return old ? old.filter((item) => !ids.includes(item.id)) : [];
-        }
-      );
-      queryClient.invalidateQueries(queryKeys.DELETE_RANGE_LICENSE);
       queryClient.invalidateQueries(queryKeys.FETCH_LICENSES);
     },
   });
@@ -135,6 +123,10 @@ const UserCheckIn = () => {
       queryClient.invalidateQueries(queryKeys.FETCH_LICENSES);
     },
   });
+};
+
+const Lookup = () => {
+  return useQuery(queryKeys.LOOKUP_LICENSES, licenseRequests.lookup);
 };
 
 const AssetCheckIn = () => {
@@ -182,6 +174,7 @@ export const useLicense = {
   Remove,
   RemoveRange,
   Filter,
+  Lookup,
   UserCheckIn,
   UserCheckOut,
   AssetCheckIn,

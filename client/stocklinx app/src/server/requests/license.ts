@@ -47,6 +47,10 @@ const filter = (queryFilters: QueryFilter[]) => {
   return baseRequests.filter<ILicense>(requestUrl, queryFilters);
 };
 
+const lookup = () => {
+  return baseRequests.lookup(requestUrl, ["tag", "name"]);
+};
+
 const userCheckIn = async (
   checkInDto: UserProductCheckInDto
 ): Promise<IUserProduct> => {
@@ -95,9 +99,10 @@ export const licenseRequests = {
   update,
   remove,
   removeRange,
+  filter,
+  lookup,
   userCheckIn,
   assetCheckIn,
   userCheckOut,
   assetCheckOut,
-  filter,
 };

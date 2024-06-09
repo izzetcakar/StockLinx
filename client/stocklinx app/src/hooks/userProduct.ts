@@ -24,101 +24,86 @@ const GetAll = () => {
   );
 };
 
-const Get =(id: string) => {
+const Get = (id: string) => {
   return useQuery<IUserProduct>({
     queryKey: [queryKeys.FETCH_USERPRODUCT, id],
     queryFn: () => userProductRequests.get(id),
   });
 };
 
-const Create =(userProduct: IUserProduct) => {
-  return useMutation<IUserProduct>({
+const Create = () => {
+  return useMutation({
     mutationKey: queryKeys.CREATE_USERPRODUCT,
-    mutationFn: () => userProductRequests.create(userProduct),
-    onSuccess: () => {
+    mutationFn: (userProduct: IUserProduct) =>
+      userProductRequests.create(userProduct),
+    onSuccess: (userProduct) => {
+      queryClient.invalidateQueries(queryKeys.FETCH_USERPRODUCT);
       queryClient.setQueryData<IUserProduct[]>(
-        queryKeys.CREATE_USERPRODUCT,
+        queryKeys.FETCH_USERPRODUCTS,
         (old) => {
           return old ? [...old, userProduct] : [userProduct];
         }
       );
-      queryClient.invalidateQueries(queryKeys.FETCH_USERPRODUCTS);
-      queryClient.invalidateQueries(queryKeys.FETCH_USERPRODUCT);
     },
   });
 };
 
-const CreateRange = (userProducts: IUserProduct[]) => {
-  return useMutation<IUserProduct[]>({
+const CreateRange = () => {
+  return useMutation({
     mutationKey: queryKeys.CREATE_RANGE_USERPRODUCT,
-    mutationFn: () => userProductRequests.createRange(userProducts),
-    onSuccess: () => {
-      queryClient.setQueriesData<IUserProduct[]>(
-        queryKeys.CREATE_RANGE_USERPRODUCT,
+    mutationFn: (userProducts: IUserProduct[]) =>
+      userProductRequests.createRange(userProducts),
+    onSuccess: (userProducts) => {
+      queryClient.setQueryData<IUserProduct[]>(
+        queryKeys.FETCH_USERPRODUCTS,
         (old) => {
           return old ? [...old, ...userProducts] : userProducts;
         }
       );
-      queryClient.invalidateQueries(queryKeys.CREATE_RANGE_USERPRODUCT);
-      queryClient.invalidateQueries(queryKeys.FETCH_USERPRODUCTS);
     },
   });
 };
 
-const Update = (userProduct: IUserProduct) => {
-  return useMutation<IUserProduct>({
+const Update = () => {
+  return useMutation({
     mutationKey: queryKeys.UPDATE_USERPRODUCT,
-    mutationFn: () => userProductRequests.update(userProduct),
-    onSuccess: () => {
+    mutationFn: (userProduct: IUserProduct) =>
+      userProductRequests.update(userProduct),
+    onSuccess: (userProduct) => {
       queryClient.setQueryData<IUserProduct[]>(
-        queryKeys.UPDATE_USERPRODUCT,
+        queryKeys.FETCH_USERPRODUCTS,
         (old) => {
-          return old
-            ? old.map((item) =>
-                item.id === userProduct.id ? userProduct : item
-              )
-            : [];
+          if (old) {
+            const index = old.findIndex((x) => x.id === userProduct.id);
+            old[index] = userProduct;
+            return [...old];
+          }
+          return [userProduct];
         }
       );
-      queryClient.invalidateQueries(queryKeys.UPDATE_USERPRODUCT);
-      queryClient.invalidateQueries(queryKeys.FETCH_USERPRODUCTS);
-      queryClient.invalidateQueries([
-        queryKeys.FETCH_USERPRODUCT,
-        userProduct.id,
-      ]);
+      queryClient.setQueryData<IUserProduct>(
+        [queryKeys.FETCH_USERPRODUCT, userProduct.id],
+        userProduct
+      );
     },
   });
 };
 
-const Remove = (id: string) => {
+const Remove = () => {
   return useMutation({
     mutationKey: queryKeys.DELETE_USERPRODUCT,
-    mutationFn: () => userProductRequests.remove(id),
+    mutationFn: (id: string) => userProductRequests.remove(id),
     onSuccess: () => {
-      queryClient.setQueryData<IUserProduct[]>(
-        queryKeys.DELETE_USERPRODUCT,
-        (old) => {
-          return old ? old.filter((item) => item.id !== id) : [];
-        }
-      );
-      queryClient.invalidateQueries(queryKeys.DELETE_USERPRODUCT);
       queryClient.invalidateQueries(queryKeys.FETCH_USERPRODUCTS);
     },
   });
 };
 
-const RemoveRange = (ids: string[]) => {
+const RemoveRange = () => {
   return useMutation({
     mutationKey: queryKeys.DELETE_RANGE_USERPRODUCT,
-    mutationFn: () => userProductRequests.removeRange(ids),
+    mutationFn: (ids: string[]) => userProductRequests.removeRange(ids),
     onSuccess: () => {
-      queryClient.setQueryData<IUserProduct[]>(
-        queryKeys.DELETE_RANGE_USERPRODUCT,
-        (old) => {
-          return old ? old.filter((item) => !ids.includes(item.id)) : [];
-        }
-      );
-      queryClient.invalidateQueries(queryKeys.DELETE_RANGE_USERPRODUCT);
       queryClient.invalidateQueries(queryKeys.FETCH_USERPRODUCTS);
     },
   });

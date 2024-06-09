@@ -15,6 +15,7 @@ enum queryKeys {
   CHECK_IN_DEPARTMENT = "CHECK_IN_DEPARTMENT",
   CHECK_OUT_DEPARTMENT = "CHECK_OUT_DEPARTMENT",
   FILTER_DEPARTMENTS = "FILTER_DEPARTMENTS",
+  LOOKUP_DEPARTMENTS = "LOOKUP_DEPARTMENTS",
 }
 
 const GetAll = () => {
@@ -24,99 +25,86 @@ const GetAll = () => {
   );
 };
 
-const Get =(id: string) => {
+const Get = (id: string) => {
   return useQuery<IDepartment>({
     queryKey: [queryKeys.FETCH_DEPARTMENT, id],
     queryFn: () => departmentRequests.get(id),
   });
 };
 
-const Create =(department: IDepartment) => {
-  return useMutation<IDepartment>({
+const Create = () => {
+  return useMutation({
     mutationKey: queryKeys.CREATE_DEPARTMENT,
-    mutationFn: () => departmentRequests.create(department),
-    onSuccess: () => {
+    mutationFn: (department: IDepartment) =>
+      departmentRequests.create(department),
+    onSuccess: (department) => {
+      queryClient.invalidateQueries(queryKeys.FETCH_DEPARTMENT);
       queryClient.setQueryData<IDepartment[]>(
-        queryKeys.CREATE_DEPARTMENT,
+        queryKeys.FETCH_DEPARTMENTS,
         (old) => {
           return old ? [...old, department] : [department];
         }
       );
-      queryClient.invalidateQueries(queryKeys.FETCH_DEPARTMENTS);
-      queryClient.invalidateQueries(queryKeys.FETCH_DEPARTMENT);
     },
   });
 };
 
-const CreateRange = (departments: IDepartment[]) => {
-  return useMutation<IDepartment[]>({
+const CreateRange = () => {
+  return useMutation({
     mutationKey: queryKeys.CREATE_RANGE_DEPARTMENT,
-    mutationFn: () => departmentRequests.createRange(departments),
-    onSuccess: () => {
-      queryClient.setQueriesData<IDepartment[]>(
-        queryKeys.CREATE_RANGE_DEPARTMENT,
+    mutationFn: (departments: IDepartment[]) =>
+      departmentRequests.createRange(departments),
+    onSuccess: (departments) => {
+      queryClient.setQueryData<IDepartment[]>(
+        queryKeys.FETCH_DEPARTMENTS,
         (old) => {
           return old ? [...old, ...departments] : departments;
         }
       );
-      queryClient.invalidateQueries(queryKeys.CREATE_RANGE_DEPARTMENT);
-      queryClient.invalidateQueries(queryKeys.FETCH_DEPARTMENTS);
     },
   });
 };
 
-const Update = (department: IDepartment) => {
-  return useMutation<IDepartment>({
+const Update = () => {
+  return useMutation({
     mutationKey: queryKeys.UPDATE_DEPARTMENT,
-    mutationFn: () => departmentRequests.update(department),
-    onSuccess: () => {
+    mutationFn: (department: IDepartment) =>
+      departmentRequests.update(department),
+    onSuccess: (department) => {
       queryClient.setQueryData<IDepartment[]>(
-        queryKeys.UPDATE_DEPARTMENT,
+        queryKeys.FETCH_DEPARTMENTS,
         (old) => {
-          return old
-            ? old.map((item) => (item.id === department.id ? department : item))
-            : [];
+          if (old) {
+            const index = old.findIndex((x) => x.id === department.id);
+            old[index] = department;
+            return [...old];
+          }
+          return [department];
         }
       );
-      queryClient.invalidateQueries(queryKeys.UPDATE_DEPARTMENT);
-      queryClient.invalidateQueries(queryKeys.FETCH_DEPARTMENTS);
-      queryClient.invalidateQueries([
-        queryKeys.FETCH_DEPARTMENT,
-        department.id,
-      ]);
+      queryClient.setQueryData<IDepartment>(
+        [queryKeys.FETCH_DEPARTMENT, department.id],
+        department
+      );
     },
   });
 };
 
-const Remove = (id: string) => {
+const Remove = () => {
   return useMutation({
     mutationKey: queryKeys.DELETE_DEPARTMENT,
-    mutationFn: () => departmentRequests.remove(id),
+    mutationFn: (id: string) => departmentRequests.remove(id),
     onSuccess: () => {
-      queryClient.setQueryData<IDepartment[]>(
-        queryKeys.DELETE_DEPARTMENT,
-        (old) => {
-          return old ? old.filter((item) => item.id !== id) : [];
-        }
-      );
-      queryClient.invalidateQueries(queryKeys.DELETE_DEPARTMENT);
       queryClient.invalidateQueries(queryKeys.FETCH_DEPARTMENTS);
     },
   });
 };
 
-const RemoveRange = (ids: string[]) => {
+const RemoveRange = () => {
   return useMutation({
     mutationKey: queryKeys.DELETE_RANGE_DEPARTMENT,
-    mutationFn: () => departmentRequests.removeRange(ids),
+    mutationFn: (ids: string[]) => departmentRequests.removeRange(ids),
     onSuccess: () => {
-      queryClient.setQueryData<IDepartment[]>(
-        queryKeys.DELETE_RANGE_DEPARTMENT,
-        (old) => {
-          return old ? old.filter((item) => !ids.includes(item.id)) : [];
-        }
-      );
-      queryClient.invalidateQueries(queryKeys.DELETE_RANGE_DEPARTMENT);
       queryClient.invalidateQueries(queryKeys.FETCH_DEPARTMENTS);
     },
   });
@@ -135,6 +123,10 @@ const Filter = () => {
   });
 };
 
+const Lookup = () => {
+  return useQuery(queryKeys.LOOKUP_DEPARTMENTS, departmentRequests.getAll);
+};
+
 export const useDepartment = {
   GetAll,
   Get,
@@ -144,4 +136,5 @@ export const useDepartment = {
   Remove,
   RemoveRange,
   Filter,
+  Lookup,
 };

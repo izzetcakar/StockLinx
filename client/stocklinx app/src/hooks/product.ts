@@ -3,6 +3,7 @@ import {
   IProductStatusCount,
   IProductLocationCount,
   IProductCategoryCount,
+  ICustomLog,
 } from "@/interfaces/serverInterfaces";
 import { productRequests } from "@/server/requests/product";
 import { useQuery } from "react-query";
@@ -44,7 +45,7 @@ const GetProductCategoryCounts = () => {
 };
 
 const GetCustomLogs = () => {
-  return useQuery<IProductCategoryCount[]>(
+  return useQuery<ICustomLog[]>(
     queryKeys.FETCH_CUSTOM_LOGS,
     productRequests.getCustomLogs
   );
