@@ -71,7 +71,7 @@ const filter = async <T>(
 ): Promise<T[]> => {
   const response = await request<T[]>({
     requestUrl: requestUrl + "filter",
-    apiType: "post",
+    apiType: "get",
     params: getQueryFilter(queryFilters),
   });
   return response.data as T[];
