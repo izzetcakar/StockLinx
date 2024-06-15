@@ -5,10 +5,9 @@ import { LookupData } from "@/interfaces/gridTableInterfaces";
 const BASE_URL: string = import.meta.env.VITE_REACT_APP_BASE_URL as string;
 
 export const getToken = (): string => {
-  const userData = localStorage.getItem("token");
-  if (userData === null || userData === undefined) return "";
-  const user = JSON.parse(userData) as string;
-  return user;
+  const token = localStorage.getItem("token");
+  if (token === null || token === undefined) return "";
+  return token;
 };
 
 export type BackendResponse<T> = {
@@ -105,7 +104,7 @@ export const request = async <T>({
         "origin, content-type, accept, authorization",
       "Access-Control-Allow-Methods": "GET,POST,DELETE,PUT",
       "Content-Type": "application/json; charset=utf-8",
-      Authorization: `Bearer ${getToken()}`,
+      Authorization: `bearer ${getToken()}`,
     },
     data: queryData,
     params: params,

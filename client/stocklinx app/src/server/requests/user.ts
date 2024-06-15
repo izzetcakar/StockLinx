@@ -2,6 +2,7 @@ import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 import { IUser, IUserLoginDto } from "@interfaces/serverInterfaces";
 import { request } from "@request";
 import { baseRequests } from "@/utils/requestUtils";
+import { TokenDto } from "@/interfaces/clientInterfaces";
 
 const requestUrl = "User/";
 
@@ -41,19 +42,23 @@ const lookup = () => {
   return baseRequests.lookup(requestUrl, ["firstName", "lastName"]);
 };
 
-const signIn = (loginDto: IUserLoginDto) => {
-  return request<IUserLoginDto>({
-    requestUrl: requestUrl + "login",
-    queryData: loginDto,
-    apiType: "post",
-  });
+const signIn = async (loginDto: IUserLoginDto): Promise<TokenDto> => {
+  return (
+    await request<TokenDto>({
+      requestUrl: requestUrl + "login",
+      queryData: loginDto,
+      apiType: "post",
+    })
+  ).data as TokenDto;
 };
 
-const getWithToken = () => {
-  return request<IUser>({
-    requestUrl: requestUrl + "getWithToken",
-    apiType: "get",
-  });
+const getWithToken = async (): Promise<IUser> => {
+  return (
+    await request<IUser>({
+      requestUrl: requestUrl + "getWithToken",
+      apiType: "get",
+    })
+  ).data as IUser;
 };
 
 export const userRequests = {

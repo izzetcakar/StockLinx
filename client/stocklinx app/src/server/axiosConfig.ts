@@ -10,6 +10,6 @@ export const axiosConfig: AxiosRequestConfig = {
       "origin, content-type, accept, authorization",
     "Access-Control-Allow-Methods": "GET,POST,DELETE,PUT",
     "Content-Type": "application/json; charset=utf-8",
-    Authorization: `Bearer ${getToken()}`,
+    Authorization: `bearer ${getToken()}`,
   },
 };
