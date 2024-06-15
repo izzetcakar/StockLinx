@@ -1,6 +1,6 @@
 import uuid4 from "uuid4";
 import { IAccessory } from "@interfaces/serverInterfaces";
-import { getImage } from "../../utils/Image";
+import { getImage } from "../../utils/imageUtils";
 import { useContext } from "react";
 import GenericContext from "@/context/GenericContext";
 

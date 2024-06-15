@@ -10,7 +10,7 @@ import {
 import { useForm } from "@mantine/form";
 import { ICompany } from "@interfaces/serverInterfaces";
 import { useInitial } from "./useInitial";
-import { toBase64 } from "../../utils/Image";
+import { toBase64 } from "../../utils/imageUtils";
 import FormSelect from "../mantine/FormSelect";
 import { useCompany } from "@/hooks/company";
 import { useLocation } from "@/hooks/location";

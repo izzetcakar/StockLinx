@@ -1,8 +1,8 @@
 import { ExcelColumn, DataColumn } from "@interfaces/gridTableInterfaces";
-import { Anchor, Button, Image } from "@mantine/core";
+import { Anchor, Image } from "@mantine/core";
 import { IAsset, IUserProduct } from "@interfaces/serverInterfaces";
 import { useNavigate } from "react-router-dom";
-import { getImage } from "../../utils/Image";
+import { getImage } from "../../utils/imageUtils";
 import {
   openAssetCheckInModal,
   openAssetCheckOutModal,
@@ -13,6 +13,7 @@ import { useUserProduct } from "@/hooks/userProduct";
 import { useUser } from "@/hooks/user";
 import { useSupplier } from "@/hooks/supplier";
 import { useProductStatus } from "@/hooks/productStatus";
+import UserCheckInOutCell from "@/cells/UserCheckInOutCell";
 
 export const useColumns = () => {
   const navigate = useNavigate();
@@ -21,8 +22,6 @@ export const useColumns = () => {
   const { data: userLookup } = useUser.Lookup();
   const { data: supplierLookup } = useSupplier.Lookup();
   const { data: productStatusLookup } = useProductStatus.Lookup();
-
-
 
   const checkIn = (asset: IAsset) => {
     openAssetCheckInModal({
@@ -141,29 +140,13 @@ export const useColumns = () => {
       dataField: "id",
       caption: "Checkin/Checkout",
       dataType: "action",
-      renderComponent(e) {
-        const asset = e as IAsset;
-        const userProduct = userProducts?.find(
-          (userProduct) => userProduct?.assetId === (e as IAsset).id
-        );
-        const user = userLookup?.find(
-          (user) => user.value === userProduct?.userId
-        );
-        return (
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <Button
-              color={user ? "red" : "green"}
-              variant="filled"
-              size="xs"
-              onClick={() => {
-                userProduct ? checkOut(asset, userProduct) : checkIn(asset);
-              }}
-            >
-              {userProduct ? "Check Out" : "Check In"}
-            </Button>
-          </div>
-        );
-      },
+      renderComponent: (e) => (
+        <UserCheckInOutCell
+          asset={e as IAsset}
+          checkIn={checkIn}
+          checkOut={checkOut}
+        />
+      ),
     },
     // INVISIBLE COLUMNS
     {

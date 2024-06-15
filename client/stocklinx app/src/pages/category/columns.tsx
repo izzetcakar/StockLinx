@@ -5,7 +5,7 @@ import {
 } from "@interfaces/gridTableInterfaces";
 import { Anchor } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
-import { createDataFromEnum } from "../../utils/createDataFromEnum";
+import { createDataFromEnum } from "../../utils/enumUtils";
 
 export const useColumns = () => {
   const navigate = useNavigate();

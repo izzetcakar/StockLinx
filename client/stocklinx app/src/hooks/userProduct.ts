@@ -4,7 +4,7 @@ import { queryClient } from "@/main";
 import { userProductRequests } from "@/server/requests/userProduct";
 import { useMutation, useQuery } from "react-query";
 
-enum queryKeys {
+export enum userProductKeys {
   FETCH_USERPRODUCTS = "FETCH_USERPRODUCTS",
   FETCH_USERPRODUCT = "FETCH_USERPRODUCT",
   CREATE_USERPRODUCT = "CREATE_USERPRODUCT",
@@ -19,59 +19,60 @@ enum queryKeys {
 
 const GetAll = () => {
   return useQuery<IUserProduct[]>(
-    queryKeys.FETCH_USERPRODUCTS,
+    userProductKeys.FETCH_USERPRODUCTS,
     userProductRequests.getAll
   );
 };
 
 const Get = (id: string) => {
   return useQuery<IUserProduct>({
-    queryKey: [queryKeys.FETCH_USERPRODUCT, id],
+    queryKey: [userProductKeys.FETCH_USERPRODUCT, id],
     queryFn: () => userProductRequests.get(id),
   });
 };
 
 const Create = () => {
   return useMutation({
-    mutationKey: queryKeys.CREATE_USERPRODUCT,
+    mutationKey: userProductKeys.CREATE_USERPRODUCT,
     mutationFn: (userProduct: IUserProduct) =>
       userProductRequests.create(userProduct),
     onSuccess: (userProduct) => {
-      queryClient.invalidateQueries(queryKeys.FETCH_USERPRODUCT);
       queryClient.setQueryData<IUserProduct[]>(
-        queryKeys.FETCH_USERPRODUCTS,
+        userProductKeys.FETCH_USERPRODUCTS,
         (old) => {
           return old ? [...old, userProduct] : [userProduct];
         }
       );
+      queryClient.invalidateQueries(userProductKeys.FILTER_USERPRODUCTS);
     },
   });
 };
 
 const CreateRange = () => {
   return useMutation({
-    mutationKey: queryKeys.CREATE_RANGE_USERPRODUCT,
+    mutationKey: userProductKeys.CREATE_RANGE_USERPRODUCT,
     mutationFn: (userProducts: IUserProduct[]) =>
       userProductRequests.createRange(userProducts),
     onSuccess: (userProducts) => {
       queryClient.setQueryData<IUserProduct[]>(
-        queryKeys.FETCH_USERPRODUCTS,
+        userProductKeys.FETCH_USERPRODUCTS,
         (old) => {
           return old ? [...old, ...userProducts] : userProducts;
         }
       );
+      queryClient.invalidateQueries(userProductKeys.FILTER_USERPRODUCTS);
     },
   });
 };
 
 const Update = () => {
   return useMutation({
-    mutationKey: queryKeys.UPDATE_USERPRODUCT,
+    mutationKey: userProductKeys.UPDATE_USERPRODUCT,
     mutationFn: (userProduct: IUserProduct) =>
       userProductRequests.update(userProduct),
     onSuccess: (userProduct) => {
       queryClient.setQueryData<IUserProduct[]>(
-        queryKeys.FETCH_USERPRODUCTS,
+        userProductKeys.FETCH_USERPRODUCTS,
         (old) => {
           if (old) {
             const index = old.findIndex((x) => x.id === userProduct.id);
@@ -82,40 +83,43 @@ const Update = () => {
         }
       );
       queryClient.setQueryData<IUserProduct>(
-        [queryKeys.FETCH_USERPRODUCT, userProduct.id],
+        [userProductKeys.FETCH_USERPRODUCT, userProduct.id],
         userProduct
       );
+      queryClient.invalidateQueries(userProductKeys.FILTER_USERPRODUCTS);
     },
   });
 };
 
 const Remove = () => {
   return useMutation({
-    mutationKey: queryKeys.DELETE_USERPRODUCT,
+    mutationKey: userProductKeys.DELETE_USERPRODUCT,
     mutationFn: (id: string) => userProductRequests.remove(id),
     onSuccess: () => {
-      queryClient.invalidateQueries(queryKeys.FETCH_USERPRODUCTS);
+      queryClient.invalidateQueries(userProductKeys.FETCH_USERPRODUCTS);
+      queryClient.invalidateQueries(userProductKeys.FILTER_USERPRODUCTS);
     },
   });
 };
 
 const RemoveRange = () => {
   return useMutation({
-    mutationKey: queryKeys.DELETE_RANGE_USERPRODUCT,
+    mutationKey: userProductKeys.DELETE_RANGE_USERPRODUCT,
     mutationFn: (ids: string[]) => userProductRequests.removeRange(ids),
     onSuccess: () => {
-      queryClient.invalidateQueries(queryKeys.FETCH_USERPRODUCTS);
+      queryClient.invalidateQueries(userProductKeys.FETCH_USERPRODUCTS);
+      queryClient.invalidateQueries(userProductKeys.FILTER_USERPRODUCTS);
     },
   });
 };
 
 const Filter = () => {
   return useMutation({
-    mutationKey: queryKeys.FILTER_USERPRODUCTS,
+    mutationKey: userProductKeys.FILTER_USERPRODUCTS,
     mutationFn: (filters: QueryFilter[]) => userProductRequests.filter(filters),
-    onSuccess(data) {
+    onSuccess(data: IUserProduct[]) {
       queryClient.setQueryData<IUserProduct[]>(
-        queryKeys.FILTER_USERPRODUCTS,
+        userProductKeys.FILTER_USERPRODUCTS,
         data
       );
     },

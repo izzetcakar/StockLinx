@@ -12,6 +12,7 @@ import { useCategory } from "@/hooks/category";
 import { useBranch } from "@/hooks/branch";
 import { useLocation } from "@/hooks/location";
 import { useComponent } from "@/hooks/component";
+import AssetProductQuantityCell from "@/cells/AssetProductQuantityCell";
 
 export const useColumns = () => {
   const navigate = useNavigate();
@@ -103,6 +104,12 @@ export const useColumns = () => {
       caption: "Avail",
       dataField: "availableQuantity",
       dataType: "number",
+      renderComponent: (e) =>
+        AssetProductQuantityCell({
+          productId: (e as IComponent).id,
+          productType: "Component",
+          totalQuantity: (e as IComponent).quantity,
+        }),
     },
     {
       caption: "Location",

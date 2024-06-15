@@ -2,7 +2,7 @@ import { DataColumn, ExcelColumn } from "@interfaces/gridTableInterfaces";
 import { useNavigate } from "react-router-dom";
 import { Anchor, Image } from "@mantine/core";
 import { ISupplier } from "@interfaces/serverInterfaces";
-import { getImage } from "../../utils/Image";
+import { getImage } from "../../utils/imageUtils";
 import { useLocation } from "@/hooks/location";
 
 export const useColumns = () => {

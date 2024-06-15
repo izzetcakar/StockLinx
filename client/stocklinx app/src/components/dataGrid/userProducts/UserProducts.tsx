@@ -1,6 +1,6 @@
 import { useColumns } from "./columns";
 import { useRef } from "react";
-import { openSubmissionModal } from "../../../utils/exportSubmissionForm";
+import { openSubmissionModal } from "../../../utils/submissionUtils";
 import { useUserProduct } from "@/hooks/userProduct";
 import Gridtable from "../../gridTable/GridTable";
 

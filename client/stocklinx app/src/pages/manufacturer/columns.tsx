@@ -5,7 +5,7 @@ import {
 } from "@interfaces/gridTableInterfaces";
 import { IManufacturer } from "@interfaces/serverInterfaces";
 import { Anchor, Image } from "@mantine/core";
-import { getImage } from "../../utils/Image";
+import { getImage } from "../../utils/imageUtils";
 
 export const useColumns = () => {
   const navigate = useNavigate();

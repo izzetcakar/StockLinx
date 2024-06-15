@@ -4,7 +4,7 @@ import { queryClient } from "@/main";
 import { permissionRequests } from "@/server/requests/permission";
 import { useMutation, useQuery } from "react-query";
 
-enum queryKeys {
+export enum permissionKeys {
   FETCH_PERMISSIONS = "FETCH_PERMISSIONS",
   FETCH_PERMISSION = "FETCH_PERMISSION",
   CREATE_PERMISSION = "CREATE_PERMISSION",
@@ -20,78 +20,81 @@ enum queryKeys {
 
 const GetAll = () => {
   return useQuery<IPermission[]>(
-    queryKeys.FETCH_PERMISSIONS,
+    permissionKeys.FETCH_PERMISSIONS,
     permissionRequests.getAll
   );
 };
 
 const Get = (id: string) => {
   return useQuery<IPermission>({
-    queryKey: [queryKeys.FETCH_PERMISSION, id],
+    queryKey: [permissionKeys.FETCH_PERMISSION, id],
     queryFn: () => permissionRequests.get(id),
   });
 };
 
 const Create = () => {
   return useMutation({
-    mutationKey: queryKeys.CREATE_PERMISSION,
+    mutationKey: permissionKeys.CREATE_PERMISSION,
     mutationFn: (permission: IPermission) =>
       permissionRequests.create(permission),
     onSuccess: (permission) => {
-      queryClient.invalidateQueries(queryKeys.FETCH_PERMISSION);
       queryClient.setQueryData<IPermission[]>(
-        queryKeys.FETCH_PERMISSIONS,
+        permissionKeys.FETCH_PERMISSIONS,
         (old) => {
           return old ? [...old, permission] : [permission];
         }
       );
+      queryClient.invalidateQueries(permissionKeys.FILTER_PERMISSIONS);
     },
   });
 };
 
 const CreateRange = () => {
   return useMutation({
-    mutationKey: queryKeys.CREATE_RANGE_PERMISSION,
+    mutationKey: permissionKeys.CREATE_RANGE_PERMISSION,
     mutationFn: (permissions: IPermission[]) =>
       permissionRequests.createRange(permissions),
     onSuccess: (permissions) => {
       queryClient.setQueryData<IPermission[]>(
-        queryKeys.FETCH_PERMISSIONS,
+        permissionKeys.FETCH_PERMISSIONS,
         (old) => {
           return old ? [...old, ...permissions] : permissions;
         }
       );
+      queryClient.invalidateQueries(permissionKeys.FILTER_PERMISSIONS);
     },
   });
 };
 
 const Remove = () => {
   return useMutation({
-    mutationKey: queryKeys.DELETE_PERMISSION,
+    mutationKey: permissionKeys.DELETE_PERMISSION,
     mutationFn: (id: string) => permissionRequests.remove(id),
     onSuccess: () => {
-      queryClient.invalidateQueries(queryKeys.FETCH_PERMISSIONS);
+      queryClient.invalidateQueries(permissionKeys.FETCH_PERMISSIONS);
+      queryClient.invalidateQueries(permissionKeys.FILTER_PERMISSIONS);
     },
   });
 };
 
 const RemoveRange = () => {
   return useMutation({
-    mutationKey: queryKeys.DELETE_RANGE_PERMISSION,
+    mutationKey: permissionKeys.DELETE_RANGE_PERMISSION,
     mutationFn: (ids: string[]) => permissionRequests.removeRange(ids),
     onSuccess: () => {
-      queryClient.invalidateQueries(queryKeys.FETCH_PERMISSIONS);
+      queryClient.invalidateQueries(permissionKeys.FETCH_PERMISSIONS);
+      queryClient.invalidateQueries(permissionKeys.FILTER_PERMISSIONS);
     },
   });
 };
 
 const Filter = () => {
   return useMutation({
-    mutationKey: queryKeys.FILTER_PERMISSIONS,
+    mutationKey: permissionKeys.FILTER_PERMISSIONS,
     mutationFn: (filters: QueryFilter[]) => permissionRequests.filter(filters),
-    onSuccess(data) {
+    onSuccess(data: IPermission[]) {
       queryClient.setQueryData<IPermission[]>(
-        queryKeys.FILTER_PERMISSIONS,
+        permissionKeys.FILTER_PERMISSIONS,
         data
       );
     },
@@ -100,13 +103,16 @@ const Filter = () => {
 
 const Sync = () => {
   return useMutation({
-    mutationKey: queryKeys.SYNC_PERMISSIONS,
+    mutationKey: permissionKeys.SYNC_PERMISSIONS,
     mutationFn: (permissions: IPermission[]) =>
       permissionRequests.sync(permissions),
     onSuccess: (data: IPermission[]) => {
-      queryClient.setQueryData<IPermission[]>(queryKeys.SYNC_PERMISSIONS, data);
-      queryClient.invalidateQueries(queryKeys.SYNC_PERMISSIONS);
-      queryClient.invalidateQueries(queryKeys.FETCH_PERMISSIONS);
+      queryClient.setQueryData<IPermission[]>(
+        permissionKeys.SYNC_PERMISSIONS,
+        data
+      );
+      queryClient.invalidateQueries(permissionKeys.SYNC_PERMISSIONS);
+      queryClient.invalidateQueries(permissionKeys.FETCH_PERMISSIONS);
     },
   });
 };

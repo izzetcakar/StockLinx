@@ -11,7 +11,7 @@ import {
 import { useForm } from "@mantine/form";
 import { IManufacturer } from "@interfaces/serverInterfaces";
 import { useInitial } from "./useInitial";
-import { toBase64 } from "../../utils/Image";
+import { toBase64 } from "../../utils/imageUtils";
 import { useManufacturer } from "@/hooks/manufacturer";
 
 interface ManufacturerFormProps {

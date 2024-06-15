@@ -4,7 +4,7 @@ import { queryClient } from "@/main";
 import { locationRequests } from "@/server/requests/location";
 import { useMutation, useQuery } from "react-query";
 
-enum queryKeys {
+export enum locationKeys {
   FETCH_LOCATIONS = "FETCH_LOCATIONS",
   FETCH_LOCATION = "FETCH_LOCATION",
   CREATE_LOCATION = "CREATE_LOCATION",
@@ -20,57 +20,60 @@ enum queryKeys {
 
 const GetAll = () => {
   return useQuery<ILocation[]>(
-    queryKeys.FETCH_LOCATIONS,
+    locationKeys.FETCH_LOCATIONS,
     locationRequests.getAll
   );
 };
 
 const Get = (id: string) => {
   return useQuery<ILocation>({
-    queryKey: [queryKeys.FETCH_LOCATION, id],
+    queryKey: [locationKeys.FETCH_LOCATION, id],
     queryFn: () => locationRequests.get(id),
   });
 };
 
 const Create = () => {
   return useMutation({
-    mutationKey: queryKeys.CREATE_LOCATION,
+    mutationKey: locationKeys.CREATE_LOCATION,
     mutationFn: (location: ILocation) => locationRequests.create(location),
     onSuccess: (location) => {
-      queryClient.invalidateQueries(queryKeys.FETCH_LOCATION);
       queryClient.setQueryData<ILocation[]>(
-        queryKeys.FETCH_LOCATIONS,
+        locationKeys.FETCH_LOCATIONS,
         (old) => {
           return old ? [...old, location] : [location];
         }
       );
+      queryClient.invalidateQueries(locationKeys.LOOKUP_LOCATIONS);
+      queryClient.invalidateQueries(locationKeys.FILTER_LOCATIONS);
     },
   });
 };
 
 const CreateRange = () => {
   return useMutation({
-    mutationKey: queryKeys.CREATE_RANGE_LOCATION,
+    mutationKey: locationKeys.CREATE_RANGE_LOCATION,
     mutationFn: (locations: ILocation[]) =>
       locationRequests.createRange(locations),
     onSuccess: (locations) => {
       queryClient.setQueryData<ILocation[]>(
-        queryKeys.FETCH_LOCATIONS,
+        locationKeys.FETCH_LOCATIONS,
         (old) => {
           return old ? [...old, ...locations] : locations;
         }
       );
+      queryClient.invalidateQueries(locationKeys.LOOKUP_LOCATIONS);
+      queryClient.invalidateQueries(locationKeys.FILTER_LOCATIONS);
     },
   });
 };
 
 const Update = () => {
   return useMutation({
-    mutationKey: queryKeys.UPDATE_LOCATION,
+    mutationKey: locationKeys.UPDATE_LOCATION,
     mutationFn: (location: ILocation) => locationRequests.update(location),
     onSuccess: (location) => {
       queryClient.setQueryData<ILocation[]>(
-        queryKeys.FETCH_LOCATIONS,
+        locationKeys.FETCH_LOCATIONS,
         (old) => {
           if (old) {
             const index = old.findIndex((x) => x.id === location.id);
@@ -81,45 +84,54 @@ const Update = () => {
         }
       );
       queryClient.setQueryData<ILocation>(
-        [queryKeys.FETCH_LOCATION, location.id],
+        [locationKeys.FETCH_LOCATION, location.id],
         location
       );
+      queryClient.invalidateQueries(locationKeys.LOOKUP_LOCATIONS);
+      queryClient.invalidateQueries(locationKeys.FILTER_LOCATIONS);
     },
   });
 };
 
 const Remove = () => {
   return useMutation({
-    mutationKey: queryKeys.DELETE_LOCATION,
+    mutationKey: locationKeys.DELETE_LOCATION,
     mutationFn: (id: string) => locationRequests.remove(id),
     onSuccess: () => {
-      queryClient.invalidateQueries(queryKeys.FETCH_LOCATIONS);
+      queryClient.invalidateQueries(locationKeys.FETCH_LOCATIONS);
+      queryClient.invalidateQueries(locationKeys.LOOKUP_LOCATIONS);
+      queryClient.invalidateQueries(locationKeys.FILTER_LOCATIONS);
     },
   });
 };
 
 const RemoveRange = () => {
   return useMutation({
-    mutationKey: queryKeys.DELETE_RANGE_LOCATION,
+    mutationKey: locationKeys.DELETE_RANGE_LOCATION,
     mutationFn: (ids: string[]) => locationRequests.removeRange(ids),
     onSuccess: () => {
-      queryClient.invalidateQueries(queryKeys.FETCH_LOCATIONS);
+      queryClient.invalidateQueries(locationKeys.FETCH_LOCATIONS);
+      queryClient.invalidateQueries(locationKeys.LOOKUP_LOCATIONS);
+      queryClient.invalidateQueries(locationKeys.FILTER_LOCATIONS);
     },
   });
 };
 
 const Filter = () => {
   return useMutation({
-    mutationKey: queryKeys.FILTER_LOCATIONS,
+    mutationKey: locationKeys.FILTER_LOCATIONS,
     mutationFn: (filters: QueryFilter[]) => locationRequests.filter(filters),
-    onSuccess(data) {
-      queryClient.setQueryData<ILocation[]>(queryKeys.FILTER_LOCATIONS, data);
+    onSuccess(data: ILocation[]) {
+      queryClient.setQueryData<ILocation[]>(
+        locationKeys.FILTER_LOCATIONS,
+        data
+      );
     },
   });
 };
 
 const Lookup = () => {
-  return useQuery(queryKeys.LOOKUP_LOCATIONS, locationRequests.lookup);
+  return useQuery(locationKeys.LOOKUP_LOCATIONS, locationRequests.lookup);
 };
 
 export const useLocation = {

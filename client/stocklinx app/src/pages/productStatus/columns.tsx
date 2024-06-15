@@ -1,5 +1,5 @@
 import { IProductStatus, ProductStatusType } from "@interfaces/serverInterfaces";
-import { createDataFromEnum } from "../../utils/createDataFromEnum";
+import { createDataFromEnum } from "../../utils/enumUtils";
 import {
   DataColumn,
   ExcelColumn,

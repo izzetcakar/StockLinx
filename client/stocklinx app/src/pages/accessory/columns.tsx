@@ -6,7 +6,7 @@ import {
 } from "@interfaces/serverInterfaces";
 import { Anchor, Button, Image } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
-import { getImage } from "../../utils/Image";
+import { getImage } from "../../utils/imageUtils";
 import { openCheckInModal } from "../../modals/modals";
 import { initialUserProduct } from "../../initials/initials";
 import { useAccessory } from "@/hooks/accessory";
@@ -14,6 +14,7 @@ import { useCategory } from "@/hooks/category";
 import { useLocation } from "@/hooks/location";
 import { useProductStatus } from "@/hooks/productStatus";
 import base_accessory from "@assets/baseProductImages/base_accessory.png";
+import UserProductQuantityCell from "@/cells/UserProductQuantityCell";
 
 export const useColumns = () => {
   const navigate = useNavigate();
@@ -135,6 +136,12 @@ export const useColumns = () => {
       caption: "Avail",
       dataField: "availableQuantity",
       dataType: "number",
+      renderComponent: (e) =>
+        UserProductQuantityCell({
+          productId: (e as IAccessory).id,
+          productType: "Accessory",
+          totalQuantity: (e as IAccessory).quantity,
+        }),
     },
     {
       dataField: "purchaseCost",

@@ -4,7 +4,7 @@ import { queryClient } from "@/main";
 import { assetProductRequests } from "@/server/requests/assetProduct";
 import { useMutation, useQuery } from "react-query";
 
-enum queryKeys {
+export enum assetProductKeys {
   FETCH_ASSETPRODUCTS = "FETCH_ASSETPRODUCTS",
   FETCH_ASSETPRODUCT = "FETCH_ASSETPRODUCT",
   CREATE_ASSETPRODUCT = "CREATE_ASSETPRODUCT",
@@ -19,59 +19,60 @@ enum queryKeys {
 
 const GetAll = () => {
   return useQuery<IAssetProduct[]>(
-    queryKeys.FETCH_ASSETPRODUCTS,
+    assetProductKeys.FETCH_ASSETPRODUCTS,
     assetProductRequests.getAll
   );
 };
 
 const Get = (id: string) => {
   return useQuery<IAssetProduct>({
-    queryKey: [queryKeys.FETCH_ASSETPRODUCT, id],
+    queryKey: [assetProductKeys.FETCH_ASSETPRODUCT, id],
     queryFn: () => assetProductRequests.get(id),
   });
 };
 
 const Create = () => {
   return useMutation({
-    mutationKey: queryKeys.CREATE_ASSETPRODUCT,
+    mutationKey: assetProductKeys.CREATE_ASSETPRODUCT,
     mutationFn: (assetProduct: IAssetProduct) =>
       assetProductRequests.create(assetProduct),
     onSuccess: (assetProduct) => {
-      queryClient.invalidateQueries(queryKeys.FETCH_ASSETPRODUCT);
       queryClient.setQueryData<IAssetProduct[]>(
-        queryKeys.FETCH_ASSETPRODUCTS,
+        assetProductKeys.FETCH_ASSETPRODUCTS,
         (old) => {
           return old ? [...old, assetProduct] : [assetProduct];
         }
       );
+      queryClient.invalidateQueries(assetProductKeys.FILTER_ASSETPRODUCTS);
     },
   });
 };
 
 const CreateRange = () => {
   return useMutation({
-    mutationKey: queryKeys.CREATE_RANGE_ASSETPRODUCT,
+    mutationKey: assetProductKeys.CREATE_RANGE_ASSETPRODUCT,
     mutationFn: (assetProducts: IAssetProduct[]) =>
       assetProductRequests.createRange(assetProducts),
     onSuccess: (assetProducts) => {
       queryClient.setQueryData<IAssetProduct[]>(
-        queryKeys.FETCH_ASSETPRODUCTS,
+        assetProductKeys.FETCH_ASSETPRODUCTS,
         (old) => {
           return old ? [...old, ...assetProducts] : assetProducts;
         }
       );
+      queryClient.invalidateQueries(assetProductKeys.FILTER_ASSETPRODUCTS);
     },
   });
 };
 
 const Update = () => {
   return useMutation({
-    mutationKey: queryKeys.UPDATE_ASSETPRODUCT,
+    mutationKey: assetProductKeys.UPDATE_ASSETPRODUCT,
     mutationFn: (assetProduct: IAssetProduct) =>
       assetProductRequests.update(assetProduct),
     onSuccess: (assetProduct) => {
       queryClient.setQueryData<IAssetProduct[]>(
-        queryKeys.FETCH_ASSETPRODUCTS,
+        assetProductKeys.FETCH_ASSETPRODUCTS,
         (old) => {
           if (old) {
             const index = old.findIndex((x) => x.id === assetProduct.id);
@@ -82,41 +83,44 @@ const Update = () => {
         }
       );
       queryClient.setQueryData<IAssetProduct>(
-        [queryKeys.FETCH_ASSETPRODUCT, assetProduct.id],
+        [assetProductKeys.FETCH_ASSETPRODUCT, assetProduct.id],
         assetProduct
       );
+      queryClient.invalidateQueries(assetProductKeys.FILTER_ASSETPRODUCTS);
     },
   });
 };
 
 const Remove = () => {
   return useMutation({
-    mutationKey: queryKeys.DELETE_ASSETPRODUCT,
+    mutationKey: assetProductKeys.DELETE_ASSETPRODUCT,
     mutationFn: (id: string) => assetProductRequests.remove(id),
     onSuccess: () => {
-      queryClient.invalidateQueries(queryKeys.FETCH_ASSETPRODUCTS);
+      queryClient.invalidateQueries(assetProductKeys.FETCH_ASSETPRODUCTS);
+      queryClient.invalidateQueries(assetProductKeys.FILTER_ASSETPRODUCTS);
     },
   });
 };
 
 const RemoveRange = () => {
   return useMutation({
-    mutationKey: queryKeys.DELETE_RANGE_ASSETPRODUCT,
+    mutationKey: assetProductKeys.DELETE_RANGE_ASSETPRODUCT,
     mutationFn: (ids: string[]) => assetProductRequests.removeRange(ids),
     onSuccess: () => {
-      queryClient.invalidateQueries(queryKeys.FETCH_ASSETPRODUCTS);
+      queryClient.invalidateQueries(assetProductKeys.FETCH_ASSETPRODUCTS);
+      queryClient.invalidateQueries(assetProductKeys.FILTER_ASSETPRODUCTS);
     },
   });
 };
 
 const Filter = () => {
   return useMutation({
-    mutationKey: queryKeys.FILTER_ASSETPRODUCTS,
+    mutationKey: assetProductKeys.FILTER_ASSETPRODUCTS,
     mutationFn: (filters: QueryFilter[]) =>
       assetProductRequests.filter(filters),
-    onSuccess(data) {
+    onSuccess(data: IAssetProduct[]) {
       queryClient.setQueryData<IAssetProduct[]>(
-        queryKeys.FILTER_ASSETPRODUCTS,
+        assetProductKeys.FILTER_ASSETPRODUCTS,
         data
       );
     },

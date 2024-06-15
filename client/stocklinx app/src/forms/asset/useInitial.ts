@@ -1,5 +1,5 @@
 import { IAsset } from "@interfaces/serverInterfaces";
-import { getImage } from "../../utils/Image";
+import { getImage } from "../../utils/imageUtils";
 import { useContext } from "react";
 import GenericContext from "@/context/GenericContext";
 import uuid4 from "uuid4";

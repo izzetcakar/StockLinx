@@ -4,7 +4,7 @@ import { queryClient } from "@/main";
 import { categoryRequests } from "@/server/requests/category";
 import { useMutation, useQuery } from "react-query";
 
-enum queryKeys {
+export enum categoryKeys {
   FETCH_CATEGORIES = "FETCH_CATEGORIES",
   FETCH_CATEGORY = "FETCH_CATEGORY",
   CREATE_CATEGORY = "CREATE_CATEGORY",
@@ -20,57 +20,60 @@ enum queryKeys {
 
 const GetAll = () => {
   return useQuery<ICategory[]>(
-    queryKeys.FETCH_CATEGORIES,
+    categoryKeys.FETCH_CATEGORIES,
     categoryRequests.getAll
   );
 };
 
 const Get = (id: string) => {
   return useQuery<ICategory>({
-    queryKey: [queryKeys.FETCH_CATEGORY, id],
+    queryKey: [categoryKeys.FETCH_CATEGORY, id],
     queryFn: () => categoryRequests.get(id),
   });
 };
 
 const Create = () => {
   return useMutation({
-    mutationKey: queryKeys.CREATE_CATEGORY,
+    mutationKey: categoryKeys.CREATE_CATEGORY,
     mutationFn: (category: ICategory) => categoryRequests.create(category),
     onSuccess: (category) => {
-      queryClient.invalidateQueries(queryKeys.FETCH_CATEGORY);
       queryClient.setQueryData<ICategory[]>(
-        queryKeys.FETCH_CATEGORIES,
+        categoryKeys.FETCH_CATEGORIES,
         (old) => {
           return old ? [...old, category] : [category];
         }
       );
+      queryClient.invalidateQueries(categoryKeys.LOOKUP_CATEGORIES);
+      queryClient.invalidateQueries(categoryKeys.FILTER_CATEGORIES);
     },
   });
 };
 
 const CreateRange = () => {
   return useMutation({
-    mutationKey: queryKeys.CREATE_RANGE_CATEGORY,
+    mutationKey: categoryKeys.CREATE_RANGE_CATEGORY,
     mutationFn: (categories: ICategory[]) =>
       categoryRequests.createRange(categories),
     onSuccess: (categories) => {
       queryClient.setQueryData<ICategory[]>(
-        queryKeys.FETCH_CATEGORIES,
+        categoryKeys.FETCH_CATEGORIES,
         (old) => {
           return old ? [...old, ...categories] : categories;
         }
       );
+      queryClient.invalidateQueries(categoryKeys.LOOKUP_CATEGORIES);
+      queryClient.invalidateQueries(categoryKeys.FILTER_CATEGORIES);
     },
   });
 };
 
 const Update = () => {
   return useMutation({
-    mutationKey: queryKeys.UPDATE_CATEGORY,
+    mutationKey: categoryKeys.UPDATE_CATEGORY,
     mutationFn: (category: ICategory) => categoryRequests.update(category),
     onSuccess: (category) => {
       queryClient.setQueryData<ICategory[]>(
-        queryKeys.FETCH_CATEGORIES,
+        categoryKeys.FETCH_CATEGORIES,
         (old) => {
           if (old) {
             const index = old.findIndex((x) => x.id === category.id);
@@ -81,45 +84,54 @@ const Update = () => {
         }
       );
       queryClient.setQueryData<ICategory>(
-        [queryKeys.FETCH_CATEGORY, category.id],
+        [categoryKeys.FETCH_CATEGORY, category.id],
         category
       );
+      queryClient.invalidateQueries(categoryKeys.LOOKUP_CATEGORIES);
+      queryClient.invalidateQueries(categoryKeys.FILTER_CATEGORIES);
     },
   });
 };
 
 const Remove = () => {
   return useMutation({
-    mutationKey: queryKeys.DELETE_CATEGORY,
+    mutationKey: categoryKeys.DELETE_CATEGORY,
     mutationFn: (id: string) => categoryRequests.remove(id),
     onSuccess: () => {
-      queryClient.invalidateQueries(queryKeys.FETCH_CATEGORIES);
+      queryClient.invalidateQueries(categoryKeys.FETCH_CATEGORIES);
+      queryClient.invalidateQueries(categoryKeys.LOOKUP_CATEGORIES);
+      queryClient.invalidateQueries(categoryKeys.FILTER_CATEGORIES);
     },
   });
 };
 
 const RemoveRange = () => {
   return useMutation({
-    mutationKey: queryKeys.DELETE_RANGE_CATEGORY,
+    mutationKey: categoryKeys.DELETE_RANGE_CATEGORY,
     mutationFn: (ids: string[]) => categoryRequests.removeRange(ids),
     onSuccess: () => {
-      queryClient.invalidateQueries(queryKeys.FETCH_CATEGORIES);
+      queryClient.invalidateQueries(categoryKeys.FETCH_CATEGORIES);
+      queryClient.invalidateQueries(categoryKeys.LOOKUP_CATEGORIES);
+      queryClient.invalidateQueries(categoryKeys.FILTER_CATEGORIES);
     },
   });
 };
 
 const Filter = () => {
   return useMutation({
-    mutationKey: queryKeys.FILTER_CATEGORIES,
+    mutationKey: categoryKeys.FILTER_CATEGORIES,
     mutationFn: (filters: QueryFilter[]) => categoryRequests.filter(filters),
-    onSuccess(data) {
-      queryClient.setQueryData<ICategory[]>(queryKeys.FILTER_CATEGORIES, data);
+    onSuccess(data: ICategory[]) {
+      queryClient.setQueryData<ICategory[]>(
+        categoryKeys.FILTER_CATEGORIES,
+        data
+      );
     },
   });
 };
 
 const Lookup = () => {
-  return useQuery(queryKeys.LOOKUP_CATEGORIES, categoryRequests.lookup);
+  return useQuery(categoryKeys.LOOKUP_CATEGORIES, categoryRequests.lookup);
 };
 
 export const useCategory = {

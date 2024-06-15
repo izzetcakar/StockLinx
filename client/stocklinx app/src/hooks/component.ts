@@ -7,8 +7,9 @@ import { IComponent } from "@/interfaces/serverInterfaces";
 import { queryClient } from "@/main";
 import { componentRequests } from "@/server/requests/component";
 import { useMutation, useQuery } from "react-query";
+import { assetProductKeys } from "./assetProduct";
 
-enum queryKeys {
+export enum componentKeys {
   FETCH_COMPONENTS = "FETCH_COMPONENTS",
   FETCH_COMPONENT = "FETCH_COMPONENT",
   CREATE_COMPONENT = "CREATE_COMPONENT",
@@ -24,57 +25,60 @@ enum queryKeys {
 
 const GetAll = () => {
   return useQuery<IComponent[]>(
-    queryKeys.FETCH_COMPONENTS,
+    componentKeys.FETCH_COMPONENTS,
     componentRequests.getAll
   );
 };
 
 const Get = (id: string) => {
   return useQuery<IComponent>({
-    queryKey: [queryKeys.FETCH_COMPONENT, id],
+    queryKey: [componentKeys.FETCH_COMPONENT, id],
     queryFn: () => componentRequests.get(id),
   });
 };
 
 const Create = () => {
   return useMutation({
-    mutationKey: queryKeys.CREATE_COMPONENT,
+    mutationKey: componentKeys.CREATE_COMPONENT,
     mutationFn: (component: IComponent) => componentRequests.create(component),
     onSuccess: (component) => {
-      queryClient.invalidateQueries(queryKeys.FETCH_COMPONENT);
       queryClient.setQueryData<IComponent[]>(
-        queryKeys.FETCH_COMPONENTS,
+        componentKeys.FETCH_COMPONENTS,
         (old) => {
           return old ? [...old, component] : [component];
         }
       );
+      queryClient.invalidateQueries(componentKeys.LOOKUP_COMPONENTS);
+      queryClient.invalidateQueries(componentKeys.FILTER_COMPONENTS);
     },
   });
 };
 
 const CreateRange = () => {
   return useMutation({
-    mutationKey: queryKeys.CREATE_RANGE_COMPONENT,
+    mutationKey: componentKeys.CREATE_RANGE_COMPONENT,
     mutationFn: (components: IComponent[]) =>
       componentRequests.createRange(components),
     onSuccess: (components) => {
       queryClient.setQueryData<IComponent[]>(
-        queryKeys.FETCH_COMPONENTS,
+        componentKeys.FETCH_COMPONENTS,
         (old) => {
           return old ? [...old, ...components] : components;
         }
       );
+      queryClient.invalidateQueries(componentKeys.LOOKUP_COMPONENTS);
+      queryClient.invalidateQueries(componentKeys.FILTER_COMPONENTS);
     },
   });
 };
 
 const Update = () => {
   return useMutation({
-    mutationKey: queryKeys.UPDATE_COMPONENT,
+    mutationKey: componentKeys.UPDATE_COMPONENT,
     mutationFn: (component: IComponent) => componentRequests.update(component),
     onSuccess: (component) => {
       queryClient.setQueryData<IComponent[]>(
-        queryKeys.FETCH_COMPONENTS,
+        componentKeys.FETCH_COMPONENTS,
         (old) => {
           if (old) {
             const index = old.findIndex((x) => x.id === component.id);
@@ -85,66 +89,75 @@ const Update = () => {
         }
       );
       queryClient.setQueryData<IComponent>(
-        [queryKeys.FETCH_COMPONENT, component.id],
+        [componentKeys.FETCH_COMPONENT, component.id],
         component
       );
+      queryClient.invalidateQueries(componentKeys.LOOKUP_COMPONENTS);
+      queryClient.invalidateQueries(componentKeys.FILTER_COMPONENTS);
     },
   });
 };
 
 const Remove = () => {
   return useMutation({
-    mutationKey: queryKeys.DELETE_COMPONENT,
+    mutationKey: componentKeys.DELETE_COMPONENT,
     mutationFn: (id: string) => componentRequests.remove(id),
     onSuccess: () => {
-      queryClient.invalidateQueries(queryKeys.FETCH_COMPONENTS);
+      queryClient.invalidateQueries(componentKeys.FETCH_COMPONENTS);
+      queryClient.invalidateQueries(componentKeys.LOOKUP_COMPONENTS);
+      queryClient.invalidateQueries(componentKeys.FILTER_COMPONENTS);
     },
   });
 };
 
 const RemoveRange = () => {
   return useMutation({
-    mutationKey: queryKeys.DELETE_RANGE_COMPONENT,
+    mutationKey: componentKeys.DELETE_RANGE_COMPONENT,
     mutationFn: (ids: string[]) => componentRequests.removeRange(ids),
     onSuccess: () => {
-      queryClient.invalidateQueries(queryKeys.FETCH_COMPONENTS);
+      queryClient.invalidateQueries(componentKeys.FETCH_COMPONENTS);
+      queryClient.invalidateQueries(componentKeys.LOOKUP_COMPONENTS);
+      queryClient.invalidateQueries(componentKeys.FILTER_COMPONENTS);
     },
   });
 };
 
 const Filter = () => {
   return useMutation({
-    mutationKey: queryKeys.FILTER_COMPONENTS,
+    mutationKey: componentKeys.FILTER_COMPONENTS,
     mutationFn: (filters: QueryFilter[]) => componentRequests.filter(filters),
-    onSuccess(data) {
-      queryClient.setQueryData<IComponent[]>(queryKeys.FILTER_COMPONENTS, data);
+    onSuccess(data: IComponent[]) {
+      queryClient.setQueryData<IComponent[]>(
+        componentKeys.FILTER_COMPONENTS,
+        data
+      );
     },
   });
 };
 
 const Lookup = () => {
-  return useQuery(queryKeys.LOOKUP_COMPONENTS, componentRequests.lookup);
+  return useQuery(componentKeys.LOOKUP_COMPONENTS, componentRequests.lookup);
 };
 
 const CheckIn = () => {
   return useMutation({
-    mutationKey: queryKeys.CHECK_IN_COMPONENT,
+    mutationKey: componentKeys.CHECK_IN_COMPONENT,
     mutationFn: (dto: AssetProductCheckInDto) => componentRequests.checkIn(dto),
     onSuccess: () => {
-      queryClient.invalidateQueries(queryKeys.CHECK_IN_COMPONENT);
-      queryClient.invalidateQueries(queryKeys.FETCH_COMPONENTS);
+      queryClient.invalidateQueries(assetProductKeys.FETCH_ASSETPRODUCTS);
+      queryClient.invalidateQueries(assetProductKeys.FILTER_ASSETPRODUCTS);
     },
   });
 };
 
 const CheckOut = () => {
-  useMutation({
-    mutationKey: queryKeys.CHECK_OUT_COMPONENT,
+  return useMutation({
+    mutationKey: componentKeys.CHECK_OUT_COMPONENT,
     mutationFn: (dto: AssetProductCheckOutDto) =>
       componentRequests.checkOut(dto),
     onSuccess: () => {
-      queryClient.invalidateQueries(queryKeys.CHECK_OUT_COMPONENT);
-      queryClient.invalidateQueries(queryKeys.FETCH_COMPONENTS);
+      queryClient.invalidateQueries(assetProductKeys.FETCH_ASSETPRODUCTS);
+      queryClient.invalidateQueries(assetProductKeys.FILTER_ASSETPRODUCTS);
     },
   });
 };

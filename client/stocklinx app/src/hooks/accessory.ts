@@ -7,8 +7,9 @@ import { IAccessory } from "@/interfaces/serverInterfaces";
 import { queryClient } from "@/main";
 import { accessoryRequests } from "@/server/requests/accessory";
 import { useMutation, useQuery } from "react-query";
+import { userProductKeys } from "./userProduct";
 
-enum queryKeys {
+export enum accessoryKeys {
   FETCH_ACCESSORIES = "FETCH_ACCESSORIES",
   FETCH_ACCESSORY = "FETCH_ACCESSORY",
   CREATE_ACCESSORY = "CREATE_ACCESSORY",
@@ -23,55 +24,58 @@ enum queryKeys {
 }
 
 const GetAll = () => {
-  return useQuery(queryKeys.FETCH_ACCESSORIES, accessoryRequests.getAll);
+  return useQuery(accessoryKeys.FETCH_ACCESSORIES, accessoryRequests.getAll);
 };
 
 const Get = (id: string) => {
   return useQuery<IAccessory>({
-    queryKey: [queryKeys.FETCH_ACCESSORY, id],
+    queryKey: [accessoryKeys.FETCH_ACCESSORY, id],
     queryFn: () => accessoryRequests.get(id),
   });
 };
 
 const Create = () => {
   return useMutation({
-    mutationKey: queryKeys.CREATE_ACCESSORY,
+    mutationKey: accessoryKeys.CREATE_ACCESSORY,
     mutationFn: (accessory: IAccessory) => accessoryRequests.create(accessory),
     onSuccess: (accessory) => {
-      queryClient.invalidateQueries(queryKeys.FETCH_ACCESSORY);
       queryClient.setQueryData<IAccessory[]>(
-        queryKeys.FETCH_ACCESSORIES,
+        accessoryKeys.FETCH_ACCESSORIES,
         (old) => {
           return old ? [...old, accessory] : [accessory];
         }
       );
+      queryClient.invalidateQueries(accessoryKeys.LOOKUP_ACCESSORIES);
+      queryClient.invalidateQueries(accessoryKeys.FILTER_ACCESSORIES);
     },
   });
 };
 
 const CreateRange = () => {
   return useMutation({
-    mutationKey: queryKeys.CREATE_RANGE_ACCESSORY,
+    mutationKey: accessoryKeys.CREATE_RANGE_ACCESSORY,
     mutationFn: (accessories: IAccessory[]) =>
       accessoryRequests.createRange(accessories),
     onSuccess: (accessories) => {
       queryClient.setQueryData<IAccessory[]>(
-        queryKeys.FETCH_ACCESSORIES,
+        accessoryKeys.FETCH_ACCESSORIES,
         (old) => {
           return old ? [...old, ...accessories] : accessories;
         }
       );
+      queryClient.invalidateQueries(accessoryKeys.LOOKUP_ACCESSORIES);
+      queryClient.invalidateQueries(accessoryKeys.FILTER_ACCESSORIES);
     },
   });
 };
 
 const Update = () => {
   return useMutation({
-    mutationKey: queryKeys.UPDATE_ACCESSORY,
+    mutationKey: accessoryKeys.UPDATE_ACCESSORY,
     mutationFn: (accessory: IAccessory) => accessoryRequests.update(accessory),
     onSuccess: (accessory) => {
       queryClient.setQueryData<IAccessory[]>(
-        queryKeys.FETCH_ACCESSORIES,
+        accessoryKeys.FETCH_ACCESSORIES,
         (old) => {
           if (old) {
             const index = old.findIndex((x) => x.id === accessory.id);
@@ -82,67 +86,75 @@ const Update = () => {
         }
       );
       queryClient.setQueryData<IAccessory>(
-        [queryKeys.FETCH_ACCESSORY, accessory.id],
+        [accessoryKeys.FETCH_ACCESSORY, accessory.id],
         accessory
       );
+      queryClient.invalidateQueries(accessoryKeys.LOOKUP_ACCESSORIES);
+      queryClient.invalidateQueries(accessoryKeys.FILTER_ACCESSORIES);
     },
   });
 };
 
 const Remove = () => {
   return useMutation({
-    mutationKey: queryKeys.DELETE_ACCESSORY,
+    mutationKey: accessoryKeys.DELETE_ACCESSORY,
     mutationFn: (id: string) => accessoryRequests.remove(id),
     onSuccess: () => {
-      queryClient.invalidateQueries(queryKeys.FETCH_ACCESSORIES);
+      queryClient.invalidateQueries(accessoryKeys.FETCH_ACCESSORIES);
+      queryClient.invalidateQueries(accessoryKeys.LOOKUP_ACCESSORIES);
+      queryClient.invalidateQueries(accessoryKeys.FILTER_ACCESSORIES);
     },
   });
 };
 
 const RemoveRange = () => {
   return useMutation({
-    mutationKey: queryKeys.DELETE_RANGE_ACCESSORY,
+    mutationKey: accessoryKeys.DELETE_RANGE_ACCESSORY,
     mutationFn: (ids: string[]) => accessoryRequests.removeRange(ids),
     onSuccess: () => {
-      queryClient.invalidateQueries(queryKeys.FETCH_ACCESSORIES);
+      queryClient.invalidateQueries(accessoryKeys.FETCH_ACCESSORIES);
+      queryClient.invalidateQueries(accessoryKeys.LOOKUP_ACCESSORIES);
+      queryClient.invalidateQueries(accessoryKeys.FILTER_ACCESSORIES);
     },
   });
 };
 
 const Filter = () => {
   return useMutation({
-    mutationKey: queryKeys.FILTER_ACCESSORIES,
+    mutationKey: accessoryKeys.FILTER_ACCESSORIES,
     mutationFn: (filters: QueryFilter[]) => accessoryRequests.filter(filters),
-    onSuccess(data) {
-      queryClient.setQueryData<IAccessory[]>(queryKeys.FETCH_ACCESSORIES, data);
+    onSuccess(data: IAccessory[]) {
+      queryClient.setQueryData<IAccessory[]>(
+        accessoryKeys.FILTER_ACCESSORIES,
+        data
+      );
     },
   });
 };
 
 const Lookup = () => {
-  return useQuery(queryKeys.LOOKUP_ACCESSORIES, accessoryRequests.lookup);
+  return useQuery(accessoryKeys.LOOKUP_ACCESSORIES, accessoryRequests.lookup);
 };
 
 const CheckIn = () => {
   return useMutation({
-    mutationKey: queryKeys.CHECK_IN_ACCESSORY,
+    mutationKey: accessoryKeys.CHECK_IN_ACCESSORY,
     mutationFn: (dto: UserProductCheckInDto) => accessoryRequests.checkIn(dto),
-    onSuccess: (dto) => {
-      queryClient.invalidateQueries([
-        queryKeys.FETCH_ACCESSORY,
-        dto.accessoryId,
-      ]);
+    onSuccess: () => {
+      queryClient.invalidateQueries(userProductKeys.FETCH_USERPRODUCTS);
+      queryClient.invalidateQueries(userProductKeys.FILTER_USERPRODUCTS);
     },
   });
 };
 
 const CheckOut = () => {
   return useMutation({
-    mutationKey: queryKeys.CHECK_OUT_ACCESSORY,
+    mutationKey: accessoryKeys.CHECK_OUT_ACCESSORY,
     mutationFn: (dto: UserProductCheckOutDto) =>
       accessoryRequests.checkOut(dto),
     onSuccess: () => {
-      queryClient.invalidateQueries(queryKeys.FETCH_ACCESSORY);
+      queryClient.invalidateQueries(userProductKeys.FETCH_USERPRODUCTS);
+      queryClient.invalidateQueries(userProductKeys.FILTER_USERPRODUCTS);
     },
   });
 };

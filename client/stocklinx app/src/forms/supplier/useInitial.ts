@@ -1,6 +1,6 @@
 import uuid4 from "uuid4";
 import { ISupplier } from "@interfaces/serverInterfaces";
-import { getImage } from "../../utils/Image";
+import { getImage } from "../../utils/imageUtils";
 
 export const useInitial = (supplier?: ISupplier, create?: boolean) => {
   let isCreate = create || false;

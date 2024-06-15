@@ -3,7 +3,7 @@ import { queryClient } from "@/main";
 import { fieldSetRequests } from "@/server/requests/fieldSet";
 import { useMutation, useQuery } from "react-query";
 
-enum queryKeys {
+export enum fieldSetKeys {
   FETCH_FIELDSETS = "FETCH_FIELDSETS",
   FETCH_FIELDSET = "FETCH_FIELDSET",
   CREATE_FIELDSET = "CREATE_FIELDSET",
@@ -19,57 +19,60 @@ enum queryKeys {
 
 const GetAll = () => {
   return useQuery<IFieldSet[]>(
-    queryKeys.FETCH_FIELDSETS,
+    fieldSetKeys.FETCH_FIELDSETS,
     fieldSetRequests.getAll
   );
 };
 
 const Get = (id: string) => {
   return useQuery<IFieldSet>({
-    queryKey: [queryKeys.FETCH_FIELDSET, id],
+    queryKey: [fieldSetKeys.FETCH_FIELDSET, id],
     queryFn: () => fieldSetRequests.get(id),
   });
 };
 
 const Create = () => {
   return useMutation({
-    mutationKey: queryKeys.CREATE_FIELDSET,
+    mutationKey: fieldSetKeys.CREATE_FIELDSET,
     mutationFn: (fieldSet: IFieldSet) => fieldSetRequests.create(fieldSet),
     onSuccess: (fieldSet) => {
-      queryClient.invalidateQueries(queryKeys.FETCH_FIELDSET);
       queryClient.setQueryData<IFieldSet[]>(
-        queryKeys.FETCH_FIELDSETS,
+        fieldSetKeys.FETCH_FIELDSETS,
         (old) => {
           return old ? [...old, fieldSet] : [fieldSet];
         }
       );
+      queryClient.invalidateQueries(fieldSetKeys.LOOKUP_FIELDSETS);
+      queryClient.invalidateQueries(fieldSetKeys.FILTER_FIELDSETS);
     },
   });
 };
 
 const CreateRange = () => {
   return useMutation({
-    mutationKey: queryKeys.CREATE_RANGE_FIELDSET,
+    mutationKey: fieldSetKeys.CREATE_RANGE_FIELDSET,
     mutationFn: (fieldSets: IFieldSet[]) =>
       fieldSetRequests.createRange(fieldSets),
     onSuccess: (fieldSets) => {
       queryClient.setQueryData<IFieldSet[]>(
-        queryKeys.FETCH_FIELDSETS,
+        fieldSetKeys.FETCH_FIELDSETS,
         (old) => {
           return old ? [...old, ...fieldSets] : fieldSets;
         }
       );
+      queryClient.invalidateQueries(fieldSetKeys.LOOKUP_FIELDSETS);
+      queryClient.invalidateQueries(fieldSetKeys.FILTER_FIELDSETS);
     },
   });
 };
 
 const Update = () => {
   return useMutation({
-    mutationKey: queryKeys.UPDATE_FIELDSET,
+    mutationKey: fieldSetKeys.UPDATE_FIELDSET,
     mutationFn: (fieldSet: IFieldSet) => fieldSetRequests.update(fieldSet),
     onSuccess: (fieldSet) => {
       queryClient.setQueryData<IFieldSet[]>(
-        queryKeys.FETCH_FIELDSETS,
+        fieldSetKeys.FETCH_FIELDSETS,
         (old) => {
           if (old) {
             const index = old.findIndex((x) => x.id === fieldSet.id);
@@ -80,35 +83,41 @@ const Update = () => {
         }
       );
       queryClient.setQueryData<IFieldSet>(
-        [queryKeys.FETCH_FIELDSET, fieldSet.id],
+        [fieldSetKeys.FETCH_FIELDSET, fieldSet.id],
         fieldSet
       );
+      queryClient.invalidateQueries(fieldSetKeys.LOOKUP_FIELDSETS);
+      queryClient.invalidateQueries(fieldSetKeys.FILTER_FIELDSETS);
     },
   });
 };
 
 const Remove = () => {
   return useMutation({
-    mutationKey: queryKeys.DELETE_FIELDSET,
+    mutationKey: fieldSetKeys.DELETE_FIELDSET,
     mutationFn: (id: string) => fieldSetRequests.remove(id),
     onSuccess: () => {
-      queryClient.invalidateQueries(queryKeys.FETCH_FIELDSETS);
+      queryClient.invalidateQueries(fieldSetKeys.FETCH_FIELDSETS);
+      queryClient.invalidateQueries(fieldSetKeys.LOOKUP_FIELDSETS);
+      queryClient.invalidateQueries(fieldSetKeys.FILTER_FIELDSETS);
     },
   });
 };
 
 const RemoveRange = () => {
   return useMutation({
-    mutationKey: queryKeys.DELETE_RANGE_FIELDSET,
+    mutationKey: fieldSetKeys.DELETE_RANGE_FIELDSET,
     mutationFn: (ids: string[]) => fieldSetRequests.removeRange(ids),
     onSuccess: () => {
-      queryClient.invalidateQueries(queryKeys.FETCH_FIELDSETS);
+      queryClient.invalidateQueries(fieldSetKeys.FETCH_FIELDSETS);
+      queryClient.invalidateQueries(fieldSetKeys.LOOKUP_FIELDSETS);
+      queryClient.invalidateQueries(fieldSetKeys.FILTER_FIELDSETS);
     },
   });
 };
 
 const Lookup = () => {
-  return useQuery(queryKeys.LOOKUP_FIELDSETS, fieldSetRequests.lookup);
+  return useQuery(fieldSetKeys.LOOKUP_FIELDSETS, fieldSetRequests.lookup);
 };
 
 export const useFieldSet = {

@@ -3,7 +3,7 @@ import { queryClient } from "@/main";
 import { modelFieldDataRequests } from "@/server/requests/modelFieldData";
 import { useMutation, useQuery } from "react-query";
 
-enum queryKeys {
+export enum modelFieldDataKeys {
   FETCH_MODELFIELDDATAS = "FETCH_MODELFIELDDATAS",
   FETCH_MODELFIELDDATA = "FETCH_MODELFIELDDATA",
   CREATE_MODELFIELDDATA = "CREATE_MODELFIELDDATA",
@@ -18,59 +18,60 @@ enum queryKeys {
 
 const GetAll = () => {
   return useQuery<IModelFieldData[]>(
-    queryKeys.FETCH_MODELFIELDDATAS,
+    modelFieldDataKeys.FETCH_MODELFIELDDATAS,
     modelFieldDataRequests.getAll
   );
 };
 
 const Get = (id: string) => {
   return useQuery<IModelFieldData>({
-    queryKey: [queryKeys.FETCH_MODELFIELDDATA, id],
+    queryKey: [modelFieldDataKeys.FETCH_MODELFIELDDATA, id],
     queryFn: () => modelFieldDataRequests.get(id),
   });
 };
 
 const Create = () => {
   return useMutation({
-    mutationKey: queryKeys.CREATE_MODELFIELDDATA,
+    mutationKey: modelFieldDataKeys.CREATE_MODELFIELDDATA,
     mutationFn: (modelFieldData: IModelFieldData) =>
       modelFieldDataRequests.create(modelFieldData),
     onSuccess: (modelFieldData) => {
-      queryClient.invalidateQueries(queryKeys.FETCH_MODELFIELDDATA);
       queryClient.setQueryData<IModelFieldData[]>(
-        queryKeys.FETCH_MODELFIELDDATAS,
+        modelFieldDataKeys.FETCH_MODELFIELDDATAS,
         (old) => {
           return old ? [...old, modelFieldData] : [modelFieldData];
         }
       );
+      queryClient.invalidateQueries(modelFieldDataKeys.FILTER_MODELFIELDDATAS);
     },
   });
 };
 
 const CreateRange = () => {
   return useMutation({
-    mutationKey: queryKeys.CREATE_RANGE_MODELFIELDDATA,
+    mutationKey: modelFieldDataKeys.CREATE_RANGE_MODELFIELDDATA,
     mutationFn: (modelFieldDatas: IModelFieldData[]) =>
       modelFieldDataRequests.createRange(modelFieldDatas),
     onSuccess: (modelFieldDatas) => {
       queryClient.setQueryData<IModelFieldData[]>(
-        queryKeys.FETCH_MODELFIELDDATAS,
+        modelFieldDataKeys.FETCH_MODELFIELDDATAS,
         (old) => {
           return old ? [...old, ...modelFieldDatas] : modelFieldDatas;
         }
       );
+      queryClient.invalidateQueries(modelFieldDataKeys.FILTER_MODELFIELDDATAS);
     },
   });
 };
 
 const Update = () => {
   return useMutation({
-    mutationKey: queryKeys.UPDATE_MODELFIELDDATA,
+    mutationKey: modelFieldDataKeys.UPDATE_MODELFIELDDATA,
     mutationFn: (modelFieldData: IModelFieldData) =>
       modelFieldDataRequests.update(modelFieldData),
     onSuccess: (modelFieldData) => {
       queryClient.setQueryData<IModelFieldData[]>(
-        queryKeys.FETCH_MODELFIELDDATAS,
+        modelFieldDataKeys.FETCH_MODELFIELDDATAS,
         (old) => {
           if (old) {
             const index = old.findIndex((x) => x.id === modelFieldData.id);
@@ -81,29 +82,32 @@ const Update = () => {
         }
       );
       queryClient.setQueryData<IModelFieldData>(
-        [queryKeys.FETCH_MODELFIELDDATA, modelFieldData.id],
+        [modelFieldDataKeys.FETCH_MODELFIELDDATA, modelFieldData.id],
         modelFieldData
       );
+      queryClient.invalidateQueries(modelFieldDataKeys.FILTER_MODELFIELDDATAS);
     },
   });
 };
 
 const Remove = () => {
   return useMutation({
-    mutationKey: queryKeys.DELETE_MODELFIELDDATA,
+    mutationKey: modelFieldDataKeys.DELETE_MODELFIELDDATA,
     mutationFn: (id: string) => modelFieldDataRequests.remove(id),
     onSuccess: () => {
-      queryClient.invalidateQueries(queryKeys.FETCH_MODELFIELDDATAS);
+      queryClient.invalidateQueries(modelFieldDataKeys.FETCH_MODELFIELDDATAS);
+      queryClient.invalidateQueries(modelFieldDataKeys.FILTER_MODELFIELDDATAS);
     },
   });
 };
 
 const RemoveRange = () => {
   return useMutation({
-    mutationKey: queryKeys.DELETE_RANGE_MODELFIELDDATA,
+    mutationKey: modelFieldDataKeys.DELETE_RANGE_MODELFIELDDATA,
     mutationFn: (ids: string[]) => modelFieldDataRequests.removeRange(ids),
     onSuccess: () => {
-      queryClient.invalidateQueries(queryKeys.FETCH_MODELFIELDDATAS);
+      queryClient.invalidateQueries(modelFieldDataKeys.FETCH_MODELFIELDDATAS);
+      queryClient.invalidateQueries(modelFieldDataKeys.FILTER_MODELFIELDDATAS);
     },
   });
 };

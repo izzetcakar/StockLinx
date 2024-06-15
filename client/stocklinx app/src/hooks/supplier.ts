@@ -4,7 +4,7 @@ import { queryClient } from "@/main";
 import { supplierRequests } from "@/server/requests/supplier";
 import { useMutation, useQuery } from "react-query";
 
-enum queryKeys {
+export enum supplierKeys {
   FETCH_SUPPLIERS = "FETCH_SUPPLIERS",
   FETCH_SUPPLIER = "FETCH_SUPPLIER",
   CREATE_SUPPLIER = "CREATE_SUPPLIER",
@@ -20,57 +20,60 @@ enum queryKeys {
 
 const GetAll = () => {
   return useQuery<ISupplier[]>(
-    queryKeys.FETCH_SUPPLIERS,
+    supplierKeys.FETCH_SUPPLIERS,
     supplierRequests.getAll
   );
 };
 
 const Get = (id: string) => {
   return useQuery<ISupplier>({
-    queryKey: [queryKeys.FETCH_SUPPLIER, id],
+    queryKey: [supplierKeys.FETCH_SUPPLIER, id],
     queryFn: () => supplierRequests.get(id),
   });
 };
 
 const Create = () => {
   return useMutation({
-    mutationKey: queryKeys.CREATE_SUPPLIER,
+    mutationKey: supplierKeys.CREATE_SUPPLIER,
     mutationFn: (supplier: ISupplier) => supplierRequests.create(supplier),
     onSuccess: (supplier) => {
-      queryClient.invalidateQueries(queryKeys.FETCH_SUPPLIER);
       queryClient.setQueryData<ISupplier[]>(
-        queryKeys.FETCH_SUPPLIERS,
+        supplierKeys.FETCH_SUPPLIERS,
         (old) => {
           return old ? [...old, supplier] : [supplier];
         }
       );
+      queryClient.invalidateQueries(supplierKeys.LOOKUP_SUPPLIERS);
+      queryClient.invalidateQueries(supplierKeys.FILTER_SUPPLIERS);
     },
   });
 };
 
 const CreateRange = () => {
   return useMutation({
-    mutationKey: queryKeys.CREATE_RANGE_SUPPLIER,
+    mutationKey: supplierKeys.CREATE_RANGE_SUPPLIER,
     mutationFn: (suppliers: ISupplier[]) =>
       supplierRequests.createRange(suppliers),
     onSuccess: (suppliers) => {
       queryClient.setQueryData<ISupplier[]>(
-        queryKeys.FETCH_SUPPLIERS,
+        supplierKeys.FETCH_SUPPLIERS,
         (old) => {
           return old ? [...old, ...suppliers] : suppliers;
         }
       );
+      queryClient.invalidateQueries(supplierKeys.LOOKUP_SUPPLIERS);
+      queryClient.invalidateQueries(supplierKeys.FILTER_SUPPLIERS);
     },
   });
 };
 
 const Update = () => {
   return useMutation({
-    mutationKey: queryKeys.UPDATE_SUPPLIER,
+    mutationKey: supplierKeys.UPDATE_SUPPLIER,
     mutationFn: (supplier: ISupplier) => supplierRequests.update(supplier),
     onSuccess: (supplier) => {
       queryClient.setQueryData<ISupplier[]>(
-        queryKeys.FETCH_SUPPLIERS,
+        supplierKeys.FETCH_SUPPLIERS,
         (old) => {
           if (old) {
             const index = old.findIndex((x) => x.id === supplier.id);
@@ -81,45 +84,54 @@ const Update = () => {
         }
       );
       queryClient.setQueryData<ISupplier>(
-        [queryKeys.FETCH_SUPPLIER, supplier.id],
+        [supplierKeys.FETCH_SUPPLIER, supplier.id],
         supplier
       );
+      queryClient.invalidateQueries(supplierKeys.LOOKUP_SUPPLIERS);
+      queryClient.invalidateQueries(supplierKeys.FILTER_SUPPLIERS);
     },
   });
 };
 
 const Remove = () => {
   return useMutation({
-    mutationKey: queryKeys.DELETE_SUPPLIER,
+    mutationKey: supplierKeys.DELETE_SUPPLIER,
     mutationFn: (id: string) => supplierRequests.remove(id),
     onSuccess: () => {
-      queryClient.invalidateQueries(queryKeys.FETCH_SUPPLIERS);
+      queryClient.invalidateQueries(supplierKeys.FETCH_SUPPLIERS);
+      queryClient.invalidateQueries(supplierKeys.LOOKUP_SUPPLIERS);
+      queryClient.invalidateQueries(supplierKeys.FILTER_SUPPLIERS);
     },
   });
 };
 
 const RemoveRange = () => {
   return useMutation({
-    mutationKey: queryKeys.DELETE_RANGE_SUPPLIER,
+    mutationKey: supplierKeys.DELETE_RANGE_SUPPLIER,
     mutationFn: (ids: string[]) => supplierRequests.removeRange(ids),
     onSuccess: () => {
-      queryClient.invalidateQueries(queryKeys.FETCH_SUPPLIERS);
+      queryClient.invalidateQueries(supplierKeys.FETCH_SUPPLIERS);
+      queryClient.invalidateQueries(supplierKeys.LOOKUP_SUPPLIERS);
+      queryClient.invalidateQueries(supplierKeys.FILTER_SUPPLIERS);
     },
   });
 };
 
 const Filter = () => {
   return useMutation({
-    mutationKey: queryKeys.FILTER_SUPPLIERS,
+    mutationKey: supplierKeys.FILTER_SUPPLIERS,
     mutationFn: (filters: QueryFilter[]) => supplierRequests.filter(filters),
-    onSuccess(data) {
-      queryClient.setQueryData<ISupplier[]>(queryKeys.FILTER_SUPPLIERS, data);
+    onSuccess(data: ISupplier[]) {
+      queryClient.setQueryData<ISupplier[]>(
+        supplierKeys.FILTER_SUPPLIERS,
+        data
+      );
     },
   });
 };
 
 const Lookup = () => {
-  return useQuery(queryKeys.LOOKUP_SUPPLIERS, supplierRequests.lookup);
+  return useQuery(supplierKeys.LOOKUP_SUPPLIERS, supplierRequests.lookup);
 };
 
 export const useSupplier = {

@@ -1,6 +1,6 @@
 import uuid4 from "uuid4";
 import { IModel } from "@interfaces/serverInterfaces";
-import { getImage } from "../../utils/Image";
+import { getImage } from "../../utils/imageUtils";
 
 export const useInitial = (model?: IModel, create?: boolean) => {
   let isCreate = create || false;

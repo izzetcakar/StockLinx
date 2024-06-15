@@ -13,7 +13,7 @@ import { useForm } from "@mantine/form";
 import { DateInput } from "@mantine/dates";
 import { CategoryType, IAccessory } from "@interfaces/serverInterfaces";
 import { useInitial } from "./useInitial";
-import { toBase64 } from "../../utils/Image";
+import { toBase64 } from "../../utils/imageUtils";
 import { openNotificationError } from "@/notification/Notification";
 import { useCategory } from "@/hooks/category";
 import { useSupplier } from "@/hooks/supplier";

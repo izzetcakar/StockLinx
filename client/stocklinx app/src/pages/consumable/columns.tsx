@@ -13,6 +13,7 @@ import { useCategory } from "@/hooks/category";
 import { useBranch } from "@/hooks/branch";
 import { useSupplier } from "@/hooks/supplier";
 import { useManufacturer } from "@/hooks/manufacturer";
+import UserProductQuantityCell from "@/cells/UserProductQuantityCell";
 
 export const useColumns = () => {
   const navigate = useNavigate();
@@ -115,6 +116,12 @@ export const useColumns = () => {
       caption: "Avail",
       dataField: "availableQuantity",
       dataType: "number",
+      renderComponent: (e) =>
+        UserProductQuantityCell({
+          productId: (e as IConsumable).id,
+          productType: "Consumable",
+          totalQuantity: (e as IConsumable).quantity,
+        }),
     },
     {
       caption: "Order Number",

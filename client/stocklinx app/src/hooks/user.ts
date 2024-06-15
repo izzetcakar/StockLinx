@@ -1,10 +1,11 @@
+import { TokenDto } from "@/interfaces/clientInterfaces";
 import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 import { IUser, IUserLoginDto } from "@/interfaces/serverInterfaces";
 import { queryClient } from "@/main";
 import { userRequests } from "@/server/requests/user";
 import { useMutation, useQuery } from "react-query";
 
-enum queryKeys {
+export enum userKeys {
   FETCH_USERS = "FETCH_USERS",
   FETCH_USER = "FETCH_USER",
   CREATE_USER = "CREATE_USER",
@@ -15,57 +16,56 @@ enum queryKeys {
   CHECK_IN_USER = "CHECK_IN_USER",
   CHECK_OUT_USER = "CHECK_OUT_USER",
   FILTER_USERS = "FILTER_USERS",
-  SIGN_IN = "SIGN_IN",
-  GET_WITH_TOKEN = "GET_WITH_TOKEN",
+  SIGN_IN_USER = "SIGN_IN_USER",
+  GET_WITH_TOKEN_USER = "GET_WITH_TOKEN_USER",
   LOOKUP_USERS = "LOOKUP_USERS",
 }
 
 const GetAll = () => {
-  return useQuery<IUser[]>(queryKeys.FETCH_USERS, userRequests.getAll);
-};
-
-const GetWithToken = () => {
-  return useQuery(queryKeys.GET_WITH_TOKEN, userRequests.getWithToken);
+  return useQuery<IUser[]>(userKeys.FETCH_USERS, userRequests.getAll);
 };
 
 const Get = (id: string) => {
   return useQuery<IUser>({
-    queryKey: [queryKeys.FETCH_USER, id],
+    queryKey: [userKeys.FETCH_USER, id],
     queryFn: () => userRequests.get(id),
   });
 };
 
 const Create = () => {
   return useMutation({
-    mutationKey: queryKeys.CREATE_USER,
+    mutationKey: userKeys.CREATE_USER,
     mutationFn: (user: IUser) => userRequests.create(user),
     onSuccess: (user) => {
-      queryClient.invalidateQueries(queryKeys.FETCH_USER);
-      queryClient.setQueryData<IUser[]>(queryKeys.FETCH_USERS, (old) => {
+      queryClient.setQueryData<IUser[]>(userKeys.FETCH_USERS, (old) => {
         return old ? [...old, user] : [user];
       });
+      queryClient.invalidateQueries(userKeys.LOOKUP_USERS);
+      queryClient.invalidateQueries(userKeys.FILTER_USERS);
     },
   });
 };
 
 const CreateRange = () => {
   return useMutation({
-    mutationKey: queryKeys.CREATE_RANGE_USER,
+    mutationKey: userKeys.CREATE_RANGE_USER,
     mutationFn: (users: IUser[]) => userRequests.createRange(users),
     onSuccess: (users) => {
-      queryClient.setQueryData<IUser[]>(queryKeys.FETCH_USERS, (old) => {
+      queryClient.setQueryData<IUser[]>(userKeys.FETCH_USERS, (old) => {
         return old ? [...old, ...users] : users;
       });
+      queryClient.invalidateQueries(userKeys.LOOKUP_USERS);
+      queryClient.invalidateQueries(userKeys.FILTER_USERS);
     },
   });
 };
 
 const Update = () => {
   return useMutation({
-    mutationKey: queryKeys.UPDATE_USER,
+    mutationKey: userKeys.UPDATE_USER,
     mutationFn: (user: IUser) => userRequests.update(user),
     onSuccess: (user) => {
-      queryClient.setQueryData<IUser[]>(queryKeys.FETCH_USERS, (old) => {
+      queryClient.setQueryData<IUser[]>(userKeys.FETCH_USERS, (old) => {
         if (old) {
           const index = old.findIndex((x) => x.id === user.id);
           old[index] = user;
@@ -73,54 +73,64 @@ const Update = () => {
         }
         return [user];
       });
-      queryClient.setQueryData<IUser>([queryKeys.FETCH_USER, user.id], user);
+      queryClient.setQueryData<IUser>([userKeys.FETCH_USER, user.id], user);
+      queryClient.invalidateQueries(userKeys.LOOKUP_USERS);
+      queryClient.invalidateQueries(userKeys.FILTER_USERS);
     },
   });
 };
 
 const Remove = () => {
   return useMutation({
-    mutationKey: queryKeys.DELETE_USER,
+    mutationKey: userKeys.DELETE_USER,
     mutationFn: (id: string) => userRequests.remove(id),
     onSuccess: () => {
-      queryClient.invalidateQueries(queryKeys.FETCH_USERS);
+      queryClient.invalidateQueries(userKeys.FETCH_USERS);
+      queryClient.invalidateQueries(userKeys.LOOKUP_USERS);
+      queryClient.invalidateQueries(userKeys.FILTER_USERS);
     },
   });
 };
 
 const RemoveRange = () => {
   return useMutation({
-    mutationKey: queryKeys.DELETE_RANGE_USER,
+    mutationKey: userKeys.DELETE_RANGE_USER,
     mutationFn: (ids: string[]) => userRequests.removeRange(ids),
     onSuccess: () => {
-      queryClient.invalidateQueries(queryKeys.FETCH_USERS);
+      queryClient.invalidateQueries(userKeys.FETCH_USERS);
+      queryClient.invalidateQueries(userKeys.LOOKUP_USERS);
+      queryClient.invalidateQueries(userKeys.FILTER_USERS);
     },
   });
 };
 
 const Filter = () => {
   return useMutation({
-    mutationKey: queryKeys.FILTER_USERS,
+    mutationKey: userKeys.FILTER_USERS,
     mutationFn: (filters: QueryFilter[]) => userRequests.filter(filters),
-    onSuccess(data) {
-      queryClient.setQueryData<IUser[]>(queryKeys.FILTER_USERS, data);
+    onSuccess(data: IUser[]) {
+      queryClient.setQueryData<IUser[]>(userKeys.FILTER_USERS, data);
     },
   });
 };
 
 const Lookup = () => {
-  return useQuery(queryKeys.LOOKUP_USERS, userRequests.lookup);
+  return useQuery(userKeys.LOOKUP_USERS, userRequests.lookup);
 };
 
 const SignIn = () => {
-  return useMutation({
-    mutationKey: queryKeys.SIGN_IN,
+  return useMutation<TokenDto, Error, IUserLoginDto>({
+    mutationKey: userKeys.SIGN_IN_USER,
     mutationFn: (loginDto: IUserLoginDto) => userRequests.signIn(loginDto),
-    onSuccess: () => {
-      queryClient.invalidateQueries(queryKeys.SIGN_IN);
-      queryClient.invalidateQueries(queryKeys.FETCH_USERS);
+    onSuccess: (data: TokenDto) => {
+      localStorage.setItem("token", data.token);
+      queryClient.invalidateQueries(userKeys.GET_WITH_TOKEN_USER);
     },
   });
+};
+
+const GetWithToken = () => {
+  return useQuery(userKeys.GET_WITH_TOKEN_USER, userRequests.getWithToken);
 };
 
 export const useUser = {

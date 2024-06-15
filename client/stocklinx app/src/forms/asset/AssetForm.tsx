@@ -17,7 +17,7 @@ import { DateInput } from "@mantine/dates";
 import { IconPlus, IconTrash } from "@tabler/icons-react";
 import { IAsset } from "@interfaces/serverInterfaces";
 import { useInitial } from "./useInitial";
-import { toBase64 } from "../../utils/Image";
+import { toBase64 } from "../../utils/imageUtils";
 import { openNotificationError } from "@/notification/Notification";
 import { useAsset } from "@/hooks/asset";
 import base_asset from "@assets/baseProductImages/base_asset.jpg";

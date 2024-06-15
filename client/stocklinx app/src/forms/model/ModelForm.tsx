@@ -19,7 +19,7 @@ import {
 } from "@interfaces/serverInterfaces";
 import { DateInput } from "@mantine/dates";
 import { useInitial } from "./useInitial";
-import { toBase64 } from "../../utils/Image";
+import { toBase64 } from "../../utils/imageUtils";
 import FormSelect from "../mantine/FormSelect";
 import uuid4 from "uuid4";
 import { useCategory } from "@/hooks/category";

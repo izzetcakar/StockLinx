@@ -11,8 +11,6 @@ import icon_harddisk from "@assets/icon_harddisk.png";
 import icon_settings from "@assets/icon_setting.png";
 import icon_group from "@assets/icon_group.png";
 import { useLocation, useNavigate } from "react-router-dom";
-import { checkEmpty } from "../../utils/checkEmpty";
-
 interface NavigationSubItem {
   title: string;
   target: string;
@@ -202,7 +200,7 @@ const Sidebar: React.FC = () => {
     setNavigationList(newList);
   };
   const navigateUser = (item: NavigationItem, index: number) => {
-    if (checkEmpty(item.subItems)) {
+    if (item.subItems && item.subItems.length > 0) {
       handleNavElements(index);
     } else {
       handleNavElements(-1);

@@ -17,6 +17,7 @@ import { useBranch } from "@/hooks/branch";
 import { useCategory } from "@/hooks/category";
 import { useLicense } from "@/hooks/license";
 import { useSupplier } from "@/hooks/supplier";
+import LicenseQuantity from "@/cells/LicenseQuantity";
 
 export const useColumns = () => {
   const navigate = useNavigate();
@@ -130,6 +131,7 @@ export const useColumns = () => {
       caption: "Avail",
       dataField: "availableQuantity",
       dataType: "number",
+      renderComponent: (e) => LicenseQuantity(e as ILicense),
     },
     {
       dataField: "id",

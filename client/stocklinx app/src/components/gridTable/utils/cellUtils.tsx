@@ -22,7 +22,7 @@ interface RenderCellProps {
 }
 export const RenderCell: React.FC<RenderCellProps> = ({ obj, column }) => {
   if (column.renderComponent) {
-    return <div> {column.renderComponent(obj)}</div>;
+    return column.renderComponent(obj);
   }
 
   let value = (

@@ -1,6 +1,6 @@
 import uuid4 from "uuid4";
 import { IManufacturer } from "@interfaces/serverInterfaces";
-import { getImage } from "../../utils/Image";
+import { getImage } from "../../utils/imageUtils";
 
 export const useInitial = (manufacturer?: IManufacturer, create?: boolean) => {
   let isCreate = create || false;

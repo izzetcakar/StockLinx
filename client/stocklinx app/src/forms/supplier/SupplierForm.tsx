@@ -11,7 +11,7 @@ import {
 import { useForm } from "@mantine/form";
 import { ISupplier } from "@interfaces/serverInterfaces";
 import { useInitial } from "./useInitial";
-import { toBase64 } from "../../utils/Image";
+import { toBase64 } from "../../utils/imageUtils";
 import FormSelect from "../mantine/FormSelect";
 import { useSupplier } from "@/hooks/supplier";
 import { useLocation } from "@/hooks/location";

@@ -4,7 +4,7 @@ import { queryClient } from "@/main";
 import { branchRequests } from "@/server/requests/branch";
 import { useMutation, useQuery } from "react-query";
 
-enum queryKeys {
+export enum branchKeys {
   FETCH_BRANCHES = "FETCH_BRANCHES",
   FETCH_BRANCH = "FETCH_BRANCH",
   CREATE_BRANCH = "CREATE_BRANCH",
@@ -19,47 +19,50 @@ enum queryKeys {
 }
 
 const GetAll = () => {
-  return useQuery<IBranch[]>(queryKeys.FETCH_BRANCHES, branchRequests.getAll);
+  return useQuery<IBranch[]>(branchKeys.FETCH_BRANCHES, branchRequests.getAll);
 };
 
 const Get = (id: string) => {
   return useQuery<IBranch>({
-    queryKey: [queryKeys.FETCH_BRANCH, id],
+    queryKey: [branchKeys.FETCH_BRANCH, id],
     queryFn: () => branchRequests.get(id),
   });
 };
 
 const Create = () => {
   return useMutation({
-    mutationKey: queryKeys.CREATE_BRANCH,
+    mutationKey: branchKeys.CREATE_BRANCH,
     mutationFn: (branch: IBranch) => branchRequests.create(branch),
     onSuccess: (branch) => {
-      queryClient.invalidateQueries(queryKeys.FETCH_BRANCH);
-      queryClient.setQueryData<IBranch[]>(queryKeys.FETCH_BRANCHES, (old) => {
+      queryClient.setQueryData<IBranch[]>(branchKeys.FETCH_BRANCHES, (old) => {
         return old ? [...old, branch] : [branch];
       });
+      queryClient.invalidateQueries(branchKeys.LOOKUP_BRANCHES);
+      queryClient.invalidateQueries(branchKeys.FILTER_BRANCHES);
     },
   });
 };
 
 const CreateRange = () => {
   return useMutation({
-    mutationKey: queryKeys.CREATE_RANGE_BRANCH,
+    mutationKey: branchKeys.CREATE_RANGE_BRANCH,
     mutationFn: (branches: IBranch[]) => branchRequests.createRange(branches),
     onSuccess: (branches) => {
-      queryClient.setQueryData<IBranch[]>(queryKeys.FETCH_BRANCHES, (old) => {
+      queryClient.setQueryData<IBranch[]>(branchKeys.FETCH_BRANCHES, (old) => {
         return old ? [...old, ...branches] : branches;
       });
+      queryClient.invalidateQueries(branchKeys.LOOKUP_BRANCHES);
+      queryClient.invalidateQueries(branchKeys.FILTER_BRANCHES);
     },
   });
 };
 
 const Update = () => {
   return useMutation({
-    mutationKey: queryKeys.UPDATE_BRANCH,
+    mutationKey: branchKeys.UPDATE_BRANCH,
     mutationFn: (branch: IBranch) => branchRequests.update(branch),
     onSuccess: (branch) => {
-      queryClient.setQueryData<IBranch[]>(queryKeys.FETCH_BRANCHES, (old) => {
+      queryClient.setQueryData<IBranch[]>(branchKeys.FETCH_BRANCHES, (old) => {
         if (old) {
           const index = old.findIndex((x) => x.id === branch.id);
           old[index] = branch;
@@ -68,45 +71,51 @@ const Update = () => {
         return [branch];
       });
       queryClient.setQueryData<IBranch>(
-        [queryKeys.FETCH_BRANCH, branch.id],
+        [branchKeys.FETCH_BRANCH, branch.id],
         branch
       );
+      queryClient.invalidateQueries(branchKeys.LOOKUP_BRANCHES);
+      queryClient.invalidateQueries(branchKeys.FILTER_BRANCHES);
     },
   });
 };
 
 const Remove = () => {
   return useMutation({
-    mutationKey: queryKeys.DELETE_BRANCH,
+    mutationKey: branchKeys.DELETE_BRANCH,
     mutationFn: (id: string) => branchRequests.remove(id),
     onSuccess: () => {
-      queryClient.invalidateQueries(queryKeys.FETCH_BRANCHES);
+      queryClient.invalidateQueries(branchKeys.FETCH_BRANCHES);
+      queryClient.invalidateQueries(branchKeys.LOOKUP_BRANCHES);
+      queryClient.invalidateQueries(branchKeys.FILTER_BRANCHES);
     },
   });
 };
 
 const RemoveRange = () => {
   return useMutation({
-    mutationKey: queryKeys.DELETE_RANGE_BRANCH,
+    mutationKey: branchKeys.DELETE_RANGE_BRANCH,
     mutationFn: (ids: string[]) => branchRequests.removeRange(ids),
     onSuccess: () => {
-      queryClient.invalidateQueries(queryKeys.FETCH_BRANCHES);
+      queryClient.invalidateQueries(branchKeys.FETCH_BRANCHES);
+      queryClient.invalidateQueries(branchKeys.LOOKUP_BRANCHES);
+      queryClient.invalidateQueries(branchKeys.FILTER_BRANCHES);
     },
   });
 };
 
 const Filter = () => {
   return useMutation({
-    mutationKey: queryKeys.FILTER_BRANCHES,
+    mutationKey: branchKeys.FILTER_BRANCHES,
     mutationFn: (filters: QueryFilter[]) => branchRequests.filter(filters),
-    onSuccess(data) {
-      queryClient.setQueryData<IBranch[]>(queryKeys.FILTER_BRANCHES, data);
+    onSuccess(data: IBranch[]) {
+      queryClient.setQueryData<IBranch[]>(branchKeys.FILTER_BRANCHES, data);
     },
   });
 };
 
 const Lookup = () => {
-  return useQuery(queryKeys.LOOKUP_BRANCHES, branchRequests.lookup);
+  return useQuery(branchKeys.LOOKUP_BRANCHES, branchRequests.lookup);
 };
 
 export const useBranch = {
