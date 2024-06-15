@@ -4,140 +4,54 @@ import {
   UserProductCheckInDto,
   UserProductCheckOutDto,
 } from "@/interfaces/dtos";
-import { QueryFilter } from "@/interfaces/gridTableInterfaces";
-import { ILicense } from "@/interfaces/serverInterfaces";
 import { queryClient } from "@/main";
 import { licenseRequests } from "@/server/requests/license";
-import { useMutation, useQuery } from "react-query";
-import { userProductKeys } from "./userProduct";
-import { assetProductKeys } from "./assetProduct";
+import { useMutation } from "react-query";
+import { baseHooks } from "./baseHooks";
 
 export enum licenseKeys {
-  FETCH_LICENSES = "FETCH_LICENSES",
-  FETCH_LICENSE = "FETCH_LICENSE",
-  CREATE_LICENSE = "CREATE_LICENSE",
-  UPDATE_LICENSE = "UPDATE_LICENSE",
-  DELETE_LICENSE = "DELETE_LICENSE",
-  CREATE_RANGE_LICENSE = "CREATE_RANGE_LICENSE",
-  DELETE_RANGE_LICENSE = "DELETE_RANGE_LICENSE",
   USER_CHECK_IN_LICENSE = "USER_CHECK_IN_LICENSE",
   USER_CHECK_OUT_LICENSE = "USER_CHECK_OUT_LICENSE",
   ASSET_CHECK_IN_LICENSE = "ASSET_CHECK_IN_LICENSE",
   ASSET_CHECK_OUT_LICENSE = "ASSET_CHECK_OUT_LICENSE",
-  FILTER_LICENSES = "FILTER_LICENSES",
-  LOOKUP_LICENSES = "LOOKUP_LICENSES",
 }
 
+const hooks = baseHooks("LICENSE");
+
 const GetAll = () => {
-  return useQuery<ILicense[]>(
-    licenseKeys.FETCH_LICENSES,
-    licenseRequests.getAll
-  );
+  return hooks.GetAll(licenseRequests.getAll);
 };
 
 const Get = (id: string) => {
-  return useQuery<ILicense>({
-    queryKey: [licenseKeys.FETCH_LICENSE, id],
-    queryFn: () => licenseRequests.get(id),
-  });
+  return hooks.Get(id, licenseRequests.get);
 };
 
 const Create = () => {
-  return useMutation({
-    mutationKey: licenseKeys.CREATE_LICENSE,
-    mutationFn: (license: ILicense) => licenseRequests.create(license),
-    onSuccess: (license) => {
-      queryClient.setQueryData<ILicense[]>(
-        licenseKeys.FETCH_LICENSES,
-        (old) => {
-          return old ? [...old, license] : [license];
-        }
-      );
-      queryClient.invalidateQueries(licenseKeys.LOOKUP_LICENSES);
-      queryClient.invalidateQueries(licenseKeys.FILTER_LICENSES);
-    },
-  });
+  return hooks.Create(licenseRequests.create);
 };
 
 const CreateRange = () => {
-  return useMutation({
-    mutationKey: licenseKeys.CREATE_RANGE_LICENSE,
-    mutationFn: (licenses: ILicense[]) => licenseRequests.createRange(licenses),
-    onSuccess: (licenses) => {
-      queryClient.setQueryData<ILicense[]>(
-        licenseKeys.FETCH_LICENSES,
-        (old) => {
-          return old ? [...old, ...licenses] : licenses;
-        }
-      );
-      queryClient.invalidateQueries(licenseKeys.LOOKUP_LICENSES);
-      queryClient.invalidateQueries(licenseKeys.FILTER_LICENSES);
-    },
-  });
+  return hooks.CreateRange(licenseRequests.createRange);
 };
 
 const Update = () => {
-  return useMutation({
-    mutationKey: licenseKeys.UPDATE_LICENSE,
-    mutationFn: (license: ILicense) => licenseRequests.update(license),
-    onSuccess: (license) => {
-      queryClient.setQueryData<ILicense[]>(
-        licenseKeys.FETCH_LICENSES,
-        (old) => {
-          if (old) {
-            const index = old.findIndex((x) => x.id === license.id);
-            old[index] = license;
-            return [...old];
-          }
-          return [license];
-        }
-      );
-      queryClient.setQueryData<ILicense>(
-        [licenseKeys.FETCH_LICENSE, license.id],
-        license
-      );
-      queryClient.invalidateQueries(licenseKeys.LOOKUP_LICENSES);
-      queryClient.invalidateQueries(licenseKeys.FILTER_LICENSES);
-    },
-  });
+  return hooks.Update(licenseRequests.update);
 };
 
 const Remove = () => {
-  return useMutation({
-    mutationKey: licenseKeys.DELETE_LICENSE,
-    mutationFn: (id: string) => licenseRequests.remove(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries(licenseKeys.FETCH_LICENSES);
-      queryClient.invalidateQueries(licenseKeys.LOOKUP_LICENSES);
-      queryClient.invalidateQueries(licenseKeys.FILTER_LICENSES);
-    },
-  });
+  return hooks.Remove(licenseRequests.remove);
 };
 
 const RemoveRange = () => {
-  return useMutation({
-    mutationKey: licenseKeys.DELETE_RANGE_LICENSE,
-    mutationFn: (ids: string[]) => licenseRequests.removeRange(ids),
-    onSuccess: () => {
-      queryClient.invalidateQueries(licenseKeys.FETCH_LICENSES);
-      queryClient.invalidateQueries(licenseKeys.LOOKUP_LICENSES);
-      queryClient.invalidateQueries(licenseKeys.FILTER_LICENSES);
-    },
-  });
+  return hooks.RemoveRange(licenseRequests.removeRange);
 };
 
 const Filter = () => {
-  return useMutation({
-    mutationKey: licenseKeys.FILTER_LICENSES,
-    mutationFn: (filters: QueryFilter[]) => licenseRequests.filter(filters),
-    onSuccess(data: ILicense[]) {
-      queryClient.setQueryData<ILicense[]>(licenseKeys.FILTER_LICENSES, data);
-    },
-  });
+  return hooks.Filter(licenseRequests.filter);
 };
 
 const Lookup = () => {
-  return useQuery(licenseKeys.LOOKUP_LICENSES, licenseRequests.lookup);
+  return hooks.Lookup(licenseRequests.lookup);
 };
 
 const UserCheckIn = () => {
@@ -146,8 +60,7 @@ const UserCheckIn = () => {
     mutationFn: (dto: UserProductCheckInDto) =>
       licenseRequests.userCheckIn(dto),
     onSuccess: () => {
-      queryClient.invalidateQueries(userProductKeys.FETCH_USERPRODUCTS);
-      queryClient.invalidateQueries(userProductKeys.FILTER_USERPRODUCTS);
+      queryClient.invalidateQueries("FETCH_ALL_USERPRODUCT");
     },
   });
 };
@@ -158,8 +71,7 @@ const UserCheckOut = () => {
     mutationFn: (dto: UserProductCheckOutDto) =>
       licenseRequests.userCheckOut(dto),
     onSuccess: () => {
-      queryClient.invalidateQueries(userProductKeys.FETCH_USERPRODUCTS);
-      queryClient.invalidateQueries(userProductKeys.FILTER_USERPRODUCTS);
+      queryClient.invalidateQueries("FETCH_ALL_USERPRODUCT");
     },
   });
 };
@@ -170,8 +82,7 @@ const AssetCheckIn = () => {
     mutationFn: (dto: AssetProductCheckInDto) =>
       licenseRequests.assetCheckIn(dto),
     onSuccess: () => {
-      queryClient.invalidateQueries(assetProductKeys.FETCH_ASSETPRODUCTS);
-      queryClient.invalidateQueries(assetProductKeys.FILTER_ASSETPRODUCTS);
+      queryClient.invalidateQueries("FETCH_ALL_ASSETPRODUCT");
     },
   });
 };
@@ -182,8 +93,7 @@ const AssetCheckOut = () => {
     mutationFn: (dto: AssetProductCheckOutDto) =>
       licenseRequests.assetCheckOut(dto),
     onSuccess: () => {
-      queryClient.invalidateQueries(assetProductKeys.FETCH_ASSETPRODUCTS);
-      queryClient.invalidateQueries(assetProductKeys.FILTER_ASSETPRODUCTS);
+      queryClient.invalidateQueries("FETCH_ALL_ASSETPRODUCT");
     },
   });
 };
