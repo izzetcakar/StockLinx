@@ -32,7 +32,6 @@ namespace StockLinx.Service.Services
 
         public async Task<AssetProductDto> GetDtoAsync(Guid id)
         {
-            await _assetProductRepository.CheckExistAsync(id);
             AssetProduct AssetProduct = await GetByIdAsync(id);
             return await _assetProductRepository.GetDtoAsync(AssetProduct);
         }
@@ -67,7 +66,6 @@ namespace StockLinx.Service.Services
 
         public async Task DeleteAssetProductAsync(Guid id)
         {
-            await _assetProductRepository.CheckExistAsync(id);
             AssetProduct AssetProduct = await GetByIdAsync(id);
             _assetProductRepository.Remove(AssetProduct);
             await _unitOfWork.CommitAsync();

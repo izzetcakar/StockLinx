@@ -95,6 +95,17 @@ namespace StockLinx.Service.Services
             Consumable consumableInDb = await GetByIdAsync(dto.Id);
             Consumable consumable = _mapper.Map<Consumable>(dto);
             consumable.UpdatedDate = DateTime.UtcNow;
+
+            int availableQuantity = await _consumableRepository.GetAvaliableQuantityAsync(
+                consumable
+            );
+            if (consumable.Quantity < availableQuantity)
+            {
+                throw new Exception(
+                    "Quantity must be greater than or equal to the available quantity"
+                );
+            }
+
             _consumableRepository.Update(consumableInDb, consumable);
             await _customLogService.CreateCustomLog(
                 "Update",
@@ -145,10 +156,11 @@ namespace StockLinx.Service.Services
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task<UserProduct> CheckInAsync(UserProductCheckInDto checkInDto)
+        public async Task<UserProductDto> CheckInAsync(UserProductCheckInDto checkInDto)
         {
             User user = await _userService.GetByIdAsync(checkInDto.UserId);
             Consumable consumable = await GetByIdAsync(checkInDto.ProductId);
+
             int availableQuantity = await _consumableRepository.GetAvaliableQuantityAsync(
                 consumable
             );
@@ -156,6 +168,7 @@ namespace StockLinx.Service.Services
             {
                 throw new Exception("Consumable stock is not enough");
             }
+
             UserProduct userProduct = new UserProduct
             {
                 Id = Guid.NewGuid(),
@@ -166,6 +179,7 @@ namespace StockLinx.Service.Services
                 Quantity = checkInDto.Quantity,
                 Notes = checkInDto.Notes,
             };
+
             await _userProductRepository.AddAsync(userProduct);
             await _customLogService.CreateCustomLog(
                 "CheckIn",
@@ -178,7 +192,7 @@ namespace StockLinx.Service.Services
                 "Checked In " + checkInDto.Quantity + " units"
             );
             await _unitOfWork.CommitAsync();
-            return userProduct;
+            return await _userProductRepository.GetDtoAsync(userProduct);
         }
 
         public async Task CheckOutAsync(UserProductCheckOutDto checkOutDto)

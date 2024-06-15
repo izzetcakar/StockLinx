@@ -95,6 +95,15 @@ namespace StockLinx.Service.Services
             License licenseInDb = await GetByIdAsync(dto.Id);
             License license = _mapper.Map<License>(dto);
             license.UpdatedDate = DateTime.UtcNow;
+
+            int availableQuantity = await _licenseRepository.GetAvaliableQuantityAsync(license);
+            if (license.Quantity < availableQuantity)
+            {
+                throw new Exception(
+                    "Quantity must be greater than or equal to the available quantity"
+                );
+            }
+
             _licenseRepository.Update(licenseInDb, license);
             await _customLogService.CreateCustomLog("Update", "License", license.Id, license.Name);
             await _unitOfWork.CommitAsync();
@@ -140,7 +149,7 @@ namespace StockLinx.Service.Services
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task<UserProduct> CheckInAsync(UserProductCheckInDto checkInDto)
+        public async Task<UserProductDto> CheckInAsync(UserProductCheckInDto checkInDto)
         {
             User user = await _userService.GetByIdAsync(checkInDto.UserId);
             License license = await GetByIdAsync(checkInDto.ProductId);
@@ -171,10 +180,10 @@ namespace StockLinx.Service.Services
                 "Checked In " + checkInDto.Quantity + " units"
             );
             await _unitOfWork.CommitAsync();
-            return userProduct;
+            return await _userProductRepository.GetDtoAsync(userProduct);
         }
 
-        public async Task<AssetProduct> CheckInAsync(AssetProductCheckInDto checkInDto)
+        public async Task<AssetProductDto> CheckInAsync(AssetProductCheckInDto checkInDto)
         {
             Asset asset = await _assetRepository.GetByIdAsync(checkInDto.AssetId);
             License license = await GetByIdAsync(checkInDto.ProductId);
@@ -205,7 +214,7 @@ namespace StockLinx.Service.Services
                 "Checked In " + checkInDto.Quantity + " units"
             );
             await _unitOfWork.CommitAsync();
-            return assetProduct;
+            return await _assetProductRepository.GetDtoAsync(assetProduct);
         }
 
         public async Task UserCheckOutAsync(UserProductCheckOutDto checkOutDto)

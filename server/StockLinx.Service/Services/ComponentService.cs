@@ -8,6 +8,7 @@ using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 using StockLinx.Core.Services;
 using StockLinx.Core.UnitOfWork;
+using StockLinx.Repository.Repositories.EF_Core;
 
 namespace StockLinx.Service.Services
 {
@@ -101,6 +102,14 @@ namespace StockLinx.Service.Services
             Component componentInDb = await GetByIdAsync(dto.Id);
             Component component = _mapper.Map<Component>(dto);
             component.UpdatedDate = DateTime.UtcNow;
+
+            int availableQuantity = await _componentRepository.GetAvaliableQuantityAsync(component);
+            if (component.Quantity < availableQuantity)
+            {
+                throw new Exception(
+                    "Quantity must be greater than or equal to the available quantity"
+                );
+            }
             _componentRepository.Update(componentInDb, component);
             await _customLogService.CreateCustomLog(
                 "Update",
@@ -151,7 +160,7 @@ namespace StockLinx.Service.Services
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task<AssetProduct> CheckInAsync(AssetProductCheckInDto checkInDto)
+        public async Task<AssetProductDto> CheckInAsync(AssetProductCheckInDto checkInDto)
         {
             Asset asset = await _assetRepository.GetByIdAsync(checkInDto.AssetId);
             Component component = await GetByIdAsync(checkInDto.ProductId);
@@ -182,7 +191,7 @@ namespace StockLinx.Service.Services
                 "Checked In " + checkInDto.Quantity + " units"
             );
             await _unitOfWork.CommitAsync();
-            return assetProduct;
+            return await _assetProductRepository.GetDtoAsync(assetProduct);
         }
 
         public async Task CheckOutAsync(AssetProductCheckOutDto checkOutDto)

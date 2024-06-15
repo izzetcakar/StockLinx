@@ -5,7 +5,6 @@ namespace StockLinx.Core.Services
     public interface IService<T> where T : class
     {
         Task<T> GetByIdAsync(Guid id);
-        Task CheckExistAsync(Guid id);
         Task<IEnumerable<T>> GetAllAsync();
         Task<IEnumerable<T>> Where(Expression<Func<T, bool>> expression);
         Task<bool> AnyAsync(Expression<Func<T, bool>> expression);

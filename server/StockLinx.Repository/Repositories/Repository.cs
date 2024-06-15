@@ -31,17 +31,6 @@ namespace StockLinx.Repository.Repositories.EF_Core
             return await dbSet.AnyAsync(expression);
         }
 
-        public async Task CheckExistAsync(Guid id)
-        {
-            bool isExist = await dbSet.AnyAsync(d =>
-                (Guid)dbSet.Entry(d).Property("Id").CurrentValue == id
-            );
-            if (!isExist)
-            {
-                throw new Exception($"{typeof(T).Name} is not found");
-            }
-        }
-
         public IQueryable<T> GetAll()
         {
             return dbSet.AsQueryable().AsNoTracking();

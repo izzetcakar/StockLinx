@@ -36,7 +36,6 @@ namespace StockLinx.Repository.Repositories.EF_Core
 
         public async Task<bool> CanDeleteAsync(Guid id)
         {
-            await CheckExistAsync(id);
             var assets = await dbContext.Assets.AnyAsync(a => a.ProductStatusId == id);
             if (assets)
             {

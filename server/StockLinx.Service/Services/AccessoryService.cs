@@ -117,10 +117,17 @@ namespace StockLinx.Service.Services
 
         public async Task<AccessoryDto> UpdateAccessoryAsync(AccessoryUpdateDto dto)
         {
-            await _accessoryRepository.CheckExistAsync(dto.Id);
             Accessory accessoryInDb = await GetByIdAsync(dto.Id);
             Accessory accessory = _mapper.Map<Accessory>(dto);
             accessory.UpdatedDate = DateTime.UtcNow;
+
+            int availableQuantity = await _accessoryRepository.GetAvaliableQuantityAsync(accessory);
+            if (accessory.Quantity < availableQuantity)
+            {
+                throw new Exception(
+                    "Quantity must be greater than or equal to the available quantity"
+                );
+            }
 
             if (accessory.ImagePath != null)
             {
@@ -133,13 +140,6 @@ namespace StockLinx.Service.Services
                     );
                     accessory.ImagePath = $"Accessories/{accessory.Id}.jpg";
                 }
-            }
-            int availableQuantity = await _accessoryRepository.GetAvaliableQuantityAsync(accessory);
-            if (accessory.Quantity < availableQuantity)
-            {
-                throw new Exception(
-                    "Quantity must be greater than or equal to the available quantity"
-                );
             }
             _accessoryRepository.Update(accessoryInDb, accessory);
             await _customLogService.CreateCustomLog(
@@ -154,7 +154,6 @@ namespace StockLinx.Service.Services
 
         public async Task DeleteAccessoryAsync(Guid id)
         {
-            await _accessoryRepository.CheckExistAsync(id);
             Accessory accessory = await GetByIdAsync(id);
             bool canDelete = await _accessoryRepository.CanDeleteAsync(id);
             if (canDelete)
@@ -175,7 +174,6 @@ namespace StockLinx.Service.Services
             List<Accessory> accessories = new List<Accessory>();
             foreach (Guid id in ids)
             {
-                await _accessoryRepository.CheckExistAsync(id);
                 Accessory accessory = await GetByIdAsync(id);
                 accessories.Add(accessory);
             }
@@ -196,9 +194,8 @@ namespace StockLinx.Service.Services
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task<UserProduct> CheckInAsync(UserProductCheckInDto checkInDto)
+        public async Task<UserProductDto> CheckInAsync(UserProductCheckInDto checkInDto)
         {
-            await _accessoryRepository.CheckExistAsync(checkInDto.ProductId);
             User user = await _userService.GetByIdAsync(checkInDto.UserId);
             Accessory accessory = await GetByIdAsync(checkInDto.ProductId);
             int availableQuantity = await _accessoryRepository.GetAvaliableQuantityAsync(accessory);
@@ -228,7 +225,7 @@ namespace StockLinx.Service.Services
                 "Checked in " + checkInDto.Quantity + " units"
             );
             await _unitOfWork.CommitAsync();
-            return userProduct;
+            return await _userProductRepository.GetDtoAsync(userProduct);
         }
 
         public async Task CheckOutAsync(UserProductCheckOutDto checkOutDto)

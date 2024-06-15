@@ -208,13 +208,11 @@ namespace StockLinx.Service.Services
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task<UserProduct> CheckInAsync(AssetCheckInDto checkInDto)
+        public async Task<UserProductDto> CheckInAsync(AssetCheckInDto checkInDto)
         {
             User user = await _userService.GetByIdAsync(checkInDto.UserId);
             Asset asset = await GetByIdAsync(checkInDto.AssetId);
-            bool isDeployed = await _userProductRepository
-                .GetAll()
-                .AnyAsync(x => x.AssetId == asset.Id);
+            bool isDeployed = await _userProductRepository.AnyAsync(x => x.AssetId == asset.Id);
             if (isDeployed)
             {
                 throw new Exception("Asset is already deployed");
@@ -241,9 +239,8 @@ namespace StockLinx.Service.Services
                 user.FirstName + user.LastName
             );
             asset.ProductStatusId = checkInDto.ProductStatusId;
-            _assetRepository.Update(asset, asset);
             await _unitOfWork.CommitAsync();
-            return userProduct;
+            return await _userProductRepository.GetDtoAsync(userProduct);
         }
 
         public async Task CheckOutAsync(AssetCheckOutDto checkOutDto)

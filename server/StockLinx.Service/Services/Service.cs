@@ -36,12 +36,7 @@ namespace StockLinx.Service.Services
         {
             return await _repository.AnyAsync(expression);
         }
-
-        public async Task CheckExistAsync(Guid id)
-        {
-            await _repository.CheckExistAsync(id);
-        }
-
+        
         public async Task<IEnumerable<T>> GetAllAsync()
         {
             return await _repository.GetAll().ToListAsync();

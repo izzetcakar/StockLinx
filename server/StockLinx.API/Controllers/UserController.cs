@@ -137,22 +137,37 @@ namespace StockLinx.API.Controllers
 
         private string CreateToken(User user)
         {
-            List<Claim> claims = new List<Claim> { new Claim("UserId", user.Id.ToString()), };
-            SymmetricSecurityKey key = new SymmetricSecurityKey(
-                System.Text.Encoding.UTF8.GetBytes(
-                    _configuration.GetSection("AppSettings:Token").Value
-                )
-            );
+            string tokenKey = _configuration["Jwt:Key"];
+            string issuer = _configuration["Jwt:Issuer"];
+            var audiences = _configuration.GetSection("Jwt:Audiences").Get<string[]>();
+
+            if (string.IsNullOrEmpty(issuer))
+            {
+                throw new InvalidOperationException("JWT issuer is missing in the configuration.");
+            }
+
+            List<Claim> claims = new List<Claim>
+            {
+                new Claim("UserId", user.Id.ToString()),
+            };
+
+            SymmetricSecurityKey key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(tokenKey));
             SigningCredentials creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
             JwtSecurityToken token = new JwtSecurityToken(
-                _configuration["Jwt:Issuer"],
-                _configuration["Jwt:Issuer"],
-                claims,
+                issuer: issuer,
+                audience: null,
+                claims: claims,
                 expires: DateTime.Now.AddDays(14),
                 signingCredentials: creds
             );
+
+            token.Payload["aud"] = audiences;
+
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+
 
         [HttpPost]
         public async Task<IActionResult> Add(UserCreateDto dto)
