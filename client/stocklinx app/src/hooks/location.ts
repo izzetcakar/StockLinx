@@ -1,5 +1,6 @@
 import { locationRequests } from "@/server/requests/location";
 import { baseHooks } from "./baseHooks";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 const hooks = baseHooks("LOCATION");
 
@@ -31,8 +32,12 @@ const RemoveRange = () => {
   return hooks.RemoveRange(locationRequests.removeRange);
 };
 
-const Filter = () => {
-  return hooks.Filter(locationRequests.filter);
+const Filter = (filters: QueryFilter[]) => {
+  return hooks.Filter(filters, locationRequests.filter);
+};
+
+const ApplyFilters = () => {
+  return hooks.ApplyFilter(locationRequests.filter);
 };
 
 const Lookup = () => {
@@ -48,5 +53,6 @@ export const useLocation = {
   Remove,
   RemoveRange,
   Filter,
+  ApplyFilters,
   Lookup,
 };

@@ -1,5 +1,6 @@
 import { branchRequests } from "@/server/requests/branch";
 import { baseHooks } from "./baseHooks";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 const hooks = baseHooks("BRANCH");
 
@@ -31,8 +32,12 @@ const RemoveRange = () => {
   return hooks.RemoveRange(branchRequests.removeRange);
 };
 
-const Filter = () => {
-  return hooks.Filter(branchRequests.filter);
+const Filter = (filters: QueryFilter[]) => {
+  return hooks.Filter(filters, branchRequests.filter);
+};
+
+const ApplyFilters = () => {
+  return hooks.ApplyFilter(branchRequests.filter);
 };
 
 const Lookup = () => {
@@ -49,4 +54,5 @@ export const useBranch = {
   RemoveRange,
   Filter,
   Lookup,
+  ApplyFilters,
 };

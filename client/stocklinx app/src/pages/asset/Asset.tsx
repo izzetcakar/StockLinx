@@ -1,13 +1,14 @@
 import { useMemo } from "react";
 import { useColumns } from "./columns";
 import { Column } from "@/interfaces/gridTableInterfaces";
+import { useAsset } from "@/hooks/asset";
 import FilterPanel from "@/components/generic/FilterPanel";
 import uuid4 from "uuid4";
-import { useAsset } from "@/hooks/asset";
 
 const Asset = () => {
   const columns = useColumns().columns;
-  const { data, mutate: applyFilters } = useAsset.Filter();
+  const { data: assets } = useAsset.Filter([]);
+  const { mutate: applyFilters } = useAsset.ApplyFilters();
 
   const filterColumns = useMemo(() => {
     return columns.map((column) => {
@@ -24,7 +25,7 @@ const Asset = () => {
         columns={filterColumns}
         applyFilters={(filters) => applyFilters(filters)}
       />
-      {data?.map((asset) => {
+      {assets?.map((asset) => {
         return (
           <div key={asset.id}>
             <div>{asset.tag}</div>

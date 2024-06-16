@@ -8,6 +8,7 @@ import { queryClient } from "@/main";
 import { licenseRequests } from "@/server/requests/license";
 import { useMutation } from "react-query";
 import { baseHooks } from "./baseHooks";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 export enum licenseKeys {
   USER_CHECK_IN_LICENSE = "USER_CHECK_IN_LICENSE",
@@ -46,8 +47,12 @@ const RemoveRange = () => {
   return hooks.RemoveRange(licenseRequests.removeRange);
 };
 
-const Filter = () => {
-  return hooks.Filter(licenseRequests.filter);
+const Filter = (filters: QueryFilter[]) => {
+  return hooks.Filter(filters, licenseRequests.filter);
+};
+
+const ApplyFilters = () => {
+  return hooks.ApplyFilter(licenseRequests.filter);
 };
 
 const Lookup = () => {
@@ -107,6 +112,7 @@ export const useLicense = {
   Remove,
   RemoveRange,
   Filter,
+  ApplyFilters,
   Lookup,
   UserCheckIn,
   UserCheckOut,

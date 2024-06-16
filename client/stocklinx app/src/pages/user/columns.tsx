@@ -18,7 +18,7 @@ export const useColumns = () => {
       lookup: {
         data: branchLookup || [],
       },
-      renderComponent(e) {
+      renderComponent: (e) => {
         const user = e as IUser;
         const { data: department } = useDepartment.Get(user.departmentId);
         const branch = branchLookup?.find(

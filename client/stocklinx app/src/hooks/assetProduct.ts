@@ -1,5 +1,6 @@
 import { assetProductRequests } from "@/server/requests/assetProduct";
 import { baseHooks } from "./baseHooks";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 const hooks = baseHooks("ASSETPRODUCT");
 
@@ -31,8 +32,12 @@ const RemoveRange = () => {
   return hooks.RemoveRange(assetProductRequests.removeRange);
 };
 
-const Filter = () => {
-  return hooks.Filter(assetProductRequests.filter);
+const Filter = (filters: QueryFilter[]) => {
+  return hooks.Filter(filters, assetProductRequests.filter);
+};
+
+const ApplyFilters = () => {
+  return hooks.ApplyFilter(assetProductRequests.filter);
 };
 
 export const useAssetProduct = {
@@ -44,4 +49,5 @@ export const useAssetProduct = {
   Remove,
   RemoveRange,
   Filter,
+  ApplyFilters,
 };

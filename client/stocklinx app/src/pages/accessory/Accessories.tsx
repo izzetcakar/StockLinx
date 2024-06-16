@@ -8,7 +8,8 @@ import { useAccessory } from "@/hooks/accessory";
 
 const Accessory = () => {
   const { drawerBadge } = useContext(GenericContext);
-  const { data: accessories, mutate: filter } = useAccessory.Filter();
+  const { data: accessories } = useAccessory.Filter([]);
+  const { mutate: filter } = useAccessory.ApplyFilters();
   const { mutate: remove } = useAccessory.Remove();
   const { mutate: removeRange } = useAccessory.RemoveRange();
 

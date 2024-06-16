@@ -4,6 +4,7 @@ import { queryClient } from "@/main";
 import { userRequests } from "@/server/requests/user";
 import { useMutation, useQuery } from "react-query";
 import { baseHooks } from "./baseHooks";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 export enum userKeys {
   SIGN_IN_USER = "SIGN_IN_USER",
@@ -40,8 +41,12 @@ const RemoveRange = () => {
   return hooks.RemoveRange(userRequests.removeRange);
 };
 
-const Filter = () => {
-  return hooks.Filter(userRequests.filter);
+const Filter = (filters: QueryFilter[]) => {
+  return hooks.Filter(filters, userRequests.filter);
+};
+
+const ApplyFilters = () => {
+  return hooks.ApplyFilter(userRequests.filter);
 };
 
 const Lookup = () => {
@@ -71,6 +76,7 @@ export const useUser = {
   Remove,
   RemoveRange,
   Filter,
+  ApplyFilters,
   Lookup,
   SignIn,
   GetWithToken,

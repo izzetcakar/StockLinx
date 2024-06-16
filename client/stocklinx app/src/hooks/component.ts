@@ -6,6 +6,7 @@ import { queryClient } from "@/main";
 import { componentRequests } from "@/server/requests/component";
 import { useMutation } from "react-query";
 import { baseHooks } from "./baseHooks";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 export enum componentKeys {
   CHECK_IN_COMPONENT = "CHECK_IN_COMPONENT",
@@ -42,8 +43,12 @@ const RemoveRange = () => {
   return hooks.RemoveRange(componentRequests.removeRange);
 };
 
-const Filter = () => {
-  return hooks.Filter(componentRequests.filter);
+const Filter = (filters: QueryFilter[]) => {
+  return hooks.Filter(filters, componentRequests.filter);
+};
+
+const ApplyFilters = () => {
+  return hooks.ApplyFilter(componentRequests.filter);
 };
 
 const Lookup = () => {
@@ -80,6 +85,7 @@ export const useComponent = {
   Remove,
   RemoveRange,
   Filter,
+  ApplyFilters,
   Lookup,
   CheckIn,
   CheckOut,

@@ -1,5 +1,6 @@
 import { manufacturerRequests } from "@/server/requests/manufacturer";
 import { baseHooks } from "./baseHooks";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 const hooks = baseHooks("MANUFACTURER");
 
@@ -31,8 +32,12 @@ const RemoveRange = () => {
   return hooks.RemoveRange(manufacturerRequests.removeRange);
 };
 
-const Filter = () => {
-  return hooks.Filter(manufacturerRequests.filter);
+const Filter = (filters: QueryFilter[]) => {
+  return hooks.Filter(filters, manufacturerRequests.filter);
+};
+
+const ApplyFilters = () => {
+  return hooks.ApplyFilter(manufacturerRequests.filter);
 };
 
 const Lookup = () => {
@@ -48,5 +53,6 @@ export const useManufacturer = {
   Remove,
   RemoveRange,
   Filter,
+  ApplyFilters,
   Lookup,
 };

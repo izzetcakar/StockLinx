@@ -6,6 +6,7 @@ import { queryClient } from "@/main";
 import { consumableRequests } from "@/server/requests/consumable";
 import { useMutation } from "react-query";
 import { baseHooks } from "./baseHooks";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 export enum consumableKeys {
   CHECK_IN_CONSUMABLE = "CHECK_IN_CONSUMABLE",
@@ -42,8 +43,12 @@ const RemoveRange = () => {
   return hooks.RemoveRange(consumableRequests.removeRange);
 };
 
-const Filter = () => {
-  return hooks.Filter(consumableRequests.filter);
+const Filter = (filters: QueryFilter[]) => {
+  return hooks.Filter(filters, consumableRequests.filter);
+};
+
+const ApplyFilters = () => {
+  return hooks.ApplyFilter(consumableRequests.filter);
 };
 
 const Lookup = () => {
@@ -80,6 +85,7 @@ export const useConsumable = {
   Remove,
   RemoveRange,
   Filter,
+  ApplyFilters,
   Lookup,
   CheckIn,
   CheckOut,

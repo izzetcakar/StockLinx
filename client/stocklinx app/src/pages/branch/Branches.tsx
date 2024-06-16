@@ -8,7 +8,8 @@ import Gridtable from "@components/gridTable/GridTable";
 
 const Branch = () => {
   const { drawerBadge } = useContext(GenericContext);
-  const { data, mutate: filter } = useBranch.Filter();
+  const { data: branches } = useBranch.Filter([]);
+  const { mutate: filter } = useBranch.ApplyFilters();
   const { mutate: remove } = useBranch.Remove();
   const { mutate: removeRange } = useBranch.RemoveRange();
 
@@ -19,7 +20,7 @@ const Branch = () => {
         {drawerBadge()}
       </div>
       <Gridtable
-        data={data || []}
+        data={branches || []}
         itemKey="id"
         columns={useColumns().columns}
         refreshData={() => filter([])}

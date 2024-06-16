@@ -6,6 +6,7 @@ import { queryClient } from "@/main";
 import { accessoryRequests } from "@/server/requests/accessory";
 import { useMutation } from "react-query";
 import { baseHooks } from "./baseHooks";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 export enum accessoryKeys {
   CHECK_IN_ACCESSORY = "CHECK_IN_ACCESSORY",
@@ -42,8 +43,12 @@ const RemoveRange = () => {
   return hooks.RemoveRange(accessoryRequests.removeRange);
 };
 
-const Filter = () => {
-  return hooks.Filter(accessoryRequests.filter);
+const Filter = (filters: QueryFilter[]) => {
+  return hooks.Filter(filters, accessoryRequests.filter);
+};
+
+const ApplyFilters = () => {
+  return hooks.ApplyFilter(accessoryRequests.filter);
 };
 
 const Lookup = () => {
@@ -80,6 +85,7 @@ export const useAccessory = {
   Remove,
   RemoveRange,
   Filter,
+  ApplyFilters,
   Lookup,
   CheckIn,
   CheckOut,

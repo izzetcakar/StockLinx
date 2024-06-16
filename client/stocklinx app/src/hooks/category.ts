@@ -1,5 +1,6 @@
 import { categoryRequests } from "@/server/requests/category";
 import { baseHooks } from "./baseHooks";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 const hooks = baseHooks("CATEGORY");
 
@@ -31,8 +32,12 @@ const RemoveRange = () => {
   return hooks.RemoveRange(categoryRequests.removeRange);
 };
 
-const Filter = () => {
-  return hooks.Filter(categoryRequests.filter);
+const Filter = (filters: QueryFilter[]) => {
+  return hooks.Filter(filters, categoryRequests.filter);
+};
+
+const ApplyFilters = () => {
+  return hooks.ApplyFilter(categoryRequests.filter);
 };
 
 const Lookup = () => {
@@ -48,5 +53,6 @@ export const useCategory = {
   Remove,
   RemoveRange,
   Filter,
+  ApplyFilters,
   Lookup,
 };

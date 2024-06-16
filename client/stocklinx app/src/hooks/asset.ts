@@ -3,6 +3,7 @@ import { queryClient } from "@/main";
 import { assetRequests } from "@/server/requests/asset";
 import { useMutation } from "react-query";
 import { baseHooks } from "./baseHooks";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 export enum assetKeys {
   CHECK_IN_ASSET = "CHECK_IN_ASSET",
@@ -39,8 +40,12 @@ const RemoveRange = () => {
   return hooks.RemoveRange(assetRequests.removeRange);
 };
 
-const Filter = () => {
-  return hooks.Filter(assetRequests.filter);
+const Filter = (filters: QueryFilter[]) => {
+  return hooks.Filter(filters, assetRequests.filter);
+};
+
+const ApplyFilters = () => {
+  return hooks.ApplyFilter(assetRequests.filter);
 };
 
 const Lookup = () => {
@@ -76,6 +81,7 @@ export const useAsset = {
   Remove,
   RemoveRange,
   Filter,
+  ApplyFilters,
   Lookup,
   CheckIn,
   CheckOut,

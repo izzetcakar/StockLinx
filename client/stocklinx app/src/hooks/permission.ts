@@ -3,6 +3,7 @@ import { queryClient } from "@/main";
 import { permissionRequests } from "@/server/requests/permission";
 import { useMutation } from "react-query";
 import { baseHooks } from "./baseHooks";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 export enum permissionKeys {
   SYNC_PERMISSIONS = "SYNC_PERMISSIONS",
@@ -34,8 +35,12 @@ const RemoveRange = () => {
   return hooks.RemoveRange(permissionRequests.removeRange);
 };
 
-const Filter = () => {
-  return hooks.Filter(permissionRequests.filter);
+const Filter = (filters: QueryFilter[]) => {
+  return hooks.Filter(filters, permissionRequests.filter);
+};
+
+const ApplyFilters = () => {
+  return hooks.ApplyFilter(permissionRequests.filter);
 };
 
 const Sync = () => {
@@ -61,5 +66,6 @@ export const usePermission = {
   Remove,
   RemoveRange,
   Filter,
+  ApplyFilters,
   Sync,
 };

@@ -1,5 +1,6 @@
 import { userProductRequests } from "@/server/requests/userProduct";
 import { baseHooks } from "./baseHooks";
+import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 const hooks = baseHooks("USERPRODUCT");
 
@@ -31,8 +32,12 @@ const RemoveRange = () => {
   return hooks.RemoveRange(userProductRequests.removeRange);
 };
 
-const Filter = () => {
-  return hooks.Filter(userProductRequests.filter);
+const Filter = (filters: QueryFilter[]) => {
+  return hooks.Filter(filters, userProductRequests.filter);
+};
+
+const ApplyFilters = () => {
+  return hooks.ApplyFilter(userProductRequests.filter);
 };
 
 export const useUserProduct = {
@@ -44,4 +49,5 @@ export const useUserProduct = {
   Remove,
   RemoveRange,
   Filter,
+  ApplyFilters,
 };

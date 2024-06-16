@@ -8,10 +8,10 @@ import Gridtable from "@components/gridTable/GridTable";
 
 const Asset = () => {
   const { drawerBadge } = useContext(GenericContext);
-  const { data, mutate: filter } = useAsset.Filter();
+  const { data: assets } = useAsset.Filter([]);
+  const { mutate: filter } = useAsset.ApplyFilters();
   const { mutate: remove } = useAsset.Remove();
   const { mutate: removeRange } = useAsset.RemoveRange();
-  const { data: assets, refetch: fetch } = useAsset.GetAll();
 
   return (
     <>
@@ -23,7 +23,7 @@ const Asset = () => {
         data={assets || []}
         itemKey="id"
         columns={useColumns().columns}
-        refreshData={() => fetch()}
+        refreshData={() => filter([])}
         onRowUpdate={(asset) => openAssetModal(asset as IAsset)}
         onRowInsert={() => openAssetModal()}
         onRowRemove={(id) => remove(id)}
