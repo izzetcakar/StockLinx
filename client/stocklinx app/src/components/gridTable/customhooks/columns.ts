@@ -1,11 +1,11 @@
 import { DataColumn, Column } from "@interfaces/gridTableInterfaces";
-import { useGridTableContext } from "../context/GenericStateContext";
+import { UseGridTableContext } from "../context/GenericStateContext";
 import { filterHooks } from "./filter";
 import { useVisible } from "./visible";
 import uuid4 from "uuid4";
 
 export const useColumns = (columns: DataColumn[]) => {
-  const { setGridColumns } = useGridTableContext();
+  const { setGridColumns } = UseGridTableContext();
   const { setBaseFiltersByColumns } = filterHooks.useFilter();
   const { setBaseVisibleColumns } = useVisible();
 
@@ -18,6 +18,7 @@ export const useColumns = (columns: DataColumn[]) => {
         renderComponent: column.renderComponent,
       };
     });
+
     setBaseFiltersByColumns(newColumns);
     setBaseVisibleColumns(newColumns);
     setGridColumns(newColumns);

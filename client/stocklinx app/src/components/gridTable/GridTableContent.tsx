@@ -4,7 +4,7 @@ import TableToolbar from "./tableToolbar/TableToolbar";
 import { GridtableProps, QueryFilter } from "@interfaces/gridTableInterfaces";
 import { Checkbox } from "@mantine/core";
 import { useSelectRow } from "./customhooks/selectRow";
-import { useGridTableContext } from "./context/GenericStateContext";
+import { UseGridTableContext } from "./context/GenericStateContext";
 import { useColumns } from "./customhooks/columns";
 import { usePaging } from "./customhooks/paging";
 import { RenderCell } from "./utils/cellUtils";
@@ -30,7 +30,7 @@ const GridtableContent: React.FC<GridtableProps> = ({
   const [keyfield, setKeyfield] = useState<keyof object>(
     itemKey as keyof object
   );
-  const { visibleColumns, selectedKeys } = useGridTableContext();
+  const { visibleColumns, selectedKeys } = UseGridTableContext();
 
   const { onDataColumnsChange } = useColumns(columns);
 

@@ -1,13 +1,15 @@
+@import "../../../base.scss";
+
 .icon {
   padding-right: 1rem;
 }
 .input {
-  font-size: 12px;
+  font-size: $fontsize-md;
   border-radius: 0;
 }
 .input:not(:focus) {
   border: none;
 }
-.input:not(:active){
+.input:not(:active) {
   background-color: transparent;
 }

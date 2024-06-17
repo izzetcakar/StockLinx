@@ -57,7 +57,11 @@ export const GenericStateProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 
   const clearFilters = () => {
-    if (filters.length > 0) setFilters([]);
+    setFilters((prev) => {
+      return prev.map((item) => {
+        return { ...item, value: null };
+      });
+    });
   };
 
   const clearRowSelection = () => {
@@ -99,7 +103,7 @@ export const GenericStateProvider: React.FC<{ children: React.ReactNode }> = ({
     </GridTableContext.Provider>
   );
 };
-export const useGridTableContext = () => {
+export const UseGridTableContext = () => {
   const context = useContext(GridTableContext);
   if (!context) {
     throw new Error("useGridContext must be used within a GridProvider");

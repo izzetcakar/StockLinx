@@ -121,6 +121,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <QueryClientProvider client={queryClient}>
     <MantineProvider
       theme={{
+        scale: 0.8,
         primaryShade: 9,
         primaryColor: "gray",
         cursorType: "pointer",
@@ -134,10 +135,17 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         },
         fontSizes: {
           xs: "0.5rem",
-          sm: "0.75rem",
-          md: "1rem",
+          sm: "0.70rem",
+          md: "0.1rem",
           lg: "1.25rem",
           xl: "1.5rem",
+        },
+        spacing: {
+          xs: "0.0625rem",
+          sm: "0.125rem",
+          md: "0.25rem",
+          lg: "0.5rem",
+          xl: "1rem",
         },
         components,
       }}

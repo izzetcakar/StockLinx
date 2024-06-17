@@ -1,10 +1,4 @@
-// #root {
-//   height: 100%;
-// }
-
-// ::-webkit-scrollbar {
-//   display: none;
-// }
+@import "./base.scss";
 
 .main__container {
   display: flex;
@@ -39,7 +33,7 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         font-weight: 700;
-        font-size: 26px;
+        font-size: $fontsize-xl;
       }
     }
   }

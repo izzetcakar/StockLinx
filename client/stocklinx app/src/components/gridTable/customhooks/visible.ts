@@ -1,9 +1,9 @@
 import { Column } from "@/interfaces/gridTableInterfaces";
-import { useGridTableContext } from "../context/GenericStateContext";
+import { UseGridTableContext } from "../context/GenericStateContext";
 
 export const useVisible = () => {
   const { visibleColumns, gridColumns, setVisibleColumns } =
-    useGridTableContext();
+    UseGridTableContext();
 
   const onVisibleChange = (columnId: string) => {
     const column = gridColumns.find((c) => c.id === columnId);

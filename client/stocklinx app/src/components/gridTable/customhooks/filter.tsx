@@ -8,7 +8,7 @@ import {
 } from "@interfaces/gridTableInterfaces";
 import { Loader, MultiSelect, Select, TextInput } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
-import { useGridTableContext } from "../context/GenericStateContext";
+import { UseGridTableContext } from "../context/GenericStateContext";
 import { useState } from "react";
 import {
   checkValidNumberInput,
@@ -21,7 +21,7 @@ import {
 } from "@/utils/filterUtilts";
 
 const useInputFilter = (filter: Filter) => {
-  const { gridColumns, setFilters } = useGridTableContext();
+  const { gridColumns, setFilters } = UseGridTableContext();
   const column = gridColumns.find((c) => c.id === filter.columnId);
   const [loading, setLoading] = useState(false);
   const [filterData, setFilterData] = useState<LookupData[]>(
@@ -42,7 +42,7 @@ const useInputFilter = (filter: Filter) => {
     if (!dataSource) return;
     setLoading(true);
     try {
-      const data = await dataSource();
+      const { data } = await dataSource();
       setFilterData(data);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -110,7 +110,7 @@ const useInputFilter = (filter: Filter) => {
 };
 
 const useFilter = () => {
-  const { gridColumns, filters, setFilters } = useGridTableContext();
+  const { gridColumns, filters, setFilters } = UseGridTableContext();
 
   const setBaseFiltersByColumns = (columns: Column[]) => {
     const newFilters: Filter[] = columns.map(

@@ -7,8 +7,6 @@ const LicenseQuantity: React.FC<ILicense> = (license: ILicense) => {
   const { data: userProducts } = useUserProduct.GetAll();
   const { data: assetProducts } = useAssetProduct.GetAll();
 
-  console.log("license:", license);
-
   const checkedUserQuantity = userProducts
     ?.filter((userProduct) => userProduct.licenseId === license.id)
     .reduce((acc, curr) => acc + curr.quantity, 0);

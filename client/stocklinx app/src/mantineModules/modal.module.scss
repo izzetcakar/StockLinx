@@ -1,4 +1,7 @@
+@import "../base.scss";
+
 .title {
-  font-size: 1.1rem;
+  font-size: $fontsize-md;
   font-weight: 700;
+  padding-left: 10px;
 }

@@ -4,6 +4,7 @@ import {
   UserProductCheckInDto,
   UserProductCheckOutDto,
 } from "./dtos";
+import { Column, Filter } from "./gridTableInterfaces";
 
 export interface IDropdownData {
   id: number;
@@ -50,4 +51,9 @@ export interface AssetProductCheckOutPayload {
 export interface UserProductCheckOutPayload {
   checkOutDto: UserProductCheckOutDto;
   onSubmit?: () => void;
+}
+export interface FilterInputProps {
+  filter: Filter;
+  setFilter: (value: any) => void;
+  column: Column;
 }

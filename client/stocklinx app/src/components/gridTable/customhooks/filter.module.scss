@@ -1,3 +1,5 @@
+@import "../../../base.scss";
+
 .dropdown {
   max-height: 138px;
   overflow-y: auto;
@@ -11,12 +13,12 @@
 }
 .item {
   border-radius: 0;
-  font-size: 12px;
+  font-size: $fontsize-md;
 }
 .item:hover {
-  font-size: 12px;
+  font-size: $fontsize-md;
   background-color: #f4f4f4;
 }
-.input:not(:active){
+.input:not(:active) {
   background-color: transparent;
 }

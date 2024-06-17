@@ -23,7 +23,7 @@ export interface LookupData {
   label: string;
 }
 export interface Lookup {
-  data: LookupData[];
+  data?: LookupData[];
   dataSource?: () => Promise<any> | any;
 }
 
@@ -32,6 +32,18 @@ export enum FilterType {
   NUMBER = "NUMBER",
   BOOLEAN = "BOOLEAN",
   LOOKUP = "LOOKUP",
+}
+
+export enum Operator {
+  CONTAINS = "contains",
+  STARTSWITH = "startswith",
+  ENDSWITH = "endswith",
+  EQUALS = "equals",
+  NOTEQUALS = "notequals",
+  GREATERTHANOREQUAL = "greaterthanorequal",
+  LESSTHANOREQUAL = "lessthanorequal",
+  GREATERTHAN = "greaterthan",
+  LESSTHAN = "lessthan",
 }
 export interface Filter {
   columnId: string;
@@ -44,7 +56,7 @@ export interface AppliedFilter {
 }
 export interface QueryFilter {
   dataField: string;
-  operator: string;
+  operator: Operator;
   value: string | number | boolean;
 }
 export interface ExcelColumn {
@@ -89,4 +101,8 @@ export interface GridtableProps {
 export interface GridtableRef {
   selectedRowKeys: string[];
   queryFilters: QueryFilter[];
+}
+export interface RenderCellProps {
+  obj: object;
+  column: Column;
 }

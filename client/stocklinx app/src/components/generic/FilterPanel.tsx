@@ -1,7 +1,8 @@
 import { Column, Filter, QueryFilter } from "@/interfaces/gridTableInterfaces";
-import { FilterInput, useFilter } from "@/utils/filterUtilts";
+import { FilterInput } from "@/utils/filterUtilts";
 import { Button, Flex } from "@mantine/core";
 import { useEffect, useState } from "react";
+import { filterHooks } from "../gridTable/customhooks/filter";
 
 interface FilterPanelProps {
   columns: Column[];
@@ -10,8 +11,8 @@ interface FilterPanelProps {
 
 const FilterPanel: React.FC<FilterPanelProps> = ({ columns, applyFilters }) => {
   const [filters, setFilters] = useState<Filter[]>([]);
-  const { setBaseFiltersByColumns } = useFilter(columns, filters, setFilters);
-  const { getQueryFilters } = useFilter(columns, filters, setFilters);
+  const { setBaseFiltersByColumns } = filterHooks.useFilter();
+  const { getQueryFilters } = filterHooks.useFilter();
 
   useEffect(() => {
     setBaseFiltersByColumns(columns);

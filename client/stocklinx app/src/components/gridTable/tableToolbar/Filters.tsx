@@ -1,6 +1,7 @@
 import { Button, Flex } from "@mantine/core";
 import { Filter, QueryFilter } from "@interfaces/gridTableInterfaces";
 import { filterHooks } from "../customhooks/filter";
+import { UseGridTableContext } from "../context/GenericStateContext";
 
 interface FiltersProps {
   filters: Filter[];
@@ -13,6 +14,13 @@ const FilterInput = (filter: Filter) => {
 
 const Filters: React.FC<FiltersProps> = ({ filters, applyFilters }) => {
   const { getQueryFilters } = filterHooks.useFilter();
+  const { clearFilters } = UseGridTableContext();
+
+  const clearAllFilters = () => {
+    clearFilters();
+    applyFilters([]);
+  };
+
   return (
     <Flex wrap={"wrap"} gap={10} align={"flex-end"}>
       {filters.map((filter) => {
@@ -28,6 +36,9 @@ const Filters: React.FC<FiltersProps> = ({ filters, applyFilters }) => {
         onClick={() => applyFilters(getQueryFilters())}
       >
         Apply
+      </Button>
+      <Button variant="light" color="red" onClick={() => clearAllFilters()}>
+        Clear
       </Button>
     </Flex>
   );

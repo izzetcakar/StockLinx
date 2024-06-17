@@ -17,7 +17,7 @@ import ItemNumberSelector from "../tableFooter/ItemNumberSelector";
 import { utils, read } from "xlsx";
 import { FileInput } from "@mantine/core";
 import { openConfirmModal, openExcelModal } from "../modals/modals";
-import { useGridTableContext } from "../context/GenericStateContext";
+import { UseGridTableContext } from "../context/GenericStateContext";
 import "./tableToolbar.scss";
 import Filters from "./Filters";
 import DropDown from "./Dropdown";
@@ -42,7 +42,7 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
   refreshData,
   onExpandData,
 }) => {
-  const { gridColumns, selectedKeys, filters } = useGridTableContext();
+  const { gridColumns, selectedKeys, filters } = UseGridTableContext();
   const [filtersVisible, setFiltersVisible] = React.useState(false);
 
   const handleFileInputChange = async (file: File | null) => {

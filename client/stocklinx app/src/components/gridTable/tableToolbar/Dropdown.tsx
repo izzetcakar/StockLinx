@@ -1,11 +1,11 @@
 import { Menu, Button } from "@mantine/core";
 import { IconChevronDown } from "@tabler/icons-react";
-import { useGridTableContext } from "../context/GenericStateContext";
+import { UseGridTableContext } from "../context/GenericStateContext";
 import { useVisible } from "../customhooks/visible";
 import "./tableToolbar.scss";
 
 const DropDown = () => {
-  const { gridColumns } = useGridTableContext();
+  const { gridColumns } = UseGridTableContext();
   const { onVisibleChange, checkIsVisible } = useVisible();
 
   return (
