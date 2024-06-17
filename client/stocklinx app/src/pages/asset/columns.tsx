@@ -8,16 +8,13 @@ import {
 } from "../../modals/modals";
 import base_asset from "@assets/baseProductImages/base_asset.jpg";
 import { useModel } from "@/hooks/model";
-import { useUserProduct } from "@/hooks/userProduct";
-import { useUser } from "@/hooks/user";
 import { useSupplier } from "@/hooks/supplier";
 import { useProductStatus } from "@/hooks/productStatus";
 import UserCheckInOutCell from "@/cells/UserCheckInOutCell";
 import { EntityCells } from "@/cells/Entity";
+import CheckedOutUserCell from "@/cells/CheckedOutUserCell";
 
 export const useColumns = () => {
-  const { data: userLK, refetch: getUserLK } = useUser.Lookup();
-  const { data: userProducts } = useUserProduct.GetAll();
   const { refetch: getModelLK } = useModel.Lookup();
   const { refetch: getSupplierLK } = useSupplier.Lookup();
   const { refetch: getProductStatusLK } = useProductStatus.Lookup();
@@ -97,18 +94,7 @@ export const useColumns = () => {
       dataField: "id",
       caption: "Checked Out To",
       dataType: "string",
-      renderComponent: (e) => {
-        const userProduct = userProducts?.find(
-          (userProduct) => userProduct?.assetId === (e as IAsset).id
-        );
-        if (!userProduct) return null;
-        const user = userLK?.find((user) => user.value === userProduct.userId);
-        return user?.label;
-      },
-      lookup: {
-        data: userLK,
-        dataSource: getUserLK,
-      },
+      renderComponent: (e) => CheckedOutUserCell((e as IAsset).id),
     },
     {
       dataField: "purchaseCost",
@@ -157,5 +143,5 @@ export const useColumns = () => {
     },
   ];
 
-  return { columns };
+  return {columns};
 };

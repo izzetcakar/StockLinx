@@ -1,5 +1,4 @@
 import { useColumns } from "./columns";
-import { useRef } from "react";
 import { openSubmissionModal } from "../../../utils/submissionUtils";
 import { useUserProduct } from "@/hooks/userProduct";
 import Gridtable from "../../gridTable/GridTable";
@@ -8,14 +7,12 @@ interface UserProductsPageProps {
   userId: string;
 }
 const UserProductsPage: React.FC<UserProductsPageProps> = ({ userId }) => {
-  const gridtableRef: any = useRef();
   const { data: userProducts } = useUserProduct.GetAll();
 
   return (
     <>
       <Gridtable
         itemKey="id"
-        ref={gridtableRef}
         data={userProducts?.filter((dp) => dp.userId === userId) || []}
         columns={useColumns()}
         enableSelectActions

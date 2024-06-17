@@ -1,7 +1,7 @@
 import { LookupData, RenderCellProps } from "@/interfaces/gridTableInterfaces";
 import React from "react";
 
-export const getLookupValue = (value: any, data?: LookupData[]) => {
+export const GetLookupValue = (value: any, data?: LookupData[]) => {
   return data?.find((item: LookupData) => item.value === value)?.label || "";
 };
 
@@ -16,8 +16,8 @@ export const RenderCell: React.FC<RenderCellProps> = ({ obj, column }) => {
     }
   )[column.dataField];
 
-  if (column.lookup) {
-    return getLookupValue(value, column.lookup.data);
+  if (column.lookup?.data) {
+    return GetLookupValue(value, column.lookup.data);
   }
   if (column.dataType === "boolean") {
     return value;

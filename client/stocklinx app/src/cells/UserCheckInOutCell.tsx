@@ -27,6 +27,7 @@ const UserCheckInOutCell: React.FC<UserCheckInOutCellProps> = ({
         color={user ? "red" : "green"}
         variant="filled"
         size="xs"
+        style={{ width: "60%" }}
         onClick={() => {
           userProduct ? checkOut(asset, userProduct) : checkIn(asset);
         }}
