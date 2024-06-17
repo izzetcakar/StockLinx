@@ -1,12 +1,11 @@
-import { DataColumn, ExcelColumn } from "@interfaces/gridTableInterfaces";
+import { DataColumn } from "@interfaces/gridTableInterfaces";
 import {
   CategoryType,
   IUserProduct,
   ILicense,
   IAssetProduct,
 } from "@interfaces/serverInterfaces";
-import { Anchor, Button } from "@mantine/core";
-import { useNavigate } from "react-router-dom";
+import { Button } from "@mantine/core";
 import { openCheckInModal } from "../../modals/modals";
 import {
   initialAssetProduct,
@@ -18,15 +17,16 @@ import { useCategory } from "@/hooks/category";
 import { useLicense } from "@/hooks/license";
 import { useSupplier } from "@/hooks/supplier";
 import LicenseQuantity from "@/cells/LicenseQuantity";
+import { EntityCells } from "@/cells/Entity";
 
 export const useColumns = () => {
-  const navigate = useNavigate();
   const { mutate: userCheckIn } = useLicense.UserCheckIn();
   const { mutate: assetCheckIn } = useLicense.AssetCheckIn();
-  const { data: categories } = useCategory.GetAll();
-  const { data: branchLookup } = useBranch.Lookup();
-  const { data: manufacturerLookup } = useManufacturer.Lookup();
-  const { data: supplierLookup } = useSupplier.Lookup();
+  const { data: categories, refetch: getCategoryLK } = useCategory.GetAll();
+  const { data: branchLookup, refetch: getBranchLK } = useBranch.Lookup();
+  const { data: manufacturerLookup, refetch: getManufacturerLK } =
+    useManufacturer.Lookup();
+  const { data: supplierLookup, refetch: getSupplierLK } = useSupplier.Lookup();
 
   const onUserCheckInHandler = (userProduct: IUserProduct) => {
     userCheckIn({
@@ -71,33 +71,11 @@ export const useColumns = () => {
       caption: "Name",
       dataField: "name",
       dataType: "string",
-      renderComponent(e) {
-        return (
-          <Anchor
-            onClick={() => navigate(`/license/${(e as ILicense)?.id}`)}
-            target="_blank"
-            underline="always"
-          >
-            {(e as ILicense).name}
-          </Anchor>
-        );
-      },
     },
     {
       caption: "License Key",
       dataField: "licenseKey",
       dataType: "string",
-      renderComponent(e) {
-        return (
-          <Anchor
-            onClick={() => navigate(`/license/${(e as ILicense)?.id}`)}
-            target="_blank"
-            underline="always"
-          >
-            {(e as ILicense).licenseKey}
-          </Anchor>
-        );
-      },
     },
     {
       caption: "Expiration Date",
@@ -118,9 +96,11 @@ export const useColumns = () => {
       caption: "Manufacturer",
       dataField: "manufacturerId",
       lookup: {
-        data: manufacturerLookup || [],
+        dataSource: getManufacturerLK,
       },
       dataType: "string",
+      renderComponent: (e) =>
+        EntityCells.Manufacturer((e as ILicense).manufacturerId),
     },
     {
       caption: "Total",
@@ -237,97 +217,5 @@ export const useColumns = () => {
     },
   ];
 
-  const excelColumns: ExcelColumn[] = [
-    {
-      caption: "Branch",
-      validate(value) {
-        return value !== null;
-      },
-      errorText: "Branch is required",
-    },
-    {
-      caption: "Name",
-      validate(value) {
-        return value !== null;
-      },
-      errorText: "Name is required",
-    },
-    {
-      caption: "License Key",
-      validate(value) {
-        return value !== null;
-      },
-      errorText: "License Key is required",
-    },
-    {
-      caption: "Expiration Date",
-    },
-    {
-      caption: "License Email",
-    },
-    {
-      caption: "Licensed To",
-    },
-    {
-      caption: "Manufacturer",
-      nullable: true,
-    },
-    {
-      caption: "Total",
-      validate(value) {
-        if (value === null || value < 0) return false;
-        return true;
-      },
-      errorText: "Quantity must be a positive number",
-    },
-    {
-      caption: "Avail",
-    },
-    {
-      caption: "Purchase Date",
-    },
-    {
-      caption: "Purchase Cost",
-      validate(value) {
-        if (value !== null && value < 0) return false;
-        return true;
-      },
-    },
-    {
-      caption: "Supplier",
-      nullable: true,
-    },
-    {
-      caption: "Category",
-      validate(value) {
-        return value !== null;
-      },
-      errorText: "Category is required",
-    },
-    {
-      caption: "Maintained",
-      validate(value) {
-        return value !== null;
-      },
-      errorText: "Maintained is required",
-    },
-    {
-      caption: "Reassignable",
-      validate(value) {
-        return value !== null;
-      },
-      errorText: "Reassignable is required",
-    },
-    {
-      caption: "Termination Date",
-    },
-    {
-      caption: "Image",
-    },
-    {
-      caption: "Notes",
-    },
-  ];
-
-  return { columns, excelColumns };
+  return { columns };
 };

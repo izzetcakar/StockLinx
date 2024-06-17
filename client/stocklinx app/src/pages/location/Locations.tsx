@@ -28,7 +28,6 @@ const Location = () => {
         onRowInsert={() => openLocationModal()}
         onRowRemove={(id) => remove(id)}
         onRowRemoveRange={(ids) => removeRange(ids)}
-        excelColumns={useColumns().excelColumns}
         onApplyFilters={(filters) => filter(filters)}
         enableToolbar
         enableEditActions

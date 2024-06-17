@@ -1,6 +1,5 @@
-import { DataColumn, ExcelColumn } from "@interfaces/gridTableInterfaces";
-import { useNavigate } from "react-router-dom";
-import { Anchor, Button } from "@mantine/core";
+import { DataColumn } from "@interfaces/gridTableInterfaces";
+import { Button } from "@mantine/core";
 import {
   CategoryType,
   IAssetProduct,
@@ -10,16 +9,14 @@ import { openCheckInModal } from "../../modals/modals";
 import { initialAssetProduct } from "../../initials/initials";
 import { useCategory } from "@/hooks/category";
 import { useBranch } from "@/hooks/branch";
-import { useLocation } from "@/hooks/location";
 import { useComponent } from "@/hooks/component";
+import { EntityCells } from "@/cells/Entity";
 import AssetProductQuantityCell from "@/cells/AssetProductQuantityCell";
 
 export const useColumns = () => {
-  const navigate = useNavigate();
   const { mutate: checkIn } = useComponent.CheckIn();
   const { data: categories } = useCategory.GetAll();
   const { data: branchLookup } = useBranch.Lookup();
-  const { data: locationLookup } = useLocation.Lookup();
 
   const onCheckInHandler = (data: IAssetProduct) => {
     checkIn({
@@ -53,33 +50,11 @@ export const useColumns = () => {
       caption: "Name",
       dataField: "name",
       dataType: "string",
-      renderComponent(e) {
-        return (
-          <Anchor
-            onClick={() => navigate(`/component/${(e as IComponent)?.id}`)}
-            target="_blank"
-            underline="always"
-          >
-            {(e as IComponent).name}
-          </Anchor>
-        );
-      },
     },
     {
       caption: "Serial",
       dataField: "serialNo",
       dataType: "string",
-      renderComponent(e) {
-        return (
-          <Anchor
-            onClick={() => navigate(`/asset/${(e as IComponent)?.id}`)}
-            target="_blank"
-            underline="always"
-          >
-            {(e as IComponent).serialNo}
-          </Anchor>
-        );
-      },
     },
     {
       caption: "Category",
@@ -94,6 +69,8 @@ export const useColumns = () => {
             })) || [],
       },
       dataType: "string",
+      renderComponent: (e) =>
+        EntityCells.Category((e as IComponent).categoryId),
     },
     {
       caption: "Total",
@@ -110,14 +87,6 @@ export const useColumns = () => {
           productType: "Component",
           totalQuantity: (e as IComponent).quantity,
         }),
-    },
-    {
-      caption: "Location",
-      dataField: "locationId",
-      lookup: {
-        data: locationLookup || [],
-      },
-      dataType: "string",
     },
     {
       caption: "Order Number",
@@ -181,61 +150,5 @@ export const useColumns = () => {
     },
   ];
 
-  const excelColumns: ExcelColumn[] = [
-    {
-      caption: "Branch",
-      validate(value) {
-        return value !== null;
-      },
-      errorText: "Branch is required",
-    },
-    {
-      caption: "Name",
-      validate(value) {
-        return value !== null;
-      },
-      errorText: "Name is required",
-    },
-    {
-      caption: "Serial No",
-    },
-    {
-      caption: "Category",
-      validate(value) {
-        return value !== null;
-      },
-      errorText: "Category is required",
-    },
-    {
-      caption: "Total",
-      validate(value) {
-        if (value === null || value < 0) return false;
-        return true;
-      },
-      errorText: "Quantity must be a positive number",
-    },
-    {
-      caption: "Order Number",
-    },
-    {
-      caption: "Purchase Date",
-    },
-    {
-      caption: "Purchase Cost",
-      validate(value) {
-        if (value !== null && value < 0) {
-          return false;
-        }
-        return true;
-      },
-      errorText: "Purchase Cost must be a positive number",
-    },
-    {
-      caption: "Image",
-    },
-    {
-      caption: "Notes",
-    },
-  ];
-  return { columns, excelColumns };
+  return { columns };
 };

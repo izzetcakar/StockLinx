@@ -1,33 +1,13 @@
-import { IProductStatus, ProductStatusType } from "@interfaces/serverInterfaces";
+import { ProductStatusType } from "@interfaces/serverInterfaces";
 import { createDataFromEnum } from "../../utils/enumUtils";
-import {
-  DataColumn,
-  ExcelColumn,
-} from "@interfaces/gridTableInterfaces";
-import { useNavigate } from "react-router-dom";
-import { Anchor } from "@mantine/core";
+import { DataColumn } from "@interfaces/gridTableInterfaces";
 
 export const useColumns = () => {
-  const navigate = useNavigate();
-
   const columns: DataColumn[] = [
     {
       dataField: "name",
       caption: "Name",
       dataType: "string",
-      renderComponent(e) {
-        return (
-          <Anchor
-            onClick={() =>
-              navigate(`/productStatus/${(e as IProductStatus)?.id}`)
-            }
-            target="_blank"
-            underline="always"
-          >
-            {(e as IProductStatus).name}
-          </Anchor>
-        );
-      },
     },
     {
       dataField: "type",
@@ -39,22 +19,5 @@ export const useColumns = () => {
     },
   ];
 
-  const excelColumns: ExcelColumn[] = [
-    {
-      caption: "Name",
-      validate(value) {
-        return value !== null;
-      },
-      errorText: "Name is required",
-    },
-    {
-      caption: "Type",
-      validate(value) {
-        return value !== null;
-      },
-      errorText: "Type is required",
-    },
-  ];
-
-  return { columns, excelColumns };
+  return { columns };
 };

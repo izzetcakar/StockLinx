@@ -1,34 +1,22 @@
-import { DataColumn, ExcelColumn } from "@interfaces/gridTableInterfaces";
-import { useNavigate } from "react-router-dom";
-import { Anchor, Image } from "@mantine/core";
+import { DataColumn } from "@interfaces/gridTableInterfaces";
+import { Image } from "@mantine/core";
 import { IModel } from "@interfaces/serverInterfaces";
 import { getImage } from "../../utils/imageUtils";
 import { useCategory } from "@/hooks/category";
 import { useManufacturer } from "@/hooks/manufacturer";
 import { useFieldSet } from "@/hooks/fieldSet";
+import { EntityCells } from "@/cells/Entity";
 
 export const useColumns = () => {
-  const navigate = useNavigate();
-  const { data: categoryLookup } = useCategory.Lookup();
-  const { data: manufacturerLookup } = useManufacturer.Lookup();
-  const { data: fieldSetLookup } = useFieldSet.Lookup();
+  const { refetch: getCategoryLK } = useCategory.Lookup();
+  const { refetch: getManufacturerLK } = useManufacturer.Lookup();
+  const { refetch: getFieldSetLK } = useFieldSet.Lookup();
 
   const columns: DataColumn[] = [
     {
       dataField: "name",
       caption: "Name",
       dataType: "string",
-      renderComponent(e) {
-        return (
-          <Anchor
-            onClick={() => navigate(`/model/${(e as IModel)?.id}`)}
-            target="_blank"
-            underline="always"
-          >
-            {(e as IModel).name}
-          </Anchor>
-        );
-      },
     },
     {
       caption: "Image",
@@ -53,46 +41,19 @@ export const useColumns = () => {
       caption: "Category",
       dataType: "string",
       lookup: {
-        data: categoryLookup || [],
+        dataSource: getCategoryLK,
       },
-      renderComponent(e) {
-        const model = e as IModel;
-        const { data: category } = useCategory.Get(model.categoryId || "");
-        return (
-          <Anchor
-            onClick={() => navigate(`/category/${(e as IModel)?.categoryId}`)}
-            target="_blank"
-            underline="always"
-          >
-            {category?.name}
-          </Anchor>
-        );
-      },
+      renderComponent: (e) => EntityCells.Category((e as IModel).categoryId),
     },
     {
       dataField: "manufacturerId",
       caption: "Manufacturer",
       dataType: "string",
       lookup: {
-        data: manufacturerLookup || [],
+        dataSource: getManufacturerLK,
       },
-      renderComponent(e) {
-        const model = e as IModel;
-        const { data: manufacturer } = useManufacturer.Get(
-          model.manufacturerId || ""
-        );
-        return (
-          <Anchor
-            onClick={() =>
-              navigate(`/manufacturer/${(e as IModel)?.manufacturerId}`)
-            }
-            target="_blank"
-            underline="always"
-          >
-            {manufacturer?.name}
-          </Anchor>
-        );
-      },
+      renderComponent: (e) =>
+        EntityCells.Manufacturer((e as IModel).manufacturerId),
     },
     {
       dataField: "modelNo",
@@ -102,10 +63,11 @@ export const useColumns = () => {
     {
       dataField: "fieldSetId",
       caption: "FieldSet",
-      lookup: {
-        data: fieldSetLookup || [],
-      },
       dataType: "string",
+      lookup: {
+        dataSource: getFieldSetLK,
+      },
+      renderComponent: (e) => EntityCells.FieldSet((e as IModel).fieldSetId),
     },
     {
       dataField: "notes",
@@ -121,38 +83,5 @@ export const useColumns = () => {
     },
   ];
 
-  const excelColumns: ExcelColumn[] = [
-    {
-      caption: "Name",
-      validate(value) {
-        return value !== null;
-      },
-      errorText: "Name is required",
-    },
-    {
-      caption: "Category",
-    },
-    {
-      caption: "Manufacturer",
-      nullable: true,
-    },
-    {
-      caption: "FieldSet",
-      nullable: true,
-    },
-    {
-      caption: "Model No",
-    },
-    {
-      caption: "Notes",
-    },
-    {
-      caption: "Image",
-    },
-    {
-      caption: "Notes",
-    },
-  ];
-
-  return { columns, excelColumns };
+  return { columns };
 };

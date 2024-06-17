@@ -1,30 +1,10 @@
-import { Anchor } from "@mantine/core";
-import {
-  DataColumn,
-  ExcelColumn,
-} from "@interfaces/gridTableInterfaces";
-import { useNavigate } from "react-router-dom";
-import { ILocation } from "@interfaces/serverInterfaces";
-
+import { DataColumn } from "@interfaces/gridTableInterfaces";
 export const useColumns = () => {
-  const navigate = useNavigate();
-
   const columns: DataColumn[] = [
     {
       dataField: "name",
       caption: "Name",
       dataType: "string",
-      renderComponent(e) {
-        return (
-          <Anchor
-            onClick={() => navigate(`/location/${(e as ILocation)?.id}`)}
-            target="_blank"
-            underline="always"
-          >
-            {(e as ILocation).name}
-          </Anchor>
-        );
-      },
     },
     {
       dataField: "country",
@@ -67,39 +47,6 @@ export const useColumns = () => {
       dataType: "string",
     },
   ];
-  const excelColumns: ExcelColumn[] = [
-    {
-      caption: "Name",
-      validate(value) {
-        return value !== null;
-      },
-      errorText: "Name is required",
-    },
-    {
-      caption: "Country",
-    },
-    {
-      caption: "State",
-    },
-    {
-      caption: "City",
-    },
-    {
-      caption: "Address",
-    },
-    {
-      caption: "Address2",
-    },
-    {
-      caption: "Zip Code",
-    },
-    {
-      caption: "Currency",
-    },
-    {
-      caption: "Notes",
-    },
-  ];
 
-  return { columns, excelColumns };
+  return { columns };
 };

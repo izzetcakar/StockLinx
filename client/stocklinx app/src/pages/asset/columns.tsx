@@ -1,7 +1,6 @@
-import { ExcelColumn, DataColumn } from "@interfaces/gridTableInterfaces";
-import { Anchor, Image } from "@mantine/core";
+import { DataColumn } from "@interfaces/gridTableInterfaces";
+import { Image } from "@mantine/core";
 import { IAsset, IUserProduct } from "@interfaces/serverInterfaces";
-import { useNavigate } from "react-router-dom";
 import { getImage } from "../../utils/imageUtils";
 import {
   openAssetCheckInModal,
@@ -14,14 +13,14 @@ import { useUser } from "@/hooks/user";
 import { useSupplier } from "@/hooks/supplier";
 import { useProductStatus } from "@/hooks/productStatus";
 import UserCheckInOutCell from "@/cells/UserCheckInOutCell";
+import { EntityCells } from "@/cells/Entity";
 
 export const useColumns = () => {
-  const navigate = useNavigate();
+  const { data: userLK, refetch: getUserLK } = useUser.Lookup();
   const { data: userProducts } = useUserProduct.GetAll();
-  const { data: modelLookup } = useModel.Lookup();
-  const { data: userLookup } = useUser.Lookup();
-  const { data: supplierLookup } = useSupplier.Lookup();
-  const { data: productStatusLookup } = useProductStatus.Lookup();
+  const { refetch: getModelLK } = useModel.Lookup();
+  const { refetch: getSupplierLK } = useSupplier.Lookup();
+  const { refetch: getProductStatusLK } = useProductStatus.Lookup();
 
   const checkIn = (asset: IAsset) => {
     openAssetCheckInModal({
@@ -52,17 +51,6 @@ export const useColumns = () => {
       dataField: "name",
       caption: "Name",
       dataType: "string",
-      renderComponent(e) {
-        return (
-          <Anchor
-            onClick={() => navigate(`/asset/${(e as IAsset)?.id}`)}
-            target="_blank"
-            underline="always"
-          >
-            {(e as IAsset).name}
-          </Anchor>
-        );
-      },
     },
     {
       caption: "Image",
@@ -73,7 +61,7 @@ export const useColumns = () => {
         return (
           <Image
             src={image ? image : base_asset}
-            height={50}
+            height={30}
             radius="md"
             width="fit-content"
             fit="contain"
@@ -85,50 +73,41 @@ export const useColumns = () => {
       dataField: "serialNo",
       caption: "Serial",
       dataType: "string",
-      renderComponent(e) {
-        return (
-          <Anchor
-            onClick={() => navigate(`/asset/${(e as IAsset)?.id}`)}
-            target="_blank"
-            underline="always"
-          >
-            {(e as IAsset).serialNo}
-          </Anchor>
-        );
-      },
     },
     {
       dataField: "modelId",
       caption: "Model",
       lookup: {
-        data: modelLookup || [],
+        dataSource: getModelLK,
       },
       dataType: "string",
+      renderComponent: (e) => EntityCells.Model((e as IAsset).modelId),
     },
     {
       dataField: "productStatusId",
       caption: "Status",
-      lookup: {
-        data: productStatusLookup || [],
-      },
       dataType: "string",
+      lookup: {
+        dataSource: getProductStatusLK,
+      },
+      renderComponent: (e) =>
+        EntityCells.ProductStatus((e as IAsset).productStatusId),
     },
     {
       dataField: "id",
       caption: "Checked Out To",
       dataType: "string",
-      renderComponent(e) {
+      renderComponent: (e) => {
         const userProduct = userProducts?.find(
           (userProduct) => userProduct?.assetId === (e as IAsset).id
         );
         if (!userProduct) return null;
-        const user = userLookup?.find(
-          (user) => user.value === userProduct.userId
-        );
+        const user = userLK?.find((user) => user.value === userProduct.userId);
         return user?.label;
       },
       lookup: {
-        data: userLookup || [],
+        data: userLK,
+        dataSource: getUserLK,
       },
     },
     {
@@ -172,63 +151,11 @@ export const useColumns = () => {
       caption: "Supplier",
       dataType: "string",
       lookup: {
-        data: supplierLookup || [],
+        dataSource: getSupplierLK,
       },
-    },
-  ];
-  const excelColumns: ExcelColumn[] = [
-    {
-      caption: "Branch",
-      validate(value) {
-        return value !== null;
-      },
-      errorText: "Branch is required",
-    },
-    {
-      caption: "Name",
-      validate(value) {
-        return value !== null;
-      },
-      errorText: "Name is required",
-    },
-    {
-      caption: "Asset Tag",
-    },
-    {
-      caption: "Serial",
-    },
-    {
-      caption: "Model",
-      nullable: true,
-    },
-    {
-      caption: "Status",
-      validate(value) {
-        return value !== null;
-      },
-      errorText: "Status is required",
-    },
-    {
-      caption: "Order No",
-    },
-    {
-      caption: "Purchase Cost",
-      validate(value) {
-        if (value !== null && value < 0) return false;
-        return true;
-      },
-      errorText: "Purchase Cost must be a positive number",
-    },
-    {
-      caption: "Purchase Date",
-    },
-    {
-      caption: "Image",
-    },
-    {
-      caption: "Notes",
+      renderComponent: (e) => EntityCells.Supplier((e as IAsset).supplierId),
     },
   ];
 
-  return { columns, excelColumns };
+  return { columns };
 };

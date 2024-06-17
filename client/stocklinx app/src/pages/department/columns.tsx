@@ -1,16 +1,14 @@
-import { DataColumn, ExcelColumn } from "@interfaces/gridTableInterfaces";
-import { useNavigate } from "react-router-dom";
+import { DataColumn } from "@interfaces/gridTableInterfaces";
 import { IDepartment } from "@interfaces/serverInterfaces";
-import { Anchor } from "@mantine/core";
 import { useBranch } from "@/hooks/branch";
 import { useLocation } from "@/hooks/location";
 import { useUser } from "@/hooks/user";
+import { EntityCells } from "@/cells/Entity";
 
 export const useColumns = () => {
-  const navigate = useNavigate();
-  const { data: branchLookup } = useBranch.Lookup();
-  const { data: locationLookup } = useLocation.Lookup();
-  const { data: userLookup } = useUser.Lookup();
+  const { refetch: getBranchLK } = useBranch.Lookup();
+  const { refetch: getLocationLK } = useLocation.Lookup();
+  const { refetch: getUserLK } = useUser.Lookup();
 
   const columns: DataColumn[] = [
     {
@@ -18,81 +16,33 @@ export const useColumns = () => {
       caption: "Branch",
       dataType: "string",
       lookup: {
-        data: branchLookup || [],
+        dataSource: getBranchLK,
       },
-      renderComponent(e) {
-        const department = e as IDepartment;
-        const { data: branch } = useBranch.Get(department.branchId);
-        return (
-          <Anchor
-            onClick={() => navigate(`/branch/${(e as IDepartment)?.branchId}`)}
-            target="_blank"
-            underline="always"
-          >
-            {branch?.name}
-          </Anchor>
-        );
-      },
+      renderComponent: (e) => EntityCells.Branch((e as IDepartment).branchId),
     },
     {
       dataField: "name",
       caption: "Name",
       dataType: "string",
-      renderComponent(e) {
-        return (
-          <Anchor
-            onClick={() => navigate(`/department/${(e as IDepartment)?.id}`)}
-            target="_blank"
-            underline="always"
-          >
-            {(e as IDepartment).name}
-          </Anchor>
-        );
-      },
     },
     {
       dataField: "locationId",
       caption: "Location",
       dataType: "string",
       lookup: {
-        data: locationLookup || [],
+        dataSource: getLocationLK,
       },
-      renderComponent(e) {
-        const department = e as IDepartment;
-        const { data: location } = useLocation.Get(department.locationId || "");
-        return (
-          <Anchor
-            onClick={() =>
-              navigate(`/location/${(e as IDepartment)?.locationId}`)
-            }
-            target="_blank"
-            underline="always"
-          >
-            {location?.name}
-          </Anchor>
-        );
-      },
+      renderComponent: (e) =>
+        EntityCells.Location((e as IDepartment).locationId),
     },
     {
       dataField: "managerId",
       caption: "Manager",
       dataType: "string",
       lookup: {
-        data: userLookup || [],
+        dataSource: getUserLK,
       },
-      renderComponent(e) {
-        const department = e as IDepartment;
-        const { data: user } = useUser.Get(department.managerId || "");
-        return (
-          <Anchor
-            onClick={() => navigate(`/user/${(e as IDepartment)?.managerId}`)}
-            target="_blank"
-            underline="always"
-          >
-            {user?.firstName + " " + user?.lastName}
-          </Anchor>
-        );
-      },
+      renderComponent: (e) => EntityCells.User((e as IDepartment).managerId),
     },
     // INVISIBLE COLUMNS
     {
@@ -103,33 +53,5 @@ export const useColumns = () => {
     },
   ];
 
-  const excelColumns: ExcelColumn[] = [
-    {
-      caption: "Branch",
-      validate(value) {
-        return value !== null;
-      },
-      errorText: "Branch is required",
-    },
-    {
-      caption: "Name",
-      validate(value) {
-        return value !== null;
-      },
-      errorText: "Name is required",
-    },
-    {
-      caption: "Location",
-      nullable: true,
-    },
-    {
-      caption: "Manager",
-      nullable: true,
-    },
-    {
-      caption: "Notes",
-    },
-  ];
-
-  return { columns, excelColumns };
+  return { columns };
 };

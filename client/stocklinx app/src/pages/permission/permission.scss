@@ -1,4 +1,5 @@
-/* Add this CSS to your stylesheets or use a CSS-in-JS solution */
+@import "../../base.scss";
+
 @keyframes slideInFromLeft {
   0% {
     transform: translateY(10%);
@@ -48,7 +49,7 @@
 
 .company__card h3,
 .branch__card h3 {
-  font-size: 1.8rem;
+  font-size: $fontsize-xl;
   margin-bottom: 10px;
   color: #fff;
 }

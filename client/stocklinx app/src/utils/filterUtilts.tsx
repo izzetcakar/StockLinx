@@ -1,9 +1,10 @@
+import { FilterInputProps } from "@/interfaces/clientInterfaces";
 import {
-  AppliedFilter,
   Column,
   Filter,
   FilterType,
   LookupData,
+  Operator,
   QueryFilter,
 } from "@/interfaces/gridTableInterfaces";
 import { Loader, MultiSelect, Select, TextInput } from "@mantine/core";
@@ -65,54 +66,54 @@ export const convertValueByType = (value: string, type: string) => {
   }
 };
 
-export const trimValueByOperator = (value: string, operator: string) => {
+export const trimValueByOperator = (value: string, operator: Operator) => {
   const trimmedValue = value.trim();
   switch (operator) {
-    case "contains":
+    case Operator.CONTAINS:
       return trimmedValue.startsWith("%") && trimmedValue.endsWith("%")
         ? trimmedValue.slice(1, -1)
         : trimmedValue;
-    case "startswith":
+    case Operator.STARTSWITH:
       return trimmedValue.slice(0, -1);
-    case "endswith":
+    case Operator.ENDSWITH:
       return trimmedValue.slice(1);
-    case "equals":
+    case Operator.EQUALS:
       return trimmedValue.slice(1);
-    case "greaterthan":
+    case Operator.GREATERTHAN:
       return trimmedValue.slice(1);
-    case "lessthan":
+    case Operator.LESSTHAN:
       return trimmedValue.slice(1);
-    case "notequals":
+    case Operator.NOTEQUALS:
       return trimmedValue.slice(2);
-    case "greaterthanorequal":
+    case Operator.GREATERTHANOREQUAL:
       return trimmedValue.slice(2);
-    case "lessthanorequal":
+    case Operator.LESSTHANOREQUAL:
       return trimmedValue.slice(2);
     default:
       return trimmedValue;
   }
 };
 
-export const getOperator = (value: string) => {
+export const getOperator = (value: string): Operator => {
   const trimmedValue = value.trim();
   const operatorPatterns: { [key: string]: RegExp } = {
-    contains: /^%.*%$/,
-    startswith: /^[^%]+%$/,
-    endswith: /^%[^%]+$/,
-    equals: /^=/,
-    notequals: /^!=/,
-    greaterthanorequal: />=/,
-    lessthanorequal: /<=/,
-    greaterthan: /^>/,
-    lessthan: /^</,
+    [Operator.CONTAINS]: /^%.*%$/,
+    [Operator.STARTSWITH]: /^[^%]+%$/,
+    [Operator.ENDSWITH]: /^%[^%]+$/,
+    [Operator.EQUALS]: /^=/,
+    [Operator.NOTEQUALS]: /^!=/,
+    [Operator.GREATERTHANOREQUAL]: />=/,
+    [Operator.LESSTHANOREQUAL]: /<=/,
+    [Operator.GREATERTHAN]: /^>/,
+    [Operator.LESSTHAN]: /^</,
   };
 
   for (const [operator, pattern] of Object.entries(operatorPatterns)) {
     if (pattern.test(trimmedValue)) {
-      return operator;
+      return operator as Operator;
     }
   }
-  return "contains";
+  return Operator.CONTAINS;
 };
 
 export const getFilterChangedValue = (e: any, filterType: FilterType) => {
@@ -262,173 +263,6 @@ export const useInputFilter = (
   return { getFilterInput };
 };
 
-export const useFilter = (
-  columns: Column[],
-  filters: Filter[],
-  setFilters: (newFilters: Filter[]) => void
-) => {
-  const getFilterType = (column: Column): FilterType => {
-    if (!column) return FilterType.TEXT;
-    if (column.lookup) return FilterType.LOOKUP;
-    switch (column.dataType) {
-      case "number":
-        return FilterType.NUMBER;
-      case "boolean":
-        return FilterType.BOOLEAN;
-      case "string":
-      default:
-        return FilterType.TEXT;
-    }
-  };
-
-  const setBaseFiltersByColumns = (columns: Column[]) => {
-    const newFilters: Filter[] = columns.map(
-      (column) =>
-        ({
-          columnId: column.id,
-          type: getFilterType(column),
-          value: null,
-        } as Filter)
-    );
-    setFilters(newFilters);
-  };
-
-  const convertValueByType = (value: string, type: string) => {
-    switch (type) {
-      case "number":
-        return parseInt(value);
-      case "boolean":
-        return value === "true";
-      case "string":
-        return value;
-      default:
-        return value;
-    }
-  };
-
-  const trimValueByOperator = (value: string, operator: string) => {
-    const trimmedValue = value.trim();
-    switch (operator) {
-      case "contains":
-        return trimmedValue.startsWith("%") && trimmedValue.endsWith("%")
-          ? trimmedValue.slice(1, -1)
-          : trimmedValue;
-      case "startswith":
-        return trimmedValue.slice(0, -1);
-      case "endswith":
-        return trimmedValue.slice(1);
-      case "equals":
-        return trimmedValue.slice(1);
-      case "greaterthan":
-        return trimmedValue.slice(1);
-      case "lessthan":
-        return trimmedValue.slice(1);
-      case "notequals":
-        return trimmedValue.slice(2);
-      case "greaterthanorequal":
-        return trimmedValue.slice(2);
-      case "lessthanorequal":
-        return trimmedValue.slice(2);
-      default:
-        return trimmedValue;
-    }
-  };
-
-  const getOperator = (value: string) => {
-    const trimmedValue = value.trim();
-    const operatorPatterns: { [key: string]: RegExp } = {
-      contains: /^%.*%$/,
-      startswith: /^[^%]+%$/,
-      endswith: /^%[^%]+$/,
-      equals: /^=/,
-      notequals: /^!=/,
-      greaterthanorequal: />=/,
-      lessthanorequal: /<=/,
-      greaterthan: /^>/,
-      lessthan: /^</,
-    };
-
-    for (const [operator, pattern] of Object.entries(operatorPatterns)) {
-      if (pattern.test(trimmedValue)) {
-        return operator;
-      }
-    }
-    return "contains";
-  };
-
-  const processFilterValues = (filter: AppliedFilter) => {
-    const filterValue = filter.value.toString().trim();
-    const dataType =
-      columns.find((c) => c.dataField === filter.dataField)?.dataType ||
-      "string";
-    if (dataType === "action") return;
-    if (dataType === "number" && checkValidNumberInput(filter.value)) return;
-    if (filterValue.includes(";")) {
-      return filterValue
-        .split(";")
-        .filter((value) => value !== "")
-        .map((value) => {
-          const operator = getOperator(value);
-          return {
-            dataField: filter.dataField,
-            operator: operator,
-            value: convertValueByType(
-              trimValueByOperator(value, operator),
-              dataType
-            ),
-          };
-        });
-    }
-    const operator = getOperator(filterValue);
-    return {
-      dataField: filter.dataField,
-      operator: operator,
-      value: convertValueByType(
-        trimValueByOperator(filterValue, operator),
-        dataType
-      ),
-    };
-  };
-
-  const getQueryFilters = (): QueryFilter[] => {
-    const activeFilters = filters.filter(
-      (filter) =>
-        filter.value !== "" &&
-        filter.value !== null &&
-        filter.value !== undefined
-    );
-    let queryFilters: QueryFilter[] = [];
-
-    activeFilters.forEach((filter) => {
-      const column = columns.find((c) => c.id === filter.columnId);
-      if (!column) return;
-
-      const processedFilters = processFilterValues({
-        dataField: column.dataField,
-        value: getFinalValue(filter.value as string, filter.type),
-      });
-
-      if (Array.isArray(processedFilters)) {
-        queryFilters = queryFilters.concat(processedFilters);
-      } else if (processedFilters) {
-        queryFilters.push(processedFilters);
-      }
-    });
-
-    return queryFilters;
-  };
-
-  return {
-    setBaseFiltersByColumns,
-    getQueryFilters,
-  };
-};
-
-interface FilterInputProps {
-  filter: Filter;
-  setFilter: (value: any) => void;
-  column: Column;
-}
 export const FilterInput: React.FC<FilterInputProps> = ({
   filter,
   setFilter,

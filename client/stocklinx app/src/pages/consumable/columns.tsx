@@ -1,11 +1,10 @@
-import { DataColumn, ExcelColumn } from "@interfaces/gridTableInterfaces";
+import { DataColumn } from "@interfaces/gridTableInterfaces";
 import {
   CategoryType,
   IConsumable,
   IUserProduct,
 } from "@interfaces/serverInterfaces";
-import { Anchor, Button } from "@mantine/core";
-import { useNavigate } from "react-router-dom";
+import { Button } from "@mantine/core";
 import { openCheckInModal } from "../../modals/modals";
 import { initialUserProduct } from "../../initials/initials";
 import { useConsumable } from "@/hooks/consumable";
@@ -14,9 +13,9 @@ import { useBranch } from "@/hooks/branch";
 import { useSupplier } from "@/hooks/supplier";
 import { useManufacturer } from "@/hooks/manufacturer";
 import UserProductQuantityCell from "@/cells/UserProductQuantityCell";
+import { EntityCells } from "@/cells/Entity";
 
 export const useColumns = () => {
-  const navigate = useNavigate();
   const { mutate: checkIn } = useConsumable.CheckIn();
   const { data: categories } = useCategory.GetAll();
   const { data: branchLookup } = useBranch.Lookup();
@@ -49,17 +48,6 @@ export const useColumns = () => {
       caption: "Name",
       dataField: "name",
       dataType: "string",
-      renderComponent(e) {
-        return (
-          <Anchor
-            onClick={() => navigate(`/consumable/${(e as IConsumable)?.id}`)}
-            target="_blank"
-            underline="always"
-          >
-            {(e as IConsumable).name}
-          </Anchor>
-        );
-      },
     },
     {
       caption: "Category",
@@ -74,38 +62,18 @@ export const useColumns = () => {
             })) || [],
       },
       dataType: "string",
+      renderComponent: (e) =>
+        EntityCells.Category((e as IConsumable).categoryId),
     },
     {
       caption: "Model No",
       dataField: "modelNo",
       dataType: "string",
-      renderComponent(e) {
-        return (
-          <Anchor
-            onClick={() => navigate(`/consumable/${(e as IConsumable)?.id}`)}
-            target="_blank"
-            underline="always"
-          >
-            {(e as IConsumable).modelNo}
-          </Anchor>
-        );
-      },
     },
     {
       caption: "Item No",
       dataField: "itemNo",
       dataType: "string",
-      renderComponent(e) {
-        return (
-          <Anchor
-            onClick={() => navigate(`/consumable/${(e as IConsumable)?.id}`)}
-            target="_blank"
-            underline="always"
-          >
-            {(e as IConsumable).itemNo}
-          </Anchor>
-        );
-      },
     },
     {
       caption: "Total",
@@ -204,73 +172,5 @@ export const useColumns = () => {
     },
   ];
 
-  const excelColumns: ExcelColumn[] = [
-    {
-      caption: "Branch",
-      validate(value) {
-        return value !== null;
-      },
-      errorText: "Branch is required",
-    },
-    {
-      caption: "Name",
-      validate(value) {
-        return value !== null;
-      },
-      errorText: "Name is required",
-    },
-    {
-      caption: "Category",
-      validate(value) {
-        return value !== null;
-      },
-      errorText: "Category is required",
-    },
-    {
-      caption: "Model No",
-    },
-    {
-      caption: "Item No",
-    },
-    {
-      caption: "Quantity",
-      validate(value) {
-        if (value === null || value < 0) return false;
-        return true;
-      },
-      errorText: "Quantity must be a positive number",
-    },
-    {
-      caption: "Order Number",
-    },
-    {
-      caption: "Purchase Date",
-    },
-    {
-      caption: "Purchase Cost",
-      validate(value) {
-        if (value !== null && value < 0) {
-          return false;
-        }
-        return true;
-      },
-      errorText: "Purchase Cost must be a positive number",
-    },
-    {
-      caption: "Supplier",
-      nullable: true,
-    },
-    {
-      caption: "Manufacturer",
-      nullable: true,
-    },
-    {
-      caption: "Image",
-    },
-    {
-      caption: "Notes",
-    },
-  ];
-
-  return { columns, excelColumns };
+  return { columns };
 };

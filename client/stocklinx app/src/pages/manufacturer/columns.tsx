@@ -1,33 +1,14 @@
-import { useNavigate } from "react-router-dom";
-import {
-  DataColumn,
-  ExcelColumn,
-} from "@interfaces/gridTableInterfaces";
+import { DataColumn } from "@interfaces/gridTableInterfaces";
 import { IManufacturer } from "@interfaces/serverInterfaces";
-import { Anchor, Image } from "@mantine/core";
+import { Image } from "@mantine/core";
 import { getImage } from "../../utils/imageUtils";
 
 export const useColumns = () => {
-  const navigate = useNavigate();
-
   const columns: DataColumn[] = [
     {
       dataField: "name",
       caption: "Name",
       dataType: "string",
-      renderComponent(e) {
-        return (
-          <Anchor
-            onClick={() =>
-              navigate(`/manufacturer/${(e as IManufacturer)?.id}`)
-            }
-            target="_blank"
-            underline="always"
-          >
-            {(e as IManufacturer).name}
-          </Anchor>
-        );
-      },
     },
     {
       caption: "Image",
@@ -76,33 +57,5 @@ export const useColumns = () => {
     },
   ];
 
-  const excelColumns: ExcelColumn[] = [
-    {
-      caption: "Name",
-      validate(value) {
-        return value !== null;
-      },
-      errorText: "Name is required",
-    },
-    {
-      caption: "URL",
-    },
-    {
-      caption: "Support URL",
-    },
-    {
-      caption: "Support Phone",
-    },
-    {
-      caption: "Support Email",
-    },
-    {
-      caption: "Image",
-    },
-    {
-      caption: "Notes",
-    },
-  ];
-
-  return { columns, excelColumns };
+  return { columns };
 };

@@ -29,7 +29,6 @@ const Accessory = () => {
         onRowRemove={(id) => remove(id)}
         onRowRemoveRange={(ids) => removeRange(ids)}
         onApplyFilters={(filters) => filter(filters)}
-        excelColumns={useColumns().excelColumns}
         enableToolbar
         enableEditActions
         enableSelectActions

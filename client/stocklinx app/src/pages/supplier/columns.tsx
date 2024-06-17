@@ -1,30 +1,18 @@
-import { DataColumn, ExcelColumn } from "@interfaces/gridTableInterfaces";
-import { useNavigate } from "react-router-dom";
-import { Anchor, Image } from "@mantine/core";
+import { DataColumn } from "@interfaces/gridTableInterfaces";
+import { Image } from "@mantine/core";
 import { ISupplier } from "@interfaces/serverInterfaces";
 import { getImage } from "../../utils/imageUtils";
 import { useLocation } from "@/hooks/location";
+import { EntityCells } from "@/cells/Entity";
 
 export const useColumns = () => {
-  const navigate = useNavigate();
-  const { data: locationLookup } = useLocation.Lookup();
+  const { refetch: getLocationLK } = useLocation.Lookup();
 
   const columns: DataColumn[] = [
     {
       dataField: "name",
       caption: "Name",
       dataType: "string",
-      renderComponent(e) {
-        return (
-          <Anchor
-            onClick={() => navigate(`/supplier/${(e as ISupplier)?.id}`)}
-            target="_blank"
-            underline="always"
-          >
-            {(e as ISupplier).name}
-          </Anchor>
-        );
-      },
     },
     {
       caption: "Image",
@@ -49,23 +37,9 @@ export const useColumns = () => {
       caption: "Location",
       dataType: "string",
       lookup: {
-        data: locationLookup || [],
+        dataSource: getLocationLK,
       },
-      renderComponent(e) {
-        const supplier = e as ISupplier;
-        const { data: location } = useLocation.Get(supplier.locationId || "");
-        return (
-          <Anchor
-            onClick={() =>
-              navigate(`/location/${(e as ISupplier)?.locationId}`)
-            }
-            target="_blank"
-            underline="always"
-          >
-            {location?.name}
-          </Anchor>
-        );
-      },
+      renderComponent: (e) => EntityCells.Location((e as ISupplier).locationId),
     },
     {
       dataField: "contactName",
@@ -106,40 +80,5 @@ export const useColumns = () => {
     },
   ];
 
-  const excelColumns: ExcelColumn[] = [
-    {
-      caption: "Name",
-      validate(value) {
-        return value !== null;
-      },
-      errorText: "Name is required",
-    },
-    {
-      caption: "Location",
-      nullable: true,
-    },
-    {
-      caption: "Contact Name",
-    },
-    {
-      caption: "Contact Email",
-    },
-    {
-      caption: "Contact Phone",
-    },
-    {
-      caption: "Website",
-    },
-    {
-      caption: "Fax",
-    },
-    {
-      caption: "Image",
-    },
-    {
-      caption: "Notes",
-    },
-  ];
-
-  return { columns, excelColumns };
+  return { columns };
 };

@@ -1,29 +1,22 @@
-import { ExcelColumn, DataColumn } from "@interfaces/gridTableInterfaces";
+import { DataColumn } from "@interfaces/gridTableInterfaces";
 import {
   CategoryType,
   IAccessory,
   IUserProduct,
 } from "@interfaces/serverInterfaces";
-import { Anchor, Button, Image } from "@mantine/core";
-import { useNavigate } from "react-router-dom";
+import { Button, Image } from "@mantine/core";
 import { getImage } from "../../utils/imageUtils";
 import { openCheckInModal } from "../../modals/modals";
 import { initialUserProduct } from "../../initials/initials";
 import { useAccessory } from "@/hooks/accessory";
 import { useCategory } from "@/hooks/category";
-import { useLocation } from "@/hooks/location";
-import { useProductStatus } from "@/hooks/productStatus";
+import { EntityCells } from "@/cells/Entity";
 import base_accessory from "@assets/baseProductImages/base_accessory.png";
 import UserProductQuantityCell from "@/cells/UserProductQuantityCell";
 
 export const useColumns = () => {
-  const navigate = useNavigate();
   const { mutate: checkIn } = useAccessory.CheckIn();
-  // const { mutate: checkOut } = useAccessory.CheckOut();
   const { data: categories } = useCategory.GetAll();
-  const { data: locationLookup } = useLocation.Lookup();
-  const { data: productStatusLookup, refetch: fetchProductStatus } =
-    useProductStatus.Lookup();
 
   const onCheckInHandler = (data: IUserProduct) => {
     checkIn({
@@ -50,26 +43,6 @@ export const useColumns = () => {
     {
       dataField: "name",
       caption: "Name",
-      dataType: "string",
-      renderComponent(e) {
-        return (
-          <Anchor
-            onClick={() => navigate(`/accessory/${(e as IAccessory)?.id}`)}
-            target="_blank"
-            underline="always"
-          >
-            {(e as IAccessory).name}
-          </Anchor>
-        );
-      },
-    },
-    {
-      dataField: "productStatusId",
-      caption: "Status",
-      lookup: {
-        data: productStatusLookup || [],
-        dataSource: fetchProductStatus,
-      },
       dataType: "string",
     },
     {
@@ -102,29 +75,12 @@ export const useColumns = () => {
               label: category.name,
             })) || [],
       },
+      renderComponent: (e) =>
+        EntityCells.Category((e as IAccessory).categoryId),
     },
     {
       caption: "Model",
       dataField: "modelNo",
-      dataType: "action",
-      renderComponent(e) {
-        return (
-          <Anchor
-            onClick={() => navigate(`/accessory/${(e as IAccessory)?.id}`)}
-            target="_blank"
-            underline="always"
-          >
-            {(e as IAccessory).modelNo}
-          </Anchor>
-        );
-      },
-    },
-    {
-      caption: "Location",
-      dataField: "locationId",
-      lookup: {
-        data: locationLookup || [],
-      },
       dataType: "string",
     },
     {
@@ -178,71 +134,5 @@ export const useColumns = () => {
     },
   ];
 
-  const excelColumns: ExcelColumn[] = [
-    {
-      caption: "Branch",
-      validate(value) {
-        return value !== null;
-      },
-      errorText: "Branch is required",
-    },
-    {
-      caption: "Name",
-      validate(value) {
-        return value !== null;
-      },
-      errorText: "Name is required",
-    },
-    {
-      caption: "Category",
-      validate(value) {
-        return value !== null;
-      },
-      errorText: "Category is required",
-    },
-    {
-      caption: "Model",
-      validate(value) {
-        return value !== null;
-      },
-      errorText: "Model is required",
-    },
-    {
-      caption: "Total",
-      validate(value) {
-        if (value === null || value < 0) return false;
-        return true;
-      },
-      errorText: "Quantity must be a positive number",
-    },
-    {
-      caption: "Purchase Cost",
-      validate(value) {
-        if (value !== null && value < 0) return false;
-        return true;
-      },
-      errorText: "Purchase Cost must be a positive number",
-    },
-    {
-      caption: "Order No",
-    },
-    {
-      caption: "Purchase Date",
-    },
-    {
-      caption: "Notes",
-    },
-    {
-      caption: "Manufacturer",
-      nullable: true,
-    },
-    {
-      caption: "Supplier",
-    },
-    {
-      caption: "Image",
-    },
-  ];
-
-  return { columns, excelColumns };
+  return { columns };
 };

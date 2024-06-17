@@ -1,3 +1,5 @@
+@import "../../base.scss";
+
 .product-card-container {
   display: flex;
   width: 100%;
@@ -36,7 +38,7 @@
       border-top-left-radius: 4px;
       border-bottom: none;
       .home-item__header__title {
-        font-size: 1em;
+        font-size: $fontsize-xl;
         font-weight: 600;
       }
       .home-item__header-icon {
