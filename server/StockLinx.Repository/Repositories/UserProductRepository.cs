@@ -27,40 +27,35 @@ namespace StockLinx.Repository.Repositories.EF_Core
         {
             Guid productId = Guid.Empty;
             string productType = string.Empty;
-            string productRoute = string.Empty;
-            string productName = string.Empty;
+            string productTag = string.Empty;
 
             if (entity.AccessoryId != null)
             {
                 Accessory accessory = await _accessoryRepository.GetByIdAsync((Guid)entity.AccessoryId);
                 productId = accessory.Id;
                 productType = "Accessory";
-                productRoute = $"/accessory/{accessory.Id}";
-                productName = accessory.Name;
+                productTag = accessory.Tag;
             }
             else if (entity.AssetId != null)
             {
                 Asset asset = await _assetRepository.GetByIdAsync((Guid)entity.AssetId);
                 productId = asset.Id;
                 productType = "Asset";
-                productRoute = $"/asset/{asset.Id}";
-                productName = asset.Name;
+                productTag = asset.Tag;
             }
             else if (entity.ConsumableId != null)
             {
                 Consumable consumable = await _consumableRepository.GetByIdAsync((Guid)entity.ConsumableId);
                 productId = consumable.Id;
                 productType = "Consumable";
-                productRoute = $"/consumable/{consumable.Id}";
-                productName = consumable.Name;
+                productTag = consumable.Tag;
             }
             else if (entity.LicenseId != null)
             {
                 License license = await _licenseRepository.GetByIdAsync((Guid)entity.LicenseId);
                 productId = license.Id;
                 productType = "License";
-                productRoute = $"/license/{license.Id}";
-                productName = license.Name;
+                productTag = license.Tag;
             }
             return new UserProductDto()
             {
@@ -70,8 +65,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
                 AssignDate = entity.AssignDate,
                 ProductId = productId,
                 ProductType = productType,
-                ProductRoute = productRoute,
-                ProductName = productName,
+                ProductTag = productTag,
                 Notes = entity.Notes,
                 Quantity = entity.Quantity,
                 UserId = entity.UserId,

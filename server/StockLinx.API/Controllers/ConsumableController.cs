@@ -142,8 +142,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                await _consumableService.CheckOutAsync(dto);
-                return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+                UserProductDto result = await _consumableService.CheckOutAsync(dto);
+                return CreateActionResult(CustomResponseDto<UserProductDto>.Success(200, result));
             }
             catch (Exception ex)
             {

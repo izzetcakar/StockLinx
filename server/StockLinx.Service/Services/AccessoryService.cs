@@ -228,7 +228,7 @@ namespace StockLinx.Service.Services
             return await _userProductRepository.GetDtoAsync(userProduct);
         }
 
-        public async Task CheckOutAsync(UserProductCheckOutDto checkOutDto)
+        public async Task<UserProductDto> CheckOutAsync(UserProductCheckOutDto checkOutDto)
         {
             UserProduct userProduct = await _userProductRepository.GetByIdAsync(
                 checkOutDto.UserProductId
@@ -245,7 +245,8 @@ namespace StockLinx.Service.Services
                         accessory.Name,
                         checkOutDto.Notes ?? "Checked out " + checkOutDto.Quantity + " units"
                     );
-                    break;
+                    await _unitOfWork.CommitAsync();
+                    return null;
                 case > 0:
                     throw new Exception(
                         "Quantity must be less than or equal to the quantity in stock"
@@ -261,10 +262,9 @@ namespace StockLinx.Service.Services
                         accessory.Name,
                         checkOutDto.Notes ?? "Checked out " + checkOutDto.Quantity + " units"
                     );
-                    break;
+                    await _unitOfWork.CommitAsync();
+                    return await _userProductRepository.GetDtoAsync(newUserProduct);
             }
-
-            await _unitOfWork.CommitAsync();
         }
 
         public async Task CheckTagExistAsync(string tag)

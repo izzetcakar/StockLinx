@@ -150,8 +150,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                await _licenseService.UserCheckOutAsync(dto);
-                return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
+                UserProductDto result = await _licenseService.UserCheckOutAsync(dto);
+                return CreateActionResult(CustomResponseDto<UserProductDto>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -164,8 +164,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                await _licenseService.AssetCheckOutAsync(dto);
-                return CreateActionResult(CustomResponseDto<NoContentResult>.Success(200));
+                AssetProductDto result = await _licenseService.AssetCheckOutAsync(dto);
+                return CreateActionResult(CustomResponseDto<AssetProductDto>.Success(200, result));
             }
             catch (Exception ex)
             {
