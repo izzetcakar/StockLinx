@@ -17,20 +17,20 @@
 }
 .gridtable {
   --global-border-color: #dce0e5bc;
-  display: block;
   table-layout: fixed;
   border-collapse: collapse;
-  max-width: 100%;
+  width: 100%;
   height: 100%;
   border: 1px solid var(--global-border-color);
   background-color: white;
   border-radius: 4px;
   border-spacing: 0;
-  font-size: $fontsize-sm;
   color: #333;
   overflow: auto;
-  // line-height: 1.33334;
+  font-size: $fontsize-sm;
   font-family: "Helvetica Neue", "Segoe UI", helvetica, verdana, sans-serif;
+  // display: block;
+  // line-height: 1.33334;
 
   // empty-cells: show;
   .gridtable__toolbar {
@@ -92,29 +92,11 @@
   box-shadow: inset -1px 0 0 var(--global-border-color),
     inset 0 0 0 var(--global-border-color);
 }
-.gridtable thead {
-  display: block;
-  overflow: auto;
-  max-width: 100%;
-}
 .gridtable tbody {
   display: block;
   overflow: auto;
   max-width: 100%;
   height: 100%;
-  font-weight: 400;
-
-
-}
-.gridtable__header__row {
-  display: flex;
-  max-width: 100%;
-}
-.gridtable__header__row__cell {
-  width: 100%;
-  word-wrap: none;
-  white-space: nowrap;
-  overflow: hidden;
 }
 .gridtable__footer__row {
   display: flex;

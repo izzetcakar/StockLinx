@@ -47,12 +47,19 @@ const GridtableContent: React.FC<GridtableProps> = ({
     onDataColumnsChange();
   }, [columns.length]);
 
+  const getColSpan = () => {
+    let colSpan = visibleColumns.length;
+    if (enableSelectActions) colSpan++;
+    if (enableEditActions) colSpan++;
+    return colSpan;
+  };
+
   return (
     <table className="gridtable">
       <tbody>
         {enableToolbar ? (
-          <tr className="gridtable__header__row">
-            <td className="gridtable__header__row__cell">
+          <tr>
+            <td colSpan={getColSpan()}>
               <TableToolbar
                 itemKey={keyfield}
                 data={data}
