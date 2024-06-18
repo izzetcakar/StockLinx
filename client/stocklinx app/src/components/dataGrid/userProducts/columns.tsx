@@ -1,11 +1,6 @@
 import { DataColumn } from "@interfaces/gridTableInterfaces";
-import { Anchor } from "@mantine/core";
-import { useNavigate } from "react-router-dom";
-import { UserProductDto } from "../../../interfaces/dtos";
 
 export const useColumns = () => {
-  const navigate = useNavigate();
-
   const columns: DataColumn[] = [
     {
       dataField: "productType",
@@ -13,17 +8,9 @@ export const useColumns = () => {
       dataType: "string",
     },
     {
-      dataField: "productName",
+      dataField: "productTag",
       caption: "Name",
       dataType: "string",
-      renderComponent(e) {
-        const route = (e as UserProductDto)?.productRoute;
-        return (
-          <Anchor onClick={() => navigate(route ? route : "")}>
-            {(e as UserProductDto).productName}
-          </Anchor>
-        );
-      },
     },
     {
       dataField: "quantity",

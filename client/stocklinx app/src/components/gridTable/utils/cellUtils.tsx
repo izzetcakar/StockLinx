@@ -6,16 +6,15 @@ export const GetLookupValue = (value: any, data?: LookupData[]) => {
 };
 
 export const RenderCell: React.FC<RenderCellProps> = ({ obj, column }) => {
-  if (column.renderComponent) {
-    return column.renderComponent(obj);
-  }
-
   const value = (
     obj as {
       [key: string | number]: any;
     }
   )[column.dataField];
 
+  if (column.renderComponent) {
+    return column.renderComponent(obj);
+  }
   if (column.lookup?.data) {
     return GetLookupValue(value, column.lookup.data);
   }

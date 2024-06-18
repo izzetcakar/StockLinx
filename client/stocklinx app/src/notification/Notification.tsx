@@ -23,8 +23,13 @@ export const openNotificationSuccess = (message: string) => {
     autoClose: 2000,
     withCloseButton: true,
     styles: () => ({
-      title: { fontSize: rem(13) },
-      description: { fontSize: rem(13) },
+      title: { fontSize: rem(14) },
+      description: { fontSize: rem(14) },
+      root: {
+        padding: rem(15),
+        marginBottom: rem(20),
+        border: "1px solid #d9d9d9",
+      },
     }),
     icon: <IconCheck style={{ width: rem(20), height: rem(20) }} />,
     color: "teal",
@@ -40,6 +45,11 @@ export const openNotificationError = (title: string, message: string) => {
     styles: () => ({
       title: { fontSize: rem(13) },
       description: { fontSize: rem(13) },
+      root: {
+        padding: rem(15),
+        marginBottom: rem(20),
+        border: "1px solid #d9d9d9",
+      },
     }),
     icon: <IconX style={{ width: rem(20), height: rem(20) }} />,
     color: "red",

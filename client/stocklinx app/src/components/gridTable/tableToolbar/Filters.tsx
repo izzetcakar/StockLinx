@@ -22,7 +22,7 @@ const Filters: React.FC<FiltersProps> = ({ filters, applyFilters }) => {
   };
 
   return (
-    <Flex wrap={"wrap"} gap={10} align={"flex-end"}>
+    <Flex gap={10} align={"flex-end"}>
       {filters.map((filter) => {
         return (
           <div key={filter.columnId}>

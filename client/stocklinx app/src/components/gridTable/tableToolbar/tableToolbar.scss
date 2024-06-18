@@ -5,6 +5,9 @@
   height: fit-content;
   padding: 10px;
   gap: 10px;
+  overflow-x: auto;
+  word-wrap: none;
+  white-space: nowrap;
 
   .gridtable__toolbar__actions {
     display: flex;

@@ -153,7 +153,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <GenericProvider>
         <GenericStateProvider>
           <ModalsProvider>
-            <Notifications w={"fit-content"} position="top-right" />
+            <Notifications w={"fit-content"} position="bottom-right" />
             <App />
           </ModalsProvider>
         </GenericStateProvider>
