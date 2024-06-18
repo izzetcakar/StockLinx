@@ -2,8 +2,9 @@ import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 import {
   AssetProductCheckInDto,
   AssetProductCheckOutDto,
+  AssetProductDto,
 } from "@interfaces/dtos";
-import { IAssetProduct, IComponent } from "@interfaces/serverInterfaces";
+import { IComponent } from "@interfaces/serverInterfaces";
 import { request } from "@request";
 import { baseRequests } from "@/utils/requestUtils";
 
@@ -47,22 +48,26 @@ const lookup = () => {
 
 const checkIn = async (
   checkInDto: AssetProductCheckInDto
-): Promise<IAssetProduct> => {
+): Promise<AssetProductDto> => {
   return (
-    await request<IAssetProduct>({
+    await request<AssetProductDto>({
       requestUrl: requestUrl + "checkin",
       apiType: "post",
       queryData: checkInDto,
     })
-  ).data as IAssetProduct;
+  ).data as AssetProductDto;
 };
 
-const checkOut = (checkOutDto: AssetProductCheckOutDto) => {
-  return request<IComponent>({
-    requestUrl: requestUrl + "checkout",
-    apiType: "post",
-    queryData: checkOutDto,
-  });
+const checkOut = async (
+  checkOutDto: AssetProductCheckOutDto
+): Promise<AssetProductDto> => {
+  return (
+    await request<AssetProductDto>({
+      requestUrl: requestUrl + "checkout",
+      apiType: "post",
+      queryData: checkOutDto,
+    })
+  ).data as AssetProductDto;
 };
 
 export const componentRequests = {

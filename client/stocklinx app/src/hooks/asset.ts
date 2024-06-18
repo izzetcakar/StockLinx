@@ -5,6 +5,9 @@ import { useMutation } from "react-query";
 import { baseHooks } from "./baseHooks";
 import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 import { IAsset, IUserProduct } from "@/interfaces/serverInterfaces";
+import { setAssetCheckStatus } from "@/utils/checkInOutUtils";
+import { closeModal } from "@/modals/modals";
+import { openNotificationSuccess } from "@/notification/Notification";
 
 export enum assetKeys {
   CHECK_IN_ASSET = "CHECK_IN_ASSET",
@@ -57,40 +60,28 @@ const CheckIn = () => {
   return useMutation({
     mutationKey: assetKeys.CHECK_IN_ASSET,
     mutationFn: (dto: AssetCheckInDto) => assetRequests.checkIn(dto),
-    onSuccess: (dto, checkInDto) => {
+    onSuccess: (res, req) => {
       queryClient.invalidateQueries("FETCH_ALL_USERPRODUCT");
       queryClient.setQueryData<IUserProduct[]>(
         "FETCH_ALL_USERPRODUCT",
         (data) => {
-          return data ? [...data, dto] : [dto];
+          return data ? [...data, res] : [res];
         }
       );
       queryClient.setQueryData<IUserProduct[]>("FILTER_USERPRODUCT", (data) => {
-        return data ? [...data, dto] : [dto];
+        return data ? [...data, res] : [res];
       });
       queryClient.setQueryData<IAsset[]>("FETCH_ALL_ASSET", (data) => {
-        return data
-          ? data.map((asset) =>
-              asset.id === checkInDto.assetId
-                ? { ...asset, productStatusId: checkInDto.productStatusId }
-                : asset
-            )
-          : [];
+        return data ? setAssetCheckStatus(data, req) : [];
       });
       queryClient.setQueryData<IAsset[]>("FILTER_ASSET", (data) => {
-        return data
-          ? data.map((asset) =>
-              asset.id === checkInDto.assetId
-                ? { ...asset, productStatusId: checkInDto.productStatusId }
-                : asset
-            )
-          : [];
+        return data ? setAssetCheckStatus(data, req) : [];
       });
-      queryClient.setQueryData(["GET_ASSET", checkInDto.assetId], (data) => {
-        return data
-          ? { ...data, productStatusId: checkInDto.productStatusId }
-          : data;
+      queryClient.setQueryData(["GET_ASSET", req.assetId], (data) => {
+        return data ? { ...data, productStatusId: req.productStatusId } : data;
       });
+      closeModal("asset_checkIn_modal");
+      openNotificationSuccess("Asset Checked In Successfully");
     },
   });
 };
@@ -99,41 +90,31 @@ const CheckOut = () => {
   return useMutation({
     mutationKey: assetKeys.CHECK_OUT_ASSET,
     mutationFn: (dto: AssetCheckOutDto) => assetRequests.checkOut(dto),
-    onSuccess: (_, dto) => {
+    onSuccess: (_, req) => {
       queryClient.setQueryData<IUserProduct[]>(
         "FETCH_ALL_USERPRODUCT",
         (data) => {
           return data
-            ? data?.filter((userProduct) => userProduct.assetId !== dto.assetId)
+            ? data?.filter((userProduct) => userProduct.assetId !== req.assetId)
             : [];
         }
       );
       queryClient.setQueryData<IUserProduct[]>("FILTER_USERPRODUCT", (data) => {
         return data
-          ? data?.filter((userProduct) => userProduct.assetId !== dto.assetId)
+          ? data?.filter((userProduct) => userProduct.assetId !== req.assetId)
           : [];
       });
       queryClient.setQueryData<IAsset[]>("FETCH_ALL_ASSET", (data) => {
-        return data
-          ? data.map((asset) =>
-              asset.id === dto.assetId
-                ? { ...asset, productStatusId: dto.productStatusId }
-                : asset
-            )
-          : [];
+        return data ? setAssetCheckStatus(data, req) : [];
       });
       queryClient.setQueryData<IAsset[]>("FILTER_ASSET", (data) => {
-        return data
-          ? data.map((asset) =>
-              asset.id === dto.assetId
-                ? { ...asset, productStatusId: dto.productStatusId }
-                : asset
-            )
-          : [];
+        return data ? setAssetCheckStatus(data, req) : [];
       });
-      queryClient.setQueryData(["GET_ASSET", dto.assetId], (data) => {
-        return data ? { ...data, productStatusId: dto.productStatusId } : data;
+      queryClient.setQueryData(["GET_ASSET", req.assetId], (data) => {
+        return data ? { ...data, productStatusId: req.productStatusId } : data;
       });
+      closeModal("asset_checkOut_modal");
+      openNotificationSuccess("Asset Checked Out Successfully");
     },
   });
 };

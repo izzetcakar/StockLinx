@@ -7,6 +7,9 @@ import { componentRequests } from "@/server/requests/component";
 import { useMutation } from "react-query";
 import { baseHooks } from "./baseHooks";
 import { QueryFilter } from "@/interfaces/gridTableInterfaces";
+import { setCheckedRecord } from "@/utils/checkInOutUtils";
+import { closeModal } from "@/modals/modals";
+import { openNotificationSuccess } from "@/notification/Notification";
 
 export enum componentKeys {
   CHECK_IN_COMPONENT = "CHECK_IN_COMPONENT",
@@ -59,8 +62,18 @@ const CheckIn = () => {
   return useMutation({
     mutationKey: componentKeys.CHECK_IN_COMPONENT,
     mutationFn: (dto: AssetProductCheckInDto) => componentRequests.checkIn(dto),
-    onSuccess: () => {
-      queryClient.invalidateQueries("FETCH_ALL_ASSETPRODUCT");
+    onSuccess: (res) => {
+      queryClient.setQueryData("FETCH_ALL_ASSETPRODUCT", (data: any) => {
+        return setCheckedRecord(data, res);
+      });
+      queryClient.setQueryData("FILTER_ASSETPRODUCT", (data: any) => {
+        return setCheckedRecord(data, res);
+      });
+      queryClient.setQueryData(["FETCH_ASSETPRODUCT", res.id], () => {
+        return res;
+      });
+      closeModal("product_checkIn_modal");
+      openNotificationSuccess("Component Checked In Successfully");
     },
   });
 };
@@ -70,8 +83,18 @@ const CheckOut = () => {
     mutationKey: componentKeys.CHECK_OUT_COMPONENT,
     mutationFn: (dto: AssetProductCheckOutDto) =>
       componentRequests.checkOut(dto),
-    onSuccess: () => {
-      queryClient.invalidateQueries("FETCH_ALL_ASSETPRODUCT");
+    onSuccess: (res) => {
+      queryClient.setQueryData("FETCH_ALL_ASSETPRODUCT", (data: any) => {
+        return setCheckedRecord(data, res);
+      });
+      queryClient.setQueryData("FILTER_ASSETPRODUCT", (data: any) => {
+        return setCheckedRecord(data, res);
+      });
+      queryClient.setQueryData(["FETCH_ASSETPRODUCT", res.id], () => {
+        return res;
+      });
+      closeModal("asset_product_checkOut_modal");
+      openNotificationSuccess("Component Checked Out Successfully");
     },
   });
 };

@@ -7,6 +7,9 @@ import { accessoryRequests } from "@/server/requests/accessory";
 import { useMutation } from "react-query";
 import { baseHooks } from "./baseHooks";
 import { QueryFilter } from "@/interfaces/gridTableInterfaces";
+import { setCheckedRecord } from "@/utils/checkInOutUtils";
+import { closeModal } from "@/modals/modals";
+import { openNotificationSuccess } from "@/notification/Notification";
 
 export enum accessoryKeys {
   CHECK_IN_ACCESSORY = "CHECK_IN_ACCESSORY",
@@ -59,8 +62,18 @@ const CheckIn = () => {
   return useMutation({
     mutationKey: accessoryKeys.CHECK_IN_ACCESSORY,
     mutationFn: (dto: UserProductCheckInDto) => accessoryRequests.checkIn(dto),
-    onSuccess: () => {
-      queryClient.invalidateQueries("FETCH_ALL_USERPRODUCT");
+    onSuccess: (res) => {
+      queryClient.setQueryData("FETCH_ALL_USERPRODUCT", (data: any) => {
+        return setCheckedRecord(data, res);
+      });
+      queryClient.setQueryData("FILTER_USERPRODUCT", (data: any) => {
+        return setCheckedRecord(data, res);
+      });
+      queryClient.setQueryData(["FETCH_USERPRODUCT", res.id], () => {
+        return res;
+      });
+      closeModal("product_checkIn_modal");
+      openNotificationSuccess("Accessory Check In Successfully");
     },
   });
 };
@@ -70,8 +83,18 @@ const CheckOut = () => {
     mutationKey: accessoryKeys.CHECK_OUT_ACCESSORY,
     mutationFn: (dto: UserProductCheckOutDto) =>
       accessoryRequests.checkOut(dto),
-    onSuccess: () => {
-      queryClient.invalidateQueries("FETCH_ALL_USERPRODUCT");
+    onSuccess: (res) => {
+      queryClient.setQueryData("FETCH_ALL_USERPRODUCT", (data: any) => {
+        return setCheckedRecord(data, res);
+      });
+      queryClient.setQueryData("FILTER_USERPRODUCT", (data: any) => {
+        return setCheckedRecord(data, res);
+      });
+      queryClient.setQueryData(["FETCH_USERPRODUCT", res.id], () => {
+        return res;
+      });
+      closeModal("user_product_checkOut_modal");
+      openNotificationSuccess("Accessory Checked Out Successfully");
     },
   });
 };

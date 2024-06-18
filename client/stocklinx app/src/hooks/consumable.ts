@@ -7,6 +7,9 @@ import { consumableRequests } from "@/server/requests/consumable";
 import { useMutation } from "react-query";
 import { baseHooks } from "./baseHooks";
 import { QueryFilter } from "@/interfaces/gridTableInterfaces";
+import { setCheckedRecord } from "@/utils/checkInOutUtils";
+import { closeModal } from "@/modals/modals";
+import { openNotificationSuccess } from "@/notification/Notification";
 
 export enum consumableKeys {
   CHECK_IN_CONSUMABLE = "CHECK_IN_CONSUMABLE",
@@ -59,8 +62,18 @@ const CheckIn = () => {
   return useMutation({
     mutationKey: consumableKeys.CHECK_IN_CONSUMABLE,
     mutationFn: (dto: UserProductCheckInDto) => consumableRequests.checkIn(dto),
-    onSuccess: () => {
-      queryClient.invalidateQueries("FETCH_ALL_USERPRODUCT");
+    onSuccess: (res) => {
+      queryClient.setQueryData("FETCH_ALL_USERPRODUCT", (data: any) => {
+        return setCheckedRecord(data, res);
+      });
+      queryClient.setQueryData("FILTER_USERPRODUCT", (data: any) => {
+        return setCheckedRecord(data, res);
+      });
+      queryClient.setQueryData(["FETCH_USERPRODUCT", res.id], () => {
+        return res;
+      });
+      closeModal("product_checkIn_modal");
+      openNotificationSuccess("Consumable checked in successfully");
     },
   });
 };
@@ -70,8 +83,18 @@ const CheckOut = () => {
     mutationKey: consumableKeys.CHECK_OUT_CONSUMABLE,
     mutationFn: (dto: UserProductCheckOutDto) =>
       consumableRequests.checkOut(dto),
-    onSuccess: () => {
-      queryClient.invalidateQueries("FETCH_ALL_USERPRODUCT");
+    onSuccess: (res) => {
+      queryClient.setQueryData("FETCH_ALL_USERPRODUCT", (data: any) => {
+        return setCheckedRecord(data, res);
+      });
+      queryClient.setQueryData("FILTER_USERPRODUCT", (data: any) => {
+        return setCheckedRecord(data, res);
+      });
+      queryClient.setQueryData(["FETCH_USERPRODUCT", res.id], () => {
+        return res;
+      });
+      closeModal("user_product_checkOut_modal");
+      openNotificationSuccess("Consumable checked out successfully");
     },
   });
 };

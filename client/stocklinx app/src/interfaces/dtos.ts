@@ -8,8 +8,7 @@ export interface UserProductDto extends BaseDto {
   userId: string;
   productId: string;
   productType: string;
-  productName: string;
-  productRoute?: string | null;
+  productTag: string;
   assignDate: Date;
   notes: string | null;
   quantity: number;

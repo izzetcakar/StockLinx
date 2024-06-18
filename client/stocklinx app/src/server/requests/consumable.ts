@@ -2,8 +2,9 @@ import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 import {
   UserProductCheckInDto,
   UserProductCheckOutDto,
+  UserProductDto,
 } from "@interfaces/dtos";
-import { IConsumable, IUserProduct } from "@interfaces/serverInterfaces";
+import { IConsumable } from "@interfaces/serverInterfaces";
 import { request } from "@request";
 import { baseRequests } from "@/utils/requestUtils";
 
@@ -47,22 +48,26 @@ const lookup = () => {
 
 const checkIn = async (
   checkInDto: UserProductCheckInDto
-): Promise<IUserProduct> => {
+): Promise<UserProductDto> => {
   return (
-    await request<IUserProduct>({
+    await request<UserProductDto>({
       requestUrl: requestUrl + "checkin",
       apiType: "post",
       queryData: checkInDto,
     })
-  ).data as IUserProduct;
+  ).data as UserProductDto;
 };
 
-const checkOut = (checkOutDto: UserProductCheckOutDto) => {
-  return request<IConsumable>({
-    requestUrl: requestUrl + "checkout",
-    apiType: "post",
-    queryData: checkOutDto,
-  });
+const checkOut = async (
+  checkOutDto: UserProductCheckOutDto
+): Promise<UserProductDto> => {
+  return (
+    await request<UserProductDto>({
+      requestUrl: requestUrl + "checkout",
+      apiType: "post",
+      queryData: checkOutDto,
+    })
+  ).data as UserProductDto;
 };
 
 export const consumableRequests = {

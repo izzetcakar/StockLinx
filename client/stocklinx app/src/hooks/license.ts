@@ -9,6 +9,9 @@ import { licenseRequests } from "@/server/requests/license";
 import { useMutation } from "react-query";
 import { baseHooks } from "./baseHooks";
 import { QueryFilter } from "@/interfaces/gridTableInterfaces";
+import { setCheckedRecord } from "@/utils/checkInOutUtils";
+import { closeModal } from "@/modals/modals";
+import { openNotificationSuccess } from "@/notification/Notification";
 
 export enum licenseKeys {
   USER_CHECK_IN_LICENSE = "USER_CHECK_IN_LICENSE",
@@ -64,8 +67,18 @@ const UserCheckIn = () => {
     mutationKey: licenseKeys.USER_CHECK_IN_LICENSE,
     mutationFn: (dto: UserProductCheckInDto) =>
       licenseRequests.userCheckIn(dto),
-    onSuccess: () => {
-      queryClient.invalidateQueries("FETCH_ALL_USERPRODUCT");
+    onSuccess: (res) => {
+      queryClient.setQueryData("FETCH_ALL_USERPRODUCT", (data: any) => {
+        return setCheckedRecord(data, res);
+      });
+      queryClient.setQueryData("FILTER_USERPRODUCT", (data: any) => {
+        return setCheckedRecord(data, res);
+      });
+      queryClient.setQueryData(["FETCH_USERPRODUCT", res.id], () => {
+        return res;
+      });
+      closeModal("product_checkIn_modal");
+      openNotificationSuccess("License checked in successfully");
     },
   });
 };
@@ -75,8 +88,18 @@ const UserCheckOut = () => {
     mutationKey: licenseKeys.USER_CHECK_OUT_LICENSE,
     mutationFn: (dto: UserProductCheckOutDto) =>
       licenseRequests.userCheckOut(dto),
-    onSuccess: () => {
-      queryClient.invalidateQueries("FETCH_ALL_USERPRODUCT");
+    onSuccess: (res) => {
+      queryClient.setQueryData("FETCH_ALL_USERPRODUCT", (data: any) => {
+        return setCheckedRecord(data, res);
+      });
+      queryClient.setQueryData("FILTER_USERPRODUCT", (data: any) => {
+        return setCheckedRecord(data, res);
+      });
+      queryClient.setQueryData(["FETCH_USERPRODUCT", res.id], () => {
+        return res;
+      });
+      closeModal("user_product_checkOut_modal");
+      openNotificationSuccess("License checked out successfully");
     },
   });
 };
@@ -86,8 +109,18 @@ const AssetCheckIn = () => {
     mutationKey: licenseKeys.ASSET_CHECK_IN_LICENSE,
     mutationFn: (dto: AssetProductCheckInDto) =>
       licenseRequests.assetCheckIn(dto),
-    onSuccess: () => {
-      queryClient.invalidateQueries("FETCH_ALL_ASSETPRODUCT");
+    onSuccess: (res) => {
+      queryClient.setQueryData("FETCH_ALL_ASSETPRODUCT", (data: any) => {
+        return setCheckedRecord(data, res);
+      });
+      queryClient.setQueryData("FILTER_ASSETPRODUCT", (data: any) => {
+        return setCheckedRecord(data, res);
+      });
+      queryClient.setQueryData(["FETCH_ASSETPRODUCT", res.id], () => {
+        return res;
+      });
+      closeModal("product_checkIn_modal");
+      openNotificationSuccess("License checked in successfully");
     },
   });
 };
@@ -97,8 +130,18 @@ const AssetCheckOut = () => {
     mutationKey: licenseKeys.ASSET_CHECK_OUT_LICENSE,
     mutationFn: (dto: AssetProductCheckOutDto) =>
       licenseRequests.assetCheckOut(dto),
-    onSuccess: () => {
-      queryClient.invalidateQueries("FETCH_ALL_ASSETPRODUCT");
+    onSuccess: (res) => {
+      queryClient.setQueryData("FETCH_ALL_ASSETPRODUCT", (data: any) => {
+        return setCheckedRecord(data, res);
+      });
+      queryClient.setQueryData("FILTER_ASSETPRODUCT", (data: any) => {
+        return setCheckedRecord(data, res);
+      });
+      queryClient.setQueryData(["FETCH_ASSETPRODUCT", res.id], () => {
+        return res;
+      });
+      closeModal("asset_product_checkOut_modal");
+      openNotificationSuccess("License checked out successfully");
     },
   });
 };

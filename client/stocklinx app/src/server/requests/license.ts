@@ -2,14 +2,12 @@ import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 import {
   AssetProductCheckInDto,
   AssetProductCheckOutDto,
+  AssetProductDto,
   UserProductCheckInDto,
   UserProductCheckOutDto,
+  UserProductDto,
 } from "@interfaces/dtos";
-import {
-  IAssetProduct,
-  ILicense,
-  IUserProduct,
-} from "@interfaces/serverInterfaces";
+import { ILicense } from "@interfaces/serverInterfaces";
 import { request } from "@request";
 import { baseRequests } from "@/utils/requestUtils";
 
@@ -53,42 +51,50 @@ const lookup = () => {
 
 const userCheckIn = async (
   checkInDto: UserProductCheckInDto
-): Promise<IUserProduct> => {
+): Promise<UserProductDto> => {
   return (
-    await request<IUserProduct>({
+    await request<UserProductDto>({
       requestUrl: requestUrl + "checkin/user",
       apiType: "post",
       queryData: checkInDto,
     })
-  ).data as IUserProduct;
+  ).data as UserProductDto;
 };
 
 const assetCheckIn = async (
   checkInDto: AssetProductCheckInDto
-): Promise<IAssetProduct> => {
+): Promise<AssetProductDto> => {
   return (
-    await request<IAssetProduct>({
+    await request<AssetProductDto>({
       requestUrl: requestUrl + "checkin/asset",
       apiType: "post",
       queryData: checkInDto,
     })
-  ).data as IAssetProduct;
+  ).data as AssetProductDto;
 };
 
-const userCheckOut = (checkOutDto: UserProductCheckOutDto) => {
-  return request<ILicense>({
-    requestUrl: requestUrl + "checkout/user",
-    apiType: "post",
-    queryData: checkOutDto,
-  });
+const userCheckOut = async (
+  checkOutDto: UserProductCheckOutDto
+): Promise<UserProductDto> => {
+  return (
+    await request<UserProductDto>({
+      requestUrl: requestUrl + "checkout/user",
+      apiType: "post",
+      queryData: checkOutDto,
+    })
+  ).data as UserProductDto;
 };
 
-const assetCheckOut = (checkOutDto: AssetProductCheckOutDto) => {
-  return request<ILicense>({
-    requestUrl: requestUrl + "checkout/asset",
-    apiType: "post",
-    queryData: checkOutDto,
-  });
+const assetCheckOut = async (
+  checkOutDto: AssetProductCheckOutDto
+): Promise<AssetProductDto> => {
+  return (
+    await request<AssetProductDto>({
+      requestUrl: requestUrl + "checkout/asset",
+      apiType: "post",
+      queryData: checkOutDto,
+    })
+  ).data as AssetProductDto;
 };
 
 export const licenseRequests = {
