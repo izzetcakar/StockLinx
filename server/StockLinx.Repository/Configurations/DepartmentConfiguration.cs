@@ -12,9 +12,9 @@ namespace StockLinx.Repository.Configurations
             builder.Property(x => x.Name).IsRequired();
 
             builder
-                .HasOne(x => x.Branch)
+                .HasOne(x => x.Company)
                 .WithMany(x => x.Departments)
-                .HasForeignKey(x => x.BranchId);
+                .HasForeignKey(x => x.CompanyId);
             builder
                 .HasOne(x => x.Location)
                 .WithMany(x => x.Departments)

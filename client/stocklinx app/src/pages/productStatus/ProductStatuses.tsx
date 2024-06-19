@@ -1,13 +1,11 @@
 import { IProductStatus } from "../../interfaces/serverInterfaces";
 import { useColumns } from "./columns";
 import { openProductStatusModal } from "../../modals/modals";
-import { useContext } from "react";
 import { useProductStatus } from "@/hooks/productStatus";
-import GenericContext from "../../context/GenericContext";
+import PageHeader from "@/components/generic/PageHeader";
 import Gridtable from "@components/gridTable/GridTable";
 
 const ProductStatus = () => {
-  const { drawerBadge } = useContext(GenericContext);
   const { data: productStatuses } = useProductStatus.Filter([]);
   const { mutate: filter } = useProductStatus.ApplyFilters();
   const { mutate: remove } = useProductStatus.Remove();
@@ -15,10 +13,7 @@ const ProductStatus = () => {
 
   return (
     <>
-      <div className="page__content__header">
-        <div className="page__content__header__title">ProductStatuses</div>
-        {drawerBadge()}
-      </div>
+      <PageHeader title="Product Statuses" enableCompanyDrawer />
       <Gridtable
         data={productStatuses || []}
         itemKey="id"

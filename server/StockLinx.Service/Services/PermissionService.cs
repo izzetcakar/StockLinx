@@ -75,7 +75,7 @@ namespace StockLinx.Service.Services
                 "Permission Given",
                 "Permission",
                 permission.Id,
-                permission.Branch.Name
+                permission.Company.Name
             );
             await _unitOfWork.CommitAsync();
             return _permissionRepository.GetDto(permission);
@@ -99,7 +99,7 @@ namespace StockLinx.Service.Services
                     "Permission Given",
                     "Permission",
                     permission.Id,
-                    permission.Branch.Name
+                    permission.Company.Name
                 );
             }
             await _permissionRepository.AddRangeAsync(permissions);
@@ -120,7 +120,7 @@ namespace StockLinx.Service.Services
                 "Permission taken",
                 "Permission",
                 permission.Id,
-                permission.Branch.Name
+                permission.Company.Name
             );
             await _unitOfWork.CommitAsync();
         }
@@ -136,7 +136,7 @@ namespace StockLinx.Service.Services
                     "Permission taken",
                     "Permission",
                     permission.Id,
-                    permission.Branch.Name
+                    permission.Company.Name
                 );
             }
             _permissionRepository.RemoveRange(permissions);
@@ -154,7 +154,7 @@ namespace StockLinx.Service.Services
             foreach (Permission entityInDb in entitiesInDb)
             {
                 var entity = entities.FirstOrDefault(p =>
-                    p.UserId == entityInDb.UserId && p.BranchId == entityInDb.BranchId
+                    p.UserId == entityInDb.UserId && p.CompanyId == entityInDb.CompanyId
                 );
                 if (entity == null)
                 {
@@ -164,14 +164,14 @@ namespace StockLinx.Service.Services
                         "Permission taken",
                         "Permission",
                         entityInDb.Id,
-                        entityInDb.Branch.Name
+                        entityInDb.Company.Name
                     );
                 }
             }
             foreach (Permission entity in entities)
             {
                 var entityInDb = entitiesInDb.FirstOrDefault(p =>
-                    p.UserId == entity.UserId && p.BranchId == entity.BranchId
+                    p.UserId == entity.UserId && p.CompanyId == entity.CompanyId
                 );
                 if (entityInDb == null)
                 {
@@ -180,7 +180,7 @@ namespace StockLinx.Service.Services
                         "Permission Given",
                         "Permission",
                         entity.Id,
-                        entity.Branch.Name
+                        entity.Company.Name
                     );
                 }
             }

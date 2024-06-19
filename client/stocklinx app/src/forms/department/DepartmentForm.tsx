@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React from "react";
 import { TextInput, Button, Group, Flex, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IDepartment } from "@interfaces/serverInterfaces";
@@ -6,7 +6,7 @@ import { useInitial } from "./useInitial";
 import { useLocation } from "@/hooks/location";
 import { useDepartment } from "@/hooks/department";
 import FormSelect from "../mantine/FormSelect";
-import GenericContext from "@/context/GenericContext";
+import { useCompany } from "@/hooks/company";
 interface DepartmentFormProps {
   department?: IDepartment;
   create?: boolean;
@@ -17,9 +17,9 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
   create,
 }) => {
   const { initialValues, isCreate } = useInitial(department, create);
-  const { branch } = useContext(GenericContext);
   const { mutate: createDepartment } = useDepartment.Create();
   const { mutate: updateDepartment } = useDepartment.Update();
+  const { data: companyLookup } = useCompany.Lookup();
   const { data: locationLookup } = useLocation.Lookup();
 
   const form = useForm<IDepartment>({
@@ -32,10 +32,6 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
   const handleSubmit = (data: IDepartment) => {
     isCreate ? createDepartment(data) : updateDepartment(data);
   };
-
-  useEffect(() => {
-    form.setFieldValue("branchId", branch?.id || "");
-  }, [branch]);
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
@@ -54,6 +50,12 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
           {...form.getInputProps("name")}
           required
           withAsterisk
+        />
+        <FormSelect
+          data={companyLookup}
+          label="Company"
+          inputProps={form.getInputProps("companyId")}
+          value={form.values.companyId}
         />
         <FormSelect
           data={locationLookup}

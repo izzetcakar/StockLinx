@@ -14,7 +14,6 @@
 
         //Relates
         public ICollection<Company>? Companies { get; set; }
-        public ICollection<Branch>? Branches { get; set; }
         public ICollection<Department>? Departments { get; set; }
         public ICollection<Supplier>? Suppliers { get; set; }
         public ICollection<User>? Users { get; set; }

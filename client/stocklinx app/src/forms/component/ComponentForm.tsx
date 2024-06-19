@@ -25,7 +25,7 @@ interface ComponentFormProps {
 
 const ComponentForm: React.FC<ComponentFormProps> = ({ component, create }) => {
   const { initialValues, isCreate } = useInitial(component, create);
-  const { branch } = useContext(GenericContext);
+  const { company } = useContext(GenericContext);
   const { mutate: createComponent } = useComponent.Create();
   const { mutate: updateComponent } = useComponent.Update();
   const { data: categories } = useCategory.GetAll();
@@ -58,16 +58,16 @@ const ComponentForm: React.FC<ComponentFormProps> = ({ component, create }) => {
     },
   });
   const handleSubmit = (data: IComponent) => {
-    if (form.values.branchId === "") {
-      openNotificationError("Error", "Please select a branch first");
+    if (form.values.companyId === "") {
+      openNotificationError("Error", "Please select a company first");
       return;
     }
     isCreate ? createComponent(data) : updateComponent(data);
   };
 
   useEffect(() => {
-    if (isCreate) form.setFieldValue("branchId", branch?.id || "");
-  }, [branch]);
+    if (isCreate) form.setFieldValue("companyId", company?.id || "");
+  }, [company]);
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>

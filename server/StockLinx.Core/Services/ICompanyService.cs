@@ -15,5 +15,7 @@ namespace StockLinx.Core.Services
         Task DeleteCompanyAsync(Guid id);
         Task DeleteRangeCompanyAsync(List<Guid> ids);
         Task<List<CompanyDto>> FilterAllAsync(string filter);
+        Task CheckTagExistAsync(string tag);
+        Task CheckTagExistAsync(List<string> tags);
     }
 }

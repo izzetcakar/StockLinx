@@ -151,10 +151,6 @@ const Sidebar: React.FC = () => {
           target: "/companies",
         },
         {
-          title: "Branches",
-          target: "/branches",
-        },
-        {
           title: "Departments",
           target: "/departments",
         },

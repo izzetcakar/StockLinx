@@ -29,7 +29,7 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
   create,
 }) => {
   const { initialValues, isCreate } = useInitial(consumable, create);
-  const { branch } = useContext(GenericContext);
+  const { company } = useContext(GenericContext);
   const { data: categories } = useCategory.GetAll();
   const { mutate: createConsumable } = useConsumable.Create();
   const { mutate: updateConsumable } = useConsumable.Update();
@@ -64,12 +64,12 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({
   });
 
   useEffect(() => {
-    if (isCreate) form.setFieldValue("branchId", branch?.id || "");
-  }, [branch]);
+    if (isCreate) form.setFieldValue("companyId", company?.id || "");
+  }, [company]);
 
   const handleSubmit = (data: IConsumable) => {
-    if (form.values.branchId === "") {
-      openNotificationError("Error", "Please select a branch first");
+    if (form.values.companyId === "") {
+      openNotificationError("Error", "Please select a company first");
       return;
     }
     isCreate ? createConsumable(data) : updateConsumable(data);

@@ -174,7 +174,6 @@ export interface SubmissionFormProps {
   userFullName: string;
   delivererFullName: string;
   companyName: string;
-  branchName: string;
   department: string;
   userStartDate: string;
   userTitle: string;
@@ -237,7 +236,6 @@ const SubmissionForm = ({
   userFullName,
   userTitle,
   userStartDate,
-  branchName,
   department,
   products,
   assignDate,
@@ -260,10 +258,7 @@ const SubmissionForm = ({
           <View style={styles.userInfoRow}>
             <Text style={styles.column}>Şube/Departman</Text>
             <View style={styles.yWrapper} />
-            <Text style={styles.input}>
-              {branchName}
-              {department}
-            </Text>
+            <Text style={styles.input}>{department}</Text>
           </View>
           <View style={styles.xWrapper} />
           <View style={styles.userInfoRow}>

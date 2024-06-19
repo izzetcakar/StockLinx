@@ -2,7 +2,7 @@
 {
     public abstract class BaseProductDto : BaseDto
     {
-        public Guid BranchId { get; set; }
+        public Guid CompanyId { get; set; }
         public Guid? SupplierId { get; set; }
         public string Tag { get; init; }
         public string Name { get; set; }

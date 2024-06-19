@@ -34,7 +34,7 @@ interface AssetFormProps {
 
 const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
   const { initialValues, isCreate } = useInitial(asset, create);
-  const { branch } = useContext(GenericContext);
+  const { company } = useContext(GenericContext);
   const { mutate: createAsset } = useAsset.Create();
   const { mutate: updateAsset } = useAsset.Update();
   const { data: modelLookup } = useModel.Lookup();
@@ -112,8 +112,8 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
   ));
 
   useEffect(() => {
-    if (isCreate) form.setFieldValue("branchId", branch?.id || "");
-  }, [branch]);
+    if (isCreate) form.setFieldValue("companyId", company?.id || "");
+  }, [company]);
 
   const handleImageChange = async (e: File | null) => {
     if (!e) return;
@@ -122,8 +122,8 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
   };
 
   const handleSubmit = (data: IAsset) => {
-    if (form.values.branchId === "") {
-      openNotificationError("Error", "Please select a branch first");
+    if (form.values.companyId === "") {
+      openNotificationError("Error", "Please select a company first");
       return;
     }
     isCreate ? createAsset(data) : updateAsset(data);

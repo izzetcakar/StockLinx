@@ -15,7 +15,7 @@ namespace StockLinx.Service.Services
     {
         private readonly IAssetRepository _assetRepository;
         private readonly IUserProductRepository _userProductRepository;
-        private readonly IBranchRepository _branchRepository;
+        private readonly ICompanyRepository _companyRepository;
         private readonly IUserService _userService;
         private readonly ICustomLogService _customLogService;
         private readonly IFilterService<Asset> _filterService;
@@ -26,7 +26,7 @@ namespace StockLinx.Service.Services
             IRepository<Asset> repository,
             IAssetRepository assetRepository,
             IUserProductRepository userProductRepository,
-            IBranchRepository branchRepository,
+            ICompanyRepository companyRepository,
             IUserService userService,
             ICustomLogService customLogService,
             IFilterService<Asset> filterService,
@@ -37,7 +37,7 @@ namespace StockLinx.Service.Services
         {
             _assetRepository = assetRepository;
             _userProductRepository = userProductRepository;
-            _branchRepository = branchRepository;
+            _companyRepository = companyRepository;
             _userService = userService;
             _customLogService = customLogService;
             _filterService = filterService;
@@ -70,16 +70,16 @@ namespace StockLinx.Service.Services
             }
             List<Asset> newAssets = new List<Asset>();
             Asset newAsset = _mapper.Map<Asset>(dto);
-            Branch branch = await _branchRepository.GetByIdAsync(newAsset.BranchId);
+            Company company = await _companyRepository.GetByIdAsync(newAsset.CompanyId);
             newAssets.Add(newAsset);
             await _customLogService.CreateCustomLog(
                 "Create",
                 "Asset",
                 newAsset.Id,
                 newAsset.Name,
-                "Branch",
-                branch.Id,
-                branch.Name
+                "Company",
+                company.Id,
+                company.Name
             );
 
             if (newAsset.ImagePath != null)
@@ -100,7 +100,7 @@ namespace StockLinx.Service.Services
                         Id = Guid.NewGuid(),
                         CreatedDate = DateTime.UtcNow,
                         UpdatedDate = null,
-                        BranchId = branch.Id,
+                        CompanyId = company.Id,
                         ImagePath = newAsset.ImagePath,
                         ModelId = newAsset.ModelId,
                         Name = newAsset.Name,
@@ -119,9 +119,9 @@ namespace StockLinx.Service.Services
                         "Asset",
                         extraAsset.Id,
                         extraAsset.Name,
-                        "Branch",
-                        branch.Id,
-                        branch.Name
+                        "Company",
+                        company.Id,
+                        company.Name
                     );
                 }
             }
@@ -133,7 +133,7 @@ namespace StockLinx.Service.Services
         public async Task<List<AssetDto>> CreateRangeAssetAsync(List<AssetCreateDto> dtos)
         {
             List<Asset> newAssets = new List<Asset>();
-            Branch branch = await _branchRepository.GetByIdAsync(dtos[0].BranchId);
+            Company company = await _companyRepository.GetByIdAsync(dtos[0].CompanyId);
             foreach (AssetCreateDto createDto in dtos)
             {
                 Asset newAsset = _mapper.Map<Asset>(createDto);
@@ -143,9 +143,9 @@ namespace StockLinx.Service.Services
                     "Asset",
                     newAsset.Id,
                     newAsset.Name,
-                    "Branch",
-                    branch.Id,
-                    branch.Name
+                    "Company",
+                    company.Id,
+                    company.Name
                 );
             }
             await _assetRepository.AddRangeAsync(newAssets);

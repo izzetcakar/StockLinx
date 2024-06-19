@@ -1,16 +1,14 @@
 import React, { ReactNode } from "react";
 import { Badge, Drawer, Select } from "@mantine/core";
 import { createContext } from "react";
-import { useBranch } from "@/hooks/branch";
 import { useCompany } from "@/hooks/company";
-import { IBranch, ICompany } from "@/interfaces/serverInterfaces";
+import { ICompany } from "@/interfaces/serverInterfaces";
 import { useDisclosure } from "@mantine/hooks";
 
 interface GenericProviderProps {
   children: ReactNode;
 }
 interface GenericContextValues {
-  branch: IBranch | null;
   company: ICompany | null;
   drawerBadge: () => React.ReactNode;
   drawerOpened: boolean;
@@ -18,7 +16,6 @@ interface GenericContextValues {
 
 const GenericContext = createContext<GenericContextValues>({
   company: null,
-  branch: null,
   drawerOpened: false,
   drawerBadge: () => (
     <Drawer
@@ -32,21 +29,15 @@ const GenericContext = createContext<GenericContextValues>({
 export const GenericProvider: React.FC<GenericProviderProps> = ({
   children,
 }) => {
-  const [branch, setBranch] = React.useState<IBranch | null>(null);
   const [company, setCompany] = React.useState<ICompany | null>(null);
-  const { data: branches } = useBranch.GetAll();
   const { data: companies } = useCompany.GetAll();
   const [drawerOpened, { open, close }] = useDisclosure(false);
 
-  const getCompanyAndBranch = () => {
-    if (branch) {
-      const company = companies?.find(
-        (company) => company.id === branch.companyId
-      );
-      if (company) {
-        return company.name + "-" + branch.name;
-      }
+  const getCompany = () => {
+    if (company) {
+      return company.name;
     }
+    return "Select Company"
   };
 
   const drawerBadge = () => {
@@ -57,7 +48,7 @@ export const GenericProvider: React.FC<GenericProviderProps> = ({
           position="right"
           opened={drawerOpened}
           onClose={close}
-          title="Company - Branch"
+          title="Companies"
         >
           <Select
             data={companies?.map((company) => ({
@@ -75,26 +66,6 @@ export const GenericProvider: React.FC<GenericProviderProps> = ({
             required
             withAsterisk
           />
-          <Select
-            data={branches
-              ?.filter((branch) => branch.companyId == company?.id)
-              .map((branch) => ({
-                value: branch.id,
-                label: branch.name,
-              }))}
-            label="Branch"
-            placeholder="Select Branch"
-            value={branch?.id}
-            onChange={(value) =>
-              setBranch(branches?.find((b) => b.id === value) || null)
-            }
-            comboboxProps={{ position: "bottom" }}
-            nothingFoundMessage={
-              company ? "No branch found" : "Select company first"
-            }
-            required
-            withAsterisk
-          />
         </Drawer>
         <Badge
           onClick={open}
@@ -104,14 +75,13 @@ export const GenericProvider: React.FC<GenericProviderProps> = ({
           radius={10}
           w="fit-content"
         >
-          {getCompanyAndBranch() || "Select Branch"}
+          {getCompany()}
         </Badge>
       </>
     );
   };
 
   const values = {
-    branch,
     company,
     drawerOpened,
     drawerBadge,

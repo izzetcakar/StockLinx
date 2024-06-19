@@ -22,7 +22,6 @@ const UserProductsPage: React.FC<UserProductsPageProps> = ({ userId }) => {
           openSubmissionModal({
             userFullName: "İzzet Çakar",
             companyName: "Bilge Adam",
-            branchName: "Bilgi İşlem",
             department: "Yazılım",
             userStartDate: "2021-05-05",
             userTitle: "Yazılım Uzmanı",

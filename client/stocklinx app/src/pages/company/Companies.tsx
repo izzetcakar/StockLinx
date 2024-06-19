@@ -1,13 +1,11 @@
 import { ICompany } from "../../interfaces/serverInterfaces";
 import { useColumns } from "./columns";
 import { openCompanyModal } from "../../modals/modals";
-import { useContext } from "react";
 import { useCompany } from "@/hooks/company";
-import GenericContext from "../../context/GenericContext";
+import PageHeader from "@/components/generic/PageHeader";
 import Gridtable from "@components/gridTable/GridTable";
 
 const Company = () => {
-  const { drawerBadge } = useContext(GenericContext);
   const { data: companies } = useCompany.Filter([]);
   const { mutate: filter } = useCompany.ApplyFilters();
   const { mutate: remove } = useCompany.Remove();
@@ -15,10 +13,7 @@ const Company = () => {
 
   return (
     <>
-      <div className="page__content__header">
-        <div className="page__content__header__title">Companies</div>
-        {drawerBadge()}
-      </div>
+      <PageHeader title="Companies" />
       <Gridtable
         data={companies || []}
         itemKey="id"

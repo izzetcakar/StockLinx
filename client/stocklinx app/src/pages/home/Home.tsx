@@ -12,6 +12,7 @@ import ProductCard from "@components/product/ProductCard";
 import LocationsCounts from "@components/dataGrid/location/LocationsCounts";
 import CategoryCounts from "@components/dataGrid/category/CategoryCounts";
 import CustomLogs from "@components/dataGrid/customLog/CustomLogs";
+import PageHeader from "@/components/generic/PageHeader";
 import "chart.js/auto";
 import "./home.scss";
 
@@ -83,9 +84,7 @@ const Home = () => {
 
   return (
     <>
-      <div className="page__content__header">
-        <div className="page__content__header__title">Home</div>
-      </div>
+      <PageHeader title="Home" enableCompanyDrawer />
       <div className="product-card-container" style={{ marginBottom: "1rem" }}>
         {handleProductCardData().map((item, index) => {
           return (

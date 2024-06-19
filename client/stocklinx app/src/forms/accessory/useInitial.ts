@@ -5,12 +5,12 @@ import { useContext } from "react";
 import GenericContext from "@/context/GenericContext";
 
 export const useInitial = (accessory?: IAccessory, create?: boolean) => {
-  const { branch } = useContext(GenericContext);
+  const { company } = useContext(GenericContext);
   let isCreate = create || false;
 
   let initialValues: IAccessory = {
     id: uuid4(),
-    branchId: branch?.id || "",
+    companyId: company?.id || "",
     tag: "",
     name: "",
     manufacturerId: null,

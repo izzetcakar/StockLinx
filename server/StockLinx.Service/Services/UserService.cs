@@ -48,7 +48,7 @@ namespace StockLinx.Service.Services
         public async Task<UserDto> GetDtoAsync(Guid id)
         {
             User user = await GetByIdAsync(id);
-            return _userRepository.GetDto(user);
+            return await _userRepository.GetDtoAsync(user);
         }
 
         public async Task<List<UserDto>> GetAllDtosAsync()
@@ -116,7 +116,7 @@ namespace StockLinx.Service.Services
                 department.Name
             );
             await _unitOfWork.CommitAsync();
-            return _userRepository.GetDto(user);
+            return await _userRepository.GetDtoAsync(user);
         }
 
         public async Task<List<UserDto>> CreateRangeUserAsync(List<UserCreateDto> dtos)
@@ -146,7 +146,7 @@ namespace StockLinx.Service.Services
             }
             await _userRepository.AddRangeAsync(users);
             await _unitOfWork.CommitAsync();
-            return _userRepository.GetDtos(users);
+            return await _userRepository.GetDtosAsync(users);
         }
 
         public async Task<UserDto> UpdateUserAsync(UserUpdateDto dto)
@@ -162,7 +162,7 @@ namespace StockLinx.Service.Services
                 user.FirstName + " " + user.LastName
             );
             await _unitOfWork.CommitAsync();
-            return _userRepository.GetDto(user);
+            return await _userRepository.GetDtoAsync(user);
         }
 
         public async Task DeleteUserAsync(Guid id)
@@ -207,7 +207,7 @@ namespace StockLinx.Service.Services
         public async Task<List<UserDto>> FilterAllAsync(string filter)
         {
             var result = await _filterService.FilterAsync(filter);
-            return _userRepository.GetDtos(result.ToList());
+            return await _userRepository.GetDtosAsync(result.ToList());
         }
     }
 }

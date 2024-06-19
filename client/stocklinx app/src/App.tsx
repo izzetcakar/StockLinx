@@ -13,7 +13,6 @@ import Manufacturers from "./pages/manufacturer/Manufacturers";
 import Suppliers from "./pages/supplier/Suppliers";
 import Locations from "./pages/location/Locations";
 import ProductStatuses from "./pages/productStatus/ProductStatuses";
-import Branches from "./pages/branch/Branches";
 import Users from "./pages/user/Users";
 import CustomFields from "./pages/customFields/CustomFields";
 import Home from "./pages/home/Home";
@@ -23,7 +22,6 @@ import Sidebar from "./components/sidebar/Sidebar";
 import Generic from "./pages/generic/Generic";
 import Accessory from "./pages/accessory/Accessory";
 import Asset from "./pages/asset/Asset";
-import Branch from "./pages/branch/Branch";
 import Category from "./pages/category/Category";
 import Company from "./pages/company/Company";
 import Component from "./pages/component/Component";
@@ -117,10 +115,6 @@ const router = createBrowserRouter([
         element: <Companies />,
       },
       {
-        path: "/branches",
-        element: <Branches />,
-      },
-      {
         path: "/departments",
         element: <Departments />,
       },
@@ -147,10 +141,6 @@ const router = createBrowserRouter([
       {
         path: "/asset",
         element: <Asset />,
-      },
-      {
-        path: "/branch",
-        element: <Branch />,
       },
       {
         path: "/category",

@@ -4,6 +4,7 @@ import { ICustomField } from "@interfaces/serverInterfaces";
 import { useCustomField } from "@/hooks/customField";
 import { useFieldSet } from "@/hooks/fieldSet";
 import GridTable from "@components/gridTable/GridTable";
+import PageHeader from "@/components/generic/PageHeader";
 
 const CustomFields = () => {
   const { data: customFields, refetch: fetchCustomFields } =
@@ -19,9 +20,7 @@ const CustomFields = () => {
 
   return (
     <div>
-      <div className="page__content__header">
-        <div className="page__content__header__title">Field Sets</div>
-      </div>
+      <PageHeader title="CustomFields" />
       <GridTable
         itemKey="id"
         data={fieldSets || []}

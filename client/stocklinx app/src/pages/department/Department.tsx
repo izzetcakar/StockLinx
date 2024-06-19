@@ -1,7 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { Anchor, Tabs } from "@mantine/core";
 import { useDepartment } from "@/hooks/department";
-import { useBranch } from "@/hooks/branch";
 import { useCompany } from "@/hooks/company";
 import { useLocation } from "@/hooks/location";
 import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
@@ -10,7 +9,6 @@ const Department = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { data: department } = useDepartment.Get(id as string);
-  const { data: branches } = useBranch.GetAll();
   const { data: companies } = useCompany.GetAll();
   const { data: locations } = useLocation.GetAll();
 
@@ -30,41 +28,13 @@ const Department = () => {
               <div className="product__content__title">Company</div>
               <div className="product__content__value">
                 <Anchor
-                  onClick={() =>
-                    navigate(
-                      `/company/${
-                        branches?.find(
-                          (branch) => branch.id === department?.branchId
-                        )?.companyId
-                      }`
-                    )
-                  }
+                  onClick={() => navigate(`/company/${department.companyId}`)}
                   target="_blank"
                   underline="always"
                 >
                   {
                     companies?.find(
-                      (company) =>
-                        company.id ===
-                        branches?.find(
-                          (branch) => branch.id === department?.branchId
-                        )?.companyId
-                    )?.name
-                  }
-                </Anchor>
-              </div>
-            </div>
-            <div className="product__content">
-              <div className="product__content__title">Branch</div>
-              <div className="product__content__value">
-                <Anchor
-                  onClick={() => navigate(`/branch/${department?.branchId}`)}
-                  target="_blank"
-                  underline="always"
-                >
-                  {
-                    branches?.find(
-                      (branch) => branch.id === department?.branchId
+                      (company) => company.id === department.companyId
                     )?.name
                   }
                 </Anchor>

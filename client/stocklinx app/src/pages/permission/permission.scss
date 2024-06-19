@@ -15,12 +15,12 @@
   margin-bottom: 20px;
 }
 
-.branch__cards__container {
+.company__cards__container {
   animation: 0.2s ease-out 0s 1 slideInFromLeft;
 }
 
 .company__card,
-.branch__card {
+.company__card {
   border-radius: 12px;
   overflow: hidden;
   width: 300px;
@@ -30,32 +30,32 @@
 }
 
 // .company__card:hover,
-// .branch__card:hover {
+// .company__card:hover {
 //   transform: scale(1.02);
 // }
 
 .company__card:active,
-.branch__card:active {
+.company__card:active {
   transform: scale(0.98);
   transition: transform 0.1s ease-in-out;
 }
 
 .company__card__header,
-.branch__card__header {
+.company__card__header {
   background-color: #222;
   padding: 20px;
   text-align: center;
 }
 
 .company__card h3,
-.branch__card h3 {
+.company__card h3 {
   font-size: $fontsize-xl;
   margin-bottom: 10px;
   color: #fff;
 }
 
 .company__card__content,
-.branch__card__content {
+.company__card__content {
   padding: 20px;
   border: 1px solid #333;
   border-bottom-left-radius: 12px;
@@ -64,7 +64,7 @@
 }
 
 .company__card__info,
-.branch__card__info {
+.company__card__info {
   margin: 0;
   color: #555;
   line-height: 1.6;

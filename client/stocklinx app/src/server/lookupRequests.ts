@@ -1,7 +1,6 @@
 import {
   IAccessory,
   IAsset,
-  IBranch,
   ICategory,
   ICompany,
   IComponent,
@@ -30,14 +29,6 @@ export const lookupRequests = () => {
       labelKeys: ["tag", "name"],
       valueKey: "id",
       requestUrl: "asset",
-    });
-  };
-
-  const branch = async () => {
-    return await lookupRequest<IBranch>({
-      labelKeys: ["name"],
-      valueKey: "id",
-      requestUrl: "branch",
     });
   };
 
@@ -132,7 +123,6 @@ export const lookupRequests = () => {
   return {
     accessory,
     asset,
-    branch,
     category,
     company,
     component,

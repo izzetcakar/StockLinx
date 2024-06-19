@@ -1,13 +1,11 @@
 import { ILocation } from "../../interfaces/serverInterfaces";
 import { useColumns } from "./columns";
 import { openLocationModal } from "../../modals/modals";
-import { useContext } from "react";
 import { useLocation } from "@/hooks/location";
-import GenericContext from "../../context/GenericContext";
 import Gridtable from "@components/gridTable/GridTable";
+import PageHeader from "@/components/generic/PageHeader";
 
 const Location = () => {
-  const { drawerBadge } = useContext(GenericContext);
   const { data: locations } = useLocation.Filter([]);
   const { mutate: filter } = useLocation.ApplyFilters();
   const { mutate: remove } = useLocation.Remove();
@@ -15,10 +13,7 @@ const Location = () => {
 
   return (
     <>
-      <div className="page__content__header">
-        <div className="page__content__header__title">Locations</div>
-        {drawerBadge()}
-      </div>
+      <PageHeader title="Locations" />
       <Gridtable
         data={locations || []}
         itemKey="id"

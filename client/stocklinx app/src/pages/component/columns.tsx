@@ -8,7 +8,7 @@ import {
 import { openCheckInModal } from "../../modals/modals";
 import { initialAssetProduct } from "../../initials/initials";
 import { useCategory } from "@/hooks/category";
-import { useBranch } from "@/hooks/branch";
+import { useCompany } from "@/hooks/company";
 import { useComponent } from "@/hooks/component";
 import { EntityCells } from "@/cells/Entity";
 import AssetProductQuantityCell from "@/cells/AssetProductQuantityCell";
@@ -16,7 +16,7 @@ import AssetProductQuantityCell from "@/cells/AssetProductQuantityCell";
 export const useColumns = () => {
   const { mutate: checkIn } = useComponent.CheckIn();
   const { data: categories } = useCategory.GetAll();
-  const { data: branchLookup } = useBranch.Lookup();
+  const { data: companyLookup } = useCompany.Lookup();
 
   const onCheckInHandler = (data: IAssetProduct) => {
     checkIn({
@@ -129,10 +129,10 @@ export const useColumns = () => {
     },
     // INVISIBLE COLUMNS
     {
-      caption: "Branch",
-      dataField: "branchId",
+      caption: "Company",
+      dataField: "companyId",
       lookup: {
-        data: branchLookup || [],
+        data: companyLookup || [],
       },
       dataType: "string",
       allowVisible: false,

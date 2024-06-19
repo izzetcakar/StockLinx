@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { Anchor, Tabs } from "@mantine/core";
 import { useComponent } from "@/hooks/component";
-import { useBranch } from "@/hooks/branch";
+import { useCompany } from "@/hooks/company";
 import { useCategory } from "@/hooks/category";
 import { useSupplier } from "@/hooks/supplier";
 import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
@@ -10,7 +10,7 @@ const Component = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { data: component } = useComponent.Get(id as string);
-  const { data: branches } = useBranch.GetAll();
+  const { data: companies } = useCompany.GetAll();
   const { data: categories } = useCategory.GetAll();
   const { data: suppliers } = useSupplier.GetAll();
 
@@ -27,11 +27,12 @@ const Component = () => {
         <Tabs.Panel value="info">
           <div className="product__content__container">
             <div className="product__content">
-              <div className="product__content__title">Branch</div>
+              <div className="product__content__title">Company</div>
               <div className="product__content__value">
                 {
-                  branches?.find((branch) => branch.id === component?.branchId)
-                    ?.name
+                  companies?.find(
+                    (company) => company.id === component?.companyId
+                  )?.name
                 }
               </div>
             </div>

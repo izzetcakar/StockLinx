@@ -1,6 +1,5 @@
 import { useAccessory } from "@/hooks/accessory";
 import { useAsset } from "@/hooks/asset";
-import { useBranch } from "@/hooks/branch";
 import { useCategory } from "@/hooks/category";
 import { useCompany } from "@/hooks/company";
 import { useComponent } from "@/hooks/component";
@@ -24,11 +23,6 @@ const Accessory = (id: string | null) => {
 const Asset = (id: string | null) => {
   const { data: asset } = useAsset.Get(id || "");
   return <div>{asset?.name || ""}</div>;
-};
-
-const Branch = (id: string | null) => {
-  const { data: branch } = useBranch.Get(id || "");
-  return <div>{branch?.name || ""}</div>;
 };
 
 const Category = (id: string | null) => {
@@ -105,7 +99,6 @@ const User = (id: string | null) => {
 export const EntityCells = {
   Accessory,
   Asset,
-  Branch,
   Category,
   Company,
   Component,

@@ -1,30 +1,31 @@
-interface CompanyCardProps {
-  companyId: string;
-  companyName: string;
+import { ICompany } from "@interfaces/serverInterfaces";
+import { openPermissionModal } from "../../modals/modals";
+import "./permission.scss";
+
+interface CompanyCardDetailProps {
+  company: ICompany;
   userCount: number;
   permissionCount: number;
-  branchCount: number;
 }
 
-const CompanyCard: React.FC<CompanyCardProps> = ({
-  branchCount,
-  companyName,
-  permissionCount,
+const CompanyCardDetail: React.FC<CompanyCardDetailProps> = ({
+  company,
   userCount,
+  permissionCount,
 }) => {
   return (
-    <div className="company__card">
+    <div className="company__card" onClick={() => openPermissionModal(company)}>
       <div className="company__card__header">
-        <h3>{companyName}</h3>
+        <h3>{company.name}</h3>
       </div>
       <div className="company__card__content">
         <p className="company__card__info">User Count: {userCount}</p>
         <p className="company__card__info">
           Permission Count: {permissionCount}
         </p>
-        <p className="company__card__info">Branch Count: {branchCount}</p>
       </div>
     </div>
   );
 };
-export default CompanyCard;
+
+export default CompanyCardDetail;

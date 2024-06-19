@@ -18,13 +18,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
 
         public PermissionDto GetDto(Permission entity)
         {
-            var dto = _mapper.Map<PermissionDto>(entity);
-            var companyId = dbContext
-                .Branches.Where(b => b.Id == entity.BranchId)
-                .Select(b => b.CompanyId)
-                .FirstOrDefault();
-            dto.CompanyId = companyId;
-            return dto;
+            return _mapper.Map<PermissionDto>(entity);
         }
 
         public List<PermissionDto> GetDtos(List<Permission> entities)

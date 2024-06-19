@@ -6,8 +6,8 @@ namespace StockLinx.Core.Repositories
 
     public interface IUserRepository : IRepository<User>
     {
-        UserDto GetDto(User entity);
-        List<UserDto> GetDtos(List<User> entities);
+        Task<UserDto> GetDtoAsync(User entity);
+        Task<List<UserDto>> GetDtosAsync(List<User> entities);
         Task<List<UserDto>> GetAllDtosAsync();
         Task<bool> CanDeleteAsync(Guid id);
     }

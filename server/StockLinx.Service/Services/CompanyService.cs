@@ -51,6 +51,7 @@ namespace StockLinx.Service.Services
 
         public async Task<CompanyDto> CreateCompanyAsync(CompanyCreateDto dto)
         {
+            await CheckTagExistAsync(dto.Tag);
             User user = await _userService.GetCurrentUser();
             if ((bool)!user.IsAdmin)
             {
@@ -75,6 +76,7 @@ namespace StockLinx.Service.Services
 
         public async Task<List<CompanyDto>> CreateRangeCompanyAsync(List<CompanyCreateDto> dtos)
         {
+            await CheckTagExistAsync(dtos.Select(d => d.Tag).ToList());
             User user = await _userService.GetCurrentUser();
             if ((bool)!user.IsAdmin)
             {
@@ -176,6 +178,27 @@ namespace StockLinx.Service.Services
         {
             var result = await _filterService.FilterAsync(filter);
             return _companyRepository.GetDtos(result.ToList());
+        }
+
+        public async Task CheckTagExistAsync(string tag)
+        {
+            tag = TagUtils.Check(tag);
+            bool isExist = await AnyAsync(d => d.Tag == tag);
+            if (isExist)
+            {
+                throw new Exception($"Tag {tag} already exist.");
+            }
+        }
+
+        public async Task CheckTagExistAsync(List<string> tags)
+        {
+            tags = TagUtils.Check(tags);
+            var existingTags = await Where(d => tags.Contains(d.Tag));
+            if (existingTags.Count() > 0)
+            {
+                var existingTagNames = existingTags.Select(x => x.Tag).ToList();
+                throw new Exception($"Tags {string.Join("\n", existingTagNames)} already exist.");
+            }
         }
     }
 }

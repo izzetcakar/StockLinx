@@ -1,13 +1,11 @@
 import { ISupplier } from "../../interfaces/serverInterfaces";
 import { useColumns } from "./columns";
 import { openSupplierModal } from "../../modals/modals";
-import { useContext } from "react";
 import { useSupplier } from "@/hooks/supplier";
-import GenericContext from "../../context/GenericContext";
+import PageHeader from "@/components/generic/PageHeader";
 import Gridtable from "@components/gridTable/GridTable";
 
 const Supplier = () => {
-  const { drawerBadge } = useContext(GenericContext);
   const { data: suppliers } = useSupplier.Filter([]);
   const { mutate: filter } = useSupplier.ApplyFilters();
   const { mutate: remove } = useSupplier.Remove();
@@ -15,10 +13,7 @@ const Supplier = () => {
 
   return (
     <>
-      <div className="page__content__header">
-        <div className="page__content__header__title">Suppliers</div>
-        {drawerBadge()}
-      </div>
+      <PageHeader title="Suppliers" />
       <Gridtable
         data={suppliers || []}
         itemKey="id"

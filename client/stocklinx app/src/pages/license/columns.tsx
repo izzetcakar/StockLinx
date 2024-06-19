@@ -12,7 +12,7 @@ import {
   initialUserProduct,
 } from "../../initials/initials";
 import { useManufacturer } from "@/hooks/manufacturer";
-import { useBranch } from "@/hooks/branch";
+import { useCompany } from "@/hooks/company";
 import { useCategory } from "@/hooks/category";
 import { useLicense } from "@/hooks/license";
 import { useSupplier } from "@/hooks/supplier";
@@ -22,11 +22,10 @@ import { EntityCells } from "@/cells/Entity";
 export const useColumns = () => {
   const { mutate: userCheckIn } = useLicense.UserCheckIn();
   const { mutate: assetCheckIn } = useLicense.AssetCheckIn();
-  const { data: categories, refetch: getCategoryLK } = useCategory.GetAll();
-  const { data: branchLookup, refetch: getBranchLK } = useBranch.Lookup();
-  const { data: manufacturerLookup, refetch: getManufacturerLK } =
-    useManufacturer.Lookup();
-  const { data: supplierLookup, refetch: getSupplierLK } = useSupplier.Lookup();
+  const { data: categories } = useCategory.GetAll();
+  const { data: companyLookup } = useCompany.Lookup();
+  const { refetch: getManufacturerLK } = useManufacturer.Lookup();
+  const { data: supplierLookup } = useSupplier.Lookup();
 
   const onUserCheckInHandler = (userProduct: IUserProduct) => {
     userCheckIn({
@@ -135,10 +134,10 @@ export const useColumns = () => {
     },
     // INVISIBLE COLUMNS
     {
-      caption: "Branch",
-      dataField: "branchId",
+      caption: "Company",
+      dataField: "companyId",
       lookup: {
-        data: branchLookup || [],
+        data: companyLookup || [],
       },
       dataType: "string",
       allowVisible: false,

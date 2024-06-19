@@ -14,7 +14,6 @@ import { DateInput } from "@mantine/dates";
 import { useInitial } from "./useInitial";
 import FormSelect from "../mantine/FormSelect";
 import { useCompany } from "@/hooks/company";
-import { useBranch } from "@/hooks/branch";
 import { useDepartment } from "@/hooks/department";
 import { useUser } from "@/hooks/user";
 
@@ -28,19 +27,8 @@ const UserForm: React.FC<UserFormProps> = ({ user, create }) => {
   const { mutate: createUser } = useUser.Create();
   const { mutate: updateUser } = useUser.Update();
   const { data: companyLookup } = useCompany.Lookup();
-  const { data: branches } = useBranch.GetAll();
   const { data: departments } = useDepartment.GetAll();
-  const [branch, setBranch] = React.useState(
-    branches?.find(
-      (b) =>
-        b.id === departments?.find((d) => d.id === user?.departmentId)?.branchId
-    )?.id
-  );
-  const [company, setCompany] = React.useState(
-    companyLookup?.find(
-      (c) => c.value === branches?.find((b) => b.id === branch)?.companyId
-    )?.value
-  );
+  const [company, setCompany] = React.useState<string>("");
 
   const form = useForm<IUser>({
     initialValues: initialValues,
@@ -65,18 +53,9 @@ const UserForm: React.FC<UserFormProps> = ({ user, create }) => {
           : "Employee No should be exactly 8 characters.",
     },
   });
+
   const handleSubmit = (data: IUser) => {
     isCreate ? createUser(data) : updateUser(data);
-  };
-
-  const handleCompanyChange = (value: string) => {
-    setCompany(value);
-    setBranch("");
-    form.setFieldValue("departmentId", "");
-  };
-  const handleBranchChange = (value: string) => {
-    setBranch(value);
-    form.setFieldValue("departmentId", "");
   };
 
   return (
@@ -95,24 +74,13 @@ const UserForm: React.FC<UserFormProps> = ({ user, create }) => {
           label="Company"
           placeholder="Select Company"
           value={company}
-          onChange={(value) => handleCompanyChange(value as string)}
-          required
-          withAsterisk
-        />
-        <Select
-          data={branches
-            ?.filter((branch) => branch.companyId === company)
-            .map((branch) => ({ value: branch.id, label: branch.name }))}
-          label="Branch"
-          placeholder="Select Branch"
-          value={branch}
-          onChange={(value) => handleBranchChange(value as string)}
+          onChange={(value) => setCompany(value as string)}
           required
           withAsterisk
         />
         <FormSelect
           data={departments
-            ?.filter((department) => department.branchId === branch)
+            ?.filter((department) => department.companyId === company)
             .map((department) => ({
               value: department.id,
               label: department.name,

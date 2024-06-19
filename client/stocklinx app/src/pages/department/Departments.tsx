@@ -1,13 +1,11 @@
 import { IDepartment } from "../../interfaces/serverInterfaces";
 import { useColumns } from "./columns";
 import { openDepartmentModal } from "../../modals/modals";
-import { useContext } from "react";
 import { useDepartment } from "@/hooks/department";
-import GenericContext from "../../context/GenericContext";
+import PageHeader from "@/components/generic/PageHeader";
 import Gridtable from "@components/gridTable/GridTable";
 
 const Department = () => {
-  const { drawerBadge } = useContext(GenericContext);
   const { data: departments } = useDepartment.Filter([]);
   const { mutate: filter } = useDepartment.ApplyFilters();
   const { mutate: remove } = useDepartment.Remove();
@@ -15,10 +13,7 @@ const Department = () => {
 
   return (
     <>
-      <div className="page__content__header">
-        <div className="page__content__header__title">Departments</div>
-        {drawerBadge()}
-      </div>
+      <PageHeader title="Departments" enableCompanyDrawer />
       <Gridtable
         data={departments || []}
         itemKey="id"

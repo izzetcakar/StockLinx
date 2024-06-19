@@ -17,7 +17,7 @@ namespace StockLinx.Service.Services
         private readonly IComponentRepository _componentRepository;
         private readonly IAssetRepository _assetRepository;
         private readonly IAssetProductRepository _assetProductRepository;
-        private readonly IBranchRepository _branchRepository;
+        private readonly ICompanyRepository _companyRepository;
         private readonly IUserService _userService;
         private readonly ICustomLogService _customLogService;
         private readonly IFilterService<Component> _filterService;
@@ -29,7 +29,7 @@ namespace StockLinx.Service.Services
             IComponentRepository componentRepository,
             IAssetRepository assetRepository,
             IAssetProductRepository assetProductRepository,
-            IBranchRepository branchRepository,
+            ICompanyRepository companyRepository,
             IUserService userService,
             ICustomLogService customLogService,
             IFilterService<Component> filterService,
@@ -41,7 +41,7 @@ namespace StockLinx.Service.Services
             _componentRepository = componentRepository;
             _assetRepository = assetRepository;
             _assetProductRepository = assetProductRepository;
-            _branchRepository = branchRepository;
+            _companyRepository = companyRepository;
             _userService = userService;
             _customLogService = customLogService;
             _filterService = filterService;

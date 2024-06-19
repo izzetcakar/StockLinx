@@ -2,7 +2,7 @@
 {
     public abstract class BaseProduct : BaseEntity
     {
-        public Guid BranchId { get; set; }
+        public Guid CompanyId { get; set; }
         public Guid? SupplierId { get; set; }
         public string Tag { get; init; }
         public string Name { get; set; }
@@ -12,7 +12,7 @@
         public DateTime? PurchaseDate { get; set; }
 
         //Relates
-        public Branch Branch { get; set; }
+        public Company Company { get; set; }
         public Supplier? Supplier { get; set; }
     }
 }

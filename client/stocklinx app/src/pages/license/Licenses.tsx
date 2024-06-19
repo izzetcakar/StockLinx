@@ -1,13 +1,11 @@
 import { ILicense } from "../../interfaces/serverInterfaces";
 import { useColumns } from "./columns";
 import { openLicenseModal } from "../../modals/modals";
-import { useContext } from "react";
 import { useLicense } from "@/hooks/license";
-import GenericContext from "../../context/GenericContext";
+import PageHeader from "@/components/generic/PageHeader";
 import Gridtable from "@components/gridTable/GridTable";
 
 const License = () => {
-  const { drawerBadge } = useContext(GenericContext);
   const { data: licenses } = useLicense.Filter([]);
   const { mutate: filter } = useLicense.ApplyFilters();
   const { mutate: remove } = useLicense.Remove();
@@ -15,10 +13,7 @@ const License = () => {
 
   return (
     <>
-      <div className="page__content__header">
-        <div className="page__content__header__title">Licenses</div>
-        {drawerBadge()}
-      </div>
+      <PageHeader title="Licenses" enableCompanyDrawer />
       <Gridtable
         data={licenses || []}
         itemKey="id"

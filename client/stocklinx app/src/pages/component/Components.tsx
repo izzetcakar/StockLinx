@@ -1,13 +1,11 @@
 import { IComponent } from "../../interfaces/serverInterfaces";
 import { useColumns } from "./columns";
 import { openComponentModal } from "../../modals/modals";
-import { useContext } from "react";
 import { useComponent } from "@/hooks/component";
-import GenericContext from "../../context/GenericContext";
+import PageHeader from "@/components/generic/PageHeader";
 import Gridtable from "@components/gridTable/GridTable";
 
 const Component = () => {
-  const { drawerBadge } = useContext(GenericContext);
   const { data: components } = useComponent.Filter([]);
   const { mutate: filter } = useComponent.ApplyFilters();
   const { mutate: remove } = useComponent.Remove();
@@ -15,10 +13,7 @@ const Component = () => {
 
   return (
     <>
-      <div className="page__content__header">
-        <div className="page__content__header__title">Components</div>
-        {drawerBadge()}
-      </div>
+      <PageHeader title="Components" enableCompanyDrawer />
       <Gridtable
         data={components || []}
         itemKey="id"

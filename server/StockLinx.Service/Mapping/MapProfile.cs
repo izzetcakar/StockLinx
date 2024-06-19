@@ -71,9 +71,6 @@ namespace StockLinx.Service.Mapping
             CreateMap<ProductStatus, ProductStatusDto>().ReverseMap();
             CreateMap<ProductStatus, ProductStatusCreateDto>().ReverseMap();
             CreateMap<ProductStatus, ProductStatusUpdateDto>().ReverseMap();
-            CreateMap<Branch, BranchDto>().ReverseMap();
-            CreateMap<Branch, BranchCreateDto>().ReverseMap();
-            CreateMap<Branch, BranchUpdateDto>().ReverseMap();
             CreateMap<CustomField, CustomFieldDto>().ReverseMap();
             CreateMap<CustomField, CustomFieldCreateDto>().ReverseMap();
             CreateMap<CustomField, CustomFieldUpdateDto>().ReverseMap();
@@ -82,7 +79,6 @@ namespace StockLinx.Service.Mapping
             CreateMap<FieldSet, FieldSetUpdateDto>().ReverseMap();
             CreateMap<Permission, PermissionDto>().ReverseMap();
             CreateMap<Permission, PermissionCreateDto>().ReverseMap();
-            CreateMap<Permission, PermissionUpdateDto>().ReverseMap();
             CreateMap<Permission, PermissionSyncDto>().ReverseMap();
         }
     }

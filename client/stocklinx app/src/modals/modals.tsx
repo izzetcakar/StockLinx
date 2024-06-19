@@ -3,7 +3,6 @@ import { Text } from "@mantine/core";
 import {
   IAccessory,
   IAsset,
-  IBranch,
   ICategory,
   ICompany,
   IComponent,
@@ -22,7 +21,6 @@ import {
   IAssetProduct,
 } from "../interfaces/serverInterfaces";
 import CategoryForm from "../forms/category/CategoryForm";
-import BranchForm from "../forms/branch/BranchForm";
 import CompanyForm from "../forms/company/CompanyForm";
 import DepartmentForm from "../forms/department/DepartmentForm";
 import LocationForm from "../forms/location/LocationForm";
@@ -67,15 +65,6 @@ export const openCategoryModal = (category?: ICategory) =>
     modalId: "category_modal",
     title: category ? "Edit Category" : "Create Category",
     children: <CategoryForm category={category} />,
-    xOffset: "auto",
-    size: "auto",
-  });
-
-export const openBranchModal = (branch?: IBranch) =>
-  modals.open({
-    modalId: "branch_modal",
-    title: branch ? "Edit Branch" : "Create Branch",
-    children: <BranchForm branch={branch} />,
     xOffset: "auto",
     size: "auto",
   });
@@ -297,11 +286,11 @@ export const openUserProductCheckOutModal = (
   });
 };
 
-export const openPermissionModal = (branch: IBranch) => {
+export const openPermissionModal = (company: ICompany) => {
   modals.open({
     modalId: "permission_modal",
     title: "Permission",
-    children: <PermissionForm branch={branch} />,
+    children: <PermissionForm company={company} />,
     xOffset: "auto",
     size: "auto",
   });

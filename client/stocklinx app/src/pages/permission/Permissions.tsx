@@ -1,52 +1,43 @@
 import { useContext } from "react";
-import { useBranch } from "@/hooks/branch";
+import { useCompany } from "@/hooks/company";
 import { usePermission } from "@/hooks/permission";
 import { useUser } from "@/hooks/user";
 import { useDepartment } from "@/hooks/department";
 import GenericContext from "@/context/GenericContext";
-import BranchCard from "./BranchCard";
+import PageHeader from "@/components/generic/PageHeader";
+import CompanyCard from "./CompanyCard";
 
 const Permissions = () => {
   const { company } = useContext(GenericContext);
-  const { data: branches } = useBranch.GetAll();
+  const { data: companies } = useCompany.GetAll();
   const { data: permissions } = usePermission.GetAll();
   const { data: users } = useUser.GetAll();
   const { data: departments } = useDepartment.GetAll();
 
   return (
     <div>
-      <h2>Permissions</h2>
-      <div className="company__cards__container">
-        {/* {companiesWithCounts.map((company) => (
-          <CompanyCard
-            key={company.id}
-            companyId={company.id}
-            companyName={company.name}
-            branchCount={company.branchCount}
-            permissionCount={company.permissionCount}
-          />
-        ))} */}
-      </div>
+      <PageHeader title="Permissions" />
+      <div className="company__cards__container"></div>
       {company && (
         <div>
-          <h3>Branches for {company.name}</h3>
-          <div className="branch__cards__container">
-            {branches
-              ?.filter((branch) => branch.companyId === company.id)
-              .map((branch) => (
-                <BranchCard
-                  key={branch.id}
-                  branch={branch}
+          <h3>Companies for {company.name}</h3>
+          <div className="company__cards__container">
+            {companies
+              ?.filter((company) => company.companyId === company.id)
+              .map((company) => (
+                <CompanyCard
+                  key={company.id}
+                  company={company}
                   permissionCount={
                     permissions?.filter(
-                      (permission) => permission.branchId === branch.id
+                      (permission) => permission.companyId === company.id
                     ).length || 0
                   }
                   userCount={
                     users?.filter(
                       (user) =>
                         departments?.find((d) => d.id === user.departmentId)
-                          ?.branchId === branch.id
+                          ?.companyId === company.id
                     ).length || 0
                   }
                 />

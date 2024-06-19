@@ -5,12 +5,12 @@ import GenericContext from "@/context/GenericContext";
 import uuid4 from "uuid4";
 
 export const useInitial = (asset?: IAsset, create?: boolean) => {
-  const { branch } = useContext(GenericContext);
+  const { company } = useContext(GenericContext);
   let isCreate = create || false;
 
   let initialValues: IAsset = {
     id: uuid4(),
-    branchId: branch?.id || "",
+    companyId: company?.id || "",
     productStatusId: "",
     supplierId: null,
     tag: "",

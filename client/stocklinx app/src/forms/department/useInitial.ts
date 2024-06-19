@@ -4,12 +4,12 @@ import GenericContext from "@/context/GenericContext";
 import { useContext } from "react";
 
 export const useInitial = (department?: IDepartment, create?: boolean) => {
-  const { branch } = useContext(GenericContext);
+  const { company } = useContext(GenericContext);
   let isCreate = create || false;
 
   let initialValues: IDepartment = {
     id: uuid4(),
-    branchId: branch?.id || "",
+    companyId: company?.id || "",
     locationId: null,
     managerId: null,
     name: "",

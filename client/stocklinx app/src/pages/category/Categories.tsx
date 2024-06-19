@@ -1,13 +1,11 @@
 import { ICategory } from "../../interfaces/serverInterfaces";
 import { useColumns } from "./columns";
 import { openCategoryModal } from "../../modals/modals";
-import { useContext } from "react";
 import { useCategory } from "@/hooks/category";
-import GenericContext from "../../context/GenericContext";
+import PageHeader from "@/components/generic/PageHeader";
 import Gridtable from "@components/gridTable/GridTable";
 
 const Category = () => {
-  const { drawerBadge } = useContext(GenericContext);
   const { data: categories } = useCategory.Filter([]);
   const { mutate: filter } = useCategory.ApplyFilters();
   const { mutate: remove } = useCategory.Remove();
@@ -15,10 +13,7 @@ const Category = () => {
 
   return (
     <>
-      <div className="page__content__header">
-        <div className="page__content__header__title">Categories</div>
-        {drawerBadge()}
-      </div>
+      <PageHeader title="Categories" />
       <Gridtable
         data={categories || []}
         itemKey="id"

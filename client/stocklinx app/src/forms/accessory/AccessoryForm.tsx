@@ -29,7 +29,7 @@ interface AccessoryFormProps {
 }
 const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory, create }) => {
   const { initialValues, isCreate } = useInitial(accessory, create);
-  const { branch } = useContext(GenericContext);
+  const { company } = useContext(GenericContext);
   const { mutate: createAccessory } = useAccessory.Create();
   const { mutate: updateAccessory } = useAccessory.Update();
   const { data: categories } = useCategory.GetAll();
@@ -67,9 +67,9 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory, create }) => {
 
   useEffect(() => {
     if (isCreate) {
-      form.setFieldValue("branchId", branch?.id || "");
+      form.setFieldValue("companyId", company?.id || "");
     }
-  }, [branch]);
+  }, [company]);
 
   const handleImageChange = async (e: File | null) => {
     if (!e) return;
@@ -78,8 +78,8 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory, create }) => {
   };
 
   const handleSubmit = (data: IAccessory) => {
-    if (form.values.branchId === "") {
-      openNotificationError("Error", "Please select a branch first");
+    if (form.values.companyId === "") {
+      openNotificationError("Error", "Please select a company first");
       return;
     }
     isCreate ? createAccessory(data) : updateAccessory(data);

@@ -81,8 +81,6 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IProductStatusRepository, ProductStatusRepository>();
 builder.Services.AddScoped<IProductStatusService, ProductStatusService>();
-builder.Services.AddScoped<IBranchRepository, BranchRepository>();
-builder.Services.AddScoped<IBranchService, BranchService>();
 builder.Services.AddScoped<IFieldSetRepository, FieldSetRepository>();
 builder.Services.AddScoped<IFieldSetService, FieldSetService>();
 builder.Services.AddScoped<ICustomFieldRepository, CustomFieldRepository>();

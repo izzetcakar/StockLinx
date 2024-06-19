@@ -4,12 +4,12 @@ import { useContext } from "react";
 import GenericContext from "@/context/GenericContext";
 
 export const useInitial = (license?: ILicense, create?: boolean) => {
-  const { branch } = useContext(GenericContext);
+  const { company } = useContext(GenericContext);
   let isCreate = create || false;
 
   let initialValues: ILicense = {
     id: uuid4(),
-    branchId: branch?.id || "",
+    companyId: company?.id || "",
     categoryId: "",
     tag: "",
     name: "",

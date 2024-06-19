@@ -23,14 +23,8 @@ export interface ICompany extends BaseEntity {
   email: string | null;
   imagePath: string | null;
 }
-export interface IBranch extends BaseEntity {
-  companyId: string;
-  locationId: string | null;
-  name: string;
-}
 export interface IDepartment extends BaseEntity {
-  companyId?: string;
-  branchId: string;
+  companyId: string;
   locationId: string | null;
   managerId: string | null;
   name: string;
@@ -56,7 +50,7 @@ export interface IProductStatus extends BaseEntity {
   type: ProductStatusType;
 }
 export interface IBaseProduct extends BaseEntity {
-  branchId: string;
+  companyId: string;
   supplierId: string | null;
   tag: string;
   name: string;
@@ -233,7 +227,6 @@ export interface ICustomLog {
   targetController: string | null;
 }
 export interface IPermission extends BaseEntity {
-  companyId?: string;
-  branchId: string;
+  companyId: string;
   userId: string;
 }

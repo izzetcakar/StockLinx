@@ -27,7 +27,7 @@ interface LicenseFormProps {
 
 const LicenseForm: React.FC<LicenseFormProps> = ({ license, create }) => {
   const { initialValues, isCreate } = useInitial(license, create);
-  const { branch } = useContext(GenericContext);
+  const { company } = useContext(GenericContext);
   const { mutate: createLicense } = useLicense.Create();
   const { mutate: updateLicense } = useLicense.Update();
   const { data: categories } = useCategory.GetAll();
@@ -61,12 +61,12 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license, create }) => {
   });
 
   useEffect(() => {
-    if (isCreate) form.setFieldValue("branchId", branch?.id || "");
-  }, [branch]);
+    if (isCreate) form.setFieldValue("companyId", company?.id || "");
+  }, [company]);
 
   const handleSubmit = (data: ILicense) => {
-    if (form.values.branchId === "") {
-      openNotificationError("Error", "Please select a branch first");
+    if (form.values.companyId === "") {
+      openNotificationError("Error", "Please select a company first");
       return;
     }
     isCreate ? createLicense(data) : updateLicense(data);

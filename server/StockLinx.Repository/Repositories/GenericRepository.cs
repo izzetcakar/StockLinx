@@ -52,6 +52,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
                     Id = Guid.NewGuid(),
                     CreatedDate = DateTime.UtcNow,
                     Name = "Özyer",
+                    Tag = "SO-001",
                     LocationId = newLocations[0].Id
                 },
                 new Company
@@ -59,6 +60,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
                     Id = Guid.NewGuid(),
                     CreatedDate = DateTime.UtcNow,
                     Name = "Hanel",
+                    Tag = "SH-001",
                     LocationId = newLocations[1].Id
                 },
                 new Company
@@ -66,33 +68,20 @@ namespace StockLinx.Repository.Repositories.EF_Core
                     Id = Guid.NewGuid(),
                     CreatedDate = DateTime.UtcNow,
                     Name = "Melden",
+                    Tag = "SM-001",
                     LocationId = newLocations[2].Id
                 },
             };
             dbContext.Companies.AddRange(newCompanies);
-            var newBranches = new List<Branch>();
-            foreach (var company in newCompanies)
-            {
-                newBranches.Add(
-                    new Branch
-                    {
-                        Id = Guid.NewGuid(),
-                        CreatedDate = DateTime.UtcNow,
-                        CompanyId = company.Id,
-                        Name = $"{company.Name} Merkez"
-                    }
-                );
-            }
-            dbContext.Branches.AddRange(newBranches);
             var newDepartments = new List<Department>();
-            foreach (var branch in newBranches)
+            foreach (var company in newCompanies)
             {
                 newDepartments.Add(
                     new Department
                     {
                         Id = Guid.NewGuid(),
                         CreatedDate = DateTime.UtcNow,
-                        BranchId = branch.Id,
+                        CompanyId = company.Id,
                         Name = "İnsan Kaynakları"
                     }
                 );
@@ -101,7 +90,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
                     {
                         Id = Guid.NewGuid(),
                         CreatedDate = DateTime.UtcNow,
-                        BranchId = branch.Id,
+                        CompanyId = company.Id,
                         Name = "Muhasebe"
                     }
                 );
@@ -110,7 +99,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
                     {
                         Id = Guid.NewGuid(),
                         CreatedDate = DateTime.UtcNow,
-                        BranchId = branch.Id,
+                        CompanyId = company.Id,
                         Name = "İdari İşler"
                     }
                 );
@@ -119,7 +108,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
                     {
                         Id = Guid.NewGuid(),
                         CreatedDate = DateTime.UtcNow,
-                        BranchId = branch.Id,
+                        CompanyId = company.Id,
                         Name = "Bilgi İşlem"
                     }
                 );
@@ -472,7 +461,6 @@ namespace StockLinx.Repository.Repositories.EF_Core
         {
             dbContext.RemoveRange(dbContext.Locations);
             dbContext.RemoveRange(dbContext.Companies);
-            dbContext.RemoveRange(dbContext.Branches);
             dbContext.RemoveRange(dbContext.Departments);
             dbContext.RemoveRange(dbContext.Users);
             dbContext.RemoveRange(dbContext.Categories);
@@ -530,7 +518,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
                 {
                     LocationId = l.Id,
                     LocationName = l.Name,
-                    ProductCount = assets.Where(a => a.Branch.LocationId == l.Id).Count(),
+                    ProductCount = assets.Where(a => a.Company.LocationId == l.Id).Count(),
                     AssignedCount = 0
                 })
                 .ToList();

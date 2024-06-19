@@ -1,13 +1,11 @@
-import { useContext } from "react";
 import { IAccessory } from "@interfaces/serverInterfaces";
 import { useColumns } from "./columns";
-import Gridtable from "@components/gridTable/GridTable";
 import { openAccessoryModal } from "../../modals/modals";
-import GenericContext from "../../context/GenericContext";
 import { useAccessory } from "@/hooks/accessory";
+import Gridtable from "@components/gridTable/GridTable";
+import PageHeader from "@/components/generic/PageHeader";
 
 const Accessory = () => {
-  const { drawerBadge } = useContext(GenericContext);
   const { data: accessories } = useAccessory.Filter([]);
   const { mutate: filter } = useAccessory.ApplyFilters();
   const { mutate: remove } = useAccessory.Remove();
@@ -15,10 +13,7 @@ const Accessory = () => {
 
   return (
     <>
-      <div className="page__content__header">
-        <div className="page__content__header__title">Accessories</div>
-        {drawerBadge()}
-      </div>
+      <PageHeader title="Accessories" enableCompanyDrawer />
       <Gridtable
         data={accessories || []}
         itemKey="id"

@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Anchor, Tabs } from "@mantine/core";
 import HistoryLogs from "@components/dataGrid/customLog/HistoryLogs";
 import { useLicense } from "@/hooks/license";
-import { useBranch } from "@/hooks/branch";
+import { useCompany } from "@/hooks/company";
 import { useCategory } from "@/hooks/category";
 import { useManufacturer } from "@/hooks/manufacturer";
 import { useSupplier } from "@/hooks/supplier";
@@ -11,7 +11,7 @@ const License = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { data: license } = useLicense.Get(id as string);
-  const { data: branches } = useBranch.GetAll();
+  const { data: companies } = useCompany.GetAll();
   const { data: categories } = useCategory.GetAll();
   const { data: manufacturers } = useManufacturer.GetAll();
   const { data: suppliers } = useSupplier.GetAll();
@@ -27,10 +27,10 @@ const License = () => {
         <Tabs.Panel value="info">
           <div className="product__content__container">
             <div className="product__content">
-              <div className="product__content__title">Branch</div>
+              <div className="product__content__title">Company</div>
               <div className="product__content__value">
                 {
-                  branches?.find((branch) => branch.id === license?.branchId)
+                  companies?.find((company) => company.id === license?.companyId)
                     ?.name
                 }
               </div>

@@ -3,7 +3,7 @@ import { Anchor, Tabs } from "@mantine/core";
 import HistoryLogs from "@components/dataGrid/customLog/HistoryLogs";
 import "../product.scss";
 import { useAccessory } from "@/hooks/accessory";
-import { useBranch } from "@/hooks/branch";
+import { useCompany } from "@/hooks/company";
 import { useCategory } from "@/hooks/category";
 import { useManufacturer } from "@/hooks/manufacturer";
 import { useSupplier } from "@/hooks/supplier";
@@ -12,7 +12,7 @@ const Accessory = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { data: accessory } = useAccessory.Get(id as string);
-  const { data: branches } = useBranch.GetAll();
+  const { data: companies } = useCompany.GetAll();
   const { data: categories } = useCategory.GetAll();
   const { data: manufacturers } = useManufacturer.GetAll();
   const { data: suppliers } = useSupplier.GetAll();
@@ -30,11 +30,12 @@ const Accessory = () => {
         <Tabs.Panel value="info">
           <div className="product__content__container">
             <div className="product__content">
-              <div className="product__content__title">Branch</div>
+              <div className="product__content__title">Company</div>
               <div className="product__content__value">
                 {
-                  branches?.find((branch) => branch.id === accessory?.branchId)
-                    ?.name
+                  companies?.find(
+                    (company) => company.id === accessory?.companyId
+                  )?.name
                 }
               </div>
             </div>

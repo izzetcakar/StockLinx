@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Data.Entity;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.Entities;
@@ -16,28 +17,22 @@ namespace StockLinx.Repository.Repositories.EF_Core
             _mapper = mapper;
         }
 
-        public UserDto GetDto(User entity)
+        public async Task<UserDto> GetDtoAsync(User entity)
         {
             var dto = _mapper.Map<UserDto>(entity);
-            var department = dbContext
-                .Departments.Where(d => d.Id == entity.DepartmentId)
-                .FirstOrDefault();
-            var branch = dbContext
-                .Branches.Where(b => b.Id == department.BranchId)
-                .FirstOrDefault();
-            dto.CompanyId = dbContext
-                .Branches.Where(b => b.Id == branch.Id)
+            dto.CompanyId = await dbContext
+                .Departments.Where(b => b.Id == entity.DepartmentId)
                 .Select(b => b.CompanyId)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
             return dto;
         }
 
-        public List<UserDto> GetDtos(List<User> entities)
+        public async Task<List<UserDto>> GetDtosAsync(List<User> entities)
         {
             var dtos = new List<UserDto>();
             foreach (var entity in entities)
             {
-                var dto = GetDto(entity);
+                var dto = await GetDtoAsync(entity);
                 dtos.Add(dto);
             }
             return dtos;
@@ -45,8 +40,8 @@ namespace StockLinx.Repository.Repositories.EF_Core
 
         public async Task<List<UserDto>> GetAllDtosAsync()
         {
-            var entities = await dbContext.Users.AsNoTracking().ToListAsync();
-            return GetDtos(entities);
+            var entities = await dbContext.Users.ToListAsync();
+            return await GetDtosAsync(entities);
         }
 
         public async Task<bool> CanDeleteAsync(Guid id)

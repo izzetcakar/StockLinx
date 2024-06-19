@@ -1,13 +1,11 @@
 import { IModel } from "../../interfaces/serverInterfaces";
 import { useColumns } from "./columns";
 import { openModelModal } from "../../modals/modals";
-import { useContext } from "react";
 import { useModel } from "@/hooks/model";
-import GenericContext from "../../context/GenericContext";
+import PageHeader from "@/components/generic/PageHeader";
 import Gridtable from "@components/gridTable/GridTable";
 
 const Model = () => {
-  const { drawerBadge } = useContext(GenericContext);
   const { data: models } = useModel.Filter([]);
   const { mutate: filter } = useModel.ApplyFilters();
   const { mutate: remove } = useModel.Remove();
@@ -15,10 +13,7 @@ const Model = () => {
 
   return (
     <>
-      <div className="page__content__header">
-        <div className="page__content__header__title">Models</div>
-        {drawerBadge()}
-      </div>
+      <PageHeader title="Models" />
       <Gridtable
         data={models || []}
         itemKey="id"

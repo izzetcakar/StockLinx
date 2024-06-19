@@ -14,7 +14,7 @@ namespace StockLinx.Service.Services
     {
         private readonly IAccessoryRepository _accessoryRepository;
         private readonly IUserProductRepository _userProductRepository;
-        private readonly IBranchRepository _branchRepository;
+        private readonly ICompanyRepository _companyRepository;
         private readonly ICustomLogService _customLogService;
         private readonly IUserService _userService;
         private readonly IFilterService<Accessory> _filterService;
@@ -24,7 +24,7 @@ namespace StockLinx.Service.Services
         public AccessoryService(
             IRepository<Accessory> repository,
             IAccessoryRepository accessoryRepository,
-            IBranchRepository branchRepository,
+            ICompanyRepository companyRepository,
             IUserProductRepository userProductRepository,
             ICustomLogService customLogService,
             IUserService userService,
@@ -36,7 +36,7 @@ namespace StockLinx.Service.Services
         {
             _accessoryRepository = accessoryRepository;
             _userProductRepository = userProductRepository;
-            _branchRepository = branchRepository;
+            _companyRepository = companyRepository;
             _customLogService = customLogService;
             _userService = userService;
             _filterService = filterService;
@@ -58,7 +58,7 @@ namespace StockLinx.Service.Services
         public async Task<AccessoryDto> CreateAccessoryAsync(AccessoryCreateDto dto)
         {
             await CheckTagExistAsync(dto.Tag);
-            Branch branch = await _branchRepository.GetByIdAsync(dto.BranchId);
+            Company company = await _companyRepository.GetByIdAsync(dto.CompanyId);
             Accessory newAccessory = _mapper.Map<Accessory>(dto);
 
             if (newAccessory.ImagePath != null)
@@ -80,9 +80,9 @@ namespace StockLinx.Service.Services
                 "Accessory",
                 newAccessory.Id,
                 newAccessory.Name,
-                "Branch",
-                branch.Id,
-                branch.Name
+                "Company",
+                company.Id,
+                company.Name
             );
             await _unitOfWork.CommitAsync();
             return await _accessoryRepository.GetDtoAsync(newAccessory);
@@ -93,7 +93,7 @@ namespace StockLinx.Service.Services
         )
         {
             await CheckTagExistAsync(dtos.Select(dto => dto.Tag).ToList());
-            Branch branch = await _branchRepository.GetByIdAsync(dtos[0].BranchId);
+            Company company = await _companyRepository.GetByIdAsync(dtos[0].CompanyId);
             List<Accessory> newAccessories = new List<Accessory>();
             foreach (AccessoryCreateDto dto in dtos)
             {
@@ -105,9 +105,9 @@ namespace StockLinx.Service.Services
                     "Accessory",
                     newAccessory.Id,
                     newAccessory.Name,
-                    "Branch",
-                    branch.Id,
-                    branch.Name
+                    "Company",
+                    company.Id,
+                    company.Name
                 );
             }
             await _accessoryRepository.AddRangeAsync(newAccessories);

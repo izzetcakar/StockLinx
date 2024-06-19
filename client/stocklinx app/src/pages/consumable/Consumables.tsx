@@ -1,13 +1,11 @@
 import { IConsumable } from "../../interfaces/serverInterfaces";
 import { useColumns } from "./columns";
 import { openConsumableModal } from "../../modals/modals";
-import { useContext } from "react";
 import { useConsumable } from "@/hooks/consumable";
-import GenericContext from "../../context/GenericContext";
+import PageHeader from "@/components/generic/PageHeader";
 import Gridtable from "@components/gridTable/GridTable";
 
 const Consumable = () => {
-  const { drawerBadge } = useContext(GenericContext);
   const { data: consumables } = useConsumable.Filter([]);
   const { mutate: filter } = useConsumable.ApplyFilters();
   const { mutate: remove } = useConsumable.Remove();
@@ -15,10 +13,7 @@ const Consumable = () => {
 
   return (
     <>
-      <div className="page__content__header">
-        <div className="page__content__header__title">Consumables</div>
-        {drawerBadge()}
-      </div>
+      <PageHeader title="Consumables" enableCompanyDrawer />
       <Gridtable
         data={consumables || []}
         itemKey="id"

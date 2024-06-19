@@ -9,7 +9,7 @@ import { openCheckInModal } from "../../modals/modals";
 import { initialUserProduct } from "../../initials/initials";
 import { useConsumable } from "@/hooks/consumable";
 import { useCategory } from "@/hooks/category";
-import { useBranch } from "@/hooks/branch";
+import { useCompany } from "@/hooks/company";
 import { useSupplier } from "@/hooks/supplier";
 import { useManufacturer } from "@/hooks/manufacturer";
 import UserProductQuantityCell from "@/cells/UserProductQuantityCell";
@@ -18,7 +18,7 @@ import { EntityCells } from "@/cells/Entity";
 export const useColumns = () => {
   const { mutate: checkIn } = useConsumable.CheckIn();
   const { data: categories } = useCategory.GetAll();
-  const { data: branchLookup } = useBranch.Lookup();
+  const { data: companyLookup } = useCompany.Lookup();
   const { data: supplierLookup } = useSupplier.Lookup();
   const { data: manufacturerLookup } = useManufacturer.Lookup();
 
@@ -132,10 +132,10 @@ export const useColumns = () => {
     },
     // INVISIBLE COLUMNS
     {
-      caption: "Branch",
-      dataField: "branchId",
+      caption: "Company",
+      dataField: "companyId",
       lookup: {
-        data: branchLookup || [],
+        data: companyLookup || [],
       },
       dataType: "string",
       allowVisible: false,
