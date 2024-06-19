@@ -34,7 +34,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
             return GetDtos(entities);
         }
 
-        public async Task<bool> CanDeleteAsync(Guid id)
+        public async Task CanDeleteAsync(Guid id)
         {
             bool assets = await dbContext.Assets.AnyAsync(a => a.CompanyId == id);
             bool accessories = await dbContext.Accessories.AnyAsync(a => a.CompanyId == id);
@@ -68,8 +68,6 @@ namespace StockLinx.Repository.Repositories.EF_Core
             {
                 throw new Exception("Cannot delete company because it has permissions.");
             }
-
-            return true;
         }
     }
 }

@@ -20,6 +20,7 @@ export interface BaseEntity {
 export interface ICompany extends BaseEntity {
   locationId: string | null;
   name: string;
+  tag: string;
   email: string | null;
   imagePath: string | null;
 }

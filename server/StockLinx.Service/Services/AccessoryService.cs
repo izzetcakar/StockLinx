@@ -154,18 +154,16 @@ namespace StockLinx.Service.Services
 
         public async Task DeleteAccessoryAsync(Guid id)
         {
+            await _accessoryRepository.CanDeleteAsync(id);
             Accessory accessory = await GetByIdAsync(id);
-            bool canDelete = await _accessoryRepository.CanDeleteAsync(id);
-            if (canDelete)
-            {
-                await _customLogService.CreateCustomLog(
-                    "Delete",
-                    "Accessory",
-                    accessory.Id,
-                    accessory.Name
-                );
-                _accessoryRepository.Remove(accessory);
-            }
+            await _customLogService.CreateCustomLog(
+                "Delete",
+                "Accessory",
+                accessory.Id,
+                accessory.Name
+            );
+            _accessoryRepository.Remove(accessory);
+
             await _unitOfWork.CommitAsync();
         }
 
@@ -179,17 +177,14 @@ namespace StockLinx.Service.Services
             }
             foreach (Accessory accessory in accessories)
             {
-                bool canDelete = await _accessoryRepository.CanDeleteAsync(accessory.Id);
-                if (canDelete)
-                {
-                    await _customLogService.CreateCustomLog(
-                        "Delete",
-                        "Accessory",
-                        accessory.Id,
-                        accessory.Name
-                    );
-                    _accessoryRepository.Remove(accessory);
-                }
+                await _accessoryRepository.CanDeleteAsync(accessory.Id);
+                await _customLogService.CreateCustomLog(
+                    "Delete",
+                    "Accessory",
+                    accessory.Id,
+                    accessory.Name
+                );
+                _accessoryRepository.Remove(accessory);
             }
             await _unitOfWork.CommitAsync();
         }

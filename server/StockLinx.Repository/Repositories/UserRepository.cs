@@ -1,4 +1,3 @@
-﻿using System.Data.Entity;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Generic;
@@ -21,13 +20,13 @@ namespace StockLinx.Repository.Repositories.EF_Core
         {
             var dto = _mapper.Map<UserDto>(entity);
             dto.CompanyId = await dbContext
-                .Departments.Where(b => b.Id == entity.DepartmentId)
+                .Departments.Where(b => b.Id == dto.DepartmentId)
                 .Select(b => b.CompanyId)
                 .FirstOrDefaultAsync();
             return dto;
         }
 
-        public async Task<List<UserDto>> GetDtosAsync(List<User> entities)
+        public async Task<List<UserDto>> GetDtosAsync(IEnumerable<User> entities)
         {
             var dtos = new List<UserDto>();
             foreach (var entity in entities)
@@ -40,18 +39,17 @@ namespace StockLinx.Repository.Repositories.EF_Core
 
         public async Task<List<UserDto>> GetAllDtosAsync()
         {
-            var entities = await dbContext.Users.ToListAsync();
+            List<User> entities = await dbContext.Users.AsNoTracking().ToListAsync();
             return await GetDtosAsync(entities);
         }
 
-        public async Task<bool> CanDeleteAsync(Guid id)
+        public async Task CanDeleteAsync(Guid id)
         {
             var userProducts = await dbContext.UserProducts.AnyAsync(dp => dp.UserId == id);
             if (userProducts)
             {
                 throw new Exception("User has deployed items");
             }
-            return true;
         }
     }
 }

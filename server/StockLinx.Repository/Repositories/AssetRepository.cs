@@ -39,7 +39,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
             return GetDtos(entities);
         }
 
-        public async Task<bool> CanDeleteAsync(Guid id)
+        public async Task CanDeleteAsync(Guid id)
         {
             bool userProducts = await dbContext.UserProducts.AnyAsync(d =>
                 d.AssetId.HasValue && d.AssetId == id
@@ -53,7 +53,6 @@ namespace StockLinx.Repository.Repositories.EF_Core
             {
                 throw new Exception("Cannot delete asset because it has products.");
             }
-            return true;
         }
     }
 }

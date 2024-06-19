@@ -46,7 +46,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
             return await GetDtosAsync(entities);
         }
 
-        public async Task<bool> CanDeleteAsync(Guid id)
+        public async Task CanDeleteAsync(Guid id)
         {
             bool assetProducts = await dbContext.AssetProducts.AnyAsync(d =>
                 d.ComponentId.HasValue && d.ComponentId == id
@@ -57,7 +57,6 @@ namespace StockLinx.Repository.Repositories.EF_Core
                     "Cannot delete component because it is has deployed to an asset."
                 );
             }
-            return true;
         }
 
         public async Task<int> GetAvaliableQuantityAsync(Component entity)

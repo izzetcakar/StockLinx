@@ -6,6 +6,5 @@
         public Guid ProductStatusId { get; set; }
         public string? ImagePath { get; set; }
         public string? SerialNo { get; set; }
-        public List<OverageAssetDto>? OverageAssets { get; set; }
     }
 }

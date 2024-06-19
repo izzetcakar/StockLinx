@@ -23,12 +23,12 @@ export const baseHooks = (entity: string) => {
     return useMutation({
       mutationKey: "CREATE_" + entity,
       mutationFn: (dto: any) => request(dto),
-      onSuccess: (dto) => {
+      onSuccess: (res) => {
         queryClient.setQueryData<any[]>("FETCH_ALL_" + entity, (old) => {
-          return old ? [...old, dto] : [dto];
+          return old ? [...old, res] : [res];
         });
         queryClient.setQueryData<any[]>("FILTER_" + entity, (old) => {
-          return old ? [...old, dto] : [dto];
+          return old ? [...old, res] : [res];
         });
         queryClient.invalidateQueries("LOOKUP_" + entity);
       },
@@ -39,12 +39,12 @@ export const baseHooks = (entity: string) => {
     return useMutation({
       mutationKey: "CREATE_RANGE_" + entity,
       mutationFn: (dtos: any[]) => request(dtos),
-      onSuccess: (dtos) => {
+      onSuccess: (res) => {
         queryClient.setQueryData<any[]>("FETCH_ALL_" + entity, (old) => {
-          return old ? [...old, ...dtos] : dtos;
+          return old ? [...old, ...res] : res;
         });
         queryClient.setQueryData<any[]>("FILTER_" + entity, (old) => {
-          return old ? [...old, ...dtos] : dtos;
+          return old ? [...old, ...res] : res;
         });
         queryClient.invalidateQueries("LOOKUP_" + entity);
       },
@@ -55,18 +55,18 @@ export const baseHooks = (entity: string) => {
     return useMutation({
       mutationKey: "UPDATE_" + entity,
       mutationFn: (dto: any) => request(dto),
-      onSuccess: (dto) => {
+      onSuccess: (res) => {
         queryClient.setQueryData<any[]>("FETCH_ALL" + entity, (old) => {
           return old
-            ? (old as any[]).map((x) => (x.id === dto.id ? dto : x))
-            : [dto];
+            ? (old as any[]).map((x) => (x.id === res.id ? res : x))
+            : [res];
         });
         queryClient.setQueryData<any[]>("FILTER_" + entity, (old) => {
           return old
-            ? (old as any[]).map((x) => (x.id === dto.id ? dto : x))
-            : [dto];
+            ? (old as any[]).map((x) => (x.id === res.id ? res : x))
+            : [res];
         });
-        queryClient.setQueryData(["FETCH_" + entity, dto.id], dto);
+        queryClient.setQueryData(["FETCH_" + entity, res.id], res);
         queryClient.invalidateQueries("LOOKUP_" + entity);
       },
     });
@@ -125,8 +125,8 @@ export const baseHooks = (entity: string) => {
     return useMutation({
       mutationKey: "APPLY_FILTER_" + entity,
       mutationFn: (filters: QueryFilter[]) => request(filters),
-      onSuccess: (filters) => {
-        queryClient.setQueryData("FILTER_" + entity, filters);
+      onSuccess: (res) => {
+        queryClient.setQueryData("FILTER_" + entity, res);
       },
     });
   };

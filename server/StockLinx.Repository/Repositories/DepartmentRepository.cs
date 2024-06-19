@@ -32,14 +32,13 @@ namespace StockLinx.Repository.Repositories.EF_Core
             return GetDtos(entities);
         }
 
-        public async Task<bool> CanDeleteAsync(Guid id)
+        public async Task CanDeleteAsync(Guid id)
         {
             bool users = await dbContext.Users.AnyAsync(u => u.DepartmentId == id);
             if (users)
             {
                 throw new Exception("Cannot delete department because it has users.");
             }
-            return true;
         }
     }
 }

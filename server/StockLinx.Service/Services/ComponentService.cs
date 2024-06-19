@@ -123,19 +123,16 @@ namespace StockLinx.Service.Services
 
         public async Task DeleteComponentAsync(Guid id)
         {
+            await _componentRepository.CanDeleteAsync(id);
             Component component = await GetByIdAsync(id);
-            bool canDelete = await _componentRepository.CanDeleteAsync(id);
-            if (canDelete)
-            {
-                _componentRepository.Remove(component);
-                await _customLogService.CreateCustomLog(
-                    "Delete",
-                    "Component",
-                    component.Id,
-                    component.Name
-                );
-                await _unitOfWork.CommitAsync();
-            }
+            _componentRepository.Remove(component);
+            await _customLogService.CreateCustomLog(
+                "Delete",
+                "Component",
+                component.Id,
+                component.Name
+            );
+            await _unitOfWork.CommitAsync();
         }
 
         public async Task DeleteRangeComponentAsync(List<Guid> ids)
@@ -143,18 +140,15 @@ namespace StockLinx.Service.Services
             List<Component> components = new List<Component>();
             foreach (Guid id in ids)
             {
+                await _componentRepository.CanDeleteAsync(id);
                 Component component = await GetByIdAsync(id);
-                bool canDelete = await _componentRepository.CanDeleteAsync(id);
-                if (canDelete)
-                {
-                    components.Add(component);
-                    await _customLogService.CreateCustomLog(
-                        "Delete",
-                        "Component",
-                        component.Id,
-                        component.Name
-                    );
-                }
+                components.Add(component);
+                await _customLogService.CreateCustomLog(
+                    "Delete",
+                    "Component",
+                    component.Id,
+                    component.Name
+                );
             }
             _componentRepository.RemoveRange(components);
             await _unitOfWork.CommitAsync();

@@ -119,19 +119,16 @@ namespace StockLinx.Service.Services
 
         public async Task DeleteConsumableAsync(Guid id)
         {
+            await _consumableRepository.CanDeleteAsync(id);
             Consumable consumable = await GetByIdAsync(id);
-            bool canDelete = await _consumableRepository.CanDeleteAsync(id);
-            if (canDelete)
-            {
-                _consumableRepository.Remove(consumable);
-                await _customLogService.CreateCustomLog(
-                    "Delete",
-                    "Consumable",
-                    consumable.Id,
-                    consumable.Name
-                );
-                await _unitOfWork.CommitAsync();
-            }
+            _consumableRepository.Remove(consumable);
+            await _customLogService.CreateCustomLog(
+                "Delete",
+                "Consumable",
+                consumable.Id,
+                consumable.Name
+            );
+            await _unitOfWork.CommitAsync();
         }
 
         public async Task DeleteRangeConsumableAsync(List<Guid> ids)
@@ -139,18 +136,15 @@ namespace StockLinx.Service.Services
             List<Consumable> consumables = new List<Consumable>();
             foreach (Guid id in ids)
             {
+                await _consumableRepository.CanDeleteAsync(id);
                 Consumable consumable = await GetByIdAsync(id);
-                bool canDelete = await _consumableRepository.CanDeleteAsync(id);
-                if (canDelete)
-                {
-                    consumables.Add(consumable);
-                    await _customLogService.CreateCustomLog(
-                        "Delete",
-                        "Consumable",
-                        consumable.Id,
-                        consumable.Name
-                    );
-                }
+                consumables.Add(consumable);
+                await _customLogService.CreateCustomLog(
+                    "Delete",
+                    "Consumable",
+                    consumable.Id,
+                    consumable.Name
+                );
             }
             _consumableRepository.RemoveRange(consumables);
             await _unitOfWork.CommitAsync();

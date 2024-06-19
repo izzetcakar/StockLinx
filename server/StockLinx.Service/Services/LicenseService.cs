@@ -112,19 +112,11 @@ namespace StockLinx.Service.Services
 
         public async Task DeleteLicenseAsync(Guid id)
         {
+            await _licenseRepository.CanDeleteAsync(id);
             License license = await GetByIdAsync(id);
-            bool canDelete = await _licenseRepository.CanDeleteAsync(id);
-            if (canDelete)
-            {
-                _licenseRepository.Remove(license);
-                await _customLogService.CreateCustomLog(
-                    "Delete",
-                    "License",
-                    license.Id,
-                    license.Name
-                );
-                await _unitOfWork.CommitAsync();
-            }
+            _licenseRepository.Remove(license);
+            await _customLogService.CreateCustomLog("Delete", "License", license.Id, license.Name);
+            await _unitOfWork.CommitAsync();
         }
 
         public async Task DeleteRangeLicenseAsync(List<Guid> ids)
@@ -132,18 +124,15 @@ namespace StockLinx.Service.Services
             List<License> licenses = new List<License>();
             foreach (Guid id in ids)
             {
-                bool canDelete = await _licenseRepository.CanDeleteAsync(id);
+                await _licenseRepository.CanDeleteAsync(id);
                 License license = await GetByIdAsync(id);
-                if (canDelete)
-                {
-                    licenses.Add(license);
-                    await _customLogService.CreateCustomLog(
-                        "Delete",
-                        "License",
-                        license.Id,
-                        license.Name
-                    );
-                }
+                licenses.Add(license);
+                await _customLogService.CreateCustomLog(
+                    "Delete",
+                    "License",
+                    license.Id,
+                    license.Name
+                );
             }
             _licenseRepository.RemoveRange(licenses);
             await _unitOfWork.CommitAsync();
@@ -254,7 +243,6 @@ namespace StockLinx.Service.Services
                     await _unitOfWork.CommitAsync();
                     return await _userProductRepository.GetDtoAsync(newUserProduct);
             }
-
         }
 
         public async Task<AssetProductDto> AssetCheckOutAsync(AssetProductCheckOutDto checkOutDto)

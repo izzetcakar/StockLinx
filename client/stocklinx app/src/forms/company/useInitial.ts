@@ -7,6 +7,7 @@ export const useInitial = (company?: ICompany, create?: boolean) => {
 
   let initialValues: ICompany = {
     id: uuid4(),
+    tag: "",
     name: "",
     email: null,
     locationId: null,

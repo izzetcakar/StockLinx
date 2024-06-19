@@ -58,7 +58,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
 
         public void RemoveRange(IEnumerable<T> entities)
         {
-            var result = dbSet.Find(entities);
+            var result = dbSet.Find(entities.Aggregate((a, b) => a).GetType().GetProperty("Id").GetValue(entities.Aggregate((a, b) => a)));
             if (result == null)
             {
                 throw new Exception($"{typeof(T).Name} is not found");
@@ -79,7 +79,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
 
         public void UpdateRange(IEnumerable<T> entities)
         {
-            var result = dbSet.Find(entities);
+            var result = dbSet.Find(entities.Aggregate((a, b) => a).GetType().GetProperty("Id").GetValue(entities.Aggregate((a, b) => a)));
             if (result == null)
             {
                 throw new Exception($"{typeof(T).Name} not found");

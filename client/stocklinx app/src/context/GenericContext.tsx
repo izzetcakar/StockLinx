@@ -37,7 +37,7 @@ export const GenericProvider: React.FC<GenericProviderProps> = ({
     if (company) {
       return company.name;
     }
-    return "Select Company"
+    return "Select Company";
   };
 
   const drawerBadge = () => {
@@ -48,23 +48,21 @@ export const GenericProvider: React.FC<GenericProviderProps> = ({
           position="right"
           opened={drawerOpened}
           onClose={close}
-          title="Companies"
+          title="Select Company"
         >
           <Select
             data={companies?.map((company) => ({
               value: company.id,
-              label: company.name,
+              label: company.tag + " - " + company.name,
             }))}
             label="Company"
-            placeholder="Select Company"
+            placeholder="Company"
             value={company?.id || ""}
             onChange={(value) =>
               setCompany(companies?.find((c) => c.id === value) || null)
             }
             comboboxProps={{ position: "bottom" }}
             nothingFoundMessage="No company found"
-            required
-            withAsterisk
           />
         </Drawer>
         <Badge

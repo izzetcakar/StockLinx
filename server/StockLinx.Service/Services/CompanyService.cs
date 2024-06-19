@@ -127,24 +127,16 @@ namespace StockLinx.Service.Services
 
         public async Task DeleteCompanyAsync(Guid id)
         {
+            await _companyRepository.CanDeleteAsync(id);
             User user = await _userService.GetCurrentUser();
             if ((bool)!user.IsAdmin)
             {
                 throw new Exception("User is not admin");
             }
             Company company = await GetByIdAsync(id);
-            bool canDelete = await _companyRepository.CanDeleteAsync(id);
-            if (canDelete)
-            {
-                await _customLogService.CreateCustomLog(
-                    "Delete",
-                    "Company",
-                    company.Id,
-                    company.Name
-                );
-                _companyRepository.Remove(company);
-                await _unitOfWork.CommitAsync();
-            }
+            await _customLogService.CreateCustomLog("Delete", "Company", company.Id, company.Name);
+            _companyRepository.Remove(company);
+            await _unitOfWork.CommitAsync();
         }
 
         public async Task DeleteRangeCompanyAsync(List<Guid> ids)
@@ -157,18 +149,15 @@ namespace StockLinx.Service.Services
             List<Company> companies = new List<Company>();
             foreach (Guid id in ids)
             {
+                await _companyRepository.CanDeleteAsync(id);
                 Company company = await GetByIdAsync(id);
-                bool canDelete = await _companyRepository.CanDeleteAsync(id);
-                if (canDelete)
-                {
-                    companies.Add(company);
-                    await _customLogService.CreateCustomLog(
-                        "Delete",
-                        "Company",
-                        company.Id,
-                        company.Name
-                    );
-                }
+                companies.Add(company);
+                await _customLogService.CreateCustomLog(
+                    "Delete",
+                    "Company",
+                    company.Id,
+                    company.Name
+                );
             }
             _companyRepository.RemoveRange(companies);
             await _unitOfWork.CommitAsync();

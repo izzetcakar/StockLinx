@@ -56,30 +56,19 @@ namespace StockLinx.Service.Services
             return await _assetRepository.GetAllDtosAsync();
         }
 
-        public async Task<List<AssetDto>> CreateAssetAsync(AssetCreateDto dto)
+        public async Task<AssetDto> CreateAssetAsync(AssetCreateDto dto)
         {
-            if (dto.OverageAssets != null && dto.OverageAssets.Count > 0)
-            {
-                await CheckTagExistAsync(
-                    dto.OverageAssets.Select(x => x.Tag).Append(dto.Tag).ToList()
-                );
-            }
-            else
-            {
-                await CheckTagExistAsync(dto.Tag);
-            }
-            List<Asset> newAssets = new List<Asset>();
+            await CheckTagExistAsync(dto.Tag);
             Asset newAsset = _mapper.Map<Asset>(dto);
             Company company = await _companyRepository.GetByIdAsync(newAsset.CompanyId);
-            newAssets.Add(newAsset);
             await _customLogService.CreateCustomLog(
                 "Create",
                 "Asset",
                 newAsset.Id,
-                newAsset.Name,
+                newAsset.Tag,
                 "Company",
                 company.Id,
-                company.Name
+                company.Tag
             );
 
             if (newAsset.ImagePath != null)
@@ -90,48 +79,22 @@ namespace StockLinx.Service.Services
                     newAsset.ImagePath = $"Assets/{newAsset.Id}.jpg";
                 }
             }
-
-            if (dto.OverageAssets != null && dto.OverageAssets.Count > 0)
-            {
-                foreach (OverageAssetDto overageAsset in dto.OverageAssets)
-                {
-                    Asset extraAsset = new Asset()
-                    {
-                        Id = Guid.NewGuid(),
-                        CreatedDate = DateTime.UtcNow,
-                        UpdatedDate = null,
-                        CompanyId = company.Id,
-                        ImagePath = newAsset.ImagePath,
-                        ModelId = newAsset.ModelId,
-                        Name = newAsset.Name,
-                        Notes = newAsset.Notes,
-                        OrderNo = newAsset.OrderNo,
-                        ProductStatusId = newAsset.ProductStatusId,
-                        PurchaseCost = newAsset.PurchaseCost,
-                        PurchaseDate = newAsset.PurchaseDate,
-                        SerialNo = newAsset.SerialNo,
-                        SupplierId = newAsset.SupplierId,
-                        Tag = overageAsset.Tag,
-                    };
-                    newAssets.Add(extraAsset);
-                    await _customLogService.CreateCustomLog(
-                        "Create",
-                        "Asset",
-                        extraAsset.Id,
-                        extraAsset.Name,
-                        "Company",
-                        company.Id,
-                        company.Name
-                    );
-                }
-            }
-            await _assetRepository.AddRangeAsync(newAssets);
+            await _customLogService.CreateCustomLog(
+                "Create",
+                "Asset",
+                newAsset.Id,
+                newAsset.Tag,
+                "Company",
+                company.Id,
+                company.Tag
+            );
             await _unitOfWork.CommitAsync();
-            return _assetRepository.GetDtos(newAssets);
+            return _assetRepository.GetDto(newAsset);
         }
 
         public async Task<List<AssetDto>> CreateRangeAssetAsync(List<AssetCreateDto> dtos)
         {
+            await CheckTagExistAsync(dtos.Select(x => x.Tag).ToList());
             List<Asset> newAssets = new List<Asset>();
             Company company = await _companyRepository.GetByIdAsync(dtos[0].CompanyId);
             foreach (AssetCreateDto createDto in dtos)
@@ -142,10 +105,10 @@ namespace StockLinx.Service.Services
                     "Create",
                     "Asset",
                     newAsset.Id,
-                    newAsset.Name,
+                    newAsset.Tag,
                     "Company",
                     company.Id,
-                    company.Name
+                    company.Tag
                 );
             }
             await _assetRepository.AddRangeAsync(newAssets);
@@ -176,12 +139,10 @@ namespace StockLinx.Service.Services
 
         public async Task DeleteAssetAsync(Guid id)
         {
+            await _assetRepository.CanDeleteAsync(id);
             Asset asset = await GetByIdAsync(id);
-            bool canDelete = await _assetRepository.CanDeleteAsync(id);
-            if (canDelete)
-            {
-                _assetRepository.Remove(asset);
-            }
+            _assetRepository.Remove(asset);
+
             await _customLogService.CreateCustomLog("Delete", "Asset", asset.Id, asset.Name);
             await _unitOfWork.CommitAsync();
         }
@@ -191,18 +152,10 @@ namespace StockLinx.Service.Services
             List<Asset> assets = new List<Asset>();
             foreach (Guid id in ids)
             {
-                bool canDelete = await _assetRepository.CanDeleteAsync(id);
+                await _assetRepository.CanDeleteAsync(id);
                 Asset asset = await GetByIdAsync(id);
-                if (canDelete)
-                {
-                    assets.Add(asset);
-                    await _customLogService.CreateCustomLog(
-                        "Delete",
-                        "Asset",
-                        asset.Id,
-                        asset.Name
-                    );
-                }
+                assets.Add(asset);
+                await _customLogService.CreateCustomLog("Delete", "Asset", asset.Id, asset.Tag);
             }
             _assetRepository.RemoveRange(assets);
             await _unitOfWork.CommitAsync();
@@ -233,7 +186,7 @@ namespace StockLinx.Service.Services
                 "CheckIn",
                 "Asset",
                 asset.Id,
-                asset.Name,
+                asset.Tag,
                 "User",
                 user.Id,
                 user.FirstName + user.LastName
@@ -254,7 +207,7 @@ namespace StockLinx.Service.Services
                 "CheckOut",
                 "Asset",
                 asset.Id,
-                asset.Name,
+                asset.Tag,
                 checkOutDto.Notes ?? "Asset is checked out"
             );
             asset.ProductStatusId = checkOutDto.ProductStatusId;

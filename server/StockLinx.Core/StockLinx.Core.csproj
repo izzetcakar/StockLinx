@@ -13,7 +13,6 @@
   </ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="LinqKit" Version="1.2.5" />
 		<PackageReference Include="LinqKit.Microsoft.EntityFrameworkCore" Version="8.1.5" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.6" />
 		<PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />

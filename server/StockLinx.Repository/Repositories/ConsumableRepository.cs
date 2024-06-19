@@ -46,7 +46,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
             return await GetDtosAsync(entities);
         }
 
-        public async Task<bool> CanDeleteAsync(Guid id)
+        public async Task CanDeleteAsync(Guid id)
         {
             bool userProducts = await dbContext.UserProducts.AnyAsync(d =>
                 d.ConsumableId.HasValue && d.ConsumableId == id
@@ -57,7 +57,6 @@ namespace StockLinx.Repository.Repositories.EF_Core
                     "Cannot delete consumable because it is used in user products."
                 );
             }
-            return true;
         }
 
         public async Task<int> GetAvaliableQuantityAsync(Consumable entity)

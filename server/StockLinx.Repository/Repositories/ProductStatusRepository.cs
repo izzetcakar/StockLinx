@@ -34,14 +34,13 @@ namespace StockLinx.Repository.Repositories.EF_Core
             return GetDtos(entities);
         }
 
-        public async Task<bool> CanDeleteAsync(Guid id)
+        public async Task CanDeleteAsync(Guid id)
         {
             var assets = await dbContext.Assets.AnyAsync(a => a.ProductStatusId == id);
             if (assets)
             {
                 throw new Exception("Product Status is in use");
             }
-            return true;
         }
     }
 }

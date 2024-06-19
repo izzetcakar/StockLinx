@@ -52,7 +52,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
             return await GetDtosAsync(entities);
         }
 
-        public async Task<bool> CanDeleteAsync(Guid id)
+        public async Task CanDeleteAsync(Guid id)
         {
             bool userProducts = await dbContext.UserProducts.AnyAsync(up =>
                 up.LicenseId.HasValue && up.LicenseId == id
@@ -68,7 +68,6 @@ namespace StockLinx.Repository.Repositories.EF_Core
             {
                 throw new Exception("Cannot delete license because it is used in asset products.");
             }
-            return true;
         }
 
         public async Task<int> GetAvaliableQuantityAsync(License entity)

@@ -46,7 +46,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
             return await GetDtosAsync(entities);
         }
 
-        public async Task<bool> CanDeleteAsync(Guid id)
+        public async Task CanDeleteAsync(Guid id)
         {
             bool userProducts = await dbContext.UserProducts.AnyAsync(d =>
                 d.AccessoryId.HasValue && d.AccessoryId == id
@@ -55,7 +55,6 @@ namespace StockLinx.Repository.Repositories.EF_Core
             {
                 throw new Exception("Cannot delete accessory because it is used in user products.");
             }
-            return true;
         }
 
         public async Task<int> GetAvaliableQuantityAsync(Accessory entity)

@@ -167,19 +167,16 @@ namespace StockLinx.Service.Services
 
         public async Task DeleteUserAsync(Guid id)
         {
+            await _userRepository.CanDeleteAsync(id);
             User user = await GetByIdAsync(id);
-            bool canDelete = await _userRepository.CanDeleteAsync(id);
-            if (canDelete)
-            {
-                await _customLogService.CreateCustomLog(
-                    "Delete",
-                    "User",
-                    user.Id,
-                    user.FirstName + " " + user.LastName
-                );
-                _userRepository.Remove(user);
-                await _unitOfWork.CommitAsync();
-            }
+            await _customLogService.CreateCustomLog(
+                "Delete",
+                "User",
+                user.Id,
+                user.FirstName + " " + user.LastName
+            );
+            _userRepository.Remove(user);
+            await _unitOfWork.CommitAsync();
         }
 
         public async Task DeleteRangeUserAsync(List<Guid> ids)
@@ -187,18 +184,15 @@ namespace StockLinx.Service.Services
             List<User> users = new List<User>();
             foreach (Guid id in ids)
             {
+                await _userRepository.CanDeleteAsync(id);
                 User user = await GetByIdAsync(id);
-                bool canDelete = await _userRepository.CanDeleteAsync(id);
-                if (canDelete)
-                {
-                    users.Add(user);
-                    await _customLogService.CreateCustomLog(
-                        "Delete",
-                        "User",
-                        user.Id,
-                        user.FirstName + " " + user.LastName
-                    );
-                }
+                users.Add(user);
+                await _customLogService.CreateCustomLog(
+                    "Delete",
+                    "User",
+                    user.Id,
+                    user.FirstName + " " + user.LastName
+                );
             }
             _userRepository.RemoveRange(users);
             await _unitOfWork.CommitAsync();

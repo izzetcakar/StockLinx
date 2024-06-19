@@ -8,6 +8,6 @@ namespace StockLinx.Core.Repositories
         CompanyDto GetDto(Company entity);
         List<CompanyDto> GetDtos(List<Company> entities);
         Task<List<CompanyDto>> GetAllDtosAsync();
-        Task<bool> CanDeleteAsync(Guid id);
+        Task CanDeleteAsync(Guid id);
     }
 }

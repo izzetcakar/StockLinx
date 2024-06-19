@@ -3,7 +3,6 @@ using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
-using StockLinx.Core.Entities;
 using StockLinx.Core.Services;
 
 namespace StockLinx.API.Controllers
@@ -52,8 +51,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                List<AssetDto> result = await _assetService.CreateAssetAsync(dto);
-                return CreateActionResult(CustomResponseDto<List<AssetDto>>.Success(201, result));
+                AssetDto result = await _assetService.CreateAssetAsync(dto);
+                return CreateActionResult(CustomResponseDto<AssetDto>.Success(201, result));
             }
             catch (Exception ex)
             {

@@ -36,6 +36,7 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
   const { initialValues, isCreate } = useInitial(asset, create);
   const { company } = useContext(GenericContext);
   const { mutate: createAsset } = useAsset.Create();
+  const { mutate: createAssetRange } = useAsset.CreateRange();
   const { mutate: updateAsset } = useAsset.Update();
   const { data: modelLookup } = useModel.Lookup();
   const { data: supplierLookup } = useSupplier.Lookup();
@@ -75,6 +76,7 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
       },
     },
   });
+
   const overageAssetFields = form.values?.overageAssets?.map((_, index) => (
     <Group key={index} mt="xs">
       <Text mah="fit-content" mt="lg">
@@ -121,12 +123,26 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
     form.setFieldValue("imagePath", base64 as string);
   };
 
+  const handleCreateAsset = (data: IAsset) => {
+    if (data.overageAssets && data.overageAssets.length > 0) {
+      const { overageAssets, ...rest } = data;
+      const newAssets = overageAssets.map((asset) => ({
+        ...rest,
+        tag: asset.tag,
+        serialNo: asset.serialNo,
+      }));
+      createAssetRange([...newAssets, rest]);
+    } else {
+      createAsset(data);
+    }
+  };
+
   const handleSubmit = (data: IAsset) => {
     if (form.values.companyId === "") {
       openNotificationError("Error", "Please select a company first");
       return;
     }
-    isCreate ? createAsset(data) : updateAsset(data);
+    isCreate ? handleCreateAsset(data) : updateAsset(data);
   };
 
   return (
