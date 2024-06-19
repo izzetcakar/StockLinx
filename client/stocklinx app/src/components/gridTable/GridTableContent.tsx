@@ -47,121 +47,115 @@ const GridtableContent: React.FC<GridtableProps> = ({
     onDataColumnsChange();
   }, [columns.length]);
 
-  const getColSpan = () => {
-    let colSpan = visibleColumns.length;
-    if (enableSelectActions) colSpan++;
-    if (enableEditActions) colSpan++;
-    return colSpan;
-  };
-
   return (
-    <table className="gridtable">
-      <tbody>
-        {enableToolbar ? (
-          <tr>
-            <td colSpan={getColSpan()}>
-              <TableToolbar
-                itemKey={keyfield}
-                data={data}
-                excelColumns={excelColumns}
-                onRowRemoveRange={onRowRemoveRange}
-                applyFilters={onApplyFilters}
-                onRowInsert={onRowInsert}
-                refreshData={refreshData}
-                onExpandData={onExpandData}
-              />
-            </td>
-          </tr>
-        ) : null}
-        <tr className="gridtable__column__row">
-          {enableSelectActions && data.length > 0 ? (
-            <td className="gridtable__column__cell checkbox">
-              {selectedKeys.length > 0 ? (
-                <div className="gridtable__selected__count">
-                  ({selectedKeys.length})
-                </div>
-              ) : null}
-              <Checkbox
-                checked={
-                  selectedKeys.length === data.length && selectedKeys.length > 0
-                }
-                disabled={data.length < 1}
-                onChange={handleSelectAll}
-                indeterminate={
-                  selectedKeys.length > 0 && selectedKeys.length < data.length
-                }
-                radius={2}
-                size="xs"
-              />
-            </td>
-          ) : null}
-          {enableEditActions && data.length > 0 ? (
-            <td className="gridtable__edit__cell"></td>
-          ) : null}
-          {visibleColumns.map((vColumn) => (
-            <td
-              key={"$column__cell__" + vColumn.id}
-              className="gridtable__column__cell"
-            >
-              {vColumn.renderHeader ? vColumn.renderHeader() : vColumn.caption}
-            </td>
-          ))}
-        </tr>
-        {data.length > 0 ? (
-          data.map((obj, rowIndex) => (
-            <tr
-              key={"$row__" + rowIndex}
-              className={getSelectedRowClass(obj[keyfield])}
-            >
-              {enableSelectActions ? (
-                <td className="gridtable__checkbox__cell">
-                  <Checkbox
-                    checked={selectedKeys.includes(obj[keyfield])}
-                    onChange={() => handleSelectRow(obj[keyfield])}
-                    radius={2}
-                    size="xs"
-                  />
-                </td>
-              ) : null}
-              {enableEditActions ? (
-                <td className="gridtable__edit__cell">
-                  <EditComponent
-                    obj={obj}
-                    id={obj[keyfield]}
-                    onRowUpdate={onRowUpdate}
-                    onRowRemove={onRowRemove}
-                  />
-                </td>
-              ) : null}
-              {visibleColumns.map((column) => (
-                <td
-                  key={`$row__cell__${column.id}__${rowIndex}`}
-                  className="gridtable__row__cell"
-                >
-                  <RenderCell obj={obj} column={column} />
-                </td>
-              ))}
-            </tr>
-          ))
-        ) : (
-          <tr className="gridtable__nodata__row">
-            <td>{noDataText}</td>
-          </tr>
-        )}
-        {onExpandData ? (
-          <tr className="gridtable__expand__data__row">
-            <td className="gridtable__expand__data__cell">
-              <button
-                className="gridtable__expand__data__btn"
-                onClick={() => expandData()}
+    <>
+      {enableToolbar ? (
+        <TableToolbar
+          itemKey={keyfield}
+          data={data}
+          excelColumns={excelColumns}
+          onRowRemoveRange={onRowRemoveRange}
+          applyFilters={onApplyFilters}
+          onRowInsert={onRowInsert}
+          refreshData={refreshData}
+          onExpandData={onExpandData}
+        />
+      ) : null}
+      <table className="gridtable">
+        <tbody>
+          <tr className="gridtable__column__row">
+            {enableSelectActions && data.length > 0 ? (
+              <td className="gridtable__column__cell checkbox">
+                {selectedKeys.length > 0 ? (
+                  <div className="gridtable__selected__count">
+                    ({selectedKeys.length})
+                  </div>
+                ) : null}
+                <Checkbox
+                  checked={
+                    selectedKeys.length === data.length &&
+                    selectedKeys.length > 0
+                  }
+                  disabled={data.length < 1}
+                  onChange={handleSelectAll}
+                  indeterminate={
+                    selectedKeys.length > 0 && selectedKeys.length < data.length
+                  }
+                  radius={2}
+                  size="xs"
+                />
+              </td>
+            ) : null}
+            {enableEditActions && data.length > 0 ? (
+              <td className="gridtable__edit__cell"></td>
+            ) : null}
+            {visibleColumns.map((vColumn) => (
+              <td
+                key={"$column__cell__" + vColumn.id}
+                className="gridtable__column__cell"
               >
-                Load More
-              </button>
-            </td>
+                {vColumn.renderHeader
+                  ? vColumn.renderHeader()
+                  : vColumn.caption}
+              </td>
+            ))}
           </tr>
-        ) : null}
-      </tbody>
-    </table>
+          {data.length > 0 ? (
+            data.map((obj, rowIndex) => (
+              <tr
+                key={"$row__" + rowIndex}
+                className={getSelectedRowClass(obj[keyfield])}
+              >
+                {enableSelectActions ? (
+                  <td className="gridtable__checkbox__cell">
+                    <Checkbox
+                      checked={selectedKeys.includes(obj[keyfield])}
+                      onChange={() => handleSelectRow(obj[keyfield])}
+                      radius={2}
+                      size="xs"
+                    />
+                  </td>
+                ) : null}
+                {enableEditActions ? (
+                  <td className="gridtable__edit__cell">
+                    <EditComponent
+                      obj={obj}
+                      id={obj[keyfield]}
+                      onRowUpdate={onRowUpdate}
+                      onRowRemove={onRowRemove}
+                    />
+                  </td>
+                ) : null}
+                {visibleColumns.map((column) => (
+                  <td
+                    key={`$row__cell__${column.id}__${rowIndex}`}
+                    className="gridtable__row__cell"
+                  >
+                    <RenderCell obj={obj} column={column} />
+                  </td>
+                ))}
+              </tr>
+            ))
+          ) : (
+            <tr className="gridtable__nodata__row">
+              <td>{noDataText}</td>
+            </tr>
+          )}
+          {onExpandData ? (
+            <tr className="gridtable__expand__data__row">
+              <td className="gridtable__expand__data__cell">
+                <button
+                  className="gridtable__expand__data__btn"
+                  onClick={() => expandData()}
+                >
+                  Load More
+                </button>
+              </td>
+            </tr>
+          ) : null}
+        </tbody>
+      </table>
+    </>
   );
 };
 
