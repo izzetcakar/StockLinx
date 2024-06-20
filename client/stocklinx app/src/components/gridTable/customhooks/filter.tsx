@@ -112,8 +112,8 @@ const useInputFilter = (filter: Filter) => {
 const useFilter = () => {
   const { gridColumns, filters, setFilters } = UseGridTableContext();
 
-  const setBaseFiltersByColumns = (columns: Column[]) => {
-    const newFilters: Filter[] = columns.map(
+  const getBaseFilters = (columns: Column[]): Filter[] => {
+    return columns.map(
       (column) =>
         ({
           columnId: column.id,
@@ -121,6 +121,10 @@ const useFilter = () => {
           value: null,
         } as Filter)
     );
+  };
+
+  const setBaseFiltersByColumns = (columns: Column[]) => {
+    const newFilters: Filter[] = getBaseFilters(columns);
     setFilters(newFilters);
   };
 
@@ -187,6 +191,7 @@ const useFilter = () => {
   };
 
   return {
+    getBaseFilters,
     setBaseFiltersByColumns,
     getQueryFilters,
   };

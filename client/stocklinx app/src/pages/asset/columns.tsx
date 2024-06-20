@@ -13,6 +13,7 @@ import { useProductStatus } from "@/hooks/productStatus";
 import UserCheckInOutCell from "@/cells/UserCheckInOutCell";
 import { EntityCells } from "@/cells/Entity";
 import CheckedOutUserCell from "@/cells/CheckedOutUserCell";
+import { EntityCardData } from "@/interfaces/clientInterfaces";
 
 export const useColumns = () => {
   const { refetch: getModelLK } = useModel.Lookup();
@@ -142,5 +143,32 @@ export const useColumns = () => {
     },
   ];
 
-  return {columns};
+  const cardColumns: EntityCardData[] = [
+    {
+      title: "Asset Details",
+      renderData: (e) => {
+        return (e as IAsset).name;
+      },
+    },
+    {
+      title: "Tag",
+      renderData(e) {
+        return (e as IAsset).tag;
+      },
+    },
+    {
+      title: "Status",
+      renderData: (e) => {
+        return EntityCells.ProductStatus((e as IAsset).productStatusId);
+      },
+    },
+    {
+      title: "Supplier",
+      renderData: (e) => {
+        return EntityCells.Supplier((e as IAsset).supplierId);
+      },
+    },
+  ];
+
+  return { columns, cardColumns };
 };

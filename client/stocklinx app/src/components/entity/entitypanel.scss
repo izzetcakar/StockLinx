@@ -1,0 +1,52 @@
+@import "../../base.scss";
+
+.entity__panel__container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  background-color: #f1f1f19f;
+  .entity__card__container {
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    height: 100%;
+    overflow-y: scroll;
+  }
+  .entity__panel__content {
+    display: flex;
+    width: 100%;
+    height: 100%;
+  }
+  .entity__card__content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    cursor: pointer;
+
+    .entity__card__title {
+      font-size: $fontsize-md;
+      &:hover {
+        background-color: #d8d8d8;
+      }
+      padding: 0.5rem 0;
+    }
+    .entity__card__title.selected {
+      background-color: #e4e4e4;
+      &:hover {
+        background-color: #d8d8d8;
+      }
+      .entity__card__column {
+        background-color: red;
+      }
+    }
+    .entity__card__column {
+      width: 100%;
+      font-size: $fontsize-sm;
+      &:hover {
+        background-color: #d8d8d8;
+      }
+      cursor: pointer;
+      padding: 0.2rem 0;
+    }
+  }
+}

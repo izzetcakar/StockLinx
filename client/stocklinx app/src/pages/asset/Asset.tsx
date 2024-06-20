@@ -4,6 +4,7 @@ import { Column } from "@/interfaces/gridTableInterfaces";
 import { useAsset } from "@/hooks/asset";
 import FilterPanel from "@/components/generic/FilterPanel";
 import uuid4 from "uuid4";
+import EntityPanel from "@/components/entity/EntityPanel";
 
 const Asset = () => {
   const columns = useColumns().columns;
@@ -20,18 +21,21 @@ const Asset = () => {
   }, [columns.length]);
 
   return (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       <FilterPanel
         columns={filterColumns}
         applyFilters={(filters) => applyFilters(filters)}
       />
-      {assets?.map((asset) => {
-        return (
-          <div key={asset.id}>
-            <div>{asset.tag}</div>
-          </div>
-        );
-      })}
+      <EntityPanel
+        data={assets || []}
+        titleProp="name"
+        columns={useColumns().cardColumns}
+      />
     </div>
   );
 };
