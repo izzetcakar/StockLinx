@@ -8,6 +8,7 @@ import EntityPanel from "@/components/entity/EntityPanel";
 
 const Asset = () => {
   const columns = useColumns().columns;
+  const cardColumns = useColumns().cardColumns;
   const { data: assets } = useAsset.Filter([]);
   const { mutate: applyFilters } = useAsset.ApplyFilters();
 
@@ -31,11 +32,7 @@ const Asset = () => {
         columns={filterColumns}
         applyFilters={(filters) => applyFilters(filters)}
       />
-      <EntityPanel
-        data={assets || []}
-        titleProp="name"
-        columns={useColumns().cardColumns}
-      />
+      <EntityPanel data={assets || []} cardColumns={cardColumns} />
     </div>
   );
 };
