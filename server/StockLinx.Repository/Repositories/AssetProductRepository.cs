@@ -8,42 +8,34 @@ namespace StockLinx.Repository.Repositories.EF_Core
 {
     public class AssetProductRepository : Repository<AssetProduct>, IAssetProductRepository
     {
+        private readonly IComponentRepository _componentRepository;
+        private readonly ILicenseRepository _licenseRepository;
         private readonly IMapper _mapper;
 
-        public AssetProductRepository(AppDbContext dbContext, IMapper mapper)
+        public AssetProductRepository(AppDbContext dbContext, IMapper mapper,
+            IComponentRepository componentRepository, ILicenseRepository licenseRepository)
             : base(dbContext)
         {
+            _componentRepository = componentRepository;
+            _licenseRepository = licenseRepository;
             _mapper = mapper;
         }
 
         public async Task<AssetProductDto> GetDtoAsync(AssetProduct entity)
         {
             AssetProductDto dto = _mapper.Map<AssetProductDto>(entity);
-            var asset = await GetByIdAsync(entity.Id);
             if (entity.ComponentId != null)
             {
-                var component = await dbContext.Components.SingleOrDefaultAsync(c =>
-                    c.Id == entity.ComponentId
-                );
-                if (component == null)
-                    return null;
-                dto.ProductId = component.Id;
+                Component component = await _componentRepository.GetByIdAsync((Guid)entity.ComponentId);
                 dto.ProductType = "Consumable";
-                dto.ProductRoute = $"/consumable/{component.Id}";
-                dto.ProductName = component.Name;
+                dto.ProductTag = component.Tag;
                 return dto;
             }
             else if (entity.LicenseId != null)
             {
-                var license = await dbContext.Licenses.SingleOrDefaultAsync(l =>
-                    l.Id == entity.LicenseId
-                );
-                if (license == null)
-                    return null;
-                dto.ProductId = license.Id;
+                License license = await _licenseRepository.GetByIdAsync((Guid)entity.LicenseId);
                 dto.ProductType = "License";
-                dto.ProductRoute = $"/license/{license.Id}";
-                dto.ProductName = license.Name;
+                dto.ProductTag = license.Tag;
                 return dto;
             }
             return dto;

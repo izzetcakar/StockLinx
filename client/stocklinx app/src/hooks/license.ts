@@ -9,7 +9,11 @@ import { licenseRequests } from "@/server/requests/license";
 import { useMutation } from "react-query";
 import { baseHooks } from "./baseHooks";
 import { QueryFilter } from "@/interfaces/gridTableInterfaces";
-import { setCheckedRecord } from "@/utils/checkInOutUtils";
+import {
+  handleCheckOutAssetProduct,
+  handleCheckOutUserProduct,
+  setCheckedRecord,
+} from "@/utils/checkInOutUtils";
 import { closeModal } from "@/modals/modals";
 import { openNotificationSuccess } from "@/notification/Notification";
 
@@ -88,18 +92,18 @@ const UserCheckOut = () => {
     mutationKey: licenseKeys.USER_CHECK_OUT_LICENSE,
     mutationFn: (dto: UserProductCheckOutDto) =>
       licenseRequests.userCheckOut(dto),
-    onSuccess: (res) => {
+    onSuccess: (res, req) => {
       queryClient.setQueryData("FETCH_ALL_USERPRODUCT", (data: any) => {
-        return setCheckedRecord(data, res);
+        return handleCheckOutUserProduct(data, req, res);
       });
       queryClient.setQueryData("FILTER_USERPRODUCT", (data: any) => {
-        return setCheckedRecord(data, res);
+        return handleCheckOutUserProduct(data, req, res);
       });
-      queryClient.setQueryData(["FETCH_USERPRODUCT", res.id], () => {
+      queryClient.setQueryData(["FETCH_USERPRODUCT", req.userProductId], () => {
         return res;
       });
       closeModal("user_product_checkOut_modal");
-      openNotificationSuccess("License checked out successfully");
+      openNotificationSuccess("License Checked Out Successfully");
     },
   });
 };
@@ -130,18 +134,21 @@ const AssetCheckOut = () => {
     mutationKey: licenseKeys.ASSET_CHECK_OUT_LICENSE,
     mutationFn: (dto: AssetProductCheckOutDto) =>
       licenseRequests.assetCheckOut(dto),
-    onSuccess: (res) => {
+    onSuccess: (res, req) => {
       queryClient.setQueryData("FETCH_ALL_ASSETPRODUCT", (data: any) => {
-        return setCheckedRecord(data, res);
+        return handleCheckOutAssetProduct(data, req, res);
       });
       queryClient.setQueryData("FILTER_ASSETPRODUCT", (data: any) => {
-        return setCheckedRecord(data, res);
+        return handleCheckOutAssetProduct(data, req, res);
       });
-      queryClient.setQueryData(["FETCH_ASSETPRODUCT", res.id], () => {
-        return res;
-      });
+      queryClient.setQueryData(
+        ["FETCH_ASSETPRODUCT", req.assetProductId],
+        () => {
+          return res;
+        }
+      );
       closeModal("asset_product_checkOut_modal");
-      openNotificationSuccess("License checked out successfully");
+      openNotificationSuccess("License Checked Out Successfully");
     },
   });
 };

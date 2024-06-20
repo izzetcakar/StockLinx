@@ -2,7 +2,7 @@
 {
     public class AssetProduct : BaseEntity
     {
-        public Guid AssetId { get; init; }
+        public Guid AssetId { get; set; }
         public Guid? ComponentId { get; set; }
         public Guid? LicenseId { get; set; }
         public DateTime AssignDate { get; init; }

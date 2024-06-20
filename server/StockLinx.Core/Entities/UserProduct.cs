@@ -2,7 +2,7 @@
 {
     public class UserProduct : BaseEntity
     {
-        public Guid UserId { get; init; }
+        public Guid UserId { get; set; }
         public Guid? AccessoryId { get; init; }
         public Guid? AssetId { get; init; }
         public Guid? ConsumableId { get; init; }

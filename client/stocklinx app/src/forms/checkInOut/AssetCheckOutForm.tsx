@@ -5,6 +5,7 @@ import { AssetCheckOutDto } from "../../interfaces/dtos";
 import FormSelect from "../mantine/FormSelect";
 import { useAsset } from "@/hooks/asset";
 import { useProductStatus } from "@/hooks/productStatus";
+import { useUser } from "@/hooks/user";
 
 interface AssetCheckOutFormProps {
   checkOutDto: AssetCheckOutDto;
@@ -14,6 +15,11 @@ const AssetCheckOutForm: React.FC<AssetCheckOutFormProps> = ({
   checkOutDto,
 }) => {
   const { mutate: checkOut } = useAsset.CheckOut();
+  const {
+    data: users,
+    isLoading: userLoading,
+    refetch: userRefetch,
+  } = useUser.Lookup();
   const { data: productStatusLookup } = useProductStatus.Lookup();
 
   const form = useForm<AssetCheckOutDto>({
@@ -35,6 +41,14 @@ const AssetCheckOutForm: React.FC<AssetCheckOutFormProps> = ({
         px={40}
         pt={20}
       >
+        <FormSelect
+          label="User"
+          data={users || []}
+          inputProps={form.getInputProps("userId")}
+          value={form.values.userId || ""}
+          fetchData={userRefetch}
+          loading={userLoading}
+        />
         <FormSelect
           label="Product Status"
           data={productStatusLookup}

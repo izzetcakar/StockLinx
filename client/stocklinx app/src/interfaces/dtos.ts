@@ -6,7 +6,10 @@ export interface BaseDto {
 
 export interface UserProductDto extends BaseDto {
   userId: string;
-  productId: string;
+  accessoryId?: string;
+  assetId?: string;
+  consumableId?: string;
+  licenseId?: string;
   productType: string;
   productTag: string;
   assignDate: Date;
@@ -15,25 +18,13 @@ export interface UserProductDto extends BaseDto {
 }
 export interface AssetProductDto extends BaseDto {
   assetId: string;
-  productId: string;
+  componentId?: string;
+  licenseId?: string;
   productType: string;
-  productName: string;
-  productRoute?: string | null;
+  productTag: string;
   assignDate: Date;
   notes: string | null;
   quantity: number;
-}
-export interface UserProductCheckOutDto {
-  userProductId: string;
-  productId: string;
-  quantity: number;
-  notes: string | null;
-}
-export interface AssetProductCheckOutDto {
-  assetProductId: string;
-  productId: string;
-  quantity: number;
-  notes: string | null;
 }
 export interface UserProductCheckInDto {
   userId: string;
@@ -56,8 +47,20 @@ export interface AssetCheckInDto {
   assaignDate: Date;
   notes: string | null;
 }
+export interface UserProductCheckOutDto {
+  userId?: string;
+  userProductId: string;
+  quantity: number;
+  notes: string | null;
+}
+export interface AssetProductCheckOutDto {
+  assetId?: string;
+  assetProductId: string;
+  quantity: number;
+  notes: string | null;
+}
 export interface AssetCheckOutDto {
-  assetId: string;
+  userId?: string;
   userProductId: string;
   productStatusId: string;
   notes: string | null;

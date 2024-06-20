@@ -206,81 +206,141 @@ namespace StockLinx.Service.Services
             return await _assetProductRepository.GetDtoAsync(assetProduct);
         }
 
-        public async Task<UserProductDto> UserCheckOutAsync(UserProductCheckOutDto checkOutDto)
+        public async Task<List<UserProductDto>> UserCheckOutAsync(
+            UserProductCheckOutDto checkOutDto
+        )
         {
+            List<UserProduct> userProducts = new List<UserProduct>();
             UserProduct userProduct = await _userProductRepository.GetByIdAsync(
                 checkOutDto.UserProductId
             );
-            License license = await _licenseRepository.GetByIdAsync(checkOutDto.ProductId);
-            switch (checkOutDto.Quantity - userProduct.Quantity)
+            License license = await GetByIdAsync((Guid)userProduct.LicenseId);
+            switch (userProduct.Quantity - checkOutDto.Quantity)
             {
                 case 0:
-                    _userProductRepository.Remove(userProduct);
-                    await _customLogService.CreateCustomLog(
-                        "CheckOut",
-                        "License",
-                        license.Id,
-                        license.Name,
-                        checkOutDto.Notes ?? "Checked Out " + checkOutDto.Quantity + " units"
-                    );
+                    await CreateCheckLogAsync("CheckOut", license, checkOutDto.Quantity);
+                    if (checkOutDto.UserId != null)
+                    {
+                        userProduct.UserId = (Guid)checkOutDto.UserId;
+                        _userProductRepository.Update(userProduct, userProduct);
+                        await CreateCheckLogAsync(
+                            "CheckOut",
+                            license,
+                            await _userService.GetByIdAsync((Guid)checkOutDto.UserId),
+                            checkOutDto.Quantity
+                        );
+                        userProducts.Add(userProduct);
+                    }
+                    else
+                    {
+                        await CreateCheckLogAsync("CheckOut", license, checkOutDto.Quantity);
+                        _userProductRepository.Remove(userProduct);
+                    }
                     await _unitOfWork.CommitAsync();
-                    return null;
+                    ;
+                    return await _userProductRepository.GetDtosAsync(userProducts);
                 case > 0:
                     throw new Exception(
                         "Quantity must be less than or equal to the quantity in stock"
                     );
                 case < 0:
-                    UserProduct newUserProduct = userProduct;
-                    newUserProduct.Quantity -= checkOutDto.Quantity;
-                    _userProductRepository.Update(userProduct, newUserProduct);
-                    await _customLogService.CreateCustomLog(
-                        "CheckOut",
-                        "License",
-                        license.Id,
-                        license.Name,
-                        checkOutDto.Notes ?? "Checked Out " + checkOutDto.Quantity + " units"
-                    );
+                    UserProduct updatedUserProduct = userProduct;
+                    updatedUserProduct.Quantity -= checkOutDto.Quantity;
+                    _userProductRepository.Update(userProduct, updatedUserProduct);
+                    await CreateCheckLogAsync("CheckOut", license, checkOutDto.Quantity);
+                    userProducts.Add(updatedUserProduct);
+                    if (checkOutDto.UserId != null)
+                    {
+                        UserProduct newUserProduct = new UserProduct
+                        {
+                            Id = Guid.NewGuid(),
+                            LicenseId = license.Id,
+                            UserId = (Guid)checkOutDto.UserId,
+                            AssignDate = DateTime.UtcNow,
+                            CreatedDate = DateTime.UtcNow,
+                            Quantity = checkOutDto.Quantity,
+                            Notes = checkOutDto.Notes,
+                        };
+                        await CreateCheckLogAsync(
+                            "CheckOut",
+                            license,
+                            await _userService.GetByIdAsync((Guid)checkOutDto.UserId),
+                            checkOutDto.Quantity
+                        );
+                        await _userProductRepository.AddAsync(newUserProduct);
+                        userProducts.Add(newUserProduct);
+                    }
                     await _unitOfWork.CommitAsync();
-                    return await _userProductRepository.GetDtoAsync(newUserProduct);
+                    return await _userProductRepository.GetDtosAsync(userProducts);
             }
         }
 
-        public async Task<AssetProductDto> AssetCheckOutAsync(AssetProductCheckOutDto checkOutDto)
+        public async Task<List<AssetProductDto>> AssetCheckOutAsync(
+            AssetProductCheckOutDto checkOutDto
+        )
         {
+            List<AssetProduct> assetProducts = new List<AssetProduct>();
             AssetProduct assetProduct = await _assetProductRepository.GetByIdAsync(
                 checkOutDto.AssetProductId
             );
-            License license = await _licenseRepository.GetByIdAsync(checkOutDto.ProductId);
-            switch (checkOutDto.Quantity - assetProduct.Quantity)
+            License license = await GetByIdAsync((Guid)assetProduct.LicenseId);
+            switch (assetProduct.Quantity - checkOutDto.Quantity)
             {
                 case 0:
-                    _assetProductRepository.Remove(assetProduct);
-                    await _customLogService.CreateCustomLog(
-                        "CheckOut",
-                        "License",
-                        license.Id,
-                        license.Name,
-                        checkOutDto.Notes ?? "Checked Out " + checkOutDto.Quantity + " units"
-                    );
+                    await CreateCheckLogAsync("CheckOut", license, checkOutDto.Quantity);
+                    if (checkOutDto.AssetId != null)
+                    {
+                        assetProduct.AssetId = (Guid)checkOutDto.AssetId;
+                        _assetProductRepository.Update(assetProduct, assetProduct);
+                        await CreateCheckLogAsync(
+                            "CheckOut",
+                            license,
+                            await _userService.GetByIdAsync((Guid)checkOutDto.AssetId),
+                            checkOutDto.Quantity
+                        );
+                        assetProducts.Add(assetProduct);
+                    }
+                    else
+                    {
+                        await CreateCheckLogAsync("CheckOut", license, checkOutDto.Quantity);
+                        _assetProductRepository.Remove(assetProduct);
+                    }
                     await _unitOfWork.CommitAsync();
-                    return null;
+                    ;
+                    return await _assetProductRepository.GetDtosAsync(assetProducts);
                 case > 0:
                     throw new Exception(
                         "Quantity must be less than or equal to the quantity in stock"
                     );
                 case < 0:
-                    AssetProduct newAssetProduct = assetProduct;
-                    newAssetProduct.Quantity -= checkOutDto.Quantity;
-                    _assetProductRepository.Update(assetProduct, newAssetProduct);
-                    await _customLogService.CreateCustomLog(
-                        "CheckOut",
-                        "License",
-                        license.Id,
-                        license.Name,
-                        checkOutDto.Notes ?? "Checked Out " + checkOutDto.Quantity + " units"
-                    );
+                    AssetProduct updatedAssetProduct = assetProduct;
+                    updatedAssetProduct.Quantity -= checkOutDto.Quantity;
+                    _assetProductRepository.Update(assetProduct, updatedAssetProduct);
+                    await CreateCheckLogAsync("CheckOut", license, checkOutDto.Quantity);
+                    assetProducts.Add(updatedAssetProduct);
+                    if (checkOutDto.AssetId != null)
+                    {
+                        AssetProduct newAssetProduct = new AssetProduct
+                        {
+                            Id = Guid.NewGuid(),
+                            LicenseId = license.Id,
+                            AssetId = (Guid)checkOutDto.AssetId,
+                            AssignDate = DateTime.UtcNow,
+                            CreatedDate = DateTime.UtcNow,
+                            Quantity = checkOutDto.Quantity,
+                            Notes = checkOutDto.Notes,
+                        };
+                        await CreateCheckLogAsync(
+                            "CheckOut",
+                            license,
+                            await _userService.GetByIdAsync((Guid)checkOutDto.AssetId),
+                            checkOutDto.Quantity
+                        );
+                        await _assetProductRepository.AddAsync(newAssetProduct);
+                        assetProducts.Add(newAssetProduct);
+                    }
                     await _unitOfWork.CommitAsync();
-                    return await _assetProductRepository.GetDtoAsync(newAssetProduct);
+                    return await _assetProductRepository.GetDtosAsync(assetProducts);
             }
         }
 
@@ -309,6 +369,36 @@ namespace StockLinx.Service.Services
         {
             var result = await _filterService.FilterAsync(filter);
             return await _licenseRepository.GetDtosAsync(result.ToList());
+        }
+
+        public async Task CreateCheckLogAsync(
+            string action,
+            License license,
+            User user,
+            int quantity
+        )
+        {
+            await _customLogService.CreateCustomLog(
+                action,
+                "License",
+                license.Id,
+                license.Name,
+                "User",
+                user.Id,
+                user.FirstName + user.LastName,
+                "Checked " + quantity + " units"
+            );
+        }
+
+        public async Task CreateCheckLogAsync(string action, License license, int quantity)
+        {
+            await _customLogService.CreateCustomLog(
+                action,
+                "License",
+                license.Id,
+                license.Name,
+                "Checked " + quantity + " units"
+            );
         }
     }
 }

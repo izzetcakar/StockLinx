@@ -196,23 +196,47 @@ namespace StockLinx.Service.Services
             return await _userProductRepository.GetDtoAsync(userProduct);
         }
 
-        public async Task CheckOutAsync(AssetCheckOutDto checkOutDto)
+        public async Task<UserProductDto> CheckOutAsync(AssetCheckOutDto checkOutDto)
         {
             UserProduct userProduct = await _userProductRepository.GetByIdAsync(
                 checkOutDto.UserProductId
             );
             Asset asset = await GetByIdAsync((Guid)userProduct.AssetId);
-            _userProductRepository.Remove(userProduct);
-            await _customLogService.CreateCustomLog(
-                "CheckOut",
-                "Asset",
-                asset.Id,
-                asset.Tag,
-                checkOutDto.Notes ?? "Asset is checked out"
-            );
+            bool isUserChanged = checkOutDto.UserId != null && checkOutDto.UserId != userProduct.UserId;
             asset.ProductStatusId = checkOutDto.ProductStatusId;
             _assetRepository.Update(asset, asset);
-            await _unitOfWork.CommitAsync();
+            if (isUserChanged)
+            {
+                var user = await _userService.GetByIdAsync((Guid)checkOutDto.UserId);
+                userProduct.UserId = user.Id;
+                _userProductRepository.Update(userProduct, userProduct);
+                await _customLogService.CreateCustomLog(
+                    "CheckOut",
+                    "Asset",
+                    asset.Id,
+                    asset.Tag,
+                    "User",
+                    user.Id,
+                    user.EmployeeNo,
+                    checkOutDto.Notes ?? "Asset is checked out"
+                    );
+                await _unitOfWork.CommitAsync();
+                return await _userProductRepository.GetDtoAsync(userProduct);
+            }
+            else
+            {
+                await _customLogService.CreateCustomLog(
+                    "CheckOut",
+                    "Asset",
+                    asset.Id,
+                    asset.Tag,
+                    checkOutDto.Notes ?? "Asset is checked out"
+                );
+                _userProductRepository.Remove(userProduct);
+                await _unitOfWork.CommitAsync();
+                return null;
+            }
+
         }
 
         public async Task<List<AssetDto>> FilterAllAsync(string filter)

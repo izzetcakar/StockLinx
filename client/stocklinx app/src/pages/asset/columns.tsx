@@ -31,7 +31,6 @@ export const useColumns = () => {
 
   const checkOut = (asset: IAsset, userProduct: IUserProduct) => {
     openAssetCheckOutModal({
-      assetId: asset.id,
       userProductId: userProduct.id,
       productStatusId: asset.productStatusId,
       notes: userProduct.notes,

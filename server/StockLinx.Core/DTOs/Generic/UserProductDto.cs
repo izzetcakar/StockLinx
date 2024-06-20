@@ -3,7 +3,10 @@
     public class UserProductDto : BaseDto
     {
         public Guid UserId { get; init; }
-        public Guid ProductId { get; init; }
+        public Guid? AccessoryId { get; init; }
+        public Guid? AssetId { get; init; }
+        public Guid? ConsumableId { get; init; }
+        public Guid? LicenseId { get; init; }
         public DateTime AssignDate { get; init; }
         public string ProductTag { get; init; }
         public string ProductType { get; init; }

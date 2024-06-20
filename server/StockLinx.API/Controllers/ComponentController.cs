@@ -140,8 +140,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                AssetProductDto result = await _componentService.CheckOutAsync(dto);
-                return CreateActionResult(CustomResponseDto<AssetProductDto>.Success(200, result));
+                List<AssetProductDto> result = await _componentService.CheckOutAsync(dto);
+                return CreateActionResult(CustomResponseDto<List<AssetProductDto>>.Success(200, result));
             }
             catch (Exception ex)
             {

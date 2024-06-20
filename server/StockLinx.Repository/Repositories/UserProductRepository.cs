@@ -25,50 +25,48 @@ namespace StockLinx.Repository.Repositories.EF_Core
 
         public async Task<UserProductDto> GetDtoAsync(UserProduct entity)
         {
-            Guid productId = Guid.Empty;
             string productType = string.Empty;
             string productTag = string.Empty;
 
             if (entity.AccessoryId != null)
             {
                 Accessory accessory = await _accessoryRepository.GetByIdAsync((Guid)entity.AccessoryId);
-                productId = accessory.Id;
                 productType = "Accessory";
                 productTag = accessory.Tag;
             }
             else if (entity.AssetId != null)
             {
                 Asset asset = await _assetRepository.GetByIdAsync((Guid)entity.AssetId);
-                productId = asset.Id;
                 productType = "Asset";
                 productTag = asset.Tag;
             }
             else if (entity.ConsumableId != null)
             {
                 Consumable consumable = await _consumableRepository.GetByIdAsync((Guid)entity.ConsumableId);
-                productId = consumable.Id;
                 productType = "Consumable";
                 productTag = consumable.Tag;
             }
             else if (entity.LicenseId != null)
             {
                 License license = await _licenseRepository.GetByIdAsync((Guid)entity.LicenseId);
-                productId = license.Id;
                 productType = "License";
                 productTag = license.Tag;
             }
             return new UserProductDto()
             {
                 Id = entity.Id,
+                UserId = entity.UserId,
+                AccessoryId = entity.AccessoryId,
+                AssetId = entity.AssetId,
+                ConsumableId = entity.ConsumableId,
+                LicenseId = entity.LicenseId,
                 CreatedDate = entity.CreatedDate,
                 UpdatedDate = entity.UpdatedDate,
                 AssignDate = entity.AssignDate,
-                ProductId = productId,
                 ProductType = productType,
                 ProductTag = productTag,
                 Notes = entity.Notes,
                 Quantity = entity.Quantity,
-                UserId = entity.UserId,
             };
         }
         public async Task<List<UserProductDto>> GetDtosAsync(List<UserProduct> entities)

@@ -188,42 +188,70 @@ namespace StockLinx.Service.Services
             return await _assetProductRepository.GetDtoAsync(assetProduct);
         }
 
-        public async Task<AssetProductDto> CheckOutAsync(AssetProductCheckOutDto checkOutDto)
+        public async Task<List<AssetProductDto>> CheckOutAsync(AssetProductCheckOutDto checkOutDto)
         {
+            List<AssetProduct> assetProducts = new List<AssetProduct>();
             AssetProduct assetProduct = await _assetProductRepository.GetByIdAsync(
                 checkOutDto.AssetProductId
             );
-            Component component = await GetByIdAsync(checkOutDto.ProductId);
-            switch (checkOutDto.Quantity - assetProduct.Quantity)
+            Component component = await GetByIdAsync((Guid)assetProduct.ComponentId);
+            switch (assetProduct.Quantity - checkOutDto.Quantity)
             {
                 case 0:
-                    _assetProductRepository.Remove(assetProduct);
-                    await _customLogService.CreateCustomLog(
-                        "CheckOut",
-                        "Component",
-                        component.Id,
-                        component.Name,
-                        checkOutDto.Notes ?? "Ckecked Out " + checkOutDto.Quantity + " units"
-                    );
+                    await CreateCheckLogAsync("CheckOut", component, checkOutDto.Quantity);
+                    if (checkOutDto.AssetId != null)
+                    {
+                        assetProduct.AssetId = (Guid)checkOutDto.AssetId;
+                        _assetProductRepository.Update(assetProduct, assetProduct);
+                        await CreateCheckLogAsync(
+                            "CheckOut",
+                            component,
+                            await _userService.GetByIdAsync((Guid)checkOutDto.AssetId),
+                            checkOutDto.Quantity
+                        );
+                        assetProducts.Add(assetProduct);
+                    }
+                    else
+                    {
+                        await CreateCheckLogAsync("CheckOut", component, checkOutDto.Quantity);
+                        _assetProductRepository.Remove(assetProduct);
+                    }
                     await _unitOfWork.CommitAsync();
-                    return null;
+                    ;
+                    return await _assetProductRepository.GetDtosAsync(assetProducts);
                 case > 0:
                     throw new Exception(
                         "Quantity must be less than or equal to the quantity in stock"
                     );
                 case < 0:
-                    AssetProduct newAssetProduct = assetProduct;
-                    newAssetProduct.Quantity -= checkOutDto.Quantity;
-                    _assetProductRepository.Update(assetProduct, newAssetProduct);
-                    await _customLogService.CreateCustomLog(
-                        "CheckOut",
-                        "Component",
-                        component.Id,
-                        component.Name,
-                        checkOutDto.Notes ?? "Ckecked Out " + checkOutDto.Quantity + " units"
-                    );
+                    AssetProduct updatedAssetProduct = assetProduct;
+                    updatedAssetProduct.Quantity -= checkOutDto.Quantity;
+                    _assetProductRepository.Update(assetProduct, updatedAssetProduct);
+                    await CreateCheckLogAsync("CheckOut", component, checkOutDto.Quantity);
+                    assetProducts.Add(updatedAssetProduct);
+                    if (checkOutDto.AssetId != null)
+                    {
+                        AssetProduct newAssetProduct = new AssetProduct
+                        {
+                            Id = Guid.NewGuid(),
+                            ComponentId = component.Id,
+                            AssetId = (Guid)checkOutDto.AssetId,
+                            AssignDate = DateTime.UtcNow,
+                            CreatedDate = DateTime.UtcNow,
+                            Quantity = checkOutDto.Quantity,
+                            Notes = checkOutDto.Notes,
+                        };
+                        await CreateCheckLogAsync(
+                            "CheckOut",
+                            component,
+                            await _userService.GetByIdAsync((Guid)checkOutDto.AssetId),
+                            checkOutDto.Quantity
+                        );
+                        await _assetProductRepository.AddAsync(newAssetProduct);
+                        assetProducts.Add(newAssetProduct);
+                    }
                     await _unitOfWork.CommitAsync();
-                    return await _assetProductRepository.GetDtoAsync(newAssetProduct);
+                    return await _assetProductRepository.GetDtosAsync(assetProducts);
             }
         }
 
@@ -252,6 +280,36 @@ namespace StockLinx.Service.Services
         {
             var result = await _filterService.FilterAsync(filter);
             return await _componentRepository.GetDtosAsync(result.ToList());
+        }
+
+        public async Task CreateCheckLogAsync(
+            string action,
+            Component component,
+            User user,
+            int quantity
+        )
+        {
+            await _customLogService.CreateCustomLog(
+                action,
+                "Component",
+                component.Id,
+                component.Name,
+                "User",
+                user.Id,
+                user.FirstName + user.LastName,
+                "Checked " + quantity + " units"
+            );
+        }
+
+        public async Task CreateCheckLogAsync(string action, Component component, int quantity)
+        {
+            await _customLogService.CreateCustomLog(
+                action,
+                "Component",
+                component.Id,
+                component.Name,
+                "Checked " + quantity + " units"
+            );
         }
     }
 }

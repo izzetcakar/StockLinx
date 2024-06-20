@@ -60,14 +60,14 @@ const checkIn = async (
 
 const checkOut = async (
   checkOutDto: UserProductCheckOutDto
-): Promise<UserProductDto> => {
+): Promise<UserProductDto[]> => {
   return (
     await request<UserProductDto>({
       requestUrl: requestUrl + "checkout",
       apiType: "post",
       queryData: checkOutDto,
     })
-  ).data as UserProductDto;
+  ).data as UserProductDto[];
 };
 
 export const consumableRequests = {

@@ -7,7 +7,10 @@ import { componentRequests } from "@/server/requests/component";
 import { useMutation } from "react-query";
 import { baseHooks } from "./baseHooks";
 import { QueryFilter } from "@/interfaces/gridTableInterfaces";
-import { setCheckedRecord } from "@/utils/checkInOutUtils";
+import {
+  handleCheckOutAssetProduct,
+  setCheckedRecord,
+} from "@/utils/checkInOutUtils";
 import { closeModal } from "@/modals/modals";
 import { openNotificationSuccess } from "@/notification/Notification";
 
@@ -83,16 +86,19 @@ const CheckOut = () => {
     mutationKey: componentKeys.CHECK_OUT_COMPONENT,
     mutationFn: (dto: AssetProductCheckOutDto) =>
       componentRequests.checkOut(dto),
-    onSuccess: (res) => {
+    onSuccess: (res, req) => {
       queryClient.setQueryData("FETCH_ALL_ASSETPRODUCT", (data: any) => {
-        return setCheckedRecord(data, res);
+        return handleCheckOutAssetProduct(data, req, res);
       });
       queryClient.setQueryData("FILTER_ASSETPRODUCT", (data: any) => {
-        return setCheckedRecord(data, res);
+        return handleCheckOutAssetProduct(data, req, res);
       });
-      queryClient.setQueryData(["FETCH_ASSETPRODUCT", res.id], () => {
-        return res;
-      });
+      queryClient.setQueryData(
+        ["FETCH_ASSETPRODUCT", req.assetProductId],
+        () => {
+          return res;
+        }
+      );
       closeModal("asset_product_checkOut_modal");
       openNotificationSuccess("Component Checked Out Successfully");
     },

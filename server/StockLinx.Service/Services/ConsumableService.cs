@@ -189,42 +189,70 @@ namespace StockLinx.Service.Services
             return await _userProductRepository.GetDtoAsync(userProduct);
         }
 
-        public async Task<UserProductDto> CheckOutAsync(UserProductCheckOutDto checkOutDto)
+        public async Task<List<UserProductDto>> CheckOutAsync(UserProductCheckOutDto checkOutDto)
         {
+            List<UserProduct> userProducts = new List<UserProduct>();
             UserProduct userProduct = await _userProductRepository.GetByIdAsync(
                 checkOutDto.UserProductId
             );
-            Consumable consumable = await GetByIdAsync(checkOutDto.ProductId);
-            switch (checkOutDto.Quantity - userProduct.Quantity)
+            Consumable consumable = await GetByIdAsync((Guid)userProduct.ConsumableId);
+            switch (userProduct.Quantity - checkOutDto.Quantity)
             {
                 case 0:
-                    _userProductRepository.Remove(userProduct);
-                    await _customLogService.CreateCustomLog(
-                        "CheckOut",
-                        "Consumable",
-                        consumable.Id,
-                        consumable.Name,
-                        checkOutDto.Notes ?? "Checked Out " + checkOutDto.Quantity + " units"
-                    );
+                    await CreateCheckLogAsync("CheckOut", consumable, checkOutDto.Quantity);
+                    if (checkOutDto.UserId != null)
+                    {
+                        userProduct.UserId = (Guid)checkOutDto.UserId;
+                        _userProductRepository.Update(userProduct, userProduct);
+                        await CreateCheckLogAsync(
+                            "CheckOut",
+                            consumable,
+                            await _userService.GetByIdAsync((Guid)checkOutDto.UserId),
+                            checkOutDto.Quantity
+                        );
+                        userProducts.Add(userProduct);
+                    }
+                    else
+                    {
+                        await CreateCheckLogAsync("CheckOut", consumable, checkOutDto.Quantity);
+                        _userProductRepository.Remove(userProduct);
+                    }
                     await _unitOfWork.CommitAsync();
-                    return null;
+                    ;
+                    return await _userProductRepository.GetDtosAsync(userProducts);
                 case > 0:
                     throw new Exception(
                         "Quantity must be less than or equal to the quantity in stock"
                     );
-                default:
-                    UserProduct newUserProduct = userProduct;
-                    newUserProduct.Quantity -= checkOutDto.Quantity;
-                    _userProductRepository.Update(userProduct, newUserProduct);
-                    await _customLogService.CreateCustomLog(
-                        "CheckOut",
-                        "Consumable",
-                        consumable.Id,
-                        consumable.Name,
-                        checkOutDto.Notes ?? "Checked Out " + checkOutDto.Quantity + " units"
-                    );
+                case < 0:
+                    UserProduct updatedUserProduct = userProduct;
+                    updatedUserProduct.Quantity -= checkOutDto.Quantity;
+                    _userProductRepository.Update(userProduct, updatedUserProduct);
+                    await CreateCheckLogAsync("CheckOut", consumable, checkOutDto.Quantity);
+                    userProducts.Add(updatedUserProduct);
+                    if (checkOutDto.UserId != null)
+                    {
+                        UserProduct newUserProduct = new UserProduct
+                        {
+                            Id = Guid.NewGuid(),
+                            ConsumableId = consumable.Id,
+                            UserId = (Guid)checkOutDto.UserId,
+                            AssignDate = DateTime.UtcNow,
+                            CreatedDate = DateTime.UtcNow,
+                            Quantity = checkOutDto.Quantity,
+                            Notes = checkOutDto.Notes,
+                        };
+                        await CreateCheckLogAsync(
+                            "CheckOut",
+                            consumable,
+                            await _userService.GetByIdAsync((Guid)checkOutDto.UserId),
+                            checkOutDto.Quantity
+                        );
+                        await _userProductRepository.AddAsync(newUserProduct);
+                        userProducts.Add(newUserProduct);
+                    }
                     await _unitOfWork.CommitAsync();
-                    return await _userProductRepository.GetDtoAsync(newUserProduct);
+                    return await _userProductRepository.GetDtosAsync(userProducts);
             }
         }
 
@@ -253,6 +281,36 @@ namespace StockLinx.Service.Services
         {
             var result = await _filterService.FilterAsync(filter);
             return await _consumableRepository.GetDtosAsync(result.ToList());
+        }
+
+        public async Task CreateCheckLogAsync(
+            string action,
+            Consumable consumable,
+            User user,
+            int quantity
+        )
+        {
+            await _customLogService.CreateCustomLog(
+                action,
+                "Consumable",
+                consumable.Id,
+                consumable.Name,
+                "User",
+                user.Id,
+                user.FirstName + user.LastName,
+                "Checked " + quantity + " units"
+            );
+        }
+
+        public async Task CreateCheckLogAsync(string action, Consumable consumable, int quantity)
+        {
+            await _customLogService.CreateCustomLog(
+                action,
+                "Consumable",
+                consumable.Id,
+                consumable.Name,
+                "Checked " + quantity + " units"
+            );
         }
     }
 }

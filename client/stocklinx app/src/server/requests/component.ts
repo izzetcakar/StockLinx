@@ -60,14 +60,14 @@ const checkIn = async (
 
 const checkOut = async (
   checkOutDto: AssetProductCheckOutDto
-): Promise<AssetProductDto> => {
+): Promise<AssetProductDto[]> => {
   return (
     await request<AssetProductDto>({
       requestUrl: requestUrl + "checkout",
       apiType: "post",
       queryData: checkOutDto,
     })
-  ).data as AssetProductDto;
+  ).data as AssetProductDto[];
 };
 
 export const componentRequests = {

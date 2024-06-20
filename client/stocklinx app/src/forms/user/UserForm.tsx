@@ -42,15 +42,13 @@ const UserForm: React.FC<UserFormProps> = ({ user, create }) => {
           ? null
           : "Invalid email address",
       password: (value: string) =>
-        /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(value)
+        /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}$/.test(value)
           ? null
-          : "Password should be at least 8 characters and include at least one lowercase letter, one uppercase letter, and one digit.",
+          : "Password should be at least 5 characters and include at least one lowercase letter, one uppercase letter, and one digit.",
       startDate: (value: Date) =>
         value ? null : "Start Date should not be empty",
       employeeNo: (value: string) =>
-        /^[A-Za-z0-9]{8}$/.test(value)
-          ? null
-          : "Employee No should be exactly 8 characters.",
+        value === "" ? "Employee No should not be empty" : null,
     },
   });
 
@@ -91,6 +89,15 @@ const UserForm: React.FC<UserFormProps> = ({ user, create }) => {
           required
         />
         <TextInput
+          label="Employee No"
+          placeholder="Employee No"
+          {...form.getInputProps("employeeNo")}
+          maxLength={10}
+          minLength={1}
+          required
+          withAsterisk
+        />
+        <TextInput
           label="First Name"
           placeholder="First Name"
           {...form.getInputProps("firstName")}
@@ -108,11 +115,17 @@ const UserForm: React.FC<UserFormProps> = ({ user, create }) => {
           label="Email"
           placeholder="Email"
           {...form.getInputProps("email")}
+          required
+          withAsterisk
         />
         <PasswordInput
           label="Password"
           placeholder="Password"
           {...form.getInputProps("password")}
+          maxLength={20}
+          minLength={6}
+          required
+          withAsterisk
         />
         <TextInput
           label="Job Title"

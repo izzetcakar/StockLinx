@@ -1,4 +1,4 @@
-import { AssetCheckInDto, AssetCheckOutDto } from "@interfaces/dtos";
+import { AssetCheckInDto, AssetCheckOutDto, UserProductDto } from "@interfaces/dtos";
 import { IAsset, IUserProduct } from "@interfaces/serverInterfaces";
 import { request } from "@request";
 import { QueryFilter } from "@/interfaces/gridTableInterfaces";
@@ -52,12 +52,16 @@ const checkIn = async (checkInDto: AssetCheckInDto): Promise<IUserProduct> => {
   ).data as IUserProduct;
 };
 
-const checkOut = (checkOutDto: AssetCheckOutDto) => {
-  return request<IAsset>({
-    requestUrl: requestUrl + "checkout",
-    apiType: "post",
-    queryData: checkOutDto,
-  });
+const checkOut = async (
+  checkOutDto: AssetCheckOutDto
+): Promise<UserProductDto | null> => {
+  return (
+    await request<UserProductDto>({
+      requestUrl: requestUrl + "checkout",
+      apiType: "post",
+      queryData: checkOutDto,
+    })
+  ).data as UserProductDto | null;
 };
 
 export const assetRequests = {

@@ -23,11 +23,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                //List<UserProductDto> result = await _userProductService.GetAllDtosAsync();
-                IEnumerable<UserProduct> result = await _userProductService.GetAllAsync();
-                return CreateActionResult(
-                    CustomResponseDto<List<UserProduct>>.Success(200, result.ToList())
-                );
+                List<UserProductDto> result = await _userProductService.GetAllDtosAsync();
+                return CreateActionResult(CustomResponseDto<List<UserProductDto>>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -40,9 +37,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                //UserProductDto result = await _userProductService.GetDtoAsync(id);
-                UserProduct result = await _userProductService.GetByIdAsync(id);
-                return CreateActionResult(CustomResponseDto<UserProduct>.Success(200, result));
+                UserProductDto result = await _userProductService.GetDtoAsync(id);
+                return CreateActionResult(CustomResponseDto<UserProductDto>.Success(200, result));
             }
             catch (Exception ex)
             {

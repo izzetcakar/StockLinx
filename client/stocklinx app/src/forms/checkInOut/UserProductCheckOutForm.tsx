@@ -2,6 +2,8 @@ import React from "react";
 import { Button, Group, Flex, Textarea, NumberInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { UserProductCheckOutDto } from "../../interfaces/dtos";
+import { useUser } from "@/hooks/user";
+import FormSelect from "../mantine/FormSelect";
 
 interface UserProductCheckOutFormProps {
   checkOutDto: UserProductCheckOutDto;
@@ -14,6 +16,11 @@ const UserProductCheckOutForm: React.FC<UserProductCheckOutFormProps> = ({
   isAsset,
   userCheckOut,
 }) => {
+  const {
+    data: users,
+    isLoading: userLoading,
+    refetch: userRefetch,
+  } = useUser.Lookup();
   const form = useForm<UserProductCheckOutDto>({
     initialValues: checkOutDto,
     validate: {
@@ -37,6 +44,14 @@ const UserProductCheckOutForm: React.FC<UserProductCheckOutFormProps> = ({
         px={40}
         pt={20}
       >
+        <FormSelect
+          label="User"
+          data={users || []}
+          inputProps={form.getInputProps("userId")}
+          value={form.values.userId || ""}
+          fetchData={userRefetch}
+          loading={userLoading}
+        />
         {!isAsset ? (
           <NumberInput
             label="Quantity"

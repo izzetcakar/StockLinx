@@ -75,26 +75,26 @@ const assetCheckIn = async (
 
 const userCheckOut = async (
   checkOutDto: UserProductCheckOutDto
-): Promise<UserProductDto> => {
+): Promise<UserProductDto[]> => {
   return (
     await request<UserProductDto>({
       requestUrl: requestUrl + "checkout/user",
       apiType: "post",
       queryData: checkOutDto,
     })
-  ).data as UserProductDto;
+  ).data as UserProductDto[];
 };
 
 const assetCheckOut = async (
   checkOutDto: AssetProductCheckOutDto
-): Promise<AssetProductDto> => {
+): Promise<AssetProductDto[]> => {
   return (
     await request<AssetProductDto>({
       requestUrl: requestUrl + "checkout/asset",
       apiType: "post",
       queryData: checkOutDto,
     })
-  ).data as AssetProductDto;
+  ).data as AssetProductDto[];
 };
 
 export const licenseRequests = {

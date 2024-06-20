@@ -1,4 +1,8 @@
-import { AssetCheckInDto, AssetCheckOutDto } from "@/interfaces/dtos";
+import {
+  AssetCheckInDto,
+  AssetCheckOutDto,
+  UserProductDto,
+} from "@/interfaces/dtos";
 import { queryClient } from "@/main";
 import { assetRequests } from "@/server/requests/asset";
 import { useMutation } from "react-query";
@@ -90,19 +94,15 @@ const CheckOut = () => {
   return useMutation({
     mutationKey: assetKeys.CHECK_OUT_ASSET,
     mutationFn: (dto: AssetCheckOutDto) => assetRequests.checkOut(dto),
-    onSuccess: (_, req) => {
+    onSuccess: (res, req) => {
       queryClient.setQueryData<IUserProduct[]>(
         "FETCH_ALL_USERPRODUCT",
         (data) => {
-          return data
-            ? data?.filter((userProduct) => userProduct.assetId !== req.assetId)
-            : [];
+          return handleCheckOutData(data, req, res);
         }
       );
       queryClient.setQueryData<IUserProduct[]>("FILTER_USERPRODUCT", (data) => {
-        return data
-          ? data?.filter((userProduct) => userProduct.assetId !== req.assetId)
-          : [];
+        return handleCheckOutData(data, req, res);
       });
       queryClient.setQueryData<IAsset[]>("FETCH_ALL_ASSET", (data) => {
         return data ? setAssetCheckStatus(data, req) : [];
@@ -110,13 +110,32 @@ const CheckOut = () => {
       queryClient.setQueryData<IAsset[]>("FILTER_ASSET", (data) => {
         return data ? setAssetCheckStatus(data, req) : [];
       });
-      queryClient.setQueryData(["GET_ASSET", req.assetId], (data) => {
-        return data ? { ...data, productStatusId: req.productStatusId } : data;
-      });
+      queryClient.invalidateQueries("GET_ASSET");
       closeModal("asset_checkOut_modal");
       openNotificationSuccess("Asset Checked Out Successfully");
     },
   });
+};
+
+const handleCheckOutData = (
+  data: any,
+  req: AssetCheckOutDto,
+  res: UserProductDto | null,
+) => {
+  if (!data) {
+    if (res) {
+      return [res];
+    }
+  }
+  if (res) {
+    const filtered = data?.filter(
+      (userProduct: UserProductDto) => userProduct.id !== req.userProductId
+    );
+    return [...filtered, res];
+  }
+  return data.filter(
+    (userProduct: UserProductDto) => userProduct.id !== req.userProductId
+  );
 };
 
 export const useAsset = {
