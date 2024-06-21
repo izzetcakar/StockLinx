@@ -29,11 +29,11 @@ import { useProductStatus } from "@/hooks/productStatus";
 
 interface AssetFormProps {
   asset?: IAsset;
-  create?: boolean;
 }
 
-const AssetForm: React.FC<AssetFormProps> = ({ asset, create }) => {
-  const { initialValues, isCreate } = useInitial(asset, create);
+const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
+  const initialValues = useInitial(asset);
+  const isCreate = initialValues.id === "";
   const { company } = useContext(GenericContext);
   const { mutate: createAsset } = useAsset.Create();
   const { mutate: createAssetRange } = useAsset.CreateRange();

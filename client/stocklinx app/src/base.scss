@@ -22,11 +22,14 @@ $spacing-lg: 0.5rem;
 $spacing-xl: 1rem;
 
 //Font Sizes
-$fontsize-xs: 0.6rem;
-$fontsize-sm: 0.7rem;
-$fontsize-md: 0.9rem;
-$fontsize-lg: 1.25rem;
-$fontsize-xl: 1.5rem;
+$fontsize-xs: 0.625rem;
+$fontsize-sm: 0.75rem;
+$fontsize-md: 0.875rem;
+$fontsize-lg: 1rem;
+$fontsize-display-sm: 1.5rem;
+$fontsize-display-md: 2rem;
+$fontsize-display-lg: 2.5rem;
+$fontsize-display-xl: 4rem;
 
 // Mixins
 @mixin flex-center {

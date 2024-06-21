@@ -155,8 +155,8 @@ export const useColumns = () => {
               gap: "5px",
             }}
           >
-            <div>{e.tag}</div>
-            <div>{e.name}</div>
+            <div>Tag : {e.tag}</div>
+            <div>Name : {e.name}</div>
           </div>
         );
       },

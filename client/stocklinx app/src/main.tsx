@@ -133,6 +133,12 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           lg: "1rem",
           xl: "2rem",
         },
+        fontSizes: {
+          xs: "0.625rem",
+          sm: "0.75rem",
+          md: "0.875rem",
+          lg: "1rem",
+        },
         components,
       }}
     >

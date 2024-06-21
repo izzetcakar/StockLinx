@@ -2,14 +2,12 @@ import { IAsset } from "@interfaces/serverInterfaces";
 import { getImage } from "../../utils/imageUtils";
 import { useContext } from "react";
 import GenericContext from "@/context/GenericContext";
-import uuid4 from "uuid4";
 
-export const useInitial = (asset?: IAsset, create?: boolean) => {
+export const useInitial = (asset?: IAsset) => {
   const { company } = useContext(GenericContext);
-  let isCreate = create || false;
 
   let initialValues: IAsset = {
-    id: uuid4(),
+    id: "",
     companyId: company?.id || "",
     productStatusId: "",
     supplierId: null,
@@ -29,11 +27,7 @@ export const useInitial = (asset?: IAsset, create?: boolean) => {
   if (asset) {
     initialValues = { ...asset };
     initialValues.imagePath = getImage(asset.imagePath);
-    isCreate = false;
   }
-  if (!asset || create) {
-    initialValues.id = uuid4();
-    isCreate = true;
-  }
-  return { initialValues, isCreate };
+
+  return initialValues;
 };
