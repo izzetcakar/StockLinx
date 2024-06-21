@@ -1,7 +1,7 @@
 import { Menu, Button } from "@mantine/core";
 import { IconChevronDown } from "@tabler/icons-react";
 import { UseGridTableContext } from "../context/GenericStateContext";
-import { useVisible } from "../customhooks/visible";
+import { useVisible } from "../hooks/visible";
 import "./tableToolbar.scss";
 
 const DropDown = () => {

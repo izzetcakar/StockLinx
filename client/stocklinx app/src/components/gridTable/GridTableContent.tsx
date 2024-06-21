@@ -3,10 +3,10 @@ import EditComponent from "./edit/EditComponent";
 import TableToolbar from "./tableToolbar/TableToolbar";
 import { GridtableProps, QueryFilter } from "@interfaces/gridTableInterfaces";
 import { Checkbox } from "@mantine/core";
-import { useSelectRow } from "./customhooks/selectRow";
+import { useSelectRow } from "./hooks/selectRow";
 import { UseGridTableContext } from "./context/GenericStateContext";
-import { useColumns } from "./customhooks/columns";
-import { usePaging } from "./customhooks/paging";
+import { useColumns } from "./hooks/columns";
+import { usePaging } from "./hooks/paging";
 import { RenderCell } from "./utils/cellUtils";
 import "./gridtable.scss";
 
@@ -21,6 +21,7 @@ const GridtableContent: React.FC<GridtableProps> = ({
   onRowRemoveRange = (ids: string[]) => console.log(ids),
   onExpandData,
   onApplyFilters = (queryFilters: QueryFilter[]) => console.log(queryFilters),
+  onRowDetail = (row: object) => console.log(row),
   itemKey = "id",
   excelColumns,
   enableToolbar = false,
@@ -59,6 +60,7 @@ const GridtableContent: React.FC<GridtableProps> = ({
           onRowInsert={onRowInsert}
           refreshData={refreshData}
           onExpandData={onExpandData}
+          onRowDetail={onRowDetail}
         />
       ) : null}
       <table className="gridtable">

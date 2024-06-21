@@ -6,12 +6,14 @@ interface ActionIconBtnProps {
   icon: string;
   iconSize?: number;
   disable?: boolean;
+  text?: string;
 }
 const ActionIconBtn: React.FC<ActionIconBtnProps> = ({
   action,
   icon,
   iconSize = 20,
   disable = false,
+  text,
 }) => {
   const [clicked, setClicked] = useState(false);
 
@@ -23,14 +25,21 @@ const ActionIconBtn: React.FC<ActionIconBtnProps> = ({
   return (
     <button
       type="submit"
-      className={clicked ? "action-btn clicked" : "action-btn"}
+      className={clicked ? "action__btn clicked" : "action__btn"}
       onClick={disable ? () => {} : handleClick}
     >
-      <img
-        className={disable ? "action-btn-icon disable" : "action-btn-icon"}
-        src={icon}
-        style={{ width: iconSize, height: iconSize }}
-      ></img>
+      <div
+        className={
+          disable ? "action__btn__content disable" : "action__btn__content"
+        }
+      >
+        <img
+          className="action__btn__icon"
+          src={icon}
+          style={{ width: iconSize, height: iconSize }}
+        />
+        {text && <div className="action__btn__text">{text}</div>}
+      </div>
     </button>
   );
 };

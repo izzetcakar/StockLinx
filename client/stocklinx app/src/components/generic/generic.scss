@@ -1,6 +1,6 @@
 @import "../../base.scss";
 
-.action-btn {
+.action__btn {
   all: unset;
   display: flex;
   align-items: center;
@@ -11,25 +11,41 @@
   border: none;
   background: none;
   transition: transform 0.1s ease;
-  .action-btn-icon {
-    padding: 0.2rem;
-    border: 1px solid #ced4da;
+  .action__btn__content {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 4px;
     border-radius: 4px;
+
+    &:hover {
+      background-color: $primary-color-light;
+      .action__btn__icon {
+        filter: invert(1) drop-shadow(0 0 white);
+      }
+      .action__btn__text {
+        color: white;
+      }
+    }
   }
-  .action-btn-icon.disable {
-    cursor: context-menu;
-    filter: opacity(0.5) drop-shadow(0 0 #ffffff);
+  .action__btn__content.disable {
+    filter: opacity(0.5) drop-shadow(0 0 white);
   }
-  .action-btn-icon:hover {
+  .action__btn__content:hover {
+    padding: 4px;
     border-radius: 4px;
-    padding: 0.2rem;
-    border: 1px solid black;
+    background-color: $primary-color-light;
+  }
+  .action__btn__text {
+    vertical-align: middle;
+    text-align: center;
+    font-size: $fontsize-sm;
   }
 }
-.action-btn.clicked {
+.action__btn.clicked {
   transform: translateY(1px); /* Move the button 1px down when clicked */
 }
-.action-btn:focus {
+.action__btn:focus {
   outline: none;
 }
 

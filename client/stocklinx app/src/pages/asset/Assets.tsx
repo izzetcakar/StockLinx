@@ -4,12 +4,19 @@ import { openAssetModal } from "../../modals/modals";
 import { useAsset } from "@/hooks/asset";
 import PageHeader from "@/components/generic/PageHeader";
 import Gridtable from "@components/gridTable/GridTable";
+import { useNavigate } from "react-router-dom";
 
 const Asset = () => {
+  const navigate = useNavigate();
   const { data: assets } = useAsset.Filter([]);
   const { mutate: filter } = useAsset.ApplyFilters();
   const { mutate: remove } = useAsset.Remove();
   const { mutate: removeRange } = useAsset.RemoveRange();
+
+  const navigateDetail = (assetDetails: IAsset[]) => {
+    if (!assetDetails.length) return;
+    navigate("/asset", { state: { assets: assetDetails } });
+  };
 
   return (
     <>
@@ -24,6 +31,7 @@ const Asset = () => {
         onRowRemove={(id) => remove(id)}
         onRowRemoveRange={(ids) => removeRange(ids)}
         onApplyFilters={(filters) => filter(filters)}
+        onRowDetail={(assets) => navigateDetail(assets as IAsset[])}
         enableToolbar
         enableEditActions
         enableSelectActions

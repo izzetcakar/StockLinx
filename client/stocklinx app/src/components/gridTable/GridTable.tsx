@@ -2,7 +2,7 @@ import React, { forwardRef, useImperativeHandle, useMemo } from "react";
 import { UseGridTableContext } from "./context/GenericStateContext";
 import { GridtableProps, GridtableRef } from "@interfaces/gridTableInterfaces";
 import GridTableContent from "./GridTableContent";
-import { filterHooks } from "./customhooks/filter";
+import { filterHooks } from "./hooks/filter";
 
 const GridTable: React.ForwardRefRenderFunction<
   GridtableRef,
@@ -25,6 +25,7 @@ const GridTable: React.ForwardRefRenderFunction<
     onRowRemove,
     onRowRemoveRange,
     onExpandData,
+    onRowDetail,
   },
   ref
 ) => {
@@ -62,6 +63,7 @@ const GridTable: React.ForwardRefRenderFunction<
       onRowRemoveRange={onRowRemoveRange}
       onExpandData={onExpandData}
       onApplyFilters={onApplyFilters}
+      onRowDetail={onRowDetail}
     />
   );
 };

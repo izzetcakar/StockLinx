@@ -2,7 +2,7 @@ import { Column, Filter, QueryFilter } from "@/interfaces/gridTableInterfaces";
 import { FilterInput } from "@/utils/filterUtilts";
 import { Button, Flex } from "@mantine/core";
 import { useEffect, useState } from "react";
-import { filterHooks } from "../gridTable/customhooks/filter";
+import { filterHooks } from "../gridTable/hooks/filter";
 
 interface FilterPanelProps {
   columns: Column[];

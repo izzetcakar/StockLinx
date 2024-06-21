@@ -10,17 +10,19 @@ import icon_refresh from "../../.././assets/icon_refresh.png";
 import icon_trash from "../../.././assets/icon_trash.png";
 import icon_filter from "../../.././assets/icon_filter.png";
 import ActionIconBtn from "../../generic/ActionIconBtn";
+import icon_detail from "../../.././assets/icon_detail.png";
 import uuid4 from "uuid4";
 import ExcelJS from "exceljs";
 import ExcelButton from "./ExcelButton";
 import ItemNumberSelector from "../tableFooter/ItemNumberSelector";
+import Filters from "./Filters";
+import DropDown from "./Dropdown";
 import { utils, read } from "xlsx";
 import { FileInput } from "@mantine/core";
 import { openConfirmModal, openExcelModal } from "../modals/modals";
 import { UseGridTableContext } from "../context/GenericStateContext";
 import "./tableToolbar.scss";
-import Filters from "./Filters";
-import DropDown from "./Dropdown";
+import { useSelectRow } from "../hooks/selectRow";
 
 interface TableToolbarProps {
   data: object[];
@@ -31,6 +33,7 @@ interface TableToolbarProps {
   onRowInsert?: () => void;
   refreshData?: () => Promise<void> | void;
   onExpandData?: (skip: number, top: number) => void;
+  onRowDetail?: (row: object) => void;
 }
 const TableToolbar: React.FC<TableToolbarProps> = ({
   data,
@@ -41,7 +44,9 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
   onRowInsert,
   refreshData,
   onExpandData,
+  onRowDetail,
 }) => {
+  const { getSelectedData } = useSelectRow(data, itemKey);
   const { gridColumns, selectedKeys, filters } = UseGridTableContext();
   const [filtersVisible, setFiltersVisible] = React.useState(false);
 
@@ -219,11 +224,6 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
       () => onRowRemoveRange(selectedKeys)
     );
   };
-  const getSelectedData = () => {
-    return (data as { [key: string]: any }[]).filter((x) =>
-      selectedKeys.includes(x[itemKey])
-    );
-  };
 
   return (
     <div className="gridtable__toolbar">
@@ -233,24 +233,32 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
           <ActionIconBtn
             action={() => setFiltersVisible((prev) => !prev)}
             icon={icon_filter}
-            iconSize={25}
+            iconSize={15}
           />
         }
         {onRowInsert ? (
-          <ActionIconBtn action={onRowInsert} icon={icon_plus} iconSize={25} />
+          <ActionIconBtn action={onRowInsert} icon={icon_plus} iconSize={15} />
         ) : null}
         {refreshData ? (
           <ActionIconBtn
             action={refreshData}
             icon={icon_refresh}
-            iconSize={25}
+            iconSize={15}
           />
         ) : null}
         <ActionIconBtn
           action={() => removeRangeHandler()}
           icon={icon_trash}
-          iconSize={25}
+          iconSize={15}
         />
+        {onRowDetail ? (
+          <ActionIconBtn
+            action={() => onRowDetail(getSelectedData())}
+            icon={icon_detail}
+            iconSize={15}
+            text="Details"
+          />
+        ) : null}
         {excelColumns ? (
           <div className="gridtable__toolbar__actions__last">
             <FileInput

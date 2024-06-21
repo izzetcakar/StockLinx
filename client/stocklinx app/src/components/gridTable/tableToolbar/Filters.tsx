@@ -1,6 +1,6 @@
 import { Button, Flex } from "@mantine/core";
 import { Filter, QueryFilter } from "@interfaces/gridTableInterfaces";
-import { filterHooks } from "../customhooks/filter";
+import { filterHooks } from "../hooks/filter";
 import { UseGridTableContext } from "../context/GenericStateContext";
 
 interface FiltersProps {

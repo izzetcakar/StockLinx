@@ -92,6 +92,7 @@ export interface GridtableProps {
   onRowRemoveRange?: (ids: string[]) => void;
   onExpandData?: (skip: number, top: number) => void;
   onApplyFilters?: (filters: QueryFilter[]) => void;
+  onRowDetail?: (row: object) => void;
   excelColumns?: ExcelColumn[];
   enableToolbar?: boolean;
   enableEditActions?: boolean;
