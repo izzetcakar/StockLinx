@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { UseGridTableContext } from "../context/GenericStateContext";
 
-export const useSelectRow = (data: object[], keyfield: keyof object) => {
+export const useSelectRow = (data: object[], keyfield: string) => {
   const { selectedKeys, setSelectedKeys, clearRowSelection } =
     UseGridTableContext();
 
@@ -25,13 +25,20 @@ export const useSelectRow = (data: object[], keyfield: keyof object) => {
     if (selectedKeys.length === data.length) {
       setSelectedKeys([]);
     } else {
-      setSelectedKeys(data.map((item) => item[keyfield]));
+      setSelectedKeys(data.map((item) => item[keyfield as keyof object]));
     }
   };
 
+  const getSelectedData = () => {
+    return data.filter((item) =>
+      selectedKeys.includes(item[keyfield as keyof object])
+    );
+  };
+
   return {
-    handleSelectRow,
     getSelectedRowClass,
+    getSelectedData,
+    handleSelectRow,
     handleSelectAll,
   };
 };
