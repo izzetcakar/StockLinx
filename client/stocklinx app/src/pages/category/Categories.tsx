@@ -1,6 +1,6 @@
 import { ICategory } from "../../interfaces/serverInterfaces";
 import { useColumns } from "./columns";
-import { openCategoryModal } from "../../modals/modals";
+import { openCategoryModal } from "@/utils/modalUtils";
 import { useCategory } from "@/hooks/query/category";
 import PageHeader from "@/components/generic/PageHeader";
 import Gridtable from "@components/gridTable/GridTable";

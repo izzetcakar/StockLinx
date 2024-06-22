@@ -11,9 +11,9 @@ import {
   handleCheckOutUserProduct,
   setCheckedRecord,
 } from "@/utils/checkInOutUtils";
-import { closeModal } from "@/modals/modals";
-import { openNotificationSuccess } from "@/notification/Notification";
+import { openNotificationSuccess } from "@/utils/notificationUtils";
 import { accessoryKeys } from "./keys";
+import { closeModal } from "@/utils/modalUtils";
 
 const hooks = baseHooks("ACCESSORY");
 

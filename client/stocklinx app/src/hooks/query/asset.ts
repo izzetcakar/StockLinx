@@ -10,8 +10,8 @@ import { baseHooks } from "./baseHooks";
 import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 import { IAsset, IUserProduct } from "@/interfaces/serverInterfaces";
 import { setAssetCheckStatus } from "@/utils/checkInOutUtils";
-import { closeModal } from "@/modals/modals";
-import { openNotificationSuccess } from "@/notification/Notification";
+import { closeModal } from "@/utils/modalUtils";
+import { openNotificationSuccess } from "@/utils/notificationUtils";
 import { assetKeys } from "./keys";
 
 const hooks = baseHooks("ASSET");

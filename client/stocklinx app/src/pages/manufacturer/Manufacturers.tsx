@@ -1,6 +1,6 @@
 import { IManufacturer } from "../../interfaces/serverInterfaces";
 import { useColumns } from "./columns";
-import { openManufacturerModal } from "../../modals/modals";
+import { openManufacturerModal } from "@/utils/modalUtils";
 import { useManufacturer } from "@/hooks/query/manufacturer";
 import PageHeader from "@/components/generic/PageHeader";
 import Gridtable from "@components/gridTable/GridTable";

@@ -1,6 +1,6 @@
 import { IComponent } from "../../interfaces/serverInterfaces";
 import { useColumns } from "./columns";
-import { openComponentModal } from "../../modals/modals";
+import { openComponentModal } from "@/utils/modalUtils";
 import { useComponent } from "@/hooks/query/component";
 import PageHeader from "@/components/generic/PageHeader";
 import Gridtable from "@components/gridTable/GridTable";

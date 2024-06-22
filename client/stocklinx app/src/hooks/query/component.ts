@@ -11,8 +11,8 @@ import {
   handleCheckOutAssetProduct,
   setCheckedRecord,
 } from "@/utils/checkInOutUtils";
-import { closeModal } from "@/modals/modals";
-import { openNotificationSuccess } from "@/notification/Notification";
+import { closeModal } from "@/utils/modalUtils";
+import { openNotificationSuccess } from "@/utils/notificationUtils";
 import { componentKeys } from "./keys";
 
 const hooks = baseHooks("COMPONENT");

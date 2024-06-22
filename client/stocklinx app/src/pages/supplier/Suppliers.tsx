@@ -1,6 +1,6 @@
 import { ISupplier } from "../../interfaces/serverInterfaces";
 import { useColumns } from "./columns";
-import { openSupplierModal } from "../../modals/modals";
+import { openSupplierModal } from "@/utils/modalUtils";
 import { useSupplier } from "@/hooks/query/supplier";
 import PageHeader from "@/components/generic/PageHeader";
 import Gridtable from "@components/gridTable/GridTable";

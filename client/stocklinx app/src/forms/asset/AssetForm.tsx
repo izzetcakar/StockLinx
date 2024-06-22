@@ -17,7 +17,7 @@ import { DateInput } from "@mantine/dates";
 import { IconPlus, IconTrash } from "@tabler/icons-react";
 import { IAsset } from "@interfaces/serverInterfaces";
 import { toBase64 } from "../../utils/imageUtils";
-import { openNotificationError } from "@/notification/Notification";
+import { openNotificationError } from "@/utils/notificationUtils";
 import { useAsset } from "@/hooks/query/asset";
 import { useModel } from "@/hooks/query/model";
 import { useSupplier } from "@/hooks/query/supplier";

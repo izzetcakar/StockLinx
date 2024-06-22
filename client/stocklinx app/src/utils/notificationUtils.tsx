@@ -1,6 +1,6 @@
 import { rem } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { IconX, IconCheck } from "@tabler/icons-react";
+import { IconCheck, IconX } from "@tabler/icons-react";
 
 export const openNotificationLoading = (message: string) => {
   notifications.show({

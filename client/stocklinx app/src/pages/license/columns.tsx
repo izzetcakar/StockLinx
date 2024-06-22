@@ -5,7 +5,7 @@ import {
   IAssetProduct,
 } from "@interfaces/serverInterfaces";
 import { Button } from "@mantine/core";
-import { openCheckInModal } from "../../modals/modals";
+import { openCheckInModal } from "@/utils/modalUtils";
 import { useManufacturer } from "@/hooks/query/manufacturer";
 import { useCompany } from "@/hooks/query/company";
 import { useCategory } from "@/hooks/query/category";

@@ -1,3 +1,5 @@
+import { DataColumn } from "@/interfaces/gridTableInterfaces";
+
 export const testData = [
   {
     id: 1,
@@ -7998,5 +8000,38 @@ export const testData = [
     email: "mmaronrr@noaa.gov",
     gender: "Male",
     ip_address: "209.221.246.3",
+  },
+];
+
+export const testColumns: DataColumn[] = [
+  {
+    caption: "ID",
+    dataField: "id",
+    dataType: "number",
+  },
+  {
+    caption: "First Name",
+    dataField: "first_name",
+    dataType: "string",
+  },
+  {
+    caption: "Last Name",
+    dataField: "last_name",
+    dataType: "string",
+  },
+  {
+    caption: "Email",
+    dataField: "email",
+    dataType: "string",
+  },
+  {
+    caption: "Gender",
+    dataField: "gender",
+    dataType: "string",
+  },
+  {
+    caption: "IP Address",
+    dataField: "ip_address",
+    dataType: "string",
   },
 ];

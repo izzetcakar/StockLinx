@@ -38,6 +38,11 @@ const Sidebar: React.FC = () => {
       target: "/",
     },
     {
+      title: "Test",
+      target: "/test",
+      icon: icon_home,
+    },
+    {
       title: "Assets",
       icon: icon_barcode,
       target: "/*",

@@ -1,5 +1,5 @@
 import { useColumns } from "./columns";
-import { openFieldSetModal, openCustomFieldModal } from "../../modals/modals";
+import { openFieldSetModal, openCustomFieldModal } from "@/utils/modalUtils";
 import { ICustomField } from "@interfaces/serverInterfaces";
 import { useCustomField } from "@/hooks/query/customField";
 import { useFieldSet } from "@/hooks/query/fieldSet";

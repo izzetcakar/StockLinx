@@ -1,6 +1,6 @@
 import { IDepartment } from "../../interfaces/serverInterfaces";
 import { useColumns } from "./columns";
-import { openDepartmentModal } from "../../modals/modals";
+import { openDepartmentModal } from "@/utils/modalUtils";
 import { useDepartment } from "@/hooks/query/department";
 import PageHeader from "@/components/generic/PageHeader";
 import Gridtable from "@components/gridTable/GridTable";

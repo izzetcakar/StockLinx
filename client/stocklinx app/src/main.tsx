@@ -11,7 +11,7 @@ import { defaultInputProps } from "./mantineModules/defaultInputProps.ts";
 import { IconCaretDownFilled, IconCalendar } from "@tabler/icons-react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { GenericStateProvider } from "./components/gridTable/context/GenericStateContext.tsx";
-import { openNotificationError } from "./notification/Notification.tsx";
+import { openNotificationError } from "./utils/notificationUtils.tsx";
 
 const components = {
   TextInput: {

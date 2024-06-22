@@ -2,7 +2,7 @@ import { DataColumn } from "@interfaces/gridTableInterfaces";
 import { IAccessory, IUserProduct } from "@interfaces/serverInterfaces";
 import { Button, Image } from "@mantine/core";
 import { getImage } from "../../utils/imageUtils";
-import { openCheckInModal } from "../../modals/modals";
+import { openCheckInModal } from "@/utils/modalUtils";
 import { useAccessory } from "@/hooks/query/accessory";
 import { useCategory } from "@/hooks/query/category";
 import { CategoryType } from "@/interfaces/enums";

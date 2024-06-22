@@ -1,6 +1,6 @@
 import { IProductStatus } from "../../interfaces/serverInterfaces";
 import { useColumns } from "./columns";
-import { openProductStatusModal } from "../../modals/modals";
+import { openProductStatusModal } from "@/utils/modalUtils";
 import { useProductStatus } from "@/hooks/query/productStatus";
 import PageHeader from "@/components/generic/PageHeader";
 import Gridtable from "@components/gridTable/GridTable";

@@ -1,15 +1,41 @@
-import { modals } from "@mantine/modals";
-import { Text } from "@mantine/core";
+import AccessoryForm from "@/forms/accessory/AccessoryForm";
+import AssetForm from "@/forms/asset/AssetForm";
+import CategoryForm from "@/forms/category/CategoryForm";
+import AssetCheckInForm from "@/forms/checkInOut/AssetCheckInForm";
+import AssetCheckOutForm from "@/forms/checkInOut/AssetCheckOutForm";
+import AssetProductCheckOutForm from "@/forms/checkInOut/AssetProductCheckOutForm";
+import CheckInForm from "@/forms/checkInOut/CheckInForm";
+import UserProductCheckOutForm from "@/forms/checkInOut/UserProductCheckOutForm";
+import CompanyForm from "@/forms/company/CompanyForm";
+import ComponentForm from "@/forms/component/ComponentForm";
+import ConsumableForm from "@/forms/consumable/ConsumableForm";
+import CustomFieldForm from "@/forms/customField/CustomFieldForm";
+import DepartmentForm from "@/forms/department/DepartmentForm";
+import FieldSetForm from "@/forms/fieldSet/FieldSetForm";
+import LicenseForm from "@/forms/license/LicenseForm";
+import LocationForm from "@/forms/location/LocationForm";
+import ManufacturerForm from "@/forms/manufacturer/ManufacturerForm";
+import ModelForm from "@/forms/model/ModelForm";
+import PermissionForm from "@/forms/permission/PermissionForm";
+import ProductStatusForm from "@/forms/productStatus/ProductStatusForm";
+import SupplierForm from "@/forms/supplier/SupplierForm";
+import UserForm from "@/forms/user/UserForm";
+import {
+  AssetCheckInDto,
+  AssetCheckOutDto,
+  AssetProductCheckOutDto,
+  UserProductCheckOutDto,
+} from "@/interfaces/dtos";
 import {
   IAccessory,
   IAsset,
+  IAssetProduct,
   ICategory,
   ICompany,
   IComponent,
   IConsumable,
   ICustomField,
   IDepartment,
-  IUserProduct,
   IFieldSet,
   ILicense,
   ILocation,
@@ -18,36 +44,10 @@ import {
   IProductStatus,
   ISupplier,
   IUser,
-  IAssetProduct,
-} from "../interfaces/serverInterfaces";
-import CategoryForm from "../forms/category/CategoryForm";
-import CompanyForm from "../forms/company/CompanyForm";
-import DepartmentForm from "../forms/department/DepartmentForm";
-import LocationForm from "../forms/location/LocationForm";
-import ManufacturerForm from "../forms/manufacturer/ManufacturerForm";
-import ModelForm from "../forms/model/ModelForm";
-import AccessoryForm from "../forms/accessory/AccessoryForm";
-import AssetForm from "../forms/asset/AssetForm";
-import ComponentForm from "../forms/component/ComponentForm";
-import ConsumableForm from "../forms/consumable/ConsumableForm";
-import LicenseForm from "../forms/license/LicenseForm";
-import ProductStatusForm from "../forms/productStatus/ProductStatusForm";
-import SupplierForm from "../forms/supplier/SupplierForm";
-import UserForm from "../forms/user/UserForm";
-import FieldSetForm from "../forms/fieldSet/FieldSetForm";
-import CustomFieldForm from "../forms/customField/CustomFieldForm";
-import PermissionForm from "../forms/permission/PermissionForm";
-import CheckInForm from "../forms/checkInOut/CheckInForm";
-import AssetCheckInForm from "../forms/checkInOut/AssetCheckInForm";
-import {
-  AssetCheckInDto,
-  AssetCheckOutDto,
-  AssetProductCheckOutDto,
-  UserProductCheckOutDto,
-} from "../interfaces/dtos";
-import AssetCheckOutForm from "../forms/checkInOut/AssetCheckOutForm";
-import AssetProductCheckOutForm from "../forms/checkInOut/AssetProductCheckOutForm";
-import UserProductCheckOutForm from "../forms/checkInOut/UserProductCheckOutForm";
+  IUserProduct,
+} from "@/interfaces/serverInterfaces";
+import { Text } from "@mantine/core";
+import { modals } from "@mantine/modals";
 
 export const closeModal = (modalId: string) => modals.close(modalId);
 

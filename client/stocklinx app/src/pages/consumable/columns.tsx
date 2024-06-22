@@ -1,7 +1,7 @@
 import { DataColumn } from "@interfaces/gridTableInterfaces";
 import { IConsumable, IUserProduct } from "@interfaces/serverInterfaces";
 import { Button } from "@mantine/core";
-import { openCheckInModal } from "../../modals/modals";
+import { openCheckInModal } from "@/utils/modalUtils";
 import { useConsumable } from "@/hooks/query/consumable";
 import { useCategory } from "@/hooks/query/category";
 import { useCompany } from "@/hooks/query/company";

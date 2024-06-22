@@ -1,6 +1,6 @@
 import { ICompany } from "../../interfaces/serverInterfaces";
 import { useColumns } from "./columns";
-import { openCompanyModal } from "../../modals/modals";
+import { openCompanyModal } from "@/utils/modalUtils";
 import { useCompany } from "@/hooks/query/company";
 import PageHeader from "@/components/generic/PageHeader";
 import Gridtable from "@components/gridTable/GridTable";

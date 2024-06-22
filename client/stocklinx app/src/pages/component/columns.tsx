@@ -1,7 +1,7 @@
 import { DataColumn } from "@interfaces/gridTableInterfaces";
 import { Button } from "@mantine/core";
 import { IAssetProduct, IComponent } from "@interfaces/serverInterfaces";
-import { openCheckInModal } from "../../modals/modals";
+import { openCheckInModal } from "@/utils/modalUtils";
 import { useCategory } from "@/hooks/query/category";
 import { useCompany } from "@/hooks/query/company";
 import { useComponent } from "@/hooks/query/component";

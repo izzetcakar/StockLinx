@@ -40,6 +40,7 @@ import "@mantine/notifications/styles.css";
 import "@mantine/dates/styles.css";
 import "./app.scss";
 import "./base.scss";
+import Test from "./pages/test/Test";
 
 const Layout = () => {
   const { data: user } = useUser.GetWithToken();
@@ -197,6 +198,10 @@ const router = createBrowserRouter([
       {
         path: "/permissions",
         element: <Permissions />,
+      },
+      {
+        path: "/test",
+        element: <Test />,
       },
     ],
   },

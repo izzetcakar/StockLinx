@@ -1,5 +1,5 @@
 import { ICompany } from "@interfaces/serverInterfaces";
-import { openPermissionModal } from "../../modals/modals";
+import { openPermissionModal } from "@/utils/modalUtils";
 import "./permission.scss";
 
 interface CompanyCardDetailProps {

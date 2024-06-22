@@ -5,7 +5,7 @@ import { getImage } from "../../utils/imageUtils";
 import {
   openAssetCheckInModal,
   openAssetCheckOutModal,
-} from "../../modals/modals";
+} from "@/utils/modalUtils";
 import base_asset from "@assets/baseProductImages/base_asset.jpg";
 import { useModel } from "@/hooks/query/model";
 import { useSupplier } from "@/hooks/query/supplier";
