@@ -3,7 +3,13 @@ export interface BaseDto {
   createdDate?: Date;
   updatedDate?: Date | null;
 }
-
+export interface IUserLoginDto {
+  email: string;
+  password: string;
+}
+export interface TokenDto {
+  token: string;
+}
 export interface UserProductDto extends BaseDto {
   userId: string;
   accessoryId?: string;

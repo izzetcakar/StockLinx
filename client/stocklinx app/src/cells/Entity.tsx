@@ -1,19 +1,19 @@
-import { useAccessory } from "@/hooks/accessory";
-import { useAsset } from "@/hooks/asset";
-import { useCategory } from "@/hooks/category";
-import { useCompany } from "@/hooks/company";
-import { useComponent } from "@/hooks/component";
-import { useConsumable } from "@/hooks/consumable";
-import { useCustomField } from "@/hooks/customField";
-import { useDepartment } from "@/hooks/department";
-import { useFieldSet } from "@/hooks/fieldSet";
-import { useLicense } from "@/hooks/license";
-import { useLocation } from "@/hooks/location";
-import { useManufacturer } from "@/hooks/manufacturer";
-import { useModel } from "@/hooks/model";
-import { useProductStatus } from "@/hooks/productStatus";
-import { useSupplier } from "@/hooks/supplier";
-import { useUser } from "@/hooks/user";
+import { useAccessory } from "@/hooks/query/accessory";
+import { useAsset } from "@/hooks/query/asset";
+import { useCategory } from "@/hooks/query/category";
+import { useCompany } from "@/hooks/query/company";
+import { useComponent } from "@/hooks/query/component";
+import { useConsumable } from "@/hooks/query/consumable";
+import { useCustomField } from "@/hooks/query/customField";
+import { useDepartment } from "@/hooks/query/department";
+import { useFieldSet } from "@/hooks/query/fieldSet";
+import { useLicense } from "@/hooks/query/license";
+import { useLocation } from "@/hooks/query/location";
+import { useManufacturer } from "@/hooks/query/manufacturer";
+import { useModel } from "@/hooks/query/model";
+import { useProductStatus } from "@/hooks/query/productStatus";
+import { useSupplier } from "@/hooks/query/supplier";
+import { useUser } from "@/hooks/query/user";
 
 const Accessory = (id: string | null) => {
   const { data: accessory } = useAccessory.Get(id || "");

@@ -2,9 +2,9 @@ import { DataColumn } from "@interfaces/gridTableInterfaces";
 import { Image } from "@mantine/core";
 import { IModel } from "@interfaces/serverInterfaces";
 import { getImage } from "../../utils/imageUtils";
-import { useCategory } from "@/hooks/category";
-import { useManufacturer } from "@/hooks/manufacturer";
-import { useFieldSet } from "@/hooks/fieldSet";
+import { useCategory } from "@/hooks/query/category";
+import { useManufacturer } from "@/hooks/query/manufacturer";
+import { useFieldSet } from "@/hooks/query/fieldSet";
 import { EntityCells } from "@/cells/Entity";
 
 export const useColumns = () => {

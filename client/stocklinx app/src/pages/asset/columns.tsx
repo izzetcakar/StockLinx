@@ -7,9 +7,9 @@ import {
   openAssetCheckOutModal,
 } from "../../modals/modals";
 import base_asset from "@assets/baseProductImages/base_asset.jpg";
-import { useModel } from "@/hooks/model";
-import { useSupplier } from "@/hooks/supplier";
-import { useProductStatus } from "@/hooks/productStatus";
+import { useModel } from "@/hooks/query/model";
+import { useSupplier } from "@/hooks/query/supplier";
+import { useProductStatus } from "@/hooks/query/productStatus";
 import UserCheckInOutCell from "@/cells/UserCheckInOutCell";
 import { EntityCells } from "@/cells/Entity";
 import CheckedOutUserCell from "@/cells/CheckedOutUserCell";

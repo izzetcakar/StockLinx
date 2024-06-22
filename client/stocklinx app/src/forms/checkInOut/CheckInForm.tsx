@@ -9,8 +9,8 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IAssetProduct, IUserProduct } from "@interfaces/serverInterfaces";
-import { useUser } from "@/hooks/user";
-import { useAsset } from "@/hooks/asset";
+import { useUser } from "@/hooks/query/user";
+import { useAsset } from "@/hooks/query/asset";
 import FormSelect from "../mantine/FormSelect";
 
 interface CheckInFormProps {

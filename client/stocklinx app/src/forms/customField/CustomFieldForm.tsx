@@ -14,9 +14,9 @@ import {
   IFieldSetCustomField,
 } from "@interfaces/serverInterfaces";
 import uuid4 from "uuid4";
-import { useFieldSet } from "@/hooks/fieldSet";
-import { useFieldSetCustomField } from "@/hooks/fieldSetCustomField";
-import { useCustomField } from "@/hooks/customField";
+import { useFieldSet } from "@/hooks/query/fieldSet";
+import { useFieldSetCustomField } from "@/hooks/query/fieldSetCustomField";
+import { useCustomField } from "@/hooks/query/customField";
 interface CustomFieldFormProps {
   customField?: ICustomField;
 }

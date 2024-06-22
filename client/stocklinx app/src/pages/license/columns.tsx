@@ -1,23 +1,20 @@
 import { DataColumn } from "@interfaces/gridTableInterfaces";
 import {
-  CategoryType,
   IUserProduct,
   ILicense,
   IAssetProduct,
 } from "@interfaces/serverInterfaces";
 import { Button } from "@mantine/core";
 import { openCheckInModal } from "../../modals/modals";
-import {
-  initialAssetProduct,
-  initialUserProduct,
-} from "../../initials/initials";
-import { useManufacturer } from "@/hooks/manufacturer";
-import { useCompany } from "@/hooks/company";
-import { useCategory } from "@/hooks/category";
-import { useLicense } from "@/hooks/license";
-import { useSupplier } from "@/hooks/supplier";
-import LicenseQuantity from "@/cells/LicenseQuantity";
+import { useManufacturer } from "@/hooks/query/manufacturer";
+import { useCompany } from "@/hooks/query/company";
+import { useCategory } from "@/hooks/query/category";
+import { useLicense } from "@/hooks/query/license";
+import { useSupplier } from "@/hooks/query/supplier";
 import { EntityCells } from "@/cells/Entity";
+import { CategoryType } from "@/interfaces/enums";
+import { useInitial } from "@/hooks/initial/useInitial";
+import LicenseQuantity from "@/cells/LicenseQuantity";
 
 export const useColumns = () => {
   const { mutate: userCheckIn } = useLicense.UserCheckIn();
@@ -26,6 +23,7 @@ export const useColumns = () => {
   const { data: companyLookup } = useCompany.Lookup();
   const { refetch: getManufacturerLK } = useManufacturer.Lookup();
   const { data: supplierLookup } = useSupplier.Lookup();
+  const initial = useInitial();
 
   const onUserCheckInHandler = (userProduct: IUserProduct) => {
     userCheckIn({
@@ -48,9 +46,9 @@ export const useColumns = () => {
   };
 
   const onHeadToModal = (id: string) => {
-    const newUserProduct = initialUserProduct;
+    const newUserProduct = initial.UserProduct;
     newUserProduct.licenseId = id;
-    const newAssetProduct = initialAssetProduct;
+    const newAssetProduct = initial.AssetProduct;
     newAssetProduct.licenseId = id;
     openCheckInModal(
       ["User", "Asset"],

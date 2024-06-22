@@ -1,7 +1,7 @@
 import { IModel } from "../../interfaces/serverInterfaces";
 import { useColumns } from "./columns";
 import { openModelModal } from "../../modals/modals";
-import { useModel } from "@/hooks/model";
+import { useModel } from "@/hooks/query/model";
 import PageHeader from "@/components/generic/PageHeader";
 import Gridtable from "@components/gridTable/GridTable";
 

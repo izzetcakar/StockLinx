@@ -16,23 +16,23 @@ import { useForm } from "@mantine/form";
 import { DateInput } from "@mantine/dates";
 import { IconPlus, IconTrash } from "@tabler/icons-react";
 import { IAsset } from "@interfaces/serverInterfaces";
-import { useInitial } from "./useInitial";
 import { toBase64 } from "../../utils/imageUtils";
 import { openNotificationError } from "@/notification/Notification";
-import { useAsset } from "@/hooks/asset";
+import { useAsset } from "@/hooks/query/asset";
+import { useModel } from "@/hooks/query/model";
+import { useSupplier } from "@/hooks/query/supplier";
+import { useProductStatus } from "@/hooks/query/productStatus";
+import { useInitial } from "@/hooks/initial/useInitial";
 import base_asset from "@assets/baseProductImages/base_asset.jpg";
-import FormSelect from "../mantine/FormSelect";
 import GenericContext from "@/context/GenericContext";
-import { useModel } from "@/hooks/model";
-import { useSupplier } from "@/hooks/supplier";
-import { useProductStatus } from "@/hooks/productStatus";
+import FormSelect from "../mantine/FormSelect";
 
 interface AssetFormProps {
   asset?: IAsset;
 }
 
 const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
-  const initialValues = useInitial(asset);
+  const initialValues = useInitial().Asset(asset);
   const isCreate = initialValues.id === "";
   const { company } = useContext(GenericContext);
   const { mutate: createAsset } = useAsset.Create();

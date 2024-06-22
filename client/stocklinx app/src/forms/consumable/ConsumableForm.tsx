@@ -9,26 +9,25 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { DateInput } from "@mantine/dates";
-import { CategoryType, IConsumable } from "@interfaces/serverInterfaces";
+import { IConsumable } from "@interfaces/serverInterfaces";
 import { openNotificationError } from "@/notification/Notification";
-import { useInitial } from "./useInitial";
-import { useCategory } from "@/hooks/category";
-import { useSupplier } from "@/hooks/supplier";
-import { useManufacturer } from "@/hooks/manufacturer";
-import { useConsumable } from "@/hooks/consumable";
+import { useCategory } from "@/hooks/query/category";
+import { useSupplier } from "@/hooks/query/supplier";
+import { useManufacturer } from "@/hooks/query/manufacturer";
+import { useConsumable } from "@/hooks/query/consumable";
+import { CategoryType } from "@/interfaces/enums";
 import FormSelect from "../mantine/FormSelect";
 import GenericContext from "@/context/GenericContext";
+import { useInitial } from "@/hooks/initial/useInitial";
 
 interface ConsumableFormProps {
   consumable?: IConsumable;
   create?: boolean;
 }
 
-const ConsumableForm: React.FC<ConsumableFormProps> = ({
-  consumable,
-  create,
-}) => {
-  const { initialValues, isCreate } = useInitial(consumable, create);
+const ConsumableForm: React.FC<ConsumableFormProps> = ({ consumable }) => {
+  const initialValues = useInitial().Consumable(consumable);
+  const isCreate = initialValues.id === "";
   const { company } = useContext(GenericContext);
   const { data: categories } = useCategory.GetAll();
   const { mutate: createConsumable } = useConsumable.Create();

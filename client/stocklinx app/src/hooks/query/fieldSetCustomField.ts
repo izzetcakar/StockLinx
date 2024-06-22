@@ -3,10 +3,7 @@ import { queryClient } from "@/main";
 import { fieldSetCustomFieldRequests } from "@/server/requests/fieldSetCustomField";
 import { useMutation } from "react-query";
 import { baseHooks } from "./baseHooks";
-
-export enum fieldSetCustomFieldKeys {
-  SYNC_FIELDSETCUSTOMFIELDS = "SYNC_FIELDSETCUSTOMFIELDS",
-}
+import { fieldSetCustomFieldKeys } from "./keys";
 
 const hooks = baseHooks("FIELDSETCUSTOMFIELD");
 

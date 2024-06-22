@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 import { Badge, Drawer, Select } from "@mantine/core";
 import { createContext } from "react";
-import { useCompany } from "@/hooks/company";
+import { useCompany } from "@/hooks/query/company";
 import { ICompany } from "@/interfaces/serverInterfaces";
 import { useDisclosure } from "@mantine/hooks";
 

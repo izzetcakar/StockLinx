@@ -1,8 +1,8 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { Anchor, Tabs } from "@mantine/core";
-import { useUser } from "@/hooks/user";
-import { useDepartment } from "@/hooks/department";
-import { useCompany } from "@/hooks/company";
+import { useUser } from "@/hooks/query/user";
+import { useDepartment } from "@/hooks/query/department";
+import { useCompany } from "@/hooks/query/company";
 import HistoryLogs from "@components/dataGrid/customLog/HistoryLogs";
 import UserProductsPage from "@components/dataGrid/userProducts/UserProducts";
 

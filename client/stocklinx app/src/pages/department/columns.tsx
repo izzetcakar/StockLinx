@@ -1,7 +1,7 @@
 import { DataColumn } from "@interfaces/gridTableInterfaces";
 import { IDepartment } from "@interfaces/serverInterfaces";
-import { useLocation } from "@/hooks/location";
-import { useUser } from "@/hooks/user";
+import { useLocation } from "@/hooks/query/location";
+import { useUser } from "@/hooks/query/user";
 import { EntityCells } from "@/cells/Entity";
 
 export const useColumns = () => {

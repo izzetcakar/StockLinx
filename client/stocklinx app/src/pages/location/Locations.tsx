@@ -1,7 +1,7 @@
 import { ILocation } from "../../interfaces/serverInterfaces";
 import { useColumns } from "./columns";
 import { openLocationModal } from "../../modals/modals";
-import { useLocation } from "@/hooks/location";
+import { useLocation } from "@/hooks/query/location";
 import Gridtable from "@components/gridTable/GridTable";
 import PageHeader from "@/components/generic/PageHeader";
 

@@ -1,15 +1,10 @@
-import { TokenDto } from "@/interfaces/clientInterfaces";
-import { IUserLoginDto } from "@/interfaces/serverInterfaces";
+import { IUserLoginDto, TokenDto } from "@/interfaces/dtos";
 import { queryClient } from "@/main";
 import { userRequests } from "@/server/requests/user";
 import { useMutation, useQuery } from "react-query";
 import { baseHooks } from "./baseHooks";
 import { QueryFilter } from "@/interfaces/gridTableInterfaces";
-
-export enum userKeys {
-  SIGN_IN_USER = "SIGN_IN_USER",
-  GET_WITH_TOKEN_USER = "GET_WITH_TOKEN_USER",
-}
+import { userKeys } from "./keys";
 
 const hooks = baseHooks("USER");
 

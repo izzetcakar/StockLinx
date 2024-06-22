@@ -1,4 +1,4 @@
-import { useAssetProduct } from "@/hooks/assetProduct";
+import { useAssetProduct } from "@/hooks/query/assetProduct";
 
 interface AssetProductQuantityCellProps {
   productId: string;

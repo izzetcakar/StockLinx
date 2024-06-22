@@ -1,15 +1,12 @@
 import { DataColumn } from "@interfaces/gridTableInterfaces";
-import {
-  CategoryType,
-  IAccessory,
-  IUserProduct,
-} from "@interfaces/serverInterfaces";
+import { IAccessory, IUserProduct } from "@interfaces/serverInterfaces";
 import { Button, Image } from "@mantine/core";
 import { getImage } from "../../utils/imageUtils";
 import { openCheckInModal } from "../../modals/modals";
-import { initialUserProduct } from "../../initials/initials";
-import { useAccessory } from "@/hooks/accessory";
-import { useCategory } from "@/hooks/category";
+import { useAccessory } from "@/hooks/query/accessory";
+import { useCategory } from "@/hooks/query/category";
+import { CategoryType } from "@/interfaces/enums";
+import { useInitial } from "@/hooks/initial/useInitial";
 import { EntityCells } from "@/cells/Entity";
 import base_accessory from "@assets/baseProductImages/base_accessory.png";
 import UserProductQuantityCell from "@/cells/UserProductQuantityCell";
@@ -17,6 +14,7 @@ import UserProductQuantityCell from "@/cells/UserProductQuantityCell";
 export const useColumns = () => {
   const { mutate: checkIn } = useAccessory.CheckIn();
   const { data: categories } = useCategory.GetAll();
+  const initial = useInitial();
 
   const onCheckInHandler = (data: IUserProduct) => {
     checkIn({
@@ -29,7 +27,7 @@ export const useColumns = () => {
   };
 
   const onHeadToModal = (id: string) => {
-    const newUserProduct = initialUserProduct;
+    const newUserProduct = initial.UserProduct;
     newUserProduct.accessoryId = id;
     openCheckInModal(["User"], newUserProduct, onCheckInHandler);
   };

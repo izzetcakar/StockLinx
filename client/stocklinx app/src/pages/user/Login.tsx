@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "@mantine/form";
-import { IUserLoginDto } from "@interfaces/serverInterfaces";
+import { IUserLoginDto } from "@interfaces/dtos";
 import {
   Button,
   Flex,
@@ -11,7 +11,7 @@ import {
   TextInput,
 } from "@mantine/core";
 import { IconKey, IconMail } from "@tabler/icons-react";
-import { useUser } from "@/hooks/user";
+import { useUser } from "@/hooks/query/user";
 import logo from "/logo.png";
 import ReCAPTCHA from "react-google-recaptcha";
 import "./user.scss";

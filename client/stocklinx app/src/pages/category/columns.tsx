@@ -1,8 +1,9 @@
-import { CategoryType, ICategory } from "@interfaces/serverInterfaces";
+import { ICategory } from "@interfaces/serverInterfaces";
 import { DataColumn } from "@interfaces/gridTableInterfaces";
 import { createDataFromEnum } from "../../utils/enumUtils";
 import { EntityCardColumn } from "@/interfaces/clientInterfaces";
 import CategoryForm from "@/forms/category/CategoryForm";
+import { CategoryType } from "@/interfaces/enums";
 
 export const useColumns = () => {
   const columns: DataColumn[] = [
@@ -29,7 +30,7 @@ export const useColumns = () => {
         return (
           <div
             style={{
-              display: "flex", 
+              display: "flex",
               flexDirection: "column",
               gap: "5px",
             }}

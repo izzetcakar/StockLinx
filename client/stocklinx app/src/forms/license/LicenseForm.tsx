@@ -10,23 +10,24 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { DateInput } from "@mantine/dates";
-import { CategoryType, ILicense } from "@interfaces/serverInterfaces";
-import { useInitial } from "./useInitial";
+import { ILicense } from "@interfaces/serverInterfaces";
 import { openNotificationError } from "@/notification/Notification";
-import { useCategory } from "@/hooks/category";
-import { useManufacturer } from "@/hooks/manufacturer";
-import { useSupplier } from "@/hooks/supplier";
-import { useLicense } from "@/hooks/license";
-import FormSelect from "../mantine/FormSelect";
+import { useCategory } from "@/hooks/query/category";
+import { useManufacturer } from "@/hooks/query/manufacturer";
+import { useSupplier } from "@/hooks/query/supplier";
+import { useLicense } from "@/hooks/query/license";
+import { CategoryType } from "@/interfaces/enums";
+import { useInitial } from "@/hooks/initial/useInitial";
 import GenericContext from "@/context/GenericContext";
+import FormSelect from "../mantine/FormSelect";
 
 interface LicenseFormProps {
   license?: ILicense;
-  create?: boolean;
 }
 
-const LicenseForm: React.FC<LicenseFormProps> = ({ license, create }) => {
-  const { initialValues, isCreate } = useInitial(license, create);
+const LicenseForm: React.FC<LicenseFormProps> = ({ license }) => {
+  const initialValues = useInitial().License(license);
+  const isCreate = initialValues.id === "";
   const { company } = useContext(GenericContext);
   const { mutate: createLicense } = useLicense.Create();
   const { mutate: updateLicense } = useLicense.Update();

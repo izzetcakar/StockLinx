@@ -9,22 +9,23 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { DateInput } from "@mantine/dates";
-import { CategoryType, IComponent } from "@interfaces/serverInterfaces";
-import { useInitial } from "./useInitial";
+import { IComponent } from "@interfaces/serverInterfaces";
 import { openNotificationError } from "@/notification/Notification";
+import { useCategory } from "@/hooks/query/category";
+import { useSupplier } from "@/hooks/query/supplier";
+import { useComponent } from "@/hooks/query/component";
+import { CategoryType } from "@/interfaces/enums";
+import { useInitial } from "@/hooks/initial/useInitial";
 import FormSelect from "../mantine/FormSelect";
 import GenericContext from "@/context/GenericContext";
-import { useCategory } from "@/hooks/category";
-import { useSupplier } from "@/hooks/supplier";
-import { useComponent } from "@/hooks/component";
 
 interface ComponentFormProps {
   component?: IComponent;
-  create?: boolean;
 }
 
-const ComponentForm: React.FC<ComponentFormProps> = ({ component, create }) => {
-  const { initialValues, isCreate } = useInitial(component, create);
+const ComponentForm: React.FC<ComponentFormProps> = ({ component }) => {
+  const initialValues = useInitial().Component(component);
+  const isCreate = initialValues.id === "";
   const { company } = useContext(GenericContext);
   const { mutate: createComponent } = useComponent.Create();
   const { mutate: updateComponent } = useComponent.Update();

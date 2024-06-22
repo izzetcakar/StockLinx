@@ -3,9 +3,9 @@ import { Button, Group, Flex, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { AssetCheckOutDto } from "../../interfaces/dtos";
 import FormSelect from "../mantine/FormSelect";
-import { useAsset } from "@/hooks/asset";
-import { useProductStatus } from "@/hooks/productStatus";
-import { useUser } from "@/hooks/user";
+import { useAsset } from "@/hooks/query/asset";
+import { useProductStatus } from "@/hooks/query/productStatus";
+import { useUser } from "@/hooks/query/user";
 
 interface AssetCheckOutFormProps {
   checkOutDto: AssetCheckOutDto;

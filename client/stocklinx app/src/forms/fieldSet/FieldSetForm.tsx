@@ -2,7 +2,7 @@ import React from "react";
 import { TextInput, Button, Group, Flex } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IFieldSet } from "@interfaces/serverInterfaces";
-import { useFieldSet } from "@/hooks/fieldSet";
+import { useFieldSet } from "@/hooks/query/fieldSet";
 import uuid4 from "uuid4";
 interface FieldSetFormProps {
   fieldSet?: IFieldSet;

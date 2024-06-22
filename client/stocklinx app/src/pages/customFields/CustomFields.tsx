@@ -1,8 +1,8 @@
 import { useColumns } from "./columns";
 import { openFieldSetModal, openCustomFieldModal } from "../../modals/modals";
 import { ICustomField } from "@interfaces/serverInterfaces";
-import { useCustomField } from "@/hooks/customField";
-import { useFieldSet } from "@/hooks/fieldSet";
+import { useCustomField } from "@/hooks/query/customField";
+import { useFieldSet } from "@/hooks/query/fieldSet";
 import GridTable from "@components/gridTable/GridTable";
 import PageHeader from "@/components/generic/PageHeader";
 

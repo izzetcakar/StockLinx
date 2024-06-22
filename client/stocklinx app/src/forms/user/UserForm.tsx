@@ -11,19 +11,19 @@ import {
 import { useForm } from "@mantine/form";
 import { IUser } from "@interfaces/serverInterfaces";
 import { DateInput } from "@mantine/dates";
-import { useInitial } from "./useInitial";
+import { useCompany } from "@/hooks/query/company";
+import { useDepartment } from "@/hooks/query/department";
+import { useUser } from "@/hooks/query/user";
 import FormSelect from "../mantine/FormSelect";
-import { useCompany } from "@/hooks/company";
-import { useDepartment } from "@/hooks/department";
-import { useUser } from "@/hooks/user";
+import { useInitial } from "@/hooks/initial/useInitial";
 
 interface UserFormProps {
   user?: IUser;
-  create?: boolean;
 }
 
-const UserForm: React.FC<UserFormProps> = ({ user, create }) => {
-  const { initialValues, isCreate } = useInitial(user, create);
+const UserForm: React.FC<UserFormProps> = ({ user }) => {
+  const initialValues = useInitial().User(user);
+  const isCreate = initialValues.id === "";
   const { mutate: createUser } = useUser.Create();
   const { mutate: updateUser } = useUser.Update();
   const { data: companyLookup } = useCompany.Lookup();

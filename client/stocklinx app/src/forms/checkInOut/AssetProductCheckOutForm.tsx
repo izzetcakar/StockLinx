@@ -3,7 +3,7 @@ import { Button, Group, Flex, Textarea, NumberInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { AssetProductCheckOutDto } from "../../interfaces/dtos";
 import FormSelect from "../mantine/FormSelect";
-import { useAsset } from "@/hooks/asset";
+import { useAsset } from "@/hooks/query/asset";
 
 interface AssetProductCheckOutFormProps {
   checkOutDto: AssetProductCheckOutDto;

@@ -2,21 +2,18 @@ import React from "react";
 import { TextInput, Button, Group, Flex, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IDepartment } from "@interfaces/serverInterfaces";
-import { useInitial } from "./useInitial";
-import { useLocation } from "@/hooks/location";
-import { useDepartment } from "@/hooks/department";
+import { useLocation } from "@/hooks/query/location";
+import { useDepartment } from "@/hooks/query/department";
+import { useCompany } from "@/hooks/query/company";
+import { useInitial } from "@/hooks/initial/useInitial";
 import FormSelect from "../mantine/FormSelect";
-import { useCompany } from "@/hooks/company";
 interface DepartmentFormProps {
   department?: IDepartment;
-  create?: boolean;
 }
 
-const DepartmentForm: React.FC<DepartmentFormProps> = ({
-  department,
-  create,
-}) => {
-  const { initialValues, isCreate } = useInitial(department, create);
+const DepartmentForm: React.FC<DepartmentFormProps> = ({ department }) => {
+  const initialValues = useInitial().Department(department);
+  const isCreate = initialValues.id === "";
   const { mutate: createDepartment } = useDepartment.Create();
   const { mutate: updateDepartment } = useDepartment.Update();
   const { data: companyLookup } = useCompany.Lookup();

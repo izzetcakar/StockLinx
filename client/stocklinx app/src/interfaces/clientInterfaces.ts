@@ -20,9 +20,6 @@ export interface ApiResponse<T> {
   success: boolean;
   status?: number;
 }
-export interface TokenDto {
-  token: string;
-}
 export interface SelectData {
   value: string;
   label: string;

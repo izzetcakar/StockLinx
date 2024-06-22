@@ -1,7 +1,7 @@
 import { ILicense } from "../../interfaces/serverInterfaces";
 import { useColumns } from "./columns";
 import { openLicenseModal } from "../../modals/modals";
-import { useLicense } from "@/hooks/license";
+import { useLicense } from "@/hooks/query/license";
 import PageHeader from "@/components/generic/PageHeader";
 import Gridtable from "@components/gridTable/GridTable";
 

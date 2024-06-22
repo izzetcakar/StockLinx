@@ -1,5 +1,5 @@
-import { useUser } from "@/hooks/user";
-import { useUserProduct } from "@/hooks/userProduct";
+import { useUser } from "@/hooks/query/user";
+import { useUserProduct } from "@/hooks/query/userProduct";
 import { IAsset } from "@/interfaces/serverInterfaces";
 import { Button } from "@mantine/core";
 import React from "react";

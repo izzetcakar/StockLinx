@@ -1,19 +1,16 @@
 import { DataColumn } from "@interfaces/gridTableInterfaces";
-import {
-  CategoryType,
-  IConsumable,
-  IUserProduct,
-} from "@interfaces/serverInterfaces";
+import { IConsumable, IUserProduct } from "@interfaces/serverInterfaces";
 import { Button } from "@mantine/core";
 import { openCheckInModal } from "../../modals/modals";
-import { initialUserProduct } from "../../initials/initials";
-import { useConsumable } from "@/hooks/consumable";
-import { useCategory } from "@/hooks/category";
-import { useCompany } from "@/hooks/company";
-import { useSupplier } from "@/hooks/supplier";
-import { useManufacturer } from "@/hooks/manufacturer";
-import UserProductQuantityCell from "@/cells/UserProductQuantityCell";
+import { useConsumable } from "@/hooks/query/consumable";
+import { useCategory } from "@/hooks/query/category";
+import { useCompany } from "@/hooks/query/company";
+import { useSupplier } from "@/hooks/query/supplier";
+import { useManufacturer } from "@/hooks/query/manufacturer";
 import { EntityCells } from "@/cells/Entity";
+import { CategoryType } from "@/interfaces/enums";
+import { useInitial } from "@/hooks/initial/useInitial";
+import UserProductQuantityCell from "@/cells/UserProductQuantityCell";
 
 export const useColumns = () => {
   const { mutate: checkIn } = useConsumable.CheckIn();
@@ -21,6 +18,7 @@ export const useColumns = () => {
   const { data: companyLookup } = useCompany.Lookup();
   const { data: supplierLookup } = useSupplier.Lookup();
   const { data: manufacturerLookup } = useManufacturer.Lookup();
+  const initial = useInitial();
 
   const onCheckInHandler = (data: IUserProduct) => {
     checkIn({
@@ -33,7 +31,7 @@ export const useColumns = () => {
   };
 
   const onHeadToModal = (id: string) => {
-    const newUserProduct = initialUserProduct;
+    const newUserProduct = initial.UserProduct;
     newUserProduct.accessoryId = id;
     openCheckInModal(["User"], newUserProduct, onCheckInHandler);
   };

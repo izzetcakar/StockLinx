@@ -1,8 +1,8 @@
 import { QueryFilter } from "@/interfaces/gridTableInterfaces";
-import { IUser, IUserLoginDto } from "@interfaces/serverInterfaces";
+import { IUser } from "@interfaces/serverInterfaces";
+import { IUserLoginDto, TokenDto } from "@/interfaces/dtos";
 import { request } from "@request";
 import { baseRequests } from "@/utils/requestUtils";
-import { TokenDto } from "@/interfaces/clientInterfaces";
 
 const requestUrl = "User/";
 

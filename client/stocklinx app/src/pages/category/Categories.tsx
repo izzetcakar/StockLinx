@@ -1,7 +1,7 @@
 import { ICategory } from "../../interfaces/serverInterfaces";
 import { useColumns } from "./columns";
 import { openCategoryModal } from "../../modals/modals";
-import { useCategory } from "@/hooks/category";
+import { useCategory } from "@/hooks/query/category";
 import PageHeader from "@/components/generic/PageHeader";
 import Gridtable from "@components/gridTable/GridTable";
 import { useNavigate } from "react-router-dom";

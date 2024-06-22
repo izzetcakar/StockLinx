@@ -2,7 +2,7 @@ import { DataColumn } from "@interfaces/gridTableInterfaces";
 import { Image } from "@mantine/core";
 import { ICompany } from "@interfaces/serverInterfaces";
 import { getImage } from "../../utils/imageUtils";
-import { useLocation } from "@/hooks/location";
+import { useLocation } from "@/hooks/query/location";
 import { EntityCells } from "@/cells/Entity";
 
 export const useColumns = () => {

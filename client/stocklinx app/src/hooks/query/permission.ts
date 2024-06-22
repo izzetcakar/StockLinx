@@ -4,10 +4,7 @@ import { permissionRequests } from "@/server/requests/permission";
 import { useMutation } from "react-query";
 import { baseHooks } from "./baseHooks";
 import { QueryFilter } from "@/interfaces/gridTableInterfaces";
-
-export enum permissionKeys {
-  SYNC_PERMISSIONS = "SYNC_PERMISSIONS",
-}
+import { permissionKeys } from "./keys";
 
 const hooks = baseHooks("PERMISSION");
 

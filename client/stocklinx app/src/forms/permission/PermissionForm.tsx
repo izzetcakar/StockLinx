@@ -2,8 +2,8 @@ import React from "react";
 import { ICompany } from "@interfaces/serverInterfaces";
 import { ActionIcon, Badge, Button, Flex, Select, rem } from "@mantine/core";
 import { IconX } from "@tabler/icons-react";
-import { useUser } from "@/hooks/user";
-import { usePermission } from "@/hooks/permission";
+import { useUser } from "@/hooks/query/user";
+import { usePermission } from "@/hooks/query/permission";
 import uuid4 from "uuid4";
 
 interface PermissionFormProps {

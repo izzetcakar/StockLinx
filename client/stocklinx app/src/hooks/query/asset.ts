@@ -12,11 +12,7 @@ import { IAsset, IUserProduct } from "@/interfaces/serverInterfaces";
 import { setAssetCheckStatus } from "@/utils/checkInOutUtils";
 import { closeModal } from "@/modals/modals";
 import { openNotificationSuccess } from "@/notification/Notification";
-
-export enum assetKeys {
-  CHECK_IN_ASSET = "CHECK_IN_ASSET",
-  CHECK_OUT_ASSET = "CHECK_OUT_ASSET",
-}
+import { assetKeys } from "./keys";
 
 const hooks = baseHooks("ASSET");
 
@@ -120,7 +116,7 @@ const CheckOut = () => {
 const handleCheckOutData = (
   data: any,
   req: AssetCheckOutDto,
-  res: UserProductDto | null,
+  res: UserProductDto | null
 ) => {
   if (!data) {
     if (res) {

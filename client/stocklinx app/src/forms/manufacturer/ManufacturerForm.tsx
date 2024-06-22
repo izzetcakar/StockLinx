@@ -10,20 +10,19 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IManufacturer } from "@interfaces/serverInterfaces";
-import { useInitial } from "./useInitial";
 import { toBase64 } from "../../utils/imageUtils";
-import { useManufacturer } from "@/hooks/manufacturer";
+import { useManufacturer } from "@/hooks/query/manufacturer";
+import { useInitial } from "@/hooks/initial/useInitial";
 
 interface ManufacturerFormProps {
   manufacturer?: IManufacturer;
-  create?: boolean;
 }
 
 const ManufacturerForm: React.FC<ManufacturerFormProps> = ({
   manufacturer,
-  create,
 }) => {
-  const { initialValues, isCreate } = useInitial(manufacturer, create);
+  const initialValues = useInitial().Manufacturer(manufacturer);
+  const isCreate = initialValues.id === "";
   const { mutate: createManufacturer } = useManufacturer.Create();
   const { mutate: updateManufacturer } = useManufacturer.Update();
 

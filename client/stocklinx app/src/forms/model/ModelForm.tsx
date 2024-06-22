@@ -12,30 +12,26 @@ import {
   FileInput,
 } from "@mantine/core";
 import { FORM_INDEX, useForm } from "@mantine/form";
-import {
-  CategoryType,
-  IModel,
-  IModelFieldData,
-} from "@interfaces/serverInterfaces";
+import { IModel, IModelFieldData } from "@interfaces/serverInterfaces";
 import { DateInput } from "@mantine/dates";
-import { useInitial } from "./useInitial";
 import { toBase64 } from "../../utils/imageUtils";
+import { useCategory } from "@/hooks/query/category";
+import { useModel } from "@/hooks/query/model";
+import { useFieldSet } from "@/hooks/query/fieldSet";
+import { useManufacturer } from "@/hooks/query/manufacturer";
+import { useCustomField } from "@/hooks/query/customField";
+import { useModelFieldData } from "@/hooks/query/modelFieldData";
+import { useFieldSetCustomField } from "@/hooks/query/fieldSetCustomField";
+import { CategoryType } from "@/interfaces/enums";
 import FormSelect from "../mantine/FormSelect";
-import uuid4 from "uuid4";
-import { useCategory } from "@/hooks/category";
-import { useModel } from "@/hooks/model";
-import { useFieldSet } from "@/hooks/fieldSet";
-import { useManufacturer } from "@/hooks/manufacturer";
-import { useCustomField } from "@/hooks/customField";
-import { useModelFieldData } from "@/hooks/modelFieldData";
-import { useFieldSetCustomField } from "@/hooks/fieldSetCustomField";
+import { useInitial } from "@/hooks/initial/useInitial";
 interface ModelFormProps {
   model?: IModel;
-  create?: boolean;
 }
 
-const ModelForm: React.FC<ModelFormProps> = ({ model, create }) => {
-  const { initialValues, isCreate } = useInitial(model, create);
+const ModelForm: React.FC<ModelFormProps> = ({ model }) => {
+  const initialValues = useInitial().Model(model);
+  const isCreate = initialValues.id === "";
   const { mutate: createModel } = useModel.Create();
   const { mutate: updateModel } = useModel.Update();
   const { data: categories } = useCategory.GetAll();
@@ -95,7 +91,7 @@ const ModelForm: React.FC<ModelFormProps> = ({ model, create }) => {
     const newArray = [...(oldModelFieldData || [])];
     notExist?.forEach((element) => {
       newArray.push({
-        id: uuid4(),
+        id: "",
         modelId: modelId,
         customFieldId: element,
         value: getCustomField(element)?.defaultValue || "",

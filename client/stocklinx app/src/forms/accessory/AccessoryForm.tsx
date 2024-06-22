@@ -11,24 +11,25 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { DateInput } from "@mantine/dates";
-import { CategoryType, IAccessory } from "@interfaces/serverInterfaces";
-import { useInitial } from "./useInitial";
+import { IAccessory } from "@interfaces/serverInterfaces";
 import { toBase64 } from "../../utils/imageUtils";
 import { openNotificationError } from "@/notification/Notification";
-import { useCategory } from "@/hooks/category";
-import { useSupplier } from "@/hooks/supplier";
-import { useManufacturer } from "@/hooks/manufacturer";
-import { useAccessory } from "@/hooks/accessory";
+import { useCategory } from "@/hooks/query/category";
+import { useSupplier } from "@/hooks/query/supplier";
+import { useManufacturer } from "@/hooks/query/manufacturer";
+import { useAccessory } from "@/hooks/query/accessory";
+import { CategoryType } from "@/interfaces/enums";
+import { useInitial } from "@/hooks/initial/useInitial";
 import base_accessory from "@assets/baseProductImages/base_accessory.png";
-import FormSelect from "../mantine/FormSelect";
 import GenericContext from "@/context/GenericContext";
+import FormSelect from "../mantine/FormSelect";
 
 interface AccessoryFormProps {
   accessory?: IAccessory;
-  create?: boolean;
 }
-const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory, create }) => {
-  const { initialValues, isCreate } = useInitial(accessory, create);
+const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory }) => {
+  const initialValues = useInitial().Accessory(accessory);
+  const isCreate = initialValues.id === "";
   const { company } = useContext(GenericContext);
   const { mutate: createAccessory } = useAccessory.Create();
   const { mutate: updateAccessory } = useAccessory.Update();

@@ -7,14 +7,7 @@ import {
 } from "@/interfaces/serverInterfaces";
 import { productRequests } from "@/server/requests/product";
 import { useQuery } from "react-query";
-
-export enum productKeys {
-  FETCH_PRODUCT_COUNTS = "FETCH_PRODUCT_COUNTS",
-  FETCH_PRODUCT_STATUS_COUNTS = "FETCH_PRODUCT_STATUS_COUNTS",
-  FETCH_PRODUCT_LOCATION_COUNTS = "FETCH_PRODUCT_LOCATION_COUNTS",
-  FETCH_PRODUCT_CATEGORY_COUNTS = "FETCH_PRODUCT_CATEGORY_COUNTS",
-  FETCH_CUSTOM_LOGS = "FETCH_CUSTOM_LOGS",
-}
+import { productKeys } from "./keys";
 
 const GetEntityCounts = () => {
   return useQuery<IEntityCount[]>(

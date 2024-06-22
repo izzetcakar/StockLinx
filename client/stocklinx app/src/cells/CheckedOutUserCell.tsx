@@ -1,5 +1,5 @@
-import { useUserProduct } from "@/hooks/userProduct";
-import { useUser } from "@/hooks/user";
+import { useUserProduct } from "@/hooks/query/userProduct";
+import { useUser } from "@/hooks/query/user";
 
 const CheckedOutUserCell = (assetId: string) => {
   const { data: userProducts } = useUserProduct.GetAll();

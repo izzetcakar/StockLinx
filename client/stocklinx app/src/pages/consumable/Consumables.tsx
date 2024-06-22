@@ -1,7 +1,7 @@
 import { IConsumable } from "../../interfaces/serverInterfaces";
 import { useColumns } from "./columns";
 import { openConsumableModal } from "../../modals/modals";
-import { useConsumable } from "@/hooks/consumable";
+import { useConsumable } from "@/hooks/query/consumable";
 import PageHeader from "@/components/generic/PageHeader";
 import Gridtable from "@components/gridTable/GridTable";
 

@@ -1,22 +1,20 @@
 import { DataColumn } from "@interfaces/gridTableInterfaces";
 import { Button } from "@mantine/core";
-import {
-  CategoryType,
-  IAssetProduct,
-  IComponent,
-} from "@interfaces/serverInterfaces";
+import { IAssetProduct, IComponent } from "@interfaces/serverInterfaces";
 import { openCheckInModal } from "../../modals/modals";
-import { initialAssetProduct } from "../../initials/initials";
-import { useCategory } from "@/hooks/category";
-import { useCompany } from "@/hooks/company";
-import { useComponent } from "@/hooks/component";
+import { useCategory } from "@/hooks/query/category";
+import { useCompany } from "@/hooks/query/company";
+import { useComponent } from "@/hooks/query/component";
 import { EntityCells } from "@/cells/Entity";
+import { CategoryType } from "@/interfaces/enums";
+import { useInitial } from "@/hooks/initial/useInitial";
 import AssetProductQuantityCell from "@/cells/AssetProductQuantityCell";
 
 export const useColumns = () => {
   const { mutate: checkIn } = useComponent.CheckIn();
   const { data: categories } = useCategory.GetAll();
   const { data: companyLookup } = useCompany.Lookup();
+  const initial = useInitial();
 
   const onCheckInHandler = (data: IAssetProduct) => {
     checkIn({
@@ -29,7 +27,7 @@ export const useColumns = () => {
   };
 
   const onHeadToModal = (id: string) => {
-    const newAssetProduct = initialAssetProduct;
+    const newAssetProduct = initial.AssetProduct;
     newAssetProduct.componentId = id;
     openCheckInModal(
       ["Asset"],

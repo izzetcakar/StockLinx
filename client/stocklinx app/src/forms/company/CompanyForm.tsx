@@ -9,18 +9,18 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { ICompany } from "@interfaces/serverInterfaces";
-import { useInitial } from "./useInitial";
+import { useInitial } from "@/hooks/initial/useInitial";
 import { toBase64 } from "../../utils/imageUtils";
+import { useCompany } from "@/hooks/query/company";
+import { useLocation } from "@/hooks/query/location";
 import FormSelect from "../mantine/FormSelect";
-import { useCompany } from "@/hooks/company";
-import { useLocation } from "@/hooks/location";
 interface CompanyFormProps {
   company?: ICompany;
-  create?: boolean;
 }
 
-const CompanyForm: React.FC<CompanyFormProps> = ({ company, create }) => {
-  const { initialValues, isCreate } = useInitial(company, create);
+const CompanyForm: React.FC<CompanyFormProps> = ({ company }) => {
+  const initialValues = useInitial().Company(company);
+  const isCreate = initialValues.id === "";
   const { mutate: createCompany } = useCompany.Create();
   const { mutate: updateCompany } = useCompany.Update();
   const { data: locationLookup } = useLocation.Lookup();

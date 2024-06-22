@@ -1,7 +1,7 @@
 import { IUser } from "../../interfaces/serverInterfaces";
 import { useColumns } from "./columns";
 import { openUserModal } from "../../modals/modals";
-import { useUser } from "@/hooks/user";
+import { useUser } from "@/hooks/query/user";
 import PageHeader from "@/components/generic/PageHeader";
 import Gridtable from "@components/gridTable/GridTable";
 

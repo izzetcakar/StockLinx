@@ -1,11 +1,11 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { Anchor, Tabs } from "@mantine/core";
 import HistoryLogs from "@components/dataGrid/customLog/HistoryLogs";
-import { useLicense } from "@/hooks/license";
-import { useCompany } from "@/hooks/company";
-import { useCategory } from "@/hooks/category";
-import { useManufacturer } from "@/hooks/manufacturer";
-import { useSupplier } from "@/hooks/supplier";
+import { useLicense } from "@/hooks/query/license";
+import { useCompany } from "@/hooks/query/company";
+import { useCategory } from "@/hooks/query/category";
+import { useManufacturer } from "@/hooks/query/manufacturer";
+import { useSupplier } from "@/hooks/query/supplier";
 
 const License = () => {
   const { id } = useParams();

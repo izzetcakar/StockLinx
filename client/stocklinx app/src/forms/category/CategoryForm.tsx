@@ -1,17 +1,18 @@
 import React from "react";
 import { TextInput, Flex, Fieldset } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { CategoryType, ICategory } from "@interfaces/serverInterfaces";
-import { useInitial } from "./useInitial";
-import { useCategory } from "@/hooks/category";
+import { ICategory } from "@interfaces/serverInterfaces";
+import { useCategory } from "@/hooks/query/category";
 import { useFormHeader } from "@/hooks/form/useFormHeader";
+import { CategoryType } from "@/interfaces/enums";
+import { useInitial } from "@/hooks/initial/useInitial";
 import FormSelect from "../mantine/FormSelect";
 interface CategoryFormProps {
   category?: ICategory;
 }
 
 const CategoryForm: React.FC<CategoryFormProps> = ({ category }) => {
-  const initialValues = useInitial(category);
+  const initialValues = useInitial().Category(category);
   const isCreate = initialValues.id === "";
   const { mutate: createCategory } = useCategory.Create();
   const { mutate: updateCategory } = useCategory.Update();

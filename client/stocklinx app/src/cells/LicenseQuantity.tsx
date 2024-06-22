@@ -1,5 +1,5 @@
-import { useAssetProduct } from "@/hooks/assetProduct";
-import { useUserProduct } from "@/hooks/userProduct";
+import { useAssetProduct } from "@/hooks/query/assetProduct";
+import { useUserProduct } from "@/hooks/query/userProduct";
 import { ILicense } from "@/interfaces/serverInterfaces";
 import React from "react";
 

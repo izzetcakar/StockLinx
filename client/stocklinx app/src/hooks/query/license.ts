@@ -16,13 +16,7 @@ import {
 } from "@/utils/checkInOutUtils";
 import { closeModal } from "@/modals/modals";
 import { openNotificationSuccess } from "@/notification/Notification";
-
-export enum licenseKeys {
-  USER_CHECK_IN_LICENSE = "USER_CHECK_IN_LICENSE",
-  USER_CHECK_OUT_LICENSE = "USER_CHECK_OUT_LICENSE",
-  ASSET_CHECK_IN_LICENSE = "ASSET_CHECK_IN_LICENSE",
-  ASSET_CHECK_OUT_LICENSE = "ASSET_CHECK_OUT_LICENSE",
-}
+import { licenseKeys } from "./keys";
 
 const hooks = baseHooks("LICENSE");
 

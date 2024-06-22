@@ -1,23 +1,20 @@
 import React from "react";
 import { TextInput, Button, Group, Flex } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import {
-  ProductStatusType,
-  IProductStatus,
-} from "@interfaces/serverInterfaces";
-import { useInitial } from "./useInitial";
+import { IProductStatus } from "@interfaces/serverInterfaces";
+import { useProductStatus } from "@/hooks/query/productStatus";
+import { ProductStatusType } from "@/interfaces/enums";
+import { useInitial } from "@/hooks/initial/useInitial";
 import FormSelect from "../mantine/FormSelect";
-import { useProductStatus } from "@/hooks/productStatus";
 interface ProductStatusFormProps {
   productStatus?: IProductStatus;
-  create?: boolean;
 }
 
 const ProductStatusForm: React.FC<ProductStatusFormProps> = ({
   productStatus,
-  create,
 }) => {
-  const { initialValues, isCreate } = useInitial(productStatus, create);
+  const initialValues = useInitial().ProductStatus(productStatus);
+  const isCreate = initialValues.id === "";
   const { mutate: createProductStatus } = useProductStatus.Create();
   const { mutate: updateProductStatus } = useProductStatus.Update();
 

@@ -1,7 +1,7 @@
 import { IAccessory } from "@interfaces/serverInterfaces";
 import { useColumns } from "./columns";
 import { openAccessoryModal } from "../../modals/modals";
-import { useAccessory } from "@/hooks/accessory";
+import { useAccessory } from "@/hooks/query/accessory";
 import Gridtable from "@components/gridTable/GridTable";
 import PageHeader from "@/components/generic/PageHeader";
 

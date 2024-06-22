@@ -7,7 +7,7 @@ import icon_checkOut from "@assets/customLog/CheckOut.png";
 import { ICustomLog } from "../../../interfaces/serverInterfaces";
 import { Anchor } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
-import { useUser } from "@/hooks/user";
+import { useUser } from "@/hooks/query/user";
 
 const getActionIcon = (action: string) => {
   switch (action) {

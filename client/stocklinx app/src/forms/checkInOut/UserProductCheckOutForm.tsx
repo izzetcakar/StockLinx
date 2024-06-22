@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Group, Flex, Textarea, NumberInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { UserProductCheckOutDto } from "../../interfaces/dtos";
-import { useUser } from "@/hooks/user";
+import { useUser } from "@/hooks/query/user";
 import FormSelect from "../mantine/FormSelect";
 
 interface UserProductCheckOutFormProps {

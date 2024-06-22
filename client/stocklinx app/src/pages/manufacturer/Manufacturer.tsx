@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { Tabs } from "@mantine/core";
-import { useManufacturer } from "@/hooks/manufacturer";
+import { useManufacturer } from "@/hooks/query/manufacturer";
 import HistoryLogs from "@components/dataGrid/customLog/HistoryLogs";
 
 const Manufacturer = () => {

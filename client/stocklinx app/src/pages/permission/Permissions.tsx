@@ -1,8 +1,8 @@
 import { useContext } from "react";
-import { useCompany } from "@/hooks/company";
-import { usePermission } from "@/hooks/permission";
-import { useUser } from "@/hooks/user";
-import { useDepartment } from "@/hooks/department";
+import { useCompany } from "@/hooks/query/company";
+import { usePermission } from "@/hooks/query/permission";
+import { useUser } from "@/hooks/query/user";
+import { useDepartment } from "@/hooks/query/department";
 import GenericContext from "@/context/GenericContext";
 import PageHeader from "@/components/generic/PageHeader";
 import CompanyCard from "./CompanyCard";

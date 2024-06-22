@@ -10,19 +10,19 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { ISupplier } from "@interfaces/serverInterfaces";
-import { useInitial } from "./useInitial";
 import { toBase64 } from "../../utils/imageUtils";
+import { useSupplier } from "@/hooks/query/supplier";
+import { useLocation } from "@/hooks/query/location";
+import { useInitial } from "@/hooks/initial/useInitial";
 import FormSelect from "../mantine/FormSelect";
-import { useSupplier } from "@/hooks/supplier";
-import { useLocation } from "@/hooks/location";
 
 interface SupplierFormProps {
   supplier?: ISupplier;
-  create?: boolean;
 }
 
-const SupplierForm: React.FC<SupplierFormProps> = ({ supplier, create }) => {
-  const { initialValues, isCreate } = useInitial(supplier, create);
+const SupplierForm: React.FC<SupplierFormProps> = ({ supplier }) => {
+  const initialValues = useInitial().Supplier(supplier);
+  const isCreate = initialValues.id === "";
   const { mutate: createSupplier } = useSupplier.Create();
   const { mutate: updateSupplier } = useSupplier.Update();
   const { data: locationLookup } = useLocation.Lookup();

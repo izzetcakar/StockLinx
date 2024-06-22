@@ -1,7 +1,7 @@
 import { IManufacturer } from "../../interfaces/serverInterfaces";
 import { useColumns } from "./columns";
 import { openManufacturerModal } from "../../modals/modals";
-import { useManufacturer } from "@/hooks/manufacturer";
+import { useManufacturer } from "@/hooks/query/manufacturer";
 import PageHeader from "@/components/generic/PageHeader";
 import Gridtable from "@components/gridTable/GridTable";
 

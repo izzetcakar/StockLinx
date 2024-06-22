@@ -2,15 +2,15 @@ import React from "react";
 import { TextInput, Flex, Textarea, Group, Button } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { ILocation } from "@interfaces/serverInterfaces";
-import { useInitial } from "./useInitial";
-import { useLocation } from "@/hooks/location";
+import { useLocation } from "@/hooks/query/location";
+import { useInitial } from "@/hooks/initial/useInitial";
 interface LocationFormProps {
   location?: ILocation;
-  create?: boolean;
 }
 
-const LocationForm: React.FC<LocationFormProps> = ({ location, create }) => {
-  const { initialValues, isCreate } = useInitial(location, create);
+const LocationForm: React.FC<LocationFormProps> = ({ location }) => {
+  const initialValues = useInitial().Location(location);
+  const isCreate = initialValues.id === "";
   const { mutate: createLocation } = useLocation.Create();
   const { mutate: updateLocation } = useLocation.Update();
 

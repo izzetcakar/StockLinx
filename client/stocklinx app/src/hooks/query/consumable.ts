@@ -3,7 +3,7 @@ import {
   UserProductCheckOutDto,
 } from "@/interfaces/dtos";
 import { queryClient } from "@/main";
-import { accessoryRequests } from "@/server/requests/accessory";
+import { consumableRequests } from "@/server/requests/consumable";
 import { useMutation } from "react-query";
 import { baseHooks } from "./baseHooks";
 import { QueryFilter } from "@/interfaces/gridTableInterfaces";
@@ -13,58 +13,54 @@ import {
 } from "@/utils/checkInOutUtils";
 import { closeModal } from "@/modals/modals";
 import { openNotificationSuccess } from "@/notification/Notification";
+import { consumableKeys } from "./keys";
 
-export enum accessoryKeys {
-  CHECK_IN_ACCESSORY = "CHECK_IN_ACCESSORY",
-  CHECK_OUT_ACCESSORY = "CHECK_OUT_ACCESSORY",
-}
-
-const hooks = baseHooks("ACCESSORY");
+const hooks = baseHooks("CONSUMABLE");
 
 const GetAll = () => {
-  return hooks.GetAll(accessoryRequests.getAll);
+  return hooks.GetAll(consumableRequests.getAll);
 };
 
 const Get = (id: string) => {
-  return hooks.Get(id, accessoryRequests.get);
+  return hooks.Get(id, consumableRequests.get);
 };
 
 const Create = () => {
-  return hooks.Create(accessoryRequests.create);
+  return hooks.Create(consumableRequests.create);
 };
 
 const CreateRange = () => {
-  return hooks.CreateRange(accessoryRequests.createRange);
+  return hooks.CreateRange(consumableRequests.createRange);
 };
 
 const Update = () => {
-  return hooks.Update(accessoryRequests.update);
+  return hooks.Update(consumableRequests.update);
 };
 
 const Remove = () => {
-  return hooks.Remove(accessoryRequests.remove);
+  return hooks.Remove(consumableRequests.remove);
 };
 
 const RemoveRange = () => {
-  return hooks.RemoveRange(accessoryRequests.removeRange);
+  return hooks.RemoveRange(consumableRequests.removeRange);
 };
 
 const Filter = (filters: QueryFilter[]) => {
-  return hooks.Filter(filters, accessoryRequests.filter);
+  return hooks.Filter(filters, consumableRequests.filter);
 };
 
 const ApplyFilters = () => {
-  return hooks.ApplyFilter(accessoryRequests.filter);
+  return hooks.ApplyFilter(consumableRequests.filter);
 };
 
 const Lookup = () => {
-  return hooks.Lookup(accessoryRequests.lookup);
+  return hooks.Lookup(consumableRequests.lookup);
 };
 
 const CheckIn = () => {
   return useMutation({
-    mutationKey: accessoryKeys.CHECK_IN_ACCESSORY,
-    mutationFn: (dto: UserProductCheckInDto) => accessoryRequests.checkIn(dto),
+    mutationKey: consumableKeys.CHECK_IN_CONSUMABLE,
+    mutationFn: (dto: UserProductCheckInDto) => consumableRequests.checkIn(dto),
     onSuccess: (res) => {
       queryClient.setQueryData("FETCH_ALL_USERPRODUCT", (data: any) => {
         return setCheckedRecord(data, res);
@@ -76,16 +72,16 @@ const CheckIn = () => {
         return res;
       });
       closeModal("product_checkIn_modal");
-      openNotificationSuccess("Accessory Check In Successfully");
+      openNotificationSuccess("Consumable checked in successfully");
     },
   });
 };
 
 const CheckOut = () => {
   return useMutation({
-    mutationKey: accessoryKeys.CHECK_OUT_ACCESSORY,
+    mutationKey: consumableKeys.CHECK_OUT_CONSUMABLE,
     mutationFn: (dto: UserProductCheckOutDto) =>
-      accessoryRequests.checkOut(dto),
+      consumableRequests.checkOut(dto),
     onSuccess: (res, req) => {
       queryClient.setQueryData("FETCH_ALL_USERPRODUCT", (data: any) => {
         return handleCheckOutUserProduct(data, req, res);
@@ -97,12 +93,12 @@ const CheckOut = () => {
         return res;
       });
       closeModal("user_product_checkOut_modal");
-      openNotificationSuccess("Accessory Checked Out Successfully");
+      openNotificationSuccess("Consumable Checked Out Successfully");
     },
   });
 };
 
-export const useAccessory = {
+export const useConsumable = {
   GetAll,
   Get,
   Create,

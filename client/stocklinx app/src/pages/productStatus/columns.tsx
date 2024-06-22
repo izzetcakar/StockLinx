@@ -1,4 +1,4 @@
-import { ProductStatusType } from "@interfaces/serverInterfaces";
+import { ProductStatusType } from "@interfaces/enums";
 import { createDataFromEnum } from "../../utils/enumUtils";
 import { DataColumn } from "@interfaces/gridTableInterfaces";
 

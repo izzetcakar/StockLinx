@@ -1,0 +1,381 @@
+import GenericContext from "@/context/GenericContext";
+import { CategoryType, ProductStatusType } from "@/interfaces/enums";
+import {
+  IAccessory,
+  IAsset,
+  IAssetProduct,
+  ICategory,
+  ICompany,
+  IComponent,
+  IConsumable,
+  IDepartment,
+  ILicense,
+  ILocation,
+  IManufacturer,
+  IModel,
+  IProductStatus,
+  ISupplier,
+  IUser,
+  IUserProduct,
+} from "@/interfaces/serverInterfaces";
+import { getImage } from "@/utils/imageUtils";
+import { useContext } from "react";
+
+export const useInitial = () => {
+  const Accessory = (entity: IAccessory | undefined) => {
+    const { company } = useContext(GenericContext);
+
+    let initialValues: IAccessory = {
+      id: "",
+      companyId: company?.id || "",
+      tag: "",
+      name: "",
+      manufacturerId: null,
+      supplierId: null,
+      categoryId: null,
+      modelNo: "",
+      quantity: 1,
+      orderNo: null,
+      purchaseCost: null,
+      purchaseDate: null,
+      notes: null,
+      imagePath: null,
+    };
+
+    if (entity) {
+      initialValues = { ...entity };
+      initialValues.imagePath = getImage(entity.imagePath);
+    }
+
+    return initialValues;
+  };
+
+  const Asset = (entity: IAsset | undefined) => {
+    const { company } = useContext(GenericContext);
+
+    let initialValues: IAsset = {
+      id: "",
+      companyId: company?.id || "",
+      productStatusId: "",
+      supplierId: null,
+      tag: "",
+      name: "",
+      imagePath: null,
+      serialNo: null,
+      orderNo: null,
+      purchaseCost: null,
+      purchaseDate: null,
+      notes: null,
+      modelId: null,
+      overageAssets: [],
+      quantity: 1,
+    };
+
+    if (entity) {
+      initialValues = { ...entity };
+      initialValues.imagePath = getImage(entity.imagePath);
+    }
+
+    return initialValues;
+  };
+
+  const Category = (entity: ICategory | undefined) => {
+    let initialValues: ICategory = {
+      id: "",
+      type: CategoryType.ASSET,
+      name: "",
+    };
+
+    if (entity) {
+      initialValues = { ...entity };
+    }
+
+    return initialValues;
+  };
+
+  const Company = (entity: ICompany | undefined) => {
+    let initialValues: ICompany = {
+      id: "",
+      tag: "",
+      name: "",
+      email: null,
+      locationId: null,
+      imagePath: null,
+    };
+
+    if (entity) {
+      initialValues = { ...entity };
+      initialValues.imagePath = getImage(entity.imagePath);
+    }
+
+    return initialValues;
+  };
+
+  const Component = (entity: IComponent | undefined) => {
+    const { company } = useContext(GenericContext);
+
+    let initialValues: IComponent = {
+      id: "",
+      companyId: company?.id || "",
+      tag: "",
+      name: "",
+      serialNo: null,
+      orderNo: null,
+      purchaseCost: null,
+      purchaseDate: null,
+      quantity: 1,
+      categoryId: "",
+      supplierId: null,
+      notes: null,
+    };
+
+    if (entity) {
+      initialValues = { ...entity };
+    }
+
+    return initialValues;
+  };
+
+  const Consumable = (entity: IConsumable | undefined) => {
+    const { company } = useContext(GenericContext);
+
+    let initialValues: IConsumable = {
+      id: "",
+      companyId: company?.id || "",
+      tag: "",
+      name: "",
+      categoryId: "",
+      manufacturerId: null,
+      supplierId: null,
+      itemNo: null,
+      modelNo: null,
+      orderNo: null,
+      purchaseCost: null,
+      purchaseDate: null,
+      quantity: 1,
+      notes: null,
+    };
+
+    if (entity) {
+      initialValues = { ...entity };
+    }
+
+    return initialValues;
+  };
+
+  const Department = (entity: IDepartment | undefined) => {
+    const { company } = useContext(GenericContext);
+
+    let initialValues: IDepartment = {
+      id: "",
+      companyId: company?.id || "",
+      locationId: null,
+      managerId: null,
+      name: "",
+      notes: null,
+    };
+
+    if (entity) {
+      initialValues = { ...entity };
+    }
+
+    return initialValues;
+  };
+
+  const License = (entity: ILicense | undefined) => {
+    const { company } = useContext(GenericContext);
+
+    let initialValues: ILicense = {
+      id: "",
+      companyId: company?.id || "",
+      categoryId: "",
+      tag: "",
+      name: "",
+      orderNo: null,
+      purchaseCost: null,
+      purchaseDate: null,
+      notes: null,
+      manufacturerId: null,
+      supplierId: null,
+      licenseKey: "",
+      licenseEmail: null,
+      licensedTo: null,
+      maintained: false,
+      reassignable: false,
+      expirationDate: null,
+      terminationDate: null,
+      quantity: 1,
+    };
+
+    if (entity) {
+      initialValues = { ...entity };
+    }
+
+    return initialValues;
+  };
+
+  const Location = (entity: ILocation | undefined) => {
+    let initialValues: ILocation = {
+      id: "",
+      name: "",
+      country: null,
+      state: null,
+      city: null,
+      address: null,
+      address2: null,
+      currency: null,
+      zipCode: null,
+      notes: null,
+    };
+
+    if (entity) {
+      initialValues = { ...entity };
+    }
+
+    return initialValues;
+  };
+
+  const Manufacturer = (entity: IManufacturer | undefined) => {
+    let initialValues: IManufacturer = {
+      id: "",
+      name: "",
+      url: null,
+      imagePath: null,
+      supportURL: null,
+      supportEmail: null,
+      supportPhone: null,
+      notes: null,
+    };
+
+    if (entity) {
+      initialValues = { ...entity };
+      initialValues.imagePath = getImage(entity.imagePath);
+    }
+
+    return initialValues;
+  };
+
+  const Model = (entity: IModel | undefined) => {
+    let initialValues: IModel = {
+      id: "",
+      name: "",
+      categoryId: "",
+      fieldSetId: null,
+      manufacturerId: null,
+      modelNo: null,
+      imagePath: null,
+      modelFieldData: [],
+      notes: null,
+    };
+
+    if (entity) {
+      initialValues = { ...entity };
+      initialValues.imagePath = getImage(entity.imagePath);
+    }
+
+    return initialValues;
+  };
+
+  const ProductStatus = (entity: IProductStatus | undefined) => {
+    let initialValues: IProductStatus = {
+      id: "",
+      type: ProductStatusType.AVAILABLE,
+      name: "",
+    };
+
+    if (entity) {
+      initialValues = { ...entity };
+    }
+
+    return initialValues;
+  };
+
+  const Supplier = (entity: ISupplier | undefined) => {
+    let initialValues: ISupplier = {
+      id: "",
+      locationId: null,
+      name: "",
+      imagePath: null,
+      contactName: null,
+      contactPhone: null,
+      contactEmail: null,
+      website: null,
+      fax: null,
+      notes: null,
+    };
+
+    if (entity) {
+      initialValues = { ...entity };
+      initialValues.imagePath = getImage(entity.imagePath);
+    }
+
+    return initialValues;
+  };
+
+  const User = (entity: IUser | undefined) => {
+    let initialValues: IUser = {
+      id: "",
+      employeeNo: "",
+      firstName: "",
+      lastName: "",
+      departmentId: "",
+      email: "",
+      password: "",
+      phoneNo: null,
+      language: null,
+      website: null,
+      startDate: new Date("2023-01-01"),
+      endDate: null,
+      jobTitle: null,
+      notes: null,
+    };
+
+    if (entity) {
+      initialValues = { ...entity };
+    }
+
+    return initialValues;
+  };
+
+  const UserProduct: IUserProduct = {
+    id: "",
+    userId: "",
+    accessoryId: null,
+    assetId: null,
+    licenseId: null,
+    consumableId: null,
+    productStatusId: "",
+    assignDate: new Date(),
+    notes: null,
+    quantity: 1,
+  };
+
+  const AssetProduct: IAssetProduct = {
+    id: "",
+    componentId: null,
+    assetId: "",
+    licenseId: null,
+    assignDate: new Date(),
+    notes: null,
+    quantity: 1,
+  };
+
+  return {
+    Accessory,
+    Asset,
+    Category,
+    Company,
+    Component,
+    Consumable,
+    Department,
+    License,
+    Location,
+    Manufacturer,
+    Model,
+    ProductStatus,
+    Supplier,
+    User,
+    UserProduct,
+    AssetProduct,
+  };
+};

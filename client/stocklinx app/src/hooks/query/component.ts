@@ -13,11 +13,7 @@ import {
 } from "@/utils/checkInOutUtils";
 import { closeModal } from "@/modals/modals";
 import { openNotificationSuccess } from "@/notification/Notification";
-
-export enum componentKeys {
-  CHECK_IN_COMPONENT = "CHECK_IN_COMPONENT",
-  CHECK_OUT_COMPONENT = "CHECK_OUT_COMPONENT",
-}
+import { componentKeys } from "./keys";
 
 const hooks = baseHooks("COMPONENT");
 
