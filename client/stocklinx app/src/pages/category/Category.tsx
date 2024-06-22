@@ -1,43 +1,44 @@
-import { useParams } from "react-router-dom";
-import { CategoryType } from "@interfaces/serverInterfaces";
-import { Tabs } from "@mantine/core";
-import HistoryLogs from "@components/dataGrid/customLog/HistoryLogs";
+import { useMemo } from "react";
+import { useColumns } from "./columns";
+import { Column } from "@/interfaces/gridTableInterfaces";
 import { useCategory } from "@/hooks/category";
+import { useLocation as useRouterLocation } from "react-router-dom";
+import FilterPanel from "@/components/generic/FilterPanel";
+import uuid4 from "uuid4";
+import EntityPanel from "@/components/entity/EntityPanel";
 
 const Category = () => {
-  const { id } = useParams();
-  const { data: category } = useCategory.Get(id as string);
+  const columns = useColumns().columns;
+  const cardColumns = useColumns().cardColumns;
+  const { data: categories } = useCategory.Filter([]);
+  const { mutate: applyFilters } = useCategory.ApplyFilters();
+  const { state } = useRouterLocation();
+
+  const filterColumns = useMemo(() => {
+    return columns.map((column) => {
+      return {
+        ...column,
+        id: uuid4(),
+      };
+    }) as Column[];
+  }, [columns.length]);
 
   return (
-    <div className="product__container">
-      <div className="product__container__title">
-        Category - {category?.name}
-      </div>
-      <Tabs defaultValue="info">
-        <Tabs.List grow>
-          <Tabs.Tab value="info">Info</Tabs.Tab>
-          <Tabs.Tab value="history">History</Tabs.Tab>
-        </Tabs.List>
-        <Tabs.Panel value="info">
-          <div className="product__content__container">
-            <div className="product__content">
-              <div className="product__content__title">Name</div>
-              <div className="product__content__value">{category?.name}</div>
-            </div>
-            <div className="product__content">
-              <div className="product__content__title">Type</div>
-              <div className="product__content__value">
-                {category?.type !== undefined
-                  ? CategoryType[category?.type]
-                  : ""}
-              </div>
-            </div>
-          </div>
-        </Tabs.Panel>
-        <Tabs.Panel value="history">
-          <HistoryLogs id={id as string} />
-        </Tabs.Panel>
-      </Tabs>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+      }}
+    >
+      <FilterPanel
+        columns={filterColumns}
+        applyFilters={(filters) => applyFilters(filters)}
+      />
+      <EntityPanel
+        data={state?.categories || categories || []}
+        cardColumns={cardColumns}
+      />
     </div>
   );
 };

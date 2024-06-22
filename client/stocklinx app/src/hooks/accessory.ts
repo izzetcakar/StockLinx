@@ -67,8 +67,6 @@ const CheckIn = () => {
     mutationFn: (dto: UserProductCheckInDto) => accessoryRequests.checkIn(dto),
     onSuccess: (res) => {
       queryClient.setQueryData("FETCH_ALL_USERPRODUCT", (data: any) => {
-        console.log("res", res);
-        console.log("added", setCheckedRecord(data, res));
         return setCheckedRecord(data, res);
       });
       queryClient.setQueryData("FILTER_USERPRODUCT", (data: any) => {
