@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { openConfirmModal } from "../gridTable/modals/modals";
-import ActionIconBtn from "../generic/ActionIconBtn";
+import { openConfirmModal } from "../../components/gridTable/modals/modals";
+import ActionIconBtn from "../../components/generic/ActionIconBtn";
 import icon_add from "../../assets/icon_plus.png";
 import icon_remove from "../../assets/icon_trash.png";
 import icon_modify from "../../assets/icon_pen.png";
@@ -13,6 +13,7 @@ interface FormHeaderProps {
 interface FormHeaderActions {
   onInsert: () => void;
   onRemove: () => void;
+  onCopy: () => void;
   onModify: () => void;
   onModifyCancel: () => void;
 }
@@ -23,12 +24,18 @@ export const useFormHeader = ({ title }: FormHeaderProps) => {
   const Actions: React.FC<FormHeaderActions> = ({
     onInsert,
     onRemove,
+    onCopy,
     onModify,
     onModifyCancel,
   }) => {
     const handleModifyCancel = () => {
-      setCanModify(false);
       onModifyCancel();
+      setCanModify(false);
+    };
+
+    const handleModify = (action: () => void) => {
+      action();
+      setCanModify(true);
     };
 
     return (
@@ -51,7 +58,10 @@ export const useFormHeader = ({ title }: FormHeaderProps) => {
             </>
           ) : (
             <>
-              <ActionIconBtn action={onInsert} icon={icon_add} />
+              <ActionIconBtn
+                action={() => handleModify(onInsert)}
+                icon={icon_add}
+              />
               <ActionIconBtn
                 action={() =>
                   openConfirmModal(
@@ -62,7 +72,10 @@ export const useFormHeader = ({ title }: FormHeaderProps) => {
                 }
                 icon={icon_remove}
               />
-              <ActionIconBtn action={onModify} icon={icon_copy} />
+              <ActionIconBtn
+                action={() => handleModify(onCopy)}
+                icon={icon_copy}
+              />
               <ActionIconBtn
                 action={() => setCanModify(true)}
                 icon={icon_modify}
@@ -77,6 +90,5 @@ export const useFormHeader = ({ title }: FormHeaderProps) => {
   return {
     Actions,
     canModify,
-    setCanModify,
   };
 };
