@@ -3,7 +3,7 @@ import "./generic.scss";
 
 interface ActionIconBtnProps {
   action: () => void;
-  icon: string;
+  icon?: string;
   iconSize?: number;
   disable?: boolean;
   text?: string;
@@ -11,7 +11,7 @@ interface ActionIconBtnProps {
 const ActionIconBtn: React.FC<ActionIconBtnProps> = ({
   action,
   icon,
-  iconSize = 20,
+  iconSize = 18,
   disable = false,
   text,
 }) => {
@@ -33,11 +33,13 @@ const ActionIconBtn: React.FC<ActionIconBtnProps> = ({
           disable ? "action__btn__content disable" : "action__btn__content"
         }
       >
-        <img
-          className="action__btn__icon"
-          src={icon}
-          style={{ width: iconSize, height: iconSize }}
-        />
+        {icon && (
+          <img
+            className="action__btn__icon"
+            src={icon}
+            style={{ width: iconSize, height: iconSize }}
+          />
+        )}
         {text && <div className="action__btn__text">{text}</div>}
       </div>
     </button>

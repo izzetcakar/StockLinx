@@ -21,8 +21,8 @@ import { utils, read } from "xlsx";
 import { FileInput } from "@mantine/core";
 import { openConfirmModal, openExcelModal } from "../modals/modals";
 import { UseGridTableContext } from "../context/GenericStateContext";
-import "./tableToolbar.scss";
 import { useSelectRow } from "../hooks/selectRow";
+import "./tableToolbar.scss";
 
 interface TableToolbarProps {
   data: object[];
