@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import EditComponent from "./edit/EditComponent";
+import React, { useState, useEffect, useRef } from "react";
 import TableToolbar from "./tableToolbar/TableToolbar";
 import { GridtableProps, QueryFilter } from "@interfaces/gridTableInterfaces";
 import { Checkbox } from "@mantine/core";
@@ -7,7 +6,7 @@ import { useSelectRow } from "./hooks/selectRow";
 import { UseGridTableContext } from "./context/GenericStateContext";
 import { useColumns } from "./hooks/columns";
 import { usePaging } from "./hooks/paging";
-import { RenderCell } from "./utils/cellUtils";
+import { MemoizedRow } from "./utils/cellUtils";
 import "./gridtable.scss";
 
 const GridtableContent: React.FC<GridtableProps> = ({
@@ -32,13 +31,12 @@ const GridtableContent: React.FC<GridtableProps> = ({
     itemKey as keyof object
   );
   const { visibleColumns, selectedKeys } = UseGridTableContext();
-
   const { onDataColumnsChange } = useColumns(columns);
-
   const { expandData } = usePaging(data.length, onExpandData);
-
   const { handleSelectRow, handleSelectAll, getSelectedRowClass } =
     useSelectRow(data, keyfield);
+  const [scrollTop, setScrollTop] = useState(0);
+  const tableBodyRef = useRef<HTMLTableSectionElement>(null);
 
   useEffect(() => {
     setKeyfield(itemKey as keyof object);
@@ -47,6 +45,46 @@ const GridtableContent: React.FC<GridtableProps> = ({
   useEffect(() => {
     onDataColumnsChange();
   }, [columns.length]);
+
+  const [dimensions, setDimensions] = useState({
+    rowHeight: 28,
+    visibleRowCount: 10,
+  });
+
+  useEffect(() => {
+    const updateDimensions = () => {
+      if (tableBodyRef.current) {
+        const container = tableBodyRef.current;
+        const containerHeight = container.clientHeight;
+        const rowElement = container.querySelector(".gridtable__row");
+
+        if (rowElement) {
+          const rowHeight = rowElement.clientHeight;
+          const visibleRowCount = Math.floor(containerHeight / rowHeight);
+          setDimensions({
+            rowHeight,
+            visibleRowCount,
+          });
+        }
+      }
+    };
+
+    setTimeout(() => {
+      updateDimensions();
+    }, 100);
+
+    window.addEventListener("resize", updateDimensions);
+
+    return () => {
+      window.removeEventListener("resize", updateDimensions);
+    };
+  }, []);
+
+  const { rowHeight, visibleRowCount } = dimensions;
+
+  const startRow = Math.floor(scrollTop / rowHeight);
+  const endRow = startRow + visibleRowCount;
+  const visibleData = data.slice(startRow, endRow);
 
   return (
     <>
@@ -64,7 +102,7 @@ const GridtableContent: React.FC<GridtableProps> = ({
         />
       ) : null}
       <table className="gridtable">
-        <tbody>
+        <tbody ref={tableBodyRef}>
           <tr className="gridtable__column__row">
             {enableSelectActions && data.length > 0 ? (
               <td className="gridtable__column__cell checkbox">
@@ -102,41 +140,21 @@ const GridtableContent: React.FC<GridtableProps> = ({
               </td>
             ))}
           </tr>
-          {data.length > 0 ? (
-            data.map((obj, rowIndex) => (
-              <tr
-                key={"$row__" + rowIndex}
-                className={getSelectedRowClass(obj[keyfield])}
-              >
-                {enableSelectActions ? (
-                  <td className="gridtable__checkbox__cell">
-                    <Checkbox
-                      checked={selectedKeys.includes(obj[keyfield])}
-                      onChange={() => handleSelectRow(obj[keyfield])}
-                      radius={2}
-                      size="xs"
-                    />
-                  </td>
-                ) : null}
-                {enableEditActions ? (
-                  <td className="gridtable__edit__cell">
-                    <EditComponent
-                      obj={obj}
-                      id={obj[keyfield]}
-                      onRowUpdate={onRowUpdate}
-                      onRowRemove={onRowRemove}
-                    />
-                  </td>
-                ) : null}
-                {visibleColumns.map((column) => (
-                  <td
-                    key={`$row__cell__${column.id}__${rowIndex}`}
-                    className="gridtable__row__cell"
-                  >
-                    <RenderCell obj={obj} column={column} />
-                  </td>
-                ))}
-              </tr>
+          {visibleData.length > 0 ? (
+            visibleData.map((obj, rowIndex) => (
+              <MemoizedRow
+                key={"$row__" + (startRow + rowIndex)}
+                obj={obj}
+                columns={visibleColumns}
+                keyfield={keyfield}
+                enableSelectActions={enableSelectActions}
+                enableEditActions={enableEditActions}
+                selectedKeys={selectedKeys}
+                handleSelectRow={handleSelectRow}
+                getSelectedRowClass={getSelectedRowClass}
+                onRowUpdate={onRowUpdate}
+                onRowRemove={onRowRemove}
+              />
             ))
           ) : (
             <tr className="gridtable__nodata__row">
