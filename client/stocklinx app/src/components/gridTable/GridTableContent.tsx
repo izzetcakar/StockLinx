@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import TableToolbar from "./tableToolbar/TableToolbar";
 import { GridtableProps, QueryFilter } from "@interfaces/gridTableInterfaces";
 import { Checkbox } from "@mantine/core";
 import { useSelectRow } from "./hooks/selectRow";
 import { UseGridTableContext } from "./context/GenericStateContext";
 import { useColumns } from "./hooks/columns";
-import { usePaging } from "./hooks/paging";
 import { MemoizedRow } from "./utils/cellUtils";
 import "./gridtable.scss";
 
@@ -27,64 +26,16 @@ const GridtableContent: React.FC<GridtableProps> = ({
   enableEditActions = false,
   enableSelectActions = false,
 }) => {
-  const [keyfield, setKeyfield] = useState<keyof object>(
-    itemKey as keyof object
-  );
+  const keyfield = itemKey as keyof object;
   const { visibleColumns, selectedKeys } = UseGridTableContext();
   const { onDataColumnsChange } = useColumns(columns);
-  const { expandData } = usePaging(data.length, onExpandData);
   const { handleSelectRow, handleSelectAll, getSelectedRowClass } =
     useSelectRow(data, keyfield);
-  const [scrollTop, setScrollTop] = useState(0);
   const tableBodyRef = useRef<HTMLTableSectionElement>(null);
-
-  useEffect(() => {
-    setKeyfield(itemKey as keyof object);
-  }, [itemKey]);
 
   useEffect(() => {
     onDataColumnsChange();
   }, [columns.length]);
-
-  const [dimensions, setDimensions] = useState({
-    rowHeight: 28,
-    visibleRowCount: 10,
-  });
-
-  useEffect(() => {
-    const updateDimensions = () => {
-      if (tableBodyRef.current) {
-        const container = tableBodyRef.current;
-        const containerHeight = container.clientHeight;
-        const rowElement = container.querySelector(".gridtable__row");
-
-        if (rowElement) {
-          const rowHeight = rowElement.clientHeight;
-          const visibleRowCount = Math.floor(containerHeight / rowHeight);
-          setDimensions({
-            rowHeight,
-            visibleRowCount,
-          });
-        }
-      }
-    };
-
-    setTimeout(() => {
-      updateDimensions();
-    }, 100);
-
-    window.addEventListener("resize", updateDimensions);
-
-    return () => {
-      window.removeEventListener("resize", updateDimensions);
-    };
-  }, []);
-
-  const { rowHeight, visibleRowCount } = dimensions;
-
-  const startRow = Math.floor(scrollTop / rowHeight);
-  const endRow = startRow + visibleRowCount;
-  const visibleData = data.slice(startRow, endRow);
 
   return (
     <>
@@ -140,10 +91,10 @@ const GridtableContent: React.FC<GridtableProps> = ({
               </td>
             ))}
           </tr>
-          {visibleData.length > 0 ? (
-            visibleData.map((obj, rowIndex) => (
+          {data.length > 0 ? (
+            data.map((obj, rowIndex) => (
               <MemoizedRow
-                key={"$row__" + (startRow + rowIndex)}
+                key={"$row__" + rowIndex}
                 obj={obj}
                 columns={visibleColumns}
                 keyfield={keyfield}
@@ -161,18 +112,6 @@ const GridtableContent: React.FC<GridtableProps> = ({
               <td>{noDataText}</td>
             </tr>
           )}
-          {onExpandData ? (
-            <tr className="gridtable__expand__data__row">
-              <td className="gridtable__expand__data__cell">
-                <button
-                  className="gridtable__expand__data__btn"
-                  onClick={() => expandData()}
-                >
-                  Load More
-                </button>
-              </td>
-            </tr>
-          ) : null}
         </tbody>
       </table>
     </>
