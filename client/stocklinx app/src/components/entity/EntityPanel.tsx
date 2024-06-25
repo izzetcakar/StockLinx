@@ -1,22 +1,17 @@
 import { EntityCardColumn } from "@/interfaces/clientInterfaces";
 import React, { useState } from "react";
 import "./entitypanel.scss";
-
 interface EntityPanelProps {
   data: any[];
   cardColumns: EntityCardColumn[];
 }
-
-interface RenderCardComponentProps {
+interface CardContentProps {
   value: any;
-  component: (e: any) => any;
+  content: (e: any) => any;
 }
 
-const RenderCardComponent: React.FC<RenderCardComponentProps> = ({
-  value,
-  component,
-}) => {
-  return component(value);
+const CardContent: React.FC<CardContentProps> = ({ value, content }) => {
+  return content(value);
 };
 
 const EntityPanel: React.FC<EntityPanelProps> = ({ cardColumns, data }) => {
@@ -29,8 +24,7 @@ const EntityPanel: React.FC<EntityPanelProps> = ({ cardColumns, data }) => {
 
   const handleSelectCard = (entity: any) => {
     if (selectedData !== entity) setSelectedData(entity);
-    if (selectedCardColumn !== cardColumns[0])
-      setSelectedCardColumn(cardColumns[0]);
+    setSelectedCardColumn(cardColumns[0]);
   };
 
   const handleSelectColumn = (entity: any, column: EntityCardColumn) => {
@@ -60,10 +54,11 @@ const EntityPanel: React.FC<EntityPanelProps> = ({ cardColumns, data }) => {
                 selectedData === entity ? "selected" : ""
               }`}
             >
-              <RenderCardComponent
-                value={entity}
-                component={cardColumns[0].renderData}
-              />
+              {typeof cardColumns[0].title === "string" ? (
+                cardColumns[0].title
+              ) : (
+                <CardContent value={entity} content={cardColumns[0].title} />
+              )}
             </div>
             {(showMore[entityIndex]
               ? cardColumns.slice(1)
@@ -81,7 +76,11 @@ const EntityPanel: React.FC<EntityPanelProps> = ({ cardColumns, data }) => {
                     : ""
                 }`}
               >
-                {column.title}
+                {typeof column.title === "string" ? (
+                  column.title
+                ) : (
+                  <CardContent value={entity} content={column.title} />
+                )}
               </div>
             ))}
             {cardColumns.length > 4 && (
@@ -101,9 +100,9 @@ const EntityPanel: React.FC<EntityPanelProps> = ({ cardColumns, data }) => {
       </div>
       <div className="panel__content">
         {selectedData && selectedCardColumn && (
-          <RenderCardComponent
+          <CardContent
             value={selectedData}
-            component={selectedCardColumn.renderData}
+            content={selectedCardColumn.renderData}
           />
         )}
       </div>

@@ -24,29 +24,12 @@ export const useColumns = () => {
 
   const cardColumns: EntityCardColumn[] = [
     {
-      title: "Title",
-      renderData: (e) => {
-        const category = e as ICategory;
-        return (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "5px",
-            }}
-          >
-            <div>Name : {category.name}</div>
-          </div>
-        );
-      },
-    },
-    {
       title: "Category Details",
       renderData: (e) => <CategoryForm category={e as ICategory} />,
     },
     {
       title: "Name",
-      renderData(e) {
+      renderData: (e) => {
         return (e as ICategory).name;
       },
     },
@@ -58,5 +41,19 @@ export const useColumns = () => {
     },
   ];
 
-  return { columns, cardColumns };
+  const titleRender = (category: ICategory) => {
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "5px",
+        }}
+      >
+        <div>Name : {category.name}</div>
+      </div>
+    );
+  };
+
+  return { columns, cardColumns, titleRender };
 };

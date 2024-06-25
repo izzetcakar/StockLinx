@@ -8,8 +8,7 @@ import uuid4 from "uuid4";
 import EntityPanel from "@/components/entity/EntityPanel";
 
 const Asset = () => {
-  const columns = useColumns().columns;
-  const cardColumns = useColumns().cardColumns;
+  const { columns, cardColumns } = useColumns();
   const { data: assets } = useAsset.Filter([]);
   const { mutate: applyFilters } = useAsset.ApplyFilters();
   const { state } = useRouterLocation();

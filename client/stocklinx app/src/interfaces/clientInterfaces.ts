@@ -55,6 +55,6 @@ export interface FilterInputProps {
   column: Column;
 }
 export interface EntityCardColumn {
-  title: string;
+  title: string | ((e: any) => any);
   renderData: (e: any) => any;
 }

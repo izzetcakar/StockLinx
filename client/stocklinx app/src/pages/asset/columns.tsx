@@ -14,6 +14,7 @@ import UserCheckInOutCell from "@/cells/UserCheckInOutCell";
 import { EntityCells } from "@/cells/Entity";
 import CheckedOutUserCell from "@/cells/CheckedOutUserCell";
 import { EntityCardColumn } from "@/interfaces/clientInterfaces";
+import AssetForm from "@/forms/asset/AssetForm";
 
 export const useColumns = () => {
   const { refetch: getModelLK } = useModel.Lookup();
@@ -53,7 +54,7 @@ export const useColumns = () => {
       caption: "Image",
       dataField: "imagePath",
       dataType: "action",
-      renderComponent(e) {
+      renderComponent: (e) => {
         const image = getImage((e as IAsset).imagePath);
         return (
           <Image
@@ -145,8 +146,7 @@ export const useColumns = () => {
 
   const cardColumns: EntityCardColumn[] = [
     {
-      title: "Title",
-      renderData: (e) => {
+      title: (asset: IAsset) => {
         return (
           <div
             style={{
@@ -155,11 +155,12 @@ export const useColumns = () => {
               gap: "5px",
             }}
           >
-            <div>Tag : {e.tag}</div>
-            <div>Name : {e.name}</div>
+            <div>Tag : {asset.tag}</div>
+            <div>Name : {asset.name}</div>
           </div>
         );
       },
+      renderData: (e) => <AssetForm asset={e as IAsset} />,
     },
     {
       title: "Asset Details",
@@ -175,21 +176,16 @@ export const useColumns = () => {
     },
     {
       title: "Status",
-      renderData: (e) => {
-        return EntityCells.ProductStatus((e as IAsset).productStatusId);
-      },
+      renderData: (e) =>
+        EntityCells.ProductStatus((e as IAsset).productStatusId),
     },
     {
       title: "Supplier",
-      renderData: (e) => {
-        return EntityCells.Supplier((e as IAsset).supplierId);
-      },
+      renderData: (e) => EntityCells.Supplier((e as IAsset).supplierId),
     },
     {
       title: "Company",
-      renderData: (e) => {
-        return (e as IAsset).companyId;
-      },
+      renderData: (e) => (e as IAsset).companyId,
     },
   ];
 
