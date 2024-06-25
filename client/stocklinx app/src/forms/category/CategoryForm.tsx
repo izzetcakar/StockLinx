@@ -30,7 +30,14 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ category }) => {
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-      <Flex direction="column" gap={10} px={40} p={20} w={"100%"}>
+      <Flex
+        direction="column"
+        gap={10}
+        p={20}
+        style={{ backgroundColor: "white" }}
+        w={"100%"}
+        h={"100%"}
+      >
         <TextInput
           label="Name"
           placeholder="New Name"

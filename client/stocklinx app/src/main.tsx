@@ -102,6 +102,13 @@ const components = {
       size: "sm",
     },
   },
+  Grid: {
+    defaultProps: {
+      gutter: "lg",
+      align: "center",
+      grow: true,
+    },
+  },
 };
 
 export const queryClient = new QueryClient({
@@ -121,9 +128,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <QueryClientProvider client={queryClient}>
     <MantineProvider
       theme={{
-        scale: 0.8,
-        primaryShade: 9,
-        primaryColor: "gray",
+        scale: 1,
         cursorType: "pointer",
         defaultRadius: "md",
         radius: {

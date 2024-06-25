@@ -26,15 +26,7 @@ const LocationForm: React.FC<LocationFormProps> = ({ location }) => {
   };
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-      <Flex
-        direction="column"
-        gap={10}
-        mx="auto"
-        h={"70dvh"}
-        w={"80dvw"}
-        px={40}
-        pt={20}
-      >
+      <Flex direction="column" gap={10} p={20}>
         <TextInput
           label="Name"
           placeholder="New Name"

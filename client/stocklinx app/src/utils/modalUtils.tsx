@@ -66,7 +66,7 @@ export const openCategoryModal = (category?: ICategory) =>
     title: category ? "Edit Category" : "Create Category",
     children: <CategoryForm category={category} />,
     xOffset: "auto",
-    size: "auto",
+    size: "95%",
   });
 
 export const openCompanyModal = (company?: ICompany) =>
@@ -75,7 +75,7 @@ export const openCompanyModal = (company?: ICompany) =>
     title: company ? "Update Company" : "Create Company",
     children: <CompanyForm company={company} />,
     xOffset: "auto",
-    size: "auto",
+    size: "95%",
   });
 
 export const openDepartmentModal = (department?: IDepartment) =>
@@ -84,7 +84,7 @@ export const openDepartmentModal = (department?: IDepartment) =>
     title: department ? "Update Department" : "Create Department",
     children: <DepartmentForm department={department} />,
     xOffset: "auto",
-    size: "auto",
+    size: "95%",
   });
 
 export const openLocationModal = (location?: ILocation) =>
@@ -93,7 +93,7 @@ export const openLocationModal = (location?: ILocation) =>
     title: location ? "Edit Location" : "Update Location",
     children: <LocationForm location={location} />,
     xOffset: "auto",
-    size: "auto",
+    size: "95%",
   });
 
 export const openManufacturerModal = (manufacturer?: IManufacturer) =>
@@ -102,7 +102,7 @@ export const openManufacturerModal = (manufacturer?: IManufacturer) =>
     title: manufacturer ? "Update Manufacturer" : "Create Manufacturer",
     children: <ManufacturerForm manufacturer={manufacturer} />,
     xOffset: "auto",
-    size: "auto",
+    size: "95%",
   });
 
 export const openModelModal = (model?: IModel) =>
@@ -111,7 +111,7 @@ export const openModelModal = (model?: IModel) =>
     title: model ? "Update Model" : "Create Model",
     children: <ModelForm model={model} />,
     xOffset: "auto",
-    size: "auto",
+    size: "95%",
   });
 
 export const openAccessoryModal = (accessory?: IAccessory) =>
@@ -120,7 +120,7 @@ export const openAccessoryModal = (accessory?: IAccessory) =>
     title: accessory ? "Update Accessory" : "Create Accessory",
     children: <AccessoryForm accessory={accessory} />,
     xOffset: "auto",
-    size: "auto",
+    size: "95%",
   });
 
 export const openAssetModal = (asset?: IAsset) =>
@@ -129,7 +129,7 @@ export const openAssetModal = (asset?: IAsset) =>
     title: asset ? "Update Asset" : "Create Asset",
     children: <AssetForm asset={asset} />,
     xOffset: "auto",
-    size: "auto",
+    size: "95%",
   });
 
 export const openComponentModal = (component?: IComponent) =>
@@ -138,7 +138,7 @@ export const openComponentModal = (component?: IComponent) =>
     title: component ? "Update Component" : "Create Component",
     children: <ComponentForm component={component} />,
     xOffset: "auto",
-    size: "auto",
+    size: "95%",
   });
 
 export const openConsumableModal = (consumable?: IConsumable) =>
@@ -147,7 +147,7 @@ export const openConsumableModal = (consumable?: IConsumable) =>
     title: consumable ? "Update Consumable" : "Create Consumable",
     children: <ConsumableForm consumable={consumable} />,
     xOffset: "auto",
-    size: "auto",
+    size: "95%",
   });
 
 export const openLicenseModal = (license?: ILicense) =>
@@ -156,7 +156,7 @@ export const openLicenseModal = (license?: ILicense) =>
     title: license ? "Update License" : "Create License",
     children: <LicenseForm license={license} />,
     xOffset: "auto",
-    size: "auto",
+    size: "95%",
   });
 
 export const openProductStatusModal = (productStatus?: IProductStatus) =>
@@ -165,7 +165,7 @@ export const openProductStatusModal = (productStatus?: IProductStatus) =>
     title: productStatus ? "Update ProductStatus" : "Create ProductStatus",
     children: <ProductStatusForm productStatus={productStatus} />,
     xOffset: "auto",
-    size: "auto",
+    size: "95%",
   });
 
 export const openSupplierModal = (supplier?: ISupplier) =>
@@ -174,7 +174,7 @@ export const openSupplierModal = (supplier?: ISupplier) =>
     title: supplier ? "Update Supplier" : "Create Supplier",
     children: <SupplierForm supplier={supplier} />,
     xOffset: "auto",
-    size: "auto",
+    size: "95%",
   });
 
 export const openUserModal = (user?: IUser) =>
@@ -183,7 +183,7 @@ export const openUserModal = (user?: IUser) =>
     title: user ? "Update User" : "Create User",
     children: <UserForm user={user} />,
     xOffset: "auto",
-    size: "auto",
+    size: "95%",
   });
 
 export const openFieldSetModal = (fieldSet?: IFieldSet) => {
@@ -192,7 +192,7 @@ export const openFieldSetModal = (fieldSet?: IFieldSet) => {
     title: fieldSet ? "Update FieldSet" : "Create FieldSet",
     children: <FieldSetForm fieldSet={fieldSet} />,
     xOffset: "auto",
-    size: "auto",
+    size: "95%",
   });
 };
 
@@ -202,7 +202,7 @@ export const openCustomFieldModal = (customField?: ICustomField) => {
     title: customField ? "Update CustomField" : "Create CustomField",
     children: <CustomFieldForm customField={customField} />,
     xOffset: "auto",
-    size: "auto",
+    size: "95%",
   });
 };
 
@@ -226,7 +226,7 @@ export const openCheckInModal = (
       />
     ),
     xOffset: "auto",
-    size: "auto",
+    size: "95%",
   });
 };
 
@@ -236,7 +236,7 @@ export const openAssetCheckInModal = (checkInDto: AssetCheckInDto) => {
     title: "Check In",
     children: <AssetCheckInForm checkInDto={checkInDto} />,
     xOffset: "auto",
-    size: "auto",
+    size: "95%",
   });
 };
 
@@ -246,7 +246,7 @@ export const openAssetCheckOutModal = (checkOutDto: AssetCheckOutDto) => {
     title: "Check Out",
     children: <AssetCheckOutForm checkOutDto={checkOutDto} />,
     xOffset: "auto",
-    size: "auto",
+    size: "95%",
   });
 };
 
@@ -264,7 +264,7 @@ export const openAssetProductCheckOutModal = (
       />
     ),
     xOffset: "auto",
-    size: "auto",
+    size: "95%",
   });
 };
 
@@ -282,7 +282,7 @@ export const openUserProductCheckOutModal = (
       />
     ),
     xOffset: "auto",
-    size: "auto",
+    size: "95%",
   });
 };
 
@@ -292,6 +292,6 @@ export const openPermissionModal = (company: ICompany) => {
     title: "Permission",
     children: <PermissionForm company={company} />,
     xOffset: "auto",
-    size: "auto",
+    size: "95%",
   });
 };

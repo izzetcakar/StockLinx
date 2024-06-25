@@ -2,19 +2,14 @@ import React from "react";
 import {
   TextInput,
   Button,
-  Group,
   NumberInput,
   Flex,
-  ActionIcon,
   Textarea,
-  Text,
   Image,
   FileInput,
-  Accordion,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { DateInput } from "@mantine/dates";
-import { IconPlus, IconTrash } from "@tabler/icons-react";
 import { IAsset } from "@interfaces/serverInterfaces";
 import { toBase64 } from "../../utils/imageUtils";
 import { openNotificationError } from "@/utils/notificationUtils";
@@ -79,42 +74,6 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
     },
   });
 
-  const overageAssetFields = form.values?.overageAssets?.map((_, index) => (
-    <Group key={index} mt="xs">
-      <Text mah="fit-content" mt="lg">
-        Asset - {index + 1}
-      </Text>
-      <TextInput
-        {...form.getInputProps(`overageAssets.${index}.tag`)}
-        label="Tag"
-        value={
-          form.values.overageAssets?.find((_, arrIndex) => arrIndex === index)
-            ?.tag
-        }
-        maxLength={10}
-        required
-        withAsterisk
-      />
-      <TextInput
-        {...form.getInputProps(`overageAssets.${index}.serialNo`)}
-        label="Serial No"
-        value={
-          form.values.overageAssets?.find((_, arrIndex) => arrIndex === index)
-            ?.serialNo
-        }
-        required
-        withAsterisk
-      />
-      <ActionIcon
-        color="red"
-        mt="lg"
-        onClick={() => form.removeListItem("overageAssets", index)}
-      >
-        <IconTrash size="1rem" />
-      </ActionIcon>
-    </Group>
-  ));
-
   const handleImageChange = async (e: File | null) => {
     if (!e) return;
     const base64 = await toBase64(e);
@@ -148,17 +107,15 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
       <Flex
         direction="column"
         gap={10}
-        mx="auto"
-        h={"80dvh"}
-        w={"80dvw"}
-        px={40}
-        pt={20}
+        p={20}
+        style={{ backgroundColor: "white" }}
+        w={"100%"}
+        h={"100%"}
       >
         <Image
           src={form.values.imagePath || base_asset}
-          height={200}
+          mah={500}
           radius="md"
-          width="fit-content"
           fit="contain"
         />
         <FileInput
@@ -167,53 +124,43 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
           placeholder="Upload image"
           onChange={(e) => handleImageChange(e)}
         />
-        <Flex w="100%" gap={10} align={"center"}>
-          <TextInput
-            label="Asset"
-            w={"100%"}
-            {...form.getInputProps("tag")}
-            onChange={(e) =>
-              form.setFieldValue("tag", e.target.value.toUpperCase())
-            }
-            maxLength={10}
-            disabled={!isCreate}
-            required
-            withAsterisk
-          />
-          <FormSelect
-            data={companyLK}
-            label="Company"
-            inputProps={form.getInputProps("companyId")}
-            value={form.values.companyId}
-            required
-          />
-          {asset ? null : (
-            <ActionIcon
-              variant="default"
-              mt={20}
-              onClick={() =>
-                form.insertListItem("overageAssets", {
-                  serialNo: "",
-                  tag: "",
-                })
-              }
-            >
-              <IconPlus size="1rem" />
-            </ActionIcon>
-          )}
-        </Flex>
-        <TextInput
-          label="Serial No"
-          placeholder="Serial No"
-          {...form.getInputProps("serialNo")}
-          value={form.values.serialNo || ""}
+        <FormSelect
+          data={companyLK}
+          label="Company"
+          inputProps={form.getInputProps("companyId")}
+          value={form.values.companyId}
+          required
         />
-        {overageAssetFields}
+        <TextInput
+          label="Asset"
+          placeholder="Asset"
+          {...form.getInputProps("tag")}
+          onChange={(e) =>
+            form.setFieldValue("tag", e.target.value.toUpperCase())
+          }
+          maxLength={10}
+          disabled={!isCreate}
+          required
+          withAsterisk
+        />
+        <TextInput
+          label="Name"
+          placeholder="New Name"
+          {...form.getInputProps("name")}
+          required
+          withAsterisk
+        />
         <FormSelect
           data={modelLK}
           label="Model"
           inputProps={form.getInputProps("modelId")}
           value={form.values.modelId}
+        />
+        <TextInput
+          label="Serial No"
+          placeholder="Serial No"
+          {...form.getInputProps("serialNo")}
+          value={form.values.serialNo || ""}
         />
         <FormSelect
           data={productStatusLK}
@@ -227,60 +174,41 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
           {...form.getInputProps("notes")}
           value={form.values.notes || ""}
         />
-        <TextInput
-          label="Name"
-          placeholder="New Name"
-          {...form.getInputProps("name")}
-          required
-          withAsterisk
-        />
-        <Accordion>
-          <Accordion.Item
-            key={"ACCORDION_ASSET_ORDER_RELATED_INFORMATION"}
-            value={"ACCORDION_ASSET_ORDER_RELATED_INFORMATION"}
-          >
-            <Accordion.Control>Order Related Information</Accordion.Control>
-            <Accordion.Panel>
-              <Flex direction="column" gap={5}>
-                <FormSelect
-                  data={supplierLK}
-                  label="Supplier"
-                  inputProps={form.getInputProps("supplierId")}
-                  value={form.values.supplierId}
-                />
-                <TextInput
-                  label="Order No"
-                  placeholder="New Order No"
-                  {...form.getInputProps("orderNo")}
-                  value={form.values.orderNo || ""}
-                />
-                <DateInput
-                  clearable
-                  label="Purchase Date"
-                  placeholder="Purchase Date"
-                  {...form.getInputProps("purchaseDate")}
-                  value={
-                    form.values.purchaseDate
-                      ? new Date(form.values.purchaseDate)
-                      : null
-                  }
-                />
-                <NumberInput
-                  placeholder="Purchase Cost"
-                  label="Purchase Cost"
-                  {...form.getInputProps("purchaseCost")}
-                  value={form.values.purchaseCost || ""}
-                  decimalScale={2}
-                />
-              </Flex>
-            </Accordion.Panel>
-          </Accordion.Item>
-        </Accordion>
-        <Group pt="md" pb="md" justify="flex-end">
-          <Button type="submit" color="dark">
-            Submit
-          </Button>
-        </Group>
+        <Flex direction="column" gap={5}>
+          <FormSelect
+            data={supplierLK}
+            label="Supplier"
+            inputProps={form.getInputProps("supplierId")}
+            value={form.values.supplierId}
+          />
+          <TextInput
+            label="Order No"
+            placeholder="New Order No"
+            {...form.getInputProps("orderNo")}
+            value={form.values.orderNo || ""}
+          />
+          <DateInput
+            clearable
+            label="Purchase Date"
+            placeholder="Purchase Date"
+            {...form.getInputProps("purchaseDate")}
+            value={
+              form.values.purchaseDate
+                ? new Date(form.values.purchaseDate)
+                : null
+            }
+          />
+          <NumberInput
+            placeholder="Purchase Cost"
+            label="Purchase Cost"
+            {...form.getInputProps("purchaseCost")}
+            value={form.values.purchaseCost || ""}
+            decimalScale={2}
+          />
+        </Flex>
+        <Button type="submit" color="dark">
+          Submit
+        </Button>
       </Flex>
     </form>
   );

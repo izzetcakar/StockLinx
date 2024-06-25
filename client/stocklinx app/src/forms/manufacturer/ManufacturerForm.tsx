@@ -46,18 +46,10 @@ const ManufacturerForm: React.FC<ManufacturerFormProps> = ({
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-      <Flex
-        direction="column"
-        gap={10}
-        mx="auto"
-        h={"70dvh"}
-        w={"80dvw"}
-        px={40}
-        pt={20}
-      >
+      <Flex direction="column" gap={10} p={20}>
         <Image
           src={form.values.imagePath}
-          height={200}
+          mah={500}
           radius="md"
           width="fit-content"
           fit="contain"
