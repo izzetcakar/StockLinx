@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React from "react";
 import {
   TextInput,
   Button,
@@ -23,8 +23,8 @@ import { useModel } from "@/hooks/query/model";
 import { useSupplier } from "@/hooks/query/supplier";
 import { useProductStatus } from "@/hooks/query/productStatus";
 import { useInitial } from "@/hooks/initial/useInitial";
+import { useCompany } from "@/hooks/query/company";
 import base_asset from "@assets/baseProductImages/base_asset.jpg";
-import GenericContext from "@/context/GenericContext";
 import FormSelect from "../mantine/FormSelect";
 
 interface AssetFormProps {
@@ -34,19 +34,21 @@ interface AssetFormProps {
 const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
   const initialValues = useInitial().Asset(asset);
   const isCreate = initialValues.id === "";
-  const { company } = useContext(GenericContext);
   const { mutate: createAsset } = useAsset.Create();
   const { mutate: createAssetRange } = useAsset.CreateRange();
   const { mutate: updateAsset } = useAsset.Update();
-  const { data: modelLookup } = useModel.Lookup();
-  const { data: supplierLookup } = useSupplier.Lookup();
-  const { data: productStatusLookup } = useProductStatus.Lookup();
+  const { data: companyLK } = useCompany.Lookup();
+  const { data: modelLK } = useModel.Lookup();
+  const { data: supplierLK } = useSupplier.Lookup();
+  const { data: productStatusLK } = useProductStatus.Lookup();
 
   const form = useForm<IAsset>({
     initialValues: initialValues,
     validate: {
       name: (value: string) =>
         /(?!^$)([^\s])/.test(value) ? null : "Name should not be empty",
+      companyId: (value: string) =>
+        value === "" ? "Company is required" : null,
       purchaseCost: (value: number | null) => {
         if (value !== null || undefined) {
           return value && value >= 0
@@ -113,10 +115,6 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
     </Group>
   ));
 
-  useEffect(() => {
-    if (isCreate) form.setFieldValue("companyId", company?.id || "");
-  }, [company]);
-
   const handleImageChange = async (e: File | null) => {
     if (!e) return;
     const base64 = await toBase64(e);
@@ -182,6 +180,13 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
             required
             withAsterisk
           />
+          <FormSelect
+            data={companyLK}
+            label="Company"
+            inputProps={form.getInputProps("companyId")}
+            value={form.values.companyId}
+            required
+          />
           {asset ? null : (
             <ActionIcon
               variant="default"
@@ -205,13 +210,13 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
         />
         {overageAssetFields}
         <FormSelect
-          data={modelLookup}
+          data={modelLK}
           label="Model"
           inputProps={form.getInputProps("modelId")}
           value={form.values.modelId}
         />
         <FormSelect
-          data={productStatusLookup}
+          data={productStatusLK}
           label="Status"
           inputProps={form.getInputProps("productStatusId")}
           value={form.values.productStatusId}
@@ -238,7 +243,7 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
             <Accordion.Panel>
               <Flex direction="column" gap={5}>
                 <FormSelect
-                  data={supplierLookup}
+                  data={supplierLK}
                   label="Supplier"
                   inputProps={form.getInputProps("supplierId")}
                   value={form.values.supplierId}

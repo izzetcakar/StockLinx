@@ -6,7 +6,7 @@ import { useLocation } from "@/hooks/query/location";
 import { EntityCells } from "@/cells/Entity";
 
 export const useColumns = () => {
-  const { refetch: fetchLocationLookup } = useLocation.Lookup();
+  const { refetch: fetchLocationLK } = useLocation.Lookup();
 
   const columns: DataColumn[] = [
     {
@@ -37,7 +37,7 @@ export const useColumns = () => {
       dataField: "locationId",
       dataType: "string",
       lookup: {
-        dataSource: fetchLocationLookup,
+        dataSource: fetchLocationLK,
       },
       renderComponent: (e) => EntityCells.Location((e as ICompany).locationId),
     },

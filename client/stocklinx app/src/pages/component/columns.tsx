@@ -13,7 +13,7 @@ import AssetProductQuantityCell from "@/cells/AssetProductQuantityCell";
 export const useColumns = () => {
   const { mutate: checkIn } = useComponent.CheckIn();
   const { data: categories } = useCategory.GetAll();
-  const { data: companyLookup } = useCompany.Lookup();
+  const { data: companyLK } = useCompany.Lookup();
   const initial = useInitial();
 
   const onCheckInHandler = (data: IAssetProduct) => {
@@ -130,7 +130,7 @@ export const useColumns = () => {
       caption: "Company",
       dataField: "companyId",
       lookup: {
-        data: companyLookup || [],
+        data: companyLK || [],
       },
       dataType: "string",
       allowVisible: false,

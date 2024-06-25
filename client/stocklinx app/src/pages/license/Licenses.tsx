@@ -13,7 +13,7 @@ const License = () => {
 
   return (
     <>
-      <PageHeader title="Licenses" enableCompanyDrawer />
+      <PageHeader title="Licenses" />
       <Gridtable
         data={licenses || []}
         itemKey="id"

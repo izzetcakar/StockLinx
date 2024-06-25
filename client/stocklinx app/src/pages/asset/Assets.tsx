@@ -20,7 +20,7 @@ const Asset = () => {
 
   return (
     <>
-      <PageHeader title="Assets" enableCompanyDrawer />
+      <PageHeader title="Assets" />
       <Gridtable
         data={assets || []}
         itemKey="id"

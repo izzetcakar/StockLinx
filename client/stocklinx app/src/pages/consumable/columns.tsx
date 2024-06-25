@@ -15,9 +15,9 @@ import UserProductQuantityCell from "@/cells/UserProductQuantityCell";
 export const useColumns = () => {
   const { mutate: checkIn } = useConsumable.CheckIn();
   const { data: categories } = useCategory.GetAll();
-  const { data: companyLookup } = useCompany.Lookup();
-  const { data: supplierLookup } = useSupplier.Lookup();
-  const { data: manufacturerLookup } = useManufacturer.Lookup();
+  const { data: companyLK } = useCompany.Lookup();
+  const { data: supplierLK } = useSupplier.Lookup();
+  const { data: manufacturerLK } = useManufacturer.Lookup();
   const initial = useInitial();
 
   const onCheckInHandler = (data: IUserProduct) => {
@@ -133,7 +133,7 @@ export const useColumns = () => {
       caption: "Company",
       dataField: "companyId",
       lookup: {
-        data: companyLookup || [],
+        data: companyLK || [],
       },
       dataType: "string",
       allowVisible: false,
@@ -142,7 +142,7 @@ export const useColumns = () => {
       caption: "Supplier",
       dataField: "supplierId",
       lookup: {
-        data: supplierLookup || [],
+        data: supplierLK || [],
       },
       dataType: "string",
       allowVisible: false,
@@ -151,7 +151,7 @@ export const useColumns = () => {
       caption: "Manufacturer",
       dataField: "manufacturerId",
       lookup: {
-        data: manufacturerLookup || [],
+        data: manufacturerLK || [],
       },
       dataType: "string",
       allowVisible: false,

@@ -16,11 +16,11 @@ const UserCheckInOutCell: React.FC<UserCheckInOutCellProps> = ({
   checkOut,
 }) => {
   const { data: userProducts } = useUserProduct.GetAll();
-  const { data: userLookup } = useUser.Lookup();
+  const { data: userLK } = useUser.Lookup();
   const userProduct = userProducts?.find(
     (userProduct) => userProduct?.assetId === asset.id
   );
-  const user = userLookup?.find((user) => user.value === userProduct?.userId);
+  const user = userLK?.find((user) => user.value === userProduct?.userId);
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
       <Button

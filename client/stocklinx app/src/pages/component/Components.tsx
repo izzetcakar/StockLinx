@@ -13,7 +13,7 @@ const Component = () => {
 
   return (
     <>
-      <PageHeader title="Components" enableCompanyDrawer />
+      <PageHeader title="Components" />
       <Gridtable
         data={components || []}
         itemKey="id"

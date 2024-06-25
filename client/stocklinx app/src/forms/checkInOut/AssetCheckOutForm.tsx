@@ -20,7 +20,7 @@ const AssetCheckOutForm: React.FC<AssetCheckOutFormProps> = ({
     isLoading: userLoading,
     refetch: userRefetch,
   } = useUser.Lookup();
-  const { data: productStatusLookup } = useProductStatus.Lookup();
+  const { data: productStatusLK } = useProductStatus.Lookup();
 
   const form = useForm<AssetCheckOutDto>({
     initialValues: checkOutDto,
@@ -51,7 +51,7 @@ const AssetCheckOutForm: React.FC<AssetCheckOutFormProps> = ({
         />
         <FormSelect
           label="Product Status"
-          data={productStatusLookup}
+          data={productStatusLK}
           inputProps={form.getInputProps("productStatusId")}
           value={form.values.productStatusId}
         />

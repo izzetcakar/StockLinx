@@ -13,7 +13,7 @@ const Accessory = () => {
 
   return (
     <>
-      <PageHeader title="Accessories" enableCompanyDrawer />
+      <PageHeader title="Accessories" />
       <Gridtable
         data={accessories || []}
         itemKey="id"

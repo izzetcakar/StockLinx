@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React from "react";
 import {
   TextInput,
   Button,
@@ -20,8 +20,8 @@ import { useManufacturer } from "@/hooks/query/manufacturer";
 import { useAccessory } from "@/hooks/query/accessory";
 import { CategoryType } from "@/interfaces/enums";
 import { useInitial } from "@/hooks/initial/useInitial";
+import { useCompany } from "@/hooks/query/company";
 import base_accessory from "@assets/baseProductImages/base_accessory.png";
-import GenericContext from "@/context/GenericContext";
 import FormSelect from "../mantine/FormSelect";
 
 interface AccessoryFormProps {
@@ -30,9 +30,9 @@ interface AccessoryFormProps {
 const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory }) => {
   const initialValues = useInitial().Accessory(accessory);
   const isCreate = initialValues.id === "";
-  const { company } = useContext(GenericContext);
   const { mutate: createAccessory } = useAccessory.Create();
   const { mutate: updateAccessory } = useAccessory.Update();
+  const { data: companyLK } = useCompany.Lookup();
   const { data: categories } = useCategory.GetAll();
   const { data: supplierLk } = useSupplier.Lookup();
   const { data: manufacturerLk } = useManufacturer.Lookup();
@@ -42,6 +42,8 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory }) => {
     validate: {
       name: (value: string) =>
         /(?!^$)([^\s])/.test(value) ? null : "Name should not be empty",
+      companyId: (value: string) =>
+        value === "" ? "Company is required" : null,
       quantity: (value: number) => {
         return value >= 1 ? null : "Quantity must be a non-negative number";
       },
@@ -65,12 +67,6 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory }) => {
       },
     },
   });
-
-  useEffect(() => {
-    if (isCreate) {
-      form.setFieldValue("companyId", company?.id || "");
-    }
-  }, [company]);
 
   const handleImageChange = async (e: File | null) => {
     if (!e) return;
@@ -109,6 +105,13 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory }) => {
           label="Upload image"
           placeholder="Upload image"
           onChange={(e) => handleImageChange(e)}
+        />
+        <FormSelect
+          data={companyLK}
+          label="Company"
+          value={form.values.companyId}
+          inputProps={form.getInputProps("companyId")}
+          required
         />
         <TextInput
           label="Accessory"

@@ -38,8 +38,8 @@ const ModelForm: React.FC<ModelFormProps> = ({ model }) => {
   const { data: modelFieldDatas } = useModelFieldData.GetAll();
   const { data: fieldSetCustomFields } = useFieldSetCustomField.GetAll();
   const { data: customFields } = useCustomField.GetAll();
-  const { data: fieldSetLookup } = useFieldSet.Lookup();
-  const { data: manufacturerLookup } = useManufacturer.Lookup();
+  const { data: fieldSetLK } = useFieldSet.Lookup();
+  const { data: manufacturerLK } = useManufacturer.Lookup();
 
   const form = useForm<IModel>({
     validateInputOnChange: ["name", `modelFieldData.${FORM_INDEX}.value`],
@@ -265,7 +265,7 @@ const ModelForm: React.FC<ModelFormProps> = ({ model }) => {
           required
         />
         <Select
-          data={fieldSetLookup}
+          data={fieldSetLK}
           label="Field Set"
           placeholder="Select Field Set"
           {...form.getInputProps("fieldSetId")}
@@ -274,7 +274,7 @@ const ModelForm: React.FC<ModelFormProps> = ({ model }) => {
           onChange={(e) => onFieldIdChange(e as string)}
         />
         <FormSelect
-          data={manufacturerLookup}
+          data={manufacturerLK}
           label="Manufacturer"
           inputProps={form.getInputProps("manufacturerId")}
           value={form.values.manufacturerId}

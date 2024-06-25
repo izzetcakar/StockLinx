@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React from "react";
 import {
   TextInput,
   Button,
@@ -17,7 +17,7 @@ import { useComponent } from "@/hooks/query/component";
 import { CategoryType } from "@/interfaces/enums";
 import { useInitial } from "@/hooks/initial/useInitial";
 import FormSelect from "../mantine/FormSelect";
-import GenericContext from "@/context/GenericContext";
+import { useCompany } from "@/hooks/query/company";
 
 interface ComponentFormProps {
   component?: IComponent;
@@ -26,17 +26,19 @@ interface ComponentFormProps {
 const ComponentForm: React.FC<ComponentFormProps> = ({ component }) => {
   const initialValues = useInitial().Component(component);
   const isCreate = initialValues.id === "";
-  const { company } = useContext(GenericContext);
   const { mutate: createComponent } = useComponent.Create();
   const { mutate: updateComponent } = useComponent.Update();
   const { data: categories } = useCategory.GetAll();
-  const { data: supplierLookup } = useSupplier.Lookup();
+  const { data: companyLK } = useCompany.Lookup();
+  const { data: supplierLK } = useSupplier.Lookup();
 
   const form = useForm<IComponent>({
     initialValues: initialValues,
     validate: {
       name: (value: string) =>
         /(?!^$)([^\s])/.test(value) ? null : "Name should not be empty",
+      companyId: (value: string) =>
+        value === "" ? "Company is required" : null,
       quantity: (value: number) => {
         return value >= 1 ? null : "Quantity must be a non-negative number";
       },
@@ -66,10 +68,6 @@ const ComponentForm: React.FC<ComponentFormProps> = ({ component }) => {
     isCreate ? createComponent(data) : updateComponent(data);
   };
 
-  useEffect(() => {
-    if (isCreate) form.setFieldValue("companyId", company?.id || "");
-  }, [company]);
-
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
       <Flex
@@ -81,6 +79,13 @@ const ComponentForm: React.FC<ComponentFormProps> = ({ component }) => {
         px={40}
         pt={20}
       >
+        <FormSelect
+          data={companyLK}
+          label="Company"
+          inputProps={form.getInputProps("companyId")}
+          value={form.values.companyId}
+          required
+        />
         <TextInput
           label="Component"
           {...form.getInputProps("tag")}
@@ -124,7 +129,7 @@ const ComponentForm: React.FC<ComponentFormProps> = ({ component }) => {
           value={form.values.serialNo || ""}
         />
         <FormSelect
-          data={supplierLookup}
+          data={supplierLK}
           label="Supplier"
           inputProps={form.getInputProps("supplierId")}
           value={form.values.supplierId}

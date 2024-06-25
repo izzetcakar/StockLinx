@@ -13,7 +13,7 @@ const ProductStatus = () => {
 
   return (
     <>
-      <PageHeader title="Product Statuses" enableCompanyDrawer />
+      <PageHeader title="Product Statuses" />
       <Gridtable
         data={productStatuses || []}
         itemKey="id"

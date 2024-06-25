@@ -25,7 +25,7 @@ const SupplierForm: React.FC<SupplierFormProps> = ({ supplier }) => {
   const isCreate = initialValues.id === "";
   const { mutate: createSupplier } = useSupplier.Create();
   const { mutate: updateSupplier } = useSupplier.Update();
-  const { data: locationLookup } = useLocation.Lookup();
+  const { data: locationLK } = useLocation.Lookup();
 
   const form = useForm<ISupplier>({
     initialValues: initialValues,
@@ -77,7 +77,7 @@ const SupplierForm: React.FC<SupplierFormProps> = ({ supplier }) => {
           withAsterisk
         />
         <FormSelect
-          data={locationLookup}
+          data={locationLK}
           label="Location"
           inputProps={form.getInputProps("locationId")}
           value={form.values.locationId}

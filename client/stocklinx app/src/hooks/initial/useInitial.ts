@@ -1,4 +1,3 @@
-import GenericContext from "@/context/GenericContext";
 import { CategoryType, ProductStatusType } from "@/interfaces/enums";
 import {
   IAccessory,
@@ -19,15 +18,12 @@ import {
   IUserProduct,
 } from "@/interfaces/serverInterfaces";
 import { getImage } from "@/utils/imageUtils";
-import { useContext } from "react";
 
 export const useInitial = () => {
   const Accessory = (entity: IAccessory | undefined) => {
-    const { company } = useContext(GenericContext);
-
     let initialValues: IAccessory = {
       id: "",
-      companyId: company?.id || "",
+      companyId: "",
       tag: "",
       name: "",
       manufacturerId: null,
@@ -51,11 +47,9 @@ export const useInitial = () => {
   };
 
   const Asset = (entity: IAsset | undefined) => {
-    const { company } = useContext(GenericContext);
-
     let initialValues: IAsset = {
       id: "",
-      companyId: company?.id || "",
+      companyId: "",
       productStatusId: "",
       supplierId: null,
       tag: "",
@@ -112,11 +106,9 @@ export const useInitial = () => {
   };
 
   const Component = (entity: IComponent | undefined) => {
-    const { company } = useContext(GenericContext);
-
     let initialValues: IComponent = {
       id: "",
-      companyId: company?.id || "",
+      companyId: "",
       tag: "",
       name: "",
       serialNo: null,
@@ -137,11 +129,9 @@ export const useInitial = () => {
   };
 
   const Consumable = (entity: IConsumable | undefined) => {
-    const { company } = useContext(GenericContext);
-
     let initialValues: IConsumable = {
       id: "",
-      companyId: company?.id || "",
+      companyId: "",
       tag: "",
       name: "",
       categoryId: "",
@@ -164,11 +154,9 @@ export const useInitial = () => {
   };
 
   const Department = (entity: IDepartment | undefined) => {
-    const { company } = useContext(GenericContext);
-
     let initialValues: IDepartment = {
       id: "",
-      companyId: company?.id || "",
+      companyId: "",
       locationId: null,
       managerId: null,
       name: "",
@@ -183,11 +171,9 @@ export const useInitial = () => {
   };
 
   const License = (entity: ILicense | undefined) => {
-    const { company } = useContext(GenericContext);
-
     let initialValues: ILicense = {
       id: "",
-      companyId: company?.id || "",
+      companyId: "",
       categoryId: "",
       tag: "",
       name: "",

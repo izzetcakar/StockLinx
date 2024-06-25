@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React from "react";
 import {
   TextInput,
   Button,
@@ -18,7 +18,7 @@ import { useSupplier } from "@/hooks/query/supplier";
 import { useLicense } from "@/hooks/query/license";
 import { CategoryType } from "@/interfaces/enums";
 import { useInitial } from "@/hooks/initial/useInitial";
-import GenericContext from "@/context/GenericContext";
+import { useCompany } from "@/hooks/query/company";
 import FormSelect from "../mantine/FormSelect";
 
 interface LicenseFormProps {
@@ -28,18 +28,20 @@ interface LicenseFormProps {
 const LicenseForm: React.FC<LicenseFormProps> = ({ license }) => {
   const initialValues = useInitial().License(license);
   const isCreate = initialValues.id === "";
-  const { company } = useContext(GenericContext);
   const { mutate: createLicense } = useLicense.Create();
   const { mutate: updateLicense } = useLicense.Update();
   const { data: categories } = useCategory.GetAll();
-  const { data: manufacturerLookup } = useManufacturer.Lookup();
-  const { data: supplierLookup } = useSupplier.Lookup();
+  const { data: companyLK } = useCompany.Lookup();
+  const { data: manufacturerLK } = useManufacturer.Lookup();
+  const { data: supplierLK } = useSupplier.Lookup();
 
   const form = useForm<ILicense>({
     initialValues: initialValues,
     validate: {
       name: (value: string) =>
         /(?!^$)([^\s])/.test(value) ? null : "Name should not be empty",
+      companyId: (value: string) =>
+        value === "" ? "Company is required" : null,
       licenseEmail: (value) =>
         value && /^\S+@\S+$/.test(value) ? null : "Invalid email",
       purchaseCost: (value: number | null) => {
@@ -61,10 +63,6 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license }) => {
     },
   });
 
-  useEffect(() => {
-    if (isCreate) form.setFieldValue("companyId", company?.id || "");
-  }, [company]);
-
   const handleSubmit = (data: ILicense) => {
     if (form.values.companyId === "") {
       openNotificationError("Error", "Please select a company first");
@@ -84,6 +82,13 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license }) => {
         px={40}
         pt={20}
       >
+        <FormSelect
+          data={companyLK}
+          label="Company"
+          inputProps={form.getInputProps("companyId")}
+          value={form.values.companyId}
+          required
+        />
         <TextInput
           label="License"
           {...form.getInputProps("tag")}
@@ -130,7 +135,7 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license }) => {
           hideControls
         />
         <FormSelect
-          data={manufacturerLookup}
+          data={manufacturerLK}
           label="Manufacturer"
           inputProps={form.getInputProps("manufacturerId")}
           value={form.values.manufacturerId}
@@ -153,7 +158,7 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license }) => {
           checked={form.values.reassignable}
         />
         <FormSelect
-          data={supplierLookup}
+          data={supplierLK}
           label="Supplier"
           inputProps={form.getInputProps("supplierId")}
           value={form.values.supplierId}

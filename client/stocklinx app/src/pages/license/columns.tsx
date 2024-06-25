@@ -20,9 +20,9 @@ export const useColumns = () => {
   const { mutate: userCheckIn } = useLicense.UserCheckIn();
   const { mutate: assetCheckIn } = useLicense.AssetCheckIn();
   const { data: categories } = useCategory.GetAll();
-  const { data: companyLookup } = useCompany.Lookup();
+  const { data: companyLK } = useCompany.Lookup();
+  const { data: supplierLK } = useSupplier.Lookup();
   const { refetch: getManufacturerLK } = useManufacturer.Lookup();
-  const { data: supplierLookup } = useSupplier.Lookup();
   const initial = useInitial();
 
   const onUserCheckInHandler = (userProduct: IUserProduct) => {
@@ -135,7 +135,7 @@ export const useColumns = () => {
       caption: "Company",
       dataField: "companyId",
       lookup: {
-        data: companyLookup || [],
+        data: companyLK || [],
       },
       dataType: "string",
       allowVisible: false,
@@ -162,7 +162,7 @@ export const useColumns = () => {
       caption: "Supplier",
       dataField: "supplierId",
       lookup: {
-        data: supplierLookup || [],
+        data: supplierLK || [],
       },
       dataType: "string",
       allowVisible: false,

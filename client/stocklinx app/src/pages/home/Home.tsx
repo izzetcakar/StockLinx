@@ -84,7 +84,7 @@ const Home = () => {
 
   return (
     <>
-      <PageHeader title="Home" enableCompanyDrawer />
+      <PageHeader title="Home" />
       <div className="product-card-container" style={{ marginBottom: "1rem" }}>
         {handleProductCardData().map((item, index) => {
           return (

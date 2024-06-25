@@ -29,8 +29,8 @@ const CheckInForm: React.FC<CheckInFormProps> = ({
   userCheckIn,
   assetCheckIn,
 }) => {
-  const { data: userLookup } = useUser.Lookup();
-  const { data: assetLookup } = useAsset.Lookup();
+  const { data: userLK } = useUser.Lookup();
+  const { data: assetLK } = useAsset.Lookup();
   const [type, setType] = useState(segment[0]);
 
   const userForm = useForm<IUserProduct>({
@@ -85,7 +85,7 @@ const CheckInForm: React.FC<CheckInFormProps> = ({
         {type === "User" ? (
           <FormSelect
             label="User"
-            data={userLookup}
+            data={userLK}
             inputProps={userForm.getInputProps("userId")}
             value={userForm.values.userId}
           />
@@ -93,7 +93,7 @@ const CheckInForm: React.FC<CheckInFormProps> = ({
         {type === "Asset" ? (
           <FormSelect
             label="Asset"
-            data={assetLookup}
+            data={assetLK}
             inputProps={assetForm.getInputProps("assetId")}
             value={assetForm.values.assetId}
           />

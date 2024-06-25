@@ -16,8 +16,8 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({ department }) => {
   const isCreate = initialValues.id === "";
   const { mutate: createDepartment } = useDepartment.Create();
   const { mutate: updateDepartment } = useDepartment.Update();
-  const { data: companyLookup } = useCompany.Lookup();
-  const { data: locationLookup } = useLocation.Lookup();
+  const { data: companyLK } = useCompany.Lookup();
+  const { data: locationLK } = useLocation.Lookup();
 
   const form = useForm<IDepartment>({
     initialValues: initialValues,
@@ -49,13 +49,13 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({ department }) => {
           withAsterisk
         />
         <FormSelect
-          data={companyLookup}
+          data={companyLK}
           label="Company"
           inputProps={form.getInputProps("companyId")}
           value={form.values.companyId}
         />
         <FormSelect
-          data={locationLookup}
+          data={locationLK}
           label="Location"
           inputProps={form.getInputProps("locationId")}
           value={form.values.locationId}

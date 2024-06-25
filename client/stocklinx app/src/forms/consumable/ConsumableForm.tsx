@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React from "react";
 import {
   TextInput,
   Button,
@@ -16,9 +16,9 @@ import { useSupplier } from "@/hooks/query/supplier";
 import { useManufacturer } from "@/hooks/query/manufacturer";
 import { useConsumable } from "@/hooks/query/consumable";
 import { CategoryType } from "@/interfaces/enums";
-import FormSelect from "../mantine/FormSelect";
-import GenericContext from "@/context/GenericContext";
 import { useInitial } from "@/hooks/initial/useInitial";
+import { useCompany } from "@/hooks/query/company";
+import FormSelect from "../mantine/FormSelect";
 
 interface ConsumableFormProps {
   consumable?: IConsumable;
@@ -28,18 +28,20 @@ interface ConsumableFormProps {
 const ConsumableForm: React.FC<ConsumableFormProps> = ({ consumable }) => {
   const initialValues = useInitial().Consumable(consumable);
   const isCreate = initialValues.id === "";
-  const { company } = useContext(GenericContext);
   const { data: categories } = useCategory.GetAll();
   const { mutate: createConsumable } = useConsumable.Create();
   const { mutate: updateConsumable } = useConsumable.Update();
-  const { data: supplierLookup } = useSupplier.Lookup();
-  const { data: manufacturerLookup } = useManufacturer.Lookup();
+  const { data: companyLK } = useCompany.Lookup();
+  const { data: supplierLK } = useSupplier.Lookup();
+  const { data: manufacturerLK } = useManufacturer.Lookup();
 
   const form = useForm<IConsumable>({
     initialValues: initialValues,
     validate: {
       name: (value: string) =>
         /(?!^$)([^\s])/.test(value) ? null : "Name should not be empty",
+      companyId: (value: string) =>
+        value === "" ? "Company is required" : null,
       quantity: (value: number) => {
         return value >= 1 ? null : "Quantity must be greater than 0";
       },
@@ -62,10 +64,6 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({ consumable }) => {
     },
   });
 
-  useEffect(() => {
-    if (isCreate) form.setFieldValue("companyId", company?.id || "");
-  }, [company]);
-
   const handleSubmit = (data: IConsumable) => {
     if (form.values.companyId === "") {
       openNotificationError("Error", "Please select a company first");
@@ -85,6 +83,13 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({ consumable }) => {
         px={40}
         pt={20}
       >
+        <FormSelect
+          data={companyLK}
+          label="Company"
+          inputProps={form.getInputProps("companyId")}
+          value={form.values.companyId}
+          required
+        />
         <TextInput
           label="Consumable"
           {...form.getInputProps("tag")}
@@ -116,13 +121,13 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({ consumable }) => {
           required
         />
         <FormSelect
-          data={supplierLookup}
+          data={supplierLK}
           label="Supplier"
           inputProps={form.getInputProps("supplierId")}
           value={form.values.supplierId}
         />
         <FormSelect
-          data={manufacturerLookup}
+          data={manufacturerLK}
           label="Manufacturer"
           inputProps={form.getInputProps("manufacturerId")}
           value={form.values.manufacturerId}

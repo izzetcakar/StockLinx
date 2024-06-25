@@ -112,7 +112,7 @@ const TestTable = () => {
 const Test = () => {
   return (
     <>
-      <PageHeader title="Test" enableCompanyDrawer />
+      <PageHeader title="Test" />
       {/* <Gridtable
         data={testData}
         itemKey="id"

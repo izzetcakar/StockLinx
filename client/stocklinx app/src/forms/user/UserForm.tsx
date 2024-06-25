@@ -26,8 +26,8 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
   const isCreate = initialValues.id === "";
   const { mutate: createUser } = useUser.Create();
   const { mutate: updateUser } = useUser.Update();
-  const { data: companyLookup } = useCompany.Lookup();
   const { data: departments } = useDepartment.GetAll();
+  const { data: companyLK } = useCompany.Lookup();
   const [company, setCompany] = React.useState<string>("");
 
   const form = useForm<IUser>({
@@ -68,8 +68,8 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
         pt={20}
       >
         <Select
-          data={companyLookup}
           label="Company"
+          data={companyLK}
           placeholder="Select Company"
           value={company}
           onChange={(value) => setCompany(value as string)}

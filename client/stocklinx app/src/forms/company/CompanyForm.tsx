@@ -23,7 +23,7 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ company }) => {
   const isCreate = initialValues.id === "";
   const { mutate: createCompany } = useCompany.Create();
   const { mutate: updateCompany } = useCompany.Update();
-  const { data: locationLookup } = useLocation.Lookup();
+  const { data: locationLK } = useLocation.Lookup();
 
   const form = useForm<ICompany>({
     initialValues: initialValues,
@@ -75,7 +75,7 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ company }) => {
           withAsterisk
         />
         <FormSelect
-          data={locationLookup}
+          data={locationLK}
           label="Location"
           inputProps={form.getInputProps("locationId")}
           value={form.values.locationId}
