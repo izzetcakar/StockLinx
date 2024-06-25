@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import "./sidebar.scss";
-import "boxicons";
 import logo from "/logo.png";
 import icon_barcode from "@assets/icon_barcode.png";
 import icon_home from "@assets/icon_home.png";
