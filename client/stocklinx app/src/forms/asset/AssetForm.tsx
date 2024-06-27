@@ -21,6 +21,8 @@ import { useInitial } from "@/hooks/initial/useInitial";
 import { useCompany } from "@/hooks/query/company";
 import base_asset from "@assets/baseProductImages/base_asset.jpg";
 import FormSelect from "../mantine/FormSelect";
+import FormCard from "@/components/form/FormCard";
+import { openModelModal, openProductStatusModal } from "@/utils/modalUtils";
 
 interface AssetFormProps {
   asset?: IAsset;
@@ -104,108 +106,113 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-      <Flex
-        direction="column"
-        gap={10}
-        p={20}
-        style={{ backgroundColor: "white" }}
-        w={"100%"}
-        h={"100%"}
-      >
-        <Image
-          src={form.values.imagePath || base_asset}
-          mah={500}
-          radius="md"
-          fit="contain"
-        />
-        <FileInput
-          accept="image/png,image/jpeg"
-          label="Upload image"
-          placeholder="Upload image"
-          onChange={(e) => handleImageChange(e)}
-        />
-        <FormSelect
-          data={companyLK}
-          label="Company"
-          inputProps={form.getInputProps("companyId")}
-          value={form.values.companyId}
-          required
-        />
-        <TextInput
-          label="Asset"
-          placeholder="Asset"
-          {...form.getInputProps("tag")}
-          onChange={(e) =>
-            form.setFieldValue("tag", e.target.value.toUpperCase())
-          }
-          maxLength={10}
-          disabled={!isCreate}
-          required
-          withAsterisk
-        />
-        <TextInput
-          label="Name"
-          placeholder="New Name"
-          {...form.getInputProps("name")}
-          required
-          withAsterisk
-        />
-        <FormSelect
-          data={modelLK}
-          label="Model"
-          inputProps={form.getInputProps("modelId")}
-          value={form.values.modelId}
-        />
-        <TextInput
-          label="Serial No"
-          placeholder="Serial No"
-          {...form.getInputProps("serialNo")}
-          value={form.values.serialNo || ""}
-        />
-        <FormSelect
-          data={productStatusLK}
-          label="Status"
-          inputProps={form.getInputProps("productStatusId")}
-          value={form.values.productStatusId}
-        />
-        <Textarea
-          placeholder="Your notes here"
-          label="Note"
-          {...form.getInputProps("notes")}
-          value={form.values.notes || ""}
-        />
-        <Flex direction="column" gap={5}>
+      <Flex direction="column" gap={10} p={20} w={"100%"} h={"100%"}>
+        <FormCard>
+          <Image
+            src={form.values.imagePath || base_asset}
+            mah={500}
+            radius="md"
+            fit="contain"
+          />
+          <FileInput
+            accept="image/png,image/jpeg"
+            label="Upload image"
+            placeholder="Upload image"
+            onChange={(e) => handleImageChange(e)}
+          />
+        </FormCard>
+        <FormCard>
           <FormSelect
-            data={supplierLK}
-            label="Supplier"
-            inputProps={form.getInputProps("supplierId")}
-            value={form.values.supplierId}
+            data={companyLK}
+            label="Company"
+            inputProps={form.getInputProps("companyId")}
+            value={form.values.companyId}
+            required
           />
           <TextInput
-            label="Order No"
-            placeholder="New Order No"
-            {...form.getInputProps("orderNo")}
-            value={form.values.orderNo || ""}
-          />
-          <DateInput
-            clearable
-            label="Purchase Date"
-            placeholder="Purchase Date"
-            {...form.getInputProps("purchaseDate")}
-            value={
-              form.values.purchaseDate
-                ? new Date(form.values.purchaseDate)
-                : null
+            label="Asset"
+            placeholder="Asset"
+            {...form.getInputProps("tag")}
+            onChange={(e) =>
+              form.setFieldValue("tag", e.target.value.toUpperCase())
             }
+            maxLength={10}
+            disabled={!isCreate}
+            required
+            withAsterisk
           />
-          <NumberInput
-            placeholder="Purchase Cost"
-            label="Purchase Cost"
-            {...form.getInputProps("purchaseCost")}
-            value={form.values.purchaseCost || ""}
-            decimalScale={2}
+          <TextInput
+            label="Name"
+            placeholder="New Name"
+            {...form.getInputProps("name")}
+            required
+            withAsterisk
           />
-        </Flex>
+          <TextInput
+            label="Serial No"
+            placeholder="Serial No"
+            {...form.getInputProps("serialNo")}
+            value={form.values.serialNo || ""}
+          />
+        </FormCard>
+        <FormCard title="Model" onClick={openModelModal}>
+          <FormSelect
+            data={modelLK}
+            inputProps={form.getInputProps("modelId")}
+            value={form.values.modelId}
+          />
+        </FormCard>
+        <FormCard
+          title="Status"
+          onClick={() => openProductStatusModal(undefined, true)}
+        >
+          <FormSelect
+            data={productStatusLK}
+            label="Status"
+            inputProps={form.getInputProps("productStatusId")}
+            value={form.values.productStatusId}
+          />
+        </FormCard>
+        <FormCard title="Purchase İnformation">
+          <Flex direction="column" gap={5}>
+            <FormSelect
+              data={supplierLK}
+              label="Supplier"
+              inputProps={form.getInputProps("supplierId")}
+              value={form.values.supplierId}
+            />
+            <TextInput
+              label="Order No"
+              placeholder="New Order No"
+              {...form.getInputProps("orderNo")}
+              value={form.values.orderNo || ""}
+            />
+            <DateInput
+              clearable
+              label="Purchase Date"
+              placeholder="Purchase Date"
+              {...form.getInputProps("purchaseDate")}
+              value={
+                form.values.purchaseDate
+                  ? new Date(form.values.purchaseDate)
+                  : null
+              }
+            />
+            <NumberInput
+              placeholder="Purchase Cost"
+              label="Purchase Cost"
+              {...form.getInputProps("purchaseCost")}
+              value={form.values.purchaseCost || ""}
+              decimalScale={2}
+            />
+            <Textarea
+              placeholder="Your notes here"
+              label="Note"
+              {...form.getInputProps("notes")}
+              value={form.values.notes || ""}
+            />
+          </Flex>
+        </FormCard>
         <Button type="submit" color="dark">
           Submit
         </Button>

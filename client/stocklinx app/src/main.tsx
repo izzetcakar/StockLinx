@@ -74,9 +74,13 @@ const components = {
   Modal: {
     defaultProps: {
       scrollAreaComponent: ScrollArea.Autosize,
+      xOffset: "auto",
+      size: "95%",
     },
     classNames: {
       title: modalClasses.title,
+      header: modalClasses.header,
+      content: modalClasses.content,
     },
   },
   Button: {
@@ -128,7 +132,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <QueryClientProvider client={queryClient}>
     <MantineProvider
       theme={{
-        scale: 1,
+        scale: 0.8,
         cursorType: "pointer",
         defaultRadius: "md",
         radius: {

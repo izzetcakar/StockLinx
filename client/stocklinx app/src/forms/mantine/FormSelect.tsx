@@ -2,7 +2,7 @@ import { Loader, Select } from "@mantine/core";
 
 interface FormSelectProps {
   data?: { value: string; label: string }[] | undefined;
-  label: string;
+  label?: string;
   inputProps: object;
   value: string | null;
   required?: boolean;
@@ -21,11 +21,13 @@ const FormSelect: React.FC<FormSelectProps> = ({
   fetchData,
   onChange,
 }) => {
+  const placeholder = label ? `Select ${label}` : "Select";
+  const nothingFound = label ? `No ${label} found` : "Nothing found";
   return (
     <Select
       data={loading || !data ? [] : data}
-      label={label}
-      placeholder={`Select ${label}`}
+      label={label || ""}
+      placeholder={placeholder}
       {...inputProps}
       value={value}
       {...(onChange
@@ -35,7 +37,7 @@ const FormSelect: React.FC<FormSelectProps> = ({
             },
           }
         : {})}
-      nothingFoundMessage={`No ${label} found`}
+      nothingFoundMessage={nothingFound}
       comboboxProps={{
         position: "bottom",
         middlewares: { flip: true, shift: false },

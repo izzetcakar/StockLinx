@@ -1,0 +1,10 @@
+@import "../../base.scss";
+
+.formcard__container {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border-radius: 10px;
+  padding: $spacing-xl;
+  gap: $spacing-lg;
+}

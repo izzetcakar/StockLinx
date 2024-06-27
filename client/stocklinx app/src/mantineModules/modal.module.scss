@@ -1,5 +1,13 @@
 @import "../base.scss";
 
+.header {
+  background-color: $background-color;
+}
+
+.content {
+  background-color: $background-color;
+}
+
 .title {
   font-size: $fontsize-md;
   font-weight: 700;
