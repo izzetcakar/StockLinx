@@ -51,6 +51,9 @@ import { modals } from "@mantine/modals";
 
 export const closeModal = (modalId: string) => modals.close(modalId);
 
+const getCanBack = (modalId: string, canBack?: boolean) =>
+  canBack ? { onBack: () => modals.close(modalId) } : {};
+
 export const genericConfirmModal = (onConfirm: () => void) =>
   modals.openConfirmModal({
     title: "Please confirm your action",
@@ -60,11 +63,16 @@ export const genericConfirmModal = (onConfirm: () => void) =>
     onConfirm: () => onConfirm(),
   });
 
-export const openCategoryModal = (category?: ICategory) =>
+export const openCategoryModal = (category?: ICategory, canBack?: boolean) =>
   modals.open({
     modalId: "category_modal",
     title: category ? "Edit Category" : "Create Category",
-    children: <CategoryForm category={category} />,
+    children: (
+      <CategoryForm
+        category={category}
+        {...getCanBack("category_modal", canBack)}
+      />
+    ),
   });
 
 export const openCompanyModal = (company?: ICompany) =>
@@ -74,32 +82,55 @@ export const openCompanyModal = (company?: ICompany) =>
     children: <CompanyForm company={company} />,
   });
 
-export const openDepartmentModal = (department?: IDepartment) =>
+export const openDepartmentModal = (
+  department?: IDepartment,
+  canBack?: boolean
+) =>
   modals.open({
     modalId: "department_modal",
     title: department ? "Update Department" : "Create Department",
-    children: <DepartmentForm department={department} />,
+    children: (
+      <DepartmentForm
+        department={department}
+        {...getCanBack("department_modal", canBack)}
+      />
+    ),
   });
 
-export const openLocationModal = (location?: ILocation) =>
+export const openLocationModal = (location?: ILocation, canBack?: boolean) =>
   modals.open({
     modalId: "location_modal",
     title: location ? "Edit Location" : "Update Location",
-    children: <LocationForm location={location} />,
+    children: (
+      <LocationForm
+        location={location}
+        {...getCanBack("location_modal", canBack)}
+      />
+    ),
   });
 
-export const openManufacturerModal = (manufacturer?: IManufacturer) =>
+export const openManufacturerModal = (
+  manufacturer?: IManufacturer,
+  canBack?: boolean
+) =>
   modals.open({
     modalId: "manufacturer_modal",
     title: manufacturer ? "Update Manufacturer" : "Create Manufacturer",
-    children: <ManufacturerForm manufacturer={manufacturer} />,
+    children: (
+      <ManufacturerForm
+        manufacturer={manufacturer}
+        {...getCanBack("manufacturer_modal", canBack)}
+      />
+    ),
   });
 
-export const openModelModal = (model?: IModel) =>
+export const openModelModal = (model?: IModel, canBack?: boolean) =>
   modals.open({
     modalId: "model_modal",
     title: model ? "Update Model" : "Create Model",
-    children: <ModelForm model={model} />,
+    children: (
+      <ModelForm model={model} {...getCanBack("model_modal", canBack)} />
+    ),
   });
 
 export const openAccessoryModal = (accessory?: IAccessory) =>
@@ -147,19 +178,22 @@ export const openProductStatusModal = (
     children: (
       <ProductStatusForm
         productStatus={productStatus}
-        {...(canBack
-          ? { onBack: () => modals.close("productStatus_modal") }
-          : {})}
+        {...getCanBack("productStatus_modal", canBack)}
       />
     ),
     size: "md",
   });
 
-export const openSupplierModal = (supplier?: ISupplier) =>
+export const openSupplierModal = (supplier?: ISupplier, canBack?: boolean) =>
   modals.open({
     modalId: "supplier_modal",
     title: supplier ? "Update Supplier" : "Create Supplier",
-    children: <SupplierForm supplier={supplier} />,
+    children: (
+      <SupplierForm
+        supplier={supplier}
+        {...getCanBack("asset_modal", canBack)}
+      />
+    ),
   });
 
 export const openUserModal = (user?: IUser) =>
