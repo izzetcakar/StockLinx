@@ -226,7 +226,6 @@ export const useInitial = () => {
       id: "",
       name: "",
       url: null,
-      imagePath: null,
       supportURL: null,
       supportEmail: null,
       supportPhone: null,
@@ -235,7 +234,6 @@ export const useInitial = () => {
 
     if (entity) {
       initialValues = { ...entity };
-      initialValues.imagePath = getImage(entity.imagePath);
     }
 
     return initialValues;
@@ -281,7 +279,6 @@ export const useInitial = () => {
       id: "",
       locationId: null,
       name: "",
-      imagePath: null,
       contactName: null,
       contactPhone: null,
       contactEmail: null,
@@ -292,7 +289,6 @@ export const useInitial = () => {
 
     if (entity) {
       initialValues = { ...entity };
-      initialValues.imagePath = getImage(entity.imagePath);
     }
 
     return initialValues;

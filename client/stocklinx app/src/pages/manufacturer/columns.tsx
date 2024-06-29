@@ -1,7 +1,4 @@
 import { DataColumn } from "@interfaces/gridTableInterfaces";
-import { IManufacturer } from "@interfaces/serverInterfaces";
-import { Image } from "@mantine/core";
-import { getImage } from "../../utils/imageUtils";
 
 export const useColumns = () => {
   const columns: DataColumn[] = [
@@ -9,24 +6,6 @@ export const useColumns = () => {
       dataField: "name",
       caption: "Name",
       dataType: "string",
-    },
-    {
-      caption: "Image",
-      dataField: "imagePath",
-      dataType: "action",
-      renderComponent(e) {
-        const image = getImage((e as IManufacturer).imagePath);
-        if (!image) return null;
-        return (
-          <Image
-            src={image}
-            height={50}
-            radius="md"
-            width="fit-content"
-            fit="contain"
-          />
-        );
-      },
     },
     {
       dataField: "url",

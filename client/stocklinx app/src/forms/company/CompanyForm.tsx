@@ -1,19 +1,12 @@
 import React from "react";
-import {
-  TextInput,
-  Button,
-  Group,
-  Flex,
-  Image,
-  FileInput,
-} from "@mantine/core";
+import { TextInput, Button, Group } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { ICompany } from "@interfaces/serverInterfaces";
 import { useInitial } from "@/hooks/initial/useInitial";
-import { toBase64 } from "../../utils/imageUtils";
 import { useCompany } from "@/hooks/query/company";
 import { useLocation } from "@/hooks/query/location";
 import FormSelect from "../mantine/FormSelect";
+import FormCard from "@/components/form/FormCard";
 interface CompanyFormProps {
   company?: ICompany;
 }
@@ -33,32 +26,13 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ company }) => {
     },
   });
 
-  const handleImageChange = async (e: File | null) => {
-    if (!e) return;
-    const base64 = await toBase64(e);
-    form.setFieldValue("imagePath", base64 as string);
-  };
-
   const handleSubmit = (data: ICompany) => {
     isCreate ? createCompany(data) : updateCompany(data);
   };
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-      <Flex direction="column" gap={10} p={20}>
-        <Image
-          src={form.values.imagePath}
-          mah={500}
-          radius="md"
-          width="fit-content"
-          fit="contain"
-        />
-        <FileInput
-          accept="image/png,image/jpeg"
-          label="Upload image"
-          placeholder="Upload image"
-          onChange={(e) => handleImageChange(e)}
-        />
+      <FormCard>
         <TextInput
           label="Name"
           placeholder="New Name"
@@ -78,12 +52,12 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ company }) => {
           {...form.getInputProps("email")}
           value={form.values.email || ""}
         />
-        <Group mt="md" justify="flex-end">
+        <Group pt="xs" justify="flex-end">
           <Button type="submit" color="dark">
             Submit
           </Button>
         </Group>
-      </Flex>
+      </FormCard>
     </form>
   );
 };

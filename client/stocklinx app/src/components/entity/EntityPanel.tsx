@@ -62,7 +62,7 @@ const EntityPanel: React.FC<EntityPanelProps> = ({ cardColumns, data }) => {
             </div>
             {(showMore[entityIndex]
               ? cardColumns.slice(1)
-              : cardColumns.slice(1, 4)
+              : cardColumns.slice(1, 3)
             ).map((column, columnIndex) => (
               <div
                 key={`entity_card_column_${columnIndex}`}
@@ -83,7 +83,7 @@ const EntityPanel: React.FC<EntityPanelProps> = ({ cardColumns, data }) => {
                 )}
               </div>
             ))}
-            {cardColumns.length > 4 && (
+            {cardColumns.length > 3 && (
               <div
                 key={`entity_card_column_more`}
                 className="card__column show__more"

@@ -1,26 +1,19 @@
 import React from "react";
-import {
-  TextInput,
-  Button,
-  Group,
-  Flex,
-  Textarea,
-  Image,
-  FileInput,
-} from "@mantine/core";
+import { TextInput, Button, Group, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { ISupplier } from "@interfaces/serverInterfaces";
-import { toBase64 } from "../../utils/imageUtils";
 import { useSupplier } from "@/hooks/query/supplier";
 import { useLocation } from "@/hooks/query/location";
 import { useInitial } from "@/hooks/initial/useInitial";
 import FormSelect from "../mantine/FormSelect";
+import FormCard from "@/components/form/FormCard";
 
 interface SupplierFormProps {
   supplier?: ISupplier;
+  onBack?: () => void;
 }
 
-const SupplierForm: React.FC<SupplierFormProps> = ({ supplier }) => {
+const SupplierForm: React.FC<SupplierFormProps> = ({ supplier, onBack }) => {
   const initialValues = useInitial().Supplier(supplier);
   const isCreate = initialValues.id === "";
   const { mutate: createSupplier } = useSupplier.Create();
@@ -35,32 +28,13 @@ const SupplierForm: React.FC<SupplierFormProps> = ({ supplier }) => {
     },
   });
 
-  const handleImageChange = async (e: File | null) => {
-    if (!e) return;
-    const base64 = await toBase64(e);
-    form.setFieldValue("imagePath", base64 as string);
-  };
-
   const handleSubmit = (data: ISupplier) => {
     isCreate ? createSupplier(data) : updateSupplier(data);
   };
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-      <Flex direction="column" gap={10} p={20}>
-        <Image
-          src={form.values.imagePath}
-          mah={500}
-          radius="md"
-          width="fit-content"
-          fit="contain"
-        />
-        <FileInput
-          accept="image/png,image/jpeg"
-          label="Upload image"
-          placeholder="Upload image"
-          onChange={(e) => handleImageChange(e)}
-        />
+      <FormCard>
         <TextInput
           label="Name"
           placeholder="New Name"
@@ -110,12 +84,17 @@ const SupplierForm: React.FC<SupplierFormProps> = ({ supplier }) => {
           {...form.getInputProps("notes")}
           value={form.values.notes || ""}
         />
-        <Group mt="md" justify="flex-end">
+        <Group pt="xs" justify="flex-end">
+          {onBack ? (
+            <Button color="dark" onClick={onBack}>
+              Back
+            </Button>
+          ) : null}
           <Button type="submit" color="dark">
             Submit
           </Button>
         </Group>
-      </Flex>
+      </FormCard>
     </form>
   );
 };

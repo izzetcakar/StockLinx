@@ -12,6 +12,8 @@
     flex-direction: column;
     width: 200px;
     height: 100%;
+    padding: $spacing-lg;
+    gap: $spacing-lg;
     overflow-y: scroll;
     box-shadow: 0 0 5px #85848486;
     clip-path: inset(0px -5px 0px 0px);
@@ -19,19 +21,24 @@
     .card__content {
       display: flex;
       flex-direction: column;
+      gap: $spacing-sm;
       width: 100%;
       cursor: pointer;
+      background-color: white;
+      border-radius: 10px;
+      padding: $spacing-lg;
 
       .card__title,
       .card__column {
         padding: 0.5rem;
+        border-radius: 10px;
         font-size: $fontsize-md;
         &:hover,
         &.selected:hover {
-          background-color: #e6e6e6e9;
+          background-color: #f3f3f3e9;
         }
         &.selected {
-          background-color: #cdcdcdd3;
+          background-color: #eeeeeee9;
         }
       }
 
@@ -68,5 +75,6 @@
     width: 100%;
     height: 100%;
     overflow: auto;
+    padding: $spacing-lg;
   }
 }

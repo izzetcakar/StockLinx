@@ -1,5 +1,5 @@
 import React from "react";
-import { TextInput, Button, Group, Flex } from "@mantine/core";
+import { TextInput, Button, Group } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IProductStatus } from "@interfaces/serverInterfaces";
 import { useProductStatus } from "@/hooks/query/productStatus";
@@ -36,62 +36,60 @@ const ProductStatusForm: React.FC<ProductStatusFormProps> = ({
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
       <FormCard>
-        <Flex direction="column" gap={10} p={20}>
-          <TextInput
-            label="Name"
-            placeholder="New Name"
-            {...form.getInputProps("name")}
-            required
-            withAsterisk
-          />
-          <FormSelect
-            data={
-              [
-                {
-                  value: ProductStatusType.AVAILABLE.toString(),
-                  label: "Avaliable",
-                },
-                {
-                  value: ProductStatusType.DAMAGED.toString(),
-                  label: "Damaged",
-                },
-                {
-                  value: ProductStatusType.DEPLOYED.toString(),
-                  label: "Deployed",
-                },
-                {
-                  value: ProductStatusType.ORDERED.toString(),
-                  label: "Ordered",
-                },
-                {
-                  value: ProductStatusType.OUT_OF_STOCK.toString(),
-                  label: "Out of Stock",
-                },
-              ] as any
-            }
-            label="Type"
-            inputProps={form.getInputProps("type")}
-            value={form.values.type.toString()}
-            onChange={(value) =>
-              form.setFieldValue(
-                "type",
-                (value ? parseInt(value) : null) as ProductStatusType
-              )
-            }
-            required
-          />
-        </Flex>
-      </FormCard>
-      <Group mt="md" justify="flex-end">
-        {onBack ? (
-          <Button color="dark" onClick={onBack}>
-            Back
+        <TextInput
+          label="Name"
+          placeholder="New Name"
+          {...form.getInputProps("name")}
+          required
+          withAsterisk
+        />
+        <FormSelect
+          data={
+            [
+              {
+                value: ProductStatusType.AVAILABLE.toString(),
+                label: "Avaliable",
+              },
+              {
+                value: ProductStatusType.DAMAGED.toString(),
+                label: "Damaged",
+              },
+              {
+                value: ProductStatusType.DEPLOYED.toString(),
+                label: "Deployed",
+              },
+              {
+                value: ProductStatusType.ORDERED.toString(),
+                label: "Ordered",
+              },
+              {
+                value: ProductStatusType.OUT_OF_STOCK.toString(),
+                label: "Out of Stock",
+              },
+            ] as any
+          }
+          label="Type"
+          inputProps={form.getInputProps("type")}
+          value={form.values.type.toString()}
+          onChange={(value) =>
+            form.setFieldValue(
+              "type",
+              (value ? parseInt(value) : null) as ProductStatusType
+            )
+          }
+          required
+        />
+        <Group pt="xs" justify="flex-end">
+          {onBack ? (
+            <Button color="dark" onClick={onBack}>
+              Back
+            </Button>
+          ) : null}
+          <Button type="submit" color="dark">
+            Submit
           </Button>
-        ) : null}
-        <Button type="submit" color="dark">
-          Submit
-        </Button>
-      </Group>
+        </Group>
+      </FormCard>
     </form>
   );
 };

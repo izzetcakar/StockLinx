@@ -16,8 +16,10 @@ import { useSupplier } from "@/hooks/query/supplier";
 import { useComponent } from "@/hooks/query/component";
 import { CategoryType } from "@/interfaces/enums";
 import { useInitial } from "@/hooks/initial/useInitial";
-import FormSelect from "../mantine/FormSelect";
 import { useCompany } from "@/hooks/query/company";
+import { openCategoryModal, openSupplierModal } from "@/utils/modalUtils";
+import FormSelect from "../mantine/FormSelect";
+import FormCard from "@/components/form/FormCard";
 
 interface ComponentFormProps {
   component?: IComponent;
@@ -70,93 +72,108 @@ const ComponentForm: React.FC<ComponentFormProps> = ({ component }) => {
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-      <Flex direction="column" gap={10} p={20}>
-        <FormSelect
-          data={companyLK}
-          label="Company"
-          inputProps={form.getInputProps("companyId")}
-          value={form.values.companyId}
-          required
-        />
-        <TextInput
-          label="Component"
-          {...form.getInputProps("tag")}
-          onChange={(e) =>
-            form.setFieldValue("tag", e.target.value.toUpperCase())
-          }
-          maxLength={10}
-          disabled={!isCreate}
-          required
-          withAsterisk
-        />
-        <TextInput
-          label="Name"
-          placeholder="New Name"
-          {...form.getInputProps("name")}
-        />
-        <FormSelect
-          data={categories
-            ?.filter((category) => category.type === CategoryType.COMPONENT)
-            .map((category) => ({
-              value: category.id,
-              label: category.name,
-            }))}
-          label="Category"
-          inputProps={form.getInputProps("categoryId")}
-          value={form.values.categoryId}
-          required
-        />
-        <NumberInput
-          defaultValue={1}
-          min={1}
-          placeholder="Quantity"
-          label="Quantity"
-          {...form.getInputProps("quantity")}
-          hideControls
-        />
-        <TextInput
-          label="Serial No"
-          placeholder="Serial No"
-          {...form.getInputProps("serialNo")}
-          value={form.values.serialNo || ""}
-        />
-        <FormSelect
-          data={supplierLK}
-          label="Supplier"
-          inputProps={form.getInputProps("supplierId")}
-          value={form.values.supplierId}
-        />
-        <TextInput
-          label="Order No"
-          placeholder="New Order No"
-          {...form.getInputProps("orderNo")}
-          value={form.values.orderNo || ""}
-        />
-        <DateInput
-          clearable
-          label="Purchase Date"
-          placeholder="Purchase Date"
-          valueFormat="DD/MM/YYYY"
-          {...form.getInputProps("purchaseDate")}
-          value={
-            form.values.purchaseDate ? new Date(form.values.purchaseDate) : null
-          }
-        />
-        <NumberInput
-          placeholder="Purchase Cost"
-          label="Purchase Cost"
-          {...form.getInputProps("purchaseCost")}
-          value={form.values.purchaseCost || ""}
-          decimalScale={2}
-          hideControls
-        />
-        <Textarea
-          placeholder="Your notes here"
-          label="Note"
-          {...form.getInputProps("notes")}
-          value={form.values.notes || ""}
-        />
-        <Group pt="md" pb="md" justify="flex-end">
+       <Flex direction="column" gap={10} px={20}>
+        <FormCard>
+          <FormSelect
+            data={companyLK}
+            label="Company"
+            inputProps={form.getInputProps("companyId")}
+            value={form.values.companyId}
+            required
+          />
+          <TextInput
+            label="Component"
+            {...form.getInputProps("tag")}
+            onChange={(e) =>
+              form.setFieldValue("tag", e.target.value.toUpperCase())
+            }
+            maxLength={10}
+            disabled={!isCreate}
+            required
+            withAsterisk
+          />
+          <TextInput
+            label="Name"
+            placeholder="New Name"
+            {...form.getInputProps("name")}
+          />
+        </FormCard>
+        <FormCard
+          title="Category"
+          onClick={() => openCategoryModal(undefined, true)}
+        >
+          <FormSelect
+            data={categories
+              ?.filter((category) => category.type === CategoryType.COMPONENT)
+              .map((category) => ({
+                value: category.id,
+                label: category.name,
+              }))}
+            inputProps={form.getInputProps("categoryId")}
+            value={form.values.categoryId}
+            required
+          />
+        </FormCard>
+        <FormCard
+          title="Supplier"
+          onClick={() => openSupplierModal(undefined, true)}
+        >
+          <FormSelect
+            data={supplierLK}
+            inputProps={form.getInputProps("supplierId")}
+            value={form.values.supplierId}
+          />
+        </FormCard>
+        <FormCard title="Purchase Information">
+          <NumberInput
+            defaultValue={1}
+            min={1}
+            placeholder="Quantity"
+            label="Quantity"
+            {...form.getInputProps("quantity")}
+            hideControls
+          />
+          <TextInput
+            label="Serial No"
+            placeholder="Serial No"
+            {...form.getInputProps("serialNo")}
+            value={form.values.serialNo || ""}
+          />
+
+          <TextInput
+            label="Order No"
+            placeholder="New Order No"
+            {...form.getInputProps("orderNo")}
+            value={form.values.orderNo || ""}
+          />
+          <DateInput
+            clearable
+            label="Purchase Date"
+            placeholder="Purchase Date"
+            valueFormat="DD/MM/YYYY"
+            {...form.getInputProps("purchaseDate")}
+            value={
+              form.values.purchaseDate
+                ? new Date(form.values.purchaseDate)
+                : null
+            }
+          />
+          <NumberInput
+            placeholder="Purchase Cost"
+            label="Purchase Cost"
+            {...form.getInputProps("purchaseCost")}
+            value={form.values.purchaseCost || ""}
+            decimalScale={2}
+            hideControls
+          />
+          <Textarea
+            placeholder="Your notes here"
+            label="Note"
+            {...form.getInputProps("notes")}
+            value={form.values.notes || ""}
+          />
+        </FormCard>
+        <Group pt="xs" justify="flex-end">
           <Button type="submit" color="dark">
             Submit
           </Button>

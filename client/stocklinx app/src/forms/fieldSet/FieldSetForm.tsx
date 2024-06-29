@@ -30,7 +30,7 @@ const FieldSetForm: React.FC<FieldSetFormProps> = ({ fieldSet }) => {
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-      <Flex direction="column" gap={10} p={20}>
+       <Flex direction="column" gap={10} px={20}>
         <TextInput
           label="Name"
           placeholder="New Name"

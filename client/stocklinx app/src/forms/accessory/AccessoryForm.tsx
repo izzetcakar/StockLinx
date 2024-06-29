@@ -23,6 +23,12 @@ import { useInitial } from "@/hooks/initial/useInitial";
 import { useCompany } from "@/hooks/query/company";
 import base_accessory from "@assets/baseProductImages/base_accessory.png";
 import FormSelect from "../mantine/FormSelect";
+import FormCard from "@/components/form/FormCard";
+import {
+  openCategoryModal,
+  openManufacturerModal,
+  openSupplierModal,
+} from "@/utils/modalUtils";
 
 interface AccessoryFormProps {
   accessory?: IAccessory;
@@ -84,117 +90,137 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory }) => {
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-      <Flex direction="column" gap={10} p={20}>
-        <Image
-          src={form.values.imagePath || base_accessory}
-          mah={500}
-          radius="md"
-          width="fit-content"
-          fit="contain"
-        />
-        <FileInput
-          accept="image/png,image/jpeg"
-          label="Upload image"
-          placeholder="Upload image"
-          onChange={(e) => handleImageChange(e)}
-        />
-        <FormSelect
-          data={companyLK}
-          label="Company"
-          value={form.values.companyId}
-          inputProps={form.getInputProps("companyId")}
-          required
-        />
-        <TextInput
-          label="Accessory"
-          {...form.getInputProps("tag")}
-          onChange={(e) =>
-            form.setFieldValue("tag", e.target.value.toUpperCase())
-          }
-          maxLength={10}
-          disabled={!isCreate}
-          required
-          withAsterisk
-        />
-        <TextInput
-          label="Name"
-          {...form.getInputProps("name")}
-          required
-          withAsterisk
-        />
-        <FormSelect
-          data={categories
-            ?.filter((category) => category.type === CategoryType.ACCESSORY)
-            .map((category) => ({
-              value: category.id,
-              label: category.name,
-            }))}
-          label="Category"
-          inputProps={form.getInputProps("categoryId")}
-          value={form.values.categoryId}
-        />
-        <FormSelect
-          data={supplierLk}
-          label="Supplier"
-          value={form.values.supplierId}
-          inputProps={form.getInputProps("supplierId")}
-        />
-        <FormSelect
-          data={manufacturerLk}
-          label="Manufacturer"
-          inputProps={form.getInputProps("manufacturerId")}
-          value={form.values.manufacturerId}
-        />
-        <TextInput
-          label="Model No"
-          placeholder="Model No"
-          {...form.getInputProps("modelNo")}
-          value={form.values.modelNo}
-          required
-          withAsterisk
-        />
-        <TextInput
-          label="Order No"
-          placeholder="New Order No"
-          {...form.getInputProps("orderNo")}
-          value={form.values.orderNo || ""}
-        />
-        <DateInput
-          clearable
-          label="Purchase Date"
-          placeholder="Purchase Date"
-          valueFormat="DD/MM/YYYY"
-          {...form.getInputProps("purchaseDate")}
-          value={
-            form.values.purchaseDate ? new Date(form.values.purchaseDate) : null
-          }
-        />
-        <NumberInput
-          placeholder="Purchase Cost"
-          label="Purchase Cost"
-          {...form.getInputProps("purchaseCost")}
-          value={form.values.purchaseCost || ""}
-          decimalScale={2}
-          hideControls
-        />
-        <NumberInput
-          defaultValue={1}
-          min={1}
-          placeholder="Quantity"
-          label="Quantity"
-          {...form.getInputProps("quantity")}
-          required
-          withAsterisk
-          hideControls
-        />
-        <Textarea
-          placeholder="Your notes here"
-          label="Note"
-          {...form.getInputProps("notes")}
-          value={form.values.notes || ""}
-        />
-        <Group pt="md" pb="md" justify="flex-end">
-          <Button type="submit" color="dark">
+       <Flex direction="column" gap={10} px={20}>
+        <FormCard>
+          <Image
+            src={form.values.imagePath || base_accessory}
+            mah={500}
+            radius="md"
+            width="fit-content"
+            fit="contain"
+          />
+          <FileInput
+            accept="image/png,image/jpeg"
+            label="Upload image"
+            placeholder="Upload image"
+            onChange={(e) => handleImageChange(e)}
+          />
+        </FormCard>
+        <FormCard>
+          <FormSelect
+            data={companyLK}
+            label="Company"
+            value={form.values.companyId}
+            inputProps={form.getInputProps("companyId")}
+            required
+          />
+          <TextInput
+            label="Accessory"
+            {...form.getInputProps("tag")}
+            onChange={(e) =>
+              form.setFieldValue("tag", e.target.value.toUpperCase())
+            }
+            maxLength={10}
+            disabled={!isCreate}
+            required
+            withAsterisk
+          />
+          <TextInput
+            label="Name"
+            {...form.getInputProps("name")}
+            required
+            withAsterisk
+          />
+        </FormCard>
+        <FormCard
+          title="Category"
+          onClick={() => openCategoryModal(undefined, true)}
+        >
+          <FormSelect
+            data={categories
+              ?.filter((category) => category.type === CategoryType.ACCESSORY)
+              .map((category) => ({
+                value: category.id,
+                label: category.name,
+              }))}
+            inputProps={form.getInputProps("categoryId")}
+            value={form.values.categoryId}
+          />
+        </FormCard>
+        <FormCard
+          title="Supplier"
+          onClick={() => openSupplierModal(undefined, true)}
+        >
+          <FormSelect
+            data={supplierLk}
+            value={form.values.supplierId}
+            inputProps={form.getInputProps("supplierId")}
+          />
+        </FormCard>
+        <FormCard
+          title="Manufacturer"
+          onClick={() => openManufacturerModal(undefined, true)}
+        >
+          <FormSelect
+            data={manufacturerLk}
+            inputProps={form.getInputProps("manufacturerId")}
+            value={form.values.manufacturerId}
+          />
+        </FormCard>
+        <FormCard title="Purchase Information">
+          <TextInput
+            label="Model No"
+            placeholder="Model No"
+            {...form.getInputProps("modelNo")}
+            value={form.values.modelNo}
+            required
+            withAsterisk
+          />
+          <TextInput
+            label="Order No"
+            placeholder="New Order No"
+            {...form.getInputProps("orderNo")}
+            value={form.values.orderNo || ""}
+          />
+          <DateInput
+            clearable
+            label="Purchase Date"
+            placeholder="Purchase Date"
+            valueFormat="DD/MM/YYYY"
+            {...form.getInputProps("purchaseDate")}
+            value={
+              form.values.purchaseDate
+                ? new Date(form.values.purchaseDate)
+                : null
+            }
+          />
+          <NumberInput
+            placeholder="Purchase Cost"
+            label="Purchase Cost"
+            {...form.getInputProps("purchaseCost")}
+            value={form.values.purchaseCost || ""}
+            decimalScale={2}
+            hideControls
+          />
+          <NumberInput
+            defaultValue={1}
+            min={1}
+            placeholder="Quantity"
+            label="Quantity"
+            {...form.getInputProps("quantity")}
+            required
+            withAsterisk
+            hideControls
+          />
+          <Textarea
+            placeholder="Your notes here"
+            label="Note"
+            {...form.getInputProps("notes")}
+            value={form.values.notes || ""}
+          />
+        </FormCard>
+        <Group pt="xs" justify="flex-end">
+          <Button type="submit" color="dark" size="md">
             Submit
           </Button>
         </Group>

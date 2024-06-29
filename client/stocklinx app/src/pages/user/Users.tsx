@@ -13,7 +13,7 @@ const User = () => {
 
   return (
     <>
-      <PageHeader title="Categories" />
+      <PageHeader title="Users" />
       <Gridtable
         data={users || []}
         itemKey="id"

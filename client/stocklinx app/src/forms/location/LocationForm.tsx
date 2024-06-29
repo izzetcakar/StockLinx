@@ -1,14 +1,16 @@
 import React from "react";
-import { TextInput, Flex, Textarea, Group, Button } from "@mantine/core";
+import { TextInput, Textarea, Group, Button } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { ILocation } from "@interfaces/serverInterfaces";
 import { useLocation } from "@/hooks/query/location";
 import { useInitial } from "@/hooks/initial/useInitial";
+import FormCard from "@/components/form/FormCard";
 interface LocationFormProps {
   location?: ILocation;
+  onBack?: () => void;
 }
 
-const LocationForm: React.FC<LocationFormProps> = ({ location }) => {
+const LocationForm: React.FC<LocationFormProps> = ({ location, onBack }) => {
   const initialValues = useInitial().Location(location);
   const isCreate = initialValues.id === "";
   const { mutate: createLocation } = useLocation.Create();
@@ -26,7 +28,7 @@ const LocationForm: React.FC<LocationFormProps> = ({ location }) => {
   };
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-      <Flex direction="column" gap={10} p={20}>
+      <FormCard>
         <TextInput
           label="Name"
           placeholder="New Name"
@@ -82,12 +84,18 @@ const LocationForm: React.FC<LocationFormProps> = ({ location }) => {
           {...form.getInputProps("notes")}
           value={form.values.notes || ""}
         />
-        <Group mt="md" justify="flex-end">
+
+        <Group pt="xs" justify="flex-end">
+          {onBack ? (
+            <Button color="dark" onClick={onBack}>
+              Back
+            </Button>
+          ) : null}
           <Button type="submit" color="dark">
             Submit
           </Button>
         </Group>
-      </Flex>
+      </FormCard>
     </form>
   );
 };

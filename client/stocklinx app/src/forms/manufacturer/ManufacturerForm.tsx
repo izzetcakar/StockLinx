@@ -1,25 +1,19 @@
 import React from "react";
-import {
-  TextInput,
-  Button,
-  Group,
-  Flex,
-  Textarea,
-  Image,
-  FileInput,
-} from "@mantine/core";
+import { TextInput, Button, Group, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IManufacturer } from "@interfaces/serverInterfaces";
-import { toBase64 } from "../../utils/imageUtils";
 import { useManufacturer } from "@/hooks/query/manufacturer";
 import { useInitial } from "@/hooks/initial/useInitial";
+import FormCard from "@/components/form/FormCard";
 
 interface ManufacturerFormProps {
   manufacturer?: IManufacturer;
+  onBack?: () => void;
 }
 
 const ManufacturerForm: React.FC<ManufacturerFormProps> = ({
   manufacturer,
+  onBack,
 }) => {
   const initialValues = useInitial().Manufacturer(manufacturer);
   const isCreate = initialValues.id === "";
@@ -34,32 +28,13 @@ const ManufacturerForm: React.FC<ManufacturerFormProps> = ({
     },
   });
 
-  const handleImageChange = async (e: File | null) => {
-    if (!e) return;
-    const base64 = await toBase64(e);
-    form.setFieldValue("imagePath", base64 as string);
-  };
-
   const handleSubmit = (data: IManufacturer) => {
     isCreate ? createManufacturer(data) : updateManufacturer(data);
   };
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-      <Flex direction="column" gap={10} p={20}>
-        <Image
-          src={form.values.imagePath}
-          mah={500}
-          radius="md"
-          width="fit-content"
-          fit="contain"
-        />
-        <FileInput
-          accept="image/png,image/jpeg"
-          label="Upload image"
-          placeholder="Upload image"
-          onChange={(e) => handleImageChange(e)}
-        />
+      <FormCard>
         <TextInput
           label="Name"
           placeholder="New Name"
@@ -97,12 +72,17 @@ const ManufacturerForm: React.FC<ManufacturerFormProps> = ({
           {...form.getInputProps("notes")}
           value={form.values.notes || ""}
         />
-      </Flex>
-      <Group mt="md" justify="flex-end">
-        <Button type="submit" color="dark">
-          Submit
-        </Button>
-      </Group>
+        <Group pt="xs" justify="flex-end">
+          {onBack ? (
+            <Button color="dark" onClick={onBack}>
+              Back
+            </Button>
+          ) : null}
+          <Button type="submit" color="dark">
+            Submit
+          </Button>
+        </Group>
+      </FormCard>
     </form>
   );
 };

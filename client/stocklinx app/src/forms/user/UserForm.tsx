@@ -14,8 +14,9 @@ import { DateInput } from "@mantine/dates";
 import { useCompany } from "@/hooks/query/company";
 import { useDepartment } from "@/hooks/query/department";
 import { useUser } from "@/hooks/query/user";
-import FormSelect from "../mantine/FormSelect";
 import { useInitial } from "@/hooks/initial/useInitial";
+import FormSelect from "../mantine/FormSelect";
+import FormCard from "@/components/form/FormCard";
 
 interface UserFormProps {
   user?: IUser;
@@ -58,110 +59,114 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-      <Flex direction="column" gap={10} p={20}>
-        <Select
-          label="Company"
-          data={companyLK}
-          placeholder="Select Company"
-          value={company}
-          onChange={(value) => setCompany(value as string)}
-          required
-          withAsterisk
-        />
-        <FormSelect
-          data={departments
-            ?.filter((department) => department.companyId === company)
-            .map((department) => ({
-              value: department.id,
-              label: department.name,
-            }))}
-          label="Department"
-          inputProps={form.getInputProps("departmentId")}
-          value={form.values.departmentId}
-          required
-        />
-        <TextInput
-          label="Employee No"
-          placeholder="Employee No"
-          {...form.getInputProps("employeeNo")}
-          maxLength={10}
-          minLength={1}
-          required
-          withAsterisk
-        />
-        <TextInput
-          label="First Name"
-          placeholder="First Name"
-          {...form.getInputProps("firstName")}
-          required
-          withAsterisk
-        />
-        <TextInput
-          label="Last Name"
-          placeholder="Last Name"
-          {...form.getInputProps("lastName")}
-          required
-          withAsterisk
-        />
-        <TextInput
-          label="Email"
-          placeholder="Email"
-          {...form.getInputProps("email")}
-          required
-          withAsterisk
-        />
-        <PasswordInput
-          label="Password"
-          placeholder="Password"
-          {...form.getInputProps("password")}
-          maxLength={20}
-          minLength={6}
-          required
-          withAsterisk
-        />
-        <TextInput
-          label="Job Title"
-          placeholder="Job Title"
-          {...form.getInputProps("jobTitle")}
-          value={form.values.jobTitle || ""}
-        />
-        <TextInput
-          label="Phone Number"
-          placeholder="Phone Number"
-          {...form.getInputProps("phoneNo")}
-          value={form.values.phoneNo || ""}
-        />
-        <TextInput
-          label="Website"
-          placeholder="Website"
-          {...form.getInputProps("website")}
-          value={form.values.website || ""}
-        />
-        <DateInput
-          label="Start Date"
-          placeholder="Start Date"
-          {...form.getInputProps("startDate")}
-          required
-          withAsterisk
-        />
-        <DateInput
-          label="End Date"
-          placeholder="End Date"
-          {...form.getInputProps("endDate")}
-        />
-        <TextInput
-          label="Language"
-          placeholder="Language"
-          {...form.getInputProps("language")}
-          value={form.values.language || ""}
-        />
-        <Textarea
-          placeholder="Your notes here"
-          label="Note"
-          {...form.getInputProps("notes")}
-          value={form.values.notes || ""}
-        />
-        <Group mt="md" justify="flex-end">
+      <Flex direction="column" gap={10} px={20}>
+        <FormCard title="Company Information">
+          <Select
+            label="Company"
+            data={companyLK}
+            placeholder="Select Company"
+            value={company}
+            onChange={(value) => setCompany(value as string)}
+            required
+            withAsterisk
+          />
+          <FormSelect
+            data={departments
+              ?.filter((department) => department.companyId === company)
+              .map((department) => ({
+                value: department.id,
+                label: department.name,
+              }))}
+            label="Department"
+            inputProps={form.getInputProps("departmentId")}
+            value={form.values.departmentId}
+            required
+          />
+          <TextInput
+            label="Employee No"
+            placeholder="Employee No"
+            {...form.getInputProps("employeeNo")}
+            maxLength={10}
+            minLength={1}
+            required
+            withAsterisk
+          />
+          <TextInput
+            label="Job Title"
+            placeholder="Job Title"
+            {...form.getInputProps("jobTitle")}
+            value={form.values.jobTitle || ""}
+          />{" "}
+          <DateInput
+            label="Start Date"
+            placeholder="Start Date"
+            {...form.getInputProps("startDate")}
+            required
+            withAsterisk
+          />
+          <DateInput
+            label="End Date"
+            placeholder="End Date"
+            {...form.getInputProps("endDate")}
+          />
+        </FormCard>
+        <FormCard title="Person Information">
+          <TextInput
+            label="First Name"
+            placeholder="First Name"
+            {...form.getInputProps("firstName")}
+            required
+            withAsterisk
+          />
+          <TextInput
+            label="Last Name"
+            placeholder="Last Name"
+            {...form.getInputProps("lastName")}
+            required
+            withAsterisk
+          />
+          <TextInput
+            label="Email"
+            placeholder="Email"
+            {...form.getInputProps("email")}
+            required
+            withAsterisk
+          />
+          <PasswordInput
+            label="Password"
+            placeholder="Password"
+            {...form.getInputProps("password")}
+            maxLength={20}
+            minLength={6}
+            required
+            withAsterisk
+          />
+          <TextInput
+            label="Phone Number"
+            placeholder="Phone Number"
+            {...form.getInputProps("phoneNo")}
+            value={form.values.phoneNo || ""}
+          />
+          <TextInput
+            label="Website"
+            placeholder="Website"
+            {...form.getInputProps("website")}
+            value={form.values.website || ""}
+          />
+          <TextInput
+            label="Language"
+            placeholder="Language"
+            {...form.getInputProps("language")}
+            value={form.values.language || ""}
+          />
+          <Textarea
+            placeholder="Your notes here"
+            label="Note"
+            {...form.getInputProps("notes")}
+            value={form.values.notes || ""}
+          />
+        </FormCard>
+        <Group pt="xs" justify="flex-end">
           <Button type="submit" color="dark">
             Submit
           </Button>

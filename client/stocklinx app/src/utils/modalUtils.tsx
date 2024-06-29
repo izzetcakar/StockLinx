@@ -73,6 +73,7 @@ export const openCategoryModal = (category?: ICategory, canBack?: boolean) =>
         {...getCanBack("category_modal", canBack)}
       />
     ),
+    size: "md",
   });
 
 export const openCompanyModal = (company?: ICompany) =>
@@ -80,6 +81,7 @@ export const openCompanyModal = (company?: ICompany) =>
     modalId: "company_modal",
     title: company ? "Update Company" : "Create Company",
     children: <CompanyForm company={company} />,
+    size: "md",
   });
 
 export const openDepartmentModal = (
@@ -95,18 +97,20 @@ export const openDepartmentModal = (
         {...getCanBack("department_modal", canBack)}
       />
     ),
+    size: "lg",
   });
 
 export const openLocationModal = (location?: ILocation, canBack?: boolean) =>
   modals.open({
     modalId: "location_modal",
-    title: location ? "Edit Location" : "Update Location",
+    title: location ? "Update Location" : "Create Location",
     children: (
       <LocationForm
         location={location}
         {...getCanBack("location_modal", canBack)}
       />
     ),
+    size: "lg",
   });
 
 export const openManufacturerModal = (
@@ -122,15 +126,14 @@ export const openManufacturerModal = (
         {...getCanBack("manufacturer_modal", canBack)}
       />
     ),
+    size: "lg",
   });
 
-export const openModelModal = (model?: IModel, canBack?: boolean) =>
+export const openModelModal = (model?: IModel) =>
   modals.open({
     modalId: "model_modal",
     title: model ? "Update Model" : "Create Model",
-    children: (
-      <ModelForm model={model} {...getCanBack("model_modal", canBack)} />
-    ),
+    children: <ModelForm model={model} />,
   });
 
 export const openAccessoryModal = (accessory?: IAccessory) =>
@@ -194,6 +197,7 @@ export const openSupplierModal = (supplier?: ISupplier, canBack?: boolean) =>
         {...getCanBack("asset_modal", canBack)}
       />
     ),
+    size: "lg",
   });
 
 export const openUserModal = (user?: IUser) =>
@@ -201,6 +205,7 @@ export const openUserModal = (user?: IUser) =>
     modalId: "user_modal",
     title: user ? "Update User" : "Create User",
     children: <UserForm user={user} />,
+    size: "xl",
   });
 
 export const openFieldSetModal = (fieldSet?: IFieldSet) => {

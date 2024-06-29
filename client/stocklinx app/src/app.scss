@@ -18,6 +18,8 @@
     height: 100%;
     overflow: auto;
     margin-top: 0.5rem;
+    padding: $spacing-lg;
+    
     .page__content__header {
       display: flex;
       max-width: 100%;

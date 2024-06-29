@@ -230,7 +230,7 @@ const ModelForm: React.FC<ModelFormProps> = ({ model }) => {
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-      <Flex direction="column" gap={10} p={20}>
+       <Flex direction="column" gap={10} px={20}>
         <Image
           src={form.values.imagePath}
           mah={500}

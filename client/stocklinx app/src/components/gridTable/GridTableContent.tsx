@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import TableToolbar from "./tableToolbar/TableToolbar";
 import { GridtableProps, QueryFilter } from "@interfaces/gridTableInterfaces";
 import { Checkbox } from "@mantine/core";
@@ -31,7 +31,6 @@ const GridtableContent: React.FC<GridtableProps> = ({
   const { onDataColumnsChange } = useColumns(columns);
   const { handleSelectRow, handleSelectAll, getSelectedRowClass } =
     useSelectRow(data, keyfield);
-  const tableBodyRef = useRef<HTMLTableSectionElement>(null);
 
   useEffect(() => {
     onDataColumnsChange();
@@ -52,8 +51,19 @@ const GridtableContent: React.FC<GridtableProps> = ({
           onRowDetail={onRowDetail}
         />
       ) : null}
-      <table className="gridtable">
-        <tbody ref={tableBodyRef}>
+      <table
+        className="gridtable"
+        style={{
+          borderTopLeftRadius: enableToolbar ? 0 : "10px",
+          borderTopRightRadius: enableToolbar ? 0 : "10px",
+        }}
+      >
+        <tbody
+          style={{
+            borderTopLeftRadius: enableToolbar ? 0 : "10px",
+            borderTopRightRadius: enableToolbar ? 0 : "10px",
+          }}
+        >
           <tr className="gridtable__column__row">
             {enableSelectActions && data.length > 0 ? (
               <td className="gridtable__column__cell checkbox">

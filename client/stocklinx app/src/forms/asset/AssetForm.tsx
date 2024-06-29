@@ -7,6 +7,7 @@ import {
   Textarea,
   Image,
   FileInput,
+  Group,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { DateInput } from "@mantine/dates";
@@ -22,7 +23,11 @@ import { useCompany } from "@/hooks/query/company";
 import base_asset from "@assets/baseProductImages/base_asset.jpg";
 import FormSelect from "../mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";
-import { openModelModal, openProductStatusModal } from "@/utils/modalUtils";
+import {
+  openModelModal,
+  openProductStatusModal,
+  openSupplierModal,
+} from "@/utils/modalUtils";
 
 interface AssetFormProps {
   asset?: IAsset;
@@ -106,7 +111,7 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-      <Flex direction="column" gap={10} p={20} w={"100%"} h={"100%"}>
+       <Flex direction="column" gap={10} px={20}>
         <FormCard>
           <Image
             src={form.values.imagePath || base_asset}
@@ -168,54 +173,57 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
         >
           <FormSelect
             data={productStatusLK}
-            label="Status"
             inputProps={form.getInputProps("productStatusId")}
             value={form.values.productStatusId}
           />
         </FormCard>
-        <FormCard title="Purchase İnformation">
-          <Flex direction="column" gap={5}>
-            <FormSelect
-              data={supplierLK}
-              label="Supplier"
-              inputProps={form.getInputProps("supplierId")}
-              value={form.values.supplierId}
-            />
-            <TextInput
-              label="Order No"
-              placeholder="New Order No"
-              {...form.getInputProps("orderNo")}
-              value={form.values.orderNo || ""}
-            />
-            <DateInput
-              clearable
-              label="Purchase Date"
-              placeholder="Purchase Date"
-              {...form.getInputProps("purchaseDate")}
-              value={
-                form.values.purchaseDate
-                  ? new Date(form.values.purchaseDate)
-                  : null
-              }
-            />
-            <NumberInput
-              placeholder="Purchase Cost"
-              label="Purchase Cost"
-              {...form.getInputProps("purchaseCost")}
-              value={form.values.purchaseCost || ""}
-              decimalScale={2}
-            />
-            <Textarea
-              placeholder="Your notes here"
-              label="Note"
-              {...form.getInputProps("notes")}
-              value={form.values.notes || ""}
-            />
-          </Flex>
+        <FormCard
+          title="Supplier"
+          onClick={() => openSupplierModal(undefined, true)}
+        >
+          <FormSelect
+            data={supplierLK}
+            inputProps={form.getInputProps("supplierId")}
+            value={form.values.supplierId}
+          />
         </FormCard>
-        <Button type="submit" color="dark">
-          Submit
-        </Button>
+        <FormCard title="Purchase İnformation">
+          <TextInput
+            label="Order No"
+            placeholder="New Order No"
+            {...form.getInputProps("orderNo")}
+            value={form.values.orderNo || ""}
+          />
+          <DateInput
+            clearable
+            label="Purchase Date"
+            placeholder="Purchase Date"
+            {...form.getInputProps("purchaseDate")}
+            value={
+              form.values.purchaseDate
+                ? new Date(form.values.purchaseDate)
+                : null
+            }
+          />
+          <NumberInput
+            placeholder="Purchase Cost"
+            label="Purchase Cost"
+            {...form.getInputProps("purchaseCost")}
+            value={form.values.purchaseCost || ""}
+            decimalScale={2}
+          />
+          <Textarea
+            placeholder="Your notes here"
+            label="Note"
+            {...form.getInputProps("notes")}
+            value={form.values.notes || ""}
+          />
+        </FormCard>
+        <Group pt="xs" justify="flex-end">
+          <Button type="submit" color="dark" size="md">
+            Submit
+          </Button>
+        </Group>
       </Flex>
     </form>
   );

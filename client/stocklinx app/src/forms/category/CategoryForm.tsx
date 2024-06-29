@@ -1,16 +1,18 @@
 import React from "react";
-import { TextInput, Flex } from "@mantine/core";
+import { TextInput, Group, Button } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { ICategory } from "@interfaces/serverInterfaces";
 import { useCategory } from "@/hooks/query/category";
 import { CategoryType } from "@/interfaces/enums";
 import { useInitial } from "@/hooks/initial/useInitial";
 import FormSelect from "../mantine/FormSelect";
+import FormCard from "@/components/form/FormCard";
 interface CategoryFormProps {
   category?: ICategory;
+  onBack?: () => void;
 }
 
-const CategoryForm: React.FC<CategoryFormProps> = ({ category }) => {
+const CategoryForm: React.FC<CategoryFormProps> = ({ category, onBack }) => {
   const initialValues = useInitial().Category(category);
   const isCreate = initialValues.id === "";
   const { mutate: createCategory } = useCategory.Create();
@@ -30,14 +32,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ category }) => {
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-      <Flex
-        direction="column"
-        gap={10}
-        p={20}
-        style={{ backgroundColor: "white" }}
-        w={"100%"}
-        h={"100%"}
-      >
+      <FormCard>
         <TextInput
           label="Name"
           placeholder="New Name"
@@ -73,7 +68,17 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ category }) => {
           }
           required
         />
-      </Flex>
+        <Group pt="xs" justify="flex-end">
+          {onBack ? (
+            <Button color="dark" onClick={onBack}>
+              Back
+            </Button>
+          ) : null}
+          <Button type="submit" color="dark">
+            Submit
+          </Button>
+        </Group>
+      </FormCard>
     </form>
   );
 };
