@@ -59,15 +59,6 @@ namespace StockLinx.Service.Services
             }
             Company company = _mapper.Map<Company>(dto);
 
-            if (company.ImagePath != null)
-            {
-                if (company.ImagePath.Contains("base64,"))
-                {
-                    ImageUtils.UploadBase64AsJpg(company.ImagePath, $"{company.Id}", "Companies");
-                    company.ImagePath = $"Companies/{company.Id}.jpg";
-                }
-            }
-
             await _companyRepository.AddAsync(company);
             await _customLogService.CreateCustomLog("Create", "Company", company.Id, company.Name);
             await _unitOfWork.CommitAsync();
@@ -109,15 +100,6 @@ namespace StockLinx.Service.Services
             Company companyInDb = await GetByIdAsync(dto.Id);
             Company company = _mapper.Map<Company>(dto);
             company.UpdatedDate = DateTime.UtcNow;
-
-            if (company.ImagePath != null)
-            {
-                if (company.ImagePath.Contains("base64,"))
-                {
-                    ImageUtils.UploadBase64AsJpg(company.ImagePath, $"{company.Id}", "Companies");
-                    company.ImagePath = $"Companies/{company.Id}.jpg";
-                }
-            }
 
             _companyRepository.Update(companyInDb, company);
             await _customLogService.CreateCustomLog("Update", "Company", company.Id, company.Name);

@@ -10,7 +10,6 @@ export interface ICompany extends BaseEntity {
   name: string;
   tag: string;
   email: string | null;
-  imagePath: string | null;
 }
 export interface IDepartment extends BaseEntity {
   companyId: string;
@@ -143,7 +142,6 @@ export interface IAssetProduct extends BaseEntity {
 }
 export interface IManufacturer extends BaseEntity {
   name: string;
-  imagePath: string | null;
   url: string | null;
   supportURL: string | null;
   supportPhone: string | null;
@@ -153,7 +151,6 @@ export interface IManufacturer extends BaseEntity {
 export interface ISupplier extends BaseEntity {
   locationId: string | null;
   name: string;
-  imagePath: string | null;
   contactName: string | null;
   contactPhone: string | null;
   contactEmail: string | null;

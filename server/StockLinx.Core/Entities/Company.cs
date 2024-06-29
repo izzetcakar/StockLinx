@@ -6,7 +6,6 @@
         public string Tag { get; set; }
         public string Name { get; set; }
         public string? Email { get; set; }
-        public string? ImagePath { get; set; }
 
         //Relates
         public Location? Location { get; set; }

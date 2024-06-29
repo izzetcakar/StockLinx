@@ -48,20 +48,6 @@ namespace StockLinx.Service.Services
         public async Task<ManufacturerDto> CreateManufacturerAsync(ManufacturerCreateDto dto)
         {
             Manufacturer manufacturer = _mapper.Map<Manufacturer>(dto);
-
-            if (manufacturer.ImagePath != null)
-            {
-                if (manufacturer.ImagePath.Contains("base64,"))
-                {
-                    ImageUtils.UploadBase64AsJpg(
-                        manufacturer.ImagePath,
-                        $"{manufacturer.Id}",
-                        "Manufacturers"
-                    );
-                    manufacturer.ImagePath = $"Manufacturers/{manufacturer.Id}.jpg";
-                }
-            }
-
             await _manufacturerRepository.AddAsync(manufacturer);
             await _customLogService.CreateCustomLog(
                 "Create",
@@ -99,19 +85,6 @@ namespace StockLinx.Service.Services
             Manufacturer manufacturerInDb = await GetByIdAsync(dto.Id);
             Manufacturer manufacturer = _mapper.Map<Manufacturer>(dto);
             manufacturer.UpdatedDate = DateTime.UtcNow;
-
-            if (manufacturer.ImagePath != null)
-            {
-                if (manufacturer.ImagePath.Contains("base64,"))
-                {
-                    ImageUtils.UploadBase64AsJpg(
-                        manufacturer.ImagePath,
-                        $"{manufacturer.Id}",
-                        "Manufacturers"
-                    );
-                    manufacturer.ImagePath = $"Manufacturers/{manufacturer.Id}.jpg";
-                }
-            }
 
             _manufacturerRepository.Update(manufacturerInDb, manufacturer);
             await _customLogService.CreateCustomLog(

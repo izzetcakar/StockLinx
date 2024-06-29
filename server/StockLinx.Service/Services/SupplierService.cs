@@ -53,7 +53,6 @@ namespace StockLinx.Service.Services
                 Id = Guid.NewGuid(),
                 Name = dto.Name,
                 CreatedDate = DateTime.UtcNow,
-                ImagePath = dto.ImagePath,
                 UpdatedDate = null,
                 ContactEmail = dto.ContactEmail,
                 ContactName = dto.ContactName,
@@ -63,15 +62,6 @@ namespace StockLinx.Service.Services
                 Notes = dto.Notes,
                 Website = dto.Website,
             };
-            if (supplier.ImagePath != null)
-            {
-                if (supplier.ImagePath.Contains("base64,"))
-                {
-                    ImageUtils.UploadBase64AsJpg(supplier.ImagePath, $"{supplier.Id}", "Suppliers");
-                    supplier.ImagePath = $"Suppliers/{supplier.Id}.jpg";
-                }
-            }
-
             await _supplierRepository.AddAsync(supplier);
             await _customLogService.CreateCustomLog(
                 "Create",
@@ -93,7 +83,6 @@ namespace StockLinx.Service.Services
                     Id = Guid.NewGuid(),
                     Name = dto.Name,
                     CreatedDate = DateTime.UtcNow,
-                    ImagePath = dto.ImagePath,
                     UpdatedDate = null,
                     ContactEmail = dto.ContactEmail,
                     ContactName = dto.ContactName,
@@ -120,15 +109,6 @@ namespace StockLinx.Service.Services
             Supplier supplierInDb = await GetByIdAsync(dto.Id);
             Supplier supplier = _mapper.Map<Supplier>(dto);
             supplier.UpdatedDate = DateTime.UtcNow;
-
-            if (supplier.ImagePath != null)
-            {
-                if (supplier.ImagePath.Contains("base64,"))
-                {
-                    ImageUtils.UploadBase64AsJpg(supplier.ImagePath, $"{supplier.Id}", "Suppliers");
-                    supplier.ImagePath = $"Suppliers/{supplier.Id}.jpg";
-                }
-            }
 
             _supplierRepository.Update(supplierInDb, supplier);
             await _customLogService.CreateCustomLog(
