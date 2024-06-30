@@ -4,41 +4,39 @@ import {
   RenderCellProps,
 } from "@/interfaces/gridTableInterfaces";
 import { Checkbox } from "@mantine/core";
-import React, { useMemo } from "react";
+import React from "react";
 import EditComponent from "../edit/EditComponent";
 
 export const GetLookupValue = (value: any, data?: LookupData[]) => {
   return data?.find((item: LookupData) => item.value === value)?.label || "";
 };
 
-export const RenderCell: React.FC<RenderCellProps> = React.memo(
-  ({ obj, column }) => {
-    const value = useMemo(
-      () =>
-        (
-          obj as {
-            [key: string | number]: any;
-          }
-        )[column.dataField],
-      [obj, column.dataField]
-    );
+export const RenderCell: React.FC<RenderCellProps> = ({
+  obj,
+  column,
+  index,
+}) => {
+  const value = (
+    obj as {
+      [key: string | number]: any;
+    }
+  )[column.dataField];
 
-    const renderedValue = useMemo(() => {
-      if (column.lookup?.data) {
-        return GetLookupValue(value, column.lookup.data);
-      }
-      if (column.dataType === "boolean") {
-        return value;
-      }
-      if (column.dataType === "date") {
-        return new Date(value).toLocaleDateString();
-      }
-      return value;
-    }, [column, value]);
-
-    return renderedValue;
+  if (column.renderComponent) {
+    return column.renderComponent(obj, index);
   }
-);
+
+  if (column.lookup?.data) {
+    return GetLookupValue(value, column.lookup.data);
+  }
+  if (column.dataType === "boolean") {
+    return value;
+  }
+  if (column.dataType === "date") {
+    return new Date(value).toLocaleDateString();
+  }
+  return value;
+};
 
 interface RowCellsProps {
   obj: any;
@@ -47,6 +45,7 @@ interface RowCellsProps {
   enableSelectActions: boolean;
   enableEditActions: boolean;
   selectedKeys: string[];
+  rowIndex: number;
   handleSelectRow: (id: string) => void;
   onRowUpdate: (row: object) => void;
   onRowRemove: (id: string) => void;
@@ -59,6 +58,7 @@ const RowCells = ({
   obj,
   columns,
   keyfield,
+  rowIndex,
   enableSelectActions,
   enableEditActions,
   selectedKeys,
@@ -68,7 +68,7 @@ const RowCells = ({
 }: RowCellsProps) => {
   return (
     <>
-      {enableSelectActions && (
+      {enableSelectActions ? (
         <td className="gridtable__checkbox__cell">
           <Checkbox
             checked={selectedKeys.includes(obj[keyfield])}
@@ -77,8 +77,8 @@ const RowCells = ({
             size="xs"
           />
         </td>
-      )}
-      {enableEditActions && (
+      ) : null}
+      {enableEditActions ? (
         <td className="gridtable__edit__cell">
           <EditComponent
             obj={obj}
@@ -87,14 +87,10 @@ const RowCells = ({
             onRowRemove={onRowRemove}
           />
         </td>
-      )}
+      ) : null}
       {columns.map((column) => (
         <td key={`$row__cell__${column.id}`} className="gridtable__row__cell">
-          {column.renderComponent ? (
-            column.renderComponent(obj)
-          ) : (
-            <RenderCell obj={obj} column={column} />
-          )}
+          <RenderCell obj={obj} column={column} index={rowIndex} />
         </td>
       ))}
     </>
@@ -106,6 +102,7 @@ export const MemoizedRow = React.memo(
     obj,
     columns,
     keyfield,
+    rowIndex,
     enableSelectActions,
     enableEditActions,
     selectedKeys,
@@ -120,6 +117,7 @@ export const MemoizedRow = React.memo(
           obj={obj}
           columns={columns}
           keyfield={keyfield}
+          rowIndex={rowIndex}
           enableSelectActions={enableSelectActions}
           enableEditActions={enableEditActions}
           selectedKeys={selectedKeys}

@@ -106,6 +106,7 @@ const GridtableContent: React.FC<GridtableProps> = ({
               <MemoizedRow
                 key={"$row__" + rowIndex}
                 obj={obj}
+                rowIndex={rowIndex}
                 columns={visibleColumns}
                 keyfield={keyfield}
                 enableSelectActions={enableSelectActions}

@@ -11,7 +11,7 @@ export enum DataType {
 export interface DataColumn {
   dataField: string;
   caption: string;
-  renderComponent?: (e: object) => any;
+  renderComponent?: (e: object, index: number) => any;
   renderHeader?: () => any;
   lookup?: Lookup;
   dataType: "string" | "number" | "boolean" | "date" | "action";
@@ -106,4 +106,5 @@ export interface GridtableRef {
 export interface RenderCellProps {
   obj: object;
   column: Column;
+  index: number;
 }
