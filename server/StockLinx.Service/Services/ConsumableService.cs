@@ -196,11 +196,12 @@ namespace StockLinx.Service.Services
                 checkOutDto.UserProductId
             );
             Consumable consumable = await GetByIdAsync((Guid)userProduct.ConsumableId);
+            bool isUserChanged = checkOutDto.UserId != null && checkOutDto.UserId != userProduct.UserId;
             switch (userProduct.Quantity - checkOutDto.Quantity)
             {
                 case 0:
                     await CreateCheckLogAsync("CheckOut", consumable, checkOutDto.Quantity);
-                    if (checkOutDto.UserId != null)
+                    if (isUserChanged)
                     {
                         userProduct.UserId = (Guid)checkOutDto.UserId;
                         _userProductRepository.Update(userProduct, userProduct);
@@ -220,17 +221,16 @@ namespace StockLinx.Service.Services
                     await _unitOfWork.CommitAsync();
                     ;
                     return await _userProductRepository.GetDtosAsync(userProducts);
-                case > 0:
+                case < 0:
                     throw new Exception(
                         "Quantity must be less than or equal to the quantity in stock"
                     );
-                case < 0:
-                    UserProduct updatedUserProduct = userProduct;
-                    updatedUserProduct.Quantity -= checkOutDto.Quantity;
-                    _userProductRepository.Update(userProduct, updatedUserProduct);
+                case > 0:
+                    userProduct.Quantity -= checkOutDto.Quantity;
+                    _userProductRepository.Update(userProduct, userProduct);
                     await CreateCheckLogAsync("CheckOut", consumable, checkOutDto.Quantity);
-                    userProducts.Add(updatedUserProduct);
-                    if (checkOutDto.UserId != null)
+                    userProducts.Add(userProduct);
+                    if (isUserChanged)
                     {
                         UserProduct newUserProduct = new UserProduct
                         {

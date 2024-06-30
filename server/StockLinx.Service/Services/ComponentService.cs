@@ -195,11 +195,12 @@ namespace StockLinx.Service.Services
                 checkOutDto.AssetProductId
             );
             Component component = await GetByIdAsync((Guid)assetProduct.ComponentId);
+            bool isAssetChanged = checkOutDto.AssetId != null && checkOutDto.AssetId != assetProduct.AssetId;
             switch (assetProduct.Quantity - checkOutDto.Quantity)
             {
                 case 0:
                     await CreateCheckLogAsync("CheckOut", component, checkOutDto.Quantity);
-                    if (checkOutDto.AssetId != null)
+                    if (isAssetChanged)
                     {
                         assetProduct.AssetId = (Guid)checkOutDto.AssetId;
                         _assetProductRepository.Update(assetProduct, assetProduct);
@@ -217,19 +218,17 @@ namespace StockLinx.Service.Services
                         _assetProductRepository.Remove(assetProduct);
                     }
                     await _unitOfWork.CommitAsync();
-                    ;
                     return await _assetProductRepository.GetDtosAsync(assetProducts);
-                case > 0:
+                case < 0:
                     throw new Exception(
                         "Quantity must be less than or equal to the quantity in stock"
                     );
-                case < 0:
-                    AssetProduct updatedAssetProduct = assetProduct;
-                    updatedAssetProduct.Quantity -= checkOutDto.Quantity;
-                    _assetProductRepository.Update(assetProduct, updatedAssetProduct);
+                case > 0:
+                    assetProduct.Quantity -= checkOutDto.Quantity;
+                    _assetProductRepository.Update(assetProduct, assetProduct);
                     await CreateCheckLogAsync("CheckOut", component, checkOutDto.Quantity);
-                    assetProducts.Add(updatedAssetProduct);
-                    if (checkOutDto.AssetId != null)
+                    assetProducts.Add(assetProduct);
+                    if (isAssetChanged)
                     {
                         AssetProduct newAssetProduct = new AssetProduct
                         {

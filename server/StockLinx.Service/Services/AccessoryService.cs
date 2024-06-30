@@ -260,11 +260,10 @@ namespace StockLinx.Service.Services
                         "Quantity must be less than or equal to the quantity in stock"
                     );
                 case < 0:
-                    UserProduct updatedUserProduct = userProduct;
-                    updatedUserProduct.Quantity -= checkOutDto.Quantity;
-                    _userProductRepository.Update(userProduct, updatedUserProduct);
+                    userProduct.Quantity -= checkOutDto.Quantity;
+                    _userProductRepository.Update(userProduct, userProduct);
                     await CreateCheckLogAsync("CheckOut", accessory, checkOutDto.Quantity);
-                    userProducts.Add(updatedUserProduct);
+                    userProducts.Add(userProduct);
                     if (isUserChanged)
                     {
                         UserProduct newUserProduct = new UserProduct

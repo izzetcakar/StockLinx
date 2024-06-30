@@ -215,11 +215,12 @@ namespace StockLinx.Service.Services
                 checkOutDto.UserProductId
             );
             License license = await GetByIdAsync((Guid)userProduct.LicenseId);
+            bool isUserChanged = checkOutDto.UserId != null && checkOutDto.UserId != userProduct.UserId;
             switch (userProduct.Quantity - checkOutDto.Quantity)
             {
                 case 0:
                     await CreateCheckLogAsync("CheckOut", license, checkOutDto.Quantity);
-                    if (checkOutDto.UserId != null)
+                    if (isUserChanged)
                     {
                         userProduct.UserId = (Guid)checkOutDto.UserId;
                         _userProductRepository.Update(userProduct, userProduct);
@@ -234,22 +235,22 @@ namespace StockLinx.Service.Services
                     else
                     {
                         await CreateCheckLogAsync("CheckOut", license, checkOutDto.Quantity);
+                        await _unitOfWork.CommitAsync();
                         _userProductRepository.Remove(userProduct);
+                        return await _userProductRepository.GetDtosAsync(userProducts);
                     }
                     await _unitOfWork.CommitAsync();
-                    ;
                     return await _userProductRepository.GetDtosAsync(userProducts);
-                case > 0:
+                case < 0:
                     throw new Exception(
                         "Quantity must be less than or equal to the quantity in stock"
                     );
-                case < 0:
-                    UserProduct updatedUserProduct = userProduct;
-                    updatedUserProduct.Quantity -= checkOutDto.Quantity;
-                    _userProductRepository.Update(userProduct, updatedUserProduct);
+                case > 0:
+                    userProduct.Quantity -= checkOutDto.Quantity;
+                    _userProductRepository.Update(userProduct, userProduct);
                     await CreateCheckLogAsync("CheckOut", license, checkOutDto.Quantity);
-                    userProducts.Add(updatedUserProduct);
-                    if (checkOutDto.UserId != null)
+                    userProducts.Add(userProduct);
+                    if (isUserChanged)
                     {
                         UserProduct newUserProduct = new UserProduct
                         {
@@ -284,11 +285,12 @@ namespace StockLinx.Service.Services
                 checkOutDto.AssetProductId
             );
             License license = await GetByIdAsync((Guid)assetProduct.LicenseId);
+            bool isAssetChanged = checkOutDto.AssetId != null && checkOutDto.AssetId != assetProduct.AssetId;
             switch (assetProduct.Quantity - checkOutDto.Quantity)
             {
                 case 0:
                     await CreateCheckLogAsync("CheckOut", license, checkOutDto.Quantity);
-                    if (checkOutDto.AssetId != null)
+                    if (isAssetChanged)
                     {
                         assetProduct.AssetId = (Guid)checkOutDto.AssetId;
                         _assetProductRepository.Update(assetProduct, assetProduct);
@@ -306,19 +308,17 @@ namespace StockLinx.Service.Services
                         _assetProductRepository.Remove(assetProduct);
                     }
                     await _unitOfWork.CommitAsync();
-                    ;
                     return await _assetProductRepository.GetDtosAsync(assetProducts);
-                case > 0:
+                case < 0:
                     throw new Exception(
                         "Quantity must be less than or equal to the quantity in stock"
                     );
-                case < 0:
-                    AssetProduct updatedAssetProduct = assetProduct;
-                    updatedAssetProduct.Quantity -= checkOutDto.Quantity;
-                    _assetProductRepository.Update(assetProduct, updatedAssetProduct);
+                case > 0:
+                    assetProduct.Quantity -= checkOutDto.Quantity;
+                    _assetProductRepository.Update(assetProduct, assetProduct);
                     await CreateCheckLogAsync("CheckOut", license, checkOutDto.Quantity);
-                    assetProducts.Add(updatedAssetProduct);
-                    if (checkOutDto.AssetId != null)
+                    assetProducts.Add(assetProduct);
+                    if (isAssetChanged)
                     {
                         AssetProduct newAssetProduct = new AssetProduct
                         {
