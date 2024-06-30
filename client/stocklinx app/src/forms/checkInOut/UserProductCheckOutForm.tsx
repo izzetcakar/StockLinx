@@ -1,9 +1,10 @@
 import React from "react";
-import { Button, Group, Flex, Textarea, NumberInput } from "@mantine/core";
+import { Button, Group, Textarea, NumberInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { UserProductCheckOutDto } from "../../interfaces/dtos";
 import { useUser } from "@/hooks/query/user";
 import FormSelect from "../mantine/FormSelect";
+import FormCard from "@/components/form/FormCard";
 
 interface UserProductCheckOutFormProps {
   checkOutDto: UserProductCheckOutDto;
@@ -35,15 +36,7 @@ const UserProductCheckOutForm: React.FC<UserProductCheckOutFormProps> = ({
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-      <Flex
-        direction="column"
-        gap={10}
-        mx="auto"
-        h={"50dvh"}
-        w={"60dvw"}
-        px={40}
-        pt={20}
-      >
+      <FormCard>
         <FormSelect
           label="User"
           data={users || []}
@@ -66,12 +59,12 @@ const UserProductCheckOutForm: React.FC<UserProductCheckOutFormProps> = ({
           {...form.getInputProps("notes")}
           value={form.values.notes || ""}
         />
-        <Group mt="md" justify="flex-end">
+        <Group pt="xs" justify="flex-end">
           <Button type="submit" color="dark">
             CheckOut
           </Button>
         </Group>
-      </Flex>
+      </FormCard>
     </form>
   );
 };

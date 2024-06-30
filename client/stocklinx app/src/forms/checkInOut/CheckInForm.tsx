@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
   Button,
   Group,
-  Flex,
   Textarea,
   NumberInput,
   SegmentedControl,
@@ -12,6 +11,7 @@ import { IAssetProduct, IUserProduct } from "@interfaces/serverInterfaces";
 import { useUser } from "@/hooks/query/user";
 import { useAsset } from "@/hooks/query/asset";
 import FormSelect from "../mantine/FormSelect";
+import FormCard from "@/components/form/FormCard";
 
 interface CheckInFormProps {
   segment: string[];
@@ -72,15 +72,7 @@ const CheckInForm: React.FC<CheckInFormProps> = ({
 
   return (
     <form onSubmit={getForm().onSubmit((values) => handleSubmit(values))}>
-      <Flex
-        direction="column"
-        gap={10}
-        mx="auto"
-        h={"50dvh"}
-        w={"60dvw"}
-        px={40}
-        pt={20}
-      >
+      <FormCard>
         <SegmentedControl value={type} onChange={setType} data={segment} />
         {type === "User" ? (
           <FormSelect
@@ -116,7 +108,7 @@ const CheckInForm: React.FC<CheckInFormProps> = ({
             CheckIn
           </Button>
         </Group>
-      </Flex>
+      </FormCard>
     </form>
   );
 };

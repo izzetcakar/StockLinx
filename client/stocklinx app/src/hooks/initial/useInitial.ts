@@ -94,12 +94,10 @@ export const useInitial = () => {
       name: "",
       email: null,
       locationId: null,
-      imagePath: null,
     };
 
     if (entity) {
       initialValues = { ...entity };
-      initialValues.imagePath = getImage(entity.imagePath);
     }
 
     return initialValues;

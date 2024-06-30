@@ -32,7 +32,6 @@
       .card__column {
         padding: 0.5rem;
         border-radius: 10px;
-        font-size: $fontsize-md;
         &:hover,
         &.selected:hover {
           background-color: #f3f3f3e9;
@@ -43,7 +42,7 @@
       }
 
       .card__title {
-        font-size: $fontsize-md;
+        font-size: $fontsize-sm;
       }
       .card__column {
         font-size: $fontsize-sm;

@@ -17,12 +17,12 @@ import { useUser } from "@/hooks/query/user";
 
 const Accessory = (id: string | null) => {
   const { data: accessory } = useAccessory.Get(id || "");
-  return <div>{accessory?.name || ""}</div>;
+  return <div>{accessory?.tag || ""}</div>;
 };
 
 const Asset = (id: string | null) => {
   const { data: asset } = useAsset.Get(id || "");
-  return <div>{asset?.name || ""}</div>;
+  return <div>{asset?.tag || ""}</div>;
 };
 
 const Category = (id: string | null) => {
@@ -37,12 +37,12 @@ const Company = (id: string | null) => {
 
 const Component = (id: string | null) => {
   const { data: component } = useComponent.Get(id || "");
-  return <div>{component?.name || ""}</div>;
+  return <div>{component?.tag || ""}</div>;
 };
 
 const Consumable = (id: string | null) => {
   const { data: consumable } = useConsumable.Get(id || "");
-  return <div>{consumable?.name || ""}</div>;
+  return <div>{consumable?.tag || ""}</div>;
 };
 
 const CustomField = (id: string | null) => {
@@ -62,7 +62,7 @@ const FieldSet = (id: string | null) => {
 
 const License = (id: string | null) => {
   const { data: license } = useLicense.Get(id || "");
-  return <div>{license?.name || ""}</div>;
+  return <div>{license?.tag || ""}</div>;
 };
 
 const Location = (id: string | null) => {

@@ -1,11 +1,12 @@
 import React from "react";
-import { Button, Group, Flex, Textarea } from "@mantine/core";
+import { Button, Group, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { AssetCheckInDto } from "../../interfaces/dtos";
 import { useUser } from "@/hooks/query/user";
 import { useProductStatus } from "@/hooks/query/productStatus";
 import { useAsset } from "@/hooks/query/asset";
 import FormSelect from "../mantine/FormSelect";
+import FormCard from "@/components/form/FormCard";
 
 interface AssetCheckInFormProps {
   checkInDto: AssetCheckInDto;
@@ -38,15 +39,7 @@ const AssetCheckInForm: React.FC<AssetCheckInFormProps> = ({ checkInDto }) => {
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-      <Flex
-        direction="column"
-        gap={10}
-        mx="auto"
-        h={"50dvh"}
-        w={"60dvw"}
-        px={40}
-        pt={20}
-      >
+      <FormCard>
         <FormSelect
           label="User"
           data={
@@ -79,12 +72,12 @@ const AssetCheckInForm: React.FC<AssetCheckInFormProps> = ({ checkInDto }) => {
           {...form.getInputProps("notes")}
           value={form.values.notes || ""}
         />
-        <Group mt="md" justify="flex-end">
+        <Group pt="xs" justify="flex-end">
           <Button type="submit" color="dark">
             CheckIn
           </Button>
         </Group>
-      </Flex>
+      </FormCard>
     </form>
   );
 };

@@ -10,10 +10,10 @@ import base_asset from "@assets/baseProductImages/base_asset.jpg";
 import { useModel } from "@/hooks/query/model";
 import { useSupplier } from "@/hooks/query/supplier";
 import { useProductStatus } from "@/hooks/query/productStatus";
-import UserCheckInOutCell from "@/cells/UserCheckInOutCell";
 import { EntityCells } from "@/cells/Entity";
-import CheckedOutUserCell from "@/cells/CheckedOutUserCell";
 import { EntityCardColumn } from "@/interfaces/clientInterfaces";
+import UserCheckInOutCell from "@/cells/UserCheckInOutCell";
+import CheckedOutUserCell from "@/cells/CheckedOutUserCell";
 import AssetForm from "@/forms/asset/AssetForm";
 
 export const useColumns = () => {

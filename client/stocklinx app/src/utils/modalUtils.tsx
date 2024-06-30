@@ -243,6 +243,7 @@ export const openCheckInModal = (
         assetCheckIn={assetCheckIn}
       />
     ),
+    size: "lg",
   });
 };
 
@@ -259,6 +260,7 @@ export const openAssetCheckOutModal = (checkOutDto: AssetCheckOutDto) => {
     modalId: "asset_checkOut_modal",
     title: "Check Out",
     children: <AssetCheckOutForm checkOutDto={checkOutDto} />,
+    size: "lg",
   });
 };
 
@@ -275,6 +277,7 @@ export const openAssetProductCheckOutModal = (
         assetCheckOut={assetCheckOut}
       />
     ),
+    size: "lg",
   });
 };
 
@@ -291,6 +294,7 @@ export const openUserProductCheckOutModal = (
         userCheckOut={userCheckOut}
       />
     ),
+    size: "lg",
   });
 };
 
