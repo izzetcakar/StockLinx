@@ -15,6 +15,10 @@ import { EntityCells } from "@/cells/Entity";
 import { CategoryType } from "@/interfaces/enums";
 import { useInitial } from "@/hooks/initial/useInitial";
 import LicenseQuantity from "@/cells/LicenseQuantity";
+import { EntityCardColumn } from "@/interfaces/clientInterfaces";
+import LicenseForm from "@/forms/license/LicenseForm";
+import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
+import LicenseSeats from "@/cells/productseats/LicenseSeats";
 
 export const useColumns = () => {
   const { mutate: userCheckIn } = useLicense.UserCheckIn();
@@ -58,6 +62,7 @@ export const useColumns = () => {
       onAssetCheckInHandler
     );
   };
+
   const columns: DataColumn[] = [
     {
       dataField: "tag",
@@ -214,5 +219,33 @@ export const useColumns = () => {
     },
   ];
 
-  return { columns };
+  const cardColumns: EntityCardColumn[] = [
+    {
+      title: (license: ILicense) => {
+        return (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "5px",
+            }}
+          >
+            <div>Tag : {license.tag}</div>
+            <div>Name : {license.name}</div>
+          </div>
+        );
+      },
+      renderData: (e) => <LicenseForm license={e as ILicense} />,
+    },
+    {
+      title: "Seats",
+      renderData: (e) => <LicenseSeats license={e as ILicense} />,
+    },
+    {
+      title: "History",
+      renderData: (e) => <HistoryLogs id={(e as ILicense).id} />,
+    },
+  ];
+
+  return { columns, cardColumns };
 };
