@@ -1,12 +1,12 @@
 import { DataColumn } from "@/interfaces/gridTableInterfaces";
-import { EntityCells } from "../Entity";
+import { EntityCells } from "../../Entity";
 import { IAssetProduct, IUserProduct } from "@/interfaces/serverInterfaces";
 import { useLicense } from "@/hooks/query/license";
-import { Button } from "@mantine/core";
 import {
   openAssetProductCheckOutModal,
   openUserProductCheckOutModal,
 } from "@/utils/modalUtils";
+import CheckOutButton from "../../CheckOutBtnCell";
 
 const isUserProduct = (e: IAssetProduct | IUserProduct): e is IUserProduct => {
   return (e as IUserProduct).userId !== undefined;
@@ -16,14 +16,6 @@ const isAssetProduct = (
   e: IAssetProduct | IUserProduct
 ): e is IAssetProduct => {
   return (e as IAssetProduct).assetId !== undefined;
-};
-
-const CheckOutButton = (checkOut: () => any) => {
-  return (
-    <div style={{ display: "flex", justifyContent: "center" }}>
-      <Button onClick={checkOut}>CheckOut</Button>
-    </div>
-  );
 };
 
 export const useColumns = () => {
@@ -75,28 +67,32 @@ export const useColumns = () => {
       renderComponent: (e) => {
         const checked = e as IUserProduct | IAssetProduct;
         if (isUserProduct(checked)) {
-          return CheckOutButton(() =>
-            openUserProductCheckOutModal(
-              {
-                userProductId: checked.id,
-                quantity: checked.quantity,
-                notes: checked.notes,
-                userId: checked.userId,
-              },
-              userCheckOut
-            )
+          return (
+            <CheckOutButton
+              checkOut={openUserProductCheckOutModal(
+                {
+                  userProductId: checked.id,
+                  quantity: checked.quantity,
+                  notes: checked.notes,
+                  userId: checked.userId,
+                },
+                userCheckOut
+              )}
+            />
           );
         }
-        return CheckOutButton(() =>
-          openAssetProductCheckOutModal(
-            {
-              assetProductId: checked.id,
-              quantity: checked.quantity,
-              notes: checked.notes,
-              assetId: checked.assetId,
-            },
-            assetCheckOut
-          )
+        return (
+          <CheckOutButton
+            checkOut={openAssetProductCheckOutModal(
+              {
+                assetProductId: checked.id,
+                quantity: checked.quantity,
+                notes: checked.notes,
+                assetId: checked.assetId,
+              },
+              assetCheckOut
+            )}
+          />
         );
       },
     },
