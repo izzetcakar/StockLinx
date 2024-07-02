@@ -14,11 +14,11 @@ import { useSupplier } from "@/hooks/query/supplier";
 import { EntityCells } from "@/cells/Entity";
 import { CategoryType } from "@/interfaces/enums";
 import { useInitial } from "@/hooks/initial/useInitial";
-import LicenseQuantity from "@/cells/LicenseQuantity";
 import { EntityCardColumn } from "@/interfaces/clientInterfaces";
+import LicenseQuantity from "@/cells/LicenseQuantity";
 import LicenseForm from "@/forms/license/LicenseForm";
 import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
-import LicenseSeats from "@/cells/productseats/LicenseSeats";
+import LicenseSeats from "@/cells/productseats/License/LicenseSeats";
 
 export const useColumns = () => {
   const { mutate: userCheckIn } = useLicense.UserCheckIn();

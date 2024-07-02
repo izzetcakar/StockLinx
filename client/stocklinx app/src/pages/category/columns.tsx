@@ -2,8 +2,9 @@ import { ICategory } from "@interfaces/serverInterfaces";
 import { DataColumn } from "@interfaces/gridTableInterfaces";
 import { createDataFromEnum } from "../../utils/enumUtils";
 import { EntityCardColumn } from "@/interfaces/clientInterfaces";
-import CategoryForm from "@/forms/category/CategoryForm";
 import { CategoryType } from "@/interfaces/enums";
+import CategoryForm from "@/forms/category/CategoryForm";
+import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
 
 export const useColumns = () => {
   const columns: DataColumn[] = [
@@ -24,36 +25,18 @@ export const useColumns = () => {
 
   const cardColumns: EntityCardColumn[] = [
     {
-      title: "Category Details",
+      title: (category: ICategory) => {
+        return <div>Name : {category.name}</div>;
+      },
       renderData: (e) => <CategoryForm category={e as ICategory} />,
     },
     {
-      title: "Name",
+      title: "History",
       renderData: (e) => {
-        return (e as ICategory).name;
-      },
-    },
-    {
-      title: "Type",
-      renderData: (e) => {
-        return CategoryType[(e as ICategory).type];
+        return <HistoryLogs id={e.id} />;
       },
     },
   ];
 
-  const titleRender = (category: ICategory) => {
-    return (
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "5px",
-        }}
-      >
-        <div>Name : {category.name}</div>
-      </div>
-    );
-  };
-
-  return { columns, cardColumns, titleRender };
+  return { columns, cardColumns };
 };

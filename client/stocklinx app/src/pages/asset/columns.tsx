@@ -15,6 +15,7 @@ import { EntityCardColumn } from "@/interfaces/clientInterfaces";
 import UserCheckInOutCell from "@/cells/UserCheckInOutCell";
 import CheckedOutUserCell from "@/cells/CheckedOutUserCell";
 import AssetForm from "@/forms/asset/AssetForm";
+import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
 
 export const useColumns = () => {
   const { refetch: getModelLK } = useModel.Lookup();
@@ -163,29 +164,8 @@ export const useColumns = () => {
       renderData: (e) => <AssetForm asset={e as IAsset} />,
     },
     {
-      title: "Asset Details",
-      renderData: (e) => {
-        return (e as IAsset).name;
-      },
-    },
-    {
-      title: "Tag",
-      renderData(e) {
-        return (e as IAsset).tag;
-      },
-    },
-    {
-      title: "Status",
-      renderData: (e) =>
-        EntityCells.ProductStatus((e as IAsset).productStatusId),
-    },
-    {
-      title: "Supplier",
-      renderData: (e) => EntityCells.Supplier((e as IAsset).supplierId),
-    },
-    {
-      title: "Company",
-      renderData: (e) => (e as IAsset).companyId,
+      title: "History",
+      renderData: (e) => <HistoryLogs id={e.id} />,
     },
   ];
 

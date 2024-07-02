@@ -1,4 +1,8 @@
+import { EntityCardColumn } from "@/interfaces/clientInterfaces";
+import { IManufacturer } from "@/interfaces/serverInterfaces";
 import { DataColumn } from "@interfaces/gridTableInterfaces";
+import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
+import ManufacturerForm from "@/forms/manufacturer/ManufacturerForm";
 
 export const useColumns = () => {
   const columns: DataColumn[] = [
@@ -36,5 +40,18 @@ export const useColumns = () => {
     },
   ];
 
-  return { columns };
+  const cardColumns: EntityCardColumn[] = [
+    {
+      title: (manufacturer: IManufacturer) => {
+        return <div>Name : {manufacturer.name}</div>;
+      },
+      renderData: (e) => <ManufacturerForm manufacturer={e as IManufacturer} />,
+    },
+    {
+      title: "History",
+      renderData: (e) => <HistoryLogs id={e.id} />,
+    },
+  ];
+
+  return { columns, cardColumns };
 };

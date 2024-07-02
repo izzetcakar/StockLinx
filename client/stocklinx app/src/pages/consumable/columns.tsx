@@ -10,19 +10,24 @@ import { useManufacturer } from "@/hooks/query/manufacturer";
 import { EntityCells } from "@/cells/Entity";
 import { CategoryType } from "@/interfaces/enums";
 import { useInitial } from "@/hooks/initial/useInitial";
+import { EntityCardColumn } from "@/interfaces/clientInterfaces";
 import UserProductQuantityCell from "@/cells/UserProductQuantityCell";
+import ConsumableForm from "@/forms/consumable/ConsumableForm";
+import UserProductSeats from "@/cells/productseats/UserProductSeats";
+import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
 
 export const useColumns = () => {
-  const { mutate: checkIn } = useConsumable.CheckIn();
+  const initial = useInitial();
   const { data: categories } = useCategory.GetAll();
   const { data: companyLK } = useCompany.Lookup();
   const { data: supplierLK } = useSupplier.Lookup();
   const { data: manufacturerLK } = useManufacturer.Lookup();
-  const initial = useInitial();
+  const { mutate: checkIn } = useConsumable.CheckIn();
+  const { mutate: checkOut } = useConsumable.CheckOut();
 
   const onCheckInHandler = (data: IUserProduct) => {
     checkIn({
-      productId: data.accessoryId as string,
+      productId: data.consumableId as string,
       userId: data.userId,
       assaignDate: data.assignDate,
       notes: data.notes,
@@ -32,7 +37,7 @@ export const useColumns = () => {
 
   const onHeadToModal = (id: string) => {
     const newUserProduct = initial.UserProduct;
-    newUserProduct.accessoryId = id;
+    newUserProduct.consumableId = id;
     openCheckInModal(["User"], newUserProduct, onCheckInHandler);
   };
 
@@ -170,5 +175,39 @@ export const useColumns = () => {
     },
   ];
 
-  return { columns };
+  const cardColumns: EntityCardColumn[] = [
+    {
+      title: (consumable: IConsumable) => {
+        return (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "5px",
+            }}
+          >
+            <div>Tag : {consumable.tag}</div>
+            <div>Name : {consumable.name}</div>
+          </div>
+        );
+      },
+      renderData: (e) => <ConsumableForm consumable={e as IConsumable} />,
+    },
+    {
+      title: "Seats",
+      renderData: (e) => (
+        <UserProductSeats
+          productIdField="consumableId"
+          productId={e.id}
+          checkOut={checkOut}
+        />
+      ),
+    },
+    {
+      title: "History",
+      renderData: (e) => <HistoryLogs id={e.id} />,
+    },
+  ];
+
+  return { columns, cardColumns };
 };

@@ -2,6 +2,9 @@ import { DataColumn } from "@interfaces/gridTableInterfaces";
 import { ISupplier } from "@interfaces/serverInterfaces";
 import { useLocation } from "@/hooks/query/location";
 import { EntityCells } from "@/cells/Entity";
+import { EntityCardColumn } from "@/interfaces/clientInterfaces";
+import SupplierForm from "@/forms/supplier/SupplierForm";
+import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
 
 export const useColumns = () => {
   const { refetch: getLocationLK } = useLocation.Lookup();
@@ -55,5 +58,18 @@ export const useColumns = () => {
     },
   ];
 
-  return { columns };
+  const cardColumns: EntityCardColumn[] = [
+    {
+      title: (supplier: ISupplier) => {
+        return <div>Name : {supplier.name}</div>;
+      },
+      renderData: (e) => <SupplierForm supplier={e as ISupplier} />,
+    },
+    {
+      title: "History",
+      renderData: (e) => <HistoryLogs id={e.id} />,
+    },
+  ];
+
+  return { columns, cardColumns };
 };

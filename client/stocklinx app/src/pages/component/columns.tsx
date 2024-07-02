@@ -8,13 +8,18 @@ import { useComponent } from "@/hooks/query/component";
 import { EntityCells } from "@/cells/Entity";
 import { CategoryType } from "@/interfaces/enums";
 import { useInitial } from "@/hooks/initial/useInitial";
+import { EntityCardColumn } from "@/interfaces/clientInterfaces";
 import AssetProductQuantityCell from "@/cells/AssetProductQuantityCell";
+import ComponentForm from "@/forms/component/ComponentForm";
+import AssetProductSeats from "@/cells/productseats/AssetProductSeats";
+import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
 
 export const useColumns = () => {
-  const { mutate: checkIn } = useComponent.CheckIn();
+  const initial = useInitial();
   const { data: categories } = useCategory.GetAll();
   const { data: companyLK } = useCompany.Lookup();
-  const initial = useInitial();
+  const { mutate: checkIn } = useComponent.CheckIn();
+  const { mutate: checkOut } = useComponent.CheckOut();
 
   const onCheckInHandler = (data: IAssetProduct) => {
     checkIn({
@@ -148,5 +153,39 @@ export const useColumns = () => {
     },
   ];
 
-  return { columns };
+  const cardColumns: EntityCardColumn[] = [
+    {
+      title: (component: IComponent) => {
+        return (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "5px",
+            }}
+          >
+            <div>Tag : {component.tag}</div>
+            <div>Name : {component.name}</div>
+          </div>
+        );
+      },
+      renderData: (e) => <ComponentForm component={e as IComponent} />,
+    },
+    {
+      title: "Seats",
+      renderData: (e) => (
+        <AssetProductSeats
+          productIdField="componentId"
+          productId={e.id}
+          checkOut={checkOut}
+        />
+      ),
+    },
+    {
+      title: "History",
+      renderData: (e) => <HistoryLogs id={e.id} />,
+    },
+  ];
+
+  return { columns, cardColumns };
 };

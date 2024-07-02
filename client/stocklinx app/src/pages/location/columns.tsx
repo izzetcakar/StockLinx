@@ -1,4 +1,9 @@
+import { EntityCardColumn } from "@/interfaces/clientInterfaces";
+import { ILocation } from "@/interfaces/serverInterfaces";
 import { DataColumn } from "@interfaces/gridTableInterfaces";
+import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
+import LocationForm from "@/forms/location/LocationForm";
+
 export const useColumns = () => {
   const columns: DataColumn[] = [
     {
@@ -48,5 +53,18 @@ export const useColumns = () => {
     },
   ];
 
-  return { columns };
+  const cardColumns: EntityCardColumn[] = [
+    {
+      title: (location: ILocation) => {
+        return <div>Name : {location.name}</div>;
+      },
+      renderData: (e) => <LocationForm location={e as ILocation} />,
+    },
+    {
+      title: "History",
+      renderData: (e) => <HistoryLogs id={e.id} />,
+    },
+  ];
+
+  return { columns, cardColumns };
 };

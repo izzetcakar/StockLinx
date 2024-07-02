@@ -6,6 +6,9 @@ import { useCategory } from "@/hooks/query/category";
 import { useManufacturer } from "@/hooks/query/manufacturer";
 import { useFieldSet } from "@/hooks/query/fieldSet";
 import { EntityCells } from "@/cells/Entity";
+import { EntityCardColumn } from "@/interfaces/clientInterfaces";
+import ModelForm from "@/forms/model/ModelForm";
+import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
 
 export const useColumns = () => {
   const { refetch: getCategoryLK } = useCategory.Lookup();
@@ -83,5 +86,18 @@ export const useColumns = () => {
     },
   ];
 
-  return { columns };
+  const cardColumns: EntityCardColumn[] = [
+    {
+      title: (model: IModel) => {
+        return <div>Name : {model.name}</div>;
+      },
+      renderData: (e) => <ModelForm model={e as IModel} />,
+    },
+    {
+      title: "History",
+      renderData: (e) => <HistoryLogs id={e.id} />,
+    },
+  ];
+
+  return { columns, cardColumns };
 };

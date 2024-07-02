@@ -8,13 +8,18 @@ import { useCategory } from "@/hooks/query/category";
 import { CategoryType } from "@/interfaces/enums";
 import { useInitial } from "@/hooks/initial/useInitial";
 import { EntityCells } from "@/cells/Entity";
+import { EntityCardColumn } from "@/interfaces/clientInterfaces";
 import base_accessory from "@assets/baseProductImages/base_accessory.png";
 import UserProductQuantityCell from "@/cells/UserProductQuantityCell";
+import AccessoryForm from "@/forms/accessory/AccessoryForm";
+import UserProductSeats from "@/cells/productseats/UserProductSeats";
+import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
 
 export const useColumns = () => {
-  const { mutate: checkIn } = useAccessory.CheckIn();
-  const { data: categories } = useCategory.GetAll();
   const initial = useInitial();
+  const { data: categories } = useCategory.GetAll();
+  const { mutate: checkIn } = useAccessory.CheckIn();
+  const { mutate: checkOut } = useAccessory.CheckOut();
 
   const onCheckInHandler = (data: IUserProduct) => {
     checkIn({
@@ -132,5 +137,39 @@ export const useColumns = () => {
     },
   ];
 
-  return { columns };
+  const cardColumns: EntityCardColumn[] = [
+    {
+      title: (accessory: IAccessory) => {
+        return (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "5px",
+            }}
+          >
+            <div>Tag : {accessory.tag}</div>
+            <div>Name : {accessory.name}</div>
+          </div>
+        );
+      },
+      renderData: (e) => <AccessoryForm accessory={e as IAccessory} />,
+    },
+    {
+      title: "Seats",
+      renderData: (e) => (
+        <UserProductSeats
+          productIdField="accessoryId"
+          productId={e.id}
+          checkOut={checkOut}
+        />
+      ),
+    },
+    {
+      title: "History",
+      renderData: (e) => <HistoryLogs id={e.id} />,
+    },
+  ];
+
+  return { columns, cardColumns };
 };

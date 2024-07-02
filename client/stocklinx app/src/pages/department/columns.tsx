@@ -3,6 +3,9 @@ import { IDepartment } from "@interfaces/serverInterfaces";
 import { useLocation } from "@/hooks/query/location";
 import { useUser } from "@/hooks/query/user";
 import { EntityCells } from "@/cells/Entity";
+import { EntityCardColumn } from "@/interfaces/clientInterfaces";
+import DepartmentForm from "@/forms/department/DepartmentForm";
+import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
 
 export const useColumns = () => {
   const { refetch: getLocationLK } = useLocation.Lookup();
@@ -42,5 +45,18 @@ export const useColumns = () => {
     },
   ];
 
-  return { columns };
+  const cardColumns: EntityCardColumn[] = [
+    {
+      title: (department: IDepartment) => {
+        return <div>Name : {department.name}</div>;
+      },
+      renderData: (e) => <DepartmentForm department={e as IDepartment} />,
+    },
+    {
+      title: "History",
+      renderData: (e) => <HistoryLogs id={e.id} />,
+    },
+  ];
+
+  return { columns, cardColumns };
 };
