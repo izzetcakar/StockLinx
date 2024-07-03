@@ -10,5 +10,6 @@ namespace StockLinx.Core.Repositories
         Task<List<UserDto>> GetDtosAsync(IEnumerable<User> entities);
         Task<List<UserDto>> GetAllDtosAsync();
         Task CanDeleteAsync(Guid id);
+        Task<Guid> GetCompanyIdAsync(Guid userId);
     }
 }

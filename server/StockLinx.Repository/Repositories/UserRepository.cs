@@ -51,5 +51,13 @@ namespace StockLinx.Repository.Repositories.EF_Core
                 throw new Exception("User has deployed items");
             }
         }
+
+        public async Task<Guid> GetCompanyIdAsync(Guid userId)
+        {
+            return await dbContext.Departments
+                .Where(b => b.Id == dbContext.Users.Where(u => u.Id == userId).Select(u => u.DepartmentId).FirstOrDefault())
+                .Select(b => b.CompanyId)
+                .FirstOrDefaultAsync();
+        }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Security.Claims;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Create;
@@ -10,7 +9,6 @@ using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 using StockLinx.Core.Services;
 using StockLinx.Core.UnitOfWork;
-using StockLinx.Repository.Repositories.EF_Core;
 
 namespace StockLinx.Service.Services
 {
@@ -60,8 +58,8 @@ namespace StockLinx.Service.Services
         {
             if (_httpContextAccessor.HttpContext != null)
             {
-                string idString = _httpContextAccessor.HttpContext.User.FindFirst("UserId").Value;
-                if (Guid.TryParse(idString, out Guid idGuid))
+                string id = _httpContextAccessor.HttpContext.User.FindFirst("UserId").Value;
+                if (Guid.TryParse(id, out Guid idGuid))
                 {
                     return idGuid;
                 }
@@ -202,6 +200,11 @@ namespace StockLinx.Service.Services
         {
             var result = await _filterService.FilterAsync(filter);
             return await _userRepository.GetDtosAsync(result.ToList());
+        }
+
+        public async Task<Guid> GetCompanyIdAsync(Guid userId)
+        {
+            return await _userRepository.GetCompanyIdAsync(userId);
         }
     }
 }
