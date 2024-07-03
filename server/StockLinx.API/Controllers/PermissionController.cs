@@ -107,22 +107,6 @@ namespace StockLinx.API.Controllers
             }
         }
 
-        [HttpPost("sync")]
-        public async Task<IActionResult> Sync(List<PermissionSyncDto> dtos)
-        {
-            try
-            {
-                List<PermissionDto> result = await _permissionService.Scyncronaize(dtos);
-                return CreateActionResult(
-                    CustomResponseDto<List<PermissionDto>>.Success(200, result)
-                );
-            }
-            catch (Exception ex)
-            {
-                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
-            }
-        }
-
         [HttpGet("filter")]
         public async Task<IActionResult> Filter([FromQuery] string? filter)
         {

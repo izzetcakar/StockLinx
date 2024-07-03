@@ -1,10 +1,6 @@
-import { IPermission } from "@/interfaces/serverInterfaces";
-import { queryClient } from "@/main";
 import { permissionRequests } from "@/server/requests/permission";
-import { useMutation } from "react-query";
 import { baseHooks } from "./baseHooks";
 import { QueryFilter } from "@/interfaces/gridTableInterfaces";
-import { permissionKeys } from "./keys";
 
 const hooks = baseHooks("PERMISSION");
 
@@ -40,21 +36,6 @@ const ApplyFilters = () => {
   return hooks.ApplyFilter(permissionRequests.filter);
 };
 
-const Sync = () => {
-  return useMutation({
-    mutationKey: permissionKeys.SYNC_PERMISSIONS,
-    mutationFn: (permissions: IPermission[]) =>
-      permissionRequests.sync(permissions),
-    onSuccess: (data: IPermission[]) => {
-      queryClient.setQueryData<IPermission[]>(
-        permissionKeys.SYNC_PERMISSIONS,
-        data
-      );
-      queryClient.invalidateQueries("FETCH_ALL_PERMISSION");
-    },
-  });
-};
-
 export const usePermission = {
   GetAll,
   Get,
@@ -64,5 +45,4 @@ export const usePermission = {
   RemoveRange,
   Filter,
   ApplyFilters,
-  Sync,
 };

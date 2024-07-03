@@ -1,6 +1,5 @@
 import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 import { IPermission } from "@interfaces/serverInterfaces";
-import { request } from "@request";
 import { baseRequests } from "@/utils/requestUtils";
 const requestUrl = "Permission/";
 
@@ -32,16 +31,6 @@ const filter = (queryFilters: QueryFilter[]) => {
   return baseRequests.filter<IPermission>(requestUrl, queryFilters);
 };
 
-const sync = async (permissions: IPermission[]): Promise<IPermission[]> => {
-  return (
-    await request<IPermission>({
-      requestUrl: requestUrl + "sync",
-      apiType: "post",
-      queryData: permissions,
-    })
-  ).data as IPermission[];
-};
-
 export const permissionRequests = {
   getAll,
   get,
@@ -49,6 +38,5 @@ export const permissionRequests = {
   createRange,
   remove,
   removeRange,
-  sync,
   filter,
 };

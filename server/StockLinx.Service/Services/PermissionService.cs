@@ -1,13 +1,10 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
-using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 using StockLinx.Core.Services;
 using StockLinx.Core.UnitOfWork;
-using StockLinx.Repository.Repositories.EF_Core;
 
 namespace StockLinx.Service.Services
 {
@@ -141,53 +138,6 @@ namespace StockLinx.Service.Services
             }
             _permissionRepository.RemoveRange(permissions);
             await _unitOfWork.CommitAsync();
-        }
-
-        public async Task<List<PermissionDto>> Scyncronaize(List<PermissionSyncDto> createDtos)
-        {
-            List<Permission> entities = _mapper.Map<List<Permission>>(createDtos);
-            List<Permission> toAdd = new List<Permission>();
-            List<Permission> entitiesInDb = await _permissionRepository
-                .GetAll()
-                .AsNoTracking()
-                .ToListAsync();
-            foreach (Permission entityInDb in entitiesInDb)
-            {
-                var entity = entities.FirstOrDefault(p =>
-                    p.UserId == entityInDb.UserId && p.CompanyId == entityInDb.CompanyId
-                );
-                if (entity == null)
-                {
-                    Permission toDelete = await GetByIdAsync(entityInDb.Id);
-                    _permissionRepository.Update(entityInDb, toDelete);
-                    await _customLogService.CreateCustomLog(
-                        "Permission taken",
-                        "Permission",
-                        entityInDb.Id,
-                        entityInDb.Company.Name
-                    );
-                }
-            }
-            foreach (Permission entity in entities)
-            {
-                var entityInDb = entitiesInDb.FirstOrDefault(p =>
-                    p.UserId == entity.UserId && p.CompanyId == entity.CompanyId
-                );
-                if (entityInDb == null)
-                {
-                    toAdd.Add(entity);
-                    await _customLogService.CreateCustomLog(
-                        "Permission Given",
-                        "Permission",
-                        entity.Id,
-                        entity.Company.Name
-                    );
-                }
-            }
-            await _permissionRepository.AddRangeAsync(toAdd);
-            await _unitOfWork.CommitAsync();
-            List<PermissionDto> dtos = await _permissionRepository.GetAllDtosAsync();
-            return dtos;
         }
 
         public async Task<List<PermissionDto>> FilterAllAsync(string filter)
