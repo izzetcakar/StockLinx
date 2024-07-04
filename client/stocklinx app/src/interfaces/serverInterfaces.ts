@@ -160,6 +160,7 @@ export interface ISupplier extends BaseEntity {
 }
 export interface IUser extends BaseEntity {
   departmentId: string;
+  isAdmin?: boolean;
   employeeNo: string;
   firstName: string;
   lastName: string;
