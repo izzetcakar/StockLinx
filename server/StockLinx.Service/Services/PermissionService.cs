@@ -38,12 +38,7 @@ namespace StockLinx.Service.Services
 
         public async Task<PermissionDto> GetDtoAsync(Guid id)
         {
-            User user = await _userService.GetCurrentUser();
-            bool isAdmin = (bool)user.IsAdmin;
-            if (!isAdmin)
-            {
-                throw new Exception("User is not admin");
-            }
+            await CheckUserAdmin();
             Permission permission = await GetByIdAsync(id);
             return _permissionRepository.GetDto(permission);
         }
@@ -61,19 +56,14 @@ namespace StockLinx.Service.Services
 
         public async Task<PermissionDto> CreatePermissionAsync(PermissionCreateDto dto)
         {
-            User user = await _userService.GetCurrentUser();
-            if ((bool)!user.IsAdmin)
+            await CheckUserAdmin();
+            bool isExist = await _permissionRepository.AnyAsync(p => p.CompanyId == dto.CompanyId && p.UserId == dto.UserId);
+            if (isExist)
             {
-                throw new Exception("User is not admin");
+                throw new Exception("Permission is already given");
             }
             Permission permission = _mapper.Map<Permission>(dto);
             await _permissionRepository.AddAsync(permission);
-            await _customLogService.CreateCustomLog(
-                "Permission Given",
-                "Permission",
-                permission.Id,
-                permission.Company.Name
-            );
             await _unitOfWork.CommitAsync();
             return _permissionRepository.GetDto(permission);
         }
@@ -82,22 +72,14 @@ namespace StockLinx.Service.Services
             List<PermissionCreateDto> dtos
         )
         {
-            User user = await _userService.GetCurrentUser();
-            if ((bool)!user.IsAdmin)
-            {
-                throw new Exception("User is not admin");
-            }
+            await CheckUserAdmin();
             List<Permission> permissions = new List<Permission>();
             foreach (PermissionCreateDto dto in dtos)
             {
+                var isExist = await _permissionRepository.AnyAsync(p => p.CompanyId == dto.CompanyId && p.UserId == dto.UserId);
+                if (isExist) continue;
                 Permission permission = _mapper.Map<Permission>(dto);
                 permissions.Add(permission);
-                await _customLogService.CreateCustomLog(
-                    "Permission Given",
-                    "Permission",
-                    permission.Id,
-                    permission.Company.Name
-                );
             }
             await _permissionRepository.AddRangeAsync(permissions);
             await _unitOfWork.CommitAsync();
@@ -106,35 +88,20 @@ namespace StockLinx.Service.Services
 
         public async Task DeletePermissionAsync(Guid id)
         {
-            User user = await _userService.GetCurrentUser();
-            if ((bool)!user.IsAdmin)
-            {
-                throw new Exception("User is not admin");
-            }
+            await CheckUserAdmin();
             Permission permission = await GetByIdAsync(id);
             _permissionRepository.Remove(permission);
-            await _customLogService.CreateCustomLog(
-                "Permission taken",
-                "Permission",
-                permission.Id,
-                permission.Company.Name
-            );
             await _unitOfWork.CommitAsync();
         }
 
         public async Task DeleteRangePermissionAsync(List<Guid> ids)
         {
+            await CheckUserAdmin();
             List<Permission> permissions = new List<Permission>();
             foreach (Guid id in ids)
             {
                 Permission permission = await GetByIdAsync(id);
                 permissions.Add(permission);
-                await _customLogService.CreateCustomLog(
-                    "Permission taken",
-                    "Permission",
-                    permission.Id,
-                    permission.Company.Name
-                );
             }
             _permissionRepository.RemoveRange(permissions);
             await _unitOfWork.CommitAsync();
@@ -144,6 +111,16 @@ namespace StockLinx.Service.Services
         {
             var result = await _filterService.FilterAsync(filter);
             return _permissionRepository.GetDtos(result.ToList());
+        }
+
+        private async Task<bool> CheckUserAdmin()
+        {
+            User user = await _userService.GetCurrentUser();
+            if ((bool)!user.IsAdmin)
+            {
+                throw new Exception("User is not admin");
+            }
+            return true;
         }
     }
 }

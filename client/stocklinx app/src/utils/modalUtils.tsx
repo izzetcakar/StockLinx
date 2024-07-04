@@ -298,10 +298,11 @@ export const openUserProductCheckOutModal = (
   });
 };
 
-export const openPermissionModal = (company: ICompany) => {
+export const openPermissionModal = () => {
   modals.open({
     modalId: "permission_modal",
     title: "Permission",
-    children: <PermissionForm company={company} />,
+    children: <PermissionForm />,
+    size: "lg",
   });
 };
