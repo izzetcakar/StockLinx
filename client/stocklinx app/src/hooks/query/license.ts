@@ -8,7 +8,6 @@ import { queryClient } from "@/main";
 import { licenseRequests } from "@/server/requests/license";
 import { useMutation } from "react-query";
 import { baseHooks } from "./baseHooks";
-import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 import {
   handleCheckOutAssetProduct,
   handleCheckOutUserProduct,
@@ -48,8 +47,8 @@ const RemoveRange = () => {
   return hooks.RemoveRange(licenseRequests.removeRange);
 };
 
-const Filter = (filters: QueryFilter[]) => {
-  return hooks.Filter(filters, licenseRequests.filter);
+const Filter = () => {
+  return hooks.Filter();
 };
 
 const ApplyFilters = () => {

@@ -6,7 +6,6 @@ import { queryClient } from "@/main";
 import { componentRequests } from "@/server/requests/component";
 import { useMutation } from "react-query";
 import { baseHooks } from "./baseHooks";
-import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 import {
   handleCheckOutAssetProduct,
   setCheckedRecord,
@@ -45,8 +44,8 @@ const RemoveRange = () => {
   return hooks.RemoveRange(componentRequests.removeRange);
 };
 
-const Filter = (filters: QueryFilter[]) => {
-  return hooks.Filter(filters, componentRequests.filter);
+const Filter = () => {
+  return hooks.Filter();
 };
 
 const ApplyFilters = () => {

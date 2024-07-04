@@ -1,6 +1,5 @@
 import { permissionRequests } from "@/server/requests/permission";
 import { baseHooks } from "./baseHooks";
-import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 const hooks = baseHooks("PERMISSION");
 
@@ -28,8 +27,8 @@ const RemoveRange = () => {
   return hooks.RemoveRange(permissionRequests.removeRange);
 };
 
-const Filter = (filters: QueryFilter[]) => {
-  return hooks.Filter(filters, permissionRequests.filter);
+const Filter = () => {
+  return hooks.Filter();
 };
 
 const ApplyFilters = () => {

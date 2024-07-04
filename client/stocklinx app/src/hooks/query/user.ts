@@ -3,7 +3,6 @@ import { queryClient } from "@/main";
 import { userRequests } from "@/server/requests/user";
 import { useMutation, useQuery } from "react-query";
 import { baseHooks } from "./baseHooks";
-import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 import { userKeys } from "./keys";
 
 const hooks = baseHooks("USER");
@@ -36,8 +35,8 @@ const RemoveRange = () => {
   return hooks.RemoveRange(userRequests.removeRange);
 };
 
-const Filter = (filters: QueryFilter[]) => {
-  return hooks.Filter(filters, userRequests.filter);
+const Filter = () => {
+  return hooks.Filter();
 };
 
 const ApplyFilters = () => {

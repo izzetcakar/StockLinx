@@ -1,6 +1,5 @@
 import { companyRequests } from "@/server/requests/company";
 import { baseHooks } from "./baseHooks";
-import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 const hooks = baseHooks("COMPANY");
 
@@ -32,8 +31,8 @@ const RemoveRange = () => {
   return hooks.RemoveRange(companyRequests.removeRange);
 };
 
-const Filter = (filters: QueryFilter[]) => {
-  return hooks.Filter(filters, companyRequests.filter);
+const Filter = () => {
+  return hooks.Filter();
 };
 
 const ApplyFilters = () => {

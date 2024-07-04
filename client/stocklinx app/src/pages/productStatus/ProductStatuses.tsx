@@ -6,7 +6,7 @@ import PageHeader from "@/components/generic/PageHeader";
 import Gridtable from "@components/gridTable/GridTable";
 
 const ProductStatus = () => {
-  const { data: productStatuses } = useProductStatus.Filter([]);
+  const { data: productStatuses } = useProductStatus.Filter();
   const { mutate: filter } = useProductStatus.ApplyFilters();
   const { mutate: remove } = useProductStatus.Remove();
   const { mutate: removeRange } = useProductStatus.RemoveRange();

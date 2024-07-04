@@ -1,6 +1,5 @@
 import { locationRequests } from "@/server/requests/location";
 import { baseHooks } from "./baseHooks";
-import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 
 const hooks = baseHooks("LOCATION");
 
@@ -32,8 +31,8 @@ const RemoveRange = () => {
   return hooks.RemoveRange(locationRequests.removeRange);
 };
 
-const Filter = (filters: QueryFilter[]) => {
-  return hooks.Filter(filters, locationRequests.filter);
+const Filter = () => {
+  return hooks.Filter();
 };
 
 const ApplyFilters = () => {

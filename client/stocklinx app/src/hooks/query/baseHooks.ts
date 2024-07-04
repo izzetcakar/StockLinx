@@ -109,13 +109,10 @@ export const baseHooks = (entity: string) => {
     });
   };
 
-  const Filter = (
-    filters: QueryFilter[],
-    request: (filters: QueryFilter[]) => Promise<any[]>
-  ) => {
+  const Filter = () => {
     return useQuery({
       queryKey: "FILTER_" + entity,
-      queryFn: () => request(filters),
+      queryFn: () => null,
       enabled: false,
       initialData: [],
     });

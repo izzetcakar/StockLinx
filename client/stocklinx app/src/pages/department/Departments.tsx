@@ -6,7 +6,7 @@ import PageHeader from "@/components/generic/PageHeader";
 import Gridtable from "@components/gridTable/GridTable";
 
 const Department = () => {
-  const { data: departments } = useDepartment.Filter([]);
+  const { data: departments } = useDepartment.Filter();
   const { mutate: filter } = useDepartment.ApplyFilters();
   const { mutate: remove } = useDepartment.Remove();
   const { mutate: removeRange } = useDepartment.RemoveRange();

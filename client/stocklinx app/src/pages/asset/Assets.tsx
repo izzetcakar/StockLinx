@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 const Asset = () => {
   const navigate = useNavigate();
-  const { data: assets } = useAsset.Filter([]);
+  const { data: assets } = useAsset.Filter();
   const { mutate: filter } = useAsset.ApplyFilters();
   const { mutate: remove } = useAsset.Remove();
   const { mutate: removeRange } = useAsset.RemoveRange();

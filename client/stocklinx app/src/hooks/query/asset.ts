@@ -7,7 +7,6 @@ import { queryClient } from "@/main";
 import { assetRequests } from "@/server/requests/asset";
 import { useMutation } from "react-query";
 import { baseHooks } from "./baseHooks";
-import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 import { IAsset, IUserProduct } from "@/interfaces/serverInterfaces";
 import { setAssetCheckStatus } from "@/utils/checkInOutUtils";
 import { closeModal } from "@/utils/modalUtils";
@@ -44,8 +43,8 @@ const RemoveRange = () => {
   return hooks.RemoveRange(assetRequests.removeRange);
 };
 
-const Filter = (filters: QueryFilter[]) => {
-  return hooks.Filter(filters, assetRequests.filter);
+const Filter = () => {
+  return hooks.Filter();
 };
 
 const ApplyFilters = () => {

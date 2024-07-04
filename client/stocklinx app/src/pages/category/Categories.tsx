@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 const Category = () => {
   const navigate = useNavigate();
-  const { data: categories } = useCategory.Filter([]);
+  const { data: categories } = useCategory.Filter();
   const { mutate: filter } = useCategory.ApplyFilters();
   const { mutate: remove } = useCategory.Remove();
   const { mutate: removeRange } = useCategory.RemoveRange();

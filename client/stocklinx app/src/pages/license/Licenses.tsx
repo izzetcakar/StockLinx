@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 const License = () => {
   const navigate = useNavigate();
-  const { data: licenses } = useLicense.Filter([]);
+  const { data: licenses } = useLicense.Filter();
   const { mutate: filter } = useLicense.ApplyFilters();
   const { mutate: remove } = useLicense.Remove();
   const { mutate: removeRange } = useLicense.RemoveRange();

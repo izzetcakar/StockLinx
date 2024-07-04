@@ -9,7 +9,7 @@ import EntityPanel from "@/components/entity/EntityPanel";
 
 const Category = () => {
   const { columns, cardColumns } = useColumns();
-  const { data: categories } = useCategory.Filter([]);
+  const { data: categories } = useCategory.Filter();
   const { mutate: applyFilters } = useCategory.ApplyFilters();
   const { state } = useRouterLocation();
 

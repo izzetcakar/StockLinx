@@ -6,7 +6,7 @@ import Gridtable from "@components/gridTable/GridTable";
 import PageHeader from "@/components/generic/PageHeader";
 
 const Accessory = () => {
-  const { data: accessories } = useAccessory.Filter([]);
+  const { data: accessories } = useAccessory.Filter();
   const { mutate: filter } = useAccessory.ApplyFilters();
   const { mutate: remove } = useAccessory.Remove();
   const { mutate: removeRange } = useAccessory.RemoveRange();

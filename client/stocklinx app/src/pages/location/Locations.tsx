@@ -6,7 +6,7 @@ import Gridtable from "@components/gridTable/GridTable";
 import PageHeader from "@/components/generic/PageHeader";
 
 const Location = () => {
-  const { data: locations } = useLocation.Filter([]);
+  const { data: locations } = useLocation.Filter();
   const { mutate: filter } = useLocation.ApplyFilters();
   const { mutate: remove } = useLocation.Remove();
   const { mutate: removeRange } = useLocation.RemoveRange();

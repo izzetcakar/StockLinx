@@ -6,7 +6,7 @@ import PageHeader from "@/components/generic/PageHeader";
 import Gridtable from "@components/gridTable/GridTable";
 
 const Supplier = () => {
-  const { data: suppliers } = useSupplier.Filter([]);
+  const { data: suppliers } = useSupplier.Filter();
   const { mutate: filter } = useSupplier.ApplyFilters();
   const { mutate: remove } = useSupplier.Remove();
   const { mutate: removeRange } = useSupplier.RemoveRange();

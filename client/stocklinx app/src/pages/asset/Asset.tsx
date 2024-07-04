@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { useColumns } from "./columns";
 import { Column } from "@/interfaces/gridTableInterfaces";
 import { useAsset } from "@/hooks/query/asset";
@@ -9,7 +9,7 @@ import EntityPanel from "@/components/entity/EntityPanel";
 
 const Asset = () => {
   const { columns, cardColumns } = useColumns();
-  const { data: assets } = useAsset.Filter([]);
+  const { data: assets } = useAsset.Filter();
   const { mutate: applyFilters } = useAsset.ApplyFilters();
   const { state } = useRouterLocation();
 
@@ -21,12 +21,6 @@ const Asset = () => {
       };
     }) as Column[];
   }, [columns.length]);
-
-  useEffect(() => {
-    if (state) {
-      console.log(state.assets);
-    }
-  }, [state]);
 
   return (
     <div
