@@ -5,6 +5,7 @@ import { useAsset } from "@/hooks/query/asset";
 import PageHeader from "@/components/generic/PageHeader";
 import Gridtable from "@components/gridTable/GridTable";
 import { useNavigate } from "react-router-dom";
+import { openSubmissionModal } from "@/utils/submissionUtils";
 
 const Asset = () => {
   const navigate = useNavigate();
@@ -20,6 +21,35 @@ const Asset = () => {
 
   return (
     <>
+      <button
+        onClick={() =>
+          openSubmissionModal({
+            userFullName: "İzzet Çakar",
+            companyName: "Bilge Adam",
+            department: "Yazılım",
+            userStartDate: "2021-05-05",
+            userTitle: "Yazılım Uzmanı",
+            products: [
+              {
+                category: "Bilgisayar",
+                title: "Lenovo",
+                description:
+                  "Lenovo ThinkpadÇakarrrrrrrrrrrrrrrrrrrrrrrrÇakarrrrrrrrrrrrrrrrrrrrrrrr",
+              },
+              {
+                category: "Bilgisayar",
+                title: "Lenovo",
+                description: "Lenovo Thinkpad",
+              },
+            ],
+            assignDate: "2023-12-23T18:24:45.061183Z",
+            delivererFullName:
+              "Teslimat İzzet ÇakarrrrrrrrrrrrrrrrrrrrrrrrÇakarrrrrrrrrrrrrrrrrrrrrrrr",
+          })
+        }
+      >
+        show
+      </button>
       <PageHeader title="Assets" />
       <Gridtable
         data={assets || []}

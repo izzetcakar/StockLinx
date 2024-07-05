@@ -12,6 +12,9 @@ Font.register({
   src: "https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-light-webfont.ttf",
 });
 
+const padding = 8;
+const borderColor = "#636363";
+
 const styles = StyleSheet.create({
   document: {
     padding: 30,
@@ -21,14 +24,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   pageContainer: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    width: "100%",
-    height: "100%",
-    backgroundColor: "white",
-    fontSize: 10,
-    padding: 30,
+    fontSize: 9,
+    padding: 40,
     fontFamily: "Roboto",
   },
   pageContent: {
@@ -37,86 +34,50 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     height: "auto",
-    border: "1px solid black",
+    border: `1px solid ${borderColor}`,
   },
-  userInfoContainer: {
-    display: "flex",
-    flexDirection: "column",
-    width: "100%",
-    height: "auto",
-  },
-  userInfoRow: {
+  content: {
     display: "flex",
     flexDirection: "row",
     width: "100%",
-    height: "auto",
+    borderBottom: `1px solid ${borderColor}`,
+  },
+  titleContainer: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
   },
   title: {
     display: "flex",
     textAlign: "center",
-    width: "100%",
-    height: "auto",
-    padding: 8,
-    borderBottom: "1px solid black",
+    width: "50%",
+    padding,
+    marginVertical: "auto",
     backgroundColor: "#dfdfdf70",
   },
-  betweenTitle: {
+  title_sm: {
+    display: "flex",
+    textAlign: "center",
+    width: 100,
+    maxWidth: 100,
+    minWidth: 100,
+    padding,
+    backgroundColor: "#dfdfdf70",
+  },
+  title_center: {
     display: "flex",
     textAlign: "center",
     width: "100%",
-    height: "auto",
-    padding: 8,
-    borderTop: "1px solid black",
-    borderBottom: "1px solid black",
+    padding,
     backgroundColor: "#dfdfdf70",
-  },
-  column: {
-    display: "flex",
-    textAlign: "left",
-    width: "100%",
-    height: "auto",
-    padding: 8,
-    backgroundColor: "#dfdfdf70",
+    borderBottom: `1px solid ${borderColor}`,
   },
   value: {
     display: "flex",
     textAlign: "center",
-    width: "100%",
-    height: "auto",
-    padding: 8,
-    backgroundColor: "#dfdfdf70",
-  },
-  input: {
-    display: "flex",
-    textAlign: "center",
-    width: "100%",
-    height: "auto",
-    padding: 8,
-    flexGrow: 1,
-  },
-  productContainer: {
-    display: "flex",
-    flexDirection: "column",
-    width: "100%",
-    height: "auto",
-  },
-  productContent: {
-    display: "flex",
-    flexDirection: "row",
-    width: "100%",
-    height: "auto",
-  },
-  productColumn: {
-    display: "flex",
-    flexDirection: "column",
-    width: "100%",
-    height: "auto",
-  },
-  descriptionContainer: {
-    display: "flex",
-    flexDirection: "column",
-    width: "100%",
-    height: "auto",
+    width: "50%",
+    padding,
+    marginVertical: "auto",
   },
   description: {
     display: "flex",
@@ -125,43 +86,36 @@ const styles = StyleSheet.create({
     padding: 8,
     lineHeight: 1.5,
   },
-  signatureContainer: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    height: "auto",
-  },
-  descriptionSignature: {
+  signContainer: {
     display: "flex",
     flexDirection: "column",
+    gap: 4,
     height: "auto",
-    padding: 8,
-    gap: 5,
+    padding,
   },
-  descriptionRow: {
+  signContent: {
     display: "flex",
     flexDirection: "row",
+    width: "100%",
     height: "auto",
   },
-  descriptionColumn: {},
-  descriptionValue: {},
-  signature: {
+  signElement: {
+    width: "50%",
+  },
+  signText: {
     display: "flex",
-    width: "auto",
-    height: 50,
+    width: "100%",
+    height: "auto",
   },
   xWrapper: {
     width: "100%",
     height: 1,
-    borderBottom: "1px solid black",
+    borderBottom: `1px solid ${borderColor}`,
   },
   yWrapper: {
     width: 1,
     height: "100%",
-    backgroundColor: "black",
-  },
-  signatureWrapper: {
-    maxWidth: 400,
+    backgroundColor: "borderColor",
   },
 });
 
@@ -188,34 +142,33 @@ const Description = ({
   delivererFullName: string;
   userFullName: string;
 }) => (
-  <View style={styles.signatureContainer}>
-    <View style={styles.descriptionSignature}>
-      <View style={styles.descriptionRow}>
-        <Text style={styles.descriptionColumn}>Teslim Alan Personel</Text>
+  <View style={styles.signContainer}>
+    <View style={styles.signContent}>
+      <View style={styles.signElement}>
+        <Text>Teslim Alan Personel</Text>
       </View>
-      <View style={styles.descriptionRow}>
-        <Text style={styles.descriptionColumn}>İsim Soyisim : </Text>
-        <Text style={styles.descriptionValue}>{userFullName}</Text>
-      </View>
-      <View style={styles.descriptionRow}>
-        <Text style={styles.descriptionColumn}>İmza :</Text>
-        <View style={styles.signature} />
+      <View style={styles.signElement}>
+        <Text>Teslim Eden Personel</Text>
       </View>
     </View>
-    <View style={styles.signatureWrapper} />
-    <View style={styles.descriptionSignature}>
-      <View style={styles.descriptionRow}>
-        <Text style={styles.descriptionColumn}>Teslim Eden Personel</Text>
+    <View style={styles.signContent}>
+      <View style={styles.signElement}>
+        <Text>İsim Soyisim : </Text>
+        <Text>{userFullName}</Text>
       </View>
-      <View style={styles.descriptionRow}>
-        <Text style={styles.descriptionColumn}>İsim Soyisim : </Text>
-        <Text style={styles.descriptionValue} wrap>
-          {delivererFullName}
-        </Text>
+      <View style={styles.signElement}>
+        <Text>İsim Soyisim : </Text>
+        <Text>{delivererFullName}</Text>
       </View>
-      <View style={styles.descriptionRow}>
-        <Text style={styles.descriptionColumn}>İmza : </Text>
-        <View style={styles.signature} />
+    </View>
+    <View style={styles.signContent}>
+      <View style={styles.signElement}>
+        <Text>İmza : </Text>
+        <Text></Text>
+      </View>
+      <View style={styles.signElement}>
+        <Text>İmza</Text>
+        <Text></Text>
       </View>
     </View>
   </View>
@@ -247,88 +200,59 @@ const SubmissionForm = ({
   >
     <Page size="A4" style={styles.pageContainer}>
       <View style={styles.pageContent}>
-        <Text style={styles.title}>Personel Zimmet Formu</Text>
-        <View style={styles.userInfoContainer}>
-          <View style={styles.userInfoRow}>
-            <Text style={styles.column}>Personel Adı Soyadı</Text>
-            <View style={styles.yWrapper} />
-            <Text style={styles.input}>{userFullName}</Text>
-          </View>
-          <View style={styles.xWrapper} />
-          <View style={styles.userInfoRow}>
-            <Text style={styles.column}>Şube/Departman</Text>
-            <View style={styles.yWrapper} />
-            <Text style={styles.input}>{department}</Text>
-          </View>
-          <View style={styles.xWrapper} />
-          <View style={styles.userInfoRow}>
-            <Text style={styles.column}>İşe Giriş Tarihi</Text>
-            <View style={styles.yWrapper} />
-            <Text style={styles.input}>{formatDate(userStartDate)}</Text>
-          </View>
-          <View style={styles.xWrapper} />
-          <View style={styles.userInfoRow}>
-            <Text style={styles.column}>Unvan</Text>
-            <View style={styles.yWrapper} />
-            <Text style={styles.input}>{userTitle}</Text>
+        <Text style={styles.title_center}>Personel Zimmet Formu</Text>
+        <View style={styles.content}>
+          <Text style={styles.title}>Personel Adı Soyadı</Text>
+          <Text style={styles.value}>{userFullName}</Text>
+        </View>
+        <View style={styles.content}>
+          <Text style={styles.title}>Şube/Departman</Text>
+          <Text style={styles.value}>{department}</Text>
+        </View>
+        <View style={styles.content}>
+          <Text style={styles.title}>İşe Giriş Tarihi</Text>
+          <Text style={styles.value}>{formatDate(userStartDate)}</Text>
+        </View>
+        <View style={styles.content}>
+          <Text style={styles.title}>Unvan</Text>
+          <Text style={styles.value}>{userTitle}</Text>
+        </View>
+        <Text style={styles.title_center}>Zimmetlenen Malzemeler</Text>
+        <View style={styles.content}>
+          <Text style={styles.title_sm}>Ürün</Text>
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>Model</Text>
+            <Text style={styles.title}>Açiklama</Text>
           </View>
         </View>
-        <View style={styles.productContainer}>
-          <Text style={styles.betweenTitle}>Zimmetlenen Malzemeler</Text>
-          <View style={styles.productContent}>
-            <View style={[styles.productColumn, { width: 200 }]}>
-              <Text style={styles.value}>Ürün</Text>
-              {products.map((product, index) => {
-                return (
-                  <View key={index}>
-                    <View style={styles.xWrapper} />
-                    <Text style={styles.column}>{product.category}</Text>
-                  </View>
-                );
-              })}
+        {products.map((product, index) => {
+          return (
+            <View style={styles.content} key={index}>
+              <Text style={styles.title_sm}>{product.category}</Text>
+              <Text style={styles.value}>{product.title}</Text>
+              <Text style={styles.value}>{product.description}</Text>
             </View>
-            <View style={styles.yWrapper} />
-            <View style={styles.productColumn}>
-              <Text style={styles.value}>Model</Text>
-              {products.map((product, index) => {
-                return (
-                  <View key={index}>
-                    <View style={styles.xWrapper} />
-                    <Text style={styles.input}>{product.title}</Text>
-                  </View>
-                );
-              })}
-            </View>
-            <View style={styles.yWrapper} />
-            <View style={styles.productColumn}>
-              <Text style={styles.value}>Açıklama</Text>
-              {products.map((product, index) => {
-                return (
-                  <View key={index}>
-                    <View style={styles.xWrapper} />
-                    <Text style={styles.input}>{product.description}</Text>
-                  </View>
-                );
-              })}
-            </View>
-          </View>
-        </View>
-        <View style={styles.xWrapper} />
-        <View style={styles.descriptionContainer}>
+          );
+        })}
+        <View style={styles.content}>
           <Text style={styles.description}>
             Yukarıda yazılı malzemeleri {formatDate(assignDate)} tarihinde
             teslim aldım. Bu tarihten itibaren verilen ürüne gelecek olan
             zarardan şahsım sorumludur.
           </Text>
+        </View>
+        <View style={styles.content}>
           {Description({ delivererFullName, userFullName })}
         </View>
-        <View style={styles.descriptionContainer}>
-          <Text style={styles.betweenTitle}>Teslim Beyanı</Text>
+        <Text style={styles.title_center}>Teslim Beyanı</Text>
+        <View style={styles.content}>
           <Text style={styles.description}>
             {formatDate(assignDate)} tarihinde işten ayrıldığımı ve işe giriş
             tarihinde şahsıma zimmetlenmiş , yukarıda belirtilmiş malzemeleri
             eksiksiz ve sorunsuz teslim ettiğimi beyan ederim.
           </Text>
+        </View>
+        <View style={[styles.content, { borderBottom: "none" }]}>
           {Description({ delivererFullName, userFullName })}
         </View>
       </View>

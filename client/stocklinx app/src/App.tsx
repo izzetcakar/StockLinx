@@ -43,27 +43,41 @@ import "./base.scss";
 import Test from "./pages/test/Test";
 
 const Layout = () => {
-  const { data: user } = useUser.GetWithToken();
+  // const { data: user } = useUser.GetWithToken();
   // const { drawerOpened } = useContext(GenericContext);
 
-  if (user) {
-    return (
-      <div className="main__container">
-        <div>
-          <Sidebar />
-        </div>
-        <div className="page">
-          <Header />
-          <div className="page__content">
-            <Outlet />
-          </div>
-        </div>
-        {/* <LoadingOverlay visible={loading > 0 && !drawerOpened} zIndex={1000} /> */}
+  // if (user) {
+  //   return (
+  //     <div className="main__container">
+  //       <div>
+  //         <Sidebar />
+  //       </div>
+  //       <div className="page">
+  //         <Header />
+  //         <div className="page__content">
+  //           <Outlet />
+  //         </div>
+  //       </div>
+  //       {/* <LoadingOverlay visible={loading > 0 && !drawerOpened} zIndex={1000} /> */}
+  //     </div>
+  //   );
+  // } else {
+  //   return <Login />;
+  // }
+  return (
+    <div className="main__container">
+      <div>
+        <Sidebar />
       </div>
-    );
-  } else {
-    return <Login />;
-  }
+      <div className="page">
+        <Header />
+        <div className="page__content">
+          <Outlet />
+        </div>
+      </div>
+      {/* <LoadingOverlay visible={loading > 0 && !drawerOpened} zIndex={1000} /> */}
+    </div>
+  );
 };
 
 const router = createBrowserRouter([
