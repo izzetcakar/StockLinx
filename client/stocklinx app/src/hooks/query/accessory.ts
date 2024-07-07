@@ -1,13 +1,13 @@
 import {
-  UserProductCheckInDto,
-  UserProductCheckOutDto,
+  EmployeeProductCheckInDto,
+  EmployeeProductCheckOutDto,
 } from "@/interfaces/dtos";
 import { queryClient } from "@/main";
 import { accessoryRequests } from "@/server/requests/accessory";
 import { useMutation } from "react-query";
 import { baseHooks } from "./baseHooks";
 import {
-  handleCheckOutUserProduct,
+  handleCheckOutEmployeeProduct,
   setCheckedRecord,
 } from "@/utils/checkInOutUtils";
 import { openNotificationSuccess } from "@/utils/notificationUtils";
@@ -59,15 +59,15 @@ const Lookup = () => {
 const CheckIn = () => {
   return useMutation({
     mutationKey: accessoryKeys.CHECK_IN_ACCESSORY,
-    mutationFn: (dto: UserProductCheckInDto) => accessoryRequests.checkIn(dto),
+    mutationFn: (dto: EmployeeProductCheckInDto) => accessoryRequests.checkIn(dto),
     onSuccess: (res) => {
-      queryClient.setQueryData("FETCH_ALL_USERPRODUCT", (data: any) => {
+      queryClient.setQueryData("FETCH_ALL_EMPLOYEEPRODUCT", (data: any) => {
         return setCheckedRecord(data, res);
       });
-      queryClient.setQueryData("FILTER_USERPRODUCT", (data: any) => {
+      queryClient.setQueryData("FILTER_EMPLOYEEPRODUCT", (data: any) => {
         return setCheckedRecord(data, res);
       });
-      queryClient.setQueryData(["FETCH_USERPRODUCT", res.id], () => {
+      queryClient.setQueryData(["FETCH_EMPLOYEEPRODUCT", res.id], () => {
         return res;
       });
       closeModal("product_checkIn_modal");
@@ -79,16 +79,16 @@ const CheckIn = () => {
 const CheckOut = () => {
   return useMutation({
     mutationKey: accessoryKeys.CHECK_OUT_ACCESSORY,
-    mutationFn: (dto: UserProductCheckOutDto) =>
+    mutationFn: (dto: EmployeeProductCheckOutDto) =>
       accessoryRequests.checkOut(dto),
     onSuccess: (res, req) => {
-      queryClient.setQueryData("FETCH_ALL_USERPRODUCT", (data: any) => {
-        return handleCheckOutUserProduct(data, req, res);
+      queryClient.setQueryData("FETCH_ALL_EMPLOYEEPRODUCT", (data: any) => {
+        return handleCheckOutEmployeeProduct(data, req, res);
       });
-      queryClient.setQueryData("FILTER_USERPRODUCT", (data: any) => {
-        return handleCheckOutUserProduct(data, req, res);
+      queryClient.setQueryData("FILTER_EMPLOYEEPRODUCT", (data: any) => {
+        return handleCheckOutEmployeeProduct(data, req, res);
       });
-      queryClient.setQueryData(["FETCH_USERPRODUCT", req.userProductId], () => {
+      queryClient.setQueryData(["FETCH_EMPLOYEEPRODUCT", req.employeeProductId], () => {
         return res;
       });
       closeModal("user_product_checkOut_modal");

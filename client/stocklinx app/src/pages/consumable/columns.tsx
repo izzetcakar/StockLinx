@@ -1,5 +1,5 @@
 import { DataColumn } from "@interfaces/gridTableInterfaces";
-import { IConsumable, IUserProduct } from "@interfaces/serverInterfaces";
+import { IConsumable, IEmployeeProduct } from "@interfaces/serverInterfaces";
 import { Button } from "@mantine/core";
 import { openCheckInModal } from "@/utils/modalUtils";
 import { useConsumable } from "@/hooks/query/consumable";
@@ -11,9 +11,9 @@ import { EntityCells } from "@/cells/Entity";
 import { CategoryType } from "@/interfaces/enums";
 import { useInitial } from "@/hooks/initial/useInitial";
 import { EntityCardColumn } from "@/interfaces/clientInterfaces";
-import UserProductQuantityCell from "@/cells/UserProductQuantityCell";
+import EmployeeProductQuantityCell from "@/cells/EmployeeProductQuantityCell";
 import ConsumableForm from "@/forms/consumable/ConsumableForm";
-import UserProductSeats from "@/cells/productseats/UserProductSeats";
+import EmployeeProductSeats from "@/cells/productseats/EmployeeProductSeats";
 import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
 
 export const useColumns = () => {
@@ -25,10 +25,10 @@ export const useColumns = () => {
   const { mutate: checkIn } = useConsumable.CheckIn();
   const { mutate: checkOut } = useConsumable.CheckOut();
 
-  const onCheckInHandler = (data: IUserProduct) => {
+  const onCheckInHandler = (data: IEmployeeProduct) => {
     checkIn({
       productId: data.consumableId as string,
-      userId: data.userId,
+      employeeId: data.employeeId,
       assaignDate: data.assignDate,
       notes: data.notes,
       quantity: data.quantity,
@@ -36,9 +36,9 @@ export const useColumns = () => {
   };
 
   const onHeadToModal = (id: string) => {
-    const newUserProduct = initial.UserProduct;
-    newUserProduct.consumableId = id;
-    openCheckInModal(["User"], newUserProduct, onCheckInHandler);
+    const newEmployeeProduct = initial.EmployeeProduct;
+    newEmployeeProduct.consumableId = id;
+    openCheckInModal(["Employee"], newEmployeeProduct, onCheckInHandler);
   };
 
   const columns: DataColumn[] = [
@@ -88,7 +88,7 @@ export const useColumns = () => {
       dataField: "availableQuantity",
       dataType: "number",
       renderComponent: (e) =>
-        UserProductQuantityCell({
+        EmployeeProductQuantityCell({
           productId: (e as IConsumable).id,
           productType: "Consumable",
           totalQuantity: (e as IConsumable).quantity,
@@ -196,7 +196,7 @@ export const useColumns = () => {
     {
       title: "Seats",
       renderData: (e) => (
-        <UserProductSeats
+        <EmployeeProductSeats
           productIdField="consumableId"
           productId={e.id}
           checkOut={checkOut}

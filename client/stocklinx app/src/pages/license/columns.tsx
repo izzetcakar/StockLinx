@@ -1,6 +1,6 @@
 import { DataColumn } from "@interfaces/gridTableInterfaces";
 import {
-  IUserProduct,
+  IEmployeeProduct,
   ILicense,
   IAssetProduct,
 } from "@interfaces/serverInterfaces";
@@ -21,7 +21,7 @@ import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
 import LicenseSeats from "@/cells/productseats/License/LicenseSeats";
 
 export const useColumns = () => {
-  const { mutate: userCheckIn } = useLicense.UserCheckIn();
+  const { mutate: employeeCheckIn } = useLicense.EmployeeCheckIn();
   const { mutate: assetCheckIn } = useLicense.AssetCheckIn();
   const { data: categories } = useCategory.GetAll();
   const { data: companyLK } = useCompany.Lookup();
@@ -29,35 +29,35 @@ export const useColumns = () => {
   const { refetch: getManufacturerLK } = useManufacturer.Lookup();
   const initial = useInitial();
 
-  const onUserCheckInHandler = (userProduct: IUserProduct) => {
-    userCheckIn({
-      userId: userProduct.userId,
-      productId: userProduct.licenseId as string,
-      assaignDate: userProduct.assignDate,
-      notes: userProduct.notes,
-      quantity: userProduct.quantity,
+  const onEmployeeCheckInHandler = (employeeProduct: IEmployeeProduct) => {
+    employeeCheckIn({
+      employeeId: employeeProduct.employeeId,
+      productId: employeeProduct.licenseId as string,
+      assaignDate: employeeProduct.assignDate,
+      notes: employeeProduct.notes,
+      quantity: employeeProduct.quantity,
     });
   };
 
-  const onAssetCheckInHandler = (userProduct: IAssetProduct) => {
+  const onAssetCheckInHandler = (employeeProduct: IAssetProduct) => {
     assetCheckIn({
-      assetId: userProduct.assetId as string,
-      productId: userProduct.licenseId as string,
-      assaignDate: userProduct.assignDate,
-      notes: userProduct.notes,
-      quantity: userProduct.quantity,
+      assetId: employeeProduct.assetId as string,
+      productId: employeeProduct.licenseId as string,
+      assaignDate: employeeProduct.assignDate,
+      notes: employeeProduct.notes,
+      quantity: employeeProduct.quantity,
     });
   };
 
   const onHeadToModal = (id: string) => {
-    const newUserProduct = initial.UserProduct;
-    newUserProduct.licenseId = id;
+    const newEmployeeProduct = initial.EmployeeProduct;
+    newEmployeeProduct.licenseId = id;
     const newAssetProduct = initial.AssetProduct;
     newAssetProduct.licenseId = id;
     openCheckInModal(
-      ["User", "Asset"],
-      newUserProduct,
-      onUserCheckInHandler,
+      ["Employee", "Asset"],
+      newEmployeeProduct,
+      onEmployeeCheckInHandler,
       newAssetProduct,
       onAssetCheckInHandler
     );

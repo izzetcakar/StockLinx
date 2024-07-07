@@ -5,44 +5,63 @@ import {
   Group,
   Textarea,
   PasswordInput,
+  Select,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { IUser } from "@interfaces/serverInterfaces";
-import { useUser } from "@/hooks/query/user";
+import { IEmployee } from "@interfaces/serverInterfaces";
+import { useEmployee } from "@/hooks/query/employee";
 import { useInitial } from "@/hooks/initial/useInitial";
 import FormCard from "@/components/form/FormCard";
+import { useCompany } from "@/hooks/query/company";
+import { useDepartment } from "@/hooks/query/department";
+import FormSelect from "../mantine/FormSelect";
 
-interface UserFormProps {
-  user?: IUser;
+interface EmployeeFormProps {
+  employee?: IEmployee;
 }
 
-const UserForm: React.FC<UserFormProps> = ({ user }) => {
-  const initialValues = useInitial().User(user);
+const EmployeeForm: React.FC<EmployeeFormProps> = ({ employee }) => {
+  const initialValues = useInitial().Employee(employee);
   const isCreate = initialValues.id === "";
-  const { mutate: createUser } = useUser.Create();
-  const { mutate: updateUser } = useUser.Update();
+  const { mutate: createEmployee } = useEmployee.Create();
+  const { mutate: updateEmployee } = useEmployee.Update();
+  const [company, setCompany] = React.useState("");
+  const { data: companies } = useCompany.GetAll();
+  const { data: departments } = useDepartment.GetAll();
 
-  const form = useForm<IUser>({
+  const form = useForm<IEmployee>({
     initialValues: initialValues,
     validate: {
       firstName: (value: string) =>
         /(?!^$)([^\s])/.test(value) ? null : "First Name should not be empty",
       lastName: (value: string) =>
         /(?!^$)([^\s])/.test(value) ? null : "Last Name should not be empty",
-      password: (value: string) =>
-        /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}$/.test(value)
-          ? null
-          : "Password should be at least 5 characters and include at least one lowercase letter, one uppercase letter, and one digit.",
     },
   });
 
-  const handleSubmit = (data: IUser) => {
-    isCreate ? createUser(data) : updateUser(data);
+  const handleSubmit = (data: IEmployee) => {
+    isCreate ? createEmployee(data) : updateEmployee(data);
   };
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
       <FormCard>
+        <Select
+          label="Company"
+          placeholder="Company"
+          data={companies || []}
+          value={company || ""}
+          onChange={(e) => setCompany(e as string)}
+          required
+          withAsterisk
+        />
+        <FormSelect
+          label="Department"
+          data={departments || []}
+          value={form.values.departmentId || ""}
+          inputProps={form.getInputProps("departmentId")}
+          required
+        />
         <TextInput
           label="First Name"
           placeholder="First Name"
@@ -89,4 +108,4 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
   );
 };
 
-export default UserForm;
+export default EmployeeForm;

@@ -1,8 +1,8 @@
 import {
   AssetProductCheckOutDto,
   AssetProductDto,
-  UserProductCheckOutDto,
-  UserProductDto,
+  EmployeeProductCheckOutDto,
+  EmployeeProductDto,
 } from "@/interfaces/dtos";
 
 export const setCheckedRecord = (data: any, res: any) => {
@@ -16,22 +16,22 @@ export const setCheckedRecord = (data: any, res: any) => {
   return data.map((up: any) => (up.id === res.id ? res : up));
 };
 
-export const handleCheckOutUserProduct = (
+export const handleCheckOutEmployeeProduct = (
   data: any,
-  req: UserProductCheckOutDto,
-  res: UserProductDto[]
+  req: EmployeeProductCheckOutDto,
+  res: EmployeeProductDto[]
 ) => {
-  const isExist = res.find((x) => x.id === req.userProductId);
+  const isExist = res.find((x) => x.id === req.employeeProductId);
   if (!data) {
     return res;
   }
   if (!isExist) {
-    const filtered = data.filter((x: any) => x.id !== req.userProductId);
+    const filtered = data.filter((x: any) => x.id !== req.employeeProductId);
     return [...filtered, ...res];
   }
-  const filtered = res.filter((x) => x.id !== req.userProductId);
+  const filtered = res.filter((x) => x.id !== req.employeeProductId);
   const updated = data.map((x: any) => {
-    if (x.id === req.userProductId) {
+    if (x.id === req.employeeProductId) {
       return isExist;
     }
     return x;

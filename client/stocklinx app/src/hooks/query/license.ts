@@ -1,8 +1,8 @@
 import {
   AssetProductCheckInDto,
   AssetProductCheckOutDto,
-  UserProductCheckInDto,
-  UserProductCheckOutDto,
+  EmployeeProductCheckInDto,
+  EmployeeProductCheckOutDto,
 } from "@/interfaces/dtos";
 import { queryClient } from "@/main";
 import { licenseRequests } from "@/server/requests/license";
@@ -10,7 +10,7 @@ import { useMutation } from "react-query";
 import { baseHooks } from "./baseHooks";
 import {
   handleCheckOutAssetProduct,
-  handleCheckOutUserProduct,
+  handleCheckOutEmployeeProduct,
   setCheckedRecord,
 } from "@/utils/checkInOutUtils";
 import { closeModal } from "@/utils/modalUtils";
@@ -59,19 +59,19 @@ const Lookup = () => {
   return hooks.Lookup(licenseRequests.lookup);
 };
 
-const UserCheckIn = () => {
+const EmployeeCheckIn = () => {
   return useMutation({
     mutationKey: licenseKeys.USER_CHECK_IN_LICENSE,
-    mutationFn: (dto: UserProductCheckInDto) =>
-      licenseRequests.userCheckIn(dto),
+    mutationFn: (dto: EmployeeProductCheckInDto) =>
+      licenseRequests.employeeCheckIn(dto),
     onSuccess: (res) => {
-      queryClient.setQueryData("FETCH_ALL_USERPRODUCT", (data: any) => {
+      queryClient.setQueryData("FETCH_ALL_EMPLOYEEPRODUCT", (data: any) => {
         return setCheckedRecord(data, res);
       });
-      queryClient.setQueryData("FILTER_USERPRODUCT", (data: any) => {
+      queryClient.setQueryData("FILTER_EMPLOYEEPRODUCT", (data: any) => {
         return setCheckedRecord(data, res);
       });
-      queryClient.setQueryData(["FETCH_USERPRODUCT", res.id], () => {
+      queryClient.setQueryData(["FETCH_EMPLOYEEPRODUCT", res.id], () => {
         return res;
       });
       closeModal("product_checkIn_modal");
@@ -80,21 +80,24 @@ const UserCheckIn = () => {
   });
 };
 
-const UserCheckOut = () => {
+const EmployeeCheckOut = () => {
   return useMutation({
     mutationKey: licenseKeys.USER_CHECK_OUT_LICENSE,
-    mutationFn: (dto: UserProductCheckOutDto) =>
-      licenseRequests.userCheckOut(dto),
+    mutationFn: (dto: EmployeeProductCheckOutDto) =>
+      licenseRequests.employeeCheckOut(dto),
     onSuccess: (res, req) => {
-      queryClient.setQueryData("FETCH_ALL_USERPRODUCT", (data: any) => {
-        return handleCheckOutUserProduct(data, req, res);
+      queryClient.setQueryData("FETCH_ALL_EMPLOYEEPRODUCT", (data: any) => {
+        return handleCheckOutEmployeeProduct(data, req, res);
       });
-      queryClient.setQueryData("FILTER_USERPRODUCT", (data: any) => {
-        return handleCheckOutUserProduct(data, req, res);
+      queryClient.setQueryData("FILTER_EMPLOYEEPRODUCT", (data: any) => {
+        return handleCheckOutEmployeeProduct(data, req, res);
       });
-      queryClient.setQueryData(["FETCH_USERPRODUCT", req.userProductId], () => {
-        return res;
-      });
+      queryClient.setQueryData(
+        ["FETCH_EMPLOYEEPRODUCT", req.employeeProductId],
+        () => {
+          return res;
+        }
+      );
       closeModal("user_product_checkOut_modal");
       openNotificationSuccess("License Checked Out Successfully");
     },
@@ -157,8 +160,8 @@ export const useLicense = {
   Filter,
   ApplyFilters,
   Lookup,
-  UserCheckIn,
-  UserCheckOut,
+  EmployeeCheckIn,
+  EmployeeCheckOut,
   AssetCheckIn,
   AssetCheckOut,
 };

@@ -1,25 +1,27 @@
 import { DataColumn } from "@/interfaces/gridTableInterfaces";
 import { EntityCells } from "../../Entity";
-import { IAssetProduct, IUserProduct } from "@/interfaces/serverInterfaces";
+import { IAssetProduct, IEmployeeProduct } from "@/interfaces/serverInterfaces";
 import { useLicense } from "@/hooks/query/license";
 import {
   openAssetProductCheckOutModal,
-  openUserProductCheckOutModal,
+  openEmployeeProductCheckOutModal,
 } from "@/utils/modalUtils";
 import CheckOutButton from "../../CheckOutBtnCell";
 
-const isUserProduct = (e: IAssetProduct | IUserProduct): e is IUserProduct => {
-  return (e as IUserProduct).userId !== undefined;
+const isEmployeeProduct = (
+  e: IAssetProduct | IEmployeeProduct
+): e is IEmployeeProduct => {
+  return (e as IEmployeeProduct).employeeId !== undefined;
 };
 
 const isAssetProduct = (
-  e: IAssetProduct | IUserProduct
+  e: IAssetProduct | IEmployeeProduct
 ): e is IAssetProduct => {
   return (e as IAssetProduct).assetId !== undefined;
 };
 
 export const useColumns = () => {
-  const { mutate: userCheckOut } = useLicense.UserCheckOut();
+  const { mutate: employeeCheckOut } = useLicense.EmployeeCheckOut();
   const { mutate: assetCheckOut } = useLicense.AssetCheckOut();
 
   const columns: DataColumn[] = [
@@ -32,13 +34,13 @@ export const useColumns = () => {
       },
     },
     {
-      caption: "User",
-      dataField: "userId",
+      caption: "Employee",
+      dataField: "employeeId",
       dataType: "action",
       renderComponent: (e) => {
-        const checked = e as IUserProduct | IAssetProduct;
-        if (isUserProduct(checked)) {
-          return EntityCells.User((checked as IUserProduct).userId);
+        const checked = e as IEmployeeProduct | IAssetProduct;
+        if (isEmployeeProduct(checked)) {
+          return EntityCells.Employee((checked as IEmployeeProduct).employeeId);
         }
         return "";
       },
@@ -48,7 +50,7 @@ export const useColumns = () => {
       dataField: "assetId",
       dataType: "action",
       renderComponent: (e) => {
-        const checked = e as IUserProduct | IAssetProduct;
+        const checked = e as IEmployeeProduct | IAssetProduct;
         if (isAssetProduct(checked)) {
           return EntityCells.Asset((checked as IAssetProduct).assetId);
         }
@@ -65,18 +67,18 @@ export const useColumns = () => {
       dataField: "id",
       dataType: "action",
       renderComponent: (e) => {
-        const checked = e as IUserProduct | IAssetProduct;
-        if (isUserProduct(checked)) {
+        const checked = e as IEmployeeProduct | IAssetProduct;
+        if (isEmployeeProduct(checked)) {
           return (
             <CheckOutButton
-              checkOut={openUserProductCheckOutModal(
+              checkOut={openEmployeeProductCheckOutModal(
                 {
-                  userProductId: checked.id,
+                  employeeProductId: checked.id,
                   quantity: checked.quantity,
                   notes: checked.notes,
-                  userId: checked.userId,
+                  employeeId: checked.employeeId,
                 },
-                userCheckOut
+                employeeCheckOut
               )}
             />
           );

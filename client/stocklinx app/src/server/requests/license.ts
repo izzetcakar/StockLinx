@@ -3,9 +3,9 @@ import {
   AssetProductCheckInDto,
   AssetProductCheckOutDto,
   AssetProductDto,
-  UserProductCheckInDto,
-  UserProductCheckOutDto,
-  UserProductDto,
+  EmployeeProductCheckInDto,
+  EmployeeProductCheckOutDto,
+  EmployeeProductDto,
 } from "@interfaces/dtos";
 import { ILicense } from "@interfaces/serverInterfaces";
 import { request } from "@request";
@@ -49,16 +49,28 @@ const lookup = () => {
   return baseRequests.lookup(requestUrl, ["tag", "name"]);
 };
 
-const userCheckIn = async (
-  checkInDto: UserProductCheckInDto
-): Promise<UserProductDto> => {
+const employeeCheckIn = async (
+  checkInDto: EmployeeProductCheckInDto
+): Promise<EmployeeProductDto> => {
   return (
-    await request<UserProductDto>({
-      requestUrl: requestUrl + "checkin/user",
+    await request<EmployeeProductDto>({
+      requestUrl: requestUrl + "checkin/employee",
       apiType: "post",
       queryData: checkInDto,
     })
-  ).data as UserProductDto;
+  ).data as EmployeeProductDto;
+};
+
+const employeeCheckOut = async (
+  checkOutDto: EmployeeProductCheckOutDto
+): Promise<EmployeeProductDto[]> => {
+  return (
+    await request<EmployeeProductDto>({
+      requestUrl: requestUrl + "checkout/employee",
+      apiType: "post",
+      queryData: checkOutDto,
+    })
+  ).data as EmployeeProductDto[];
 };
 
 const assetCheckIn = async (
@@ -71,18 +83,6 @@ const assetCheckIn = async (
       queryData: checkInDto,
     })
   ).data as AssetProductDto;
-};
-
-const userCheckOut = async (
-  checkOutDto: UserProductCheckOutDto
-): Promise<UserProductDto[]> => {
-  return (
-    await request<UserProductDto>({
-      requestUrl: requestUrl + "checkout/user",
-      apiType: "post",
-      queryData: checkOutDto,
-    })
-  ).data as UserProductDto[];
 };
 
 const assetCheckOut = async (
@@ -107,8 +107,8 @@ export const licenseRequests = {
   removeRange,
   filter,
   lookup,
-  userCheckIn,
+  employeeCheckIn,
   assetCheckIn,
-  userCheckOut,
+  employeeCheckOut,
   assetCheckOut,
 };

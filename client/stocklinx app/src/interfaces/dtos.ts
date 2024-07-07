@@ -10,8 +10,8 @@ export interface IUserLoginDto {
 export interface TokenDto {
   token: string;
 }
-export interface UserProductDto extends BaseDto {
-  userId: string;
+export interface EmployeeProductDto extends BaseDto {
+  employeeId: string;
   accessoryId?: string;
   assetId?: string;
   consumableId?: string;
@@ -32,8 +32,8 @@ export interface AssetProductDto extends BaseDto {
   notes: string | null;
   quantity: number;
 }
-export interface UserProductCheckInDto {
-  userId: string;
+export interface EmployeeProductCheckInDto {
+  employeeId: string;
   productId: string;
   assaignDate: Date;
   notes: string | null;
@@ -48,14 +48,14 @@ export interface AssetProductCheckInDto {
 }
 export interface AssetCheckInDto {
   assetId: string;
-  userId: string;
+  employeeId: string;
   productStatusId: string;
   assaignDate: Date;
   notes: string | null;
 }
-export interface UserProductCheckOutDto {
-  userId?: string;
-  userProductId: string;
+export interface EmployeeProductCheckOutDto {
+  employeeId?: string;
+  employeeProductId: string;
   quantity: number;
   notes: string | null;
 }
@@ -66,8 +66,8 @@ export interface AssetProductCheckOutDto {
   notes: string | null;
 }
 export interface AssetCheckOutDto {
-  userId?: string;
-  userProductId: string;
+  employeeId?: string;
+  employeeProductId: string;
   productStatusId: string;
   notes: string | null;
 }

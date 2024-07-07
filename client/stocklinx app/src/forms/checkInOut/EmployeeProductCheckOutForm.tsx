@@ -1,28 +1,26 @@
 import React from "react";
 import { Button, Group, Textarea, NumberInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { UserProductCheckOutDto } from "../../interfaces/dtos";
-import { useUser } from "@/hooks/query/user";
+import { EmployeeProductCheckOutDto } from "../../interfaces/dtos";
+import { useEmployee } from "@/hooks/query/employee";
 import FormSelect from "../mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";
 
-interface UserProductCheckOutFormProps {
-  checkOutDto: UserProductCheckOutDto;
+interface EmployeeProductCheckOutFormProps {
+  checkOutDto: EmployeeProductCheckOutDto;
   isAsset?: boolean;
-  userCheckOut: (data: UserProductCheckOutDto) => void;
+  employeeCheckOut: (data: EmployeeProductCheckOutDto) => void;
 }
 
-const UserProductCheckOutForm: React.FC<UserProductCheckOutFormProps> = ({
-  checkOutDto,
-  isAsset,
-  userCheckOut,
-}) => {
+const EmployeeProductCheckOutForm: React.FC<
+  EmployeeProductCheckOutFormProps
+> = ({ checkOutDto, isAsset, employeeCheckOut }) => {
   const {
-    data: users,
-    isLoading: userLoading,
-    refetch: userRefetch,
-  } = useUser.Lookup();
-  const form = useForm<UserProductCheckOutDto>({
+    data: employees,
+    isLoading: employeeLoading,
+    refetch: employeeRefetch,
+  } = useEmployee.Lookup();
+  const form = useForm<EmployeeProductCheckOutDto>({
     initialValues: checkOutDto,
     validate: {
       quantity: (value: number) =>
@@ -30,20 +28,20 @@ const UserProductCheckOutForm: React.FC<UserProductCheckOutFormProps> = ({
     },
   });
 
-  const handleSubmit = (data: UserProductCheckOutDto) => {
-    userCheckOut(data);
+  const handleSubmit = (data: EmployeeProductCheckOutDto) => {
+    employeeCheckOut(data);
   };
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
       <FormCard>
         <FormSelect
-          label="User"
-          data={users || []}
-          inputProps={form.getInputProps("userId")}
-          value={form.values.userId || ""}
-          fetchData={userRefetch}
-          loading={userLoading}
+          label="Employee"
+          data={employees || []}
+          inputProps={form.getInputProps("employeeId")}
+          value={form.values.employeeId || ""}
+          fetchData={employeeRefetch}
+          loading={employeeLoading}
         />
         {!isAsset ? (
           <NumberInput
@@ -69,4 +67,4 @@ const UserProductCheckOutForm: React.FC<UserProductCheckOutFormProps> = ({
   );
 };
 
-export default UserProductCheckOutForm;
+export default EmployeeProductCheckOutForm;

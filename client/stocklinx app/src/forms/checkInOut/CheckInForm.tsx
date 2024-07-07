@@ -7,8 +7,8 @@ import {
   SegmentedControl,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { IAssetProduct, IUserProduct } from "@interfaces/serverInterfaces";
-import { useUser } from "@/hooks/query/user";
+import { IAssetProduct, IEmployeeProduct } from "@interfaces/serverInterfaces";
+import { useEmployee } from "@/hooks/query/employee";
 import { useAsset } from "@/hooks/query/asset";
 import FormSelect from "../mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";
@@ -16,28 +16,28 @@ import FormCard from "@/components/form/FormCard";
 interface CheckInFormProps {
   segment: string[];
   isAsset?: boolean;
-  userProduct?: IUserProduct;
+  employeeProduct?: IEmployeeProduct;
   assetProduct?: IAssetProduct;
-  userCheckIn?: (data: IUserProduct) => void;
+  employeeCheckIn?: (data: IEmployeeProduct) => void;
   assetCheckIn?: (data: IAssetProduct) => void;
 }
 
 const CheckInForm: React.FC<CheckInFormProps> = ({
   segment,
-  userProduct,
+  employeeProduct,
   assetProduct,
-  userCheckIn,
+  employeeCheckIn,
   assetCheckIn,
 }) => {
-  const { data: userLK } = useUser.Lookup();
+  const { data: employeeLK } = useEmployee.Lookup();
   const { data: assetLK } = useAsset.Lookup();
   const [type, setType] = useState(segment[0]);
 
-  const userForm = useForm<IUserProduct>({
-    initialValues: userProduct,
+  const employeeForm = useForm<IEmployeeProduct>({
+    initialValues: employeeProduct,
     validate: {
-      userId: (value: string) =>
-        value !== "" ? null : "User must be selected",
+      employeeId: (value: string) =>
+        value !== "" ? null : "Employee must be selected",
     },
   });
   const assetForm = useForm<IAssetProduct>({
@@ -48,24 +48,24 @@ const CheckInForm: React.FC<CheckInFormProps> = ({
     },
   });
 
-  const handleSubmit = (data: IUserProduct | IAssetProduct) => {
-    if (type === "User") {
-      userCheckIn && userCheckIn(data as IUserProduct);
+  const handleSubmit = (data: IEmployeeProduct | IAssetProduct) => {
+    if (type === "Employee") {
+      employeeCheckIn && employeeCheckIn(data as IEmployeeProduct);
     } else {
       assetCheckIn && assetCheckIn(data as IAssetProduct);
     }
   };
 
   const getFormInputProps = (input: string) => {
-    if (type === "User") {
-      return userForm.getInputProps(input);
+    if (type === "Employee") {
+      return employeeForm.getInputProps(input);
     }
     return assetForm.getInputProps(input);
   };
 
   const getForm = () => {
-    if (type === "User") {
-      return userForm;
+    if (type === "Employee") {
+      return employeeForm;
     }
     return assetForm;
   };
@@ -74,12 +74,12 @@ const CheckInForm: React.FC<CheckInFormProps> = ({
     <form onSubmit={getForm().onSubmit((values) => handleSubmit(values))}>
       <FormCard>
         <SegmentedControl value={type} onChange={setType} data={segment} />
-        {type === "User" ? (
+        {type === "Employee" ? (
           <FormSelect
-            label="User"
-            data={userLK}
-            inputProps={userForm.getInputProps("userId")}
-            value={userForm.values.userId}
+            label="Employee"
+            data={employeeLK}
+            inputProps={employeeForm.getInputProps("employeeId")}
+            value={employeeForm.values.employeeId}
           />
         ) : null}
         {type === "Asset" ? (

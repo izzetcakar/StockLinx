@@ -1,12 +1,12 @@
 import { DataColumn } from "@/interfaces/gridTableInterfaces";
 import { EntityCells } from "../Entity";
-import { IUserProduct } from "@/interfaces/serverInterfaces";
-import { openUserProductCheckOutModal } from "@/utils/modalUtils";
+import { IEmployeeProduct } from "@/interfaces/serverInterfaces";
+import { openEmployeeProductCheckOutModal } from "@/utils/modalUtils";
+import { EmployeeProductCheckOutDto } from "@/interfaces/dtos";
 import CheckOutButton from "../CheckOutBtnCell";
-import { UserProductCheckOutDto } from "@/interfaces/dtos";
 
-export const userSeatColumns = (
-  userCheckOut: (data: UserProductCheckOutDto) => void
+export const employeeSeatColumns = (
+  employeeCheckOut: (data: EmployeeProductCheckOutDto) => void
 ) => {
   const columns: DataColumn[] = [
     {
@@ -18,12 +18,12 @@ export const userSeatColumns = (
       },
     },
     {
-      caption: "User",
-      dataField: "userId",
+      caption: "Employee",
+      dataField: "employeeId",
       dataType: "action",
       renderComponent: (e) => {
-        const checked = e as IUserProduct;
-        return EntityCells.User((checked as IUserProduct).userId);
+        const checked = e as IEmployeeProduct;
+        return EntityCells.User((checked as IEmployeeProduct).employeeId);
       },
     },
     {
@@ -36,17 +36,17 @@ export const userSeatColumns = (
       dataField: "id",
       dataType: "action",
       renderComponent: (e) => {
-        const checked = e as IUserProduct;
+        const checked = e as IEmployeeProduct;
         return (
           <CheckOutButton
-            checkOut={openUserProductCheckOutModal(
+            checkOut={openEmployeeProductCheckOutModal(
               {
-                userProductId: checked.id,
+                employeeProductId: checked.id,
                 quantity: checked.quantity,
                 notes: checked.notes,
-                userId: checked.userId,
+                employeeId: checked.employeeId,
               },
-              userCheckOut
+              employeeCheckOut
             )}
           />
         );

@@ -121,8 +121,8 @@ export interface IFieldSetCustomField extends BaseEntity {
   fieldSetId: string;
   customFieldId: string;
 }
-export interface IUserProduct extends BaseEntity {
-  userId: string;
+export interface IEmployeeProduct extends BaseEntity {
+  employeeId: string;
   accessoryId: string | null;
   assetId: string | null;
   licenseId: string | null;
@@ -159,19 +159,20 @@ export interface ISupplier extends BaseEntity {
   notes: string | null;
 }
 export interface IUser extends BaseEntity {
-  departmentId: string;
   isAdmin?: boolean;
-  employeeNo: string;
   firstName: string;
   lastName: string;
   email: string;
   password: string;
-  phoneNo: string | null;
-  language: string | null;
+  notes: string | null;
+}
+export interface IEmployee extends BaseEntity {
+  companyId?: string;
+  departmentId: string;
+  firstName: string;
+  lastName: string;
   jobTitle: string | null;
-  website: string | null;
-  startDate: Date;
-  endDate: Date | null;
+  phoneNo: string | null;
   notes: string | null;
 }
 export interface IToken {

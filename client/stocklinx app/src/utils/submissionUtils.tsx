@@ -1,5 +1,7 @@
 import { PDFViewer, pdf } from "@react-pdf/renderer";
-import SubmissionForm, { SubmissionFormProps } from "../forms/SubmissionForm";
+import SubmissionForm, {
+  SubmissionFormProps,
+} from "../forms/submission/SubmissionForm";
 import { modals } from "@mantine/modals";
 
 export const handlePdf = async (submissionFormProps: SubmissionFormProps) => {

@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Group, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { AssetCheckInDto } from "../../interfaces/dtos";
-import { useUser } from "@/hooks/query/user";
+import { useEmployee } from "@/hooks/query/employee";
 import { useProductStatus } from "@/hooks/query/productStatus";
 import { useAsset } from "@/hooks/query/asset";
 import FormSelect from "../mantine/FormSelect";
@@ -14,10 +14,10 @@ interface AssetCheckInFormProps {
 
 const AssetCheckInForm: React.FC<AssetCheckInFormProps> = ({ checkInDto }) => {
   const {
-    data: users,
-    isLoading: userLoading,
-    refetch: userRefetch,
-  } = useUser.GetAll();
+    data: employees,
+    isLoading: employeeLoading,
+    refetch: employeeRefetch,
+  } = useEmployee.GetAll();
   const {
     data: productStatuses,
     isLoading: statusLoading,
@@ -28,8 +28,8 @@ const AssetCheckInForm: React.FC<AssetCheckInFormProps> = ({ checkInDto }) => {
   const form = useForm<AssetCheckInDto>({
     initialValues: checkInDto,
     validate: {
-      userId: (value: string) =>
-        value !== "" ? null : "User must be selected",
+      employeeId: (value: string) =>
+        value !== "" ? null : "Employee must be selected",
     },
   });
 
@@ -41,17 +41,17 @@ const AssetCheckInForm: React.FC<AssetCheckInFormProps> = ({ checkInDto }) => {
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
       <FormCard>
         <FormSelect
-          label="User"
+          label="Employee"
           data={
-            users?.map((user) => ({
-              value: user.id,
-              label: user.firstName + " " + user.lastName,
+            employees?.map((employee) => ({
+              value: employee.id,
+              label: employee.firstName + " " + employee.lastName,
             })) || []
           }
-          inputProps={form.getInputProps("userId")}
-          value={form.values.userId}
-          fetchData={userRefetch}
-          loading={userLoading}
+          inputProps={form.getInputProps("employeeId")}
+          value={form.values.employeeId}
+          fetchData={employeeRefetch}
+          loading={employeeLoading}
           required
         />
         <FormSelect

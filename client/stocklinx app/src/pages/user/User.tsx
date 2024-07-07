@@ -4,7 +4,7 @@ import { useUser } from "@/hooks/query/user";
 import { useDepartment } from "@/hooks/query/department";
 import { useCompany } from "@/hooks/query/company";
 import HistoryLogs from "@components/dataGrid/customLog/HistoryLogs";
-import UserProductsPage from "@components/dataGrid/userProducts/UserProducts";
+import EmployeeProductsPage from "@components/dataGrid/employeeProducts/EmployeeProducts";
 
 const User = () => {
   const { id } = useParams();
@@ -28,9 +28,9 @@ const User = () => {
       <div className="product__container__title">
         User - {user?.firstName} {user?.lastName}
       </div>
-      <Tabs defaultValue="userProducts">
+      <Tabs defaultValue="employeeProducts">
         <Tabs.List grow>
-          <Tabs.Tab value="userProducts">Deployed Products</Tabs.Tab>
+          <Tabs.Tab value="employeeProducts">Deployed Products</Tabs.Tab>
           <Tabs.Tab value="info">Info</Tabs.Tab>
           <Tabs.Tab value="history">History</Tabs.Tab>
         </Tabs.List>
@@ -119,8 +119,8 @@ const User = () => {
         <Tabs.Panel value="history">
           <HistoryLogs id={id as string} />
         </Tabs.Panel>
-        <Tabs.Panel value="userProducts">
-          <UserProductsPage userId={id as string} />
+        <Tabs.Panel value="employeeProducts">
+          <EmployeeProductsPage userId={id as string} />
         </Tabs.Panel>
       </Tabs>
     </div>

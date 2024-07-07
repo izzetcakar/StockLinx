@@ -1,8 +1,8 @@
 import {
   AssetProductCheckInDto,
   AssetProductCheckOutDto,
-  UserProductCheckInDto,
-  UserProductCheckOutDto,
+  EmployeeProductCheckInDto,
+  EmployeeProductCheckOutDto,
 } from "./dtos";
 import { Column, Filter } from "./gridTableInterfaces";
 
@@ -37,16 +37,16 @@ export interface AssetProductCheckInPayload {
   checkInDto: AssetProductCheckInDto;
   onSubmit?: () => void;
 }
-export interface UserProductCheckInPayload {
-  checkInDto: UserProductCheckInDto;
+export interface EmployeeProductCheckInPayload {
+  checkInDto: EmployeeProductCheckInDto;
   onSubmit?: () => void;
 }
 export interface AssetProductCheckOutPayload {
   checkOutDto: AssetProductCheckOutDto;
   onSubmit?: () => void;
 }
-export interface UserProductCheckOutPayload {
-  checkOutDto: UserProductCheckOutDto;
+export interface EmployeeProductCheckOutPayload {
+  checkOutDto: EmployeeProductCheckOutDto;
   onSubmit?: () => void;
 }
 export interface FilterInputProps {

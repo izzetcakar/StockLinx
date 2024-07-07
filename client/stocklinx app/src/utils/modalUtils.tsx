@@ -5,7 +5,7 @@ import AssetCheckInForm from "@/forms/checkInOut/AssetCheckInForm";
 import AssetCheckOutForm from "@/forms/checkInOut/AssetCheckOutForm";
 import AssetProductCheckOutForm from "@/forms/checkInOut/AssetProductCheckOutForm";
 import CheckInForm from "@/forms/checkInOut/CheckInForm";
-import UserProductCheckOutForm from "@/forms/checkInOut/UserProductCheckOutForm";
+import EmployeeProductCheckOutForm from "@/forms/checkInOut/EmployeeProductCheckOutForm";
 import CompanyForm from "@/forms/company/CompanyForm";
 import ComponentForm from "@/forms/component/ComponentForm";
 import ConsumableForm from "@/forms/consumable/ConsumableForm";
@@ -24,7 +24,7 @@ import {
   AssetCheckInDto,
   AssetCheckOutDto,
   AssetProductCheckOutDto,
-  UserProductCheckOutDto,
+  EmployeeProductCheckOutDto,
 } from "@/interfaces/dtos";
 import {
   IAccessory,
@@ -44,7 +44,7 @@ import {
   IProductStatus,
   ISupplier,
   IUser,
-  IUserProduct,
+  IEmployeeProduct,
 } from "@/interfaces/serverInterfaces";
 import { Text } from "@mantine/core";
 import { modals } from "@mantine/modals";
@@ -226,8 +226,8 @@ export const openCustomFieldModal = (customField?: ICustomField) => {
 
 export const openCheckInModal = (
   segment: string[] = ["User"],
-  userProduct?: IUserProduct,
-  userCheckIn?: (data: IUserProduct) => void,
+  employeeProduct?: IEmployeeProduct,
+  employeeCheckIn?: (data: IEmployeeProduct) => void,
   assetProduct?: IAssetProduct,
   assetCheckIn?: (data: IAssetProduct) => void
 ) => {
@@ -237,8 +237,8 @@ export const openCheckInModal = (
     children: (
       <CheckInForm
         segment={segment}
-        userProduct={userProduct}
-        userCheckIn={userCheckIn}
+        employeeProduct={employeeProduct}
+        employeeCheckIn={employeeCheckIn}
         assetProduct={assetProduct}
         assetCheckIn={assetCheckIn}
       />
@@ -281,17 +281,17 @@ export const openAssetProductCheckOutModal = (
   });
 };
 
-export const openUserProductCheckOutModal = (
-  checkOutDto: UserProductCheckOutDto,
-  userCheckOut: (data: UserProductCheckOutDto) => void
+export const openEmployeeProductCheckOutModal = (
+  checkOutDto: EmployeeProductCheckOutDto,
+  employeeCheckOut: (data: EmployeeProductCheckOutDto) => void
 ) => {
   modals.open({
     modalId: "user_product_checkOut_modal",
     title: "Check Out",
     children: (
-      <UserProductCheckOutForm
+      <EmployeeProductCheckOutForm
         checkOutDto={checkOutDto}
-        userCheckOut={userCheckOut}
+        employeeCheckOut={employeeCheckOut}
       />
     ),
     size: "lg",

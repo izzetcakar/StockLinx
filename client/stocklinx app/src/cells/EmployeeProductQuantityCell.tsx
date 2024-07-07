@@ -1,31 +1,31 @@
-import { useUserProduct } from "@/hooks/query/userProduct";
+import { useEmployeeProduct } from "@/hooks/query/employeeProduct";
 
-interface UserProductQuantityCellProps {
+interface EmployeeProductQuantityCellProps {
   productId: string;
   productType: string;
   totalQuantity: number;
 }
 
-const UserProductQuantityCell: React.FC<UserProductQuantityCellProps> = ({
+const EmployeeProductQuantityCell: React.FC<EmployeeProductQuantityCellProps> = ({
   productId,
   productType,
   totalQuantity,
 }) => {
-  const { data: userProducts } = useUserProduct.GetAll();
+  const { data: employeeProducts } = useEmployeeProduct.GetAll();
 
   const getCheckedQuantity = () => {
     switch (productType) {
       case "Consumable":
         return (
-          userProducts
-            ?.filter((userProduct) => userProduct.consumableId === productId)
+          employeeProducts
+            ?.filter((employeeProduct) => employeeProduct.consumableId === productId)
             .reduce((acc, curr) => acc + curr.quantity, 0) || 0
         );
 
       case "Accessory":
         return (
-          userProducts
-            ?.filter((userProduct) => userProduct.accessoryId === productId)
+          employeeProducts
+            ?.filter((employeeProduct) => employeeProduct.accessoryId === productId)
             .reduce((acc, curr) => acc + curr.quantity, 0) || 0
         );
       default:
@@ -36,4 +36,4 @@ const UserProductQuantityCell: React.FC<UserProductQuantityCellProps> = ({
   return <div>{totalQuantity - getCheckedQuantity()}</div>;
 };
 
-export default UserProductQuantityCell;
+export default EmployeeProductQuantityCell;

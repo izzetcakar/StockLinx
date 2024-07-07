@@ -1,19 +1,19 @@
 import { useColumns } from "./columns";
 import { openSubmissionModal } from "../../../utils/submissionUtils";
-import { useUserProduct } from "@/hooks/query/userProduct";
+import { useEmployeeProduct } from "@/hooks/query/employeeProduct";
 import Gridtable from "../../gridTable/GridTable";
 
-interface UserProductsPageProps {
+interface EmployeeProductsPageProps {
   userId: string;
 }
-const UserProductsPage: React.FC<UserProductsPageProps> = ({ userId }) => {
-  const { data: userProducts } = useUserProduct.GetAll();
+const EmployeeProductsPage: React.FC<EmployeeProductsPageProps> = ({ userId }) => {
+  const { data: employeeProducts } = useEmployeeProduct.GetAll();
 
   return (
     <>
       <Gridtable
         itemKey="id"
-        data={userProducts?.filter((dp) => dp.userId === userId) || []}
+        data={employeeProducts?.filter((dp) => dp.userId === userId) || []}
         columns={useColumns()}
         enableSelectActions
       />
@@ -48,4 +48,4 @@ const UserProductsPage: React.FC<UserProductsPageProps> = ({ userId }) => {
   );
 };
 
-export default UserProductsPage;
+export default EmployeeProductsPage;

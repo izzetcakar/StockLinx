@@ -2,10 +2,10 @@ import React from "react";
 import { Button, Group, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { AssetCheckOutDto } from "../../interfaces/dtos";
-import FormSelect from "../mantine/FormSelect";
 import { useAsset } from "@/hooks/query/asset";
 import { useProductStatus } from "@/hooks/query/productStatus";
-import { useUser } from "@/hooks/query/user";
+import { useEmployee } from "@/hooks/query/employee";
+import FormSelect from "../mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";
 
 interface AssetCheckOutFormProps {
@@ -17,10 +17,10 @@ const AssetCheckOutForm: React.FC<AssetCheckOutFormProps> = ({
 }) => {
   const { mutate: checkOut } = useAsset.CheckOut();
   const {
-    data: users,
-    isLoading: userLoading,
-    refetch: userRefetch,
-  } = useUser.Lookup();
+    data: employees,
+    isLoading: employeeLoading,
+    refetch: employeeRefetch,
+  } = useEmployee.Lookup();
   const { data: productStatusLK } = useProductStatus.Lookup();
 
   const form = useForm<AssetCheckOutDto>({
@@ -35,12 +35,12 @@ const AssetCheckOutForm: React.FC<AssetCheckOutFormProps> = ({
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
       <FormCard>
         <FormSelect
-          label="User"
-          data={users || []}
-          inputProps={form.getInputProps("userId")}
-          value={form.values.userId || ""}
-          fetchData={userRefetch}
-          loading={userLoading}
+          label="Employee"
+          data={employees || []}
+          inputProps={form.getInputProps("employeeId")}
+          value={form.values.employeeId || ""}
+          fetchData={employeeRefetch}
+          loading={employeeLoading}
         />
         <FormSelect
           label="Product Status"

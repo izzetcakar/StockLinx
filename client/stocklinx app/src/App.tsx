@@ -35,49 +35,33 @@ import ProductStatus from "./pages/productStatus/ProductStatus";
 import Supplier from "./pages/supplier/Supplier";
 import User from "./pages/user/User";
 import Permissions from "./pages/permission/Permissions";
+import Test from "./pages/test/Test";
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
 import "@mantine/dates/styles.css";
 import "./app.scss";
 import "./base.scss";
-import Test from "./pages/test/Test";
 
 const Layout = () => {
-  // const { data: user } = useUser.GetWithToken();
-  // const { drawerOpened } = useContext(GenericContext);
+  const { data: user } = useUser.GetWithToken();
 
-  // if (user) {
-  //   return (
-  //     <div className="main__container">
-  //       <div>
-  //         <Sidebar />
-  //       </div>
-  //       <div className="page">
-  //         <Header />
-  //         <div className="page__content">
-  //           <Outlet />
-  //         </div>
-  //       </div>
-  //       {/* <LoadingOverlay visible={loading > 0 && !drawerOpened} zIndex={1000} /> */}
-  //     </div>
-  //   );
-  // } else {
-  //   return <Login />;
-  // }
-  return (
-    <div className="main__container">
-      <div>
-        <Sidebar />
-      </div>
-      <div className="page">
-        <Header />
-        <div className="page__content">
-          <Outlet />
+  if (user) {
+    return (
+      <div className="main__container">
+        <div>
+          <Sidebar />
+        </div>
+        <div className="page">
+          <Header />
+          <div className="page__content">
+            <Outlet />
+          </div>
         </div>
       </div>
-      {/* <LoadingOverlay visible={loading > 0 && !drawerOpened} zIndex={1000} /> */}
-    </div>
-  );
+    );
+  } else {
+    return <Login />;
+  }
 };
 
 const router = createBrowserRouter([

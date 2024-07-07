@@ -1,14 +1,14 @@
 import { useAssetProduct } from "@/hooks/query/assetProduct";
-import { useUserProduct } from "@/hooks/query/userProduct";
+import { useEmployeeProduct } from "@/hooks/query/employeeProduct";
 import { ILicense } from "@/interfaces/serverInterfaces";
 import React from "react";
 
 const LicenseQuantity: React.FC<ILicense> = (license: ILicense) => {
-  const { data: userProducts } = useUserProduct.GetAll();
+  const { data: employeeProducts } = useEmployeeProduct.GetAll();
   const { data: assetProducts } = useAssetProduct.GetAll();
 
-  const checkedUserQuantity = userProducts
-    ?.filter((userProduct) => userProduct.licenseId === license.id)
+  const checkedUserQuantity = employeeProducts
+    ?.filter((employeeProduct) => employeeProduct.licenseId === license.id)
     .reduce((acc, curr) => acc + curr.quantity, 0);
 
   const checkedAssetQuantity = assetProducts

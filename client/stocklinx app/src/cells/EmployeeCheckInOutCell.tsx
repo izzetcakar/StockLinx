@@ -1,5 +1,5 @@
 import { useUser } from "@/hooks/query/user";
-import { useUserProduct } from "@/hooks/query/userProduct";
+import { useEmployeeProduct } from "@/hooks/query/employeeProduct";
 import { IAsset } from "@/interfaces/serverInterfaces";
 import { Button } from "@mantine/core";
 import React from "react";
@@ -15,12 +15,12 @@ const UserCheckInOutCell: React.FC<UserCheckInOutCellProps> = ({
   checkIn,
   checkOut,
 }) => {
-  const { data: userProducts } = useUserProduct.GetAll();
+  const { data: employeeProducts } = useEmployeeProduct.GetAll();
   const { data: userLK } = useUser.Lookup();
-  const userProduct = userProducts?.find(
-    (userProduct) => userProduct?.assetId === asset.id
+  const employeeProduct = employeeProducts?.find(
+    (employeeProduct) => employeeProduct?.assetId === asset.id
   );
-  const user = userLK?.find((user) => user.value === userProduct?.userId);
+  const user = userLK?.find((user) => user.value === employeeProduct?.userId);
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
       <Button
@@ -29,10 +29,10 @@ const UserCheckInOutCell: React.FC<UserCheckInOutCellProps> = ({
         size="xs"
         style={{ width: "60%" }}
         onClick={() => {
-          userProduct ? checkOut(asset, userProduct) : checkIn(asset);
+          employeeProduct ? checkOut(asset, employeeProduct) : checkIn(asset);
         }}
       >
-        {userProduct ? "Check Out" : "Check In"}
+        {employeeProduct ? "Check Out" : "Check In"}
       </Button>
     </div>
   );

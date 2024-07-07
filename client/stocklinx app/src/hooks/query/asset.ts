@@ -1,13 +1,13 @@
 import {
   AssetCheckInDto,
   AssetCheckOutDto,
-  UserProductDto,
+  EmployeeProductDto,
 } from "@/interfaces/dtos";
 import { queryClient } from "@/main";
 import { assetRequests } from "@/server/requests/asset";
 import { useMutation } from "react-query";
 import { baseHooks } from "./baseHooks";
-import { IAsset, IUserProduct } from "@/interfaces/serverInterfaces";
+import { IAsset, IEmployeeProduct } from "@/interfaces/serverInterfaces";
 import { setAssetCheckStatus } from "@/utils/checkInOutUtils";
 import { closeModal } from "@/utils/modalUtils";
 import { openNotificationSuccess } from "@/utils/notificationUtils";
@@ -60,14 +60,14 @@ const CheckIn = () => {
     mutationKey: assetKeys.CHECK_IN_ASSET,
     mutationFn: (dto: AssetCheckInDto) => assetRequests.checkIn(dto),
     onSuccess: (res, req) => {
-      queryClient.invalidateQueries("FETCH_ALL_USERPRODUCT");
-      queryClient.setQueryData<IUserProduct[]>(
-        "FETCH_ALL_USERPRODUCT",
+      queryClient.invalidateQueries("FETCH_ALL_EMPLOYEEPRODUCT");
+      queryClient.setQueryData<IEmployeeProduct[]>(
+        "FETCH_ALL_EMPLOYEEPRODUCT",
         (data) => {
           return data ? [...data, res] : [res];
         }
       );
-      queryClient.setQueryData<IUserProduct[]>("FILTER_USERPRODUCT", (data) => {
+      queryClient.setQueryData<IEmployeeProduct[]>("FILTER_EMPLOYEEPRODUCT", (data) => {
         return data ? [...data, res] : [res];
       });
       queryClient.setQueryData<IAsset[]>("FETCH_ALL_ASSET", (data) => {
@@ -90,13 +90,13 @@ const CheckOut = () => {
     mutationKey: assetKeys.CHECK_OUT_ASSET,
     mutationFn: (dto: AssetCheckOutDto) => assetRequests.checkOut(dto),
     onSuccess: (res, req) => {
-      queryClient.setQueryData<IUserProduct[]>(
-        "FETCH_ALL_USERPRODUCT",
+      queryClient.setQueryData<IEmployeeProduct[]>(
+        "FETCH_ALL_EMPLOYEEPRODUCT",
         (data) => {
           return handleCheckOutData(data, req, res);
         }
       );
-      queryClient.setQueryData<IUserProduct[]>("FILTER_USERPRODUCT", (data) => {
+      queryClient.setQueryData<IEmployeeProduct[]>("FILTER_EMPLOYEEPRODUCT", (data) => {
         return handleCheckOutData(data, req, res);
       });
       queryClient.setQueryData<IAsset[]>("FETCH_ALL_ASSET", (data) => {
@@ -115,7 +115,7 @@ const CheckOut = () => {
 const handleCheckOutData = (
   data: any,
   req: AssetCheckOutDto,
-  res: UserProductDto | null
+  res: EmployeeProductDto | null
 ) => {
   if (!data) {
     if (res) {
@@ -124,12 +124,12 @@ const handleCheckOutData = (
   }
   if (res) {
     const filtered = data?.filter(
-      (userProduct: UserProductDto) => userProduct.id !== req.userProductId
+      (employeeProduct: EmployeeProductDto) => employeeProduct.id !== req.employeeProductId
     );
     return [...filtered, res];
   }
   return data.filter(
-    (userProduct: UserProductDto) => userProduct.id !== req.userProductId
+    (employeeProduct: EmployeeProductDto) => employeeProduct.id !== req.employeeProductId
   );
 };
 

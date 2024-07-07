@@ -96,6 +96,11 @@ const User = (id: string | null) => {
   return <div>{user?.firstName + user?.lastName || ""}</div>;
 };
 
+const Employee = (id: string | null) => {
+  const { data: user } = useUser.Get(id || "");
+  return <div>{user?.firstName + user?.lastName || ""}</div>;
+};
+
 export const EntityCells = {
   Accessory,
   Asset,
@@ -113,4 +118,5 @@ export const EntityCells = {
   ProductStatus,
   Supplier,
   User,
+  Employee,
 };

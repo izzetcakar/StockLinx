@@ -15,7 +15,8 @@ import {
   IProductStatus,
   ISupplier,
   IUser,
-  IUserProduct,
+  IEmployeeProduct,
+  IEmployee,
 } from "@/interfaces/serverInterfaces";
 import { getImage } from "@/utils/imageUtils";
 
@@ -295,18 +296,10 @@ export const useInitial = () => {
   const User = (entity: IUser | undefined) => {
     let initialValues: IUser = {
       id: "",
-      employeeNo: "",
       firstName: "",
       lastName: "",
-      departmentId: "",
       email: "",
       password: "",
-      phoneNo: null,
-      language: null,
-      website: null,
-      startDate: new Date("2023-01-01"),
-      endDate: null,
-      jobTitle: null,
       notes: null,
     };
 
@@ -317,9 +310,27 @@ export const useInitial = () => {
     return initialValues;
   };
 
-  const UserProduct: IUserProduct = {
+  const Employee = (entity: IEmployee | undefined) => {
+    let initialValues: IEmployee = {
+      id: "",
+      departmentId: "",
+      firstName: "",
+      lastName: "",
+      jobTitle: null,
+      phoneNo: null,
+      notes: null,
+    };
+
+    if (entity) {
+      initialValues = { ...entity };
+    }
+
+    return initialValues;
+  };
+
+  const EmployeeProduct: IEmployeeProduct = {
     id: "",
-    userId: "",
+    employeeId: "",
     accessoryId: null,
     assetId: null,
     licenseId: null,
@@ -355,7 +366,8 @@ export const useInitial = () => {
     ProductStatus,
     Supplier,
     User,
-    UserProduct,
+    Employee,
+    EmployeeProduct,
     AssetProduct,
   };
 };

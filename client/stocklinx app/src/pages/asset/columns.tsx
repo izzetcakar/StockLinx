@@ -1,6 +1,6 @@
 import { DataColumn } from "@interfaces/gridTableInterfaces";
 import { Image } from "@mantine/core";
-import { IAsset, IUserProduct } from "@interfaces/serverInterfaces";
+import { IAsset, IEmployeeProduct } from "@interfaces/serverInterfaces";
 import { getImage } from "../../utils/imageUtils";
 import {
   openAssetCheckInModal,
@@ -12,8 +12,8 @@ import { useSupplier } from "@/hooks/query/supplier";
 import { useProductStatus } from "@/hooks/query/productStatus";
 import { EntityCells } from "@/cells/Entity";
 import { EntityCardColumn } from "@/interfaces/clientInterfaces";
-import UserCheckInOutCell from "@/cells/UserCheckInOutCell";
-import CheckedOutUserCell from "@/cells/CheckedOutUserCell";
+import EmployeeCheckInOutCell from "@/cells/EmployeeCheckInOutCell";
+import CheckedOutEmployeeCell from "@/cells/CheckedOutEmployeeCell";
 import AssetForm from "@/forms/asset/AssetForm";
 import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
 
@@ -24,7 +24,7 @@ export const useColumns = () => {
 
   const checkIn = (asset: IAsset) => {
     openAssetCheckInModal({
-      userId: "",
+      employeeId: "",
       assetId: asset.id,
       assaignDate: new Date(),
       notes: asset.notes,
@@ -32,11 +32,11 @@ export const useColumns = () => {
     });
   };
 
-  const checkOut = (asset: IAsset, userProduct: IUserProduct) => {
+  const checkOut = (asset: IAsset, employeeProduct: IEmployeeProduct) => {
     openAssetCheckOutModal({
-      userProductId: userProduct.id,
+      employeeProductId: employeeProduct.id,
       productStatusId: asset.productStatusId,
-      notes: userProduct.notes,
+      notes: employeeProduct.notes,
     });
   };
 
@@ -96,7 +96,7 @@ export const useColumns = () => {
       dataField: "id",
       caption: "Checked Out To",
       dataType: "string",
-      renderComponent: (e) => CheckedOutUserCell((e as IAsset).id),
+      renderComponent: (e) => CheckedOutEmployeeCell((e as IAsset).id),
     },
     {
       dataField: "purchaseCost",
@@ -108,7 +108,7 @@ export const useColumns = () => {
       caption: "Checkin/Checkout",
       dataType: "action",
       renderComponent: (e) => (
-        <UserCheckInOutCell
+        <EmployeeCheckInOutCell
           asset={e as IAsset}
           checkIn={checkIn}
           checkOut={checkOut}

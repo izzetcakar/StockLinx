@@ -1,5 +1,5 @@
-import { AssetCheckInDto, AssetCheckOutDto, UserProductDto } from "@interfaces/dtos";
-import { IAsset, IUserProduct } from "@interfaces/serverInterfaces";
+import { AssetCheckInDto, AssetCheckOutDto, EmployeeProductDto } from "@interfaces/dtos";
+import { IAsset, IEmployeeProduct } from "@interfaces/serverInterfaces";
 import { request } from "@request";
 import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 import { baseRequests } from "@/utils/requestUtils";
@@ -42,26 +42,26 @@ const lookup = () => {
   return baseRequests.lookup(requestUrl, ["tag", "name"]);
 };
 
-const checkIn = async (checkInDto: AssetCheckInDto): Promise<IUserProduct> => {
+const checkIn = async (checkInDto: AssetCheckInDto): Promise<IEmployeeProduct> => {
   return (
-    await request<IUserProduct>({
+    await request<IEmployeeProduct>({
       requestUrl: requestUrl + "checkin",
       apiType: "post",
       queryData: checkInDto,
     })
-  ).data as IUserProduct;
+  ).data as IEmployeeProduct;
 };
 
 const checkOut = async (
   checkOutDto: AssetCheckOutDto
-): Promise<UserProductDto | null> => {
+): Promise<EmployeeProductDto | null> => {
   return (
-    await request<UserProductDto>({
+    await request<EmployeeProductDto>({
       requestUrl: requestUrl + "checkout",
       apiType: "post",
       queryData: checkOutDto,
     })
-  ).data as UserProductDto | null;
+  ).data as EmployeeProductDto | null;
 };
 
 export const assetRequests = {

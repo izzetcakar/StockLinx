@@ -1,19 +1,34 @@
 import { DataColumn } from "@interfaces/gridTableInterfaces";
-import { IUser } from "@interfaces/serverInterfaces";
+import { IEmployee } from "@interfaces/serverInterfaces";
+import { useDepartment } from "@/hooks/query/department";
+import { EntityCells } from "@/cells/Entity";
 import { EntityCardColumn } from "@/interfaces/clientInterfaces";
-import UserForm from "@/forms/user/UserForm";
+import EmployeeForm from "@/forms/employee/EmployeeForm";
 import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
 
 export const useColumns = () => {
+  const { refetch: getDepartmentLK } = useDepartment.Lookup();
+
   const columns: DataColumn[] = [
     {
-      dataField: "firstName",
-      dataType: "action",
-      caption: "Name",
-      renderComponent(e) {
-        const user = e as IUser;
-        return user?.firstName + user?.lastName;
+      dataField: "departmentId",
+      caption: "Department",
+      dataType: "string",
+      lookup: {
+        dataSource: getDepartmentLK,
       },
+      renderComponent: (e) =>
+        EntityCells.Department((e as IEmployee).departmentId),
+    },
+    {
+      dataField: "firstName",
+      dataType: "string",
+      caption: "First Name",
+    },
+    {
+      dataField: "lastName",
+      dataType: "string",
+      caption: "Last Name",
     },
     {
       caption: "Title",
@@ -39,14 +54,14 @@ export const useColumns = () => {
 
   const cardColumns: EntityCardColumn[] = [
     {
-      title: (user: IUser) => {
+      title: (employee: IEmployee) => {
         return (
           <div>
-            Name : {user.firstName} + + {user.lastName}
+            Name : {employee.firstName} + + {employee.lastName}
           </div>
         );
       },
-      renderData: (e) => <UserForm user={e as IUser} />,
+      renderData: (e) => <EmployeeForm employee={e as IEmployee} />,
     },
     {
       title: "History",
