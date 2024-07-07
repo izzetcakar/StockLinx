@@ -12,7 +12,7 @@ import {
 } from "@mantine/core";
 import { IconKey, IconMail } from "@tabler/icons-react";
 import { useUser } from "@/hooks/query/user";
-import logo from "/logo.png";
+import logo from "@assets/logo.png";
 import ReCAPTCHA from "react-google-recaptcha";
 import "./user.scss";
 

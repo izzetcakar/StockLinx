@@ -41,6 +41,7 @@ import "@mantine/notifications/styles.css";
 import "@mantine/dates/styles.css";
 import "./app.scss";
 import "./base.scss";
+import Employees from "./pages/employee/Employees";
 
 const Layout = () => {
   const { data: user } = useUser.GetWithToken();
@@ -48,11 +49,9 @@ const Layout = () => {
   if (user) {
     return (
       <div className="main__container">
-        <div>
-          <Sidebar />
-        </div>
+        <Header />
         <div className="page">
-          <Header />
+          <Sidebar />
           <div className="page__content">
             <Outlet />
           </div>
@@ -128,6 +127,10 @@ const router = createBrowserRouter([
       {
         path: "/users",
         element: <Users />,
+      },
+      {
+        path: "/employees",
+        element: <Employees />,
       },
       {
         path: "/customfields",

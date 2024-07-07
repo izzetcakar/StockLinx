@@ -1,192 +1,17 @@
-import React, { useState } from "react";
-import "./sidebar.scss";
-import logo from "/logo.png";
-import icon_barcode from "@assets/icon_barcode.png";
-import icon_home from "@assets/icon_home.png";
-import icon_keybord from "@assets/icon_keyboard.png";
-import icon_drop from "@assets/icon_drop.png";
-import icon_disk from "@assets/icon_disk.png";
-import icon_harddisk from "@assets/icon_harddisk.png";
-import icon_settings from "@assets/icon_setting.png";
-import icon_group from "@assets/icon_group.png";
+import React, { useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useUser } from "@/hooks/query/user";
-interface NavigationSubItem {
-  title: string;
-  target: string;
-}
-interface NavigationItem {
-  title: string;
-  icon: string;
-  subItems?: NavigationSubItem[];
-  isExpanded?: boolean;
-  target: string;
-  onClick?: () => void;
-}
-
-const baseNavigationList = [
-  {
-    title: "Home",
-    icon: icon_home,
-    target: "/",
-  },
-  {
-    title: "Test",
-    target: "/test",
-    icon: icon_home,
-  },
-  {
-    title: "Assets",
-    icon: icon_barcode,
-    target: "/*",
-    subItems: [
-      {
-        title: "Assets",
-        target: "/assets",
-      },
-      {
-        title: "Asset",
-        target: "/asset",
-      },
-    ],
-  },
-  {
-    title: "Licenses",
-    icon: icon_disk,
-    target: "/*",
-    subItems: [
-      {
-        title: "Licenses",
-        target: "/licenses",
-      },
-      {
-        title: "License",
-        target: "/license",
-      },
-    ],
-  },
-  {
-    title: "Accessories",
-    icon: icon_keybord,
-    target: "/*",
-    subItems: [
-      {
-        title: "Accessories",
-        target: "/accessories",
-      },
-      {
-        title: "Accessory",
-        target: "/accessory",
-      },
-    ],
-  },
-  {
-    title: "Consumables",
-    icon: icon_drop,
-    target: "/*",
-    subItems: [
-      {
-        title: "Consumables",
-        target: "/consumables",
-      },
-      {
-        title: "Consumable",
-        target: "/consumable",
-      },
-    ],
-  },
-  {
-    title: "Components",
-    icon: icon_harddisk,
-    target: "/*",
-    subItems: [
-      {
-        title: "Components",
-        target: "/components",
-      },
-      {
-        title: "Component",
-        target: "/component",
-      },
-    ],
-  },
-  {
-    title: "Users",
-    icon: icon_group,
-    target: "/users",
-  },
-  {
-    title: "Settings",
-    icon: icon_settings,
-    subItems: [
-      {
-        title: "Custom Fields",
-        target: "/customfields",
-      },
-      {
-        title: "Status Labels",
-        target: "/productstatuses",
-      },
-      {
-        title: "Asset Models",
-        target: "/models",
-      },
-      {
-        title: "Categories",
-        target: "/categories",
-      },
-      {
-        title: "Manufacturers",
-        target: "/manufacturers",
-      },
-      {
-        title: "Suppliers",
-        target: "/suppliers",
-      },
-      {
-        title: "Companies",
-        target: "/companies",
-      },
-      {
-        title: "Departments",
-        target: "/departments",
-      },
-      {
-        title: "Locations",
-        target: "/locations",
-      },
-      {
-        title: "Users",
-        target: "/users",
-      },
-    ],
-    isExpanded: false,
-    target: "/*",
-  },
-];
+import {
+  NavigationItem,
+  NavigationSubItem,
+} from "@/interfaces/clientInterfaces";
+import GenericContext from "@/context/GenericContext";
+import "./sidebar.scss";
 
 const Sidebar: React.FC = () => {
   const location = useLocation();
-  const { data: user } = useUser.GetWithToken();
-  const [navigationList, setNavigationList] = useState<NavigationItem[]>(
-    user?.isAdmin
-      ? [
-          ...baseNavigationList,
-          {
-            icon: "",
-            title: "Permissions",
-            target: "/permissions",
-          },
-        ]
-      : baseNavigationList
-  );
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const navigate = useNavigate();
-
-  const handleLogoClick = () => {
-    setIsSidebarCollapsed(!isSidebarCollapsed);
-    hideAllDisplayElements();
-  };
+  const { isSidebarCollapsed, navigationList, setNavigationList } =
+    useContext(GenericContext);
 
   const handleNavElements = (target: number) => {
     const newList = navigationList.map((item, index) => {
@@ -208,18 +33,6 @@ const Sidebar: React.FC = () => {
     }
   };
 
-  const hideAllDisplayElements = () => {
-    setNavigationList((prev) =>
-      prev.map((item) => {
-        if (item?.isExpanded && item?.subItems) {
-          return { ...item, isExpanded: false };
-        } else {
-          return item;
-        }
-      })
-    );
-  };
-
   const checkIfActive = (item: NavigationItem | NavigationSubItem) => {
     return item.target === location.pathname;
   };
@@ -235,12 +48,6 @@ const Sidebar: React.FC = () => {
     <div
       className={`sidebar__container ${isSidebarCollapsed ? "collapsed" : ""}`}
     >
-      <div className="navigation__item" onClick={() => handleLogoClick()}>
-        <div className="icon">
-          <img src={logo} className="logo" alt="Logo" />
-        </div>
-        <div className="title">Stocklinx</div>
-      </div>
       {navigationList.map((item, index) => (
         <React.Fragment key={index}>
           <div

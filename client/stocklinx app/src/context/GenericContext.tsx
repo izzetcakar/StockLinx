@@ -1,20 +1,36 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useState } from "react";
 import { Badge, Drawer, Select } from "@mantine/core";
 import { createContext } from "react";
 import { useCompany } from "@/hooks/query/company";
 import { ICompany } from "@/interfaces/serverInterfaces";
 import { useDisclosure } from "@mantine/hooks";
+import { useUser } from "@/hooks/query/user";
+import { NavigationItem } from "@/interfaces/clientInterfaces";
+import {
+  adminNavigationList,
+  baseNavigationList,
+} from "@/utils/navigationUtils";
 
 interface GenericProviderProps {
   children: ReactNode;
 }
 interface GenericContextValues {
+  navigationList: NavigationItem[];
+  isSidebarCollapsed: boolean;
   company: ICompany | null;
-  drawerBadge: () => React.ReactNode;
   drawerOpened: boolean;
+  setNavigationList: React.Dispatch<React.SetStateAction<NavigationItem[]>>;
+  setIsSidebarCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
+  hideAllDisplayElements: () => void;
+  drawerBadge: () => React.ReactNode;
 }
 
 const GenericContext = createContext<GenericContextValues>({
+  navigationList: [],
+  isSidebarCollapsed: false,
+  setNavigationList: () => {},
+  setIsSidebarCollapsed: () => {},
+  hideAllDisplayElements: () => {},
   company: null,
   drawerOpened: false,
   drawerBadge: () => (
@@ -32,6 +48,22 @@ export const GenericProvider: React.FC<GenericProviderProps> = ({
   const [company, setCompany] = React.useState<ICompany | null>(null);
   const { data: companies } = useCompany.GetAll();
   const [drawerOpened, { open, close }] = useDisclosure(false);
+  const { data: user } = useUser.GetWithToken();
+  const [navigationList, setNavigationList] = useState<NavigationItem[]>(
+    user?.isAdmin ? adminNavigationList : baseNavigationList
+  );
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const hideAllDisplayElements = () => {
+    setNavigationList((prev) =>
+      prev.map((item) => {
+        if (item?.isExpanded && item?.subItems) {
+          return { ...item, isExpanded: false };
+        } else {
+          return item;
+        }
+      })
+    );
+  };
 
   const getCompany = () => {
     if (company) {
@@ -80,8 +112,13 @@ export const GenericProvider: React.FC<GenericProviderProps> = ({
   };
 
   const values = {
+    navigationList,
+    isSidebarCollapsed,
     company,
     drawerOpened,
+    setNavigationList,
+    setIsSidebarCollapsed,
+    hideAllDisplayElements,
     drawerBadge,
   };
 

@@ -71,10 +71,6 @@
     object-fit: cover;
     opacity: 0.8;
   }
-  .logo {
-    width: 1.4rem;
-    height: 1.4rem;
-  }
   .title {
     flex: 1;
     text-align: start;
@@ -84,15 +80,13 @@
     white-space: nowrap;
   }
 }
-.navigation__item:first-child {
-  margin-top: 1rem;
-}
+
 .navigation__item.logout {
   margin-top: auto;
   margin-bottom: 1rem;
 }
 
-.sidebar__container .navigation__item:not(:first-child):not(:last-child):hover {
+.sidebar__container .navigation__item:not(:last-child):hover {
   background-color: $primary-color-light-2;
 }
 .sidebar__container .navigation__element:hover {

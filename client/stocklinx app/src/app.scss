@@ -2,39 +2,21 @@
 
 .main__container {
   display: flex;
+  flex-direction: column;
   height: 100dvh;
-  overflow: auto;
 
   .page {
     display: flex;
-    flex-direction: column;
     width: 100%;
-    height: 100%;
+    height: calc(100% - 45px);
   }
   .page__content {
     display: flex;
     flex-direction: column;
-    max-width: 100%;
+    width: 100%;
     height: 100%;
     overflow: auto;
-    padding: 0 $spacing-lg;
-
-    .page__content__header {
-      display: flex;
-      max-width: 100%;
-      height: fit-content;
-      align-items: center;
-      justify-content: space-between;
-      padding-bottom: 0.5rem;
-      .page__content__header__title {
-        font-family: "Helvetica Neue", "Segoe UI", helvetica, verdana,
-          sans-serif;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        font-weight: 700;
-        font-size: $fontsize-display-sm;
-      }
-    }
+    padding: $spacing-lg;
   }
   .page__content::-webkit-scrollbar {
     display: none;

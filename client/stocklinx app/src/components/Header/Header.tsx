@@ -1,8 +1,13 @@
-import { Anchor, Breadcrumbs, Menu } from "@mantine/core";
+import { Menu, Select } from "@mantine/core";
+import { useContext } from "react";
 import iconSetting from "@assets/icon_setting.png";
+import logo from "@assets/logo.png";
+import GenericContext from "@/context/GenericContext";
 import "./header.scss";
 
 const Header = () => {
+  const { isSidebarCollapsed, setIsSidebarCollapsed, hideAllDisplayElements } =
+    useContext(GenericContext);
   const profileSettings = [
     { id: 1, name: "Profile", icon: "user" },
     {
@@ -15,16 +20,29 @@ const Header = () => {
     { id: 4, name: "Exit", icon: "runner" },
   ];
 
-  const items = [
-    { title: "Mantine", href: "" },
-    { title: "Mantine hooks", href: "" },
-    { title: "use-id", href: "" },
-  ];
+  const handleLogoClick = () => {
+    setIsSidebarCollapsed(!isSidebarCollapsed);
+    hideAllDisplayElements();
+  };
 
   return (
     <div className="page__header">
       <div className="page__header__item">
-        <div className="page__header__title">Header</div>
+        <div className="navigation__item" onClick={() => handleLogoClick()}>
+          <div className="icon">
+            <img src={logo} className="logo" alt="Logo" />
+          </div>
+        </div>
+        <Select
+          data={[
+            { value: "en", label: "English" },
+            { value: "ru", label: "Russian" },
+          ]}
+          placeholder="Search"
+          searchable
+          clearable
+          style={{ width: 300 }}
+        />
       </div>
       <Menu
         transitionProps={{ transition: "pop-top-right" }}
