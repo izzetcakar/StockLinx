@@ -6,6 +6,19 @@ import {
 } from "./dtos";
 import { Column, Filter } from "./gridTableInterfaces";
 
+export interface NavigationSubItem {
+  title: string;
+  target: string;
+}
+export interface NavigationItem {
+  title: string;
+  icon: string;
+  subItems?: NavigationSubItem[];
+  isExpanded?: boolean;
+  target: string;
+  onClick?: () => void;
+}
+
 export interface IDropdownData {
   id: number;
   text: string;

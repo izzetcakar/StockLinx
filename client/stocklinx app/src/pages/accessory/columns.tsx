@@ -31,10 +31,15 @@ export const useColumns = () => {
     });
   };
 
-  const onHeadToModal = (id: string) => {
+  const onHeadToModal = (accessory: IAccessory) => {
     const newEmployeeProduct = initial.EmployeeProduct;
-    newEmployeeProduct.accessoryId = id;
-    openCheckInModal(["User"], newEmployeeProduct, onCheckInHandler);
+    newEmployeeProduct.accessoryId = accessory.id;
+    openCheckInModal(
+      accessory.companyId,
+      ["User"],
+      newEmployeeProduct,
+      onCheckInHandler
+    );
   };
 
   const columns: DataColumn[] = [
@@ -120,7 +125,7 @@ export const useColumns = () => {
               variant="filled"
               size="xs"
               disabled={(accessory?.availableQuantity as number) < 1}
-              onClick={() => onHeadToModal(accessory.id)}
+              onClick={() => onHeadToModal(accessory as IAccessory)}
             >
               Check In
             </Button>

@@ -1,19 +1,12 @@
 import React from "react";
-import {
-  TextInput,
-  Button,
-  Group,
-  Textarea,
-  PasswordInput,
-  Select,
-} from "@mantine/core";
+import { TextInput, Button, Group, Textarea, Select } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IEmployee } from "@interfaces/serverInterfaces";
 import { useEmployee } from "@/hooks/query/employee";
 import { useInitial } from "@/hooks/initial/useInitial";
-import FormCard from "@/components/form/FormCard";
 import { useCompany } from "@/hooks/query/company";
 import { useDepartment } from "@/hooks/query/department";
+import FormCard from "@/components/form/FormCard";
 import FormSelect from "../mantine/FormSelect";
 
 interface EmployeeFormProps {
@@ -25,9 +18,9 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({ employee }) => {
   const isCreate = initialValues.id === "";
   const { mutate: createEmployee } = useEmployee.Create();
   const { mutate: updateEmployee } = useEmployee.Update();
-  const [company, setCompany] = React.useState("");
-  const { data: companies } = useCompany.GetAll();
   const { data: departments } = useDepartment.GetAll();
+  const { data: companyLK } = useCompany.Lookup();
+  const [company, setCompany] = React.useState<string>("");
 
   const form = useForm<IEmployee>({
     initialValues: initialValues,
@@ -43,23 +36,40 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({ employee }) => {
     isCreate ? createEmployee(data) : updateEmployee(data);
   };
 
+  const handleCompanyChane = (newCompany: string) => {
+    if (form.values.departmentId === "") {
+      setCompany(newCompany);
+      return;
+    }
+    if (newCompany !== company && company !== "" && newCompany !== "") {
+      console.log("diffentCompany");
+      form.setFieldValue("departmentId", null);
+      setCompany(newCompany);
+    }
+  };
+
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
       <FormCard>
         <Select
           label="Company"
           placeholder="Company"
-          data={companies || []}
-          value={company || ""}
-          onChange={(e) => setCompany(e as string)}
-          required
+          data={companyLK || []}
+          onChange={(e) => handleCompanyChane(e?.toString() || "")}
+          value={company}
           withAsterisk
         />
-        <FormSelect
+        <Select
           label="Department"
-          data={departments || []}
-          value={form.values.departmentId || ""}
-          inputProps={form.getInputProps("departmentId")}
+          data={
+            departments
+              ?.filter((d) => d.companyId === company)
+              .map((d) => ({
+                value: d.id,
+                label: d.name,
+              })) || []
+          }
+          {...form.getInputProps("departmentId")}
           required
         />
         <TextInput
@@ -77,20 +87,16 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({ employee }) => {
           withAsterisk
         />
         <TextInput
-          label="Email"
-          placeholder="Email"
-          {...form.getInputProps("email")}
-          required
-          withAsterisk
+          label="Job Title"
+          placeholder="Job Title"
+          {...form.getInputProps("jobTitle")}
+          value={form.values.jobTitle || ""}
         />
-        <PasswordInput
-          label="Password"
-          placeholder="Password"
-          {...form.getInputProps("password")}
-          maxLength={20}
-          minLength={6}
-          required
-          withAsterisk
+        <TextInput
+          label="Phone Number"
+          placeholder="Phone Number"
+          {...form.getInputProps("phoneNo")}
+          value={form.values.phoneNo || ""}
         />
         <Textarea
           placeholder="Your notes here"

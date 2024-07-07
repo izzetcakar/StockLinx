@@ -49,12 +49,13 @@ export const useColumns = () => {
     });
   };
 
-  const onHeadToModal = (id: string) => {
+  const onHeadToModal = (license: ILicense) => {
     const newEmployeeProduct = initial.EmployeeProduct;
-    newEmployeeProduct.licenseId = id;
+    newEmployeeProduct.licenseId = license.id;
     const newAssetProduct = initial.AssetProduct;
-    newAssetProduct.licenseId = id;
+    newAssetProduct.licenseId = license.id;
     openCheckInModal(
+      license.companyId,
       ["Employee", "Asset"],
       newEmployeeProduct,
       onEmployeeCheckInHandler,
@@ -126,7 +127,7 @@ export const useColumns = () => {
               color={"green"}
               variant="filled"
               size="xs"
-              onClick={() => onHeadToModal((e as ILicense).id)}
+              onClick={() => onHeadToModal(e as ILicense)}
               disabled={(e as ILicense).availableQuantity === 0}
             >
               Check In

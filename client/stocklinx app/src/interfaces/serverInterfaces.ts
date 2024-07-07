@@ -14,7 +14,6 @@ export interface ICompany extends BaseEntity {
 export interface IDepartment extends BaseEntity {
   companyId: string;
   locationId: string | null;
-  managerId: string | null;
   name: string;
   notes: string | null;
 }

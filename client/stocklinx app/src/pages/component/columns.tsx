@@ -31,10 +31,11 @@ export const useColumns = () => {
     });
   };
 
-  const onHeadToModal = (id: string) => {
+  const onHeadToModal = (component: IComponent) => {
     const newAssetProduct = initial.AssetProduct;
-    newAssetProduct.componentId = id;
+    newAssetProduct.componentId = component.id;
     openCheckInModal(
+      component.companyId,
       ["Asset"],
       undefined,
       undefined,
@@ -122,7 +123,7 @@ export const useColumns = () => {
                 component.availableQuantity !== undefined &&
                 component?.availableQuantity < 1
               }
-              onClick={() => onHeadToModal(component.id)}
+              onClick={() => onHeadToModal(component as IComponent)}
             >
               Check In
             </Button>

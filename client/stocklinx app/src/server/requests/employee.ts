@@ -37,7 +37,7 @@ const filter = (queryFilters: QueryFilter[]) => {
 };
 
 const lookup = () => {
-  return baseRequests.lookup(requestUrl);
+  return baseRequests.lookup(requestUrl, ["firstName", "lastName"]);
 };
 
 export const employeeRequests = {

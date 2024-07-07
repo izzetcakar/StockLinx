@@ -11,6 +11,7 @@ import ComponentForm from "@/forms/component/ComponentForm";
 import ConsumableForm from "@/forms/consumable/ConsumableForm";
 import CustomFieldForm from "@/forms/customField/CustomFieldForm";
 import DepartmentForm from "@/forms/department/DepartmentForm";
+import EmployeeForm from "@/forms/employee/EmployeeForm";
 import FieldSetForm from "@/forms/fieldSet/FieldSetForm";
 import LicenseForm from "@/forms/license/LicenseForm";
 import LocationForm from "@/forms/location/LocationForm";
@@ -45,6 +46,7 @@ import {
   ISupplier,
   IUser,
   IEmployeeProduct,
+  IEmployee,
 } from "@/interfaces/serverInterfaces";
 import { Text } from "@mantine/core";
 import { modals } from "@mantine/modals";
@@ -208,6 +210,14 @@ export const openUserModal = (user?: IUser) =>
     size: "xl",
   });
 
+export const openEmployeeModal = (employee?: IEmployee) =>
+  modals.open({
+    modalId: "employee_modal",
+    title: employee ? "Update Employee" : "Create Employee",
+    children: <EmployeeForm employee={employee} />,
+    size: "xl",
+  });
+
 export const openFieldSetModal = (fieldSet?: IFieldSet) => {
   modals.open({
     modalId: "fieldSet_modal",
@@ -225,7 +235,8 @@ export const openCustomFieldModal = (customField?: ICustomField) => {
 };
 
 export const openCheckInModal = (
-  segment: string[] = ["User"],
+  companyId: string,
+  segment: string[] = ["Employee"],
   employeeProduct?: IEmployeeProduct,
   employeeCheckIn?: (data: IEmployeeProduct) => void,
   assetProduct?: IAssetProduct,
@@ -236,6 +247,7 @@ export const openCheckInModal = (
     title: "Check In",
     children: (
       <CheckInForm
+        companyId={companyId}
         segment={segment}
         employeeProduct={employeeProduct}
         employeeCheckIn={employeeCheckIn}

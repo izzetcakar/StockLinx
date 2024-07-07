@@ -127,6 +127,11 @@ namespace StockLinx.Service.Services
 
         public async Task<bool> VerifyCompanyAccessAsync(Guid companyId)
         {
+            bool isAdmin = await _userService.CheckCurrentUserAdmin();
+            if (isAdmin)
+            {
+                return true;
+            }
             Guid userId = _userService.GetIdByToken();
             bool isExist = await AnyAsync(p => p.UserId == userId && p.CompanyId == companyId);
             if (!isExist)

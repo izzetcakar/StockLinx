@@ -117,7 +117,7 @@ namespace StockLinx.API.Controllers
             }
         }
 
-        [HttpPost("checkin/user")]
+        [HttpPost("checkin/employee")]
         public async Task<IActionResult> CheckInLicense(EmployeeProductCheckInDto dto)
         {
             try
@@ -147,7 +147,7 @@ namespace StockLinx.API.Controllers
             }
         }
 
-        [HttpPost("checkout/user")]
+        [HttpPost("checkout/employee")]
         public async Task<IActionResult> EmployeeCheckOutLicense(EmployeeProductCheckOutDto dto)
         {
             try

@@ -14,6 +14,7 @@ import FormSelect from "../mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";
 
 interface CheckInFormProps {
+  companyId: string;
   segment: string[];
   isAsset?: boolean;
   employeeProduct?: IEmployeeProduct;
@@ -23,13 +24,14 @@ interface CheckInFormProps {
 }
 
 const CheckInForm: React.FC<CheckInFormProps> = ({
+  companyId,
   segment,
   employeeProduct,
   assetProduct,
   employeeCheckIn,
   assetCheckIn,
 }) => {
-  const { data: employeeLK } = useEmployee.Lookup();
+  const { data: employees } = useEmployee.GetAll();
   const { data: assetLK } = useAsset.Lookup();
   const [type, setType] = useState(segment[0]);
 
@@ -77,7 +79,14 @@ const CheckInForm: React.FC<CheckInFormProps> = ({
         {type === "Employee" ? (
           <FormSelect
             label="Employee"
-            data={employeeLK}
+            data={
+              employees
+                ?.filter((emp) => emp.companyId === companyId)
+                .map((emp) => ({
+                  value: emp.id,
+                  label: emp.firstName + " " + emp.lastName,
+                })) || []
+            }
             inputProps={employeeForm.getInputProps("employeeId")}
             value={employeeForm.values.employeeId}
           />
@@ -85,7 +94,7 @@ const CheckInForm: React.FC<CheckInFormProps> = ({
         {type === "Asset" ? (
           <FormSelect
             label="Asset"
-            data={assetLK}
+            data={assetLK || []}
             inputProps={assetForm.getInputProps("assetId")}
             value={assetForm.values.assetId}
           />

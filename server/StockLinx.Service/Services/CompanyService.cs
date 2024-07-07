@@ -49,7 +49,9 @@ namespace StockLinx.Service.Services
 
         public async Task<List<CompanyDto>> GetAllDtosAsync()
         {
-            return await _companyRepository.GetAllDtosAsync();
+            var list = await _companyRepository.GetAllDtosAsync();
+            List<Guid> companyIds = await _permissionService.GetCompanyIdsAsync();
+            return list.Where(d => companyIds.Contains(d.Id)).ToList();
         }
 
         public async Task<CompanyDto> CreateCompanyAsync(CompanyCreateDto dto)

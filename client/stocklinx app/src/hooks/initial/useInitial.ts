@@ -157,7 +157,6 @@ export const useInitial = () => {
       id: "",
       companyId: "",
       locationId: null,
-      managerId: null,
       name: "",
       notes: null,
     };

@@ -1,21 +1,30 @@
 import { DataColumn } from "@interfaces/gridTableInterfaces";
 import { IDepartment } from "@interfaces/serverInterfaces";
 import { useLocation } from "@/hooks/query/location";
-import { useUser } from "@/hooks/query/user";
 import { EntityCells } from "@/cells/Entity";
 import { EntityCardColumn } from "@/interfaces/clientInterfaces";
+import { useCompany } from "@/hooks/query/company";
 import DepartmentForm from "@/forms/department/DepartmentForm";
 import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
 
 export const useColumns = () => {
   const { refetch: getLocationLK } = useLocation.Lookup();
-  const { refetch: getUserLK } = useUser.Lookup();
+  const { refetch: getCompanyLK } = useCompany.Lookup();
 
   const columns: DataColumn[] = [
     {
       dataField: "name",
       caption: "Name",
       dataType: "string",
+    },
+    {
+      dataField: "companyId",
+      caption: "Company",
+      dataType: "string",
+      lookup: {
+        dataSource: getCompanyLK,
+      },
+      renderComponent: (e) => EntityCells.Company((e as IDepartment).companyId),
     },
     {
       dataField: "locationId",
@@ -26,15 +35,6 @@ export const useColumns = () => {
       },
       renderComponent: (e) =>
         EntityCells.Location((e as IDepartment).locationId),
-    },
-    {
-      dataField: "managerId",
-      caption: "Manager",
-      dataType: "string",
-      lookup: {
-        dataSource: getUserLK,
-      },
-      renderComponent: (e) => EntityCells.User((e as IDepartment).managerId),
     },
     // INVISIBLE COLUMNS
     {

@@ -29,7 +29,7 @@ const FormSelect: React.FC<FormSelectProps> = ({
       label={label || ""}
       placeholder={placeholder}
       {...inputProps}
-      value={value}
+      value={value || ""}
       {...(onChange
         ? {
             onChange: (value) => {
