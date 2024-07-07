@@ -4,36 +4,36 @@ using StockLinx.Core.Entities;
 
 namespace StockLinx.Repository.Configurations
 {
-    public class UserProductConfiguration : IEntityTypeConfiguration<UserProduct>
+    public class EmployeeProductConfiguration : IEntityTypeConfiguration<EmployeeProduct>
     {
-        public void Configure(EntityTypeBuilder<UserProduct> builder)
+        public void Configure(EntityTypeBuilder<EmployeeProduct> builder)
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Quantity).HasDefaultValue(1);
 
             builder
-                .HasOne(x => x.User)
-                .WithMany(x => x.UserProducts)
-                .HasForeignKey(x => x.UserId)
+                .HasOne(x => x.Employee)
+                .WithMany(x => x.EmployeeProducts)
+                .HasForeignKey(x => x.EmployeeId)
                 .OnDelete(DeleteBehavior.SetNull);
             builder
                 .HasOne(x => x.Accessory)
-                .WithMany(x => x.UserProducts)
+                .WithMany(x => x.EmployeeProducts)
                 .HasForeignKey(x => x.AccessoryId)
                 .OnDelete(DeleteBehavior.SetNull);
             builder
                 .HasOne(x => x.Asset)
-                .WithMany(x => x.UserProducts)
+                .WithMany(x => x.EmployeeProducts)
                 .HasForeignKey(x => x.AssetId)
                 .OnDelete(DeleteBehavior.SetNull);
             builder
                 .HasOne(x => x.Consumable)
-                .WithMany(x => x.UserProducts)
+                .WithMany(x => x.EmployeeProducts)
                 .HasForeignKey(x => x.ConsumableId)
                 .OnDelete(DeleteBehavior.SetNull);
             builder
                 .HasOne(x => x.License)
-                .WithMany(x => x.UserProducts)
+                .WithMany(x => x.EmployeeProducts)
                 .HasForeignKey(x => x.LicenseId)
                 .OnDelete(DeleteBehavior.SetNull);
         }

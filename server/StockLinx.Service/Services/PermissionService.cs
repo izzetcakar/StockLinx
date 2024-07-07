@@ -45,12 +45,7 @@ namespace StockLinx.Service.Services
 
         public async Task<List<PermissionDto>> GetAllDtosAsync()
         {
-            User user = await _userService.GetCurrentUser();
-            bool isAdmin = (bool)user.IsAdmin;
-            if (!isAdmin)
-            {
-                return new List<PermissionDto>();
-            }
+            await CheckUserAdmin();
             return await _permissionRepository.GetAllDtosAsync();
         }
 
@@ -109,18 +104,42 @@ namespace StockLinx.Service.Services
 
         public async Task<List<PermissionDto>> FilterAllAsync(string filter)
         {
+            await CheckUserAdmin();
             var result = await _filterService.FilterAsync(filter);
             return _permissionRepository.GetDtos(result.ToList());
         }
 
         private async Task<bool> CheckUserAdmin()
         {
-            User user = await _userService.GetCurrentUser();
-            if ((bool)!user.IsAdmin)
+            bool isAdmin = await _userService.CheckCurrentUserAdmin();
+            if (!isAdmin)
             {
                 throw new Exception("User is not admin");
             }
             return true;
+        }
+
+        public async Task<List<Company>> GetUserCompaniesAsync()
+        {
+            Guid userId = _userService.GetIdByToken();
+            return await _permissionRepository.GetUserCompaniesAsync(userId);
+        }
+
+        public async Task<bool> VerifyCompanyAccessAsync(Guid companyId)
+        {
+            Guid userId = _userService.GetIdByToken();
+            bool isExist = await AnyAsync(p => p.UserId == userId && p.CompanyId == companyId);
+            if (!isExist)
+            {
+                throw new Exception("User does not have access to this company");
+            }
+            return true;
+        }
+
+        public async Task<List<Guid>> GetCompanyIdsAsync()
+        {
+            Guid userId = _userService.GetIdByToken();
+            return await _permissionRepository.GetCompanyIdsAsync(userId);
         }
     }
 }

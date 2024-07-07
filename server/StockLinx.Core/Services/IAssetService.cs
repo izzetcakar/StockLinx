@@ -15,8 +15,8 @@ namespace StockLinx.Core.Services
         Task<AssetDto> UpdateAssetAsync(AssetUpdateDto dto);
         Task DeleteAssetAsync(Guid id);
         Task DeleteRangeAssetAsync(List<Guid> ids);
-        Task<UserProductDto> CheckInAsync(AssetCheckInDto checkInDto);
-        Task<UserProductDto> CheckOutAsync(AssetCheckOutDto checkOutDto);
+        Task<EmployeeProductDto> CheckInAsync(AssetCheckInDto checkInDto);
+        Task<EmployeeProductDto> CheckOutAsync(AssetCheckOutDto checkOutDto);
         Task CheckTagExistAsync(string tag);
         Task CheckTagExistAsync(List<string> tags);
         Task<List<AssetDto>> FilterAllAsync(string filter);

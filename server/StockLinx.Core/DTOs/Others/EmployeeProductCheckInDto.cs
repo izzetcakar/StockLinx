@@ -1,8 +1,8 @@
 ﻿namespace StockLinx.Core.DTOs.Others
 {
-    public class UserProductCheckInDto
+    public class EmployeeProductCheckInDto
     {
-        public Guid UserId { get; init; }
+        public Guid EmployeeId { get; init; }
         public Guid ProductId { get; init; }
         public DateTime AssignDate { get; init; }
         public int Quantity { get; set; }

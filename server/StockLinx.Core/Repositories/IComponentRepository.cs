@@ -8,6 +8,7 @@ namespace StockLinx.Core.Repositories
         Task<ComponentDto> GetDtoAsync(Component entity);
         Task<List<ComponentDto>> GetDtosAsync(List<Component> entities);
         Task<List<ComponentDto>> GetAllDtosAsync();
+        Task<List<ComponentDto>> GetAllDtosAsync(List<Guid> companyIds);
         Task CanDeleteAsync(Guid id);
         Task<int> GetAvaliableQuantityAsync(Component entity);
     }

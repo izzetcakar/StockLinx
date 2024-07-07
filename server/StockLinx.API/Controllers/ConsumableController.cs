@@ -124,12 +124,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost("checkin")]
-        public async Task<IActionResult> CheckInConsumable(UserProductCheckInDto dto)
+        public async Task<IActionResult> CheckInConsumable(EmployeeProductCheckInDto dto)
         {
             try
             {
-                UserProductDto result = await _consumableService.CheckInAsync(dto);
-                return CreateActionResult(CustomResponseDto<UserProductDto>.Success(200, result));
+                EmployeeProductDto result = await _consumableService.CheckInAsync(dto);
+                return CreateActionResult(CustomResponseDto<EmployeeProductDto>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -138,12 +138,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost("checkout")]
-        public async Task<IActionResult> CheckOutConsumable(UserProductCheckOutDto dto)
+        public async Task<IActionResult> CheckOutConsumable(EmployeeProductCheckOutDto dto)
         {
             try
             {
-                List<UserProductDto> result = await _consumableService.CheckOutAsync(dto);
-                return CreateActionResult(CustomResponseDto<List<UserProductDto>>.Success(200, result));
+                List<EmployeeProductDto> result = await _consumableService.CheckOutAsync(dto);
+                return CreateActionResult(CustomResponseDto<List<EmployeeProductDto>>.Success(200, result));
             }
             catch (Exception ex)
             {

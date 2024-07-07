@@ -6,15 +6,23 @@ using StockLinx.Core.Repositories;
 
 namespace StockLinx.Repository.Repositories.EF_Core
 {
-    public class UserProductRepository : Repository<UserProduct>, IUserProductRepository
+    public class EmployeeProductRepository : Repository<EmployeeProduct>, IEmployeeProductRepository
     {
         private readonly IMapper _mapper;
         private readonly IAccessoryRepository _accessoryRepository;
         private readonly IAssetRepository _assetRepository;
         private readonly IConsumableRepository _consumableRepository;
         private readonly ILicenseRepository _licenseRepository;
-        public UserProductRepository(AppDbContext dbContext, IMapper mapper, IAccessoryRepository accessoryRepository,
-            IAssetRepository assetRepository, IConsumableRepository consumableRepository, ILicenseRepository licenseRepository) : base(dbContext)
+
+        public EmployeeProductRepository(
+            AppDbContext dbContext,
+            IMapper mapper,
+            IAccessoryRepository accessoryRepository,
+            IAssetRepository assetRepository,
+            IConsumableRepository consumableRepository,
+            ILicenseRepository licenseRepository
+        )
+            : base(dbContext)
         {
             _mapper = mapper;
             _accessoryRepository = accessoryRepository;
@@ -23,14 +31,16 @@ namespace StockLinx.Repository.Repositories.EF_Core
             _licenseRepository = licenseRepository;
         }
 
-        public async Task<UserProductDto> GetDtoAsync(UserProduct entity)
+        public async Task<EmployeeProductDto> GetDtoAsync(EmployeeProduct entity)
         {
             string productType = string.Empty;
             string productTag = string.Empty;
 
             if (entity.AccessoryId != null)
             {
-                Accessory accessory = await _accessoryRepository.GetByIdAsync((Guid)entity.AccessoryId);
+                Accessory accessory = await _accessoryRepository.GetByIdAsync(
+                    (Guid)entity.AccessoryId
+                );
                 productType = "Accessory";
                 productTag = accessory.Tag;
             }
@@ -42,7 +52,9 @@ namespace StockLinx.Repository.Repositories.EF_Core
             }
             else if (entity.ConsumableId != null)
             {
-                Consumable consumable = await _consumableRepository.GetByIdAsync((Guid)entity.ConsumableId);
+                Consumable consumable = await _consumableRepository.GetByIdAsync(
+                    (Guid)entity.ConsumableId
+                );
                 productType = "Consumable";
                 productTag = consumable.Tag;
             }
@@ -52,10 +64,10 @@ namespace StockLinx.Repository.Repositories.EF_Core
                 productType = "License";
                 productTag = license.Tag;
             }
-            return new UserProductDto()
+            return new EmployeeProductDto()
             {
                 Id = entity.Id,
-                UserId = entity.UserId,
+                EmployeeId = entity.EmployeeId,
                 AccessoryId = entity.AccessoryId,
                 AssetId = entity.AssetId,
                 ConsumableId = entity.ConsumableId,
@@ -69,9 +81,10 @@ namespace StockLinx.Repository.Repositories.EF_Core
                 Quantity = entity.Quantity,
             };
         }
-        public async Task<List<UserProductDto>> GetDtosAsync(List<UserProduct> entities)
+
+        public async Task<List<EmployeeProductDto>> GetDtosAsync(List<EmployeeProduct> entities)
         {
-            List<UserProductDto> dtos = new List<UserProductDto>();
+            List<EmployeeProductDto> dtos = new List<EmployeeProductDto>();
             foreach (var entity in entities)
             {
                 var dto = await GetDtoAsync(entity);
@@ -79,11 +92,11 @@ namespace StockLinx.Repository.Repositories.EF_Core
             }
             return dtos;
         }
-        public async Task<List<UserProductDto>> GetAllDtosAsync()
+
+        public async Task<List<EmployeeProductDto>> GetAllDtosAsync()
         {
-            var entities = await dbContext.UserProducts.ToListAsync();
+            var entities = await dbContext.EmployeeProducts.ToListAsync();
             return await GetDtosAsync(entities);
         }
     }
-
 }

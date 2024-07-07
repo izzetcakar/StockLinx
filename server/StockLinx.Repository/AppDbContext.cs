@@ -16,7 +16,7 @@ namespace StockLinx.Repository
         public DbSet<Component> Components { get; set; }
         public DbSet<Consumable> Consumables { get; set; }
         public DbSet<Department> Departments { get; set; }
-        public DbSet<UserProduct> UserProducts { get; set; }
+        public DbSet<EmployeeProduct> EmployeeProducts { get; set; }
         public DbSet<AssetProduct> AssetProducts { get; set; }
         public DbSet<License> Licenses { get; set; }
         public DbSet<Location> Locations { get; set; }
@@ -29,6 +29,7 @@ namespace StockLinx.Repository
         public DbSet<Supplier> Suppliers { get; set; }
         public DbSet<ProductStatus> ProductStatuses { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Employee> Employees { get; set; }
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<CustomLog> CustomLogs { get; set; }
 

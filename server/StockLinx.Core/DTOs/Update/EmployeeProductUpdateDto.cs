@@ -1,8 +1,8 @@
 ﻿namespace StockLinx.Core.DTOs.Update
 {
-    public class UserProductUpdateDto : BaseUpdateDto
+    public class EmployeeProductUpdateDto : BaseUpdateDto
     {
-        public Guid UserId { get; set; }
+        public Guid EmployeeId { get; set; }
         public Guid? AccessoryId { get; set; }
         public Guid? AssetId { get; set; }
         public Guid? ConsumableId { get; set; }

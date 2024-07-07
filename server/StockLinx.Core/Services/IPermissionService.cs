@@ -1,6 +1,5 @@
 ﻿using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
-using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.Entities;
 
 namespace StockLinx.Core.Services
@@ -14,5 +13,8 @@ namespace StockLinx.Core.Services
         Task DeletePermissionAsync(Guid id);
         Task DeleteRangePermissionAsync(List<Guid> ids);
         Task<List<PermissionDto>> FilterAllAsync(string filter);
+        Task<List<Company>> GetUserCompaniesAsync();
+        Task<bool> VerifyCompanyAccessAsync(Guid companyId);
+        Task<List<Guid>> GetCompanyIdsAsync();
     }
 }

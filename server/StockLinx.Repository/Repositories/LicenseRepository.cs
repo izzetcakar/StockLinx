@@ -18,8 +18,8 @@ namespace StockLinx.Repository.Repositories.EF_Core
 
         public async Task<LicenseDto> GetDtoAsync(License entity)
         {
-            var userProducts = await dbContext
-                .UserProducts.Where(d => d.LicenseId.HasValue && d.LicenseId == entity.Id)
+            var employeeProducts = await dbContext
+                .EmployeeProducts.Where(d => d.LicenseId.HasValue && d.LicenseId == entity.Id)
                 .AsNoTracking()
                 .ToListAsync();
             var assetProducts = await dbContext
@@ -28,7 +28,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
                 .ToListAsync();
             var availableQuantity =
                 entity.Quantity
-                - userProducts.Sum(up => up.Quantity)
+                - employeeProducts.Sum(up => up.Quantity)
                 - assetProducts.Sum(ap => ap.Quantity);
             var dto = _mapper.Map<LicenseDto>(entity);
             dto.AvailableQuantity = availableQuantity;
@@ -52,12 +52,21 @@ namespace StockLinx.Repository.Repositories.EF_Core
             return await GetDtosAsync(entities);
         }
 
+        public async Task<List<LicenseDto>> GetAllDtosAsync(List<Guid> companyIds)
+        {
+            var entities = await dbContext.Licenses
+                .Where(a => companyIds.Contains(a.CompanyId))
+                .AsNoTracking()
+                .ToListAsync();
+            return await GetDtosAsync(entities);
+        }
+
         public async Task CanDeleteAsync(Guid id)
         {
-            bool userProducts = await dbContext.UserProducts.AnyAsync(up =>
+            bool employeeProducts = await dbContext.EmployeeProducts.AnyAsync(up =>
                 up.LicenseId.HasValue && up.LicenseId == id
             );
-            if (userProducts)
+            if (employeeProducts)
             {
                 throw new Exception("Cannot delete license because it is used in user products.");
             }
@@ -72,15 +81,15 @@ namespace StockLinx.Repository.Repositories.EF_Core
 
         public async Task<int> GetAvaliableQuantityAsync(License entity)
         {
-            List<UserProduct> userProducts = await dbContext
-                .UserProducts.Where(d => d.LicenseId.HasValue && d.LicenseId == entity.Id)
+            List<EmployeeProduct> employeeProducts = await dbContext
+                .EmployeeProducts.Where(d => d.LicenseId.HasValue && d.LicenseId == entity.Id)
                 .ToListAsync();
             List<AssetProduct> assetProducts = await dbContext
                 .AssetProducts.Where(d => d.LicenseId.HasValue && d.LicenseId == entity.Id)
                 .ToListAsync();
             int availableQuantity =
                 entity.Quantity
-                - userProducts.Sum(d => d.Quantity)
+                - employeeProducts.Sum(d => d.Quantity)
                 - assetProducts.Sum(d => d.Quantity);
             return availableQuantity;
         }

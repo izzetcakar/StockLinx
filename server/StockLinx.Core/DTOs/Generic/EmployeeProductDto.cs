@@ -1,8 +1,8 @@
 ﻿namespace StockLinx.Core.DTOs.Generic
 {
-    public class UserProductDto : BaseDto
+    public class EmployeeProductDto : BaseDto
     {
-        public Guid UserId { get; init; }
+        public Guid EmployeeId { get; init; }
         public Guid? AccessoryId { get; init; }
         public Guid? AssetId { get; init; }
         public Guid? ConsumableId { get; init; }

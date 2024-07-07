@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
@@ -14,33 +13,36 @@ namespace StockLinx.Service.Services
     public class AssetService : Service<Asset>, IAssetService
     {
         private readonly IAssetRepository _assetRepository;
-        private readonly IUserProductRepository _userProductRepository;
+        private readonly IEmployeeRepository _employeeRepository;
+        private readonly IEmployeeProductRepository _employeeProductRepository;
         private readonly ICompanyRepository _companyRepository;
-        private readonly IUserService _userService;
-        private readonly ICustomLogService _customLogService;
+        private readonly IPermissionService _permissionService;
         private readonly IFilterService<Asset> _filterService;
+        private readonly ICustomLogService _customLogService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
         public AssetService(
             IRepository<Asset> repository,
             IAssetRepository assetRepository,
-            IUserProductRepository userProductRepository,
+            IEmployeeRepository employeeRepository,
+            IEmployeeProductRepository employeeProductRepository,
             ICompanyRepository companyRepository,
-            IUserService userService,
-            ICustomLogService customLogService,
+            IPermissionService permissionService,
             IFilterService<Asset> filterService,
+            ICustomLogService customLogService,
             IUnitOfWork unitOfWork,
             IMapper mapper
         )
             : base(repository, unitOfWork)
         {
             _assetRepository = assetRepository;
-            _userProductRepository = userProductRepository;
+            _employeeRepository = employeeRepository;
+            _employeeProductRepository = employeeProductRepository;
             _companyRepository = companyRepository;
-            _userService = userService;
-            _customLogService = customLogService;
+            _permissionService = permissionService;
             _filterService = filterService;
+            _customLogService = customLogService;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
@@ -48,16 +50,19 @@ namespace StockLinx.Service.Services
         public async Task<AssetDto> GetDtoAsync(Guid id)
         {
             Asset asset = await GetByIdAsync(id);
+            await _permissionService.VerifyCompanyAccessAsync(asset.CompanyId);
             return _assetRepository.GetDto(asset);
         }
 
         public async Task<List<AssetDto>> GetAllDtosAsync()
         {
-            return await _assetRepository.GetAllDtosAsync();
+            List<Guid> companyIds = await _permissionService.GetCompanyIdsAsync();
+            return await _assetRepository.GetAllDtosAsync(companyIds);
         }
 
         public async Task<AssetDto> CreateAssetAsync(AssetCreateDto dto)
         {
+            await _permissionService.VerifyCompanyAccessAsync(dto.CompanyId);
             await CheckTagExistAsync(dto.Tag);
             Asset newAsset = _mapper.Map<Asset>(dto);
             Company company = await _companyRepository.GetByIdAsync(newAsset.CompanyId);
@@ -99,6 +104,7 @@ namespace StockLinx.Service.Services
             Company company = await _companyRepository.GetByIdAsync(dtos[0].CompanyId);
             foreach (AssetCreateDto createDto in dtos)
             {
+                await _permissionService.VerifyCompanyAccessAsync(createDto.CompanyId);
                 Asset newAsset = _mapper.Map<Asset>(createDto);
                 newAssets.Add(newAsset);
                 await _customLogService.CreateCustomLog(
@@ -118,6 +124,7 @@ namespace StockLinx.Service.Services
 
         public async Task<AssetDto> UpdateAssetAsync(AssetUpdateDto dto)
         {
+            await _permissionService.VerifyCompanyAccessAsync(dto.CompanyId);
             Asset assetInDb = await GetByIdAsync(dto.Id);
             Asset asset = _mapper.Map<Asset>(dto);
             asset.UpdatedDate = DateTime.UtcNow;
@@ -139,8 +146,9 @@ namespace StockLinx.Service.Services
 
         public async Task DeleteAssetAsync(Guid id)
         {
-            await _assetRepository.CanDeleteAsync(id);
             Asset asset = await GetByIdAsync(id);
+            await _permissionService.VerifyCompanyAccessAsync(asset.CompanyId);
+            await _assetRepository.CanDeleteAsync(id);
             _assetRepository.Remove(asset);
 
             await _customLogService.CreateCustomLog("Delete", "Asset", asset.Id, asset.Name);
@@ -152,8 +160,9 @@ namespace StockLinx.Service.Services
             List<Asset> assets = new List<Asset>();
             foreach (Guid id in ids)
             {
-                await _assetRepository.CanDeleteAsync(id);
                 Asset asset = await GetByIdAsync(id);
+                await _permissionService.VerifyCompanyAccessAsync(asset.CompanyId);
+                await _assetRepository.CanDeleteAsync(id);
                 assets.Add(asset);
                 await _customLogService.CreateCustomLog("Delete", "Asset", asset.Id, asset.Tag);
             }
@@ -161,67 +170,69 @@ namespace StockLinx.Service.Services
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task<UserProductDto> CheckInAsync(AssetCheckInDto checkInDto)
+        public async Task<EmployeeProductDto> CheckInAsync(AssetCheckInDto checkInDto)
         {
-            User user = await _userService.GetByIdAsync(checkInDto.UserId);
+            Employee employee = await _employeeRepository.GetByIdAsync(checkInDto.EmployeeId);
             Asset asset = await GetByIdAsync(checkInDto.AssetId);
-            bool isDeployed = await _userProductRepository.AnyAsync(x => x.AssetId == asset.Id);
+            await _permissionService.VerifyCompanyAccessAsync(asset.CompanyId);
+            bool isDeployed = await _employeeProductRepository.AnyAsync(x => x.AssetId == asset.Id);
             if (isDeployed)
             {
                 throw new Exception("Asset is already deployed");
             }
 
-            UserProduct userProduct = new UserProduct
+            EmployeeProduct employeeProduct = new EmployeeProduct
             {
                 Id = Guid.NewGuid(),
                 AssetId = asset.Id,
-                UserId = checkInDto.UserId,
+                EmployeeId = checkInDto.EmployeeId,
                 AssignDate = DateTime.UtcNow,
                 CreatedDate = DateTime.UtcNow,
                 Quantity = 1,
                 Notes = checkInDto.Notes,
             };
-            await _userProductRepository.AddAsync(userProduct);
+            await _employeeProductRepository.AddAsync(employeeProduct);
             await _customLogService.CreateCustomLog(
                 "CheckIn",
                 "Asset",
                 asset.Id,
                 asset.Tag,
-                "User",
-                user.Id,
-                user.FirstName + user.LastName
+                "Employee",
+                employee.Id,
+                employee.FirstName + employee.LastName
             );
             asset.ProductStatusId = checkInDto.ProductStatusId;
             await _unitOfWork.CommitAsync();
-            return await _userProductRepository.GetDtoAsync(userProduct);
+            return await _employeeProductRepository.GetDtoAsync(employeeProduct);
         }
 
-        public async Task<UserProductDto> CheckOutAsync(AssetCheckOutDto checkOutDto)
+        public async Task<EmployeeProductDto> CheckOutAsync(AssetCheckOutDto checkOutDto)
         {
-            UserProduct userProduct = await _userProductRepository.GetByIdAsync(
-                checkOutDto.UserProductId
+            EmployeeProduct employeeProduct = await _employeeProductRepository.GetByIdAsync(
+                checkOutDto.EmployeeProductId
             );
-            Asset asset = await GetByIdAsync((Guid)userProduct.AssetId);
-            bool isUserChanged = checkOutDto.UserId != null && checkOutDto.UserId != userProduct.UserId;
+            Asset asset = await GetByIdAsync((Guid)employeeProduct.AssetId);
+            await _permissionService.VerifyCompanyAccessAsync(asset.CompanyId);
+            bool isEmployeeChanged = checkOutDto.EmployeeId != null && checkOutDto.EmployeeId != employeeProduct.EmployeeId;
             asset.ProductStatusId = checkOutDto.ProductStatusId;
             _assetRepository.Update(asset, asset);
-            if (isUserChanged)
+            if (isEmployeeChanged)
             {
-                var user = await _userService.GetByIdAsync((Guid)checkOutDto.UserId);
-                userProduct.UserId = user.Id;
-                _userProductRepository.Update(userProduct, userProduct);
+                var employee = await _employeeRepository.GetByIdAsync((Guid)checkOutDto.EmployeeId);
+                employeeProduct.EmployeeId = employee.Id;
+                _employeeProductRepository.Update(employeeProduct, employeeProduct);
                 await _customLogService.CreateCustomLog(
                     "CheckOut",
                     "Asset",
                     asset.Id,
                     asset.Tag,
-                    "User",
-                    user.Id,
-                    user.EmployeeNo,
+                    "Employee",
+                    employee.Id,
+                    employee.FirstName + " " + employee.LastName,
                     checkOutDto.Notes ?? "Asset is checked out"
                     );
                 await _unitOfWork.CommitAsync();
-                return await _userProductRepository.GetDtoAsync(userProduct);
+                return await _employeeProductRepository.GetDtoAsync(employeeProduct);
             }
             else
             {
@@ -232,7 +243,7 @@ namespace StockLinx.Service.Services
                     asset.Tag,
                     checkOutDto.Notes ?? "Asset is checked out"
                 );
-                _userProductRepository.Remove(userProduct);
+                _employeeProductRepository.Remove(employeeProduct);
                 await _unitOfWork.CommitAsync();
                 return null;
             }
@@ -242,7 +253,9 @@ namespace StockLinx.Service.Services
         public async Task<List<AssetDto>> FilterAllAsync(string filter)
         {
             var result = await _filterService.FilterAsync(filter);
-            return _assetRepository.GetDtos(result.ToList());
+            var list = _assetRepository.GetDtos(result.ToList());
+            var companyIds = await _permissionService.GetCompanyIdsAsync();
+            return list.Where(x => companyIds.Contains(x.CompanyId)).ToList();
         }
 
         public async Task CheckTagExistAsync(string tag)

@@ -13,10 +13,11 @@ namespace StockLinx.Service.Services
     public class AccessoryService : Service<Accessory>, IAccessoryService
     {
         private readonly IAccessoryRepository _accessoryRepository;
-        private readonly IUserProductRepository _userProductRepository;
+        private readonly IEmployeeProductRepository _employeeProductRepository;
         private readonly ICompanyRepository _companyRepository;
+        private readonly IEmployeeRepository _employeeRepository;
         private readonly ICustomLogService _customLogService;
-        private readonly IUserService _userService;
+        private readonly IPermissionService _permissionService;
         private readonly IFilterService<Accessory> _filterService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
@@ -24,10 +25,11 @@ namespace StockLinx.Service.Services
         public AccessoryService(
             IRepository<Accessory> repository,
             IAccessoryRepository accessoryRepository,
+            IEmployeeRepository employeeRepository,
             ICompanyRepository companyRepository,
-            IUserProductRepository userProductRepository,
+            IEmployeeProductRepository employeeProductRepository,
             ICustomLogService customLogService,
-            IUserService userService,
+            IPermissionService permissionService,
             IFilterService<Accessory> filterService,
             IMapper mapper,
             IUnitOfWork unitOfWork
@@ -35,10 +37,11 @@ namespace StockLinx.Service.Services
             : base(repository, unitOfWork)
         {
             _accessoryRepository = accessoryRepository;
-            _userProductRepository = userProductRepository;
+            _employeeRepository = employeeRepository;
+            _employeeProductRepository = employeeProductRepository;
             _companyRepository = companyRepository;
             _customLogService = customLogService;
-            _userService = userService;
+            _permissionService = permissionService;
             _filterService = filterService;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
@@ -47,16 +50,19 @@ namespace StockLinx.Service.Services
         public async Task<AccessoryDto> GetDto(Guid id)
         {
             Accessory accessory = await GetByIdAsync(id);
+            await _permissionService.VerifyCompanyAccessAsync(accessory.CompanyId);
             return await _accessoryRepository.GetDtoAsync(accessory);
         }
 
         public async Task<List<AccessoryDto>> GetAllDtos()
         {
-            return await _accessoryRepository.GetAllDtosAsync();
+            List<Guid> companyIds = await _permissionService.GetCompanyIdsAsync();
+            return await _accessoryRepository.GetAllDtosAsync(companyIds);
         }
 
         public async Task<AccessoryDto> CreateAccessoryAsync(AccessoryCreateDto dto)
         {
+            await _permissionService.VerifyCompanyAccessAsync(dto.CompanyId);
             await CheckTagExistAsync(dto.Tag);
             Company company = await _companyRepository.GetByIdAsync(dto.CompanyId);
             Accessory newAccessory = _mapper.Map<Accessory>(dto);
@@ -97,6 +103,7 @@ namespace StockLinx.Service.Services
             List<Accessory> newAccessories = new List<Accessory>();
             foreach (AccessoryCreateDto dto in dtos)
             {
+                await _permissionService.VerifyCompanyAccessAsync(dto.CompanyId);
                 Accessory newAccessory = _mapper.Map<Accessory>(dto);
                 newAccessory.Quantity = 1;
                 newAccessories.Add(newAccessory);
@@ -117,6 +124,7 @@ namespace StockLinx.Service.Services
 
         public async Task<AccessoryDto> UpdateAccessoryAsync(AccessoryUpdateDto dto)
         {
+            await _permissionService.VerifyCompanyAccessAsync(dto.CompanyId);
             Accessory accessoryInDb = await GetByIdAsync(dto.Id);
             Accessory accessory = _mapper.Map<Accessory>(dto);
             accessory.UpdatedDate = DateTime.UtcNow;
@@ -154,8 +162,9 @@ namespace StockLinx.Service.Services
 
         public async Task DeleteAccessoryAsync(Guid id)
         {
-            await _accessoryRepository.CanDeleteAsync(id);
             Accessory accessory = await GetByIdAsync(id);
+            await _permissionService.VerifyCompanyAccessAsync(accessory.CompanyId);
+            await _accessoryRepository.CanDeleteAsync(id);
             await _customLogService.CreateCustomLog(
                 "Delete",
                 "Accessory",
@@ -173,6 +182,7 @@ namespace StockLinx.Service.Services
             foreach (Guid id in ids)
             {
                 Accessory accessory = await GetByIdAsync(id);
+                await _permissionService.VerifyCompanyAccessAsync(accessory.CompanyId);
                 accessories.Add(accessory);
             }
             foreach (Accessory accessory in accessories)
@@ -189,88 +199,94 @@ namespace StockLinx.Service.Services
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task<UserProductDto> CheckInAsync(UserProductCheckInDto checkInDto)
+        public async Task<EmployeeProductDto> CheckInAsync(EmployeeProductCheckInDto checkInDto)
         {
-            User user = await _userService.GetByIdAsync(checkInDto.UserId);
+            Employee employee = await _employeeRepository.GetByIdAsync(checkInDto.EmployeeId);
             Accessory accessory = await GetByIdAsync(checkInDto.ProductId);
+            await _permissionService.VerifyCompanyAccessAsync(accessory.CompanyId);
             int availableQuantity = await _accessoryRepository.GetAvaliableQuantityAsync(accessory);
             if (availableQuantity - checkInDto.Quantity < 0)
             {
                 throw new Exception("Accessory stock is not enough");
             }
-            UserProduct userProduct = new UserProduct
+            EmployeeProduct employeeProduct = new EmployeeProduct
             {
                 Id = Guid.NewGuid(),
                 AccessoryId = accessory.Id,
-                UserId = checkInDto.UserId,
+                EmployeeId = checkInDto.EmployeeId,
                 AssignDate = DateTime.UtcNow,
                 CreatedDate = DateTime.UtcNow,
                 Quantity = checkInDto.Quantity,
                 Notes = checkInDto.Notes,
             };
-            await _userProductRepository.AddAsync(userProduct);
+            await _employeeProductRepository.AddAsync(employeeProduct);
             await _customLogService.CreateCustomLog(
                 "CheckIn",
                 "Accessory",
                 accessory.Id,
                 accessory.Name,
-                "User",
-                user.Id,
-                user.FirstName + user.LastName,
+                "Employee",
+                employee.Id,
+                employee.FirstName + employee.LastName,
                 "Checked in " + checkInDto.Quantity + " units"
             );
             await _unitOfWork.CommitAsync();
-            return await _userProductRepository.GetDtoAsync(userProduct);
+            return await _employeeProductRepository.GetDtoAsync(employeeProduct);
         }
 
-        public async Task<List<UserProductDto>> CheckOutAsync(UserProductCheckOutDto checkOutDto)
+        public async Task<List<EmployeeProductDto>> CheckOutAsync(
+            EmployeeProductCheckOutDto checkOutDto
+        )
         {
-            List<UserProduct> userProducts = new List<UserProduct>();
-            UserProduct userProduct = await _userProductRepository.GetByIdAsync(
-                checkOutDto.UserProductId
+            List<EmployeeProduct> employeeProducts = new List<EmployeeProduct>();
+            EmployeeProduct employeeProduct = await _employeeProductRepository.GetByIdAsync(
+                checkOutDto.EmployeeProductId
             );
-            Accessory accessory = await GetByIdAsync((Guid)userProduct.AccessoryId);
-            bool isUserChanged = checkOutDto.UserId != null && checkOutDto.UserId != userProduct.UserId;
-            switch (userProduct.Quantity - checkOutDto.Quantity)
+            Accessory accessory = await GetByIdAsync((Guid)employeeProduct.AccessoryId);
+            await _permissionService.VerifyCompanyAccessAsync(accessory.CompanyId);
+            bool isEmployeeChanged =
+                checkOutDto.EmployeeId != null
+                && checkOutDto.EmployeeId != employeeProduct.EmployeeId;
+            switch (employeeProduct.Quantity - checkOutDto.Quantity)
             {
                 case 0:
                     await CreateCheckLogAsync("CheckOut", accessory, checkOutDto.Quantity);
-                    if (isUserChanged)
+                    if (isEmployeeChanged)
                     {
-                        userProduct.UserId = (Guid)checkOutDto.UserId;
-                        _userProductRepository.Update(userProduct, userProduct);
+                        employeeProduct.EmployeeId = (Guid)checkOutDto.EmployeeId;
+                        _employeeProductRepository.Update(employeeProduct, employeeProduct);
                         await CreateCheckLogAsync(
                             "CheckOut",
                             accessory,
-                            await _userService.GetByIdAsync((Guid)checkOutDto.UserId),
+                            await _employeeRepository.GetByIdAsync((Guid)checkOutDto.EmployeeId),
                             checkOutDto.Quantity
                         );
-                        userProducts.Add(userProduct);
+                        employeeProducts.Add(employeeProduct);
                     }
                     else
                     {
                         await CreateCheckLogAsync("CheckOut", accessory, checkOutDto.Quantity);
-                        _userProductRepository.Remove(userProduct);
+                        _employeeProductRepository.Remove(employeeProduct);
                     }
                     await _unitOfWork.CommitAsync();
                     ;
-                    return await _userProductRepository.GetDtosAsync(userProducts);
+                    return await _employeeProductRepository.GetDtosAsync(employeeProducts);
                 case > 0:
                     throw new Exception(
                         "Quantity must be less than or equal to the quantity in stock"
                     );
                 case < 0:
-                    userProduct.Quantity -= checkOutDto.Quantity;
-                    _userProductRepository.Update(userProduct, userProduct);
+                    employeeProduct.Quantity -= checkOutDto.Quantity;
+                    _employeeProductRepository.Update(employeeProduct, employeeProduct);
                     await CreateCheckLogAsync("CheckOut", accessory, checkOutDto.Quantity);
-                    userProducts.Add(userProduct);
-                    if (isUserChanged)
+                    employeeProducts.Add(employeeProduct);
+                    if (isEmployeeChanged)
                     {
-                        UserProduct newUserProduct = new UserProduct
+                        EmployeeProduct newEmployeeProduct = new EmployeeProduct
                         {
                             Id = Guid.NewGuid(),
                             AccessoryId = accessory.Id,
-                            UserId = (Guid)checkOutDto.UserId,
+                            EmployeeId = (Guid)checkOutDto.EmployeeId,
                             AssignDate = DateTime.UtcNow,
                             CreatedDate = DateTime.UtcNow,
                             Quantity = checkOutDto.Quantity,
@@ -279,14 +295,14 @@ namespace StockLinx.Service.Services
                         await CreateCheckLogAsync(
                             "CheckOut",
                             accessory,
-                            await _userService.GetByIdAsync((Guid)checkOutDto.UserId),
+                            await _employeeRepository.GetByIdAsync((Guid)checkOutDto.EmployeeId),
                             checkOutDto.Quantity
                         );
-                        await _userProductRepository.AddAsync(newUserProduct);
-                        userProducts.Add(newUserProduct);
+                        await _employeeProductRepository.AddAsync(newEmployeeProduct);
+                        employeeProducts.Add(newEmployeeProduct);
                     }
                     await _unitOfWork.CommitAsync();
-                    return await _userProductRepository.GetDtosAsync(userProducts);
+                    return await _employeeProductRepository.GetDtosAsync(employeeProducts);
             }
         }
 
@@ -314,13 +330,15 @@ namespace StockLinx.Service.Services
         public async Task<List<AccessoryDto>> FilterAllAsync(string filter)
         {
             var result = await _filterService.FilterAsync(filter);
-            return await _accessoryRepository.GetDtosAsync(result.ToList());
+            var list = await _accessoryRepository.GetDtosAsync(result.ToList());
+            var companyIds = await _permissionService.GetCompanyIdsAsync();
+            return list.Where(x => companyIds.Contains(x.CompanyId)).ToList();
         }
 
         public async Task CreateCheckLogAsync(
             string action,
             Accessory accessory,
-            User user,
+            Employee employee,
             int quantity
         )
         {
@@ -329,9 +347,9 @@ namespace StockLinx.Service.Services
                 "Accessory",
                 accessory.Id,
                 accessory.Name,
-                "User",
-                user.Id,
-                user.FirstName + user.LastName,
+                "Employee",
+                employee.Id,
+                employee.FirstName + employee.LastName,
                 "Checked " + quantity + " units"
             );
         }

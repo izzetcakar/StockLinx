@@ -121,8 +121,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                UserProductDto result = await _assetService.CheckInAsync(dto);
-                return CreateActionResult(CustomResponseDto<UserProductDto>.Success(200, result));
+                EmployeeProductDto result = await _assetService.CheckInAsync(dto);
+                return CreateActionResult(CustomResponseDto<EmployeeProductDto>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -135,8 +135,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                UserProductDto result = await _assetService.CheckOutAsync(dto);
-                return CreateActionResult(CustomResponseDto<UserProductDto>.Success(200, result));
+                EmployeeProductDto result = await _assetService.CheckOutAsync(dto);
+                return CreateActionResult(CustomResponseDto<EmployeeProductDto>.Success(200, result));
             }
             catch (Exception ex)
             {

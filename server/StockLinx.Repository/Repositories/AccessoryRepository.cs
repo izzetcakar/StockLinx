@@ -18,11 +18,11 @@ namespace StockLinx.Repository.Repositories.EF_Core
 
         public async Task<AccessoryDto> GetDtoAsync(Accessory entity)
         {
-            List<UserProduct> userProducts = await dbContext
-                .UserProducts.Where(d => d.AccessoryId.HasValue && d.AccessoryId == entity.Id)
+            List<EmployeeProduct> employeeProducts = await dbContext
+                .EmployeeProducts.Where(d => d.AccessoryId.HasValue && d.AccessoryId == entity.Id)
                 .AsNoTracking()
                 .ToListAsync();
-            int availableQuantity = entity.Quantity - userProducts.Sum(d => d.Quantity);
+            int availableQuantity = entity.Quantity - employeeProducts.Sum(d => d.Quantity);
             AccessoryDto dto = _mapper.Map<AccessoryDto>(entity);
             dto.AvailableQuantity = availableQuantity;
             return dto;
@@ -46,12 +46,18 @@ namespace StockLinx.Repository.Repositories.EF_Core
             return await GetDtosAsync(entities);
         }
 
+        public async Task<List<AccessoryDto>> GetAllDtosAsync(List<Guid> companyIds)
+        {
+            List<Accessory> entities = await dbContext.Accessories.Where(a => companyIds.Contains(a.CompanyId)).AsNoTracking().ToListAsync();
+            return await GetDtosAsync(entities);
+        }
+
         public async Task CanDeleteAsync(Guid id)
         {
-            bool userProducts = await dbContext.UserProducts.AnyAsync(d =>
+            bool employeeProducts = await dbContext.EmployeeProducts.AnyAsync(d =>
                 d.AccessoryId.HasValue && d.AccessoryId == id
             );
-            if (userProducts)
+            if (employeeProducts)
             {
                 throw new Exception("Cannot delete accessory because it is used in user products.");
             }
@@ -59,11 +65,11 @@ namespace StockLinx.Repository.Repositories.EF_Core
 
         public async Task<int> GetAvaliableQuantityAsync(Accessory entity)
         {
-            List<UserProduct> userProducts = await dbContext
-                .UserProducts.Where(d => d.AccessoryId.HasValue && d.AccessoryId == entity.Id)
+            List<EmployeeProduct> employeeProducts = await dbContext
+                .EmployeeProducts.Where(d => d.AccessoryId.HasValue && d.AccessoryId == entity.Id)
                 .AsNoTracking()
                 .ToListAsync();
-            int availableQuantity = entity.Quantity - userProducts.Sum(up => up.Quantity);
+            int availableQuantity = entity.Quantity - employeeProducts.Sum(up => up.Quantity);
             return availableQuantity;
         }
 

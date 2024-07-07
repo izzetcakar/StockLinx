@@ -20,7 +20,6 @@ namespace StockLinx.Repository.Configurations
                 .WithMany(x => x.Departments)
                 .HasForeignKey(x => x.LocationId)
                 .OnDelete(DeleteBehavior.SetNull);
-            //builder.HasOne(x => x.Manager).WithOne(x => x.Department).HasForeignKey<Department>(x => x.ManagerId).OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

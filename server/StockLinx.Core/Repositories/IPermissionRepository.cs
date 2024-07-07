@@ -8,5 +8,7 @@ namespace StockLinx.Core.Repositories
         PermissionDto GetDto(Permission entity);
         List<PermissionDto> GetDtos(List<Permission> entities);
         Task<List<PermissionDto>> GetAllDtosAsync();
+        Task<List<Company>> GetUserCompaniesAsync(Guid userId);
+        Task<List<Guid>> GetCompanyIdsAsync(Guid userId);
     }
 }

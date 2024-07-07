@@ -37,5 +37,26 @@ namespace StockLinx.Repository.Repositories.EF_Core
             var entities = await dbContext.Permissions.AsNoTracking().ToListAsync();
             return GetDtos(entities);
         }
+
+        public async Task<List<Company>> GetUserCompaniesAsync(Guid userId)
+        {
+            bool isAdmin = await dbContext.Users.Where(u => u.Id == userId).Select(u => u.IsAdmin).FirstOrDefaultAsync();
+            if (isAdmin)
+            {
+                return await dbContext.Companies.ToListAsync();
+            }
+            List<Guid> ids = await dbContext.Permissions.Where(p => p.UserId == userId).Select(p => p.CompanyId).Distinct().ToListAsync();
+            return await dbContext.Companies.Where(c => ids.Contains(c.Id)).ToListAsync();
+        }
+
+        public Task<List<Guid>> GetCompanyIdsAsync(Guid userId)
+        {
+            bool isAdmin = dbContext.Users.Where(u => u.Id == userId).Select(u => u.IsAdmin).FirstOrDefault();
+            if (isAdmin)
+            {
+                return dbContext.Companies.Select(c => c.Id).ToListAsync();
+            }
+            return dbContext.Permissions.Where(p => p.UserId == userId).Select(p => p.CompanyId).Distinct().ToListAsync();
+        }
     }
 }

@@ -13,36 +13,39 @@ namespace StockLinx.Service.Services
     public class LicenseService : Service<License>, ILicenseService
     {
         private readonly ILicenseRepository _licenseRepository;
-        private readonly IUserProductRepository _userProductRepository;
+        private readonly IEmployeeRepository _employeeRepository;
+        private readonly IEmployeeProductRepository _employeeProductRepository;
         private readonly IAssetProductRepository _assetProductRepository;
         private readonly IAssetRepository _assetRepository;
-        private readonly IUserService _userService;
-        private readonly ICustomLogService _customLogService;
+        private readonly IPermissionService _permissionService;
         private readonly IFilterService<License> _filterService;
+        private readonly ICustomLogService _customLogService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
         public LicenseService(
             IRepository<License> repository,
             ILicenseRepository licenseRepository,
-            IUserProductRepository userProductRepository,
+            IEmployeeRepository employeeRepository,
+            IEmployeeProductRepository employeeProductRepository,
             IAssetProductRepository assetProductRepository,
             IAssetRepository assetRepository,
-            IUserService userService,
-            ICustomLogService customLogService,
+            IPermissionService permissionService,
             IFilterService<License> filterService,
+            ICustomLogService customLogService,
             IMapper mapper,
             IUnitOfWork unitOfWork
         )
             : base(repository, unitOfWork)
         {
             _licenseRepository = licenseRepository;
-            _userProductRepository = userProductRepository;
+            _employeeRepository = employeeRepository;
+            _employeeProductRepository = employeeProductRepository;
             _assetProductRepository = assetProductRepository;
             _assetRepository = assetRepository;
-            _userService = userService;
-            _customLogService = customLogService;
+            _permissionService = permissionService;
             _filterService = filterService;
+            _customLogService = customLogService;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
@@ -50,16 +53,19 @@ namespace StockLinx.Service.Services
         public async Task<LicenseDto> GetDtoAsync(Guid id)
         {
             License license = await GetByIdAsync(id);
+            await _permissionService.VerifyCompanyAccessAsync(license.CompanyId);
             return await _licenseRepository.GetDtoAsync(license);
         }
 
         public async Task<List<LicenseDto>> GetAllDtosAsync()
         {
-            return await _licenseRepository.GetAllDtosAsync();
+            List<Guid> companyIds = await _permissionService.GetCompanyIdsAsync();
+            return await _licenseRepository.GetAllDtosAsync(companyIds);
         }
 
         public async Task<LicenseDto> CreateLicenseAsync(LicenseCreateDto dto)
         {
+            await _permissionService.VerifyCompanyAccessAsync(dto.CompanyId);
             await CheckTagExistAsync(dto.Tag);
             License license = _mapper.Map<License>(dto);
             await _licenseRepository.AddAsync(license);
@@ -76,6 +82,7 @@ namespace StockLinx.Service.Services
             List<License> licenses = new List<License>();
             foreach (LicenseCreateDto createDto in createDtos)
             {
+                await _permissionService.VerifyCompanyAccessAsync(createDto.CompanyId);
                 License license = _mapper.Map<License>(createDto);
                 licenses.Add(license);
                 await _customLogService.CreateCustomLog(
@@ -92,6 +99,7 @@ namespace StockLinx.Service.Services
 
         public async Task<LicenseDto> UpdateLicenseAsync(LicenseUpdateDto dto)
         {
+            await _permissionService.VerifyCompanyAccessAsync(dto.CompanyId);
             License licenseInDb = await GetByIdAsync(dto.Id);
             License license = _mapper.Map<License>(dto);
             license.UpdatedDate = DateTime.UtcNow;
@@ -112,8 +120,9 @@ namespace StockLinx.Service.Services
 
         public async Task DeleteLicenseAsync(Guid id)
         {
-            await _licenseRepository.CanDeleteAsync(id);
             License license = await GetByIdAsync(id);
+            await _permissionService.VerifyCompanyAccessAsync(license.CompanyId);
+            await _licenseRepository.CanDeleteAsync(id);
             _licenseRepository.Remove(license);
             await _customLogService.CreateCustomLog("Delete", "License", license.Id, license.Name);
             await _unitOfWork.CommitAsync();
@@ -124,8 +133,9 @@ namespace StockLinx.Service.Services
             List<License> licenses = new List<License>();
             foreach (Guid id in ids)
             {
-                await _licenseRepository.CanDeleteAsync(id);
                 License license = await GetByIdAsync(id);
+                await _permissionService.VerifyCompanyAccessAsync(license.CompanyId);
+                await _licenseRepository.CanDeleteAsync(id);
                 licenses.Add(license);
                 await _customLogService.CreateCustomLog(
                     "Delete",
@@ -138,44 +148,46 @@ namespace StockLinx.Service.Services
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task<UserProductDto> CheckInAsync(UserProductCheckInDto checkInDto)
+        public async Task<EmployeeProductDto> CheckInAsync(EmployeeProductCheckInDto checkInDto)
         {
-            User user = await _userService.GetByIdAsync(checkInDto.UserId);
+            Employee employee = await _employeeRepository.GetByIdAsync(checkInDto.EmployeeId);
             License license = await GetByIdAsync(checkInDto.ProductId);
+            await _permissionService.VerifyCompanyAccessAsync(license.CompanyId);
             int availableQuantity = await _licenseRepository.GetAvaliableQuantityAsync(license);
             if (availableQuantity - checkInDto.Quantity < 0)
             {
                 throw new Exception("License stock is not enough");
             }
-            UserProduct userProduct = new UserProduct
+            EmployeeProduct employeeProduct = new EmployeeProduct
             {
                 Id = Guid.NewGuid(),
                 LicenseId = license.Id,
-                UserId = checkInDto.UserId,
+                EmployeeId = checkInDto.EmployeeId,
                 AssignDate = DateTime.UtcNow,
                 CreatedDate = DateTime.UtcNow,
                 Quantity = checkInDto.Quantity,
                 Notes = checkInDto.Notes,
             };
-            await _userProductRepository.AddAsync(userProduct);
+            await _employeeProductRepository.AddAsync(employeeProduct);
             await _customLogService.CreateCustomLog(
                 "CheckIn",
                 "License",
                 license.Id,
                 license.Name,
-                "User",
-                user.Id,
-                user.FirstName + user.LastName,
+                "Employee",
+                employee.Id,
+                employee.FirstName + employee.LastName,
                 "Checked In " + checkInDto.Quantity + " units"
             );
             await _unitOfWork.CommitAsync();
-            return await _userProductRepository.GetDtoAsync(userProduct);
+            return await _employeeProductRepository.GetDtoAsync(employeeProduct);
         }
 
         public async Task<AssetProductDto> CheckInAsync(AssetProductCheckInDto checkInDto)
         {
             Asset asset = await _assetRepository.GetByIdAsync(checkInDto.AssetId);
             License license = await GetByIdAsync(checkInDto.ProductId);
+            await _permissionService.VerifyCompanyAccessAsync(license.CompanyId);
             int availableQuantity = await _licenseRepository.GetAvaliableQuantityAsync(license);
             if (availableQuantity - checkInDto.Quantity < 0)
             {
@@ -206,57 +218,60 @@ namespace StockLinx.Service.Services
             return await _assetProductRepository.GetDtoAsync(assetProduct);
         }
 
-        public async Task<List<UserProductDto>> UserCheckOutAsync(
-            UserProductCheckOutDto checkOutDto
+        public async Task<List<EmployeeProductDto>> EmployeeCheckOutAsync(
+            EmployeeProductCheckOutDto checkOutDto
         )
         {
-            List<UserProduct> userProducts = new List<UserProduct>();
-            UserProduct userProduct = await _userProductRepository.GetByIdAsync(
-                checkOutDto.UserProductId
+            List<EmployeeProduct> employeeProducts = new List<EmployeeProduct>();
+            EmployeeProduct employeeProduct = await _employeeProductRepository.GetByIdAsync(
+                checkOutDto.EmployeeProductId
             );
-            License license = await GetByIdAsync((Guid)userProduct.LicenseId);
-            bool isUserChanged = checkOutDto.UserId != null && checkOutDto.UserId != userProduct.UserId;
-            switch (userProduct.Quantity - checkOutDto.Quantity)
+            License license = await GetByIdAsync((Guid)employeeProduct.LicenseId);
+            await _permissionService.VerifyCompanyAccessAsync(license.CompanyId);
+            bool isEmployeeChanged =
+                checkOutDto.EmployeeId != null
+                && checkOutDto.EmployeeId != employeeProduct.EmployeeId;
+            switch (employeeProduct.Quantity - checkOutDto.Quantity)
             {
                 case 0:
                     await CreateCheckLogAsync("CheckOut", license, checkOutDto.Quantity);
-                    if (isUserChanged)
+                    if (isEmployeeChanged)
                     {
-                        userProduct.UserId = (Guid)checkOutDto.UserId;
-                        _userProductRepository.Update(userProduct, userProduct);
+                        employeeProduct.EmployeeId = (Guid)checkOutDto.EmployeeId;
+                        _employeeProductRepository.Update(employeeProduct, employeeProduct);
                         await CreateCheckLogAsync(
                             "CheckOut",
                             license,
-                            await _userService.GetByIdAsync((Guid)checkOutDto.UserId),
+                            await _employeeRepository.GetByIdAsync((Guid)checkOutDto.EmployeeId),
                             checkOutDto.Quantity
                         );
-                        userProducts.Add(userProduct);
+                        employeeProducts.Add(employeeProduct);
                     }
                     else
                     {
                         await CreateCheckLogAsync("CheckOut", license, checkOutDto.Quantity);
                         await _unitOfWork.CommitAsync();
-                        _userProductRepository.Remove(userProduct);
-                        return await _userProductRepository.GetDtosAsync(userProducts);
+                        _employeeProductRepository.Remove(employeeProduct);
+                        return await _employeeProductRepository.GetDtosAsync(employeeProducts);
                     }
                     await _unitOfWork.CommitAsync();
-                    return await _userProductRepository.GetDtosAsync(userProducts);
+                    return await _employeeProductRepository.GetDtosAsync(employeeProducts);
                 case < 0:
                     throw new Exception(
                         "Quantity must be less than or equal to the quantity in stock"
                     );
                 case > 0:
-                    userProduct.Quantity -= checkOutDto.Quantity;
-                    _userProductRepository.Update(userProduct, userProduct);
+                    employeeProduct.Quantity -= checkOutDto.Quantity;
+                    _employeeProductRepository.Update(employeeProduct, employeeProduct);
                     await CreateCheckLogAsync("CheckOut", license, checkOutDto.Quantity);
-                    userProducts.Add(userProduct);
-                    if (isUserChanged)
+                    employeeProducts.Add(employeeProduct);
+                    if (isEmployeeChanged)
                     {
-                        UserProduct newUserProduct = new UserProduct
+                        EmployeeProduct newEmployeeProduct = new EmployeeProduct
                         {
                             Id = Guid.NewGuid(),
                             LicenseId = license.Id,
-                            UserId = (Guid)checkOutDto.UserId,
+                            EmployeeId = (Guid)checkOutDto.EmployeeId,
                             AssignDate = DateTime.UtcNow,
                             CreatedDate = DateTime.UtcNow,
                             Quantity = checkOutDto.Quantity,
@@ -265,14 +280,14 @@ namespace StockLinx.Service.Services
                         await CreateCheckLogAsync(
                             "CheckOut",
                             license,
-                            await _userService.GetByIdAsync((Guid)checkOutDto.UserId),
+                            await _employeeRepository.GetByIdAsync((Guid)checkOutDto.EmployeeId),
                             checkOutDto.Quantity
                         );
-                        await _userProductRepository.AddAsync(newUserProduct);
-                        userProducts.Add(newUserProduct);
+                        await _employeeProductRepository.AddAsync(newEmployeeProduct);
+                        employeeProducts.Add(newEmployeeProduct);
                     }
                     await _unitOfWork.CommitAsync();
-                    return await _userProductRepository.GetDtosAsync(userProducts);
+                    return await _employeeProductRepository.GetDtosAsync(employeeProducts);
             }
         }
 
@@ -285,7 +300,9 @@ namespace StockLinx.Service.Services
                 checkOutDto.AssetProductId
             );
             License license = await GetByIdAsync((Guid)assetProduct.LicenseId);
-            bool isAssetChanged = checkOutDto.AssetId != null && checkOutDto.AssetId != assetProduct.AssetId;
+            await _permissionService.VerifyCompanyAccessAsync(license.CompanyId);
+            bool isAssetChanged =
+                checkOutDto.AssetId != null && checkOutDto.AssetId != assetProduct.AssetId;
             switch (assetProduct.Quantity - checkOutDto.Quantity)
             {
                 case 0:
@@ -297,7 +314,7 @@ namespace StockLinx.Service.Services
                         await CreateCheckLogAsync(
                             "CheckOut",
                             license,
-                            await _userService.GetByIdAsync((Guid)checkOutDto.AssetId),
+                            await _employeeRepository.GetByIdAsync((Guid)checkOutDto.AssetId),
                             checkOutDto.Quantity
                         );
                         assetProducts.Add(assetProduct);
@@ -333,7 +350,7 @@ namespace StockLinx.Service.Services
                         await CreateCheckLogAsync(
                             "CheckOut",
                             license,
-                            await _userService.GetByIdAsync((Guid)checkOutDto.AssetId),
+                            await _employeeRepository.GetByIdAsync((Guid)checkOutDto.AssetId),
                             checkOutDto.Quantity
                         );
                         await _assetProductRepository.AddAsync(newAssetProduct);
@@ -368,13 +385,15 @@ namespace StockLinx.Service.Services
         public async Task<List<LicenseDto>> FilterAllAsync(string filter)
         {
             var result = await _filterService.FilterAsync(filter);
-            return await _licenseRepository.GetDtosAsync(result.ToList());
+            var list = await _licenseRepository.GetDtosAsync(result.ToList());
+            List<Guid> companyIds = await _permissionService.GetCompanyIdsAsync();
+            return list.Where(x => companyIds.Contains(x.CompanyId)).ToList();
         }
 
         public async Task CreateCheckLogAsync(
             string action,
             License license,
-            User user,
+            Employee employee,
             int quantity
         )
         {
@@ -383,9 +402,9 @@ namespace StockLinx.Service.Services
                 "License",
                 license.Id,
                 license.Name,
-                "User",
-                user.Id,
-                user.FirstName + user.LastName,
+                "Employee",
+                employee.Id,
+                employee.FirstName + employee.LastName,
                 "Checked " + quantity + " units"
             );
         }

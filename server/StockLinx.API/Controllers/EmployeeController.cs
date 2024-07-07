@@ -1,22 +1,20 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
-using StockLinx.Core.DTOs.Update;
-using StockLinx.Core.Entities;
 using StockLinx.Core.Services;
 
 namespace StockLinx.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccessoryController : CustomBaseController
+    public class EmployeeController : CustomBaseController
     {
-        private readonly IAccessoryService _accessoryService;
+        private readonly IEmployeeService _employeeService;
 
-        public AccessoryController(IAccessoryService accessoryService)
+        public EmployeeController(IEmployeeService employeeService)
         {
-            _accessoryService = accessoryService;
+            _employeeService = employeeService;
         }
 
         [HttpGet]
@@ -24,10 +22,9 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                List<AccessoryDto> result = await _accessoryService.GetAllDtos();
-
+                List<EmployeeDto> result = await _employeeService.GetAllDtosAsync();
                 return CreateActionResult(
-                    CustomResponseDto<List<AccessoryDto>>.Success(200, result)
+                    CustomResponseDto<List<EmployeeDto>>.Success(200, result)
                 );
             }
             catch (Exception ex)
@@ -41,9 +38,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                AccessoryDto dto = await _accessoryService.GetDto(id);
-
-                return CreateActionResult(CustomResponseDto<AccessoryDto>.Success(200, dto));
+                EmployeeDto result = await _employeeService.GetDtoAsync(id);
+                return CreateActionResult(CustomResponseDto<EmployeeDto>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -52,13 +48,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(AccessoryCreateDto dto)
+        public async Task<IActionResult> Add(EmployeeCreateDto dto)
         {
             try
             {
-                AccessoryDto result = await _accessoryService.CreateAccessoryAsync(dto);
-
-                return CreateActionResult(CustomResponseDto<AccessoryDto>.Success(201, result));
+                EmployeeDto result = await _employeeService.CreateEmployeeAsync(dto);
+                return CreateActionResult(CustomResponseDto<EmployeeDto>.Success(201, result));
             }
             catch (Exception ex)
             {
@@ -67,13 +62,13 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost("range")]
-        public async Task<IActionResult> AddRangeAccessories(List<AccessoryCreateDto> dtos)
+        public async Task<IActionResult> AddRangeEmployees(List<EmployeeCreateDto> dtos)
         {
             try
             {
-                List<AccessoryDto> result = await _accessoryService.CreateRangeAccessoryAsync(dtos);
+                List<EmployeeDto> result = await _employeeService.CreateRangeEmployeeAsync(dtos);
                 return CreateActionResult(
-                    CustomResponseDto<List<AccessoryDto>>.Success(201, result)
+                    CustomResponseDto<List<EmployeeDto>>.Success(201, result)
                 );
             }
             catch (Exception ex)
@@ -83,12 +78,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(AccessoryUpdateDto dto)
+        public async Task<IActionResult> Update(EmployeeUpdateDto dto)
         {
             try
             {
-                AccessoryDto result = await _accessoryService.UpdateAccessoryAsync(dto);
-                return CreateActionResult(CustomResponseDto<AccessoryDto>.Success(200, result));
+                EmployeeDto result = await _employeeService.UpdateEmployeeAsync(dto);
+                return CreateActionResult(CustomResponseDto<EmployeeDto>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -101,7 +96,7 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                await _accessoryService.DeleteAccessoryAsync(id);
+                await _employeeService.DeleteEmployeeAsync(id);
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
             }
             catch (Exception ex)
@@ -111,40 +106,12 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpDelete("range")]
-        public async Task<IActionResult> DeleteRangeAccessories(List<Guid> ids)
+        public async Task<IActionResult> DeleteRangeEmployees(List<Guid> ids)
         {
             try
             {
-                await _accessoryService.DeleteRangeAccessoryAsync(ids);
+                await _employeeService.DeleteRangeEmployeeAsync(ids);
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Success(200));
-            }
-            catch (Exception ex)
-            {
-                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
-            }
-        }
-
-        [HttpPost("checkin")]
-        public async Task<IActionResult> CheckIn(EmployeeProductCheckInDto dto)
-        {
-            try
-            {
-                EmployeeProductDto result = await _accessoryService.CheckInAsync(dto);
-                return CreateActionResult(CustomResponseDto<EmployeeProductDto>.Success(200, result));
-            }
-            catch (Exception ex)
-            {
-                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
-            }
-        }
-
-        [HttpPost("checkout")]
-        public async Task<IActionResult> CheckOut(EmployeeProductCheckOutDto dto)
-        {
-            try
-            {
-                List<EmployeeProductDto> result = await _accessoryService.CheckOutAsync(dto);
-                return CreateActionResult(CustomResponseDto<List<EmployeeProductDto>>.Success(200, result));
             }
             catch (Exception ex)
             {
@@ -161,9 +128,9 @@ namespace StockLinx.API.Controllers
                 {
                     return await All();
                 }
-                List<AccessoryDto> result = await _accessoryService.FilterAllAsync(filter);
+                List<EmployeeDto> result = await _employeeService.FilterAllAsync(filter);
                 return CreateActionResult(
-                    CustomResponseDto<List<AccessoryDto>>.Success(200, result)
+                    CustomResponseDto<List<EmployeeDto>>.Success(200, result)
                 );
             }
             catch (Exception ex)

@@ -39,12 +39,18 @@ namespace StockLinx.Repository.Repositories.EF_Core
             return GetDtos(entities);
         }
 
+        public async Task<List<AssetDto>> GetAllDtosAsync(List<Guid> companyIds)
+        {
+            List<Asset> entities = await dbContext.Assets.Where(a => companyIds.Contains(a.CompanyId)).AsNoTracking().ToListAsync();
+            return GetDtos(entities);
+        }
+
         public async Task CanDeleteAsync(Guid id)
         {
-            bool userProducts = await dbContext.UserProducts.AnyAsync(d =>
+            bool employeeProducts = await dbContext.EmployeeProducts.AnyAsync(d =>
                 d.AssetId.HasValue && d.AssetId == id
             );
-            if (userProducts)
+            if (employeeProducts)
             {
                 throw new Exception("Cannot delete asset because it has deployed.");
             }

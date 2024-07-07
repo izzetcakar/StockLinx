@@ -118,12 +118,14 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost("checkin/user")]
-        public async Task<IActionResult> CheckInLicense(UserProductCheckInDto dto)
+        public async Task<IActionResult> CheckInLicense(EmployeeProductCheckInDto dto)
         {
             try
             {
-                UserProductDto result = await _licenseService.CheckInAsync(dto);
-                return CreateActionResult(CustomResponseDto<UserProductDto>.Success(200, result));
+                EmployeeProductDto result = await _licenseService.CheckInAsync(dto);
+                return CreateActionResult(
+                    CustomResponseDto<EmployeeProductDto>.Success(200, result)
+                );
             }
             catch (Exception ex)
             {
@@ -146,12 +148,14 @@ namespace StockLinx.API.Controllers
         }
 
         [HttpPost("checkout/user")]
-        public async Task<IActionResult> UserCheckOutLicense(UserProductCheckOutDto dto)
+        public async Task<IActionResult> EmployeeCheckOutLicense(EmployeeProductCheckOutDto dto)
         {
             try
             {
-                List<UserProductDto> result = await _licenseService.UserCheckOutAsync(dto);
-                return CreateActionResult(CustomResponseDto<List<UserProductDto>>.Success(200, result));
+                List<EmployeeProductDto> result = await _licenseService.EmployeeCheckOutAsync(dto);
+                return CreateActionResult(
+                    CustomResponseDto<List<EmployeeProductDto>>.Success(200, result)
+                );
             }
             catch (Exception ex)
             {
@@ -165,7 +169,9 @@ namespace StockLinx.API.Controllers
             try
             {
                 List<AssetProductDto> result = await _licenseService.AssetCheckOutAsync(dto);
-                return CreateActionResult(CustomResponseDto<List<AssetProductDto>>.Success(200, result));
+                return CreateActionResult(
+                    CustomResponseDto<List<AssetProductDto>>.Success(200, result)
+                );
             }
             catch (Exception ex)
             {

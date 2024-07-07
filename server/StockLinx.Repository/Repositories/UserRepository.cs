@@ -16,22 +16,17 @@ namespace StockLinx.Repository.Repositories.EF_Core
             _mapper = mapper;
         }
 
-        public async Task<UserDto> GetDtoAsync(User entity)
+        public UserDto GetDto(User entity)
         {
-            var dto = _mapper.Map<UserDto>(entity);
-            dto.CompanyId = await dbContext
-                .Departments.Where(b => b.Id == dto.DepartmentId)
-                .Select(b => b.CompanyId)
-                .FirstOrDefaultAsync();
-            return dto;
+            return _mapper.Map<UserDto>(entity);
         }
 
-        public async Task<List<UserDto>> GetDtosAsync(IEnumerable<User> entities)
+        public List<UserDto> GetDtos(IEnumerable<User> entities)
         {
             var dtos = new List<UserDto>();
             foreach (var entity in entities)
             {
-                var dto = await GetDtoAsync(entity);
+                var dto = GetDto(entity);
                 dtos.Add(dto);
             }
             return dtos;
@@ -40,24 +35,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
         public async Task<List<UserDto>> GetAllDtosAsync()
         {
             List<User> entities = await dbContext.Users.AsNoTracking().ToListAsync();
-            return await GetDtosAsync(entities);
-        }
-
-        public async Task CanDeleteAsync(Guid id)
-        {
-            var userProducts = await dbContext.UserProducts.AnyAsync(dp => dp.UserId == id);
-            if (userProducts)
-            {
-                throw new Exception("User has deployed items");
-            }
-        }
-
-        public async Task<Guid> GetCompanyIdAsync(Guid userId)
-        {
-            return await dbContext.Departments
-                .Where(b => b.Id == dbContext.Users.Where(u => u.Id == userId).Select(u => u.DepartmentId).FirstOrDefault())
-                .Select(b => b.CompanyId)
-                .FirstOrDefaultAsync();
+            return GetDtos(entities);
         }
     }
 }

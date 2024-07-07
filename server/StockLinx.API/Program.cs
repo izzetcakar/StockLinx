@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using System.Reflection;
+using System.Text;
+using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
@@ -14,22 +17,18 @@ using StockLinx.Repository.UnitOfWork;
 using StockLinx.Service.Mapping;
 using StockLinx.Service.Services;
 using Swashbuckle.AspNetCore.Filters;
-using System.Reflection;
-using System.Text;
-using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("CORSPolicy",
+    options.AddPolicy(
+        "CORSPolicy",
         builder =>
         {
-            builder
-            .AllowAnyMethod()
-            .AllowAnyHeader()
-            .AllowAnyOrigin();
-        });
+            builder.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin();
+        }
+    );
 });
 
 builder.Services.Configure<FormOptions>(o =>
@@ -59,8 +58,10 @@ builder.Services.AddScoped<IConsumableRepository, ConsumableRepository>();
 builder.Services.AddScoped<IConsumableService, ConsumableService>();
 builder.Services.AddScoped<IAssetProductRepository, AssetProductRepository>();
 builder.Services.AddScoped<IAssetProductService, AssetProductService>();
-builder.Services.AddScoped<IUserProductRepository, UserProductRepository>();
-builder.Services.AddScoped<IUserProductService, UserProductService>();
+builder.Services.AddScoped<IEmployeeProductRepository, EmployeeProductRepository>();
+builder.Services.AddScoped<IEmployeeProductService, EmployeeProductService>();
+builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<ILicenseRepository, LicenseRepository>();
 builder.Services.AddScoped<ILicenseService, LicenseService>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
@@ -96,30 +97,39 @@ builder.Services.AddScoped<IGenericService, GenericService>();
 builder.Services.AddAutoMapper(typeof(MapProfile));
 builder.Services.AddHttpContextAccessor();
 
-builder.Services.AddControllersWithViews().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
-
+builder
+    .Services.AddControllersWithViews()
+    .AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 builder.Services.AddDbContext<AppDbContext>(x =>
 {
-    x.UseNpgsql(builder.Configuration.GetConnectionString("SqlConnection"), option =>
-    {
-        option.MigrationsAssembly(Assembly.GetAssembly(typeof(AppDbContext)).GetName().Name);
-    });
+    x.UseNpgsql(
+        builder.Configuration.GetConnectionString("SqlConnection"),
+        option =>
+        {
+            option.MigrationsAssembly(Assembly.GetAssembly(typeof(AppDbContext)).GetName().Name);
+        }
+    );
 });
 
 builder.Services.AddSwaggerGen(options =>
 {
-    options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
-    {
-        Description = "Standard Authorization header using the Bearer scheme (\"bearer {token}\")",
-        In = ParameterLocation.Header,
-        Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey
-    });
+    options.AddSecurityDefinition(
+        "oauth2",
+        new OpenApiSecurityScheme
+        {
+            Description =
+                "Standard Authorization header using the Bearer scheme (\"bearer {token}\")",
+            In = ParameterLocation.Header,
+            Name = "Authorization",
+            Type = SecuritySchemeType.ApiKey
+        }
+    );
 
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+builder
+    .Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.Authority = "http://localhost:7000";
@@ -127,28 +137,45 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
-                .GetBytes("a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6A7B8C9D0E1F2G3H4I5J6K7L8M9N0")),
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(
+                    "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6A7B8C9D0E1F2G3H4I5J6K7L8M9N0"
+                )
+            ),
             ValidateIssuer = true,
             ValidIssuer = "https://localhost:7000",
             ValidateAudience = true,
-            ValidAudiences = new[] { "https://localhost:7000", "https://localhost:7001", "http://localhost:5173" },
+            ValidAudiences = new[]
+            {
+                "https://localhost:7000",
+                "https://localhost:7001",
+                "http://localhost:5173"
+            },
             RequireExpirationTime = true,
         };
     });
 builder.Services.AddAuthorization(auth =>
 {
-    auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
-        .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme‌​)
-        .RequireAuthenticatedUser().Build());
+    auth.AddPolicy(
+        "Bearer",
+        new AuthorizationPolicyBuilder()
+            .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme‌​)
+            .RequireAuthenticatedUser()
+            .Build()
+    );
 });
-builder.Services.AddCors(options => options.AddPolicy(name: "NgOrigins",
-    policy =>
-    {
-        policy.WithOrigins("http://localhost:5173", "http://192.168.1.104:5173")
-              .AllowAnyMethod()
-              .AllowAnyHeader();
-    }));
+builder.Services.AddCors(options =>
+    options.AddPolicy(
+        name: "NgOrigins",
+        policy =>
+        {
+            policy
+                .WithOrigins("http://localhost:5173", "http://192.168.1.104:5173")
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        }
+    )
+);
 
 var app = builder.Build();
 
@@ -165,11 +192,15 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 
-app.UseStaticFiles(new StaticFileOptions()
-{
-    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Resources")),
-    RequestPath = new PathString("/Resources")
-});
+app.UseStaticFiles(
+    new StaticFileOptions()
+    {
+        FileProvider = new PhysicalFileProvider(
+            Path.Combine(Directory.GetCurrentDirectory(), @"Resources")
+        ),
+        RequestPath = new PathString("/Resources")
+    }
+);
 
 app.UseAuthentication();
 

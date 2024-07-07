@@ -6,7 +6,6 @@ using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 using StockLinx.Core.Services;
 using StockLinx.Core.UnitOfWork;
-using StockLinx.Repository.Repositories.EF_Core;
 
 namespace StockLinx.Service.Services
 {
@@ -14,8 +13,9 @@ namespace StockLinx.Service.Services
     {
         private readonly ICompanyRepository _companyRepository;
         private readonly IUserService _userService;
-        private readonly ICustomLogService _customLogService;
+        private readonly IPermissionService _permissionService;
         private readonly IFilterService<Company> _filterService;
+        private readonly ICustomLogService _customLogService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
@@ -23,8 +23,9 @@ namespace StockLinx.Service.Services
             IRepository<Company> repository,
             ICompanyRepository companyRepository,
             IUserService userService,
-            ICustomLogService customLogService,
+            IPermissionService permissionService,
             IFilterService<Company> filterService,
+            ICustomLogService customLogService,
             IMapper mapper,
             IUnitOfWork unitOfWork
         )
@@ -32,14 +33,16 @@ namespace StockLinx.Service.Services
         {
             _companyRepository = companyRepository;
             _userService = userService;
-            _customLogService = customLogService;
+            _permissionService = permissionService;
             _filterService = filterService;
+            _customLogService = customLogService;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
 
         public async Task<CompanyDto> GetDtoAsync(Guid id)
         {
+            await _permissionService.VerifyCompanyAccessAsync(id);
             Company company = await GetByIdAsync(id);
             return _companyRepository.GetDto(company);
         }
@@ -52,8 +55,8 @@ namespace StockLinx.Service.Services
         public async Task<CompanyDto> CreateCompanyAsync(CompanyCreateDto dto)
         {
             await CheckTagExistAsync(dto.Tag);
-            User user = await _userService.GetCurrentUser();
-            if ((bool)!user.IsAdmin)
+            bool isAdmin = await _userService.CheckCurrentUserAdmin();
+            if (!isAdmin)
             {
                 throw new Exception("User is not admin");
             }
@@ -68,8 +71,8 @@ namespace StockLinx.Service.Services
         public async Task<List<CompanyDto>> CreateRangeCompanyAsync(List<CompanyCreateDto> dtos)
         {
             await CheckTagExistAsync(dtos.Select(d => d.Tag).ToList());
-            User user = await _userService.GetCurrentUser();
-            if ((bool)!user.IsAdmin)
+            bool isAdmin = await _userService.CheckCurrentUserAdmin();
+            if (!isAdmin)
             {
                 throw new Exception("User is not admin");
             }
@@ -92,11 +95,7 @@ namespace StockLinx.Service.Services
 
         public async Task<CompanyDto> UpdateCompanyAsync(CompanyUpdateDto dto)
         {
-            User user = await _userService.GetCurrentUser();
-            if ((bool)!user.IsAdmin)
-            {
-                throw new Exception("User is not admin");
-            }
+            await _permissionService.VerifyCompanyAccessAsync(dto.Id);
             Company companyInDb = await GetByIdAsync(dto.Id);
             Company company = _mapper.Map<Company>(dto);
             company.UpdatedDate = DateTime.UtcNow;
@@ -109,6 +108,7 @@ namespace StockLinx.Service.Services
 
         public async Task DeleteCompanyAsync(Guid id)
         {
+            await _permissionService.VerifyCompanyAccessAsync(id);
             await _companyRepository.CanDeleteAsync(id);
             User user = await _userService.GetCurrentUser();
             if ((bool)!user.IsAdmin)
@@ -123,14 +123,10 @@ namespace StockLinx.Service.Services
 
         public async Task DeleteRangeCompanyAsync(List<Guid> ids)
         {
-            User user = await _userService.GetCurrentUser();
-            if ((bool)!user.IsAdmin)
-            {
-                throw new Exception("User is not admin");
-            }
             List<Company> companies = new List<Company>();
             foreach (Guid id in ids)
             {
+                await _permissionService.VerifyCompanyAccessAsync(id);
                 await _companyRepository.CanDeleteAsync(id);
                 Company company = await GetByIdAsync(id);
                 companies.Add(company);
@@ -148,7 +144,9 @@ namespace StockLinx.Service.Services
         public async Task<List<CompanyDto>> FilterAllAsync(string filter)
         {
             var result = await _filterService.FilterAsync(filter);
-            return _companyRepository.GetDtos(result.ToList());
+            var list = _companyRepository.GetDtos(result.ToList());
+            List<Guid> companyIds = await _permissionService.GetCompanyIdsAsync();
+            return list.Where(d => companyIds.Contains(d.Id)).ToList();
         }
 
         public async Task CheckTagExistAsync(string tag)

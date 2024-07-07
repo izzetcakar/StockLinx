@@ -46,15 +46,15 @@ namespace StockLinx.Repository.Repositories.EF_Core
             {
                 throw new Exception("Cannot delete company because it has items.");
             }
-            bool userProducts = await dbContext.UserProducts.AnyAsync(d =>
-                d.User.Department.CompanyId == id
+            bool employeeProducts = await dbContext.EmployeeProducts.AnyAsync(d =>
+                d.Employee.Department.CompanyId == id
             );
-            if (userProducts)
+            if (employeeProducts)
             {
                 throw new Exception("Cannot delete company because it is used in user products.");
             }
-            bool users = await dbContext.Users.AnyAsync(u => u.Department.CompanyId == id);
-            if (users)
+            bool employees = await dbContext.Employees.AnyAsync(u => u.Department.CompanyId == id);
+            if (employees)
             {
                 throw new Exception("Cannot delete company because it has users.");
             }

@@ -16,7 +16,6 @@ namespace StockLinx.Service.Services
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUserRepository _userRepository;
-        private readonly IDepartmentRepository _departmentRepository;
         private readonly ICustomLogService _customLogService;
         private readonly IFilterService<User> _filterService;
         private readonly IMapper _mapper;
@@ -25,7 +24,6 @@ namespace StockLinx.Service.Services
         public UserService(
             IRepository<User> repository,
             IUserRepository userRepository,
-            IDepartmentRepository departmentRepository,
             IHttpContextAccessor httpContextAccessor,
             ICustomLogService customLogService,
             IFilterService<User> filterService,
@@ -36,7 +34,6 @@ namespace StockLinx.Service.Services
         {
             _httpContextAccessor = httpContextAccessor;
             _userRepository = userRepository;
-            _departmentRepository = departmentRepository;
             _customLogService = customLogService;
             _filterService = filterService;
             _mapper = mapper;
@@ -46,7 +43,7 @@ namespace StockLinx.Service.Services
         public async Task<UserDto> GetDtoAsync(Guid id)
         {
             User user = await GetByIdAsync(id);
-            return await _userRepository.GetDtoAsync(user);
+            return _userRepository.GetDto(user);
         }
 
         public async Task<List<UserDto>> GetAllDtosAsync()
@@ -58,7 +55,7 @@ namespace StockLinx.Service.Services
         {
             if (_httpContextAccessor.HttpContext != null)
             {
-                string id = _httpContextAccessor.HttpContext.User.FindFirst("UserId").Value;
+                string id = _httpContextAccessor?.HttpContext?.User?.FindFirst("UserId")?.Value;
                 if (Guid.TryParse(id, out Guid idGuid))
                 {
                     return idGuid;
@@ -95,26 +92,15 @@ namespace StockLinx.Service.Services
         public async Task<UserDto> CreateUserAsync(UserCreateDto dto)
         {
             User user = _mapper.Map<User>(dto);
-            Department department = await _departmentRepository.GetByIdAsync(dto.DepartmentId);
-            bool employeeNoExist = await _userRepository.AnyAsync(x =>
-                x.EmployeeNo == user.EmployeeNo
-            );
-            if (employeeNoExist)
-            {
-                throw new Exception("EmployeeNo already exists");
-            }
             await _userRepository.AddAsync(user);
             await _customLogService.CreateCustomLog(
                 "Create",
                 "User",
                 user.Id,
-                user.FirstName + " " + user.LastName,
-                "Department",
-                department.Id,
-                department.Name
+                user.FirstName + " " + user.LastName
             );
             await _unitOfWork.CommitAsync();
-            return await _userRepository.GetDtoAsync(user);
+            return _userRepository.GetDto(user);
         }
 
         public async Task<List<UserDto>> CreateRangeUserAsync(List<UserCreateDto> dtos)
@@ -123,28 +109,17 @@ namespace StockLinx.Service.Services
             foreach (UserCreateDto dto in dtos)
             {
                 User user = _mapper.Map<User>(dto);
-                Department department = await _departmentRepository.GetByIdAsync(dto.DepartmentId);
-                bool employeeNoExist = await _userRepository.AnyAsync(x =>
-                    x.EmployeeNo == user.EmployeeNo
-                );
-                if (employeeNoExist)
-                {
-                    throw new Exception("EmployeeNo already exists");
-                }
                 users.Add(user);
                 await _customLogService.CreateCustomLog(
                     "Create",
                     "User",
                     user.Id,
-                    user.FirstName + " " + user.LastName,
-                    "Department",
-                    department.Id,
-                    department.Name
+                    user.FirstName + " " + user.LastName
                 );
             }
             await _userRepository.AddRangeAsync(users);
             await _unitOfWork.CommitAsync();
-            return await _userRepository.GetDtosAsync(users);
+            return _userRepository.GetDtos(users);
         }
 
         public async Task<UserDto> UpdateUserAsync(UserUpdateDto dto)
@@ -160,12 +135,11 @@ namespace StockLinx.Service.Services
                 user.FirstName + " " + user.LastName
             );
             await _unitOfWork.CommitAsync();
-            return await _userRepository.GetDtoAsync(user);
+            return _userRepository.GetDto(user);
         }
 
         public async Task DeleteUserAsync(Guid id)
         {
-            await _userRepository.CanDeleteAsync(id);
             User user = await GetByIdAsync(id);
             await _customLogService.CreateCustomLog(
                 "Delete",
@@ -182,7 +156,6 @@ namespace StockLinx.Service.Services
             List<User> users = new List<User>();
             foreach (Guid id in ids)
             {
-                await _userRepository.CanDeleteAsync(id);
                 User user = await GetByIdAsync(id);
                 users.Add(user);
                 await _customLogService.CreateCustomLog(
@@ -199,12 +172,13 @@ namespace StockLinx.Service.Services
         public async Task<List<UserDto>> FilterAllAsync(string filter)
         {
             var result = await _filterService.FilterAsync(filter);
-            return await _userRepository.GetDtosAsync(result.ToList());
+            return _userRepository.GetDtos(result.ToList());
         }
 
-        public async Task<Guid> GetCompanyIdAsync(Guid userId)
+        public async Task<bool> CheckCurrentUserAdmin()
         {
-            return await _userRepository.GetCompanyIdAsync(userId);
+            User user = await GetCurrentUser();
+            return user.IsAdmin;
         }
     }
 }

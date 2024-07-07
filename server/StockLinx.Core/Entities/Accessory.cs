@@ -11,6 +11,6 @@
         //Relates
         public Manufacturer? Manufacturer { get; set; }
         public Category? Category { get; set; }
-        public ICollection<UserProduct>? UserProducts { get; set; }
+        public ICollection<EmployeeProduct>? EmployeeProducts { get; set; }
     }
 }

@@ -118,13 +118,10 @@ namespace StockLinx.Repository.Repositories.EF_Core
             {
                 Id = Guid.NewGuid(),
                 CreatedDate = DateTime.UtcNow,
-                DepartmentId = newDepartments[0].Id,
                 Email = "admin@gmail.com",
                 Password = "123",
                 FirstName = "adminF",
                 LastName = "adminL",
-                EmployeeNo = "111",
-                StartDate = DateTime.UtcNow,
             };
 
             dbContext.Users.Add(newUser);

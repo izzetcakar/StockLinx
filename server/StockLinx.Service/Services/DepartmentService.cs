@@ -6,31 +6,33 @@ using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 using StockLinx.Core.Services;
 using StockLinx.Core.UnitOfWork;
-using StockLinx.Repository.Repositories.EF_Core;
 
 namespace StockLinx.Service.Services
 {
     public class DepartmentService : Service<Department>, IDepartmentService
     {
         private readonly IDepartmentRepository _departmentRepository;
-        private readonly ICustomLogService _customLogService;
+        private readonly IPermissionService _permissionService;
         private readonly IFilterService<Department> _filterService;
+        private readonly ICustomLogService _customLogService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
         public DepartmentService(
             IRepository<Department> repository,
             IDepartmentRepository departmentRepository,
-            ICustomLogService customLogService,
+            IPermissionService permissionService,
             IFilterService<Department> filterService,
+            ICustomLogService customLogService,
             IMapper mapper,
             IUnitOfWork unitOfWork
         )
             : base(repository, unitOfWork)
         {
             _departmentRepository = departmentRepository;
-            _customLogService = customLogService;
+            _permissionService = permissionService;
             _filterService = filterService;
+            _customLogService = customLogService;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
@@ -38,16 +40,19 @@ namespace StockLinx.Service.Services
         public async Task<DepartmentDto> GetDtoAsync(Guid id)
         {
             Department department = await GetByIdAsync(id);
+            await _permissionService.VerifyCompanyAccessAsync(department.CompanyId);
             return _departmentRepository.GetDto(department);
         }
 
         public async Task<List<DepartmentDto>> GetAllDtosAsync()
         {
-            return await _departmentRepository.GetAllDtosAsync();
+            List<Guid> companyIds = await _permissionService.GetCompanyIdsAsync();
+            return await _departmentRepository.GetAllDtosAsync(companyIds);
         }
 
         public async Task<DepartmentDto> CreateDepartmentAsync(DepartmentCreateDto dto)
         {
+            await _permissionService.VerifyCompanyAccessAsync(dto.CompanyId);
             Department department = _mapper.Map<Department>(dto);
             await _departmentRepository.AddAsync(department);
             await _customLogService.CreateCustomLog(
@@ -67,6 +72,7 @@ namespace StockLinx.Service.Services
             List<Department> departments = new List<Department>();
             foreach (DepartmentCreateDto dto in dtos)
             {
+                await _permissionService.VerifyCompanyAccessAsync(dto.CompanyId);
                 Department department = _mapper.Map<Department>(dto);
                 departments.Add(department);
                 await _customLogService.CreateCustomLog(
@@ -83,6 +89,7 @@ namespace StockLinx.Service.Services
 
         public async Task<DepartmentDto> UpdateDepartmentAsync(DepartmentUpdateDto dto)
         {
+            await _permissionService.VerifyCompanyAccessAsync(dto.CompanyId);
             Department departmentInDb = await GetByIdAsync(dto.Id);
             Department department = _mapper.Map<Department>(dto);
             department.UpdatedDate = DateTime.UtcNow;
@@ -100,6 +107,7 @@ namespace StockLinx.Service.Services
         public async Task DeleteDepartmentAsync(Guid id)
         {
             Department department = await GetByIdAsync(id);
+            await _permissionService.VerifyCompanyAccessAsync(department.CompanyId);
             _departmentRepository.Remove(department);
             await _customLogService.CreateCustomLog(
                 "Delete",
@@ -116,6 +124,7 @@ namespace StockLinx.Service.Services
             foreach (Guid id in ids)
             {
                 Department department = await GetByIdAsync(id);
+                await _permissionService.VerifyCompanyAccessAsync(department.CompanyId);
                 departments.Add(department);
                 await _customLogService.CreateCustomLog(
                     "Delete",
@@ -131,7 +140,9 @@ namespace StockLinx.Service.Services
         public async Task<List<DepartmentDto>> FilterAllAsync(string filter)
         {
             var result = await _filterService.FilterAsync(filter);
-            return _departmentRepository.GetDtos(result.ToList());
+            var list = _departmentRepository.GetDtos(result.ToList());
+            List<Guid> companyIds = await _permissionService.GetCompanyIdsAsync();
+            return list.Where(x => companyIds.Contains(x.CompanyId)).ToList();
         }
     }
 }

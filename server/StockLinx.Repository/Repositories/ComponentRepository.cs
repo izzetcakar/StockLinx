@@ -46,6 +46,15 @@ namespace StockLinx.Repository.Repositories.EF_Core
             return await GetDtosAsync(entities);
         }
 
+        public async Task<List<ComponentDto>> GetAllDtosAsync(List<Guid> companyIds)
+        {
+            var entities = await dbContext.Components
+                .Where(a => companyIds.Contains(a.CompanyId))
+                .AsNoTracking()
+                .ToListAsync();
+            return await GetDtosAsync(entities);
+        }
+
         public async Task CanDeleteAsync(Guid id)
         {
             bool assetProducts = await dbContext.AssetProducts.AnyAsync(d =>

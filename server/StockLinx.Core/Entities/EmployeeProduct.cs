@@ -1,8 +1,8 @@
 ﻿namespace StockLinx.Core.Entities
 {
-    public class UserProduct : BaseEntity
+    public class EmployeeProduct : BaseEntity
     {
-        public Guid UserId { get; set; }
+        public Guid EmployeeId { get; set; }
         public Guid? AccessoryId { get; init; }
         public Guid? AssetId { get; init; }
         public Guid? ConsumableId { get; init; }
@@ -10,7 +10,7 @@
         public DateTime AssignDate { get; init; }
         public string? Notes { get; set; }
         public int Quantity { get; set; }
-        public User User { get; init; }
+        public Employee Employee { get; init; }
         public Accessory? Accessory { get; init; }
         public Asset? Asset { get; init; }
         public Consumable? Consumable { get; init; }
