@@ -1,8 +1,21 @@
 import { LookupData, QueryFilter } from "@/interfaces/gridTableInterfaces";
 import { queryClient } from "@/main";
+import {
+  closeNotification,
+  openNotificationLoading,
+  openNotificationSuccess,
+} from "@/utils/notificationUtils";
+import { closeModal } from "@mantine/modals";
 import { useMutation, useQuery } from "react-query";
 
 export const baseHooks = (entity: string) => {
+  const lowerCaseEntity = entity.toLowerCase();
+
+  const mutateSettle = (entity: string) => {
+    closeNotification("notification-loading");
+    closeModal(entity + "-modal");
+  };
+
   const GetAll = (request: () => Promise<any[]>) => {
     return useQuery({
       queryKey: "FETCH_ALL_" + entity,
@@ -23,7 +36,14 @@ export const baseHooks = (entity: string) => {
     return useMutation({
       mutationKey: "CREATE_" + entity,
       mutationFn: (dto: any) => request(dto),
+      onMutate: () => {
+        openNotificationLoading("Creating " + lowerCaseEntity);
+      },
+      onSettled: () => {
+        mutateSettle(lowerCaseEntity);
+      },
       onSuccess: (res) => {
+        openNotificationSuccess("Successfully created " + lowerCaseEntity);
         queryClient.setQueryData<any[]>("FETCH_ALL_" + entity, (old) => {
           return old ? [...old, res] : [res];
         });
@@ -39,7 +59,14 @@ export const baseHooks = (entity: string) => {
     return useMutation({
       mutationKey: "CREATE_RANGE_" + entity,
       mutationFn: (dtos: any[]) => request(dtos),
+      onMutate: () => {
+        openNotificationLoading("Creating " + lowerCaseEntity + "s");
+      },
+      onSettled: () => {
+        mutateSettle(lowerCaseEntity);
+      },
       onSuccess: (res) => {
+        openNotificationSuccess("Successfully created " + lowerCaseEntity + " items");
         queryClient.setQueryData<any[]>("FETCH_ALL_" + entity, (old) => {
           return old ? [...old, ...res] : res;
         });
@@ -55,7 +82,14 @@ export const baseHooks = (entity: string) => {
     return useMutation({
       mutationKey: "UPDATE_" + entity,
       mutationFn: (dto: any) => request(dto),
+      onMutate: () => {
+        openNotificationLoading("Updating " + lowerCaseEntity);
+      },
+      onSettled: () => {
+        mutateSettle(lowerCaseEntity);
+      },
       onSuccess: (res) => {
+        openNotificationSuccess("Successfully updated " + lowerCaseEntity);
         queryClient.setQueryData<any[]>("FETCH_ALL" + entity, (old) => {
           return old
             ? (old as any[]).map((x) => (x.id === res.id ? res : x))
@@ -76,7 +110,14 @@ export const baseHooks = (entity: string) => {
     return useMutation({
       mutationKey: "DELETE_" + entity,
       mutationFn: (id: string) => request(id),
+      onMutate: () => {
+        openNotificationLoading("Deleting " + lowerCaseEntity);
+      },
+      onSettled: () => {
+        mutateSettle(lowerCaseEntity);
+      },
       onSuccess: (_, id) => {
+        openNotificationSuccess("Successfully deleted " + lowerCaseEntity);
         queryClient.setQueryData<any[]>("FETCH_ALL_" + entity, (old) => {
           return old ? old.filter((x) => x.id !== id) : [];
         });
@@ -95,7 +136,14 @@ export const baseHooks = (entity: string) => {
     return useMutation({
       mutationKey: "DELETE_RANGE_" + entity,
       mutationFn: (ids: string[]) => request(ids),
+      onMutate: () => {
+        openNotificationLoading("Deleting " + lowerCaseEntity + "s");
+      },
+      onSettled: () => {
+        mutateSettle(lowerCaseEntity);
+      },
       onSuccess: (_, ids) => {
+        openNotificationSuccess("Successfully deleted " + lowerCaseEntity + " items");
         queryClient.setQueryData<any[]>("FETCH_ALL_" + entity, (old) => {
           return old ? old.filter((x) => !ids.includes(x.id)) : [];
         });

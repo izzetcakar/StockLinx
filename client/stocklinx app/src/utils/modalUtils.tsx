@@ -67,12 +67,12 @@ export const genericConfirmModal = (onConfirm: () => void) =>
 
 export const openCategoryModal = (category?: ICategory, canBack?: boolean) =>
   modals.open({
-    modalId: "category_modal",
+    modalId: "category-modal",
     title: category ? "Edit Category" : "Create Category",
     children: (
       <CategoryForm
         category={category}
-        {...getCanBack("category_modal", canBack)}
+        {...getCanBack("category-modal", canBack)}
       />
     ),
     size: "md",
@@ -80,7 +80,7 @@ export const openCategoryModal = (category?: ICategory, canBack?: boolean) =>
 
 export const openCompanyModal = (company?: ICompany) =>
   modals.open({
-    modalId: "company_modal",
+    modalId: "company-modal",
     title: company ? "Update Company" : "Create Company",
     children: <CompanyForm company={company} />,
     size: "md",
@@ -91,12 +91,12 @@ export const openDepartmentModal = (
   canBack?: boolean
 ) =>
   modals.open({
-    modalId: "department_modal",
+    modalId: "department-modal",
     title: department ? "Update Department" : "Create Department",
     children: (
       <DepartmentForm
         department={department}
-        {...getCanBack("department_modal", canBack)}
+        {...getCanBack("department-modal", canBack)}
       />
     ),
     size: "lg",
@@ -104,12 +104,12 @@ export const openDepartmentModal = (
 
 export const openLocationModal = (location?: ILocation, canBack?: boolean) =>
   modals.open({
-    modalId: "location_modal",
+    modalId: "location-modal",
     title: location ? "Update Location" : "Create Location",
     children: (
       <LocationForm
         location={location}
-        {...getCanBack("location_modal", canBack)}
+        {...getCanBack("location-modal", canBack)}
       />
     ),
     size: "lg",
@@ -120,12 +120,12 @@ export const openManufacturerModal = (
   canBack?: boolean
 ) =>
   modals.open({
-    modalId: "manufacturer_modal",
+    modalId: "manufacturer-modal",
     title: manufacturer ? "Update Manufacturer" : "Create Manufacturer",
     children: (
       <ManufacturerForm
         manufacturer={manufacturer}
-        {...getCanBack("manufacturer_modal", canBack)}
+        {...getCanBack("manufacturer-modal", canBack)}
       />
     ),
     size: "lg",
@@ -133,42 +133,42 @@ export const openManufacturerModal = (
 
 export const openModelModal = (model?: IModel) =>
   modals.open({
-    modalId: "model_modal",
+    modalId: "model-modal",
     title: model ? "Update Model" : "Create Model",
     children: <ModelForm model={model} />,
   });
 
 export const openAccessoryModal = (accessory?: IAccessory) =>
   modals.open({
-    modalId: "accessory_modal",
+    modalId: "accessory-modal",
     title: accessory ? "Update Accessory" : "Create Accessory",
     children: <AccessoryForm accessory={accessory} />,
   });
 
 export const openAssetModal = (asset?: IAsset) =>
   modals.open({
-    modalId: "asset_modal",
+    modalId: "asset-modal",
     title: asset ? "Update Asset" : "Create Asset",
     children: <AssetForm asset={asset} />,
   });
 
 export const openComponentModal = (component?: IComponent) =>
   modals.open({
-    modalId: "component_modal",
+    modalId: "component-modal",
     title: component ? "Update Component" : "Create Component",
     children: <ComponentForm component={component} />,
   });
 
 export const openConsumableModal = (consumable?: IConsumable) =>
   modals.open({
-    modalId: "consumable_modal",
+    modalId: "consumable-modal",
     title: consumable ? "Update Consumable" : "Create Consumable",
     children: <ConsumableForm consumable={consumable} />,
   });
 
 export const openLicenseModal = (license?: ILicense) =>
   modals.open({
-    modalId: "license_modal",
+    modalId: "license-modal",
     title: license ? "Update License" : "Create License",
     children: <LicenseForm license={license} />,
   });
@@ -178,12 +178,12 @@ export const openProductStatusModal = (
   canBack?: boolean
 ) =>
   modals.open({
-    modalId: "productStatus_modal",
+    modalId: "productstatus-modal",
     title: productStatus ? "Update ProductStatus" : "Create ProductStatus",
     children: (
       <ProductStatusForm
         productStatus={productStatus}
-        {...getCanBack("productStatus_modal", canBack)}
+        {...getCanBack("productstatus-modal", canBack)}
       />
     ),
     size: "md",
@@ -191,12 +191,12 @@ export const openProductStatusModal = (
 
 export const openSupplierModal = (supplier?: ISupplier, canBack?: boolean) =>
   modals.open({
-    modalId: "supplier_modal",
+    modalId: "supplier-modal",
     title: supplier ? "Update Supplier" : "Create Supplier",
     children: (
       <SupplierForm
         supplier={supplier}
-        {...getCanBack("asset_modal", canBack)}
+        {...getCanBack("asset-modal", canBack)}
       />
     ),
     size: "lg",
@@ -204,7 +204,7 @@ export const openSupplierModal = (supplier?: ISupplier, canBack?: boolean) =>
 
 export const openUserModal = (user?: IUser) =>
   modals.open({
-    modalId: "user_modal",
+    modalId: "user-modal",
     title: user ? "Update User" : "Create User",
     children: <UserForm user={user} />,
     size: "xl",
@@ -212,7 +212,7 @@ export const openUserModal = (user?: IUser) =>
 
 export const openEmployeeModal = (employee?: IEmployee) =>
   modals.open({
-    modalId: "employee_modal",
+    modalId: "employee-modal",
     title: employee ? "Update Employee" : "Create Employee",
     children: <EmployeeForm employee={employee} />,
     size: "xl",
@@ -220,7 +220,7 @@ export const openEmployeeModal = (employee?: IEmployee) =>
 
 export const openFieldSetModal = (fieldSet?: IFieldSet) => {
   modals.open({
-    modalId: "fieldSet_modal",
+    modalId: "fieldset-modal",
     title: fieldSet ? "Update FieldSet" : "Create FieldSet",
     children: <FieldSetForm fieldSet={fieldSet} />,
   });
@@ -228,7 +228,7 @@ export const openFieldSetModal = (fieldSet?: IFieldSet) => {
 
 export const openCustomFieldModal = (customField?: ICustomField) => {
   modals.open({
-    modalId: "customField_modal",
+    modalId: "customfield-modal",
     title: customField ? "Update CustomField" : "Create CustomField",
     children: <CustomFieldForm customField={customField} />,
   });
@@ -243,7 +243,7 @@ export const openCheckInModal = (
   assetCheckIn?: (data: IAssetProduct) => void
 ) => {
   modals.open({
-    modalId: "product_checkIn_modal",
+    modalId: "product-checkin-modal",
     title: "Check In",
     children: (
       <CheckInForm
@@ -261,7 +261,7 @@ export const openCheckInModal = (
 
 export const openAssetCheckInModal = (checkInDto: AssetCheckInDto) => {
   modals.open({
-    modalId: "asset_checkIn_modal",
+    modalId: "asset-checkin-modal",
     title: "Check In",
     children: <AssetCheckInForm checkInDto={checkInDto} />,
   });
@@ -269,7 +269,7 @@ export const openAssetCheckInModal = (checkInDto: AssetCheckInDto) => {
 
 export const openAssetCheckOutModal = (checkOutDto: AssetCheckOutDto) => {
   modals.open({
-    modalId: "asset_checkOut_modal",
+    modalId: "asset-checkout-modal",
     title: "Check Out",
     children: <AssetCheckOutForm checkOutDto={checkOutDto} />,
     size: "lg",
@@ -281,7 +281,7 @@ export const openAssetProductCheckOutModal = (
   assetCheckOut: (data: AssetProductCheckOutDto) => void
 ) => {
   modals.open({
-    modalId: "asset_product_checkOut_modal",
+    modalId: "asset-product-checkout-modal",
     title: "Check Out",
     children: (
       <AssetProductCheckOutForm
@@ -298,7 +298,7 @@ export const openEmployeeProductCheckOutModal = (
   employeeCheckOut: (data: EmployeeProductCheckOutDto) => void
 ) => {
   modals.open({
-    modalId: "user_product_checkOut_modal",
+    modalId: "user-product-checkout-modal",
     title: "Check Out",
     children: (
       <EmployeeProductCheckOutForm
@@ -312,7 +312,7 @@ export const openEmployeeProductCheckOutModal = (
 
 export const openPermissionModal = () => {
   modals.open({
-    modalId: "permission_modal",
+    modalId: "permission-modal",
     title: "Permission",
     children: <PermissionForm />,
     size: "lg",

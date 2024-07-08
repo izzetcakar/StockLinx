@@ -4,7 +4,7 @@ import { IconCheck, IconX } from "@tabler/icons-react";
 
 export const openNotificationLoading = (message: string) => {
   notifications.show({
-    id: "notificationLoading",
+    id: "notification-loading",
     loading: true,
     message: message,
     autoClose: false,
@@ -16,8 +16,13 @@ export const closeNotification = (notification: string) => {
   notifications.hide(notification);
 };
 
+export const closeAllNotifications = () => {
+  notifications.cleanQueue();
+};
+
 export const openNotificationSuccess = (message: string) => {
   notifications.show({
+    id: "notification-success",
     title: message,
     message: null,
     autoClose: 2000,
@@ -38,6 +43,7 @@ export const openNotificationSuccess = (message: string) => {
 
 export const openNotificationError = (title: string, message: string) => {
   notifications.show({
+    id: "notification-error",
     title: title,
     message: message,
     autoClose: 2000,
