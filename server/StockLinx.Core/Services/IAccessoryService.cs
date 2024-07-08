@@ -8,8 +8,8 @@ namespace StockLinx.Core.Services
 {
     public interface IAccessoryService : IService<Accessory>
     {
-        Task<AccessoryDto> GetDto(Guid id);
-        Task<List<AccessoryDto>> GetAllDtos();
+        Task<AccessoryDto> GetDtoAsync(Guid id);
+        Task<List<AccessoryDto>> GetAllDtosAsync();
         Task<AccessoryDto> CreateAccessoryAsync(AccessoryCreateDto dto);
         Task<List<AccessoryDto>> CreateRangeAccessoryAsync(List<AccessoryCreateDto> dtos);
         Task<AccessoryDto> UpdateAccessoryAsync(AccessoryUpdateDto dto);

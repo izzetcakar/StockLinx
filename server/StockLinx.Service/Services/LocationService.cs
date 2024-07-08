@@ -49,12 +49,7 @@ namespace StockLinx.Service.Services
         {
             Location location = _mapper.Map<Location>(dto);
             await _locationRepository.AddAsync(location);
-            await _customLogService.CreateCustomLog(
-                "Create",
-                "Location",
-                location.Id,
-                location.Name
-            );
+            await CreateCheckLogAsync("Create", location);
             await _unitOfWork.CommitAsync();
             return _locationRepository.GetDto(location);
         }
@@ -66,12 +61,7 @@ namespace StockLinx.Service.Services
             {
                 Location location = _mapper.Map<Location>(dto);
                 locations.Add(location);
-                await _customLogService.CreateCustomLog(
-                    "Create",
-                    "Location",
-                    location.Id,
-                    location.Name
-                );
+                await CreateCheckLogAsync("Create", location);
             }
             await _locationRepository.AddRangeAsync(locations);
             await _unitOfWork.CommitAsync();
@@ -84,12 +74,7 @@ namespace StockLinx.Service.Services
             Location location = _mapper.Map<Location>(dto);
             location.UpdatedDate = DateTime.UtcNow;
             _locationRepository.Update(locationInDb, location);
-            await _customLogService.CreateCustomLog(
-                "Update",
-                "Location",
-                location.Id,
-                location.Name
-            );
+            await CreateCheckLogAsync("Update", location);
             await _unitOfWork.CommitAsync();
             return _locationRepository.GetDto(location);
         }
@@ -98,12 +83,7 @@ namespace StockLinx.Service.Services
         {
             Location location = await GetByIdAsync(id);
             _locationRepository.Remove(location);
-            await _customLogService.CreateCustomLog(
-                "Delete",
-                "Location",
-                location.Id,
-                location.Name
-            );
+            await CreateCheckLogAsync("Delete", location);
             await _unitOfWork.CommitAsync();
         }
 
@@ -114,12 +94,7 @@ namespace StockLinx.Service.Services
             {
                 Location location = await GetByIdAsync(id);
                 locations.Add(location);
-                await _customLogService.CreateCustomLog(
-                    "Delete",
-                    "Location",
-                    location.Id,
-                    location.Name
-                );
+                await CreateCheckLogAsync("Delete", location);
             }
             _locationRepository.RemoveRange(locations);
             await _unitOfWork.CommitAsync();
@@ -129,6 +104,11 @@ namespace StockLinx.Service.Services
         {
             var result = await _filterService.FilterAsync(filter);
             return _locationRepository.GetDtos(result.ToList());
+        }
+
+        public async Task CreateCheckLogAsync(string action, Location location)
+        {
+            await _customLogService.CreateCustomLog(action, "Location", location.Id, location.Name);
         }
     }
 }

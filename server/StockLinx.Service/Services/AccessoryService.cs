@@ -47,14 +47,14 @@ namespace StockLinx.Service.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<AccessoryDto> GetDto(Guid id)
+        public async Task<AccessoryDto> GetDtoAsync(Guid id)
         {
             Accessory accessory = await GetByIdAsync(id);
             await _permissionService.VerifyCompanyAccessAsync(accessory.CompanyId);
             return await _accessoryRepository.GetDtoAsync(accessory);
         }
 
-        public async Task<List<AccessoryDto>> GetAllDtos()
+        public async Task<List<AccessoryDto>> GetAllDtosAsync()
         {
             List<Guid> companyIds = await _permissionService.GetCompanyIdsAsync();
             return await _accessoryRepository.GetAllDtosAsync(companyIds);
@@ -64,7 +64,6 @@ namespace StockLinx.Service.Services
         {
             await _permissionService.VerifyCompanyAccessAsync(dto.CompanyId);
             await CheckTagExistAsync(dto.Tag);
-            Company company = await _companyRepository.GetByIdAsync(dto.CompanyId);
             Accessory newAccessory = _mapper.Map<Accessory>(dto);
 
             if (newAccessory.ImagePath != null)
@@ -81,14 +80,10 @@ namespace StockLinx.Service.Services
             }
 
             await _accessoryRepository.AddAsync(newAccessory);
-            await _customLogService.CreateCustomLog(
+            await CreateCheckLogAsync(
                 "Create",
-                "Accessory",
-                newAccessory.Id,
-                newAccessory.Name,
-                "Company",
-                company.Id,
-                company.Name
+                newAccessory,
+                await _companyRepository.GetByIdAsync(newAccessory.CompanyId)
             );
             await _unitOfWork.CommitAsync();
             return await _accessoryRepository.GetDtoAsync(newAccessory);
@@ -99,7 +94,6 @@ namespace StockLinx.Service.Services
         )
         {
             await CheckTagExistAsync(dtos.Select(dto => dto.Tag).ToList());
-            Company company = await _companyRepository.GetByIdAsync(dtos[0].CompanyId);
             List<Accessory> newAccessories = new List<Accessory>();
             foreach (AccessoryCreateDto dto in dtos)
             {
@@ -107,14 +101,10 @@ namespace StockLinx.Service.Services
                 Accessory newAccessory = _mapper.Map<Accessory>(dto);
                 newAccessory.Quantity = 1;
                 newAccessories.Add(newAccessory);
-                await _customLogService.CreateCustomLog(
+                await CreateCheckLogAsync(
                     "Create",
-                    "Accessory",
-                    newAccessory.Id,
-                    newAccessory.Name,
-                    "Company",
-                    company.Id,
-                    company.Name
+                    newAccessory,
+                    await _companyRepository.GetByIdAsync(newAccessory.CompanyId)
                 );
             }
             await _accessoryRepository.AddRangeAsync(newAccessories);
@@ -150,12 +140,7 @@ namespace StockLinx.Service.Services
                 }
             }
             _accessoryRepository.Update(accessoryInDb, accessory);
-            await _customLogService.CreateCustomLog(
-                "Update",
-                "Accessory",
-                accessory.Id,
-                accessory.Name
-            );
+            await CreateCheckLogAsync("Update", accessory);
             await _unitOfWork.CommitAsync();
             return await _accessoryRepository.GetDtoAsync(accessory);
         }
@@ -172,7 +157,7 @@ namespace StockLinx.Service.Services
                 accessory.Name
             );
             _accessoryRepository.Remove(accessory);
-
+            await CreateCheckLogAsync("Delete", accessory);
             await _unitOfWork.CommitAsync();
         }
 
@@ -188,12 +173,7 @@ namespace StockLinx.Service.Services
             foreach (Accessory accessory in accessories)
             {
                 await _accessoryRepository.CanDeleteAsync(accessory.Id);
-                await _customLogService.CreateCustomLog(
-                    "Delete",
-                    "Accessory",
-                    accessory.Id,
-                    accessory.Name
-                );
+                await CreateCheckLogAsync("Delete", accessory);
                 _accessoryRepository.Remove(accessory);
             }
             await _unitOfWork.CommitAsync();
@@ -220,16 +200,7 @@ namespace StockLinx.Service.Services
                 Notes = checkInDto.Notes,
             };
             await _employeeProductRepository.AddAsync(employeeProduct);
-            await _customLogService.CreateCustomLog(
-                "CheckIn",
-                "Accessory",
-                accessory.Id,
-                accessory.Name,
-                "Employee",
-                employee.Id,
-                employee.FirstName + employee.LastName,
-                "Checked in " + checkInDto.Quantity + " units"
-            );
+            await CreateCheckLogAsync("CheckIn", accessory, employee, checkInDto.Quantity);
             await _unitOfWork.CommitAsync();
             return await _employeeProductRepository.GetDtoAsync(employeeProduct);
         }
@@ -256,7 +227,7 @@ namespace StockLinx.Service.Services
                         employeeProduct.EmployeeId = (Guid)checkOutDto.EmployeeId;
                         _employeeProductRepository.Update(employeeProduct, employeeProduct);
                         await CreateCheckLogAsync(
-                            "CheckOut",
+                            "CheckIn",
                             accessory,
                             await _employeeRepository.GetByIdAsync((Guid)checkOutDto.EmployeeId),
                             checkOutDto.Quantity
@@ -293,7 +264,7 @@ namespace StockLinx.Service.Services
                             Notes = checkOutDto.Notes,
                         };
                         await CreateCheckLogAsync(
-                            "CheckOut",
+                            "CheckIn",
                             accessory,
                             await _employeeRepository.GetByIdAsync((Guid)checkOutDto.EmployeeId),
                             checkOutDto.Quantity
@@ -362,6 +333,29 @@ namespace StockLinx.Service.Services
                 accessory.Id,
                 accessory.Name,
                 "Checked " + quantity + " units"
+            );
+        }
+
+        public async Task CreateCheckLogAsync(string action, Accessory accessory)
+        {
+            await _customLogService.CreateCustomLog(
+                action,
+                "Accessory",
+                accessory.Id,
+                accessory.Name
+            );
+        }
+
+        public async Task CreateCheckLogAsync(string action, Accessory accessory, Company company)
+        {
+            await _customLogService.CreateCustomLog(
+                action,
+                "Accessory",
+                accessory.Id,
+                accessory.Name,
+                "Company",
+                company.Id,
+                company.Name
             );
         }
     }

@@ -52,7 +52,9 @@ namespace StockLinx.Service.Services
         public async Task<PermissionDto> CreatePermissionAsync(PermissionCreateDto dto)
         {
             await CheckUserAdmin();
-            bool isExist = await _permissionRepository.AnyAsync(p => p.CompanyId == dto.CompanyId && p.UserId == dto.UserId);
+            bool isExist = await _permissionRepository.AnyAsync(p =>
+                p.CompanyId == dto.CompanyId && p.UserId == dto.UserId
+            );
             if (isExist)
             {
                 throw new Exception("Permission is already given");
@@ -71,8 +73,11 @@ namespace StockLinx.Service.Services
             List<Permission> permissions = new List<Permission>();
             foreach (PermissionCreateDto dto in dtos)
             {
-                var isExist = await _permissionRepository.AnyAsync(p => p.CompanyId == dto.CompanyId && p.UserId == dto.UserId);
-                if (isExist) continue;
+                var isExist = await _permissionRepository.AnyAsync(p =>
+                    p.CompanyId == dto.CompanyId && p.UserId == dto.UserId
+                );
+                if (isExist)
+                    continue;
                 Permission permission = _mapper.Map<Permission>(dto);
                 permissions.Add(permission);
             }
@@ -145,6 +150,19 @@ namespace StockLinx.Service.Services
         {
             Guid userId = _userService.GetIdByToken();
             return await _permissionRepository.GetCompanyIdsAsync(userId);
+        }
+
+        public async Task CreateCheckLogAsync(string action, User user, Company company)
+        {
+            await _customLogService.CreateCustomLog(
+                action,
+                "User",
+                user.Id,
+                user.FirstName + " " + user.LastName,
+                "Company",
+                company.Id,
+                company.Tag
+            );
         }
     }
 }

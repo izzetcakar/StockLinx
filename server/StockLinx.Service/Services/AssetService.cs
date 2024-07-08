@@ -93,6 +93,7 @@ namespace StockLinx.Service.Services
                 company.Id,
                 company.Tag
             );
+            await _assetRepository.AddAsync(newAsset);
             await _unitOfWork.CommitAsync();
             return _assetRepository.GetDto(newAsset);
         }
@@ -213,7 +214,9 @@ namespace StockLinx.Service.Services
             );
             Asset asset = await GetByIdAsync((Guid)employeeProduct.AssetId);
             await _permissionService.VerifyCompanyAccessAsync(asset.CompanyId);
-            bool isEmployeeChanged = checkOutDto.EmployeeId != null && checkOutDto.EmployeeId != employeeProduct.EmployeeId;
+            bool isEmployeeChanged =
+                checkOutDto.EmployeeId != null
+                && checkOutDto.EmployeeId != employeeProduct.EmployeeId;
             asset.ProductStatusId = checkOutDto.ProductStatusId;
             _assetRepository.Update(asset, asset);
             if (isEmployeeChanged)
@@ -230,7 +233,7 @@ namespace StockLinx.Service.Services
                     employee.Id,
                     employee.FirstName + " " + employee.LastName,
                     checkOutDto.Notes ?? "Asset is checked out"
-                    );
+                );
                 await _unitOfWork.CommitAsync();
                 return await _employeeProductRepository.GetDtoAsync(employeeProduct);
             }
@@ -247,7 +250,6 @@ namespace StockLinx.Service.Services
                 await _unitOfWork.CommitAsync();
                 return null;
             }
-
         }
 
         public async Task<List<AssetDto>> FilterAllAsync(string filter)
@@ -277,6 +279,41 @@ namespace StockLinx.Service.Services
                 var existingTagNames = existingTags.Select(x => x.Tag).ToList();
                 throw new Exception($"Tags {string.Join("\n", existingTagNames)} already exist.");
             }
+        }
+
+        public async Task CreateCheckLogAsync(
+            string action,
+            Asset asset,
+            Employee employee,
+            int quantity
+        )
+        {
+            await _customLogService.CreateCustomLog(
+                action,
+                "Asset",
+                asset.Id,
+                asset.Name,
+                "Employee",
+                employee.Id,
+                employee.FirstName + employee.LastName,
+                "Checked " + quantity + " units"
+            );
+        }
+
+        public async Task CreateCheckLogAsync(string action, Asset asset, int quantity)
+        {
+            await _customLogService.CreateCustomLog(
+                action,
+                "Asset",
+                asset.Id,
+                asset.Name,
+                "Checked " + quantity + " units"
+            );
+        }
+
+        public async Task CreateCheckLogAsync(string action, Asset asset)
+        {
+            await _customLogService.CreateCustomLog(action, "Asset", asset.Id, asset.Name);
         }
     }
 }

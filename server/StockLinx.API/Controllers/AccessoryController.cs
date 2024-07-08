@@ -24,7 +24,7 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                List<AccessoryDto> result = await _accessoryService.GetAllDtos();
+                List<AccessoryDto> result = await _accessoryService.GetAllDtosAsync();
 
                 return CreateActionResult(
                     CustomResponseDto<List<AccessoryDto>>.Success(200, result)
@@ -41,7 +41,7 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                AccessoryDto dto = await _accessoryService.GetDto(id);
+                AccessoryDto dto = await _accessoryService.GetDtoAsync(id);
 
                 return CreateActionResult(CustomResponseDto<AccessoryDto>.Success(200, dto));
             }

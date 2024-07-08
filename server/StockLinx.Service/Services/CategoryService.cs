@@ -49,12 +49,7 @@ namespace StockLinx.Service.Services
         {
             Category category = _mapper.Map<Category>(dto);
             await _categoryRepository.AddAsync(category);
-            await _customLogService.CreateCustomLog(
-                "Create",
-                "Category",
-                category.Id,
-                category.Name
-            );
+            await CreateCheckLogAsync("Create", category);
             await _unitOfWork.CommitAsync();
             return _categoryRepository.GetDto(category);
         }
@@ -66,12 +61,7 @@ namespace StockLinx.Service.Services
             {
                 Category category = _mapper.Map<Category>(dto);
                 categories.Add(category);
-                await _customLogService.CreateCustomLog(
-                    "Create",
-                    "Category",
-                    category.Id,
-                    category.Name
-                );
+                await CreateCheckLogAsync("Create", category);
             }
             await _categoryRepository.AddRangeAsync(categories);
             await _unitOfWork.CommitAsync();
@@ -84,12 +74,7 @@ namespace StockLinx.Service.Services
             Category category = _mapper.Map<Category>(dto);
             category.UpdatedDate = DateTime.UtcNow;
             _categoryRepository.Update(categoryInDb, category);
-            await _customLogService.CreateCustomLog(
-                "Update",
-                "Category",
-                category.Id,
-                category.Name
-            );
+            await CreateCheckLogAsync("Update", category);
             await _unitOfWork.CommitAsync();
             return _categoryRepository.GetDto(category);
         }
@@ -98,12 +83,7 @@ namespace StockLinx.Service.Services
         {
             Category category = await GetByIdAsync(id);
             _categoryRepository.Remove(category);
-            await _customLogService.CreateCustomLog(
-                "Delete",
-                "Category",
-                category.Id,
-                category.Name
-            );
+            await CreateCheckLogAsync("Delete", category);
             await _unitOfWork.CommitAsync();
         }
 
@@ -114,12 +94,7 @@ namespace StockLinx.Service.Services
             {
                 Category category = await GetByIdAsync(id);
                 categories.Add(category);
-                await _customLogService.CreateCustomLog(
-                    "Delete",
-                    "Category",
-                    category.Id,
-                    category.Name
-                );
+                await CreateCheckLogAsync("Delete", category);
             }
             _categoryRepository.RemoveRange(categories);
             await _unitOfWork.CommitAsync();
@@ -129,6 +104,11 @@ namespace StockLinx.Service.Services
         {
             var result = await _filterService.FilterAsync(filter);
             return _categoryRepository.GetDtos(result.ToList());
+        }
+
+        public async Task CreateCheckLogAsync(string action, Category category)
+        {
+            await _customLogService.CreateCustomLog(action, "Category", category.Id, category.Name);
         }
     }
 }

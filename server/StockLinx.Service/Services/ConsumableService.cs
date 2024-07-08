@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Others;
@@ -14,11 +13,12 @@ namespace StockLinx.Service.Services
     public class ConsumableService : Service<Consumable>, IConsumableService
     {
         private readonly IConsumableRepository _consumableRepository;
-        private readonly IEmployeeRepository _employeeRepository;
         private readonly IEmployeeProductRepository _employeeProductRepository;
+        private readonly ICompanyRepository _companyRepository;
+        private readonly IEmployeeRepository _employeeRepository;
+        private readonly ICustomLogService _customLogService;
         private readonly IPermissionService _permissionService;
         private readonly IFilterService<Consumable> _filterService;
-        private readonly ICustomLogService _customLogService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
@@ -26,10 +26,11 @@ namespace StockLinx.Service.Services
             IRepository<Consumable> repository,
             IConsumableRepository consumableRepository,
             IEmployeeRepository employeeRepository,
+            ICompanyRepository companyRepository,
             IEmployeeProductRepository employeeProductRepository,
+            ICustomLogService customLogService,
             IPermissionService permissionService,
             IFilterService<Consumable> filterService,
-            ICustomLogService customLogService,
             IMapper mapper,
             IUnitOfWork unitOfWork
         )
@@ -38,9 +39,10 @@ namespace StockLinx.Service.Services
             _consumableRepository = consumableRepository;
             _employeeRepository = employeeRepository;
             _employeeProductRepository = employeeProductRepository;
+            _companyRepository = companyRepository;
+            _customLogService = customLogService;
             _permissionService = permissionService;
             _filterService = filterService;
-            _customLogService = customLogService;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
@@ -62,39 +64,38 @@ namespace StockLinx.Service.Services
         {
             await _permissionService.VerifyCompanyAccessAsync(dto.CompanyId);
             await CheckTagExistAsync(dto.Tag);
-            Consumable consumable = _mapper.Map<Consumable>(dto);
-            await _consumableRepository.AddAsync(consumable);
-            await _customLogService.CreateCustomLog(
+            Consumable newConsumable = _mapper.Map<Consumable>(dto);
+            await _consumableRepository.AddAsync(newConsumable);
+            await CreateCheckLogAsync(
                 "Create",
-                "Consumable",
-                consumable.Id,
-                consumable.Name
+                newConsumable,
+                await _companyRepository.GetByIdAsync(newConsumable.CompanyId)
             );
             await _unitOfWork.CommitAsync();
-            return await _consumableRepository.GetDtoAsync(consumable);
+            return await _consumableRepository.GetDtoAsync(newConsumable);
         }
 
         public async Task<List<ConsumableDto>> CreateRangeConsumableAsync(
-            List<ConsumableCreateDto> createDtos
+            List<ConsumableCreateDto> dtos
         )
         {
-            await CheckTagExistAsync(createDtos.Select(dto => dto.Tag).ToList());
-            List<Consumable> consumables = new List<Consumable>();
-            foreach (ConsumableCreateDto createDto in createDtos)
+            await CheckTagExistAsync(dtos.Select(dto => dto.Tag).ToList());
+            List<Consumable> newAccessories = new List<Consumable>();
+            foreach (ConsumableCreateDto dto in dtos)
             {
-                await _permissionService.VerifyCompanyAccessAsync(createDto.CompanyId);
-                Consumable consumable = _mapper.Map<Consumable>(createDto);
-                consumables.Add(consumable);
-                await _customLogService.CreateCustomLog(
+                await _permissionService.VerifyCompanyAccessAsync(dto.CompanyId);
+                Consumable newConsumable = _mapper.Map<Consumable>(dto);
+                newConsumable.Quantity = 1;
+                newAccessories.Add(newConsumable);
+                await CreateCheckLogAsync(
                     "Create",
-                    "Consumable",
-                    consumable.Id,
-                    consumable.Name
+                    newConsumable,
+                    await _companyRepository.GetByIdAsync(newConsumable.CompanyId)
                 );
             }
-            await _consumableRepository.AddRangeAsync(consumables);
+            await _consumableRepository.AddRangeAsync(newAccessories);
             await _unitOfWork.CommitAsync();
-            return await _consumableRepository.GetDtosAsync(consumables);
+            return await _consumableRepository.GetDtosAsync(newAccessories);
         }
 
         public async Task<ConsumableDto> UpdateConsumableAsync(ConsumableUpdateDto dto)
@@ -115,48 +116,42 @@ namespace StockLinx.Service.Services
             }
 
             _consumableRepository.Update(consumableInDb, consumable);
-            await _customLogService.CreateCustomLog(
-                "Update",
-                "Consumable",
-                consumable.Id,
-                consumable.Name
-            );
+            await CreateCheckLogAsync("Update", consumable);
             await _unitOfWork.CommitAsync();
             return await _consumableRepository.GetDtoAsync(consumable);
         }
 
         public async Task DeleteConsumableAsync(Guid id)
         {
-            await _consumableRepository.CanDeleteAsync(id);
             Consumable consumable = await GetByIdAsync(id);
             await _permissionService.VerifyCompanyAccessAsync(consumable.CompanyId);
-            _consumableRepository.Remove(consumable);
+            await _consumableRepository.CanDeleteAsync(id);
             await _customLogService.CreateCustomLog(
                 "Delete",
                 "Consumable",
                 consumable.Id,
                 consumable.Name
             );
+            _consumableRepository.Remove(consumable);
+            await CreateCheckLogAsync("Delete", consumable);
             await _unitOfWork.CommitAsync();
         }
 
         public async Task DeleteRangeConsumableAsync(List<Guid> ids)
         {
-            List<Consumable> consumables = new List<Consumable>();
+            List<Consumable> accessories = new List<Consumable>();
             foreach (Guid id in ids)
             {
-                await _consumableRepository.CanDeleteAsync(id);
                 Consumable consumable = await GetByIdAsync(id);
                 await _permissionService.VerifyCompanyAccessAsync(consumable.CompanyId);
-                consumables.Add(consumable);
-                await _customLogService.CreateCustomLog(
-                    "Delete",
-                    "Consumable",
-                    consumable.Id,
-                    consumable.Name
-                );
+                accessories.Add(consumable);
             }
-            _consumableRepository.RemoveRange(consumables);
+            foreach (Consumable consumable in accessories)
+            {
+                await _consumableRepository.CanDeleteAsync(consumable.Id);
+                await CreateCheckLogAsync("Delete", consumable);
+                _consumableRepository.Remove(consumable);
+            }
             await _unitOfWork.CommitAsync();
         }
 
@@ -172,7 +167,6 @@ namespace StockLinx.Service.Services
             {
                 throw new Exception("Consumable stock is not enough");
             }
-
             EmployeeProduct employeeProduct = new EmployeeProduct
             {
                 Id = Guid.NewGuid(),
@@ -183,18 +177,8 @@ namespace StockLinx.Service.Services
                 Quantity = checkInDto.Quantity,
                 Notes = checkInDto.Notes,
             };
-
             await _employeeProductRepository.AddAsync(employeeProduct);
-            await _customLogService.CreateCustomLog(
-                "CheckIn",
-                "Consumable",
-                consumable.Id,
-                consumable.Name,
-                "Employee",
-                employee.Id,
-                employee.FirstName + employee.LastName,
-                "Checked In " + checkInDto.Quantity + " units"
-            );
+            await CreateCheckLogAsync("CheckIn", consumable, employee, checkInDto.Quantity);
             await _unitOfWork.CommitAsync();
             return await _employeeProductRepository.GetDtoAsync(employeeProduct);
         }
@@ -221,7 +205,7 @@ namespace StockLinx.Service.Services
                         employeeProduct.EmployeeId = (Guid)checkOutDto.EmployeeId;
                         _employeeProductRepository.Update(employeeProduct, employeeProduct);
                         await CreateCheckLogAsync(
-                            "CheckOut",
+                            "CheckIn",
                             consumable,
                             await _employeeRepository.GetByIdAsync((Guid)checkOutDto.EmployeeId),
                             checkOutDto.Quantity
@@ -236,11 +220,11 @@ namespace StockLinx.Service.Services
                     await _unitOfWork.CommitAsync();
                     ;
                     return await _employeeProductRepository.GetDtosAsync(employeeProducts);
-                case < 0:
+                case > 0:
                     throw new Exception(
                         "Quantity must be less than or equal to the quantity in stock"
                     );
-                case > 0:
+                case < 0:
                     employeeProduct.Quantity -= checkOutDto.Quantity;
                     _employeeProductRepository.Update(employeeProduct, employeeProduct);
                     await CreateCheckLogAsync("CheckOut", consumable, checkOutDto.Quantity);
@@ -258,7 +242,7 @@ namespace StockLinx.Service.Services
                             Notes = checkOutDto.Notes,
                         };
                         await CreateCheckLogAsync(
-                            "CheckOut",
+                            "CheckIn",
                             consumable,
                             await _employeeRepository.GetByIdAsync((Guid)checkOutDto.EmployeeId),
                             checkOutDto.Quantity
@@ -296,8 +280,8 @@ namespace StockLinx.Service.Services
         {
             var result = await _filterService.FilterAsync(filter);
             var list = await _consumableRepository.GetDtosAsync(result.ToList());
-            List<Guid> companyIds = await _permissionService.GetCompanyIdsAsync();
-            return list.Where(d => companyIds.Contains(d.Id)).ToList();
+            var companyIds = await _permissionService.GetCompanyIdsAsync();
+            return list.Where(x => companyIds.Contains(x.CompanyId)).ToList();
         }
 
         public async Task CreateCheckLogAsync(
@@ -327,6 +311,29 @@ namespace StockLinx.Service.Services
                 consumable.Id,
                 consumable.Name,
                 "Checked " + quantity + " units"
+            );
+        }
+
+        public async Task CreateCheckLogAsync(string action, Consumable consumable)
+        {
+            await _customLogService.CreateCustomLog(
+                action,
+                "Consumable",
+                consumable.Id,
+                consumable.Name
+            );
+        }
+
+        public async Task CreateCheckLogAsync(string action, Consumable consumable, Company company)
+        {
+            await _customLogService.CreateCustomLog(
+                action,
+                "Consumable",
+                consumable.Id,
+                consumable.Name,
+                "Company",
+                company.Id,
+                company.Name
             );
         }
     }

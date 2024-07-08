@@ -13,36 +13,36 @@ namespace StockLinx.Service.Services
     public class ComponentService : Service<Component>, IComponentService
     {
         private readonly IComponentRepository _componentRepository;
-        private readonly IEmployeeRepository _employeeRepository;
-        private readonly IAssetRepository _assetRepository;
         private readonly IAssetProductRepository _assetProductRepository;
+        private readonly ICompanyRepository _companyRepository;
+        private readonly IAssetRepository _assetRepository;
+        private readonly ICustomLogService _customLogService;
         private readonly IPermissionService _permissionService;
         private readonly IFilterService<Component> _filterService;
-        private readonly ICustomLogService _customLogService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
         public ComponentService(
             IRepository<Component> repository,
             IComponentRepository componentRepository,
-            IEmployeeRepository employeeRepository,
             IAssetRepository assetRepository,
+            ICompanyRepository companyRepository,
             IAssetProductRepository assetProductRepository,
+            ICustomLogService customLogService,
             IPermissionService permissionService,
             IFilterService<Component> filterService,
-            ICustomLogService customLogService,
             IMapper mapper,
             IUnitOfWork unitOfWork
         )
             : base(repository, unitOfWork)
         {
             _componentRepository = componentRepository;
-            _employeeRepository = employeeRepository;
             _assetRepository = assetRepository;
             _assetProductRepository = assetProductRepository;
+            _companyRepository = companyRepository;
+            _customLogService = customLogService;
             _permissionService = permissionService;
             _filterService = filterService;
-            _customLogService = customLogService;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
@@ -64,39 +64,38 @@ namespace StockLinx.Service.Services
         {
             await _permissionService.VerifyCompanyAccessAsync(dto.CompanyId);
             await CheckTagExistAsync(dto.Tag);
-            Component component = _mapper.Map<Component>(dto);
-            await _componentRepository.AddAsync(component);
-            await _customLogService.CreateCustomLog(
+            Component newComponent = _mapper.Map<Component>(dto);
+            await _componentRepository.AddAsync(newComponent);
+            await CreateCheckLogAsync(
                 "Create",
-                "Component",
-                component.Id,
-                component.Name
+                newComponent,
+                await _companyRepository.GetByIdAsync(newComponent.CompanyId)
             );
             await _unitOfWork.CommitAsync();
-            return await _componentRepository.GetDtoAsync(component);
+            return await _componentRepository.GetDtoAsync(newComponent);
         }
 
         public async Task<List<ComponentDto>> CreateRangeComponentAsync(
-            List<ComponentCreateDto> createDtos
+            List<ComponentCreateDto> dtos
         )
         {
-            await CheckTagExistAsync(createDtos.Select(x => x.Tag).ToList());
-            List<Component> components = new List<Component>();
-            foreach (ComponentCreateDto createDto in createDtos)
+            await CheckTagExistAsync(dtos.Select(dto => dto.Tag).ToList());
+            List<Component> newAccessories = new List<Component>();
+            foreach (ComponentCreateDto dto in dtos)
             {
-                await _permissionService.VerifyCompanyAccessAsync(createDto.CompanyId);
-                Component component = _mapper.Map<Component>(createDto);
-                components.Add(component);
-                await _customLogService.CreateCustomLog(
+                await _permissionService.VerifyCompanyAccessAsync(dto.CompanyId);
+                Component newComponent = _mapper.Map<Component>(dto);
+                newComponent.Quantity = 1;
+                newAccessories.Add(newComponent);
+                await CreateCheckLogAsync(
                     "Create",
-                    "Component",
-                    component.Id,
-                    component.Name
+                    newComponent,
+                    await _companyRepository.GetByIdAsync(newComponent.CompanyId)
                 );
             }
-            await _componentRepository.AddRangeAsync(components);
+            await _componentRepository.AddRangeAsync(newAccessories);
             await _unitOfWork.CommitAsync();
-            return await _componentRepository.GetDtosAsync(components);
+            return await _componentRepository.GetDtosAsync(newAccessories);
         }
 
         public async Task<ComponentDto> UpdateComponentAsync(ComponentUpdateDto dto)
@@ -113,13 +112,9 @@ namespace StockLinx.Service.Services
                     "Quantity must be greater than or equal to the available quantity"
                 );
             }
+
             _componentRepository.Update(componentInDb, component);
-            await _customLogService.CreateCustomLog(
-                "Update",
-                "Component",
-                component.Id,
-                component.Name
-            );
+            await CreateCheckLogAsync("Update", component);
             await _unitOfWork.CommitAsync();
             return await _componentRepository.GetDtoAsync(component);
         }
@@ -129,33 +124,32 @@ namespace StockLinx.Service.Services
             Component component = await GetByIdAsync(id);
             await _permissionService.VerifyCompanyAccessAsync(component.CompanyId);
             await _componentRepository.CanDeleteAsync(id);
-            _componentRepository.Remove(component);
             await _customLogService.CreateCustomLog(
                 "Delete",
                 "Component",
                 component.Id,
                 component.Name
             );
+            _componentRepository.Remove(component);
+            await CreateCheckLogAsync("Delete", component);
             await _unitOfWork.CommitAsync();
         }
 
         public async Task DeleteRangeComponentAsync(List<Guid> ids)
         {
-            List<Component> components = new List<Component>();
+            List<Component> accessories = new List<Component>();
             foreach (Guid id in ids)
             {
                 Component component = await GetByIdAsync(id);
                 await _permissionService.VerifyCompanyAccessAsync(component.CompanyId);
-                await _componentRepository.CanDeleteAsync(id);
-                components.Add(component);
-                await _customLogService.CreateCustomLog(
-                    "Delete",
-                    "Component",
-                    component.Id,
-                    component.Name
-                );
+                accessories.Add(component);
             }
-            _componentRepository.RemoveRange(components);
+            foreach (Component component in accessories)
+            {
+                await _componentRepository.CanDeleteAsync(component.Id);
+                await CreateCheckLogAsync("Delete", component);
+                _componentRepository.Remove(component);
+            }
             await _unitOfWork.CommitAsync();
         }
 
@@ -180,16 +174,7 @@ namespace StockLinx.Service.Services
                 Notes = checkInDto.Notes,
             };
             await _assetProductRepository.AddAsync(assetProduct);
-            await _customLogService.CreateCustomLog(
-                "CheckIn",
-                "Component",
-                component.Id,
-                component.Name,
-                "Asset",
-                asset.Id,
-                asset.Name,
-                "Checked In " + checkInDto.Quantity + " units"
-            );
+            await CreateCheckLogAsync("CheckIn", component, asset, checkInDto.Quantity);
             await _unitOfWork.CommitAsync();
             return await _assetProductRepository.GetDtoAsync(assetProduct);
         }
@@ -213,9 +198,9 @@ namespace StockLinx.Service.Services
                         assetProduct.AssetId = (Guid)checkOutDto.AssetId;
                         _assetProductRepository.Update(assetProduct, assetProduct);
                         await CreateCheckLogAsync(
-                            "CheckOut",
+                            "CheckIn",
                             component,
-                            await _employeeRepository.GetByIdAsync((Guid)checkOutDto.AssetId),
+                            await _assetRepository.GetByIdAsync((Guid)checkOutDto.AssetId),
                             checkOutDto.Quantity
                         );
                         assetProducts.Add(assetProduct);
@@ -226,12 +211,13 @@ namespace StockLinx.Service.Services
                         _assetProductRepository.Remove(assetProduct);
                     }
                     await _unitOfWork.CommitAsync();
+                    ;
                     return await _assetProductRepository.GetDtosAsync(assetProducts);
-                case < 0:
+                case > 0:
                     throw new Exception(
                         "Quantity must be less than or equal to the quantity in stock"
                     );
-                case > 0:
+                case < 0:
                     assetProduct.Quantity -= checkOutDto.Quantity;
                     _assetProductRepository.Update(assetProduct, assetProduct);
                     await CreateCheckLogAsync("CheckOut", component, checkOutDto.Quantity);
@@ -249,9 +235,9 @@ namespace StockLinx.Service.Services
                             Notes = checkOutDto.Notes,
                         };
                         await CreateCheckLogAsync(
-                            "CheckOut",
+                            "CheckIn",
                             component,
-                            await _employeeRepository.GetByIdAsync((Guid)checkOutDto.AssetId),
+                            await _assetRepository.GetByIdAsync((Guid)checkOutDto.AssetId),
                             checkOutDto.Quantity
                         );
                         await _assetProductRepository.AddAsync(newAssetProduct);
@@ -287,14 +273,14 @@ namespace StockLinx.Service.Services
         {
             var result = await _filterService.FilterAsync(filter);
             var list = await _componentRepository.GetDtosAsync(result.ToList());
-            List<Guid> companyIds = await _permissionService.GetCompanyIdsAsync();
-            return list.Where(d => companyIds.Contains(d.Id)).ToList();
+            var companyIds = await _permissionService.GetCompanyIdsAsync();
+            return list.Where(x => companyIds.Contains(x.CompanyId)).ToList();
         }
 
         public async Task CreateCheckLogAsync(
             string action,
             Component component,
-            Employee employee,
+            Asset asset,
             int quantity
         )
         {
@@ -303,9 +289,9 @@ namespace StockLinx.Service.Services
                 "Component",
                 component.Id,
                 component.Name,
-                "Employee",
-                employee.Id,
-                employee.FirstName + employee.LastName,
+                "Asset",
+                asset.Id,
+                asset.Tag,
                 "Checked " + quantity + " units"
             );
         }
@@ -318,6 +304,29 @@ namespace StockLinx.Service.Services
                 component.Id,
                 component.Name,
                 "Checked " + quantity + " units"
+            );
+        }
+
+        public async Task CreateCheckLogAsync(string action, Component component)
+        {
+            await _customLogService.CreateCustomLog(
+                action,
+                "Component",
+                component.Id,
+                component.Name
+            );
+        }
+
+        public async Task CreateCheckLogAsync(string action, Component component, Company company)
+        {
+            await _customLogService.CreateCustomLog(
+                action,
+                "Component",
+                component.Id,
+                component.Name,
+                "Company",
+                company.Id,
+                company.Name
             );
         }
     }

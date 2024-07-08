@@ -48,12 +48,7 @@ namespace StockLinx.Service.Services
         {
             Manufacturer manufacturer = _mapper.Map<Manufacturer>(dto);
             await _manufacturerRepository.AddAsync(manufacturer);
-            await _customLogService.CreateCustomLog(
-                "Create",
-                "Manufacturer",
-                manufacturer.Id,
-                manufacturer.Name
-            );
+            await CreateCheckLogAsync("Create", manufacturer);
             await _unitOfWork.CommitAsync();
             return _manufacturerRepository.GetDto(manufacturer);
         }
@@ -67,12 +62,7 @@ namespace StockLinx.Service.Services
             {
                 Manufacturer manufacturer = _mapper.Map<Manufacturer>(dto);
                 manufacturers.Add(manufacturer);
-                await _customLogService.CreateCustomLog(
-                    "Create",
-                    "Manufacturer",
-                    manufacturer.Id,
-                    manufacturer.Name
-                );
+                await CreateCheckLogAsync("Create", manufacturer);
             }
             await _manufacturerRepository.AddRangeAsync(manufacturers);
             await _unitOfWork.CommitAsync();
@@ -86,12 +76,7 @@ namespace StockLinx.Service.Services
             manufacturer.UpdatedDate = DateTime.UtcNow;
 
             _manufacturerRepository.Update(manufacturerInDb, manufacturer);
-            await _customLogService.CreateCustomLog(
-                "Update",
-                "Manufacturer",
-                manufacturer.Id,
-                manufacturer.Name
-            );
+            await CreateCheckLogAsync("Update", manufacturer);
             await _unitOfWork.CommitAsync();
             return _manufacturerRepository.GetDto(manufacturer);
         }
@@ -100,12 +85,7 @@ namespace StockLinx.Service.Services
         {
             Manufacturer manufacturer = await GetByIdAsync(id);
             _manufacturerRepository.Remove(manufacturer);
-            await _customLogService.CreateCustomLog(
-                "Delete",
-                "Manufacturer",
-                manufacturer.Id,
-                manufacturer.Name
-            );
+            await CreateCheckLogAsync("Delete", manufacturer);
             await _unitOfWork.CommitAsync();
         }
 
@@ -116,12 +96,7 @@ namespace StockLinx.Service.Services
             {
                 Manufacturer manufacturer = await GetByIdAsync(id);
                 manufacturers.Add(manufacturer);
-                await _customLogService.CreateCustomLog(
-                    "Delete",
-                    "Manufacturer",
-                    manufacturer.Id,
-                    manufacturer.Name
-                );
+                await CreateCheckLogAsync("Delete", manufacturer);
             }
             _manufacturerRepository.RemoveRange(manufacturers);
             await _unitOfWork.CommitAsync();
@@ -131,6 +106,16 @@ namespace StockLinx.Service.Services
         {
             var result = await _filterService.FilterAsync(filter);
             return _manufacturerRepository.GetDtos(result.ToList());
+        }
+
+        public async Task CreateCheckLogAsync(string action, Manufacturer manufacturer)
+        {
+            await _customLogService.CreateCustomLog(
+                action,
+                "Manufacturer",
+                manufacturer.Id,
+                manufacturer.Name
+            );
         }
     }
 }

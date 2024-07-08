@@ -48,12 +48,7 @@ namespace StockLinx.Service.Services
         {
             Employee employee = _mapper.Map<Employee>(dto);
             await _employeeRepository.AddAsync(employee);
-            await _customLogService.CreateCustomLog(
-                "Create",
-                "Employee",
-                employee.Id,
-                employee.FirstName + " " + employee.LastName
-            );
+            await CreateCheckLogAsync("Create", employee);
             await _unitOfWork.CommitAsync();
             return await _employeeRepository.GetDtoAsync(employee);
         }
@@ -65,12 +60,7 @@ namespace StockLinx.Service.Services
             {
                 Employee employee = _mapper.Map<Employee>(dto);
                 employees.Add(employee);
-                await _customLogService.CreateCustomLog(
-                    "Create",
-                    "Employee",
-                    employee.Id,
-                    employee.FirstName + " " + employee.LastName
-                );
+                await CreateCheckLogAsync("Create", employee);
             }
             await _employeeRepository.AddRangeAsync(employees);
             await _unitOfWork.CommitAsync();
@@ -83,12 +73,7 @@ namespace StockLinx.Service.Services
             Employee employee = _mapper.Map<Employee>(dto);
             employee.UpdatedDate = DateTime.UtcNow;
             _employeeRepository.Update(employeeInDb, employee);
-            await _customLogService.CreateCustomLog(
-                "Update",
-                "Employee",
-                employee.Id,
-                employee.FirstName + " " + employee.LastName
-            );
+            await CreateCheckLogAsync("Update", employee);
             await _unitOfWork.CommitAsync();
             return await _employeeRepository.GetDtoAsync(employee);
         }
@@ -97,12 +82,7 @@ namespace StockLinx.Service.Services
         {
             await _employeeRepository.CanDeleteAsync(id);
             Employee employee = await GetByIdAsync(id);
-            await _customLogService.CreateCustomLog(
-                "Delete",
-                "Employee",
-                employee.Id,
-                employee.FirstName + " " + employee.LastName
-            );
+            await CreateCheckLogAsync("Delete", employee);
             _employeeRepository.Remove(employee);
             await _unitOfWork.CommitAsync();
         }
@@ -115,12 +95,7 @@ namespace StockLinx.Service.Services
                 await _employeeRepository.CanDeleteAsync(id);
                 Employee employee = await GetByIdAsync(id);
                 employees.Add(employee);
-                await _customLogService.CreateCustomLog(
-                    "Delete",
-                    "Employee",
-                    employee.Id,
-                    employee.FirstName + " " + employee.LastName
-                );
+                await CreateCheckLogAsync("Delete", employee);
             }
             _employeeRepository.RemoveRange(employees);
             await _unitOfWork.CommitAsync();
@@ -135,6 +110,16 @@ namespace StockLinx.Service.Services
         public async Task<Guid> GetCompanyIdAsync(Guid employeeId)
         {
             return await _employeeRepository.GetCompanyIdAsync(employeeId);
+        }
+
+        public async Task CreateCheckLogAsync(string action, Employee employee)
+        {
+            await _customLogService.CreateCustomLog(
+                action,
+                "Employee",
+                employee.Id,
+                employee.FirstName + " " + employee.LastName
+            );
         }
     }
 }

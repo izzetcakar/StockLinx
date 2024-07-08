@@ -17,6 +17,7 @@ namespace StockLinx.Service.Services
         private readonly IEmployeeProductRepository _employeeProductRepository;
         private readonly IAssetProductRepository _assetProductRepository;
         private readonly IAssetRepository _assetRepository;
+        private readonly ICompanyRepository _companyRepository;
         private readonly IPermissionService _permissionService;
         private readonly IFilterService<License> _filterService;
         private readonly ICustomLogService _customLogService;
@@ -30,6 +31,7 @@ namespace StockLinx.Service.Services
             IEmployeeProductRepository employeeProductRepository,
             IAssetProductRepository assetProductRepository,
             IAssetRepository assetRepository,
+            ICompanyRepository companyRepository,
             IPermissionService permissionService,
             IFilterService<License> filterService,
             ICustomLogService customLogService,
@@ -43,6 +45,7 @@ namespace StockLinx.Service.Services
             _employeeProductRepository = employeeProductRepository;
             _assetProductRepository = assetProductRepository;
             _assetRepository = assetRepository;
+            _companyRepository = companyRepository;
             _permissionService = permissionService;
             _filterService = filterService;
             _customLogService = customLogService;
@@ -69,7 +72,11 @@ namespace StockLinx.Service.Services
             await CheckTagExistAsync(dto.Tag);
             License license = _mapper.Map<License>(dto);
             await _licenseRepository.AddAsync(license);
-            await _customLogService.CreateCustomLog("Create", "License", license.Id, license.Name);
+            await CreateCheckLogAsync(
+                "Create",
+                license,
+                await _companyRepository.GetByIdAsync(dto.CompanyId)
+            );
             await _unitOfWork.CommitAsync();
             return await _licenseRepository.GetDtoAsync(license);
         }
@@ -85,11 +92,10 @@ namespace StockLinx.Service.Services
                 await _permissionService.VerifyCompanyAccessAsync(createDto.CompanyId);
                 License license = _mapper.Map<License>(createDto);
                 licenses.Add(license);
-                await _customLogService.CreateCustomLog(
+                await CreateCheckLogAsync(
                     "Create",
-                    "License",
-                    license.Id,
-                    license.Name
+                    license,
+                    await _companyRepository.GetByIdAsync(createDto.CompanyId)
                 );
             }
             await _licenseRepository.AddRangeAsync(licenses);
@@ -169,16 +175,7 @@ namespace StockLinx.Service.Services
                 Notes = checkInDto.Notes,
             };
             await _employeeProductRepository.AddAsync(employeeProduct);
-            await _customLogService.CreateCustomLog(
-                "CheckIn",
-                "License",
-                license.Id,
-                license.Name,
-                "Employee",
-                employee.Id,
-                employee.FirstName + employee.LastName,
-                "Checked In " + checkInDto.Quantity + " units"
-            );
+            await CreateCheckLogAsync("CheckIn", license, employee, checkInDto.Quantity);
             await _unitOfWork.CommitAsync();
             return await _employeeProductRepository.GetDtoAsync(employeeProduct);
         }
@@ -204,16 +201,7 @@ namespace StockLinx.Service.Services
                 Notes = checkInDto.Notes,
             };
             await _assetProductRepository.AddAsync(assetProduct);
-            await _customLogService.CreateCustomLog(
-                "CheckIn",
-                "License",
-                license.Id,
-                license.Name,
-                "Asset",
-                asset.Id,
-                asset.Name,
-                "Checked In " + checkInDto.Quantity + " units"
-            );
+            await CreateCheckLogAsync("CheckIn", license, asset, checkInDto.Quantity);
             await _unitOfWork.CommitAsync();
             return await _assetProductRepository.GetDtoAsync(assetProduct);
         }
@@ -240,7 +228,7 @@ namespace StockLinx.Service.Services
                         employeeProduct.EmployeeId = (Guid)checkOutDto.EmployeeId;
                         _employeeProductRepository.Update(employeeProduct, employeeProduct);
                         await CreateCheckLogAsync(
-                            "CheckOut",
+                            "CheckIn",
                             license,
                             await _employeeRepository.GetByIdAsync((Guid)checkOutDto.EmployeeId),
                             checkOutDto.Quantity
@@ -250,17 +238,16 @@ namespace StockLinx.Service.Services
                     else
                     {
                         await CreateCheckLogAsync("CheckOut", license, checkOutDto.Quantity);
-                        await _unitOfWork.CommitAsync();
                         _employeeProductRepository.Remove(employeeProduct);
-                        return await _employeeProductRepository.GetDtosAsync(employeeProducts);
                     }
                     await _unitOfWork.CommitAsync();
+                    ;
                     return await _employeeProductRepository.GetDtosAsync(employeeProducts);
-                case < 0:
+                case > 0:
                     throw new Exception(
                         "Quantity must be less than or equal to the quantity in stock"
                     );
-                case > 0:
+                case < 0:
                     employeeProduct.Quantity -= checkOutDto.Quantity;
                     _employeeProductRepository.Update(employeeProduct, employeeProduct);
                     await CreateCheckLogAsync("CheckOut", license, checkOutDto.Quantity);
@@ -278,7 +265,7 @@ namespace StockLinx.Service.Services
                             Notes = checkOutDto.Notes,
                         };
                         await CreateCheckLogAsync(
-                            "CheckOut",
+                            "CheckIn",
                             license,
                             await _employeeRepository.GetByIdAsync((Guid)checkOutDto.EmployeeId),
                             checkOutDto.Quantity
@@ -312,9 +299,9 @@ namespace StockLinx.Service.Services
                         assetProduct.AssetId = (Guid)checkOutDto.AssetId;
                         _assetProductRepository.Update(assetProduct, assetProduct);
                         await CreateCheckLogAsync(
-                            "CheckOut",
+                            "CheckIn",
                             license,
-                            await _employeeRepository.GetByIdAsync((Guid)checkOutDto.AssetId),
+                            await _assetRepository.GetByIdAsync((Guid)checkOutDto.AssetId),
                             checkOutDto.Quantity
                         );
                         assetProducts.Add(assetProduct);
@@ -325,12 +312,13 @@ namespace StockLinx.Service.Services
                         _assetProductRepository.Remove(assetProduct);
                     }
                     await _unitOfWork.CommitAsync();
+                    ;
                     return await _assetProductRepository.GetDtosAsync(assetProducts);
-                case < 0:
+                case > 0:
                     throw new Exception(
                         "Quantity must be less than or equal to the quantity in stock"
                     );
-                case > 0:
+                case < 0:
                     assetProduct.Quantity -= checkOutDto.Quantity;
                     _assetProductRepository.Update(assetProduct, assetProduct);
                     await CreateCheckLogAsync("CheckOut", license, checkOutDto.Quantity);
@@ -348,9 +336,9 @@ namespace StockLinx.Service.Services
                             Notes = checkOutDto.Notes,
                         };
                         await CreateCheckLogAsync(
-                            "CheckOut",
+                            "CheckIn",
                             license,
-                            await _employeeRepository.GetByIdAsync((Guid)checkOutDto.AssetId),
+                            await _assetRepository.GetByIdAsync((Guid)checkOutDto.AssetId),
                             checkOutDto.Quantity
                         );
                         await _assetProductRepository.AddAsync(newAssetProduct);
@@ -409,6 +397,25 @@ namespace StockLinx.Service.Services
             );
         }
 
+        public async Task CreateCheckLogAsync(
+            string action,
+            License license,
+            Asset asset,
+            int quantity
+        )
+        {
+            await _customLogService.CreateCustomLog(
+                action,
+                "License",
+                license.Id,
+                license.Name,
+                "Employee",
+                asset.Id,
+                asset.Tag,
+                "Checked " + quantity + " units"
+            );
+        }
+
         public async Task CreateCheckLogAsync(string action, License license, int quantity)
         {
             await _customLogService.CreateCustomLog(
@@ -417,6 +424,24 @@ namespace StockLinx.Service.Services
                 license.Id,
                 license.Name,
                 "Checked " + quantity + " units"
+            );
+        }
+
+        public async Task CreateCheckLogAsync(string action, License license)
+        {
+            await _customLogService.CreateCustomLog(action, "License", license.Id, license.Name);
+        }
+
+        public async Task CreateCheckLogAsync(string action, License license, Company company)
+        {
+            await _customLogService.CreateCustomLog(
+                action,
+                "License",
+                license.Id,
+                license.Name,
+                "Company",
+                company.Id,
+                company.Name
             );
         }
     }

@@ -65,7 +65,7 @@ namespace StockLinx.Service.Services
             Company company = _mapper.Map<Company>(dto);
 
             await _companyRepository.AddAsync(company);
-            await _customLogService.CreateCustomLog("Create", "Company", company.Id, company.Name);
+            await CreateCheckLogAsync("Create", company);
             await _unitOfWork.CommitAsync();
             return _companyRepository.GetDto(company);
         }
@@ -83,12 +83,7 @@ namespace StockLinx.Service.Services
             {
                 Company company = _mapper.Map<Company>(dto);
                 companies.Add(company);
-                await _customLogService.CreateCustomLog(
-                    "Create",
-                    "Company",
-                    company.Id,
-                    company.Name
-                );
+                await CreateCheckLogAsync("Create", company);
             }
             await _companyRepository.AddRangeAsync(companies);
             await _unitOfWork.CommitAsync();
@@ -101,9 +96,8 @@ namespace StockLinx.Service.Services
             Company companyInDb = await GetByIdAsync(dto.Id);
             Company company = _mapper.Map<Company>(dto);
             company.UpdatedDate = DateTime.UtcNow;
-
             _companyRepository.Update(companyInDb, company);
-            await _customLogService.CreateCustomLog("Update", "Company", company.Id, company.Name);
+            await CreateCheckLogAsync("Update", company);
             await _unitOfWork.CommitAsync();
             return _companyRepository.GetDto(company);
         }
@@ -118,7 +112,7 @@ namespace StockLinx.Service.Services
                 throw new Exception("User is not admin");
             }
             Company company = await GetByIdAsync(id);
-            await _customLogService.CreateCustomLog("Delete", "Company", company.Id, company.Name);
+            await CreateCheckLogAsync("Delete", company);
             _companyRepository.Remove(company);
             await _unitOfWork.CommitAsync();
         }
@@ -132,12 +126,7 @@ namespace StockLinx.Service.Services
                 await _companyRepository.CanDeleteAsync(id);
                 Company company = await GetByIdAsync(id);
                 companies.Add(company);
-                await _customLogService.CreateCustomLog(
-                    "Delete",
-                    "Company",
-                    company.Id,
-                    company.Name
-                );
+                await CreateCheckLogAsync("Delete", company);
             }
             _companyRepository.RemoveRange(companies);
             await _unitOfWork.CommitAsync();
@@ -170,6 +159,11 @@ namespace StockLinx.Service.Services
                 var existingTagNames = existingTags.Select(x => x.Tag).ToList();
                 throw new Exception($"Tags {string.Join("\n", existingTagNames)} already exist.");
             }
+        }
+
+        public async Task CreateCheckLogAsync(string action, Company company)
+        {
+            await _customLogService.CreateCustomLog(action, "Company", company.Id, company.Name);
         }
     }
 }

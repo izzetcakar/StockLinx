@@ -48,8 +48,9 @@ namespace StockLinx.Service.Services
         public async Task<ModelDto> CreateModelAsync(ModelCreateDto dto)
         {
             ModelDto added = _modelRepository.CreateModel(dto);
+            Model model = _mapper.Map<Model>(dto);
             await _unitOfWork.CommitAsync();
-            await _customLogService.CreateCustomLog("Create", "Model", Guid.Empty, added.Name);
+            await CreateCheckLogAsync("Create", model);
             return added;
         }
 
@@ -60,7 +61,7 @@ namespace StockLinx.Service.Services
             {
                 Model model = _mapper.Map<Model>(dto);
                 models.Add(model);
-                await _customLogService.CreateCustomLog("Create", "Model", model.Id, model.Name);
+                await CreateCheckLogAsync("Create", model);
             }
             await _modelRepository.AddRangeAsync(models);
             await _unitOfWork.CommitAsync();
@@ -71,14 +72,15 @@ namespace StockLinx.Service.Services
         {
             Model modelInDb = await GetByIdAsync(dto.Id);
             _modelRepository.UpdateModel(dto);
-            await _customLogService.CreateCustomLog("Update", "Model", dto.Id, dto.Name);
+            await CreateCheckLogAsync("Update", modelInDb);
+            await _unitOfWork.CommitAsync();
         }
 
         public async Task DeleteModelAsync(Guid id)
         {
             Model model = await GetByIdAsync(id);
             _modelRepository.Remove(model);
-            await _customLogService.CreateCustomLog("Delete", "Model", model.Id, model.Name);
+            await CreateCheckLogAsync("Delete", model);
             await _unitOfWork.CommitAsync();
         }
 
@@ -89,7 +91,7 @@ namespace StockLinx.Service.Services
             {
                 Model model = await GetByIdAsync(id);
                 models.Add(model);
-                await _customLogService.CreateCustomLog("Delete", "Model", model.Id, model.Name);
+                await CreateCheckLogAsync("Delete", model);
             }
             _modelRepository.RemoveRange(models);
             await _unitOfWork.CommitAsync();
@@ -99,6 +101,11 @@ namespace StockLinx.Service.Services
         {
             var result = await _filterService.FilterAsync(filter);
             return _modelRepository.GetDtos(result.ToList());
+        }
+
+        public async Task CreateCheckLogAsync(string action, Model model)
+        {
+            await _customLogService.CreateCustomLog(action, "Model", model.Id, model.Name);
         }
     }
 }
