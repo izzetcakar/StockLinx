@@ -43,6 +43,9 @@ import "@mantine/notifications/styles.css";
 import "@mantine/dates/styles.css";
 import "./app.scss";
 import "./base.scss";
+// import 'devextreme/dist/css/dx.light.compact.css';
+import "./theme.base.css";
+import "./theme.additional.css";
 
 const Layout = () => {
   const { data: user } = useUser.GetWithToken();
