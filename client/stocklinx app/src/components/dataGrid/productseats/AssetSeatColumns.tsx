@@ -1,9 +1,9 @@
 import { DataColumn } from "@/interfaces/gridTableInterfaces";
-import { EntityCells } from "../Entity";
 import { IAssetProduct } from "@/interfaces/serverInterfaces";
 import { openAssetProductCheckOutModal } from "@/utils/modalUtils";
 import { AssetProductCheckOutDto } from "@/interfaces/dtos";
-import CheckOutButton from "../CheckOutBtnCell";
+import { EntityCells } from "@/cells/Entity";
+import CheckOutButton from "@/cells/CheckOutBtnCell";
 
 export const assetSeatColumns = (
   assetCheckOut: (data: AssetProductCheckOutDto) => void

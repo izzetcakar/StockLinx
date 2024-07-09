@@ -1,12 +1,12 @@
 import { DataColumn } from "@/interfaces/gridTableInterfaces";
-import { EntityCells } from "../../Entity";
 import { IAssetProduct, IEmployeeProduct } from "@/interfaces/serverInterfaces";
 import { useLicense } from "@/hooks/query/license";
 import {
   openAssetProductCheckOutModal,
   openEmployeeProductCheckOutModal,
 } from "@/utils/modalUtils";
-import CheckOutButton from "../../CheckOutBtnCell";
+import { EntityCells } from "@/cells/Entity";
+import CheckOutButton from "@/cells/CheckOutBtnCell";
 
 const isEmployeeProduct = (
   e: IAssetProduct | IEmployeeProduct

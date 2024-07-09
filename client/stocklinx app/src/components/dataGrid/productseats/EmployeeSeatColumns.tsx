@@ -1,9 +1,9 @@
 import { DataColumn } from "@/interfaces/gridTableInterfaces";
-import { EntityCells } from "../Entity";
 import { IEmployeeProduct } from "@/interfaces/serverInterfaces";
 import { openEmployeeProductCheckOutModal } from "@/utils/modalUtils";
 import { EmployeeProductCheckOutDto } from "@/interfaces/dtos";
-import CheckOutButton from "../CheckOutBtnCell";
+import { EntityCells } from "@/cells/Entity";
+import CheckOutButton from "@/cells/CheckOutBtnCell";
 
 export const employeeSeatColumns = (
   employeeCheckOut: (data: EmployeeProductCheckOutDto) => void
@@ -23,7 +23,7 @@ export const employeeSeatColumns = (
       dataType: "action",
       renderComponent: (e) => {
         const checked = e as IEmployeeProduct;
-        return EntityCells.User((checked as IEmployeeProduct).employeeId);
+        return EntityCells.Employee((checked as IEmployeeProduct).employeeId);
       },
     },
     {

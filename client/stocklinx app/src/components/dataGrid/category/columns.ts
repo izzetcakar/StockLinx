@@ -1,5 +1,4 @@
 import { DataColumn } from "@interfaces/gridTableInterfaces";
-import "../customDatagrid.scss";
 
 export const useColumns = () => {
   const columns: DataColumn[] = [

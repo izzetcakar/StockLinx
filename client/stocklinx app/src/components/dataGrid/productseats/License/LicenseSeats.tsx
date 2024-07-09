@@ -1,8 +1,8 @@
-import Gridtable from "@/components/gridTable/GridTable";
 import { useAssetProduct } from "@/hooks/query/assetProduct";
 import { useEmployeeProduct } from "@/hooks/query/employeeProduct";
 import { ILicense } from "@/interfaces/serverInterfaces";
 import { useColumns } from "./LicenseSeatColumns";
+import Gridtable from "@/components/gridTable/GridTable";
 
 interface LicenseSeatsProps {
   license: ILicense;

@@ -4,21 +4,34 @@ import { assetSeatColumns } from "./AssetSeatColumns";
 import { AssetProductCheckOutDto } from "@/interfaces/dtos";
 
 interface AssetSeatProps {
-  productIdField: string;
-  productId: string;
+  field: string;
+  value: string;
+  productType?: "license" | "component";
   checkOut: (data: AssetProductCheckOutDto) => void;
 }
 
 const AssetProductSeats: React.FC<AssetSeatProps> = ({
-  productIdField,
-  productId,
+  field,
+  value,
+  productType,
   checkOut,
 }) => {
   const columns = assetSeatColumns(checkOut).columns;
   const { data: assetProducts } = useAssetProduct.GetAll();
 
+  const filterByType = () => {
+    switch (productType) {
+      case "license":
+        return assetProducts?.filter((u) => u.licenseId !== null) || [];
+      case "component":
+        return assetProducts?.filter((u) => u.componentId !== null) || [];
+      default:
+        return assetProducts || [];
+    }
+  };
+
   const getData = () => {
-    return assetProducts?.filter((u) => u[productIdField] === productId) || [];
+    return filterByType()?.filter((u) => u[field] === value);
   };
 
   return <Gridtable itemKey="id" data={getData()} columns={columns} />;
