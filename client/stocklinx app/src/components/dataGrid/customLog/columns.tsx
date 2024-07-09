@@ -34,11 +34,13 @@ export const useColumns = () => {
       dataType: "action",
       renderComponent(e) {
         return (
-          <img
-            src={getActionIcon((e as ICustomLog).action)}
-            height={16}
-            width={16}
-          />
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <img
+              src={getActionIcon((e as ICustomLog).action)}
+              height={16}
+              width={16}
+            />
+          </div>
         );
       },
     },
@@ -74,23 +76,23 @@ export const useColumns = () => {
       dataType: "date",
     },
     {
-      dataField: "item",
-      caption: "Item",
-      dataType: "string",
-    },
-    {
       dataField: "itemController",
       caption: "Item Controller",
       dataType: "string",
     },
     {
-      dataField: "target",
-      caption: "Target",
+      dataField: "item",
+      caption: "Item",
       dataType: "string",
     },
     {
       dataField: "targetController",
       caption: "Target Controller",
+      dataType: "string",
+    },
+    {
+      dataField: "target",
+      caption: "Target",
       dataType: "string",
     },
   ];

@@ -6,8 +6,9 @@ import icon_disk from "@assets/icon_disk.png";
 import icon_harddisk from "@assets/icon_harddisk.png";
 import icon_settings from "@assets/icon_setting.png";
 import icon_group from "@assets/icon_group.png";
+import { NavigationItem } from "@/interfaces/clientInterfaces";
 
-export const baseNavigationList = [
+export const baseNavigationList: NavigationItem[] = [
   {
     title: "Test",
     target: "/test",
@@ -91,7 +92,17 @@ export const baseNavigationList = [
   {
     title: "Employees",
     icon: icon_group,
-    target: "/employees",
+    target: "/*",
+    subItems: [
+      {
+        title: "Employees",
+        target: "/employees",
+      },
+      {
+        title: "Employee",
+        target: "/employee",
+      },
+    ],
   },
   {
     title: "Settings",
@@ -143,16 +154,30 @@ export const baseNavigationList = [
   },
 ];
 
-export const adminNavigationList = [
-  ...baseNavigationList,
+const adminNavigationItems: NavigationItem[] = [
   {
     title: "Users",
     icon: icon_group,
-    target: "/users",
+    target: "/*",
+    subItems: [
+      {
+        title: "Users",
+        target: "/users",
+      },
+      {
+        title: "User",
+        target: "/user",
+      },
+    ],
   },
   {
     icon: "",
     title: "Permissions",
     target: "/permissions",
   },
+];
+
+export const adminNavigationList: NavigationItem[] = [
+  ...baseNavigationList,
+  ...adminNavigationItems,
 ];

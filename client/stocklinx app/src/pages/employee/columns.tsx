@@ -3,11 +3,20 @@ import { IEmployee } from "@interfaces/serverInterfaces";
 import { useDepartment } from "@/hooks/query/department";
 import { EntityCells } from "@/cells/Entity";
 import { EntityCardColumn } from "@/interfaces/clientInterfaces";
+import { useAccessory } from "@/hooks/query/accessory";
+import { useConsumable } from "@/hooks/query/consumable";
+import { useComponent } from "@/hooks/query/component";
 import EmployeeForm from "@/forms/employee/EmployeeForm";
 import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
+import EmployeeProductSeats from "@/components/dataGrid/productseats/EmployeeProductSeats";
+import AssetProductSeats from "@/components/dataGrid/productseats/AssetProductSeats";
+import LicenseEmployeeSeats from "@/components/dataGrid/productseats/License/LicenseEmployeeSeats";
 
 export const useColumns = () => {
   const { refetch: getDepartmentLK } = useDepartment.Lookup();
+  const { mutate: checkOutAccessory } = useAccessory.CheckOut();
+  const { mutate: checkOutConumable } = useConsumable.CheckOut();
+  const { mutate: checkOutComponent } = useComponent.CheckOut();
 
   const columns: DataColumn[] = [
     {
@@ -57,7 +66,7 @@ export const useColumns = () => {
       title: (employee: IEmployee) => {
         return (
           <div>
-            Name : {employee.firstName} + + {employee.lastName}
+            Name : {employee.firstName} {employee.lastName}
           </div>
         );
       },
@@ -66,6 +75,45 @@ export const useColumns = () => {
     {
       title: "History",
       renderData: (e) => <HistoryLogs id={e.id} />,
+    },
+    {
+      title: "Accessory",
+      renderData: (e) => (
+        <EmployeeProductSeats
+          field="employeeId"
+          value={(e as IEmployee).id}
+          productType="accessory"
+          checkOut={checkOutAccessory}
+        />
+      ),
+    },
+    {
+      title: "Consumable",
+      renderData: (e) => (
+        <EmployeeProductSeats
+          field="employeeId"
+          value={(e as IEmployee).id}
+          productType="consumable"
+          checkOut={checkOutConumable}
+        />
+      ),
+    },
+    {
+      title: "Component",
+      renderData: (e) => (
+        <AssetProductSeats
+          field="employeeId"
+          value={(e as IEmployee).id}
+          productType="component"
+          checkOut={checkOutComponent}
+        />
+      ),
+    },
+    {
+      title: "License",
+      renderData: (e) => (
+        <LicenseEmployeeSeats employeeId={(e as IEmployee).id} />
+      ),
     },
   ];
 

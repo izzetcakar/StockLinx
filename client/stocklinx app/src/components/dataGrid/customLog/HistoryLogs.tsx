@@ -3,18 +3,18 @@ import { useProduct } from "@/hooks/query/product";
 import Gridtable from "../../gridTable/GridTable";
 
 interface HistoryLogsProps {
-  id: string;
+  id?: string;
+  userId?: string;
 }
-const HistoryLogs: React.FC<HistoryLogsProps> = ({ id }) => {
+const HistoryLogs: React.FC<HistoryLogsProps> = ({ id, userId }) => {
   const { data } = useProduct.GetCustomLogs();
 
-  return (
-    <Gridtable
-      itemKey="id"
-      data={data?.filter((cl) => cl.itemId === id || cl.targetId === id) || []}
-      columns={useColumns()}
-    />
-  );
+  const filterData =
+    data?.filter(
+      (cl) => cl.itemId === id || cl.targetId === id || cl.userId === userId
+    ) || [];
+
+  return <Gridtable itemKey="id" data={filterData} columns={useColumns()} />;
 };
 
 export default HistoryLogs;

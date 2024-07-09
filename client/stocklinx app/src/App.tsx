@@ -35,13 +35,14 @@ import ProductStatus from "./pages/productStatus/ProductStatus";
 import Supplier from "./pages/supplier/Supplier";
 import User from "./pages/user/User";
 import Permissions from "./pages/permission/Permissions";
+import Employees from "./pages/employee/Employees";
+import Employee from "./pages/employee/Employee";
 import Test from "./pages/test/Test";
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
 import "@mantine/dates/styles.css";
 import "./app.scss";
 import "./base.scss";
-import Employees from "./pages/employee/Employees";
 
 const Layout = () => {
   const { data: user } = useUser.GetWithToken();
@@ -127,6 +128,10 @@ const router = createBrowserRouter([
       {
         path: "/users",
         element: <Users />,
+      },
+      {
+        path: "/employee",
+        element: <Employee />,
       },
       {
         path: "/employees",
