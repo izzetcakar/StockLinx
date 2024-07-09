@@ -1,33 +1,34 @@
-import { useUser } from "@/hooks/query/user";
+import React from "react";
+import { useEmployee } from "@/hooks/query/employee";
 import { useEmployeeProduct } from "@/hooks/query/employeeProduct";
 import { IAsset } from "@/interfaces/serverInterfaces";
 import { Button } from "@mantine/core";
-import React from "react";
 
-interface UserCheckInOutCellProps {
+interface EmployeeCheckInOutCellProps {
   asset: IAsset;
   checkIn: any;
   checkOut: any;
 }
 
-const UserCheckInOutCell: React.FC<UserCheckInOutCellProps> = ({
+const EmployeeCheckInOutCell: React.FC<EmployeeCheckInOutCellProps> = ({
   asset,
   checkIn,
   checkOut,
 }) => {
   const { data: employeeProducts } = useEmployeeProduct.GetAll();
-  const { data: userLK } = useUser.Lookup();
+  const { data: employeeLK } = useEmployee.Lookup();
   const employeeProduct = employeeProducts?.find(
     (employeeProduct) => employeeProduct?.assetId === asset.id
   );
-  const user = userLK?.find((user) => user.value === employeeProduct?.userId);
+  const employee = employeeLK?.find(
+    (employee) => employee.value === employeeProduct?.employeeId
+  );
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
       <Button
-        color={user ? "red" : "green"}
+        color={employee ? "red" : "green"}
         variant="filled"
         size="xs"
-        style={{ width: "60%" }}
         onClick={() => {
           employeeProduct ? checkOut(asset, employeeProduct) : checkIn(asset);
         }}
@@ -38,4 +39,4 @@ const UserCheckInOutCell: React.FC<UserCheckInOutCellProps> = ({
   );
 };
 
-export default UserCheckInOutCell;
+export default EmployeeCheckInOutCell;

@@ -11,7 +11,7 @@ import { useInitial } from "@/hooks/initial/useInitial";
 import { EntityCardColumn } from "@/interfaces/clientInterfaces";
 import AssetProductQuantityCell from "@/cells/AssetProductQuantityCell";
 import ComponentForm from "@/forms/component/ComponentForm";
-import AssetProductSeats from "@/cells/productseats/AssetProductSeats";
+import AssetProductSeats from "@/components/dataGrid/productseats/AssetProductSeats";
 import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
 
 export const useColumns = () => {
@@ -84,7 +84,7 @@ export const useColumns = () => {
     {
       caption: "Avail",
       dataField: "availableQuantity",
-      dataType: "number",
+      dataType: "action",
       renderComponent: (e) =>
         AssetProductQuantityCell({
           productId: (e as IComponent).id,
@@ -176,8 +176,8 @@ export const useColumns = () => {
       title: "Seats",
       renderData: (e) => (
         <AssetProductSeats
-          productIdField="componentId"
-          productId={e.id}
+          field="componentId"
+          value={e.id}
           checkOut={checkOut}
         />
       ),

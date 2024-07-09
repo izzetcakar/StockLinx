@@ -18,7 +18,7 @@ import { EntityCardColumn } from "@/interfaces/clientInterfaces";
 import LicenseQuantity from "@/cells/LicenseQuantity";
 import LicenseForm from "@/forms/license/LicenseForm";
 import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
-import LicenseSeats from "@/cells/productseats/License/LicenseSeats";
+import LicenseSeats from "@/components/dataGrid/productseats/License/LicenseSeats";
 
 export const useColumns = () => {
   const { mutate: employeeCheckIn } = useLicense.EmployeeCheckIn();
@@ -113,7 +113,7 @@ export const useColumns = () => {
     {
       caption: "Avail",
       dataField: "availableQuantity",
-      dataType: "number",
+      dataType: "action",
       renderComponent: (e) => LicenseQuantity(e as ILicense),
     },
     {

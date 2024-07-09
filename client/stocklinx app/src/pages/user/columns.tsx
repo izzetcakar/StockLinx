@@ -42,7 +42,7 @@ export const useColumns = () => {
       title: (user: IUser) => {
         return (
           <div>
-            Name : {user.firstName} + + {user.lastName}
+            Name : {user.firstName} {user.lastName}
           </div>
         );
       },
@@ -50,7 +50,7 @@ export const useColumns = () => {
     },
     {
       title: "History",
-      renderData: (e) => <HistoryLogs id={e.id} />,
+      renderData: (e) => <HistoryLogs userId={(e as IUser).id} />,
     },
   ];
 

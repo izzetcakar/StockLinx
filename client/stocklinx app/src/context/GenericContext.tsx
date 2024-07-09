@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode, useLayoutEffect, useState } from "react";
 import { Badge, Drawer, Select } from "@mantine/core";
 import { createContext } from "react";
 import { useCompany } from "@/hooks/query/company";
@@ -53,6 +53,15 @@ export const GenericProvider: React.FC<GenericProviderProps> = ({
     user?.isAdmin ? adminNavigationList : baseNavigationList
   );
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+
+  useLayoutEffect(() => {
+    if (user?.isAdmin) {
+      setNavigationList(adminNavigationList);
+    } else {
+      setNavigationList(baseNavigationList);
+    }
+  }, [user?.isAdmin]);
+
   const hideAllDisplayElements = () => {
     setNavigationList((prev) =>
       prev.map((item) => {

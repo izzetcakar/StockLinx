@@ -12,8 +12,8 @@ import { EntityCardColumn } from "@/interfaces/clientInterfaces";
 import base_accessory from "@assets/baseProductImages/base_accessory.png";
 import EmployeeProductQuantityCell from "@/cells/EmployeeProductQuantityCell";
 import AccessoryForm from "@/forms/accessory/AccessoryForm";
-import EmployeeProductSeats from "@/cells/productseats/EmployeeProductSeats";
 import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
+import EmployeeProductSeats from "@/components/dataGrid/productseats/EmployeeProductSeats";
 
 export const useColumns = () => {
   const initial = useInitial();
@@ -36,7 +36,7 @@ export const useColumns = () => {
     newEmployeeProduct.accessoryId = accessory.id;
     openCheckInModal(
       accessory.companyId,
-      ["User"],
+      ["Employee"],
       newEmployeeProduct,
       onCheckInHandler
     );
@@ -99,7 +99,7 @@ export const useColumns = () => {
     {
       caption: "Avail",
       dataField: "availableQuantity",
-      dataType: "number",
+      dataType: "action",
       renderComponent: (e) =>
         EmployeeProductQuantityCell({
           productId: (e as IAccessory).id,
@@ -164,8 +164,8 @@ export const useColumns = () => {
       title: "Seats",
       renderData: (e) => (
         <EmployeeProductSeats
-          productIdField="accessoryId"
-          productId={e.id}
+          field="accessoryId"
+          value={e.id}
           checkOut={checkOut}
         />
       ),

@@ -95,7 +95,7 @@ export const useColumns = () => {
     {
       dataField: "id",
       caption: "Checked Out To",
-      dataType: "string",
+      dataType: "action",
       renderComponent: (e) => CheckedOutEmployeeCell((e as IAsset).id),
     },
     {

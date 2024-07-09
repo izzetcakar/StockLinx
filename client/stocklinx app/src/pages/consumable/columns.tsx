@@ -13,8 +13,8 @@ import { useInitial } from "@/hooks/initial/useInitial";
 import { EntityCardColumn } from "@/interfaces/clientInterfaces";
 import EmployeeProductQuantityCell from "@/cells/EmployeeProductQuantityCell";
 import ConsumableForm from "@/forms/consumable/ConsumableForm";
-import EmployeeProductSeats from "@/cells/productseats/EmployeeProductSeats";
 import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
+import EmployeeProductSeats from "@/components/dataGrid/productseats/EmployeeProductSeats";
 
 export const useColumns = () => {
   const initial = useInitial();
@@ -91,7 +91,7 @@ export const useColumns = () => {
     {
       caption: "Avail",
       dataField: "availableQuantity",
-      dataType: "number",
+      dataType: "action",
       renderComponent: (e) =>
         EmployeeProductQuantityCell({
           productId: (e as IConsumable).id,
@@ -202,8 +202,8 @@ export const useColumns = () => {
       title: "Seats",
       renderData: (e) => (
         <EmployeeProductSeats
-          productIdField="consumableId"
-          productId={e.id}
+          field="consumableId"
+          value={e.id}
           checkOut={checkOut}
         />
       ),

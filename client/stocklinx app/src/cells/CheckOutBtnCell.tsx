@@ -8,7 +8,7 @@ interface CheckOutButtonProps {
 const CheckOutButton: React.FC<CheckOutButtonProps> = ({ checkOut }) => {
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
-      <Button onClick={checkOut()}>CheckOut</Button>
+      <Button onClick={() => checkOut()}>CheckOut</Button>
     </div>
   );
 };

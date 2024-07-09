@@ -6,6 +6,7 @@ import { useComponent } from "@/hooks/query/component";
 import { useConsumable } from "@/hooks/query/consumable";
 import { useCustomField } from "@/hooks/query/customField";
 import { useDepartment } from "@/hooks/query/department";
+import { useEmployee } from "@/hooks/query/employee";
 import { useFieldSet } from "@/hooks/query/fieldSet";
 import { useLicense } from "@/hooks/query/license";
 import { useLocation } from "@/hooks/query/location";
@@ -97,8 +98,8 @@ const User = (id: string | null) => {
 };
 
 const Employee = (id: string | null) => {
-  const { data: user } = useUser.Get(id || "");
-  return <div>{user?.firstName + user?.lastName || ""}</div>;
+  const { data: employee } = useEmployee.Get(id || "");
+  return <div>{employee?.firstName + employee?.lastName || ""}</div>;
 };
 
 export const EntityCells = {
