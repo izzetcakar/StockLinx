@@ -8,25 +8,36 @@ import {
   Paging,
   Scrolling,
   Toolbar,
+  Editing,
+  Popup,
+  Form,
   Item,
-  Selection,
+  Lookup,
+  Column,
+  DataGridRef,
 } from "devextreme-react/data-grid";
 import Button from "devextreme-react/button";
 import { useColumns } from "./columns";
 import { openCategoryModal } from "@/utils/modalUtils";
 import Gridtable from "@/components/gridTable/GridTable";
 import detail_icon from "@/assets/icon_detail.png";
+import { createDataFromEnum } from "@/utils/enumUtils";
+import { CategoryType } from "@/interfaces/enums";
+import { Item as FormItem } from "devextreme-react/form";
+import { useRef } from "react";
 
 const Category = () => {
   const navigate = useNavigate();
+  const gridRef = useRef<DataGridRef>(null);
   const { columns } = useColumns();
 
   const { data: categories, refetch } = useCategory.GetAll();
   const { mutate: remove } = useCategory.Remove();
   const { mutate: removeRange } = useCategory.RemoveRange();
 
-  const navigateDetail = (categoryDetails: ICategory[]) => {
-    if (!categoryDetails.length) return;
+  const navigateDetail = () => {
+    const categoryDetails = gridRef?.current?.instance?.getSelectedRowsData();
+    if (!categoryDetails || categoryDetails.length === 0) return;
     navigate("/category", { state: { categories: categoryDetails } });
   };
 
@@ -34,9 +45,10 @@ const Category = () => {
     <>
       <PageHeader title="Categories" />
       <DataGrid
-        dataSource={categories}
+        dataSource={categories || []}
         keyExpr={"id"}
         className={"dx-card"}
+        ref={gridRef}
         columnFixing={{ enabled: true }}
         filterRow={{ visible: true }}
         selection={{
@@ -44,12 +56,47 @@ const Category = () => {
           showCheckBoxesMode: "always",
           selectAllMode: "page",
         }}
+        loadPanel={{ enabled: true }}
         allowColumnResizing
         allowColumnReordering
       >
         <Paging defaultPageSize={20} />
         <Pager showPageSizeSelector={true} showInfo={true} />
         <Scrolling mode="virtual" />
+        <Column dataField="name" caption="Name" />
+        <Column dataField="type" caption="Type">
+          <Lookup
+            dataSource={createDataFromEnum(CategoryType)}
+            valueExpr="value"
+            displayExpr="label"
+          />
+        </Column>
+        <Editing
+          mode="popup"
+          allowUpdating={true}
+          allowAdding={true}
+          allowDeleting={true}
+        >
+          <Popup
+            title="Employee Info"
+            showTitle={true}
+            width={700}
+            height={525}
+          />
+          <Form>
+            <FormItem itemType="group" colCount={2} colSpan={2}>
+              <FormItem dataField="name" />
+              <FormItem dataField="type">
+                <Lookup
+                  dataSource={createDataFromEnum(CategoryType)}
+                  valueExpr="value"
+                  displayExpr="label"
+                />
+              </FormItem>
+              <FormItem dataField="name" editorType="dxTextArea" colSpan={2} />
+            </FormItem>
+          </Form>
+        </Editing>
         <Toolbar>
           <Item location="before" locateInMenu="auto" widget="dxButton">
             <Button
