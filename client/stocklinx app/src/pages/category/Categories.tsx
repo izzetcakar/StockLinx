@@ -14,7 +14,6 @@ import {
   Item,
   Lookup,
   Column,
-  DataGridRef,
 } from "devextreme-react/data-grid";
 import Button from "devextreme-react/button";
 import { useColumns } from "./columns";
@@ -28,7 +27,7 @@ import { useRef } from "react";
 
 const Category = () => {
   const navigate = useNavigate();
-  const gridRef = useRef<DataGridRef>(null);
+  const gridRef = useRef<any>(null);
   const { columns } = useColumns();
 
   const { data: categories, refetch } = useCategory.GetAll();
@@ -49,14 +48,21 @@ const Category = () => {
         keyExpr={"id"}
         className={"dx-card"}
         ref={gridRef}
-        columnFixing={{ enabled: true }}
-        filterRow={{ visible: true }}
         selection={{
           mode: "multiple",
           showCheckBoxesMode: "always",
           selectAllMode: "page",
         }}
-        loadPanel={{ enabled: true }}
+        onRowInserted={(e) => console.log(e.data)}
+        onRowUpdated={(e) => console.log(e)}
+        onRowRemoved={(e) => console.log(e.data)}
+        columnChooser={{ enabled: true }}
+        export={{
+          enabled: true,
+          fileName: "Categories",
+          allowExportSelectedData: true,
+        }}
+        showRowLines
         allowColumnResizing
         allowColumnReordering
       >
@@ -73,18 +79,19 @@ const Category = () => {
         </Column>
         <Editing
           mode="popup"
+          useIcons={true}
           allowUpdating={true}
           allowAdding={true}
           allowDeleting={true}
         >
           <Popup
-            title="Employee Info"
+            title="Category Info"
             showTitle={true}
-            width={700}
-            height={525}
+            maxWidth={400}
+            maxHeight={250}
           />
           <Form>
-            <FormItem itemType="group" colCount={2} colSpan={2}>
+            <FormItem itemType="group" colCount={1} colSpan={2}>
               <FormItem dataField="name" />
               <FormItem dataField="type">
                 <Lookup
@@ -93,40 +100,35 @@ const Category = () => {
                   displayExpr="label"
                 />
               </FormItem>
-              <FormItem dataField="name" editorType="dxTextArea" colSpan={2} />
             </FormItem>
           </Form>
         </Editing>
         <Toolbar>
-          <Item location="before" locateInMenu="auto" widget="dxButton">
+          <Item location="before" widget="dxButton">
             <Button
               icon="refresh"
               onClick={() => refetch()}
               style={{ border: "none" }}
             />
           </Item>
-          <Item location="before" locateInMenu="auto" widget="dxButton">
-            <Button
-              icon="add"
-              onClick={() => refetch()}
-              style={{ border: "none" }}
-            />
-          </Item>
-          <Item location="before" locateInMenu="auto" widget="dxButton">
+          <Item name="addRowButton" location="before" />
+          <Item location="before" widget="dxButton">
             <Button
               icon="trash"
               onClick={() => refetch()}
               style={{ border: "none" }}
             />
           </Item>
-          <Item location="before" locateInMenu="auto" widget="dxButton">
+          <Item location="before" widget="dxButton">
             <Button
               icon={detail_icon}
-              onClick={() => refetch()}
+              onClick={() => navigateDetail()}
               style={{ border: "none" }}
               text="Details"
             />
           </Item>
+          <Item name="columnChooserButton" location="after" />
+          <Item name="exportButton" location="after" />
         </Toolbar>
       </DataGrid>
       <Gridtable
@@ -139,7 +141,7 @@ const Category = () => {
         onRowRemove={(id) => remove(id)}
         onRowRemoveRange={(ids) => removeRange(ids)}
         // onApplyFilters={(filters) => filter(filters)}
-        onRowDetail={(c) => navigateDetail(c as ICategory[])}
+        // onRowDetail={(c) => navigateDetail(c as ICategory[])}
         enableToolbar
         enableEditActions
         enableSelectActions
