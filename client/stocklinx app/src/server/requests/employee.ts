@@ -40,7 +40,7 @@ const lookup = () => {
   return baseRequests.lookup(requestUrl, ["firstName", "lastName"]);
 };
 
-export const employeeRequests = {
+export default {
   getAll,
   get,
   create,

@@ -2,9 +2,7 @@ import React from "react";
 import { TextInput, Button, Group, Flex, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IDepartment } from "@interfaces/serverInterfaces";
-import { useLocation } from "@/hooks/query/location";
-import { useDepartment } from "@/hooks/query/department";
-import { useCompany } from "@/hooks/query/company";
+import { useLocation, useCompany, useDepartment } from "@queryhooks";
 import { useInitial } from "@/hooks/initial/useInitial";
 import FormSelect from "../mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";
@@ -38,7 +36,7 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
       <FormCard>
-         <Flex direction="column" gap={10} px={20}>
+        <Flex direction="column" gap={10} px={20}>
           <TextInput
             label="Name"
             placeholder="New Name"

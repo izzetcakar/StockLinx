@@ -2,10 +2,10 @@ import EntityPanel from "@/components/entity/EntityPanel";
 import FilterPanel from "@/components/generic/FilterPanel";
 import { useLocation } from "react-router-dom";
 import { useColumns } from "./columns";
-import { useUser } from "@/hooks/query/user";
+import { useUser } from "@queryhooks";
 import { useMemo } from "react";
-import uuid4 from "uuid4";
 import { Column } from "@/interfaces/gridTableInterfaces";
+import uuid4 from "uuid4";
 
 const User = () => {
   const { state } = useLocation();

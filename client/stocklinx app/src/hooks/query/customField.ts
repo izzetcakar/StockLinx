@@ -1,4 +1,4 @@
-import { customFieldRequests } from "@/server/requests/customField";
+import { customFieldRequests } from "@requests";
 import { baseHooks } from "./baseHooks";
 
 const hooks = baseHooks("CUSTOMFIELD");
@@ -35,7 +35,7 @@ const Lookup = () => {
   return hooks.Lookup(customFieldRequests.lookup);
 };
 
-export const useCustomField = {
+export default {
   GetAll,
   Get,
   Create,

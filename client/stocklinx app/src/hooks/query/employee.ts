@@ -1,4 +1,4 @@
-import { employeeRequests } from "@/server/requests/employee";
+import { employeeRequests } from "@requests";
 import { baseHooks } from "./baseHooks";
 
 const hooks = baseHooks("EMPLOYEE");
@@ -42,7 +42,7 @@ const ApplyFilters = () => {
 const Lookup = () => {
   return hooks.Lookup(employeeRequests.lookup);
 };
-export const useEmployee = {
+export default {
   GetAll,
   Get,
   Create,

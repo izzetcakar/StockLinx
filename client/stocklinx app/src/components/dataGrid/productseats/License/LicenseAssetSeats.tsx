@@ -1,4 +1,4 @@
-import { useAssetProduct } from "@/hooks/query/assetProduct";
+import { useAssetProduct } from "@queryhooks";
 import { useColumns } from "./LicenseSeatColumns";
 import Gridtable from "@/components/gridTable/GridTable";
 

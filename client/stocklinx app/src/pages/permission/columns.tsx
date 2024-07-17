@@ -1,6 +1,5 @@
 import { EntityCells } from "@/cells/Entity";
-import { useCompany } from "@/hooks/query/company";
-import { useUser } from "@/hooks/query/user";
+import { useCompany, useUser } from "@queryhooks";
 import { DataColumn } from "@/interfaces/gridTableInterfaces";
 import { IPermission } from "@/interfaces/serverInterfaces";
 

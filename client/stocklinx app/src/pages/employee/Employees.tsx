@@ -1,7 +1,7 @@
 import { IEmployee } from "../../interfaces/serverInterfaces";
 import { useColumns } from "./columns";
 import { openEmployeeModal } from "@/utils/modalUtils";
-import { useEmployee } from "@/hooks/query/employee";
+import { useEmployee } from "@queryhooks";
 import { useNavigate } from "react-router-dom";
 import Gridtable from "@components/gridTable/GridTable";
 import PageHeader from "@/components/generic/PageHeader";

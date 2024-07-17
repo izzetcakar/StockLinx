@@ -8,7 +8,7 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IUser } from "@interfaces/serverInterfaces";
-import { useUser } from "@/hooks/query/user";
+import { useUser } from "@queryhooks";
 import { useInitial } from "@/hooks/initial/useInitial";
 import FormCard from "@/components/form/FormCard";
 

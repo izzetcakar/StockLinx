@@ -61,7 +61,7 @@ const getWithToken = async (): Promise<IUser> => {
   ).data as IUser;
 };
 
-export const userRequests = {
+export default {
   getAll,
   get,
   signIn,

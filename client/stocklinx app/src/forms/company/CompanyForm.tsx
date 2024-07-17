@@ -3,8 +3,7 @@ import { TextInput, Button, Group } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { ICompany } from "@interfaces/serverInterfaces";
 import { useInitial } from "@/hooks/initial/useInitial";
-import { useCompany } from "@/hooks/query/company";
-import { useLocation } from "@/hooks/query/location";
+import { useCompany, useLocation } from "@queryhooks";
 import FormSelect from "../mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";
 interface CompanyFormProps {

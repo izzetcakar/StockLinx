@@ -1,4 +1,4 @@
-import { manufacturerRequests } from "@/server/requests/manufacturer";
+import { manufacturerRequests } from "@requests";
 import { baseHooks } from "./baseHooks";
 
 const hooks = baseHooks("MANUFACTURER");
@@ -43,7 +43,7 @@ const Lookup = () => {
   return hooks.Lookup(manufacturerRequests.lookup);
 };
 
-export const useManufacturer = {
+export default {
   GetAll,
   Get,
   Create,

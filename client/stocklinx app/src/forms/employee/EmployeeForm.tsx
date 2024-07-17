@@ -2,12 +2,9 @@ import React from "react";
 import { TextInput, Button, Group, Textarea, Select } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IEmployee } from "@interfaces/serverInterfaces";
-import { useEmployee } from "@/hooks/query/employee";
+import { useEmployee, useDepartment, useCompany } from "@queryhooks";
 import { useInitial } from "@/hooks/initial/useInitial";
-import { useCompany } from "@/hooks/query/company";
-import { useDepartment } from "@/hooks/query/department";
 import FormCard from "@/components/form/FormCard";
-import FormSelect from "../mantine/FormSelect";
 
 interface EmployeeFormProps {
   employee?: IEmployee;

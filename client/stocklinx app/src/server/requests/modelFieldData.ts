@@ -16,10 +16,7 @@ const create = (modelFieldData: IModelFieldData) => {
 };
 
 const createRange = (modelFieldDatas: IModelFieldData[]) => {
-  return baseRequests.createRange<IModelFieldData>(
-    requestUrl,
-    modelFieldDatas
-  );
+  return baseRequests.createRange<IModelFieldData>(requestUrl, modelFieldDatas);
 };
 
 const update = (modelFieldData: IModelFieldData) => {
@@ -34,7 +31,7 @@ const removeRange = (ids: string[]) => {
   return baseRequests.removeRange(requestUrl, ids);
 };
 
-export const modelFieldDataRequests = {
+export default {
   getAll,
   get,
   create,

@@ -1,6 +1,6 @@
 import { useColumns } from "./columns";
 import { openSubmissionModal } from "../../../utils/submissionUtils";
-import { useEmployeeProduct } from "@/hooks/query/employeeProduct";
+import { useEmployeeProduct } from "@queryhooks";
 import Gridtable from "../../gridTable/GridTable";
 
 interface EmployeeProductsPageProps {

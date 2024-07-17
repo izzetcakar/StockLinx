@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Group, Textarea, NumberInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { EmployeeProductCheckOutDto } from "../../interfaces/dtos";
-import { useEmployee } from "@/hooks/query/employee";
+import { useEmployee } from "@queryhooks";
 import FormSelect from "../mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";
 

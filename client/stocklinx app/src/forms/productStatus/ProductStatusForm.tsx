@@ -2,7 +2,7 @@ import React from "react";
 import { TextInput, Button, Group } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IProductStatus } from "@interfaces/serverInterfaces";
-import { useProductStatus } from "@/hooks/query/productStatus";
+import { useProductStatus } from "@queryhooks";
 import { ProductStatusType } from "@/interfaces/enums";
 import { useInitial } from "@/hooks/initial/useInitial";
 import FormSelect from "../mantine/FormSelect";

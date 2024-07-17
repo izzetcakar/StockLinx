@@ -49,7 +49,7 @@ const synchronize = (fieldSetCustomFields: IFieldSetCustomField[]) => {
   });
 };
 
-export const fieldSetCustomFieldRequests = {
+export default {
   getAll,
   get,
   create,

@@ -1,9 +1,8 @@
 import { DataColumn } from "@interfaces/gridTableInterfaces";
 import { IDepartment } from "@interfaces/serverInterfaces";
-import { useLocation } from "@/hooks/query/location";
+import { useLocation, useCompany } from "@queryhooks";
 import { EntityCells } from "@/cells/Entity";
 import { EntityCardColumn } from "@/interfaces/clientInterfaces";
-import { useCompany } from "@/hooks/query/company";
 import DepartmentForm from "@/forms/department/DepartmentForm";
 import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
 

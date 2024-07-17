@@ -1,4 +1,4 @@
-import { useLicense } from "@/hooks/query/license";
+import { useLicense } from "@queryhooks";
 import { Column } from "@/interfaces/gridTableInterfaces";
 import { useMemo } from "react";
 import { useLocation as useRouterLocation } from "react-router-dom";

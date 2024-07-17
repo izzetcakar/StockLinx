@@ -5,7 +5,7 @@ import {
   IProductCategoryCount,
   ICustomLog,
 } from "@/interfaces/serverInterfaces";
-import { productRequests } from "@/server/requests/product";
+import { productRequests } from "@requests";
 import { useQuery } from "react-query";
 import { productKeys } from "./keys";
 
@@ -44,7 +44,7 @@ const GetCustomLogs = () => {
   );
 };
 
-export const useProduct = {
+export default {
   GetEntityCounts,
   GetProductStatusCounts,
   GetProductLocationCounts,

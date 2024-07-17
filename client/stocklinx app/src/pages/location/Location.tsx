@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { Tabs } from "@mantine/core";
-import { useLocation } from "@/hooks/query/location";
+import { useLocation } from "@queryhooks";
 import HistoryLogs from "@components/dataGrid/customLog/HistoryLogs";
 
 const Location = () => {

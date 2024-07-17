@@ -17,13 +17,15 @@ import { useForm } from "@mantine/form";
 import { DateInput } from "@mantine/dates";
 import { ILicense } from "@interfaces/serverInterfaces";
 import { openNotificationError } from "@/utils/notificationUtils";
-import { useCategory } from "@/hooks/query/category";
-import { useManufacturer } from "@/hooks/query/manufacturer";
-import { useSupplier } from "@/hooks/query/supplier";
-import { useLicense } from "@/hooks/query/license";
+import {
+  useCategory,
+  useLicense,
+  useCompany,
+  useSupplier,
+  useManufacturer,
+} from "@queryhooks";
 import { CategoryType } from "@/interfaces/enums";
 import { useInitial } from "@/hooks/initial/useInitial";
-import { useCompany } from "@/hooks/query/company";
 import FormSelect from "../mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";
 
@@ -79,7 +81,7 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license }) => {
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-       <Flex direction="column" gap={10} px={20}>
+      <Flex direction="column" gap={10} px={20}>
         <FormCard>
           <FormSelect
             data={companyLK}

@@ -1,5 +1,4 @@
-import { useFieldSet } from "@/hooks/query/fieldSet";
-import { useFieldSetCustomField } from "@/hooks/query/fieldSetCustomField";
+import { useFieldSet, useFieldSetCustomField } from "@queryhooks";
 import { DataColumn } from "@interfaces/gridTableInterfaces";
 import { ICustomField } from "@interfaces/serverInterfaces";
 

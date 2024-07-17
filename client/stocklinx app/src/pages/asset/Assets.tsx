@@ -1,7 +1,7 @@
 import { IAsset } from "../../interfaces/serverInterfaces";
 import { useColumns } from "./columns";
 import { openAssetModal } from "@/utils/modalUtils";
-import { useAsset } from "@/hooks/query/asset";
+import { useAsset } from "@queryhooks";
 import { useNavigate } from "react-router-dom";
 import PageHeader from "@/components/generic/PageHeader";
 import Gridtable from "@components/gridTable/GridTable";

@@ -1,4 +1,4 @@
-import { assetProductRequests } from "@/server/requests/assetProduct";
+import { assetProductRequests } from "@requests";
 import { baseHooks } from "./baseHooks";
 
 const hooks = baseHooks("ASSETPRODUCT");
@@ -39,7 +39,7 @@ const ApplyFilters = () => {
   return hooks.ApplyFilter(assetProductRequests.filter);
 };
 
-export const useAssetProduct = {
+export default {
   GetAll,
   Get,
   Create,

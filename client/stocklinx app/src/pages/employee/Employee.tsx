@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useColumns } from "./columns";
 import { Column } from "@/interfaces/gridTableInterfaces";
-import { useEmployee } from "@/hooks/query/employee";
+import { useEmployee } from "@queryhooks";
 import { useLocation as useRouterLocation } from "react-router-dom";
 import FilterPanel from "@/components/generic/FilterPanel";
 import uuid4 from "uuid4";

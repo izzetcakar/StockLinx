@@ -1,4 +1,4 @@
-import { useEmployeeProduct } from "@/hooks/query/employeeProduct";
+import { useEmployeeProduct } from "@queryhooks";
 import { useColumns } from "./LicenseSeatColumns";
 import Gridtable from "@/components/gridTable/GridTable";
 

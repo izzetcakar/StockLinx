@@ -3,7 +3,7 @@ import {
   EmployeeProductCheckOutDto,
 } from "@/interfaces/dtos";
 import { queryClient } from "@/main";
-import { consumableRequests } from "@/server/requests/consumable";
+import { consumableRequests } from "@requests";
 import { useMutation } from "react-query";
 import { baseHooks } from "./baseHooks";
 import {
@@ -59,7 +59,8 @@ const Lookup = () => {
 const CheckIn = () => {
   return useMutation({
     mutationKey: consumableKeys.CHECK_IN_CONSUMABLE,
-    mutationFn: (dto: EmployeeProductCheckInDto) => consumableRequests.checkIn(dto),
+    mutationFn: (dto: EmployeeProductCheckInDto) =>
+      consumableRequests.checkIn(dto),
     onSuccess: (res) => {
       queryClient.setQueryData("FETCH_ALL_EMPLOYEEPRODUCT", (data: any) => {
         return setCheckedRecord(data, res);
@@ -88,16 +89,19 @@ const CheckOut = () => {
       queryClient.setQueryData("FILTER_EMPLOYEEPRODUCT", (data: any) => {
         return handleCheckOutEmployeeProduct(data, req, res);
       });
-      queryClient.setQueryData(["FETCH_EMPLOYEEPRODUCT", req.employeeProductId], () => {
-        return res;
-      });
+      queryClient.setQueryData(
+        ["FETCH_EMPLOYEEPRODUCT", req.employeeProductId],
+        () => {
+          return res;
+        }
+      );
       closeModal("user_product_checkOut_modal");
       openNotificationSuccess("Consumable Checked Out Successfully");
     },
   });
 };
 
-export const useConsumable = {
+export default {
   GetAll,
   Get,
   Create,

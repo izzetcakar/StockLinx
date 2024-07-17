@@ -1,7 +1,5 @@
 import { Button, Group, MultiSelect } from "@mantine/core";
-import { useUser } from "@/hooks/query/user";
-import { usePermission } from "@/hooks/query/permission";
-import { useCompany } from "@/hooks/query/company";
+import { useUser, useCompany, usePermission } from "@queryhooks";
 import { useForm } from "@mantine/form";
 import FormSelect from "../mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";

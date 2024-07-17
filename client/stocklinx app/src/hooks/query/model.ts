@@ -1,4 +1,4 @@
-import { modelRequests } from "@/server/requests/model";
+import { modelRequests } from "@requests";
 import { baseHooks } from "./baseHooks";
 
 const hooks = baseHooks("MODEL");
@@ -43,7 +43,7 @@ const Lookup = () => {
   return hooks.Lookup(modelRequests.lookup);
 };
 
-export const useModel = {
+export default {
   GetAll,
   Get,
   Create,

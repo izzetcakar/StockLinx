@@ -35,7 +35,7 @@ const lookup = () => {
   return baseRequests.lookup(requestUrl);
 };
 
-export const fieldSetRequests = {
+export default {
   getAll,
   get,
   create,

@@ -1,6 +1,6 @@
 import { useColumns } from "./columns";
 import Gridtable from "../../gridTable/GridTable";
-import { useProduct } from "@/hooks/query/product";
+import { useProduct } from "@queryhooks";
 
 const LocationCounts = () => {
   const { data } = useProduct.GetProductLocationCounts();

@@ -1,6 +1,6 @@
 import { DataColumn } from "@interfaces/gridTableInterfaces";
 import { ICompany } from "@interfaces/serverInterfaces";
-import { useLocation } from "@/hooks/query/location";
+import { useLocation } from "@queryhooks";
 import { EntityCells } from "@/cells/Entity";
 import { EntityCardColumn } from "@/interfaces/clientInterfaces";
 import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";

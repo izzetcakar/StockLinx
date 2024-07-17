@@ -16692,7 +16692,9 @@
   background-color: #fff;
 }
 .dx-datagrid-pager {
-  border-top: 1px solid #ddd;
+  /* border-top: 1px solid #ddd; */
+  padding-left: 10px;
+  padding-right: 10px;
 }
 .dx-datagrid-pager .dx-navigate-button,
 .dx-datagrid-pager .dx-page,
@@ -28207,4 +28209,8 @@ input.dx-hidden {
 }
 .dx-widget.dx-button.dx-button-mode-contained.dx-button-normal.dx-button-has-icon.dx-item.dx-buttongroup-item.dx-item-content.dx-buttongroup-item-content.dx-buttongroup-first-item.dx-buttongroup-last-item.dx-shape-standard.dx-dropdownbutton-action.dx-buttongroup-item-has-width{
   border: none;
+}
+.dx-datagrid-scrollable-simulated.dx-datagrid-content.dx-datagrid-scroll-container{
+  border: none;
+  outline: none;
 }

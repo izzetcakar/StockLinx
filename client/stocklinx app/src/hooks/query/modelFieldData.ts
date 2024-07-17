@@ -1,4 +1,4 @@
-import { modelFieldDataRequests } from "@/server/requests/modelFieldData";
+import { modelFieldDataRequests } from "@requests";
 import { baseHooks } from "./baseHooks";
 
 const hooks = baseHooks("MODELFIELDDATA");
@@ -31,7 +31,7 @@ const RemoveRange = () => {
   return hooks.RemoveRange(modelFieldDataRequests.removeRange);
 };
 
-export const useModelFieldData = {
+export default {
   GetAll,
   Get,
   Create,

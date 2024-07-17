@@ -97,7 +97,7 @@ const assetCheckOut = async (
   ).data as AssetProductDto[];
 };
 
-export const licenseRequests = {
+export default {
   getAll,
   get,
   create,

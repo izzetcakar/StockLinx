@@ -2,7 +2,7 @@ import React from "react";
 import { TextInput, Group, Button } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { ICategory } from "@interfaces/serverInterfaces";
-import { useCategory } from "@/hooks/query/category";
+import { useCategory } from "@queryhooks";
 import { CategoryType } from "@/interfaces/enums";
 import { useInitial } from "@/hooks/initial/useInitial";
 import FormSelect from "../mantine/FormSelect";

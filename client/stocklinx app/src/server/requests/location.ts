@@ -39,7 +39,7 @@ const lookup = () => {
   return baseRequests.lookup(requestUrl);
 };
 
-export const locationRequests = {
+export default {
   getAll,
   get,
   create,

@@ -14,9 +14,11 @@ import {
   IFieldSetCustomField,
 } from "@interfaces/serverInterfaces";
 import uuid4 from "uuid4";
-import { useFieldSet } from "@/hooks/query/fieldSet";
-import { useFieldSetCustomField } from "@/hooks/query/fieldSetCustomField";
-import { useCustomField } from "@/hooks/query/customField";
+import {
+  useFieldSet,
+  useFieldSetCustomField,
+  useCustomField,
+} from "@queryhooks";
 interface CustomFieldFormProps {
   customField?: ICustomField;
 }
@@ -97,7 +99,7 @@ const CustomFieldForm: React.FC<CustomFieldFormProps> = ({ customField }) => {
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-       <Flex direction="column" gap={10} px={20}>
+      <Flex direction="column" gap={10} px={20}>
         <TextInput
           label="Name"
           placeholder="New Name"

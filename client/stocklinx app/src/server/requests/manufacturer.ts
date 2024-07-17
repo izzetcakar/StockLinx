@@ -40,7 +40,7 @@ const lookup = () => {
   return baseRequests.lookup(requestUrl);
 };
 
-export const manufacturerRequests = {
+export default {
   getAll,
   get,
   create,

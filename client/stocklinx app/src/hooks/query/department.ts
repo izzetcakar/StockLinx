@@ -1,4 +1,4 @@
-import { departmentRequests } from "@/server/requests/department";
+import { departmentRequests } from "@requests";
 import { baseHooks } from "./baseHooks";
 
 const hooks = baseHooks("DEPARTMENT");
@@ -43,7 +43,7 @@ const Lookup = () => {
   return hooks.Lookup(departmentRequests.lookup);
 };
 
-export const useDepartment = {
+export default {
   GetAll,
   Get,
   Create,

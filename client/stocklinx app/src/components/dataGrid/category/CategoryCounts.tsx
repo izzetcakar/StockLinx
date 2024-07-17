@@ -1,5 +1,5 @@
 import { useColumns } from "./columns";
-import { useProduct } from "@/hooks/query/product";
+import { useProduct } from "@queryhooks";
 import Gridtable from "../../gridTable/GridTable";
 
 const CategoryCounts = () => {

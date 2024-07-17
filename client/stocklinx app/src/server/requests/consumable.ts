@@ -70,7 +70,7 @@ const checkOut = async (
   ).data as EmployeeProductDto[];
 };
 
-export const consumableRequests = {
+export default {
   getAll,
   get,
   create,

@@ -1,6 +1,6 @@
 import { IFieldSetCustomField } from "@/interfaces/serverInterfaces";
 import { queryClient } from "@/main";
-import { fieldSetCustomFieldRequests } from "@/server/requests/fieldSetCustomField";
+import { fieldSetCustomFieldRequests } from "@requests";
 import { useMutation } from "react-query";
 import { baseHooks } from "./baseHooks";
 import { fieldSetCustomFieldKeys } from "./keys";
@@ -46,7 +46,7 @@ const Sync = (fieldSetCustomFields: IFieldSetCustomField[]) => {
   });
 };
 
-export const useFieldSetCustomField = {
+export default {
   GetAll,
   Get,
   Create,

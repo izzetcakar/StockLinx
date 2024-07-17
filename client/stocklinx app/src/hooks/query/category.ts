@@ -1,4 +1,4 @@
-import { categoryRequests } from "@/server/requests/category";
+import { categoryRequests } from "@requests";
 import { baseHooks } from "./baseHooks";
 
 const hooks = baseHooks("CATEGORY");
@@ -43,7 +43,7 @@ const Lookup = () => {
   return hooks.Lookup(categoryRequests.lookup);
 };
 
-export const useCategory = {
+export default {
   GetAll,
   Get,
   Create,

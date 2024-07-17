@@ -1,9 +1,11 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { Anchor, Tabs } from "@mantine/core";
-import { useComponent } from "@/hooks/query/component";
-import { useCompany } from "@/hooks/query/company";
-import { useCategory } from "@/hooks/query/category";
-import { useSupplier } from "@/hooks/query/supplier";
+import {
+  useComponent,
+  useCompany,
+  useCategory,
+  useSupplier,
+} from "@queryhooks";
 import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
 
 const Component = () => {

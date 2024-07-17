@@ -1,6 +1,5 @@
 import React from "react";
-import { useEmployee } from "@/hooks/query/employee";
-import { useEmployeeProduct } from "@/hooks/query/employeeProduct";
+import { useEmployee, useEmployeeProduct } from "@queryhooks";
 import { IAsset } from "@/interfaces/serverInterfaces";
 import { Button } from "@mantine/core";
 

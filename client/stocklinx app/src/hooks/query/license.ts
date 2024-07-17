@@ -5,7 +5,7 @@ import {
   EmployeeProductCheckOutDto,
 } from "@/interfaces/dtos";
 import { queryClient } from "@/main";
-import { licenseRequests } from "@/server/requests/license";
+import { licenseRequests } from "@requests";
 import { useMutation } from "react-query";
 import { baseHooks } from "./baseHooks";
 import {
@@ -149,7 +149,7 @@ const AssetCheckOut = () => {
   });
 };
 
-export const useLicense = {
+export default {
   GetAll,
   Get,
   Create,

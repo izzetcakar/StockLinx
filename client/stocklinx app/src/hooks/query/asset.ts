@@ -4,7 +4,6 @@ import {
   EmployeeProductDto,
 } from "@/interfaces/dtos";
 import { queryClient } from "@/main";
-import { assetRequests } from "@/server/requests/asset";
 import { useMutation } from "react-query";
 import { baseHooks } from "./baseHooks";
 import { IAsset, IEmployeeProduct } from "@/interfaces/serverInterfaces";
@@ -12,6 +11,7 @@ import { setAssetCheckStatus } from "@/utils/checkInOutUtils";
 import { closeModal } from "@/utils/modalUtils";
 import { openNotificationSuccess } from "@/utils/notificationUtils";
 import { assetKeys } from "./keys";
+import { assetRequests } from "@requests";
 
 const hooks = baseHooks("ASSET");
 
@@ -67,9 +67,12 @@ const CheckIn = () => {
           return data ? [...data, res] : [res];
         }
       );
-      queryClient.setQueryData<IEmployeeProduct[]>("FILTER_EMPLOYEEPRODUCT", (data) => {
-        return data ? [...data, res] : [res];
-      });
+      queryClient.setQueryData<IEmployeeProduct[]>(
+        "FILTER_EMPLOYEEPRODUCT",
+        (data) => {
+          return data ? [...data, res] : [res];
+        }
+      );
       queryClient.setQueryData<IAsset[]>("FETCH_ALL_ASSET", (data) => {
         return data ? setAssetCheckStatus(data, req) : [];
       });
@@ -96,9 +99,12 @@ const CheckOut = () => {
           return handleCheckOutData(data, req, res);
         }
       );
-      queryClient.setQueryData<IEmployeeProduct[]>("FILTER_EMPLOYEEPRODUCT", (data) => {
-        return handleCheckOutData(data, req, res);
-      });
+      queryClient.setQueryData<IEmployeeProduct[]>(
+        "FILTER_EMPLOYEEPRODUCT",
+        (data) => {
+          return handleCheckOutData(data, req, res);
+        }
+      );
       queryClient.setQueryData<IAsset[]>("FETCH_ALL_ASSET", (data) => {
         return data ? setAssetCheckStatus(data, req) : [];
       });
@@ -124,16 +130,18 @@ const handleCheckOutData = (
   }
   if (res) {
     const filtered = data?.filter(
-      (employeeProduct: EmployeeProductDto) => employeeProduct.id !== req.employeeProductId
+      (employeeProduct: EmployeeProductDto) =>
+        employeeProduct.id !== req.employeeProductId
     );
     return [...filtered, res];
   }
   return data.filter(
-    (employeeProduct: EmployeeProductDto) => employeeProduct.id !== req.employeeProductId
+    (employeeProduct: EmployeeProductDto) =>
+      employeeProduct.id !== req.employeeProductId
   );
 };
 
-export const useAsset = {
+export default {
   GetAll,
   Get,
   Create,

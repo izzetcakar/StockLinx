@@ -1,7 +1,7 @@
 import { IComponent } from "../../interfaces/serverInterfaces";
 import { useColumns } from "./columns";
 import { openComponentModal } from "@/utils/modalUtils";
-import { useComponent } from "@/hooks/query/component";
+import { useComponent } from "@queryhooks";
 import PageHeader from "@/components/generic/PageHeader";
 import Gridtable from "@components/gridTable/GridTable";
 

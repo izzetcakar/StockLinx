@@ -11,12 +11,14 @@ import { useForm } from "@mantine/form";
 import { DateInput } from "@mantine/dates";
 import { IComponent } from "@interfaces/serverInterfaces";
 import { openNotificationError } from "@/utils/notificationUtils";
-import { useCategory } from "@/hooks/query/category";
-import { useSupplier } from "@/hooks/query/supplier";
-import { useComponent } from "@/hooks/query/component";
+import {
+  useCategory,
+  useComponent,
+  useCompany,
+  useSupplier,
+} from "@queryhooks";
 import { CategoryType } from "@/interfaces/enums";
 import { useInitial } from "@/hooks/initial/useInitial";
-import { useCompany } from "@/hooks/query/company";
 import { openCategoryModal, openSupplierModal } from "@/utils/modalUtils";
 import FormSelect from "../mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";
@@ -72,7 +74,7 @@ const ComponentForm: React.FC<ComponentFormProps> = ({ component }) => {
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-       <Flex direction="column" gap={10} px={20}>
+      <Flex direction="column" gap={10} px={20}>
         <FormCard>
           <FormSelect
             data={companyLK}

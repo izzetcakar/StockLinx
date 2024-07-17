@@ -1,4 +1,4 @@
-import { fieldSetRequests } from "@/server/requests/fieldSet";
+import { fieldSetRequests } from "@requests";
 import { baseHooks } from "./baseHooks";
 
 const hooks = baseHooks("FIELDSET");
@@ -35,7 +35,7 @@ const Lookup = () => {
   return hooks.Lookup(fieldSetRequests.lookup);
 };
 
-export const useFieldSet = {
+export default {
   GetAll,
   Get,
   Create,

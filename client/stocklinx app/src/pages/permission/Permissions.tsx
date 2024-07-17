@@ -1,5 +1,5 @@
 import { useColumns } from "./columns";
-import { usePermission } from "@/hooks/query/permission";
+import { usePermission } from "@queryhooks";
 import { openPermissionModal } from "@/utils/modalUtils";
 import PageHeader from "@/components/generic/PageHeader";
 import Gridtable from "@components/gridTable/GridTable";

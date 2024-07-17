@@ -1,20 +1,22 @@
-import { useAccessory } from "@/hooks/query/accessory";
-import { useAsset } from "@/hooks/query/asset";
-import { useCategory } from "@/hooks/query/category";
-import { useCompany } from "@/hooks/query/company";
-import { useComponent } from "@/hooks/query/component";
-import { useConsumable } from "@/hooks/query/consumable";
-import { useCustomField } from "@/hooks/query/customField";
-import { useDepartment } from "@/hooks/query/department";
-import { useEmployee } from "@/hooks/query/employee";
-import { useFieldSet } from "@/hooks/query/fieldSet";
-import { useLicense } from "@/hooks/query/license";
-import { useLocation } from "@/hooks/query/location";
-import { useManufacturer } from "@/hooks/query/manufacturer";
-import { useModel } from "@/hooks/query/model";
-import { useProductStatus } from "@/hooks/query/productStatus";
-import { useSupplier } from "@/hooks/query/supplier";
-import { useUser } from "@/hooks/query/user";
+import {
+  useAccessory,
+  useAsset,
+  useCategory,
+  useCompany,
+  useComponent,
+  useConsumable,
+  useCustomField,
+  useDepartment,
+  useFieldSet,
+  useLicense,
+  useLocation,
+  useManufacturer,
+  useModel,
+  useProductStatus,
+  useSupplier,
+  useUser,
+  useEmployee,
+} from "@queryhooks";
 
 const Accessory = (id: string | null) => {
   const { data: accessory } = useAccessory.Get(id || "");

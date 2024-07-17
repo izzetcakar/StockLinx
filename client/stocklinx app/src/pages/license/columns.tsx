@@ -6,11 +6,13 @@ import {
 } from "@interfaces/serverInterfaces";
 import { Button } from "@mantine/core";
 import { openCheckInModal } from "@/utils/modalUtils";
-import { useManufacturer } from "@/hooks/query/manufacturer";
-import { useCompany } from "@/hooks/query/company";
-import { useCategory } from "@/hooks/query/category";
-import { useLicense } from "@/hooks/query/license";
-import { useSupplier } from "@/hooks/query/supplier";
+import {
+  useManufacturer,
+  useLicense,
+  useCategory,
+  useCompany,
+  useSupplier,
+} from "@queryhooks";
 import { EntityCells } from "@/cells/Entity";
 import { CategoryType } from "@/interfaces/enums";
 import { useInitial } from "@/hooks/initial/useInitial";

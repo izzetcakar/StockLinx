@@ -1,4 +1,4 @@
-import { employeeProductRequests } from "@/server/requests/employeeProduct";
+import { employeeProductRequests } from "@requests";
 import { baseHooks } from "./baseHooks";
 
 const hooks = baseHooks("EMPLOYEEPRODUCT");
@@ -39,7 +39,7 @@ const ApplyFilters = () => {
   return hooks.ApplyFilter(employeeProductRequests.filter);
 };
 
-export const useEmployeeProduct = {
+export default {
   GetAll,
   Get,
   Create,

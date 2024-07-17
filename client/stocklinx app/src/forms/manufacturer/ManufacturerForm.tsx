@@ -2,7 +2,7 @@ import React from "react";
 import { TextInput, Button, Group, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IManufacturer } from "@interfaces/serverInterfaces";
-import { useManufacturer } from "@/hooks/query/manufacturer";
+import { useManufacturer } from "@queryhooks";
 import { useInitial } from "@/hooks/initial/useInitial";
 import FormCard from "@/components/form/FormCard";
 

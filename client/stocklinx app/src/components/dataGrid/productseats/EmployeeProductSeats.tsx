@@ -1,5 +1,5 @@
 import Gridtable from "@/components/gridTable/GridTable";
-import { useEmployeeProduct } from "@/hooks/query/employeeProduct";
+import { useEmployeeProduct } from "@queryhooks";
 import { employeeSeatColumns } from "./EmployeeSeatColumns";
 import { EmployeeProductCheckOutDto } from "@/interfaces/dtos";
 

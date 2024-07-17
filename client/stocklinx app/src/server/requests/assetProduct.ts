@@ -36,7 +36,7 @@ const filter = (queryFilters: QueryFilter[]) => {
   return baseRequests.filter<IAssetProduct>(requestUrl, queryFilters);
 };
 
-export const assetProductRequests = {
+export default {
   getAll,
   get,
   create,

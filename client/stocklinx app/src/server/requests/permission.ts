@@ -31,7 +31,7 @@ const filter = (queryFilters: QueryFilter[]) => {
   return baseRequests.filter<IPermission>(requestUrl, queryFilters);
 };
 
-export const permissionRequests = {
+export default {
   getAll,
   get,
   create,

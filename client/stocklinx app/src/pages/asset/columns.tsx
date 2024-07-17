@@ -7,9 +7,7 @@ import {
   openAssetCheckOutModal,
 } from "@/utils/modalUtils";
 import base_asset from "@assets/baseProductImages/base_asset.jpg";
-import { useModel } from "@/hooks/query/model";
-import { useSupplier } from "@/hooks/query/supplier";
-import { useProductStatus } from "@/hooks/query/productStatus";
+import { useModel, useProductStatus, useSupplier } from "@queryhooks";
 import { EntityCells } from "@/cells/Entity";
 import { EntityCardColumn } from "@/interfaces/clientInterfaces";
 import EmployeeCheckInOutCell from "@/cells/EmployeeCheckInOutCell";

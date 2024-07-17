@@ -1,12 +1,8 @@
-import { ICategory } from "../../interfaces/serverInterfaces";
-import { useCategory } from "@/hooks/query/category";
 import { useNavigate } from "react-router-dom";
-import PageHeader from "@/components/generic/PageHeader";
 import {
   DataGrid,
   Pager,
   Paging,
-  Scrolling,
   Toolbar,
   Editing,
   Popup,
@@ -15,24 +11,23 @@ import {
   Lookup,
   Column,
 } from "devextreme-react/data-grid";
-import Button from "devextreme-react/button";
-import { useColumns } from "./columns";
-import { openCategoryModal } from "@/utils/modalUtils";
-import Gridtable from "@/components/gridTable/GridTable";
-import detail_icon from "@/assets/icon_detail.png";
+import { Item as FormItem } from "devextreme-react/form";
 import { createDataFromEnum } from "@/utils/enumUtils";
 import { CategoryType } from "@/interfaces/enums";
-import { Item as FormItem } from "devextreme-react/form";
 import { useRef } from "react";
+import { useCategory } from "@/hooks/query";
+import { categoryRequests } from "@requests";
+import PageHeader from "@/components/generic/PageHeader";
+import Button from "devextreme-react/button";
+import detail_icon from "@/assets/icon_detail.png";
+import CustomStore from "devextreme/data/custom_store";
 
 const Category = () => {
   const navigate = useNavigate();
   const gridRef = useRef<any>(null);
-  const { columns } = useColumns();
-
-  const { data: categories, refetch } = useCategory.GetAll();
-  const { mutate: remove } = useCategory.Remove();
-  const { mutate: removeRange } = useCategory.RemoveRange();
+  const { mutate: createCategory } = useCategory.Create();
+  const { mutate: updateCategory } = useCategory.Update();
+  const { mutate: removeCategory } = useCategory.Remove();
 
   const navigateDetail = () => {
     const categoryDetails = gridRef?.current?.instance?.getSelectedRowsData();
@@ -40,12 +35,29 @@ const Category = () => {
     navigate("/category", { state: { categories: categoryDetails } });
   };
 
+  const categoryStore = new CustomStore({
+    loadMode: "raw",
+    key: "id",
+    load: () => {
+      return categoryRequests.getAll();
+    },
+    insert: (values) => {
+      return createCategory(values) as any;
+    },
+    update: async (key, values) => {
+      const oldData: any = await categoryStore.byKey(key);
+      return updateCategory({ ...oldData, ...values });
+    },
+    remove: (key) => {
+      return removeCategory(key) as any;
+    },
+  });
+
   return (
     <>
       <PageHeader title="Categories" />
       <DataGrid
-        dataSource={categories || []}
-        keyExpr={"id"}
+        dataSource={categoryStore}
         className={"dx-card"}
         ref={gridRef}
         selection={{
@@ -53,9 +65,6 @@ const Category = () => {
           showCheckBoxesMode: "always",
           selectAllMode: "page",
         }}
-        onRowInserted={(e) => console.log(e.data)}
-        onRowUpdated={(e) => console.log(e)}
-        onRowRemoved={(e) => console.log(e.data)}
         columnChooser={{ enabled: true }}
         export={{
           enabled: true,
@@ -67,8 +76,7 @@ const Category = () => {
         allowColumnReordering
       >
         <Paging defaultPageSize={20} />
-        <Pager showPageSizeSelector={true} showInfo={true} />
-        <Scrolling mode="virtual" />
+        <Pager visible showPageSizeSelector allowedPageSizes={[5, 20, 50]} />
         <Column dataField="name" caption="Name" />
         <Column dataField="type" caption="Type">
           <Lookup
@@ -77,16 +85,10 @@ const Category = () => {
             displayExpr="label"
           />
         </Column>
-        <Editing
-          mode="popup"
-          useIcons={true}
-          allowUpdating={true}
-          allowAdding={true}
-          allowDeleting={true}
-        >
+        <Editing mode="popup" useIcons allowUpdating allowAdding allowDeleting>
           <Popup
             title="Category Info"
-            showTitle={true}
+            showTitle
             maxWidth={400}
             maxHeight={250}
           />
@@ -107,17 +109,15 @@ const Category = () => {
           <Item location="before" widget="dxButton">
             <Button
               icon="refresh"
-              onClick={() => refetch()}
+              onClick={() => {
+                gridRef?.current?.instance?.refresh();
+              }}
               style={{ border: "none" }}
             />
           </Item>
           <Item name="addRowButton" location="before" />
           <Item location="before" widget="dxButton">
-            <Button
-              icon="trash"
-              onClick={() => refetch()}
-              style={{ border: "none" }}
-            />
+            <Button icon="trash" style={{ border: "none" }} />
           </Item>
           <Item location="before" widget="dxButton">
             <Button
@@ -131,21 +131,6 @@ const Category = () => {
           <Item name="exportButton" location="after" />
         </Toolbar>
       </DataGrid>
-      <Gridtable
-        data={categories || []}
-        itemKey="id"
-        columns={columns}
-        refreshData={() => refetch()}
-        onRowUpdate={(c) => openCategoryModal(c as ICategory)}
-        onRowInsert={() => openCategoryModal()}
-        onRowRemove={(id) => remove(id)}
-        onRowRemoveRange={(ids) => removeRange(ids)}
-        // onApplyFilters={(filters) => filter(filters)}
-        // onRowDetail={(c) => navigateDetail(c as ICategory[])}
-        enableToolbar
-        enableEditActions
-        enableSelectActions
-      />
     </>
   );
 };

@@ -1,10 +1,9 @@
 import React, { ReactNode, useLayoutEffect, useState } from "react";
 import { Badge, Drawer, Select } from "@mantine/core";
 import { createContext } from "react";
-import { useCompany } from "@/hooks/query/company";
+import { useCompany, useUser } from "@queryhooks";
 import { ICompany } from "@/interfaces/serverInterfaces";
 import { useDisclosure } from "@mantine/hooks";
-import { useUser } from "@/hooks/query/user";
 import { NavigationItem } from "@/interfaces/clientInterfaces";
 import {
   adminNavigationList,

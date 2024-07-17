@@ -1,4 +1,4 @@
-import { permissionRequests } from "@/server/requests/permission";
+import { permissionRequests } from "@requests";
 import { baseHooks } from "./baseHooks";
 
 const hooks = baseHooks("PERMISSION");
@@ -35,7 +35,7 @@ const ApplyFilters = () => {
   return hooks.ApplyFilter(permissionRequests.filter);
 };
 
-export const usePermission = {
+export default {
   GetAll,
   Get,
   Create,

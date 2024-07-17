@@ -15,13 +15,15 @@ import { FORM_INDEX, useForm } from "@mantine/form";
 import { IModel, IModelFieldData } from "@interfaces/serverInterfaces";
 import { DateInput } from "@mantine/dates";
 import { toBase64 } from "../../utils/imageUtils";
-import { useCategory } from "@/hooks/query/category";
-import { useModel } from "@/hooks/query/model";
-import { useFieldSet } from "@/hooks/query/fieldSet";
-import { useManufacturer } from "@/hooks/query/manufacturer";
-import { useCustomField } from "@/hooks/query/customField";
-import { useModelFieldData } from "@/hooks/query/modelFieldData";
-import { useFieldSetCustomField } from "@/hooks/query/fieldSetCustomField";
+import {
+  useCategory,
+  useModel,
+  useModelFieldData,
+  useFieldSetCustomField,
+  useCustomField,
+  useFieldSet,
+  useManufacturer,
+} from "@queryhooks";
 import { CategoryType } from "@/interfaces/enums";
 import FormSelect from "../mantine/FormSelect";
 import { useInitial } from "@/hooks/initial/useInitial";

@@ -54,7 +54,7 @@ const getCustomLogs = async (): Promise<ICustomLog[]> => {
   ).data as ICustomLog[];
 };
 
-export const productRequests = {
+export default {
   getEntityCounts,
   getProductStatusCounts,
   getProductLocationCounts,

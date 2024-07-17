@@ -3,7 +3,7 @@ import {
   AssetProductCheckOutDto,
 } from "@/interfaces/dtos";
 import { queryClient } from "@/main";
-import { componentRequests } from "@/server/requests/component";
+import { componentRequests } from "@requests";
 import { useMutation } from "react-query";
 import { baseHooks } from "./baseHooks";
 import {
@@ -100,7 +100,7 @@ const CheckOut = () => {
   });
 };
 
-export const useComponent = {
+export default {
   GetAll,
   Get,
   Create,

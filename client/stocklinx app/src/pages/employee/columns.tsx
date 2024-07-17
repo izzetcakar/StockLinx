@@ -1,11 +1,13 @@
 import { DataColumn } from "@interfaces/gridTableInterfaces";
 import { IEmployee } from "@interfaces/serverInterfaces";
-import { useDepartment } from "@/hooks/query/department";
+import {
+  useDepartment,
+  useAccessory,
+  useConsumable,
+  useComponent,
+} from "@queryhooks";
 import { EntityCells } from "@/cells/Entity";
 import { EntityCardColumn } from "@/interfaces/clientInterfaces";
-import { useAccessory } from "@/hooks/query/accessory";
-import { useConsumable } from "@/hooks/query/consumable";
-import { useComponent } from "@/hooks/query/component";
 import EmployeeForm from "@/forms/employee/EmployeeForm";
 import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
 import EmployeeProductSeats from "@/components/dataGrid/productseats/EmployeeProductSeats";

@@ -36,7 +36,7 @@ const filter = (queryFilters: QueryFilter[]) => {
   return baseRequests.filter<IEmployeeProduct>(requestUrl, queryFilters);
 };
 
-export const employeeProductRequests = {
+export default {
   getAll,
   get,
   create,

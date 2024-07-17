@@ -18,10 +18,12 @@
       "@notifications": ["./src/notifications/notification.tsx*"],
       "@functions/*": ["src/utils/*"],
       "@request": ["./src/server/api.ts"],
+      "@requests": ["./src/server/requests/index.ts"],
       "@style": ["./src/base.scss*"],
       "@interfaces": ["./src/interfaces/*"],
       "@utils": ["./src/utils/*"],
-      "@hooks": ["./src/hooks/*"]
+      "@hooks": ["./src/hooks/*"],
+      "@queryhooks": ["./src/hooks/query/index.ts"]
     },
 
     /* Bundler mode */

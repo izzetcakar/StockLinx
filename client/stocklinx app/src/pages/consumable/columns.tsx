@@ -2,11 +2,13 @@ import { DataColumn } from "@interfaces/gridTableInterfaces";
 import { IConsumable, IEmployeeProduct } from "@interfaces/serverInterfaces";
 import { Button } from "@mantine/core";
 import { openCheckInModal } from "@/utils/modalUtils";
-import { useConsumable } from "@/hooks/query/consumable";
-import { useCategory } from "@/hooks/query/category";
-import { useCompany } from "@/hooks/query/company";
-import { useSupplier } from "@/hooks/query/supplier";
-import { useManufacturer } from "@/hooks/query/manufacturer";
+import {
+  useConsumable,
+  useCategory,
+  useCompany,
+  useSupplier,
+  useManufacturer,
+} from "@queryhooks";
 import { EntityCells } from "@/cells/Entity";
 import { CategoryType } from "@/interfaces/enums";
 import { useInitial } from "@/hooks/initial/useInitial";

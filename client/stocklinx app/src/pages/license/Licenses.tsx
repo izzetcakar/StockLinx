@@ -1,10 +1,10 @@
 import { ILicense } from "../../interfaces/serverInterfaces";
 import { useColumns } from "./columns";
 import { openLicenseModal } from "@/utils/modalUtils";
-import { useLicense } from "@/hooks/query/license";
+import { useLicense } from "@queryhooks";
+import { useNavigate } from "react-router-dom";
 import PageHeader from "@/components/generic/PageHeader";
 import Gridtable from "@components/gridTable/GridTable";
-import { useNavigate } from "react-router-dom";
 
 const License = () => {
   const navigate = useNavigate();

@@ -1,4 +1,4 @@
-import { supplierRequests } from "@/server/requests/supplier";
+import { supplierRequests } from "@requests";
 import { baseHooks } from "./baseHooks";
 
 const hooks = baseHooks("SUPPLIER");
@@ -42,7 +42,7 @@ const ApplyFilters = () => {
 const Lookup = () => {
   return hooks.Lookup(supplierRequests.lookup);
 };
-export const useSupplier = {
+export default {
   GetAll,
   Get,
   Create,

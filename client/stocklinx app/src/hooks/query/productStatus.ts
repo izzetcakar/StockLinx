@@ -1,4 +1,4 @@
-import { productStatusRequests } from "@/server/requests/productStatus";
+import { productStatusRequests } from "@requests";
 import { baseHooks } from "./baseHooks";
 
 const hooks = baseHooks("PRODUCTSTATUS");
@@ -43,7 +43,7 @@ const Lookup = () => {
   return hooks.Lookup(productStatusRequests.lookup);
 };
 
-export const useProductStatus = {
+export default {
   GetAll,
   Get,
   Create,

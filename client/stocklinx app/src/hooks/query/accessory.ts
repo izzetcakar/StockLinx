@@ -3,7 +3,6 @@ import {
   EmployeeProductCheckOutDto,
 } from "@/interfaces/dtos";
 import { queryClient } from "@/main";
-import { accessoryRequests } from "@/server/requests/accessory";
 import { useMutation } from "react-query";
 import { baseHooks } from "./baseHooks";
 import {
@@ -13,6 +12,7 @@ import {
 import { openNotificationSuccess } from "@/utils/notificationUtils";
 import { accessoryKeys } from "./keys";
 import { closeModal } from "@/utils/modalUtils";
+import { accessoryRequests } from "@requests";
 
 const hooks = baseHooks("ACCESSORY");
 
@@ -59,7 +59,8 @@ const Lookup = () => {
 const CheckIn = () => {
   return useMutation({
     mutationKey: accessoryKeys.CHECK_IN_ACCESSORY,
-    mutationFn: (dto: EmployeeProductCheckInDto) => accessoryRequests.checkIn(dto),
+    mutationFn: (dto: EmployeeProductCheckInDto) =>
+      accessoryRequests.checkIn(dto),
     onSuccess: (res) => {
       queryClient.setQueryData("FETCH_ALL_EMPLOYEEPRODUCT", (data: any) => {
         return setCheckedRecord(data, res);
@@ -88,16 +89,19 @@ const CheckOut = () => {
       queryClient.setQueryData("FILTER_EMPLOYEEPRODUCT", (data: any) => {
         return handleCheckOutEmployeeProduct(data, req, res);
       });
-      queryClient.setQueryData(["FETCH_EMPLOYEEPRODUCT", req.employeeProductId], () => {
-        return res;
-      });
+      queryClient.setQueryData(
+        ["FETCH_EMPLOYEEPRODUCT", req.employeeProductId],
+        () => {
+          return res;
+        }
+      );
       closeModal("user_product_checkOut_modal");
       openNotificationSuccess("Accessory Checked Out Successfully");
     },
   });
 };
 
-export const useAccessory = {
+export default {
   GetAll,
   Get,
   Create,

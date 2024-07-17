@@ -1,4 +1,4 @@
-import { locationRequests } from "@/server/requests/location";
+import { locationRequests } from "@requests";
 import { baseHooks } from "./baseHooks";
 
 const hooks = baseHooks("LOCATION");
@@ -43,7 +43,7 @@ const Lookup = () => {
   return hooks.Lookup(locationRequests.lookup);
 };
 
-export const useLocation = {
+export default {
   GetAll,
   Get,
   Create,

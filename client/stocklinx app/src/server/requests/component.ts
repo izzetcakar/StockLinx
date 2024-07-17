@@ -70,7 +70,7 @@ const checkOut = async (
   ).data as AssetProductDto[];
 };
 
-export const componentRequests = {
+export default {
   getAll,
   get,
   create,

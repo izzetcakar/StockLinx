@@ -40,7 +40,7 @@ const lookup = () => {
   return baseRequests.lookup(requestUrl);
 };
 
-export const categoryRequests = {
+export default {
   getAll,
   get,
   create,

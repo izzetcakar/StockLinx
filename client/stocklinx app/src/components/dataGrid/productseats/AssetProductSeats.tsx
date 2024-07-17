@@ -1,5 +1,5 @@
 import Gridtable from "@/components/gridTable/GridTable";
-import { useAssetProduct } from "@/hooks/query/assetProduct";
+import { useAssetProduct } from "@queryhooks";
 import { assetSeatColumns } from "./AssetSeatColumns";
 import { AssetProductCheckOutDto } from "@/interfaces/dtos";
 

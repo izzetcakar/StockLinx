@@ -1,4 +1,4 @@
-import { companyRequests } from "@/server/requests/company";
+import { companyRequests } from "@requests";
 import { baseHooks } from "./baseHooks";
 
 const hooks = baseHooks("COMPANY");
@@ -43,7 +43,7 @@ const Lookup = () => {
   return hooks.Lookup(companyRequests.lookup);
 };
 
-export const useCompany = {
+export default {
   GetAll,
   Get,
   Create,

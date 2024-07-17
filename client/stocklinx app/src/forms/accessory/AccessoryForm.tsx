@@ -14,21 +14,23 @@ import { DateInput } from "@mantine/dates";
 import { IAccessory } from "@interfaces/serverInterfaces";
 import { toBase64 } from "../../utils/imageUtils";
 import { openNotificationError } from "@/utils/notificationUtils";
-import { useCategory } from "@/hooks/query/category";
-import { useSupplier } from "@/hooks/query/supplier";
-import { useManufacturer } from "@/hooks/query/manufacturer";
-import { useAccessory } from "@/hooks/query/accessory";
+import {
+  useCategory,
+  useAccessory,
+  useCompany,
+  useSupplier,
+  useManufacturer,
+} from "@queryhooks";
 import { CategoryType } from "@/interfaces/enums";
 import { useInitial } from "@/hooks/initial/useInitial";
-import { useCompany } from "@/hooks/query/company";
-import base_accessory from "@assets/baseProductImages/base_accessory.png";
-import FormSelect from "../mantine/FormSelect";
-import FormCard from "@/components/form/FormCard";
 import {
   openCategoryModal,
   openManufacturerModal,
   openSupplierModal,
 } from "@/utils/modalUtils";
+import base_accessory from "@assets/baseProductImages/base_accessory.png";
+import FormSelect from "../mantine/FormSelect";
+import FormCard from "@/components/form/FormCard";
 
 interface AccessoryFormProps {
   accessory?: IAccessory;
@@ -90,7 +92,7 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory }) => {
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-       <Flex direction="column" gap={10} px={20}>
+      <Flex direction="column" gap={10} px={20}>
         <FormCard>
           <Image
             src={form.values.imagePath || base_accessory}

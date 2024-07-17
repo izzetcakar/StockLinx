@@ -8,8 +8,7 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IAssetProduct, IEmployeeProduct } from "@interfaces/serverInterfaces";
-import { useEmployee } from "@/hooks/query/employee";
-import { useAsset } from "@/hooks/query/asset";
+import { useEmployee, useAsset } from "@queryhooks";
 import FormSelect from "../mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";
 

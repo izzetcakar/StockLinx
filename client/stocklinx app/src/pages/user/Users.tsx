@@ -1,10 +1,10 @@
 import { IUser } from "../../interfaces/serverInterfaces";
 import { useColumns } from "./columns";
 import { openUserModal } from "@/utils/modalUtils";
-import { useUser } from "@/hooks/query/user";
+import { useUser } from "@queryhooks";
+import { useNavigate } from "react-router-dom";
 import PageHeader from "@/components/generic/PageHeader";
 import Gridtable from "@components/gridTable/GridTable";
-import { useNavigate } from "react-router-dom";
 
 const User = () => {
   const navigate = useNavigate();

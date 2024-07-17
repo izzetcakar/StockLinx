@@ -1,6 +1,6 @@
 import { DataColumn } from "@/interfaces/gridTableInterfaces";
 import { IAssetProduct, IEmployeeProduct } from "@/interfaces/serverInterfaces";
-import { useLicense } from "@/hooks/query/license";
+import { useLicense } from "@queryhooks";
 import {
   openAssetProductCheckOutModal,
   openEmployeeProductCheckOutModal,

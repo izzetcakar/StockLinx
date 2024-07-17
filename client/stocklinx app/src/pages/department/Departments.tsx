@@ -1,7 +1,7 @@
 import { IDepartment } from "../../interfaces/serverInterfaces";
 import { useColumns } from "./columns";
 import { openDepartmentModal } from "@/utils/modalUtils";
-import { useDepartment } from "@/hooks/query/department";
+import { useDepartment } from "@queryhooks";
 import PageHeader from "@/components/generic/PageHeader";
 import Gridtable from "@components/gridTable/GridTable";
 

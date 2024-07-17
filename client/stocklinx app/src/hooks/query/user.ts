@@ -1,6 +1,6 @@
 import { IUserLoginDto, TokenDto } from "@/interfaces/dtos";
 import { queryClient } from "@/main";
-import { userRequests } from "@/server/requests/user";
+import { userRequests } from "@requests";
 import { useMutation, useQuery } from "react-query";
 import { baseHooks } from "./baseHooks";
 import { userKeys } from "./keys";
@@ -61,7 +61,7 @@ const GetWithToken = () => {
   return useQuery(userKeys.GET_WITH_TOKEN_USER, userRequests.getWithToken);
 };
 
-export const useUser = {
+export default {
   GetAll,
   Get,
   Create,

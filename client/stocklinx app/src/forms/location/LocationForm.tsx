@@ -2,7 +2,7 @@ import React from "react";
 import { TextInput, Textarea, Group, Button } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { ILocation } from "@interfaces/serverInterfaces";
-import { useLocation } from "@/hooks/query/location";
+import { useLocation } from "@queryhooks";
 import { useInitial } from "@/hooks/initial/useInitial";
 import FormCard from "@/components/form/FormCard";
 interface LocationFormProps {

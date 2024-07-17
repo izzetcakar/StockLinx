@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
-import { useUser } from "./hooks/query/user";
+import { useUser } from "@queryhooks";
 import Accessories from "./pages/accessory/Accessories";
 import Assets from "./pages/asset/Assets";
 import Components from "./pages/component/Components";
