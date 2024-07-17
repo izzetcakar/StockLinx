@@ -1,5 +1,9 @@
 import { DataColumn } from "@interfaces/gridTableInterfaces";
-import { IAccessory, IEmployeeProduct } from "@interfaces/serverInterfaces";
+import {
+  IAccessory,
+  ICompany,
+  IEmployeeProduct,
+} from "@interfaces/serverInterfaces";
 import { Button, Image } from "@mantine/core";
 import { getImage } from "../../utils/imageUtils";
 import { openCheckInModal } from "@/utils/modalUtils";
@@ -13,6 +17,13 @@ import EmployeeProductQuantityCell from "@/cells/EmployeeProductQuantityCell";
 import AccessoryForm from "@/forms/accessory/AccessoryForm";
 import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
 import EmployeeProductSeats from "@/components/dataGrid/productseats/EmployeeProductSeats";
+import {
+  companyDataStore,
+  filterCategoryDataStore,
+  manufacturerDataStore,
+  supplierDataStore,
+} from "@/server/entityDatasources";
+import { Column } from "devextreme/ui/data_grid";
 
 export const useColumns = () => {
   const initial = useInitial();
@@ -175,5 +186,103 @@ export const useColumns = () => {
     },
   ];
 
-  return { columns, cardColumns };
+  const devColumns: Column<IAccessory>[] = [
+    {
+      caption: "Company",
+      dataField: "companyId",
+      lookup: {
+        dataSource: companyDataStore,
+        valueExpr: "id",
+        displayExpr: (e: ICompany) => (e ? e?.tag + " - " + e?.name : ""),
+      },
+    },
+    {
+      caption: "Image",
+      dataField: "imagePath",
+      cellTemplate: "imageTemplate",
+    },
+    {
+      caption: "Tag",
+      dataField: "tag",
+    },
+    {
+      caption: "Name",
+      dataField: "name",
+    },
+    {
+      caption: "Category",
+      dataField: "categoryId",
+      lookup: {
+        dataSource: filterCategoryDataStore(CategoryType.ACCESSORY),
+        valueExpr: "id",
+        displayExpr: "name",
+      },
+    },
+    {
+      caption: "Model No",
+      dataField: "model",
+    },
+    {
+      caption: "Check In",
+      cellTemplate: "checkInTemplate",
+    },
+    {
+      caption: "Total",
+      dataField: "quantity",
+      dataType: "number",
+    },
+    {
+      caption: "AvaliableQuantity",
+      dataField: "availableQuantity",
+      dataType: "number",
+    },
+    {
+      caption: "Purchase Cost",
+      dataField: "purchaseCost",
+      dataType: "number",
+    },
+    {
+      caption: "Notes",
+      dataField: "notes",
+      visible: false,
+    },
+    {
+      caption: "Supplier",
+      dataField: "supplierId",
+      visible: false,
+      lookup: {
+        dataSource: supplierDataStore,
+        valueExpr: "id",
+        displayExpr: "name",
+      },
+    },
+    {
+      caption: "Manufacturer",
+      dataField: "manufacturerId",
+      visible: false,
+      lookup: {
+        dataSource: manufacturerDataStore,
+        valueExpr: "id",
+        displayExpr: "name",
+      },
+    },
+    {
+      caption: "Model No",
+      dataField: "modelNo",
+      visible: false,
+    },
+    {
+      caption: "Order No",
+      dataField: "orderNo",
+      visible: false,
+    },
+    {
+      caption: "Purchase Date",
+      dataField: "purchaseDate",
+      dataType: "date",
+      visible: false,
+    },
+  ];
+
+  return { columns, cardColumns, devColumns };
 };

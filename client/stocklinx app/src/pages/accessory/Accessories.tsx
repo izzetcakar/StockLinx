@@ -7,37 +7,29 @@ import {
   Popup,
   Form,
   Lookup,
-  Column,
 } from "devextreme-react/data-grid";
 import { Item as FormItem } from "devextreme-react/form";
 import { useNavigate } from "react-router-dom";
 import { useRef } from "react";
-import {
-  IAccessory,
-  ICompany,
-  IEmployeeProduct,
-} from "@/interfaces/serverInterfaces";
+import { IAccessory, IEmployeeProduct } from "@/interfaces/serverInterfaces";
 import { useInitial } from "@/hooks/initial/useInitial";
 import { openCheckInModal } from "@/utils/modalUtils";
 import { createDataFromEnum } from "@/utils/enumUtils";
-import { CategoryType } from "@/interfaces/enums";
-import {
-  companyDataStore,
-  filterCategoryDataStore,
-  manufacturerDataStore,
-  supplierDataStore,
-} from "@/server/entityDatasources";
+import { useColumns } from "./columns";
 import { getImage } from "@/utils/imageUtils";
-import Button from "devextreme-react/button";
-import base_accessory from "@/assets/baseProductImages/base_accessory.png";
+import { Template } from "devextreme-react/core/template";
+import { CategoryType } from "@/interfaces/enums";
+import BaseToolbar from "@/components/devextreme/BaseToolbar";
 import PageHeader from "@/components/generic/PageHeader";
 import CustomStore from "devextreme/data/custom_store";
-import BaseToolbar from "@/components/devextreme/BaseToolbar";
+import base_accessory from "@assets/baseProductImages/base_accessory.png";
+import Button from "devextreme-react/button";
 
 const Accessory = () => {
   const navigate = useNavigate();
   const gridRef = useRef<any>(null);
   const initial = useInitial();
+  const { devColumns } = useColumns();
 
   const navigateDetail = () => {
     const accessoryDetails = gridRef?.current?.instance?.getSelectedRowsData();
@@ -99,16 +91,12 @@ const Accessory = () => {
           showCheckBoxesMode: "always",
           selectAllMode: "page",
         }}
+        columns={devColumns}
         columnChooser={{ enabled: true }}
         export={{
           enabled: true,
           fileName: "Categories",
           allowExportSelectedData: true,
-        }}
-        customizeColumns={(columns) => {
-          columns.forEach((column) => {
-            column.alignment = "center";
-          });
         }}
         showRowLines
         columnHidingEnabled
@@ -118,87 +106,33 @@ const Accessory = () => {
       >
         <Paging defaultPageSize={20} />
         <Pager visible showPageSizeSelector allowedPageSizes={[5, 20, 50]} />
-        <Column dataField="companyId" caption="Company">
-          <Lookup
-            dataSource={companyDataStore}
-            valueExpr="id"
-            displayExpr={(e: ICompany) => (e ? e?.tag + " - " + e?.name : "")}
-          />
-        </Column>
-        <Column
-          dataField="imagePath"
-          caption="Image"
-          dataType="image"
-          cellRender={(e) => {
-            const image = getImage((e as IAccessory).imagePath);
+        <Template
+          name="imageTemplate"
+          render={(e: any) => {
+            const image = getImage(e.data?.imagePath);
             return (
               <img
                 src={image ? image : base_accessory}
                 height={50}
-                width="fit-content"
+                style={{ borderRadius: "50%" }}
+                alt="Accessory"
               />
             );
           }}
         />
-        <Column dataField="tag" caption="Tag" />
-        <Column dataField="name" caption="Name" />
-        <Column dataField="categoryId" caption="Category">
-          <Lookup
-            dataSource={filterCategoryDataStore(CategoryType.ACCESSORY)}
-            valueExpr="id"
-            displayExpr="name"
-          />
-        </Column>
-        <Column dataField="model" caption="Model No" />
-        <Column
-          caption="Check In"
-          cellRender={(e) => (
-            <Button
-              disabled={(e.data?.availableQuantity as number) < 1}
-              onClick={() => onHeadToModal(e)}
-              type="success"
-            >
-              Check In
-            </Button>
-          )}
-        />
-        <Column dataField="quantity" caption="Total" dataType="number" />
-        <Column
-          dataField="availableQuantity"
-          caption="AvaliableQuantity"
-          dataType="number"
-        />
-        <Column
-          dataField="purchaseCost"
-          caption="Purchase Cost"
-          dataType="number"
-        />
-        <Column dataField="notes" caption="Notes" visible={false} />
-        <Column dataField="supplierId" caption="Supplier" visible={false}>
-          <Lookup
-            dataSource={supplierDataStore}
-            valueExpr="id"
-            displayExpr="name"
-          />
-        </Column>
-        <Column
-          dataField="manufacturerId"
-          caption="Manufacturer"
-          visible={false}
-        >
-          <Lookup
-            dataSource={manufacturerDataStore}
-            valueExpr="id"
-            displayExpr="name"
-          />
-        </Column>
-        <Column dataField="modelNo" caption="Model No" visible={false} />
-        <Column dataField="orderNo" caption="Order No" visible={false} />
-        <Column
-          dataField="purchaseDate"
-          caption="Purchase Date"
-          dataType="date"
-          visible={false}
+        <Template
+          name="checkInTemplate"
+          render={(e: any) => {
+            return (
+              <Button
+                disabled={(e.data?.availableQuantity as number) < 1}
+                onClick={() => onHeadToModal(e.data)}
+                type="success"
+              >
+                Check In
+              </Button>
+            );
+          }}
         />
         <Editing mode="popup" useIcons allowUpdating allowAdding allowDeleting>
           <Popup title="Accessory Info" showTitle />
