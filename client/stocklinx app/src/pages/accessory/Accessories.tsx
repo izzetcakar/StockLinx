@@ -1,45 +1,43 @@
-import { useAccessory } from "@queryhooks";
-import {
-  accessoryRequests,
-  categoryRequests,
-  companyRequests,
-  manufacturerRequests,
-  supplierRequests,
-} from "@requests";
-import PageHeader from "@/components/generic/PageHeader";
-import CustomStore from "devextreme/data/custom_store";
+import { accessoryRequests } from "@requests";
 import {
   DataGrid,
   Pager,
   Paging,
-  Toolbar,
   Editing,
   Popup,
   Form,
-  Item,
   Lookup,
   Column,
 } from "devextreme-react/data-grid";
 import { Item as FormItem } from "devextreme-react/form";
 import { useNavigate } from "react-router-dom";
 import { useRef } from "react";
-import { IAccessory, IEmployeeProduct } from "@/interfaces/serverInterfaces";
+import {
+  IAccessory,
+  ICompany,
+  IEmployeeProduct,
+} from "@/interfaces/serverInterfaces";
 import { useInitial } from "@/hooks/initial/useInitial";
 import { openCheckInModal } from "@/utils/modalUtils";
 import { createDataFromEnum } from "@/utils/enumUtils";
 import { CategoryType } from "@/interfaces/enums";
+import {
+  companyDataStore,
+  filterCategoryDataStore,
+  manufacturerDataStore,
+  supplierDataStore,
+} from "@/server/entityDatasources";
+import { getImage } from "@/utils/imageUtils";
 import Button from "devextreme-react/button";
-import EmployeeProductQuantityCell from "@/cells/EmployeeProductQuantityCell";
-import detail_icon from "@/assets/icon_detail.png";
+import base_accessory from "@/assets/baseProductImages/base_accessory.png";
+import PageHeader from "@/components/generic/PageHeader";
+import CustomStore from "devextreme/data/custom_store";
+import BaseToolbar from "@/components/devextreme/BaseToolbar";
 
 const Accessory = () => {
   const navigate = useNavigate();
   const gridRef = useRef<any>(null);
   const initial = useInitial();
-  const { mutate: createAccessory } = useAccessory.Create();
-  const { mutate: updateAccessory } = useAccessory.Update();
-  const { mutate: removeAccessory } = useAccessory.Remove();
-  const { mutate: checkIn } = useAccessory.CheckIn();
 
   const navigateDetail = () => {
     const accessoryDetails = gridRef?.current?.instance?.getSelectedRowsData();
@@ -53,20 +51,23 @@ const Accessory = () => {
     load: () => {
       return accessoryRequests.getAll();
     },
+    byKey: (key) => {
+      return accessoryRequests.get(key);
+    },
     insert: (values) => {
-      return createAccessory(values) as any;
+      return accessoryRequests.create(values);
     },
     update: async (key, values) => {
       const oldData: any = await accessoryStore.byKey(key);
-      return updateAccessory({ ...oldData, ...values });
+      return accessoryRequests.update({ ...oldData, ...values });
     },
     remove: (key) => {
-      return removeAccessory(key) as any;
+      return accessoryRequests.remove(key) as any;
     },
   });
 
   const onCheckInHandler = (data: IEmployeeProduct) => {
-    checkIn({
+    accessoryRequests.checkIn({
       productId: data.accessoryId as string,
       employeeId: data.employeeId,
       assaignDate: data.assignDate,
@@ -104,40 +105,67 @@ const Accessory = () => {
           fileName: "Categories",
           allowExportSelectedData: true,
         }}
+        customizeColumns={(columns) => {
+          columns.forEach((column) => {
+            column.alignment = "center";
+          });
+        }}
         showRowLines
+        columnHidingEnabled
         allowColumnResizing
         allowColumnReordering
+        filterRow={{ visible: true }}
       >
         <Paging defaultPageSize={20} />
         <Pager visible showPageSizeSelector allowedPageSizes={[5, 20, 50]} />
         <Column dataField="companyId" caption="Company">
           <Lookup
-            dataSource={companyRequests.getAll()}
+            dataSource={companyDataStore}
             valueExpr="id"
-            displayExpr="name"
+            displayExpr={(e: ICompany) => (e ? e?.tag + " - " + e?.name : "")}
           />
         </Column>
+        <Column
+          dataField="imagePath"
+          caption="Image"
+          dataType="image"
+          cellRender={(e) => {
+            const image = getImage((e as IAccessory).imagePath);
+            return (
+              <img
+                src={image ? image : base_accessory}
+                height={50}
+                width="fit-content"
+              />
+            );
+          }}
+        />
         <Column dataField="tag" caption="Tag" />
         <Column dataField="name" caption="Name" />
-        <Column dataField="image" caption="Image" dataType="image" />
         <Column dataField="categoryId" caption="Category">
           <Lookup
-            dataSource={categoryRequests.getAll()}
+            dataSource={filterCategoryDataStore(CategoryType.ACCESSORY)}
             valueExpr="id"
             displayExpr="name"
           />
         </Column>
         <Column dataField="model" caption="Model No" />
+        <Column
+          caption="Check In"
+          cellRender={(e) => (
+            <Button
+              disabled={(e.data?.availableQuantity as number) < 1}
+              onClick={() => onHeadToModal(e)}
+              type="success"
+            >
+              Check In
+            </Button>
+          )}
+        />
         <Column dataField="quantity" caption="Total" dataType="number" />
         <Column
+          dataField="availableQuantity"
           caption="AvaliableQuantity"
-          renderAsync={(e: IAccessory) =>
-            EmployeeProductQuantityCell({
-              productId: e.id,
-              totalQuantity: e.quantity,
-              productType: "Accessory",
-            })
-          }
           dataType="number"
         />
         <Column
@@ -145,23 +173,10 @@ const Accessory = () => {
           caption="Purchase Cost"
           dataType="number"
         />
-        <Column
-          caption="Check In"
-          renderAsync={(e: IAccessory) => (
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <Button
-                disabled={(e?.availableQuantity as number) < 1}
-                onClick={() => onHeadToModal(e)}
-              >
-                Check In
-              </Button>
-            </div>
-          )}
-        />
         <Column dataField="notes" caption="Notes" visible={false} />
         <Column dataField="supplierId" caption="Supplier" visible={false}>
           <Lookup
-            dataSource={supplierRequests.getAll()}
+            dataSource={supplierDataStore}
             valueExpr="id"
             displayExpr="name"
           />
@@ -172,7 +187,7 @@ const Accessory = () => {
           visible={false}
         >
           <Lookup
-            dataSource={manufacturerRequests.getAll()}
+            dataSource={manufacturerDataStore}
             valueExpr="id"
             displayExpr="name"
           />
@@ -215,31 +230,7 @@ const Accessory = () => {
             />
           </Form>
         </Editing>
-        <Toolbar>
-          <Item location="before" widget="dxButton">
-            <Button
-              icon="refresh"
-              onClick={() => {
-                gridRef?.current?.instance?.refresh();
-              }}
-              style={{ border: "none" }}
-            />
-          </Item>
-          <Item name="addRowButton" location="before" />
-          <Item location="before" widget="dxButton">
-            <Button icon="trash" style={{ border: "none" }} />
-          </Item>
-          <Item location="before" widget="dxButton">
-            <Button
-              icon={detail_icon}
-              onClick={() => navigateDetail()}
-              style={{ border: "none" }}
-              text="Details"
-            />
-          </Item>
-          <Item name="columnChooserButton" location="after" />
-          <Item name="exportButton" location="after" />
-        </Toolbar>
+        {BaseToolbar({ gridRef, navigateDetail })}
       </DataGrid>
     </>
   );
