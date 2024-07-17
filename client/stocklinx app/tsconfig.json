@@ -19,6 +19,7 @@
       "@functions/*": ["src/utils/*"],
       "@request": ["./src/server/api.ts"],
       "@requests": ["./src/server/requests/index.ts"],
+      "@datasources": ["./src/server/entityDatasources.ts"],
       "@style": ["./src/base.scss*"],
       "@interfaces": ["./src/interfaces/*"],
       "@utils": ["./src/utils/*"],
