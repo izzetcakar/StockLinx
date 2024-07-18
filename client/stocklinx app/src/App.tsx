@@ -39,7 +39,7 @@ import Employees from "./pages/employee/Employees";
 import Employee from "./pages/employee/Employee";
 import Test from "./pages/test/Test";
 import "devextreme/ui/lookup";
-import 'devextreme-react/text-area';
+import "devextreme-react/text-area";
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
 import "@mantine/dates/styles.css";
@@ -47,6 +47,8 @@ import "./app.scss";
 import "./base.scss";
 import "./theme.base.css";
 import "./theme.additional.css";
+import "./tailwind.css";
+import "./globals.css";
 // import 'devextreme/dist/css/dx.light.compact.css';
 
 const Layout = () => {

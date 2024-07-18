@@ -4,7 +4,27 @@
     "skipLibCheck": true,
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@components/*": ["./src/components/*"],
+      "@pages/*": ["./src/pages/*"],
+      "@forms/*": ["./src/forms/*"],
+      "@assets/*": ["./src/assets/*"],
+      "@interfaces/*": ["./src/interfaces/*"],
+      "@modals": ["./src/modals/modals.tsx"],
+      "@notifications": ["./src/notifications/notification.tsx*"],
+      "@functions/*": ["src/utils/*"],
+      "@request": ["./src/server/api.ts"],
+      "@requests": ["./src/server/requests/index.ts"],
+      "@datasources": ["./src/server/entityDatasources.ts"],
+      "@style": ["./src/base.scss*"],
+      "@interfaces": ["./src/interfaces/*"],
+      "@utils": ["./src/utils/*"],
+      "@hooks": ["./src/hooks/*"],
+      "@queryhooks": ["./src/hooks/query/index.ts"]
+    }
   },
   "include": ["vite.config.ts"]
 }
