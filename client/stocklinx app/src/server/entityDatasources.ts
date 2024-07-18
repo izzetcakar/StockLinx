@@ -17,6 +17,7 @@ import {
   userRequests,
   assetProductRequests,
   employeeProductRequests,
+  productStatusRequests,
 } from "@requests";
 import CustomStore from "devextreme/data/custom_store";
 
@@ -197,5 +198,15 @@ export const employeeProductDataStore = new CustomStore({
   },
   byKey: (key) => {
     return employeeProductRequests.get(key);
+  },
+});
+
+export const productStatusDataStore = new CustomStore({
+  key: "id",
+  load: () => {
+    return productStatusRequests.getAll();
+  },
+  byKey: (key) => {
+    return productStatusRequests.get(key);
   },
 });
