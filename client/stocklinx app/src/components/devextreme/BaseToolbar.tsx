@@ -4,12 +4,12 @@ import Button from "devextreme-react/button";
 import detail_icon from "@/assets/icon_detail.png";
 
 interface BaseToolbarProps {
-  gridRef: React.MutableRefObject<any>;
+  refetch: () => any;
   navigateDetail: () => void;
 }
 
 const BaseToolbar: React.FC<BaseToolbarProps> = ({
-  gridRef,
+  refetch,
   navigateDetail,
 }) => {
   return (
@@ -17,9 +17,7 @@ const BaseToolbar: React.FC<BaseToolbarProps> = ({
       <Item location="before" widget="dxButton">
         <Button
           icon="refresh"
-          onClick={() => {
-            gridRef?.current?.instance?.refresh();
-          }}
+          onClick={() => refetch()}
           style={{ border: "none" }}
         />
       </Item>
