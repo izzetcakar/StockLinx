@@ -71,6 +71,24 @@ const CheckIn = () => {
       queryClient.setQueryData(["FETCH_EMPLOYEEPRODUCT", res.id], () => {
         return res;
       });
+      queryClient.setQueryData("FETCH_ALL_ACCESSORY", (data: any) => {
+        console.log("d", data);
+        return data.map((x: any) => {
+          if (x.id === res.accessoryId) {
+            x.availableQuantity -= res.quantity;
+          }
+          return x;
+        });
+      });
+      queryClient.setQueryData(
+        ["FETCH_ACCESSORY", res.accessoryId],
+        (data: any) => {
+          return {
+            ...data,
+            availableQuantity: data?.availableQuantity - res.quantity,
+          };
+        }
+      );
       closeModal("product_checkIn_modal");
       openNotificationSuccess("Accessory Check In Successfully");
     },

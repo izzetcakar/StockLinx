@@ -71,6 +71,23 @@ const CheckIn = () => {
       queryClient.setQueryData(["FETCH_EMPLOYEEPRODUCT", res.id], () => {
         return res;
       });
+      queryClient.setQueryData("FETCH_ALL_COnsumable", (data: any) => {
+        return data.map((x: any) => {
+          if (x.id === res.consumableId) {
+            x.availableQuantity -= res.quantity;
+          }
+          return x;
+        });
+      });
+      queryClient.setQueryData(
+        ["FETCH_COnsumable", res.consumableId],
+        (data: any) => {
+          return {
+            ...data,
+            availableQuantity: data?.availableQuantity - res.quantity,
+          };
+        }
+      );
       closeModal("product_checkIn_modal");
       openNotificationSuccess("Consumable checked in successfully");
     },

@@ -70,6 +70,23 @@ const CheckIn = () => {
       queryClient.setQueryData(["FETCH_ASSETPRODUCT", res.id], () => {
         return res;
       });
+      queryClient.setQueryData("FETCH_ALL_COMPONENT", (data: any) => {
+        return data.map((x: any) => {
+          if (x.id === res.componentId) {
+            x.availableQuantity -= res.quantity;
+          }
+          return x;
+        });
+      });
+      queryClient.setQueryData(
+        ["FETCH_COMPONENT", res.componentId],
+        (data: any) => {
+          return {
+            ...data,
+            availableQuantity: data?.availableQuantity - res.quantity,
+          };
+        }
+      );
       closeModal("product_checkIn_modal");
       openNotificationSuccess("Component Checked In Successfully");
     },

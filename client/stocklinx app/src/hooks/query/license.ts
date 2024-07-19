@@ -74,6 +74,23 @@ const EmployeeCheckIn = () => {
       queryClient.setQueryData(["FETCH_EMPLOYEEPRODUCT", res.id], () => {
         return res;
       });
+      queryClient.setQueryData("FETCH_ALL_LICENSE", (data: any) => {
+        return data.map((x: any) => {
+          if (x.id === res.licenseId) {
+            x.availableQuantity -= res.quantity;
+          }
+          return x;
+        });
+      });
+      queryClient.setQueryData(
+        ["FETCH_LICENSE", res.licenseId],
+        (data: any) => {
+          return {
+            ...data,
+            availableQuantity: data?.availableQuantity - res.quantity,
+          };
+        }
+      );
       closeModal("product_checkIn_modal");
       openNotificationSuccess("License checked in successfully");
     },
@@ -119,6 +136,23 @@ const AssetCheckIn = () => {
       queryClient.setQueryData(["FETCH_ASSETPRODUCT", res.id], () => {
         return res;
       });
+      queryClient.setQueryData("FETCH_ALL_LICENSE", (data: any) => {
+        return data.map((x: any) => {
+          if (x.id === res.licenseId) {
+            x.availableQuantity -= res.quantity;
+          }
+          return x;
+        });
+      });
+      queryClient.setQueryData(
+        ["FETCH_LICENSE", res.licenseId],
+        (data: any) => {
+          return {
+            ...data,
+            availableQuantity: data?.availableQuantity - res.quantity,
+          };
+        }
+      );
       closeModal("product_checkIn_modal");
       openNotificationSuccess("License checked in successfully");
     },
