@@ -1,13 +1,6 @@
 import { DataColumn } from "@interfaces/gridTableInterfaces";
 import { Image } from "@mantine/core";
-import {
-  IAsset,
-  ICompany,
-  IEmployeeProduct,
-  IModel,
-  IProductStatus,
-  ISupplier,
-} from "@interfaces/serverInterfaces";
+import { IAsset, IEmployeeProduct } from "@interfaces/serverInterfaces";
 import { getImage } from "../../utils/imageUtils";
 import {
   openAssetCheckInModal,
@@ -21,13 +14,6 @@ import EmployeeCheckInOutCell from "@/cells/EmployeeCheckInOutCell";
 import CheckedOutEmployeeCell from "@/cells/CheckedOutEmployeeCell";
 import AssetForm from "@/forms/asset/AssetForm";
 import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
-import { Column } from "devextreme/ui/data_grid";
-import {
-  companyDataStore,
-  modelDataStore,
-  productStatusDataStore,
-  supplierDataStore,
-} from "@/server/entityDatasources";
 
 export const useColumns = () => {
   const { refetch: getModelLK } = useModel.Lookup();
@@ -181,86 +167,5 @@ export const useColumns = () => {
     },
   ];
 
-  const devColumns: Column<IAsset>[] = [
-    {
-      caption: "Company",
-      dataField: "companyId",
-      lookup: {
-        dataSource: companyDataStore,
-        valueExpr: "id",
-        displayExpr: (e: ICompany) => (e ? e?.tag + " - " + e?.name : ""),
-      },
-    },
-    {
-      caption: "Tag",
-      dataField: "tag",
-    },
-    {
-      caption: "Name",
-      dataField: "name",
-    },
-    {
-      caption: "Image",
-      dataField: "imagePath",
-      cellTemplate: "imageTemplate",
-    },
-    {
-      caption: "Serial No",
-      dataField: "serialNo",
-      dataType: "string",
-    },
-    {
-      caption: "Model",
-      dataField: "modelId",
-      lookup: {
-        dataSource: modelDataStore,
-        valueExpr: "id",
-        displayExpr: (e: IModel) => e?.name,
-      },
-    },
-    {
-      caption: "Check In/Out",
-      cellTemplate: "checkInOutTemplate",
-    },
-    {
-      caption: "Product Status",
-      dataField: "productStatusId",
-      lookup: {
-        dataSource: productStatusDataStore,
-        valueExpr: "id",
-        displayExpr: (e: IProductStatus) => e?.name,
-      },
-    },
-    {
-      caption: "Purchase Cost",
-      dataField: "purchaseCost",
-      dataType: "number",
-    },
-    {
-      caption: "Purchase Date",
-      dataField: "purchaseDate",
-      dataType: "date",
-    },
-    {
-      caption: "Supplier",
-      dataField: "supplierId",
-      lookup: {
-        dataSource: supplierDataStore,
-        valueExpr: "id",
-        displayExpr: (e: ISupplier) => e?.name,
-      },
-    },
-    {
-      caption: "Order No",
-      dataField: "orderNo",
-      dataType: "string",
-    },
-    {
-      caption: "Notes",
-      dataField: "notes",
-      dataType: "string",
-    },
-  ];
-
-  return { columns, cardColumns, devColumns };
+  return { columns, cardColumns };
 };
