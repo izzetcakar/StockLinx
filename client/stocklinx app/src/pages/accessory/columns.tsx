@@ -1,22 +1,7 @@
-import { DataColumn } from "@interfaces/gridTableInterfaces";
-import {
-  IAccessory,
-  ICompany,
-  IEmployeeProduct,
-} from "@interfaces/serverInterfaces";
-import { Button, Image } from "@mantine/core";
-import { getImage } from "../../utils/imageUtils";
-import { openCheckInModal } from "@/utils/modalUtils";
-import { useAccessory, useCategory } from "@queryhooks";
+import { IAccessory, ICompany } from "@interfaces/serverInterfaces";
+import { useAccessory } from "@queryhooks";
 import { CategoryType } from "@/interfaces/enums";
-import { useInitial } from "@/hooks/initial/useInitial";
-import { EntityCells } from "@/cells/Entity";
 import { EntityCardColumn } from "@/interfaces/clientInterfaces";
-import base_accessory from "@assets/baseProductImages/base_accessory.png";
-import EmployeeProductQuantityCell from "@/cells/EmployeeProductQuantityCell";
-import AccessoryForm from "@/forms/accessory/AccessoryForm";
-import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
-import EmployeeProductSeats from "@/components/dataGrid/productseats/EmployeeProductSeats";
 import {
   companyDataStore,
   filterCategoryDataStore,
@@ -24,133 +9,12 @@ import {
   supplierDataStore,
 } from "@/server/entityDatasources";
 import { Column } from "devextreme/ui/data_grid";
+import AccessoryForm from "@/forms/accessory/AccessoryForm";
+import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
+import EmployeeProductSeats from "@/components/dataGrid/productseats/EmployeeProductSeats";
 
 export const useColumns = () => {
-  const initial = useInitial();
-  const { data: categories } = useCategory.GetAll();
-  const { mutate: checkIn } = useAccessory.CheckIn();
   const { mutate: checkOut } = useAccessory.CheckOut();
-
-  const onCheckInHandler = (data: IEmployeeProduct) => {
-    checkIn({
-      productId: data.accessoryId as string,
-      employeeId: data.employeeId,
-      assaignDate: data.assignDate,
-      notes: data.notes,
-      quantity: data.quantity,
-    });
-  };
-
-  const onHeadToModal = (accessory: IAccessory) => {
-    const newEmployeeProduct = initial.EmployeeProduct;
-    newEmployeeProduct.accessoryId = accessory.id;
-    openCheckInModal(
-      accessory.companyId,
-      ["Employee"],
-      newEmployeeProduct,
-      onCheckInHandler
-    );
-  };
-
-  const columns: DataColumn[] = [
-    {
-      dataField: "tag",
-      caption: "Accessory",
-      dataType: "string",
-    },
-    {
-      dataField: "name",
-      caption: "Name",
-      dataType: "string",
-    },
-    {
-      caption: "Image",
-      dataField: "imagePath",
-      dataType: "action",
-      renderComponent(e) {
-        const image = getImage((e as IAccessory).imagePath);
-        return (
-          <Image
-            src={image ? image : base_accessory}
-            height={50}
-            radius="md"
-            width="fit-content"
-            fit="contain"
-          />
-        );
-      },
-    },
-    {
-      caption: "Category",
-      dataField: "categoryId",
-      dataType: "string",
-      lookup: {
-        data:
-          categories
-            ?.filter((category) => category.type === CategoryType.ACCESSORY)
-            .map((category) => ({
-              value: category.id,
-              label: category.name,
-            })) || [],
-      },
-      renderComponent: (e) =>
-        EntityCells.Category((e as IAccessory).categoryId),
-    },
-    {
-      caption: "Model",
-      dataField: "modelNo",
-      dataType: "string",
-    },
-    {
-      caption: "Total",
-      dataField: "quantity",
-      dataType: "number",
-    },
-    {
-      caption: "Avail",
-      dataField: "availableQuantity",
-      dataType: "action",
-      renderComponent: (e) =>
-        EmployeeProductQuantityCell({
-          productId: (e as IAccessory).id,
-          productType: "Accessory",
-          totalQuantity: (e as IAccessory).quantity,
-        }),
-    },
-    {
-      dataField: "purchaseCost",
-      caption: "Purchase Cost",
-      dataType: "number",
-    },
-    {
-      dataField: "id",
-      caption: "Checkin",
-      dataType: "action",
-      renderComponent(e) {
-        const accessory = e as IAccessory;
-        return (
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <Button
-              color={"green"}
-              variant="filled"
-              size="xs"
-              disabled={(accessory?.availableQuantity as number) < 1}
-              onClick={() => onHeadToModal(accessory as IAccessory)}
-            >
-              Check In
-            </Button>
-          </div>
-        );
-      },
-    },
-    // INVISIBLE COLUMNS
-    {
-      caption: "Notes",
-      dataField: "notes",
-      dataType: "string",
-      allowVisible: false,
-    },
-  ];
 
   const cardColumns: EntityCardColumn[] = [
     {
@@ -186,7 +50,10 @@ export const useColumns = () => {
     },
   ];
 
-  const devColumns: Column<IAccessory>[] = [
+  const columns: Column<IAccessory>[] = [
+    {
+      cellTemplate: "actionTemplate",
+    },
     {
       caption: "Company",
       dataField: "companyId",
@@ -232,7 +99,7 @@ export const useColumns = () => {
       dataType: "number",
     },
     {
-      caption: "AvaliableQuantity",
+      caption: "Available",
       dataField: "availableQuantity",
       dataType: "number",
     },
@@ -284,5 +151,5 @@ export const useColumns = () => {
     },
   ];
 
-  return { columns, cardColumns, devColumns };
+  return { columns, cardColumns };
 };
