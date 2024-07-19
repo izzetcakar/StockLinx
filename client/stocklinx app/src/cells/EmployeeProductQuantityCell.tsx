@@ -34,7 +34,7 @@ const EmployeeProductQuantityCell: React.FC<EmployeeProductQuantityCellProps> =
       }
     };
 
-    return <div>{totalQuantity - getCheckedQuantity()}</div>;
+    return totalQuantity - getCheckedQuantity();
   };
 
 export default EmployeeProductQuantityCell;
