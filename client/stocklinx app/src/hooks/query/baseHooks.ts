@@ -1,7 +1,13 @@
 import { LookupData, QueryFilter } from "@/interfaces/gridTableInterfaces";
 import { queryClient } from "@/main";
+import { closeModal } from "@/utils/modalUtils";
 import { openNotificationSuccess } from "@/utils/notificationUtils";
 import { useMutation, useQuery } from "react-query";
+
+const onSucccessHandler = (entity: string, successMessage: string) => {
+  closeModal(entity.toLowerCase() + "-modal");
+  openNotificationSuccess(successMessage);
+};
 
 export const baseHooks = (entity: string) => {
   const lowerCaseEntity = entity.toLowerCase();
@@ -27,7 +33,7 @@ export const baseHooks = (entity: string) => {
       mutationKey: "CREATE_" + entity,
       mutationFn: (dto: any) => request(dto),
       onSuccess: (res) => {
-        openNotificationSuccess("Successfully created " + lowerCaseEntity);
+        onSucccessHandler(entity, "Successfully created " + lowerCaseEntity);
         queryClient.setQueryData<any[]>("FETCH_ALL_" + entity, (old) => {
           return old ? [...old, res] : [res];
         });
@@ -44,7 +50,8 @@ export const baseHooks = (entity: string) => {
       mutationKey: "CREATE_RANGE_" + entity,
       mutationFn: (dtos: any[]) => request(dtos),
       onSuccess: (res) => {
-        openNotificationSuccess(
+        onSucccessHandler(
+          entity,
           "Successfully created " + lowerCaseEntity + " items"
         );
         queryClient.setQueryData<any[]>("FETCH_ALL_" + entity, (old) => {
@@ -63,7 +70,7 @@ export const baseHooks = (entity: string) => {
       mutationKey: "UPDATE_" + entity,
       mutationFn: (dto: any) => request(dto),
       onSuccess: (res) => {
-        openNotificationSuccess("Successfully updated " + lowerCaseEntity);
+        onSucccessHandler(entity, "Successfully updated " + lowerCaseEntity);
         queryClient.setQueryData<any[]>("FETCH_ALL_" + entity, (old) => {
           return old
             ? (old as any[]).map((x) => (x.id === res.id ? res : x))
@@ -106,7 +113,11 @@ export const baseHooks = (entity: string) => {
       mutationFn: (ids: string[]) => request(ids),
       onSuccess: (_, ids) => {
         openNotificationSuccess(
-          "Successfully deleted " + lowerCaseEntity + " items"
+          "Successfully deleted " +
+            ids.length +
+            " " +
+            lowerCaseEntity +
+            " items"
         );
         queryClient.setQueryData<any[]>("FETCH_ALL_" + entity, (old) => {
           return old ? old.filter((x) => !ids.includes(x.id)) : [];
