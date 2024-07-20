@@ -91,7 +91,7 @@ const EmployeeCheckIn = () => {
           };
         }
       );
-      closeModal("product_checkIn_modal");
+      closeModal("product-checkin-modal");
       openNotificationSuccess("License checked in successfully");
     },
   });
@@ -153,7 +153,7 @@ const AssetCheckIn = () => {
           };
         }
       );
-      closeModal("product_checkIn_modal");
+      closeModal("product-checkin-modal");
       openNotificationSuccess("License checked in successfully");
     },
   });

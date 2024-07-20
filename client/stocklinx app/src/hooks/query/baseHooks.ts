@@ -64,7 +64,7 @@ export const baseHooks = (entity: string) => {
       mutationFn: (dto: any) => request(dto),
       onSuccess: (res) => {
         openNotificationSuccess("Successfully updated " + lowerCaseEntity);
-        queryClient.setQueryData<any[]>("FETCH_ALL" + entity, (old) => {
+        queryClient.setQueryData<any[]>("FETCH_ALL_" + entity, (old) => {
           return old
             ? (old as any[]).map((x) => (x.id === res.id ? res : x))
             : [res];

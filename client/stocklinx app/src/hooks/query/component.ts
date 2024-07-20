@@ -87,7 +87,7 @@ const CheckIn = () => {
           };
         }
       );
-      closeModal("product_checkIn_modal");
+      closeModal("product-checkin-modal");
       openNotificationSuccess("Component Checked In Successfully");
     },
   });

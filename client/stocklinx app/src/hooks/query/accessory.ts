@@ -72,7 +72,6 @@ const CheckIn = () => {
         return res;
       });
       queryClient.setQueryData("FETCH_ALL_ACCESSORY", (data: any) => {
-        console.log("d", data);
         return data.map((x: any) => {
           if (x.id === res.accessoryId) {
             x.availableQuantity -= res.quantity;
@@ -89,7 +88,7 @@ const CheckIn = () => {
           };
         }
       );
-      closeModal("product_checkIn_modal");
+      closeModal("product-checkin-modal");
       openNotificationSuccess("Accessory Check In Successfully");
     },
   });
