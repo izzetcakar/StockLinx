@@ -1,37 +1,27 @@
-import { IProductStatus } from "../../interfaces/serverInterfaces";
+import { useProductStatus } from "@/hooks/query";
 import { useColumns } from "./columns";
 import { openProductStatusModal } from "@/utils/modalUtils";
-import { useProductStatus } from "@queryhooks";
-import PageHeader from "@/components/generic/PageHeader";
-import Gridtable from "@components/gridTable/GridTable";
+import BaseMantineTable from "@/components/mantine/BaseMantineTable";
 
-const ProductStatus = () => {
-  const { data: productStatuses } = useProductStatus.Filter();
-  const { mutate: filter } = useProductStatus.ApplyFilters();
+const ProductStatuses = () => {
+  const { columns } = useColumns();
+  const { data, isRefetching, refetch } = useProductStatus.GetAll();
   const { mutate: remove } = useProductStatus.Remove();
   const { mutate: removeRange } = useProductStatus.RemoveRange();
 
   return (
-    <>
-      <PageHeader title="Product Statuses" />
-      <Gridtable
-        data={productStatuses || []}
-        itemKey="id"
-        columns={useColumns().columns}
-        refreshData={() => filter([])}
-        onRowUpdate={(productStatus) =>
-          openProductStatusModal(productStatus as IProductStatus)
-        }
-        onRowInsert={() => openProductStatusModal()}
-        onRowRemove={(id) => remove(id)}
-        onRowRemoveRange={(ids) => removeRange(ids)}
-        onApplyFilters={(filters) => filter(filters)}
-        enableToolbar
-        enableEditActions
-        enableSelectActions
-      />
-    </>
+    <BaseMantineTable
+      data={data}
+      columns={columns}
+      isLoading={isRefetching}
+      refetch={refetch}
+      onAdd={() => openProductStatusModal()}
+      onCopy={(value: any) => openProductStatusModal({ ...value, id: "" })}
+      onUpdate={(value: any) => openProductStatusModal(value)}
+      onRemove={(id: string) => remove(id)}
+      onRemoveRange={(ids: string[]) => removeRange(ids)}
+    />
   );
 };
 
-export default ProductStatus;
+export default ProductStatuses;

@@ -1,25 +1,35 @@
 import { ICategory } from "@interfaces/serverInterfaces";
-import { DataColumn } from "@interfaces/gridTableInterfaces";
 import { createDataFromEnum } from "../../utils/enumUtils";
 import { EntityCardColumn } from "@/interfaces/clientInterfaces";
 import { CategoryType } from "@/interfaces/enums";
+import { MRT_ColumnDef } from "mantine-react-table";
 import CategoryForm from "@/forms/category/CategoryForm";
 import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
 
+const categoryData = createDataFromEnum(CategoryType).map((e) => ({
+  value: e.value.toString(),
+  label: e.label,
+}));
+
 export const useColumns = () => {
-  const columns: DataColumn[] = [
+  const columns: MRT_ColumnDef<ICategory>[] = [
     {
-      dataField: "name",
-      caption: "Name",
-      dataType: "string",
+      accessorKey: "name",
+      header: "Name",
     },
     {
-      dataField: "type",
-      caption: "Type",
-      lookup: {
-        data: createDataFromEnum(CategoryType),
+      accessorKey: "type",
+      header: "Type",
+      filterVariant: "multi-select",
+      accessorFn: ({ type }) => {
+        return type !== null ? type.toString() : "";
       },
-      dataType: "number",
+      Cell: ({ cell }) => {
+        return categoryData.find((e) => e.value === cell.getValue())?.label;
+      },
+      mantineFilterMultiSelectProps: () => ({
+        data: categoryData,
+      }),
     },
   ];
 

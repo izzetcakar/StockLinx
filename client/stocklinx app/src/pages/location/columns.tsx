@@ -1,55 +1,46 @@
 import { EntityCardColumn } from "@/interfaces/clientInterfaces";
 import { ILocation } from "@/interfaces/serverInterfaces";
-import { DataColumn } from "@interfaces/gridTableInterfaces";
+import { MRT_ColumnDef } from "mantine-react-table";
 import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
 import LocationForm from "@/forms/location/LocationForm";
 
 export const useColumns = () => {
-  const columns: DataColumn[] = [
+  const columns: MRT_ColumnDef<ILocation>[] = [
     {
-      dataField: "name",
-      caption: "Name",
-      dataType: "string",
+      accessorKey: "name",
+      header: "Name",
     },
     {
-      dataField: "country",
-      caption: "Country",
-      dataType: "string",
+      accessorKey: "country",
+      header: "Country",
     },
     {
-      dataField: "state",
-      caption: "State",
-      dataType: "string",
+      accessorKey: "state",
+      header: "State",
     },
     {
-      dataField: "city",
-      caption: "City",
-      dataType: "string",
+      accessorKey: "city",
+      header: "City",
     },
     {
-      dataField: "address",
-      caption: "Address",
-      dataType: "string",
+      accessorKey: "address",
+      header: "Address",
     },
     {
-      dataField: "address2",
-      caption: "Address2",
-      dataType: "string",
+      accessorKey: "address2",
+      header: "Address2",
     },
     {
-      dataField: "zipCode",
-      caption: "Zip Code",
-      dataType: "string",
+      accessorKey: "zipCode",
+      header: "Zip Code",
     },
     {
-      dataField: "currency",
-      caption: "Currency",
-      dataType: "string",
+      accessorKey: "currency",
+      header: "Currency",
     },
     {
-      dataField: "notes",
-      caption: "Notes",
-      dataType: "string",
+      accessorKey: "notes",
+      header: "Notes",
     },
   ];
 

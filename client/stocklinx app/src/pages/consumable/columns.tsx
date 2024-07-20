@@ -1,6 +1,5 @@
-import { DataColumn } from "@interfaces/gridTableInterfaces";
 import { IConsumable, IEmployeeProduct } from "@interfaces/serverInterfaces";
-import { Button } from "@mantine/core";
+import { Button, Loader } from "@mantine/core";
 import { openCheckInModal } from "@/utils/modalUtils";
 import {
   useConsumable,
@@ -10,20 +9,36 @@ import {
   useManufacturer,
 } from "@queryhooks";
 import { EntityCells } from "@/cells/Entity";
-import { CategoryType } from "@/interfaces/enums";
 import { useInitial } from "@/hooks/initial/useInitial";
+import { MRT_ColumnDef } from "mantine-react-table";
+import { CategoryType } from "@/interfaces/enums";
 import { EntityCardColumn } from "@/interfaces/clientInterfaces";
-import EmployeeProductQuantityCell from "@/cells/EmployeeProductQuantityCell";
 import ConsumableForm from "@/forms/consumable/ConsumableForm";
 import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
 import EmployeeProductSeats from "@/components/dataGrid/productseats/EmployeeProductSeats";
 
 export const useColumns = () => {
   const initial = useInitial();
-  const { data: categories } = useCategory.GetAll();
-  const { data: companyLK } = useCompany.Lookup();
-  const { data: supplierLK } = useSupplier.Lookup();
-  const { data: manufacturerLK } = useManufacturer.Lookup();
+  const {
+    data: categories,
+    isRefetching: categoryLoading,
+    refetch: getCategories,
+  } = useCategory.GetAll();
+  const {
+    data: companyLK,
+    isRefetching: companyLoading,
+    refetch: getCompanyLK,
+  } = useCompany.Lookup();
+  const {
+    data: supplierLK,
+    isRefetching: supplierLoading,
+    refetch: getSupplier,
+  } = useSupplier.Lookup();
+  const {
+    data: manufacturerLK,
+    isRefetching: manufacturerLoading,
+    refetch: getManufacturerLK,
+  } = useManufacturer.Lookup();
   const { mutate: checkIn } = useConsumable.CheckIn();
   const { mutate: checkOut } = useConsumable.CheckOut();
 
@@ -48,21 +63,32 @@ export const useColumns = () => {
     );
   };
 
-  const columns: DataColumn[] = [
+  const columns: MRT_ColumnDef<IConsumable>[] = [
     {
-      dataField: "tag",
-      caption: "Consumable",
-      dataType: "string",
+      accessorKey: "companyId",
+      header: "Company",
+      filterVariant: "multi-select",
+      Cell: ({ row }) => EntityCells.Company(row.original.companyId),
+      mantineFilterMultiSelectProps: () => ({
+        data: companyLoading ? [] : companyLK,
+        rightSection: companyLoading ? <Loader size={16} /> : null,
+        onDropdownOpen: getCompanyLK,
+      }),
     },
     {
-      caption: "Name",
-      dataField: "name",
-      dataType: "string",
+      accessorKey: "tag",
+      header: "Tag",
     },
     {
-      caption: "Category",
-      dataField: "categoryId",
-      lookup: {
+      accessorKey: "name",
+      header: "Name",
+    },
+    {
+      accessorKey: "categoryId",
+      header: "Category",
+      filterVariant: "multi-select",
+      Cell: ({ row }) => EntityCells.Category(row.original.categoryId),
+      mantineFilterMultiSelectProps: () => ({
         data:
           categories
             ?.filter((category) => category.type === CategoryType.CONSUMABLE)
@@ -70,58 +96,56 @@ export const useColumns = () => {
               value: category.id,
               label: category.name,
             })) || [],
-      },
-      dataType: "string",
-      renderComponent: (e) =>
-        EntityCells.Category((e as IConsumable).categoryId),
+        rightSection: categoryLoading ? <Loader size={16} /> : null,
+        onDropdownOpen: getCategories,
+      }),
     },
     {
-      caption: "Model No",
-      dataField: "modelNo",
-      dataType: "string",
+      accessorKey: "modelNo",
+      header: "Model No",
     },
     {
-      caption: "Item No",
-      dataField: "itemNo",
-      dataType: "string",
+      accessorKey: "itemNo",
+      header: "Item No",
     },
     {
-      caption: "Total",
-      dataField: "quantity",
-      dataType: "number",
+      accessorKey: "quantity",
+      header: "Total",
     },
     {
-      caption: "Avail",
-      dataField: "availableQuantity",
-      dataType: "action",
-      renderComponent: (e) =>
-        EmployeeProductQuantityCell({
-          productId: (e as IConsumable).id,
-          productType: "Consumable",
-          totalQuantity: (e as IConsumable).quantity,
-        }),
+      accessorKey: "availableQuantity",
+      header: "Avail",
+      Cell: ({ row }) => row.original.availableQuantity || 0,
     },
     {
-      caption: "Order Number",
-      dataField: "orderNo",
-      dataType: "string",
+      accessorKey: "orderNo",
+      header: "Order Number",
     },
     {
-      caption: "Purchase Date",
-      dataField: "purchaseDate",
-      dataType: "date",
+      accessorKey: "purchaseDate",
+      header: "Purchase Date",
+      accessorFn: (originalRow) =>
+        originalRow.purchaseDate ? new Date(originalRow.purchaseDate) : "",
+      filterVariant: "date-range",
+      Cell: ({ cell }) =>
+        cell.getValue() !== ""
+          ? cell.getValue<Date>().toLocaleDateString()
+          : "",
     },
     {
-      caption: "Purchase Cost",
-      dataField: "purchaseCost",
-      dataType: "number",
+      accessorKey: "purchaseCost",
+      header: "Purchase Cost",
+      filterVariant: "range-slider",
     },
     {
-      dataField: "id",
-      caption: "Checkin",
-      dataType: "action",
-      renderComponent(e) {
-        const consumable = e as IConsumable;
+      header: "Checkin",
+      filterVariant: "checkbox",
+      accessorFn: (originalRow) =>
+        originalRow.availableQuantity && originalRow.availableQuantity > 0
+          ? "true"
+          : "false",
+      Cell: ({ row }) => {
+        const consumable = row.original;
         return (
           <div style={{ display: "flex", justifyContent: "center" }}>
             <Button
@@ -132,7 +156,7 @@ export const useColumns = () => {
                 consumable.availableQuantity !== undefined &&
                 consumable?.availableQuantity < 1
               }
-              onClick={() => onHeadToModal(consumable as IConsumable)}
+              onClick={() => onHeadToModal(consumable)}
             >
               Check In
             </Button>
@@ -140,45 +164,31 @@ export const useColumns = () => {
         );
       },
     },
-    // INVISIBLE COLUMNS
     {
-      caption: "Company",
-      dataField: "companyId",
-      lookup: {
-        data: companyLK || [],
-      },
-      dataType: "string",
-      allowVisible: false,
+      accessorKey: "supplierId",
+      header: "Supplier",
+      filterVariant: "multi-select",
+      Cell: ({ row }) => EntityCells.Supplier(row.original.supplierId),
+      mantineFilterMultiSelectProps: () => ({
+        data: supplierLoading ? [] : supplierLK,
+        rightSection: supplierLoading ? <Loader size={16} /> : null,
+        onDropdownOpen: getSupplier,
+      }),
     },
     {
-      caption: "Supplier",
-      dataField: "supplierId",
-      lookup: {
-        data: supplierLK || [],
-      },
-      dataType: "string",
-      allowVisible: false,
+      accessorKey: "manufacturerId",
+      header: "Manufacturer",
+      filterVariant: "multi-select",
+      Cell: ({ row }) => EntityCells.Manufacturer(row.original.manufacturerId),
+      mantineFilterMultiSelectProps: () => ({
+        data: manufacturerLoading ? [] : manufacturerLK,
+        rightSection: manufacturerLoading ? <Loader size={16} /> : null,
+        onDropdownOpen: getManufacturerLK,
+      }),
     },
     {
-      caption: "Manufacturer",
-      dataField: "manufacturerId",
-      lookup: {
-        data: manufacturerLK || [],
-      },
-      dataType: "string",
-      allowVisible: false,
-    },
-    {
-      dataField: "imagePath",
-      caption: "Image",
-      dataType: "string",
-      allowVisible: false,
-    },
-    {
-      caption: "Notes",
-      dataField: "notes",
-      dataType: "string",
-      allowVisible: false,
+      accessorKey: "notes",
+      header: "Notes",
     },
   ];
 

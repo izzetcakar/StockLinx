@@ -1,33 +1,25 @@
+import { usePermission } from "@/hooks/query";
 import { useColumns } from "./columns";
-import { usePermission } from "@queryhooks";
 import { openPermissionModal } from "@/utils/modalUtils";
-import PageHeader from "@/components/generic/PageHeader";
-import Gridtable from "@components/gridTable/GridTable";
+import BaseMantineTable from "@/components/mantine/BaseMantineTable";
 
-const Permission = () => {
-  const { data: permissions } = usePermission.Filter();
-  const { mutate: filter } = usePermission.ApplyFilters();
+const Permissions = () => {
+  const { columns } = useColumns();
+  const { data, isRefetching, refetch } = usePermission.GetAll();
   const { mutate: remove } = usePermission.Remove();
   const { mutate: removeRange } = usePermission.RemoveRange();
 
   return (
-    <>
-      <PageHeader title="Permissions" />
-      <Gridtable
-        data={permissions || []}
-        itemKey="id"
-        columns={useColumns().columns}
-        refreshData={() => filter([])}
-        onRowInsert={() => openPermissionModal()}
-        onRowRemove={(id) => remove(id)}
-        onRowRemoveRange={(ids) => removeRange(ids)}
-        onApplyFilters={(filters) => filter(filters)}
-        enableToolbar
-        enableEditActions
-        enableSelectActions
-      />
-    </>
+    <BaseMantineTable
+      data={data}
+      columns={columns}
+      isLoading={isRefetching}
+      refetch={refetch}
+      onAdd={() => openPermissionModal()}
+      onRemove={(id: string) => remove(id)}
+      onRemoveRange={(ids: string[]) => removeRange(ids)}
+    />
   );
 };
 
-export default Permission;
+export default Permissions;

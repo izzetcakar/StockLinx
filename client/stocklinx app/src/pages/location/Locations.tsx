@@ -1,35 +1,27 @@
-import { ILocation } from "../../interfaces/serverInterfaces";
+import { useLocation } from "@/hooks/query";
 import { useColumns } from "./columns";
 import { openLocationModal } from "@/utils/modalUtils";
-import { useLocation } from "@queryhooks";
-import Gridtable from "@components/gridTable/GridTable";
-import PageHeader from "@/components/generic/PageHeader";
+import BaseMantineTable from "@/components/mantine/BaseMantineTable";
 
-const Location = () => {
-  const { data: locations } = useLocation.Filter();
-  const { mutate: filter } = useLocation.ApplyFilters();
+const Locations = () => {
+  const { columns } = useColumns();
+  const { data, isRefetching, refetch } = useLocation.GetAll();
   const { mutate: remove } = useLocation.Remove();
   const { mutate: removeRange } = useLocation.RemoveRange();
 
   return (
-    <>
-      <PageHeader title="Locations" />
-      <Gridtable
-        data={locations || []}
-        itemKey="id"
-        columns={useColumns().columns}
-        refreshData={() => filter([])}
-        onRowUpdate={(location) => openLocationModal(location as ILocation)}
-        onRowInsert={() => openLocationModal()}
-        onRowRemove={(id) => remove(id)}
-        onRowRemoveRange={(ids) => removeRange(ids)}
-        onApplyFilters={(filters) => filter(filters)}
-        enableToolbar
-        enableEditActions
-        enableSelectActions
-      />
-    </>
+    <BaseMantineTable
+      data={data}
+      columns={columns}
+      isLoading={isRefetching}
+      refetch={refetch}
+      onAdd={() => openLocationModal()}
+      onCopy={(value: any) => openLocationModal({ ...value, id: "" })}
+      onUpdate={(value: any) => openLocationModal(value)}
+      onRemove={(id: string) => remove(id)}
+      onRemoveRange={(ids: string[]) => removeRange(ids)}
+    />
   );
 };
 
-export default Location;
+export default Locations;

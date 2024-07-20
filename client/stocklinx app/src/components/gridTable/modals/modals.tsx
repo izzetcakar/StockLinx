@@ -24,4 +24,5 @@ export const openConfirmModal = (
     children: <Text size="sm">{text}</Text>,
     labels: { confirm: "Confirm", cancel: "Cancel" },
     onConfirm: onConfirm,
+    size: "sm",
   });

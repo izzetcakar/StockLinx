@@ -1,4 +1,3 @@
-import { DataColumn } from "@interfaces/gridTableInterfaces";
 import { IEmployee } from "@interfaces/serverInterfaces";
 import {
   useDepartment,
@@ -8,6 +7,8 @@ import {
 } from "@queryhooks";
 import { EntityCells } from "@/cells/Entity";
 import { EntityCardColumn } from "@/interfaces/clientInterfaces";
+import { MRT_ColumnDef } from "mantine-react-table";
+import { Loader } from "@mantine/core";
 import EmployeeForm from "@/forms/employee/EmployeeForm";
 import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
 import EmployeeProductSeats from "@/components/dataGrid/productseats/EmployeeProductSeats";
@@ -15,51 +16,50 @@ import AssetProductSeats from "@/components/dataGrid/productseats/AssetProductSe
 import LicenseEmployeeSeats from "@/components/dataGrid/productseats/License/LicenseEmployeeSeats";
 
 export const useColumns = () => {
-  const { refetch: getDepartmentLK } = useDepartment.Lookup();
+  const {
+    data: departmentLK,
+    isRefetching: departmentLoading,
+    refetch: getDepartmentLK,
+  } = useDepartment.Lookup();
   const { mutate: checkOutAccessory } = useAccessory.CheckOut();
   const { mutate: checkOutConumable } = useConsumable.CheckOut();
   const { mutate: checkOutComponent } = useComponent.CheckOut();
 
-  const columns: DataColumn[] = [
+  const columns: MRT_ColumnDef<IEmployee>[] = [
     {
-      dataField: "departmentId",
-      caption: "Department",
-      dataType: "string",
-      lookup: {
-        dataSource: getDepartmentLK,
-      },
-      renderComponent: (e) =>
-        EntityCells.Department((e as IEmployee).departmentId),
+      accessorKey: "departmentId",
+      header: "Department",
+      filterVariant: "multi-select",
+      Cell: ({ row }) => EntityCells.Department(row.original.departmentId),
+      mantineFilterMultiSelectProps: () => ({
+        data: departmentLoading ? [] : departmentLK,
+        rightSection: departmentLoading ? null : <Loader size={16} />,
+        onDropdownOpen: getDepartmentLK,
+      }),
     },
     {
-      dataField: "firstName",
-      dataType: "string",
-      caption: "First Name",
+      accessorKey: "firstName",
+      header: "First Name",
     },
     {
-      dataField: "lastName",
-      dataType: "string",
-      caption: "Last Name",
+      accessorKey: "lastName",
+      header: "Last Name",
     },
     {
-      caption: "Title",
-      dataField: "jobTitle",
-      dataType: "string",
+      accessorKey: "jobTitle",
+      header: "Title",
     },
     {
-      dataField: "email",
-      caption: "Email",
-      dataType: "string",
+      accessorKey: "email",
+      header: "Email",
     },
     {
-      dataField: "phoneNo",
-      caption: "Phone",
-      dataType: "string",
+      accessorKey: "phoneNo",
+      header: "Phone",
     },
     {
-      dataField: "startDate",
-      caption: "Start Date",
-      dataType: "date",
+      accessorKey: "startDate",
+      header: "Start Date",
     },
   ];
 

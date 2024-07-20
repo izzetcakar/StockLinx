@@ -1,37 +1,27 @@
-import { IConsumable } from "../../interfaces/serverInterfaces";
+import { useConsumable } from "@/hooks/query";
 import { useColumns } from "./columns";
 import { openConsumableModal } from "@/utils/modalUtils";
-import { useConsumable } from "@queryhooks";
-import PageHeader from "@/components/generic/PageHeader";
-import Gridtable from "@components/gridTable/GridTable";
+import BaseMantineTable from "@/components/mantine/BaseMantineTable";
 
-const Consumable = () => {
-  const { data: consumables } = useConsumable.Filter();
-  const { mutate: filter } = useConsumable.ApplyFilters();
+const Consumables = () => {
+  const { columns } = useColumns();
+  const { data, isRefetching, refetch } = useConsumable.GetAll();
   const { mutate: remove } = useConsumable.Remove();
   const { mutate: removeRange } = useConsumable.RemoveRange();
 
   return (
-    <>
-      <PageHeader title="Consumables" />
-      <Gridtable
-        data={consumables || []}
-        itemKey="id"
-        columns={useColumns().columns}
-        refreshData={() => filter([])}
-        onRowUpdate={(consumable) =>
-          openConsumableModal(consumable as IConsumable)
-        }
-        onRowInsert={() => openConsumableModal()}
-        onRowRemove={(id) => remove(id)}
-        onRowRemoveRange={(ids) => removeRange(ids)}
-        onApplyFilters={(filters) => filter(filters)}
-        enableToolbar
-        enableEditActions
-        enableSelectActions
-      />
-    </>
+    <BaseMantineTable
+      data={data}
+      columns={columns}
+      isLoading={isRefetching}
+      refetch={refetch}
+      onAdd={() => openConsumableModal()}
+      onCopy={(value: any) => openConsumableModal({ ...value, id: "" })}
+      onUpdate={(value: any) => openConsumableModal(value)}
+      onRemove={(id: string) => remove(id)}
+      onRemoveRange={(ids: string[]) => removeRange(ids)}
+    />
   );
 };
 
-export default Consumable;
+export default Consumables;

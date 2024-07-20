@@ -1,35 +1,45 @@
-import { DataColumn } from "@interfaces/gridTableInterfaces";
-import { Image } from "@mantine/core";
+import { Image, Loader } from "@mantine/core";
 import { IModel } from "@interfaces/serverInterfaces";
 import { getImage } from "../../utils/imageUtils";
 import { useCategory, useFieldSet, useManufacturer } from "@queryhooks";
 import { EntityCells } from "@/cells/Entity";
 import { EntityCardColumn } from "@/interfaces/clientInterfaces";
+import { MRT_ColumnDef } from "mantine-react-table";
+import { CategoryType } from "@/interfaces/enums";
 import ModelForm from "@/forms/model/ModelForm";
 import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
 
 export const useColumns = () => {
-  const { refetch: getCategoryLK } = useCategory.Lookup();
-  const { refetch: getManufacturerLK } = useManufacturer.Lookup();
-  const { refetch: getFieldSetLK } = useFieldSet.Lookup();
+  const {
+    data: categories,
+    isRefetching: categoryLoading,
+    refetch: getCategories,
+  } = useCategory.GetAll();
+  const {
+    data: manufacturerLK,
+    isRefetching: manufacturerLoading,
+    refetch: getManufacturerLK,
+  } = useManufacturer.Lookup();
+  const {
+    data: fieldSetLK,
+    isRefetching: fieldSetLoading,
+    refetch: getFieldSetLK,
+  } = useFieldSet.Lookup();
 
-  const columns: DataColumn[] = [
+  const columns: MRT_ColumnDef<IModel>[] = [
     {
-      dataField: "name",
-      caption: "Name",
-      dataType: "string",
+      accessorKey: "name",
+      header: "Name",
     },
     {
-      caption: "Image",
-      dataField: "imagePath",
-      dataType: "action",
-      renderComponent(e) {
-        const image = getImage((e as IModel).imagePath);
-        if (!image) return null;
+      accessorKey: "imagePath",
+      header: "Image",
+      Cell: ({ row }) => {
+        const image = getImage(row.original.imagePath);
         return (
           <Image
-            src={image}
-            height={50}
+            src={image ? image : ""}
+            height={30}
             radius="md"
             width="fit-content"
             fit="contain"
@@ -38,49 +48,47 @@ export const useColumns = () => {
       },
     },
     {
-      dataField: "categoryId",
-      caption: "Category",
-      dataType: "string",
-      lookup: {
-        dataSource: getCategoryLK,
-      },
-      renderComponent: (e) => EntityCells.Category((e as IModel).categoryId),
+      accessorKey: "categoryId",
+      header: "Category",
+      filterVariant: "multi-select",
+      Cell: ({ row }) => EntityCells.Category(row.original.categoryId),
+      mantineFilterMultiSelectProps: () => ({
+        data: categoryLoading
+          ? []
+          : categories?.filter((c) => c.type === CategoryType.ASSET),
+        rightSection: categoryLoading ? <Loader size={16} /> : null,
+        onDropdownOpen: getCategories,
+      }),
     },
     {
-      dataField: "manufacturerId",
-      caption: "Manufacturer",
-      dataType: "string",
-      lookup: {
-        dataSource: getManufacturerLK,
-      },
-      renderComponent: (e) =>
-        EntityCells.Manufacturer((e as IModel).manufacturerId),
+      accessorKey: "manufacturerId",
+      header: "Manufacturer",
+      filterVariant: "multi-select",
+      Cell: ({ row }) => EntityCells.Manufacturer(row.original.manufacturerId),
+      mantineFilterMultiSelectProps: () => ({
+        data: manufacturerLoading ? [] : manufacturerLK,
+        rightSection: manufacturerLoading ? <Loader size={16} /> : null,
+        onDropdownOpen: getManufacturerLK,
+      }),
     },
     {
-      dataField: "modelNo",
-      caption: "Model No",
-      dataType: "string",
+      accessorKey: "modelNo",
+      header: "Model No",
     },
     {
-      dataField: "fieldSetId",
-      caption: "FieldSet",
-      dataType: "string",
-      lookup: {
-        dataSource: getFieldSetLK,
-      },
-      renderComponent: (e) => EntityCells.FieldSet((e as IModel).fieldSetId),
+      accessorKey: "fieldSetId",
+      header: "FieldSet",
+      filterVariant: "multi-select",
+      Cell: ({ row }) => EntityCells.FieldSet(row.original.fieldSetId),
+      mantineFilterMultiSelectProps: () => ({
+        data: fieldSetLoading ? [] : fieldSetLK,
+        rightSection: fieldSetLoading ? <Loader size={16} /> : null,
+        onDropdownOpen: getFieldSetLK,
+      }),
     },
     {
-      dataField: "notes",
-      caption: "Notes",
-      dataType: "string",
-    },
-    // INVISIBLE COLUMNS
-    {
-      dataField: "imagePath",
-      caption: "Image",
-      dataType: "string",
-      allowVisible: false,
+      accessorKey: "notes",
+      header: "Notes",
     },
   ];
 

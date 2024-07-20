@@ -1,60 +1,58 @@
-import { DataColumn } from "@interfaces/gridTableInterfaces";
 import { ISupplier } from "@interfaces/serverInterfaces";
 import { useLocation } from "@queryhooks";
 import { EntityCells } from "@/cells/Entity";
 import { EntityCardColumn } from "@/interfaces/clientInterfaces";
+import { MRT_ColumnDef } from "mantine-react-table";
+import { Loader } from "@mantine/core";
 import SupplierForm from "@/forms/supplier/SupplierForm";
 import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
 
 export const useColumns = () => {
-  const { refetch: getLocationLK } = useLocation.Lookup();
+  const {
+    data: locationsLK,
+    isRefetching: locationLoading,
+    refetch: getLocationLK,
+  } = useLocation.Lookup();
 
-  const columns: DataColumn[] = [
+  const columns: MRT_ColumnDef<ISupplier>[] = [
     {
-      dataField: "name",
-      caption: "Name",
-      dataType: "string",
+      accessorKey: "name",
+      header: "Name",
     },
     {
-      dataField: "locationId",
-      caption: "Location",
-      dataType: "string",
-      lookup: {
-        dataSource: getLocationLK,
-      },
-      renderComponent: (e) => EntityCells.Location((e as ISupplier).locationId),
+      accessorKey: "locationId",
+      header: "Location",
+      filterVariant: "multi-select",
+      Cell: ({ row }) => EntityCells.Location(row.original.locationId),
+      mantineFilterMultiSelectProps: () => ({
+        data: locationLoading ? [] : locationsLK,
+        rightSection: locationLoading ? <Loader size={16} /> : null,
+        onDropdownOpen: getLocationLK,
+      }),
     },
     {
-      dataField: "contactName",
-      caption: "Contact Name",
-      dataType: "string",
+      accessorKey: "contactName",
+      header: "Contact Name",
     },
     {
-      dataField: "contactEmail",
-      caption: "Contact Email",
-      dataType: "string",
+      accessorKey: "contactEmail",
+      header: "Contact Email",
     },
     {
-      dataField: "contactPhone",
-      caption: "Contact Phone",
-      dataType: "string",
+      accessorKey: "contactPhone",
+      header: "Contact Phone",
     },
     {
-      dataField: "website",
-      caption: "Website",
-      dataType: "string",
+      accessorKey: "website",
+      header: "Website",
     },
     {
-      dataField: "fax",
-      caption: "Fax",
-      dataType: "string",
+      accessorKey: "fax",
+      header: "Fax",
     },
-    // INVISIBLE COLUMNS
     {
-      dataField: "notes",
-      caption: "Notes",
-      dataType: "string",
-      allowVisible: false,
+      accessorKey: "notes",
+      header: "Notes",
     },
   ];
 

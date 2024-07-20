@@ -1,42 +1,27 @@
-import { useNavigate } from "react-router-dom";
-import { IAsset, IEmployeeProduct } from "@/interfaces/serverInterfaces";
-import {
-  openAssetCheckInModal,
-  openAssetCheckOutModal,
-} from "@/utils/modalUtils";
-import PageHeader from "@/components/generic/PageHeader";
+import { useAsset } from "@/hooks/query";
+import { useColumns } from "./columns";
+import { openAssetModal } from "@/utils/modalUtils";
+import BaseMantineTable from "@/components/mantine/BaseMantineTable";
 
-const Asset = () => {
-  const navigate = useNavigate();
-
-  const navigateDetail = (assetDetails: IAsset[]) => {
-    if (!assetDetails || assetDetails.length === 0) return;
-    navigate("/asset", { state: { assets: assetDetails } });
-  };
-
-  const checkIn = (asset: IAsset) => {
-    openAssetCheckInModal({
-      employeeId: "",
-      assetId: asset.id,
-      assaignDate: new Date(),
-      notes: asset.notes,
-      productStatusId: asset.productStatusId,
-    });
-  };
-
-  const checkOut = (asset: IAsset, employeeProduct: IEmployeeProduct) => {
-    openAssetCheckOutModal({
-      employeeProductId: employeeProduct.id,
-      productStatusId: asset.productStatusId,
-      notes: employeeProduct.notes,
-    });
-  };
+const Assets = () => {
+  const { columns } = useColumns();
+  const { data, isRefetching, refetch } = useAsset.GetAll();
+  const { mutate: remove } = useAsset.Remove();
+  const { mutate: removeRange } = useAsset.RemoveRange();
 
   return (
-    <>
-      <PageHeader title="Assets" />
-    </>
+    <BaseMantineTable
+      data={data}
+      columns={columns}
+      isLoading={isRefetching}
+      refetch={refetch}
+      onAdd={() => openAssetModal()}
+      onCopy={(value: any) => openAssetModal({ ...value, id: "" })}
+      onUpdate={(value: any) => openAssetModal(value)}
+      onRemove={(id: string) => remove(id)}
+      onRemoveRange={(ids: string[]) => removeRange(ids)}
+    />
   );
 };
 
-export default Asset;
+export default Assets;

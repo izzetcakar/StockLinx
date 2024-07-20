@@ -1,33 +1,41 @@
-import { DataColumn } from "@interfaces/gridTableInterfaces";
 import { ICompany } from "@interfaces/serverInterfaces";
 import { useLocation } from "@queryhooks";
 import { EntityCells } from "@/cells/Entity";
+import { MRT_ColumnDef } from "mantine-react-table";
+import { Loader } from "@mantine/core";
 import { EntityCardColumn } from "@/interfaces/clientInterfaces";
 import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
 import CompanyForm from "@/forms/company/CompanyForm";
 
 export const useColumns = () => {
-  const { refetch: fetchLocationLK } = useLocation.Lookup();
+  const {
+    data: locationLK,
+    isRefetching: locationLoading,
+    refetch: getLocationLK,
+  } = useLocation.Lookup();
 
-  const columns: DataColumn[] = [
+  const columns: MRT_ColumnDef<ICompany>[] = [
     {
-      dataField: "name",
-      caption: "Name",
-      dataType: "string",
+      accessorKey: "tag",
+      header: "Tag",
     },
     {
-      caption: "Location",
-      dataField: "locationId",
-      dataType: "string",
-      lookup: {
-        dataSource: fetchLocationLK,
-      },
-      renderComponent: (e) => EntityCells.Location((e as ICompany).locationId),
+      header: "Name",
+      accessorKey: "name",
     },
     {
-      dataField: "email",
-      caption: "Email",
-      dataType: "string",
+      accessorKey: "locationId",
+      header: "Location",
+      Cell: ({ row }) => EntityCells.Location(row.original.locationId),
+      mantineFilterMultiSelectProps: () => ({
+        data: locationLoading ? [] : locationLK,
+        rightSection: locationLoading ? <Loader size={16} /> : null,
+        onDropdownOpen: getLocationLK,
+      }),
+    },
+    {
+      accessorKey: "email",
+      header: "Email",
     },
   ];
 

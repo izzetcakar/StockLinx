@@ -1,35 +1,27 @@
-import { IModel } from "../../interfaces/serverInterfaces";
+import { useModel } from "@/hooks/query";
 import { useColumns } from "./columns";
 import { openModelModal } from "@/utils/modalUtils";
-import { useModel } from "@queryhooks";
-import PageHeader from "@/components/generic/PageHeader";
-import Gridtable from "@components/gridTable/GridTable";
+import BaseMantineTable from "@/components/mantine/BaseMantineTable";
 
-const Model = () => {
-  const { data: models } = useModel.Filter();
-  const { mutate: filter } = useModel.ApplyFilters();
+const Models = () => {
+  const { columns } = useColumns();
+  const { data, isRefetching, refetch } = useModel.GetAll();
   const { mutate: remove } = useModel.Remove();
   const { mutate: removeRange } = useModel.RemoveRange();
 
   return (
-    <>
-      <PageHeader title="Models" />
-      <Gridtable
-        data={models || []}
-        itemKey="id"
-        columns={useColumns().columns}
-        refreshData={() => filter([])}
-        onRowUpdate={(model) => openModelModal(model as IModel)}
-        onRowInsert={() => openModelModal()}
-        onRowRemove={(id) => remove(id)}
-        onRowRemoveRange={(ids) => removeRange(ids)}
-        onApplyFilters={(filters) => filter(filters)}
-        enableToolbar
-        enableEditActions
-        enableSelectActions
-      />
-    </>
+    <BaseMantineTable
+      data={data}
+      columns={columns}
+      isLoading={isRefetching}
+      refetch={refetch}
+      onAdd={() => openModelModal()}
+      onCopy={(value: any) => openModelModal({ ...value, id: "" })}
+      onUpdate={(value: any) => openModelModal(value)}
+      onRemove={(id: string) => remove(id)}
+      onRemoveRange={(ids: string[]) => removeRange(ids)}
+    />
   );
 };
 
-export default Model;
+export default Models;

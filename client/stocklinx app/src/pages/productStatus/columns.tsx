@@ -1,25 +1,25 @@
 import { ProductStatusType } from "@interfaces/enums";
 import { createDataFromEnum } from "../../utils/enumUtils";
-import { DataColumn } from "@interfaces/gridTableInterfaces";
 import { EntityCardColumn } from "@/interfaces/clientInterfaces";
 import { IProductStatus } from "@/interfaces/serverInterfaces";
+import { MRT_ColumnDef } from "mantine-react-table";
 import ProductStatusForm from "@/forms/productStatus/ProductStatusForm";
 import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
 
 export const useColumns = () => {
-  const columns: DataColumn[] = [
+  const columns: MRT_ColumnDef<IProductStatus>[] = [
     {
-      dataField: "name",
-      caption: "Name",
-      dataType: "string",
+      accessorKey: "name",
+      header: "Name",
     },
     {
-      dataField: "type",
-      caption: "Type",
-      lookup: {
+      accessorKey: "type",
+      header: "Type",
+      filterVariant: "multi-select",
+      Cell: ({ row }) => ProductStatusType[row.original.type],
+      mantineFilterMultiSelectProps: () => ({
         data: createDataFromEnum(ProductStatusType),
-      },
-      dataType: "number",
+      }),
     },
   ];
 

@@ -1,43 +1,27 @@
-import { ILicense } from "../../interfaces/serverInterfaces";
+import { useLicense } from "@/hooks/query";
 import { useColumns } from "./columns";
 import { openLicenseModal } from "@/utils/modalUtils";
-import { useLicense } from "@queryhooks";
-import { useNavigate } from "react-router-dom";
-import PageHeader from "@/components/generic/PageHeader";
-import Gridtable from "@components/gridTable/GridTable";
+import BaseMantineTable from "@/components/mantine/BaseMantineTable";
 
-const License = () => {
-  const navigate = useNavigate();
-  const { data: licenses } = useLicense.Filter();
-  const { mutate: filter } = useLicense.ApplyFilters();
+const Licenses = () => {
+  const { columns } = useColumns();
+  const { data, isRefetching, refetch } = useLicense.GetAll();
   const { mutate: remove } = useLicense.Remove();
   const { mutate: removeRange } = useLicense.RemoveRange();
 
-  const navigateDetail = (licenseDetails: ILicense[]) => {
-    if (!licenseDetails.length) return;
-    navigate("/license", { state: { licenses: licenseDetails } });
-  };
-
   return (
-    <>
-      <PageHeader title="Licenses" />
-      <Gridtable
-        data={licenses || []}
-        itemKey="id"
-        columns={useColumns().columns}
-        refreshData={() => filter([])}
-        onRowUpdate={(license) => openLicenseModal(license as ILicense)}
-        onRowInsert={() => openLicenseModal()}
-        onRowRemove={(id) => remove(id)}
-        onRowRemoveRange={(ids) => removeRange(ids)}
-        onApplyFilters={(filters) => filter(filters)}
-        onRowDetail={(licenses) => navigateDetail(licenses as ILicense[])}
-        enableToolbar
-        enableEditActions
-        enableSelectActions
-      />
-    </>
+    <BaseMantineTable
+      data={data}
+      columns={columns}
+      isLoading={isRefetching}
+      refetch={refetch}
+      onAdd={() => openLicenseModal()}
+      onCopy={(value: any) => openLicenseModal({ ...value, id: "" })}
+      onUpdate={(value: any) => openLicenseModal(value)}
+      onRemove={(id: string) => remove(id)}
+      onRemoveRange={(ids: string[]) => removeRange(ids)}
+    />
   );
 };
 
-export default License;
+export default Licenses;

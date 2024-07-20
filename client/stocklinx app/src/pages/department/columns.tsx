@@ -1,46 +1,54 @@
-import { DataColumn } from "@interfaces/gridTableInterfaces";
 import { IDepartment } from "@interfaces/serverInterfaces";
 import { useLocation, useCompany } from "@queryhooks";
 import { EntityCells } from "@/cells/Entity";
+import { MRT_ColumnDef } from "mantine-react-table";
+import { Loader } from "@mantine/core";
 import { EntityCardColumn } from "@/interfaces/clientInterfaces";
 import DepartmentForm from "@/forms/department/DepartmentForm";
 import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
 
 export const useColumns = () => {
-  const { refetch: getLocationLK } = useLocation.Lookup();
-  const { refetch: getCompanyLK } = useCompany.Lookup();
+  const {
+    data: companyLK,
+    isRefetching: companyLoading,
+    refetch: getCompanyLK,
+  } = useCompany.Lookup();
+  const {
+    data: locationLK,
+    isRefetching: locationLoading,
+    refetch: getLocationLK,
+  } = useLocation.Lookup();
 
-  const columns: DataColumn[] = [
+  const columns: MRT_ColumnDef<IDepartment>[] = [
     {
-      dataField: "name",
-      caption: "Name",
-      dataType: "string",
+      accessorKey: "name",
+      header: "Name",
     },
     {
-      dataField: "companyId",
-      caption: "Company",
-      dataType: "string",
-      lookup: {
-        dataSource: getCompanyLK,
-      },
-      renderComponent: (e) => EntityCells.Company((e as IDepartment).companyId),
+      accessorKey: "companyId",
+      header: "Company",
+      filterVariant: "multi-select",
+      Cell: ({ row }) => EntityCells.Company(row.original.companyId),
+      mantineFilterMultiSelectProps: () => ({
+        data: companyLoading ? [] : companyLK,
+        rightSection: companyLoading ? null : <Loader size={16} />,
+        onDropdownOpen: getCompanyLK,
+      }),
     },
     {
-      dataField: "locationId",
-      caption: "Location",
-      dataType: "string",
-      lookup: {
-        dataSource: getLocationLK,
-      },
-      renderComponent: (e) =>
-        EntityCells.Location((e as IDepartment).locationId),
+      accessorKey: "locationId",
+      header: "Location",
+      filterVariant: "multi-select",
+      Cell: ({ row }) => EntityCells.Location(row.original.locationId),
+      mantineFilterMultiSelectProps: () => ({
+        data: locationLoading ? [] : locationLK,
+        rightSection: locationLoading ? null : <Loader size={16} />,
+        onDropdownOpen: getLocationLK,
+      }),
     },
-    // INVISIBLE COLUMNS
     {
-      dataField: "notes",
-      caption: "Notes",
-      dataType: "string",
-      allowVisible: false,
+      accessorKey: "notes",
+      header: "Notes",
     },
   ];
 

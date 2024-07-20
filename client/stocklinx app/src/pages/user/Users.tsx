@@ -1,43 +1,27 @@
-import { IUser } from "../../interfaces/serverInterfaces";
+import { useUser } from "@/hooks/query";
 import { useColumns } from "./columns";
 import { openUserModal } from "@/utils/modalUtils";
-import { useUser } from "@queryhooks";
-import { useNavigate } from "react-router-dom";
-import PageHeader from "@/components/generic/PageHeader";
-import Gridtable from "@components/gridTable/GridTable";
+import BaseMantineTable from "@/components/mantine/BaseMantineTable";
 
-const User = () => {
-  const navigate = useNavigate();
-  const { data: users } = useUser.Filter();
-  const { mutate: filter } = useUser.ApplyFilters();
+const Users = () => {
+  const { columns } = useColumns();
+  const { data, isRefetching, refetch } = useUser.GetAll();
   const { mutate: remove } = useUser.Remove();
   const { mutate: removeRange } = useUser.RemoveRange();
 
-  const navigateDetail = (userDetails: IUser[]) => {
-    if (!userDetails.length) return;
-    navigate("/user", { state: { users: userDetails } });
-  };
-
   return (
-    <>
-      <PageHeader title="Users" />
-      <Gridtable
-        data={users || []}
-        itemKey="id"
-        columns={useColumns().columns}
-        refreshData={() => filter([])}
-        onRowUpdate={(user) => openUserModal(user as IUser)}
-        onRowInsert={() => openUserModal()}
-        onRowRemove={(id) => remove(id)}
-        onRowRemoveRange={(ids) => removeRange(ids)}
-        onApplyFilters={(filters) => filter(filters)}
-        onRowDetail={(users) => navigateDetail(users as IUser[])}
-        enableToolbar
-        enableEditActions
-        enableSelectActions
-      />
-    </>
+    <BaseMantineTable
+      data={data}
+      columns={columns}
+      isLoading={isRefetching}
+      refetch={refetch}
+      onAdd={() => openUserModal()}
+      onCopy={(value: any) => openUserModal({ ...value, id: "" })}
+      onUpdate={(value: any) => openUserModal(value)}
+      onRemove={(id: string) => remove(id)}
+      onRemoveRange={(ids: string[]) => removeRange(ids)}
+    />
   );
 };
 
-export default User;
+export default Users;

@@ -1,37 +1,27 @@
-import { IDepartment } from "../../interfaces/serverInterfaces";
+import { useDepartment } from "@/hooks/query";
 import { useColumns } from "./columns";
 import { openDepartmentModal } from "@/utils/modalUtils";
-import { useDepartment } from "@queryhooks";
-import PageHeader from "@/components/generic/PageHeader";
-import Gridtable from "@components/gridTable/GridTable";
+import BaseMantineTable from "@/components/mantine/BaseMantineTable";
 
-const Department = () => {
-  const { data: departments } = useDepartment.Filter();
-  const { mutate: filter } = useDepartment.ApplyFilters();
+const Departments = () => {
+  const { columns } = useColumns();
+  const { data, isRefetching, refetch } = useDepartment.GetAll();
   const { mutate: remove } = useDepartment.Remove();
   const { mutate: removeRange } = useDepartment.RemoveRange();
 
   return (
-    <>
-      <PageHeader title="Departments" />
-      <Gridtable
-        data={departments || []}
-        itemKey="id"
-        columns={useColumns().columns}
-        refreshData={() => filter([])}
-        onRowUpdate={(department) =>
-          openDepartmentModal(department as IDepartment)
-        }
-        onRowInsert={() => openDepartmentModal()}
-        onRowRemove={(id) => remove(id)}
-        onRowRemoveRange={(ids) => removeRange(ids)}
-        onApplyFilters={(filters) => filter(filters)}
-        enableToolbar
-        enableEditActions
-        enableSelectActions
-      />
-    </>
+    <BaseMantineTable
+      data={data}
+      columns={columns}
+      isLoading={isRefetching}
+      refetch={refetch}
+      onAdd={() => openDepartmentModal()}
+      onCopy={(value: any) => openDepartmentModal({ ...value, id: "" })}
+      onUpdate={(value: any) => openDepartmentModal(value)}
+      onRemove={(id: string) => remove(id)}
+      onRemoveRange={(ids: string[]) => removeRange(ids)}
+    />
   );
 };
 
-export default Department;
+export default Departments;

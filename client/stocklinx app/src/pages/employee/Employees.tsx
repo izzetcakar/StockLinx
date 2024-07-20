@@ -1,42 +1,26 @@
-import { IEmployee } from "../../interfaces/serverInterfaces";
+import { useEmployee } from "@/hooks/query";
 import { useColumns } from "./columns";
 import { openEmployeeModal } from "@/utils/modalUtils";
-import { useEmployee } from "@queryhooks";
-import { useNavigate } from "react-router-dom";
-import Gridtable from "@components/gridTable/GridTable";
-import PageHeader from "@/components/generic/PageHeader";
+import BaseMantineTable from "@/components/mantine/BaseMantineTable";
 
 const Employees = () => {
-  const navigate = useNavigate();
-  const { data: employees } = useEmployee.Filter();
-  const { mutate: filter } = useEmployee.ApplyFilters();
+  const { columns } = useColumns();
+  const { data, isRefetching, refetch } = useEmployee.GetAll();
   const { mutate: remove } = useEmployee.Remove();
   const { mutate: removeRange } = useEmployee.RemoveRange();
 
-  const navigateDetail = (employeeDetails: IEmployee[]) => {
-    if (!employeeDetails.length) return;
-    navigate("/employee", { state: { employees: employeeDetails } });
-  };
-
   return (
-    <>
-      <PageHeader title="Employees" />
-      <Gridtable
-        data={employees || []}
-        itemKey="id"
-        columns={useColumns().columns}
-        refreshData={() => filter([])}
-        onRowUpdate={(employee) => openEmployeeModal(employee as IEmployee)}
-        onRowInsert={() => openEmployeeModal()}
-        onRowRemove={(id) => remove(id)}
-        onRowRemoveRange={(ids) => removeRange(ids)}
-        onApplyFilters={(filters) => filter(filters)}
-        onRowDetail={(employees) => navigateDetail(employees as IEmployee[])}
-        enableToolbar
-        enableEditActions
-        enableSelectActions
-      />
-    </>
+    <BaseMantineTable
+      data={data}
+      columns={columns}
+      isLoading={isRefetching}
+      refetch={refetch}
+      onAdd={() => openEmployeeModal()}
+      onCopy={(value: any) => openEmployeeModal({ ...value, id: "" })}
+      onUpdate={(value: any) => openEmployeeModal(value)}
+      onRemove={(id: string) => remove(id)}
+      onRemoveRange={(ids: string[]) => removeRange(ids)}
+    />
   );
 };
 

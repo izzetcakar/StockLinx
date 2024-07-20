@@ -1,21 +1,38 @@
-import { DataColumn } from "@interfaces/gridTableInterfaces";
-import { Button } from "@mantine/core";
+import { Button, Loader } from "@mantine/core";
 import { IAssetProduct, IComponent } from "@interfaces/serverInterfaces";
 import { openCheckInModal } from "@/utils/modalUtils";
-import { useCategory, useCompany, useComponent } from "@queryhooks";
+import {
+  useCategory,
+  useCompany,
+  useComponent,
+  useSupplier,
+} from "@queryhooks";
 import { EntityCells } from "@/cells/Entity";
 import { CategoryType } from "@/interfaces/enums";
 import { useInitial } from "@/hooks/initial/useInitial";
 import { EntityCardColumn } from "@/interfaces/clientInterfaces";
-import AssetProductQuantityCell from "@/cells/AssetProductQuantityCell";
+import { MRT_ColumnDef } from "mantine-react-table";
 import ComponentForm from "@/forms/component/ComponentForm";
 import AssetProductSeats from "@/components/dataGrid/productseats/AssetProductSeats";
 import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
 
 export const useColumns = () => {
   const initial = useInitial();
-  const { data: categories } = useCategory.GetAll();
-  const { data: companyLK } = useCompany.Lookup();
+  const {
+    data: categories,
+    isRefetching: categoryLoading,
+    refetch: getCategories,
+  } = useCategory.GetAll();
+  const {
+    data: companyLK,
+    isRefetching: companyLoading,
+    refetch: getCompanyLK,
+  } = useCompany.Lookup();
+  const {
+    data: supplierLK,
+    isRefetching: supplierLoading,
+    refetch: getSupplierLK,
+  } = useSupplier.Lookup();
   const { mutate: checkIn } = useComponent.CheckIn();
   const { mutate: checkOut } = useComponent.CheckOut();
 
@@ -41,76 +58,209 @@ export const useColumns = () => {
       onCheckInHandler
     );
   };
+  //   {
+  //     dataField: "tag",
+  //     caption: "Component",
+  //     dataType: "string",
+  //   },
+  //   {
+  //     caption: "Name",
+  //     dataField: "name",
+  //     dataType: "string",
+  //   },
+  //   {
+  //     caption: "Serial",
+  //     dataField: "serialNo",
+  //     dataType: "string",
+  //   },
+  //   {
+  //     caption: "Category",
+  //     dataField: "categoryId",
+  //     lookup: {
+  //       data:
+  //         categories
+  //           ?.filter((category) => category.type === CategoryType.COMPONENT)
+  //           .map((category) => ({
+  //             value: category.id,
+  //             label: category.name,
+  //           })) || [],
+  //     },
+  //     dataType: "string",
+  //     renderComponent: (e) =>
+  //       EntityCells.Category((e as IComponent).categoryId),
+  //   },
+  //   {
+  //     caption: "Total",
+  //     dataField: "quantity",
+  //     dataType: "number",
+  //   },
+  //   {
+  //     caption: "Avail",
+  //     dataField: "availableQuantity",
+  //     dataType: "action",
+  //     renderComponent: (e) =>
+  //       AssetProductQuantityCell({
+  //         productId: (e as IComponent).id,
+  //         productType: "Component",
+  //         totalQuantity: (e as IComponent).quantity,
+  //       }),
+  //   },
+  //   {
+  //     caption: "Order Number",
+  //     dataField: "orderNo",
+  //     dataType: "string",
+  //   },
+  //   {
+  //     caption: "Purchase Date",
+  //     dataField: "purchaseDate",
+  //     dataType: "date",
+  //   },
+  //   {
+  //     caption: "Purchase Cost",
+  //     dataField: "purchaseCost",
+  //     dataType: "number",
+  //   },
+  //   {
+  //     dataField: "id",
+  //     caption: "Checkin",
+  //     dataType: "action",
+  //     renderComponent(e) {
+  //       const component = e as IComponent;
+  //       return (
+  //         <div style={{ display: "flex", justifyContent: "center" }}>
+  //           <Button
+  //             color={"green"}
+  //             variant="filled"
+  //             size="xs"
+  //             disabled={
+  //               component.availableQuantity !== undefined &&
+  //               component?.availableQuantity < 1
+  //             }
+  //             onClick={() => onHeadToModal(component as IComponent)}
+  //           >
+  //             Check In
+  //           </Button>
+  //         </div>
+  //       );
+  //     },
+  //   },
+  //   // INVISIBLE COLUMNS
+  //   {
+  //     caption: "Company",
+  //     dataField: "companyId",
+  //     lookup: {
+  //       data: companyLK || [],
+  //     },
+  //     dataType: "string",
+  //     allowVisible: false,
+  //   },
+  //   {
+  //     dataField: "imagePath",
+  //     caption: "Image",
+  //     dataType: "string",
+  //     allowVisible: false,
+  //   },
+  //   {
+  //     caption: "Notes",
+  //     dataField: "notes",
+  //     dataType: "string",
+  //   },
+  // ];
 
-  const columns: DataColumn[] = [
+  const columns: MRT_ColumnDef<IComponent>[] = [
     {
-      dataField: "tag",
-      caption: "Component",
-      dataType: "string",
+      accessorKey: "companyId",
+      header: "Company",
+      filterVariant: "multi-select",
+      Cell: ({ row }) => EntityCells.Company(row.original.companyId),
+      mantineFilterMultiSelectProps: () => ({
+        data: companyLoading ? [] : companyLK,
+        rightSection: companyLoading ? <Loader size={16} /> : null,
+        onDropdownOpen: getCompanyLK,
+      }),
     },
     {
-      caption: "Name",
-      dataField: "name",
-      dataType: "string",
+      accessorKey: "tag",
+      header: "Tag",
     },
     {
-      caption: "Serial",
-      dataField: "serialNo",
-      dataType: "string",
+      header: "Name",
+      accessorKey: "name",
     },
     {
-      caption: "Category",
-      dataField: "categoryId",
-      lookup: {
-        data:
-          categories
-            ?.filter((category) => category.type === CategoryType.COMPONENT)
-            .map((category) => ({
-              value: category.id,
-              label: category.name,
-            })) || [],
-      },
-      dataType: "string",
-      renderComponent: (e) =>
-        EntityCells.Category((e as IComponent).categoryId),
+      accessorKey: "imagePath",
+      header: "Image",
     },
     {
-      caption: "Total",
-      dataField: "quantity",
-      dataType: "number",
+      accessorKey: "serialNo",
+      header: "Serial",
     },
     {
-      caption: "Avail",
-      dataField: "availableQuantity",
-      dataType: "action",
-      renderComponent: (e) =>
-        AssetProductQuantityCell({
-          productId: (e as IComponent).id,
-          productType: "Component",
-          totalQuantity: (e as IComponent).quantity,
-        }),
+      accessorKey: "categoryId",
+      header: "Category",
+      Cell: ({ row }) => EntityCells.Category(row.original.categoryId),
+      mantineFilterMultiSelectProps: () => ({
+        data: categoryLoading
+          ? []
+          : categories
+              ?.filter((category) => category.type === CategoryType.COMPONENT)
+              .map((category) => ({
+                value: category.id,
+                label: category.name,
+              })),
+        rightSection: categoryLoading ? <Loader size={16} /> : null,
+        onDropdownOpen: getCategories,
+      }),
     },
     {
-      caption: "Order Number",
-      dataField: "orderNo",
-      dataType: "string",
+      accessorKey: "quantity",
+      header: "Total",
     },
     {
-      caption: "Purchase Date",
-      dataField: "purchaseDate",
-      dataType: "date",
+      accessorKey: "availableQuantity",
+      header: "Avail",
+      Cell: ({ row }) => row.original.availableQuantity || 0,
     },
     {
-      caption: "Purchase Cost",
-      dataField: "purchaseCost",
-      dataType: "number",
+      accessorKey: "supplierId",
+      header: "Supplier",
+      filterVariant: "multi-select",
+      Cell: ({ row }) => EntityCells.Supplier(row.original.supplierId),
+      mantineFilterMultiSelectProps: () => ({
+        data: supplierLK || [],
+        rightSection: supplierLoading ? <Loader size={16} /> : null,
+        onDropdownOpen: getSupplierLK,
+      }),
     },
     {
-      dataField: "id",
-      caption: "Checkin",
-      dataType: "action",
-      renderComponent(e) {
-        const component = e as IComponent;
+      accessorKey: "orderNo",
+      header: "Order Number",
+    },
+    {
+      accessorKey: "purchaseDate",
+      header: "Purchase Date",
+      accessorFn: (originalRow) =>
+        originalRow.purchaseDate ? new Date(originalRow.purchaseDate) : "",
+      filterVariant: "date-range",
+      Cell: ({ cell }) =>
+        cell.getValue() !== ""
+          ? cell.getValue<Date>().toLocaleDateString()
+          : "",
+    },
+    {
+      accessorKey: "purchaseCost",
+      header: "Purchase Cost",
+      filterVariant: "range-slider",
+    },
+    {
+      header: "Checkin",
+      filterVariant: "checkbox",
+      accessorFn: (originalRow) =>
+        originalRow.availableQuantity && originalRow.availableQuantity > 0
+          ? "true"
+          : "false",
+      Cell: ({ row }) => {
+        const component = row.original;
         return (
           <div style={{ display: "flex", justifyContent: "center" }}>
             <Button
@@ -121,7 +271,7 @@ export const useColumns = () => {
                 component.availableQuantity !== undefined &&
                 component?.availableQuantity < 1
               }
-              onClick={() => onHeadToModal(component as IComponent)}
+              onClick={() => onHeadToModal(component)}
             >
               Check In
             </Button>
@@ -129,26 +279,9 @@ export const useColumns = () => {
         );
       },
     },
-    // INVISIBLE COLUMNS
     {
-      caption: "Company",
-      dataField: "companyId",
-      lookup: {
-        data: companyLK || [],
-      },
-      dataType: "string",
-      allowVisible: false,
-    },
-    {
-      dataField: "imagePath",
-      caption: "Image",
-      dataType: "string",
-      allowVisible: false,
-    },
-    {
-      caption: "Notes",
-      dataField: "notes",
-      dataType: "string",
+      accessorKey: "notes",
+      header: "Notes",
     },
   ];
 

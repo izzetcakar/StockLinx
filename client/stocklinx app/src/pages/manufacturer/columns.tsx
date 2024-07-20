@@ -1,42 +1,34 @@
 import { EntityCardColumn } from "@/interfaces/clientInterfaces";
 import { IManufacturer } from "@/interfaces/serverInterfaces";
-import { DataColumn } from "@interfaces/gridTableInterfaces";
+import { MRT_ColumnDef } from "mantine-react-table";
 import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
 import ManufacturerForm from "@/forms/manufacturer/ManufacturerForm";
 
 export const useColumns = () => {
-  const columns: DataColumn[] = [
+  const columns: MRT_ColumnDef<IManufacturer>[] = [
     {
-      dataField: "name",
-      caption: "Name",
-      dataType: "string",
+      accessorKey: "name",
+      header: "Name",
     },
     {
-      dataField: "url",
-      caption: "URL",
-      dataType: "string",
+      accessorKey: "url",
+      header: "URL",
     },
     {
-      dataField: "supportURL",
-      caption: "Support URL",
-      dataType: "string",
+      accessorKey: "supportURL",
+      header: "Support URL",
     },
     {
-      dataField: "supportPhone",
-      caption: "Support Phone",
-      dataType: "string",
+      accessorKey: "supportPhone",
+      header: "Support Phone",
     },
     {
-      dataField: "supportEmail",
-      caption: "Support Email",
-      dataType: "string",
+      accessorKey: "supportEmail",
+      header: "Support Email",
     },
-    // INVISIBLE COLUMNS
     {
-      dataField: "notes",
-      caption: "Notes",
-      dataType: "string",
-      allowVisible: false,
+      accessorKey: "notes",
+      header: "Notes",
     },
   ];
 

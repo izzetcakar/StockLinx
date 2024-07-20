@@ -1,22 +1,45 @@
 import { IAccessory, IEmployeeProduct } from "@interfaces/serverInterfaces";
-import { useAccessory, useCompany } from "@queryhooks";
+import {
+  useAccessory,
+  useCategory,
+  useCompany,
+  useManufacturer,
+  useSupplier,
+} from "@queryhooks";
 import { EntityCardColumn } from "@/interfaces/clientInterfaces";
 import { MRT_ColumnDef } from "mantine-react-table";
 import { EntityCells } from "@/cells/Entity";
-import { Button, Loader } from "@mantine/core";
+import { Button, Image, Loader } from "@mantine/core";
 import { openCheckInModal } from "@/utils/modalUtils";
 import { useInitial } from "@/hooks/initial/useInitial";
+import { getImage } from "@/utils/imageUtils";
 import AccessoryForm from "@/forms/accessory/AccessoryForm";
 import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
 import EmployeeProductSeats from "@/components/dataGrid/productseats/EmployeeProductSeats";
+import base_accessory from "@/assets/baseProductImages/base_accessory.png";
 
 export const useColumns = () => {
   const initial = useInitial();
   const {
-    data: companies,
-    isRefetching: loading,
-    refetch: getcom,
+    data: companyLK,
+    isRefetching: companyLoading,
+    refetch: getCompanyLK,
   } = useCompany.Lookup();
+  const {
+    data: categoryLK,
+    isRefetching: categoryLoading,
+    refetch: getCategoryLK,
+  } = useCategory.Lookup();
+  const {
+    data: supplierLK,
+    isRefetching: supplierLoading,
+    refetch: getSupplierLK,
+  } = useSupplier.Lookup();
+  const {
+    data: manufacturerLK,
+    isRefetching: manufacturerLoading,
+    refetch: getManufacturerLK,
+  } = useManufacturer.Lookup();
   const { mutate: checkIn } = useAccessory.CheckIn();
   const { mutate: checkOut } = useAccessory.CheckOut();
 
@@ -79,14 +102,28 @@ export const useColumns = () => {
     {
       accessorKey: "companyId",
       header: "Company",
-      Cell: ({ renderedCellValue }) =>
-        EntityCells.Company(renderedCellValue as string),
-      filterVariant: "select",
-      mantineFilterSelectProps: () => ({
-        data: loading ? [] : companies,
-        onDropdownOpen: getcom,
-        rightSection: loading && <Loader size={16} />,
+      filterVariant: "multi-select",
+      Cell: ({ row }) => EntityCells.Company(row.original.companyId),
+      mantineFilterMultiSelectProps: () => ({
+        data: companyLoading ? [] : companyLK,
+        rightSection: companyLoading ? <Loader size={16} /> : null,
+        onDropdownOpen: getCompanyLK,
       }),
+    },
+    {
+      accessorKey: "imagePath",
+      header: "Image",
+      Cell: ({ row }) => {
+        const image = getImage(row.original.imagePath);
+        return (
+          <Image
+            src={image ? image : base_accessory}
+            height={50}
+            fit="contain"
+            radius="md"
+          />
+        );
+      },
     },
     {
       accessorKey: "tag",
@@ -95,14 +132,30 @@ export const useColumns = () => {
     {
       accessorKey: "name",
       header: "Name",
+      grow: false,
     },
     {
-      accessorKey: "availableQuantity",
-      header: "Available Quantity",
-      Cell: ({ row }) => row.original.availableQuantity || 0,
+      accessorKey: "categoryId",
+      header: "Category",
+      filterVariant: "multi-select",
+      Cell: ({ row }) => EntityCells.Category(row.original.categoryId),
+      mantineFilterMultiSelectProps: () => ({
+        data: categoryLoading ? [] : categoryLK,
+        rightSection: categoryLoading ? <Loader size={16} /> : null,
+        onDropdownOpen: getCategoryLK,
+      }),
+    },
+    {
+      accessorKey: "model",
+      header: "Model No",
     },
     {
       header: "Check In",
+      filterVariant: "checkbox",
+      accessorFn: (originalRow) =>
+        originalRow.availableQuantity && originalRow.availableQuantity > 0
+          ? "true"
+          : "false",
       Cell: ({ row }) => (
         <div style={{ display: "flex", justifyContent: "center" }}>
           <Button
@@ -120,108 +173,67 @@ export const useColumns = () => {
         </div>
       ),
     },
+    {
+      accessorKey: "quantity",
+      header: "Total",
+      Cell: ({ row }) => row.original.quantity || 0,
+    },
+    {
+      accessorKey: "availableQuantity",
+      header: "Available Quantity",
+      Cell: ({ row }) => row.original.availableQuantity || 0,
+    },
+    {
+      accessorKey: "manufacturerId",
+      header: "Manufacturer",
+      filterVariant: "multi-select",
+      Cell: ({ row }) => EntityCells.Manufacturer(row.original.manufacturerId),
+      mantineFilterMultiSelectProps: () => ({
+        data: manufacturerLoading ? [] : manufacturerLK,
+        rightSection: manufacturerLoading ? <Loader size={16} /> : null,
+        onDropdownOpen: getManufacturerLK,
+      }),
+    },
+    {
+      accessorKey: "supplierId",
+      header: "Supplier",
+      filterVariant: "multi-select",
+      Cell: ({ row }) => EntityCells.Supplier(row.original.supplierId),
+      mantineFilterMultiSelectProps: () => ({
+        data: supplierLoading ? [] : supplierLK,
+        rightSection: supplierLoading ? <Loader size={16} /> : null,
+        onDropdownOpen: getSupplierLK,
+      }),
+    },
+    {
+      accessorKey: "purchaseCost",
+      header: "Purchase Cost",
+      filterVariant: "range-slider",
+    },
+    {
+      accessorKey: "modelNo",
+      header: "Model No",
+    },
+    {
+      accessorKey: "orderNo",
+      header: "Order No",
+    },
+    {
+      accessorKey: "purchaseDate",
+      header: "Purchase Date",
+      accessorFn: (originalRow) =>
+        originalRow.purchaseDate ? new Date(originalRow.purchaseDate) : "",
+      filterVariant: "date-range",
+      Cell: ({ cell }) =>
+        cell.getValue() !== ""
+          ? cell.getValue<Date>().toLocaleDateString()
+          : "",
+    },
+    {
+      accessorKey: "notes",
+      header: "Notes",
+    },
   ];
-
-  // const columns: Column<IAccessory>[] = [
-  //   {
-  //     cellTemplate: "actionTemplate",
-  //   },
-  //   {
-  //     caption: "Company",
-  //     dataField: "companyId",
-  //     lookup: {
-  //       dataSource: companyDataStore,
-  //       valueExpr: "id",
-  //       displayExpr: (e: ICompany) => (e ? e?.tag + " - " + e?.name : ""),
-  //     },
-  //   },
-  //   {
-  //     caption: "Image",
-  //     dataField: "imagePath",
-  //     cellTemplate: "imageTemplate",
-  //   },
-  //   {
-  //     caption: "Tag",
-  //     dataField: "tag",
-  //   },
-  //   {
-  //     caption: "Name",
-  //     dataField: "name",
-  //   },
-  //   {
-  //     caption: "Category",
-  //     dataField: "categoryId",
-  //     lookup: {
-  //       dataSource: filterCategoryDataStore(CategoryType.ACCESSORY),
-  //       valueExpr: "id",
-  //       displayExpr: "name",
-  //     },
-  //   },
-  //   {
-  //     caption: "Model No",
-  //     dataField: "model",
-  //   },
-  //   {
-  //     caption: "Check In",
-  //     cellTemplate: "checkInTemplate",
-  //   },
-  //   {
-  //     caption: "Total",
-  //     dataField: "quantity",
-  //     dataType: "number",
-  //   },
-  //   {
-  //     caption: "Available",
-  //     dataField: "availableQuantity",
-  //     dataType: "number",
-  //   },
-  //   {
-  //     caption: "Purchase Cost",
-  //     dataField: "purchaseCost",
-  //     dataType: "number",
-  //   },
-  //   {
-  //     caption: "Notes",
-  //     dataField: "notes",
-  //     visible: false,
-  //   },
-  //   {
-  //     caption: "Supplier",
-  //     dataField: "supplierId",
-  //     visible: false,
-  //     lookup: {
-  //       dataSource: supplierDataStore,
-  //       valueExpr: "id",
-  //       displayExpr: "name",
-  //     },
-  //   },
-  //   {
-  //     caption: "Manufacturer",
-  //     dataField: "manufacturerId",
-  //     visible: false,
-  //     lookup: {
-  //       dataSource: manufacturerDataStore,
-  //       valueExpr: "id",
-  //       displayExpr: "name",
-  //     },
-  //   },
-  //   {
-  //     caption: "Model No",
-  //     dataField: "modelNo",
-  //     visible: false,
-  //   },
-  //   {
-  //     caption: "Order No",
-  //     dataField: "orderNo",
-  //     visible: false,
-  //   },
-  //   {
-  //     caption: "Purchase Date",
-  //     dataField: "purchaseDate",
-  //     dataType: "date",
-  //     visible: false,
-  //   },
-  // ];
 
   return { columns, cardColumns };
 };

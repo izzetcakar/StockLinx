@@ -1,31 +1,47 @@
 import { EntityCells } from "@/cells/Entity";
 import { useCompany, useUser } from "@queryhooks";
-import { DataColumn } from "@/interfaces/gridTableInterfaces";
 import { IPermission } from "@/interfaces/serverInterfaces";
+import { MRT_ColumnDef } from "mantine-react-table";
+import { Loader } from "@mantine/core";
 
 export const useColumns = () => {
-  const { refetch: getCompanyLK } = useCompany.Lookup();
-  const { refetch: getUserLK } = useUser.Lookup();
+  const {
+    data: companyLK,
+    isRefetching: companyLoading,
+    refetch: getCompanyLK,
+  } = useCompany.Lookup();
+  const {
+    data: userLK,
+    isRefetching: userLoading,
+    refetch: getUserLK,
+  } = useUser.Lookup();
 
-  const columns: DataColumn[] = [
+  const columns: MRT_ColumnDef<IPermission>[] = [
     {
-      caption: "Company",
-      dataField: "companyId",
-      dataType: "string",
-      lookup: { dataSource: getCompanyLK },
-      renderComponent: (e) => EntityCells.Company((e as IPermission).companyId),
+      accessorKey: "companyId",
+      header: "Company",
+      filterVariant: "multi-select",
+      Cell: ({ row }) => EntityCells.Company(row.original.companyId),
+      mantineFilterMultiSelectProps: () => ({
+        data: companyLoading ? [] : companyLK,
+        rightSection: companyLoading ? <Loader size={16} /> : null,
+        onDropdownOpen: getCompanyLK,
+      }),
     },
     {
-      caption: "User",
-      dataField: "userId",
-      dataType: "string",
-      lookup: { dataSource: getUserLK },
-      renderComponent: (e) => EntityCells.User((e as IPermission).userId),
+      accessorKey: "userId",
+      header: "User",
+      filterVariant: "multi-select",
+      Cell: ({ row }) => EntityCells.User(row.original.userId),
+      mantineFilterMultiSelectProps: () => ({
+        data: userLoading ? [] : userLK,
+        rightSection: userLoading ? <Loader size={16} /> : null,
+        onDropdownOpen: getUserLK,
+      }),
     },
     {
-      caption: "Date",
-      dataField: "createdDate",
-      dataType: "string",
+      accessorKey: "createdDate",
+      header: "Date",
     },
   ];
 

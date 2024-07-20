@@ -1,5 +1,4 @@
-import { DataColumn } from "@interfaces/gridTableInterfaces";
-import { Image } from "@mantine/core";
+import { Image, Loader } from "@mantine/core";
 import { IAsset, IEmployeeProduct } from "@interfaces/serverInterfaces";
 import { getImage } from "../../utils/imageUtils";
 import {
@@ -7,18 +6,41 @@ import {
   openAssetCheckOutModal,
 } from "@/utils/modalUtils";
 import base_asset from "@assets/baseProductImages/base_asset.jpg";
-import { useModel, useProductStatus, useSupplier } from "@queryhooks";
+import {
+  useCompany,
+  useModel,
+  useProductStatus,
+  useSupplier,
+} from "@queryhooks";
 import { EntityCells } from "@/cells/Entity";
 import { EntityCardColumn } from "@/interfaces/clientInterfaces";
+import { MRT_ColumnDef } from "mantine-react-table";
 import EmployeeCheckInOutCell from "@/cells/EmployeeCheckInOutCell";
 import CheckedOutEmployeeCell from "@/cells/CheckedOutEmployeeCell";
 import AssetForm from "@/forms/asset/AssetForm";
 import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
 
 export const useColumns = () => {
-  const { refetch: getModelLK } = useModel.Lookup();
-  const { refetch: getSupplierLK } = useSupplier.Lookup();
-  const { refetch: getProductStatusLK } = useProductStatus.Lookup();
+  const {
+    data: companyLK,
+    isRefetching: companyLoading,
+    refetch: getCompanyLK,
+  } = useCompany.Lookup();
+  const {
+    data: modelLK,
+    isRefetching: modelLoading,
+    refetch: getModelLK,
+  } = useModel.Lookup();
+  const {
+    data: productStatusLK,
+    isRefetching: productStatusLoading,
+    refetch: getProductStatusLK,
+  } = useProductStatus.Lookup();
+  const {
+    data: supplierLK,
+    isRefetching: supplierLoading,
+    refetch: getSupplierLK,
+  } = useSupplier.Lookup();
 
   const checkIn = (asset: IAsset) => {
     openAssetCheckInModal({
@@ -38,23 +60,31 @@ export const useColumns = () => {
     });
   };
 
-  const columns: DataColumn[] = [
+  const columns: MRT_ColumnDef<IAsset>[] = [
     {
-      dataField: "tag",
-      caption: "Tag",
-      dataType: "string",
+      accessorKey: "companyId",
+      header: "Company",
+      filterVariant: "multi-select",
+      Cell: ({ row }) => EntityCells.Company(row.original.companyId),
+      mantineFilterMultiSelectProps: () => ({
+        data: companyLoading ? [] : companyLK,
+        rightSection: companyLoading ? <Loader size={16} /> : null,
+        onDropdownOpen: getCompanyLK,
+      }),
     },
     {
-      dataField: "name",
-      caption: "Name",
-      dataType: "string",
+      accessorKey: "tag",
+      header: "Tag",
     },
     {
-      caption: "Image",
-      dataField: "imagePath",
-      dataType: "action",
-      renderComponent: (e) => {
-        const image = getImage((e as IAsset).imagePath);
+      accessorKey: "name",
+      header: "Name",
+    },
+    {
+      accessorKey: "imagePath",
+      header: "Image",
+      Cell: ({ row }) => {
+        const image = getImage(row.original.imagePath);
         return (
           <Image
             src={image ? image : base_asset}
@@ -67,79 +97,91 @@ export const useColumns = () => {
       },
     },
     {
-      dataField: "serialNo",
-      caption: "Serial",
-      dataType: "string",
+      accessorKey: "serialNo",
+      header: "Serial",
     },
     {
-      dataField: "modelId",
-      caption: "Model",
-      lookup: {
-        dataSource: getModelLK,
-      },
-      dataType: "string",
-      renderComponent: (e) => EntityCells.Model((e as IAsset).modelId),
+      accessorKey: "modelId",
+      header: "Model",
+      filterVariant: "multi-select",
+      Cell: ({ row }) => EntityCells.Model(row.original.modelId),
+      mantineFilterMultiSelectProps: () => ({
+        data: modelLoading ? [] : modelLK,
+        rightSection: modelLoading ? <Loader size={16} /> : null,
+        onDropdownOpen: getModelLK,
+      }),
     },
     {
-      dataField: "productStatusId",
-      caption: "Status",
-      dataType: "string",
-      lookup: {
-        dataSource: getProductStatusLK,
-      },
-      renderComponent: (e) =>
-        EntityCells.ProductStatus((e as IAsset).productStatusId),
+      accessorKey: "productStatusId",
+      header: "Status",
+      filterVariant: "multi-select",
+      Cell: ({ row }) =>
+        EntityCells.ProductStatus(row.original.productStatusId),
+      mantineFilterMultiSelectProps: () => ({
+        data: productStatusLoading ? [] : productStatusLK,
+        rightSection: productStatusLoading ? <Loader size={16} /> : null,
+        onDropdownOpen: getProductStatusLK,
+      }),
     },
     {
-      dataField: "id",
-      caption: "Checked Out To",
-      dataType: "action",
-      renderComponent: (e) => CheckedOutEmployeeCell((e as IAsset).id),
+      header: "Checked Out To",
+      Cell: ({ row }) => CheckedOutEmployeeCell(row.original.id),
     },
     {
-      dataField: "purchaseCost",
-      caption: "Purchase Cost",
-      dataType: "number",
-    },
-    {
-      dataField: "id",
-      caption: "Checkin/Checkout",
-      dataType: "action",
-      renderComponent: (e) => (
+      header: "CheckIn/Out",
+      filterVariant: "select",
+      accessorFn: (originalRow) =>
+        originalRow.availableQuantity && originalRow.availableQuantity > 0
+          ? "true"
+          : "false",
+      mantineFilterSelectProps: () => ({
+        data: [
+          { value: "true", label: "Checked In" },
+          { value: "false", label: "Checked Out" },
+        ],
+      }),
+      Cell: ({ row }) => (
         <EmployeeCheckInOutCell
-          asset={e as IAsset}
+          asset={row.original}
           checkIn={checkIn}
           checkOut={checkOut}
         />
       ),
     },
-    // INVISIBLE COLUMNS
     {
-      dataField: "notes",
-      caption: "Notes",
-      dataType: "string",
-      allowVisible: false,
+      accessorKey: "supplierId",
+      header: "Supplier",
+      filterVariant: "multi-select",
+      Cell: ({ row }) => EntityCells.Supplier(row.original.supplierId),
+      mantineFilterMultiSelectProps: () => ({
+        data: supplierLoading ? [] : supplierLK,
+        rightSection: supplierLoading ? <Loader size={16} /> : null,
+        onDropdownOpen: getSupplierLK,
+      }),
     },
     {
-      dataField: "orderNo",
-      caption: "Order No",
-      dataType: "string",
-      allowVisible: false,
+      accessorKey: "orderNo",
+      header: "Order No",
     },
     {
-      dataField: "purchaseDate",
-      caption: "Purchase Date",
-      dataType: "date",
-      allowVisible: false,
+      accessorKey: "purchaseCost",
+      header: "Purchase Cost",
+      filterVariant: "range-slider",
     },
     {
-      dataField: "supplierId",
-      caption: "Supplier",
-      dataType: "string",
-      lookup: {
-        dataSource: getSupplierLK,
-      },
-      renderComponent: (e) => EntityCells.Supplier((e as IAsset).supplierId),
+      accessorKey: "purchaseDate",
+      header: "Purchase Date",
+      accessorFn: (originalRow) =>
+        originalRow.purchaseDate ? new Date(originalRow.purchaseDate) : "",
+      filterVariant: "date-range",
+      Cell: ({ cell }) =>
+        cell.getValue() !== ""
+          ? cell.getValue<Date>().toLocaleDateString()
+          : "",
+    },
+    {
+      accessorKey: "notes",
+      header: "Notes",
     },
   ];
 

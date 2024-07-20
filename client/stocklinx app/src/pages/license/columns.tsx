@@ -1,10 +1,9 @@
-import { DataColumn } from "@interfaces/gridTableInterfaces";
 import {
   IEmployeeProduct,
   ILicense,
   IAssetProduct,
 } from "@interfaces/serverInterfaces";
-import { Button } from "@mantine/core";
+import { Button, Loader } from "@mantine/core";
 import { openCheckInModal } from "@/utils/modalUtils";
 import {
   useManufacturer,
@@ -17,19 +16,35 @@ import { EntityCells } from "@/cells/Entity";
 import { CategoryType } from "@/interfaces/enums";
 import { useInitial } from "@/hooks/initial/useInitial";
 import { EntityCardColumn } from "@/interfaces/clientInterfaces";
-import LicenseQuantity from "@/cells/LicenseQuantity";
+import { MRT_ColumnDef } from "mantine-react-table";
 import LicenseForm from "@/forms/license/LicenseForm";
 import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
 import LicenseSeats from "@/components/dataGrid/productseats/License/LicenseSeats";
 
 export const useColumns = () => {
+  const initial = useInitial();
   const { mutate: employeeCheckIn } = useLicense.EmployeeCheckIn();
   const { mutate: assetCheckIn } = useLicense.AssetCheckIn();
-  const { data: categories } = useCategory.GetAll();
-  const { data: companyLK } = useCompany.Lookup();
-  const { data: supplierLK } = useSupplier.Lookup();
-  const { refetch: getManufacturerLK } = useManufacturer.Lookup();
-  const initial = useInitial();
+  const {
+    data: categories,
+    isRefetching: categoryLoading,
+    refetch: getCategories,
+  } = useCategory.GetAll();
+  const {
+    data: companyLK,
+    isRefetching: companyLoading,
+    refetch: getCompanyLK,
+  } = useCompany.Lookup();
+  const {
+    data: supplierLK,
+    isRefetching: supplierLoading,
+    refetch: getSupplierLK,
+  } = useSupplier.Lookup();
+  const {
+    data: manufacturerLK,
+    isRefetching: manufacturerLoading,
+    refetch: getManufacturerLK,
+  } = useManufacturer.Lookup();
 
   const onEmployeeCheckInHandler = (employeeProduct: IEmployeeProduct) => {
     employeeCheckIn({
@@ -66,119 +81,78 @@ export const useColumns = () => {
     );
   };
 
-  const columns: DataColumn[] = [
+  const columns: MRT_ColumnDef<ILicense>[] = [
     {
-      dataField: "tag",
-      caption: "License",
-      dataType: "string",
+      accessorKey: "companyId",
+      header: "Company",
+      filterVariant: "multi-select",
+      Cell: ({ row }) => EntityCells.Company(row.original.companyId),
+      mantineFilterMultiSelectProps: () => ({
+        data: companyLoading ? [] : companyLK,
+        rightSection: companyLoading ? <Loader size={16} /> : null,
+        onDropdownOpen: getCompanyLK,
+      }),
     },
     {
-      caption: "Name",
-      dataField: "name",
-      dataType: "string",
+      accessorKey: "tag",
+      header: "License",
     },
     {
-      caption: "License Key",
-      dataField: "licenseKey",
-      dataType: "string",
+      accessorKey: "name",
+      header: "Name",
     },
     {
-      caption: "Expiration Date",
-      dataField: "expirationDate",
-      dataType: "date",
+      accessorKey: "licenseKey",
+      header: "License Key",
     },
     {
-      caption: "License Email",
-      dataField: "licenseEmail",
-      dataType: "string",
+      accessorKey: "expirationDate",
+      header: "Expiration Date",
     },
     {
-      caption: "Licensed To",
-      dataField: "licensedTo",
-      dataType: "string",
+      accessorKey: "licenseEmail",
+      header: "License Email",
     },
     {
-      caption: "Manufacturer",
-      dataField: "manufacturerId",
-      lookup: {
-        dataSource: getManufacturerLK,
-      },
-      dataType: "string",
-      renderComponent: (e) =>
-        EntityCells.Manufacturer((e as ILicense).manufacturerId),
+      accessorKey: "licensedTo",
+      header: "Licensed To",
     },
     {
-      caption: "Total",
-      dataField: "quantity",
-      dataType: "number",
+      accessorKey: "quantity",
+      header: "Total",
     },
     {
-      caption: "Avail",
-      dataField: "availableQuantity",
-      dataType: "action",
-      renderComponent: (e) => LicenseQuantity(e as ILicense),
+      accessorKey: "availableQuantity",
+      header: "Avail",
+      Cell: ({ row }) => row.original.availableQuantity || 0,
     },
     {
-      dataField: "id",
-      caption: "Checkin",
-      dataType: "action",
-      renderComponent(e) {
-        return (
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <Button
-              color={"green"}
-              variant="filled"
-              size="xs"
-              onClick={() => onHeadToModal(e as ILicense)}
-              disabled={(e as ILicense).availableQuantity === 0}
-            >
-              Check In
-            </Button>
-          </div>
-        );
-      },
-    },
-    // INVISIBLE COLUMNS
-    {
-      caption: "Company",
-      dataField: "companyId",
-      lookup: {
-        data: companyLK || [],
-      },
-      dataType: "string",
-      allowVisible: false,
+      header: "Checkin",
+      filterVariant: "checkbox",
+      accessorFn: (originalRow) =>
+        originalRow.availableQuantity && originalRow.availableQuantity > 0
+          ? "true"
+          : "false",
+      Cell: ({ row }) => (
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <Button
+            color={"green"}
+            variant="filled"
+            size="xs"
+            onClick={() => onHeadToModal(row.original)}
+            disabled={row.original.availableQuantity === 0}
+          >
+            Check In
+          </Button>
+        </div>
+      ),
     },
     {
-      caption: "Order No",
-      dataField: "orderNo",
-      dataType: "string",
-      allowVisible: false,
-    },
-    {
-      caption: "Purchase Date",
-      dataField: "purchaseDate",
-      dataType: "date",
-      allowVisible: false,
-    },
-    {
-      caption: "Purchase Cost",
-      dataField: "purchaseCost",
-      dataType: "number",
-      allowVisible: false,
-    },
-    {
-      caption: "Supplier",
-      dataField: "supplierId",
-      lookup: {
-        data: supplierLK || [],
-      },
-      dataType: "string",
-      allowVisible: false,
-    },
-    {
-      caption: "Category",
-      dataField: "categoryId",
-      lookup: {
+      accessorKey: "categoryId",
+      header: "Category",
+      filterVariant: "multi-select",
+      Cell: ({ row }) => EntityCells.Category(row.original.categoryId),
+      mantineFilterMultiSelectProps: () => ({
         data:
           categories
             ?.filter((c) => c.type === CategoryType.LICENSE)
@@ -186,39 +160,63 @@ export const useColumns = () => {
               value: category.id,
               label: category.name,
             })) || [],
-      },
-      dataType: "string",
-      allowVisible: false,
+        rightSection: categoryLoading ? <Loader size={16} /> : null,
+        onDropdownOpen: getCategories,
+      }),
     },
     {
-      caption: "Maintained",
-      dataField: "maintained",
-      dataType: "boolean",
-      allowVisible: false,
+      accessorKey: "manufacturerId",
+      header: "Manufacturer",
+      filterVariant: "multi-select",
+      Cell: ({ row }) => EntityCells.Manufacturer(row.original.manufacturerId),
+      mantineFilterMultiSelectProps: () => ({
+        data: manufacturerLoading ? [] : manufacturerLK,
+        rightSection: manufacturerLoading ? <Loader size={16} /> : null,
+        onDropdownOpen: getManufacturerLK,
+      }),
     },
     {
-      caption: "Reassignable",
-      dataField: "reassignable",
-      dataType: "boolean",
-      allowVisible: false,
+      accessorKey: "supplierId",
+      header: "Supplier",
+      filterVariant: "multi-select",
+      Cell: ({ row }) => EntityCells.Supplier(row.original.supplierId),
+      mantineFilterMultiSelectProps: () => ({
+        data: supplierLoading ? [] : supplierLK,
+        rightSection: supplierLoading ? <Loader size={16} /> : null,
+        onDropdownOpen: getSupplierLK,
+      }),
     },
     {
-      caption: "Termination Date",
-      dataField: "terminationDate",
-      dataType: "date",
-      allowVisible: false,
+      accessorKey: "purchaseCost",
+      header: "Purchase Cost",
+      filterVariant: "range-slider",
     },
     {
-      dataField: "imagePath",
-      caption: "Image",
-      dataType: "string",
-      allowVisible: false,
+      accessorKey: "purchaseDate",
+      header: "Purchase Date",
+      accessorFn: (originalRow) =>
+        originalRow.purchaseDate ? new Date(originalRow.purchaseDate) : "",
+      filterVariant: "date-range",
+      Cell: ({ cell }) =>
+        cell.getValue() !== ""
+          ? cell.getValue<Date>().toLocaleDateString()
+          : "",
     },
     {
-      caption: "Notes",
-      dataField: "notes",
-      dataType: "string",
-      allowVisible: false,
+      accessorKey: "maintained",
+      header: "Maintained",
+    },
+    {
+      accessorKey: "reassignable",
+      header: "Reassignable",
+    },
+    {
+      accessorKey: "terminationDate",
+      header: "Termination Date",
+    },
+    {
+      accessorKey: "notes",
+      header: "Notes",
     },
   ];
 

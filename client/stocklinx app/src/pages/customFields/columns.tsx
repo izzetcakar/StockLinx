@@ -1,69 +1,81 @@
 import { useFieldSet, useFieldSetCustomField } from "@queryhooks";
-import { DataColumn } from "@interfaces/gridTableInterfaces";
-import { ICustomField } from "@interfaces/serverInterfaces";
+import { ICustomField, IFieldSet } from "@interfaces/serverInterfaces";
+import { MRT_ColumnDef } from "mantine-react-table";
+import { Loader } from "@mantine/core";
 
 export const useColumns = () => {
-  const { data: fieldSets } = useFieldSet.GetAll();
-  const { data: fieldSetCustomFields } = useFieldSetCustomField.GetAll();
+  const {
+    data: fieldSets,
+    isRefetching: fieldSetLoading,
+    refetch: getFields,
+  } = useFieldSet.GetAll();
+  const {
+    data: fieldSetCustomFields,
+    isRefetching: fieldSetCustomFieldLoading,
+    refetch: getFieldSetCustomFields,
+  } = useFieldSetCustomField.GetAll();
 
-  const fieldSetColumns: DataColumn[] = [
+  const fieldSetColumns: MRT_ColumnDef<IFieldSet>[] = [
     {
-      caption: "Name",
-      dataField: "name",
-      dataType: "string",
+      accessorKey: "name",
+      header: "Name",
     },
   ];
 
-  const customFieldColumns: DataColumn[] = [
+  const customFieldColumns: MRT_ColumnDef<ICustomField>[] = [
     {
-      caption: "FieldSets",
-      dataField: "id",
-      dataType: "action",
-      renderComponent(e) {
+      accessorKey: "fieldSetId",
+      header: "FieldSets",
+      filterVariant: "multi-select",
+      Cell: ({ row }) => {
         return fieldSets?.map((f) => {
           const foundFc = fieldSetCustomFields?.find(
-            (fc) => fc.fieldSetId === (e as ICustomField).id
+            (fc) => fc.fieldSetId === (row.original as ICustomField).id
           );
           if (foundFc) {
-            return <div key={f.id}>{f.name}</div>;
+            return f.name;
           }
         });
       },
+      mantineFilterMultiSelectProps: () => ({
+        data: fieldSets,
+        rightSection:
+          fieldSetLoading || fieldSetCustomFieldLoading ? null : (
+            <Loader size={16} />
+          ),
+        onDropdownOpen: () => {
+          getFields();
+          getFieldSetCustomFields();
+        },
+      }),
     },
     {
-      caption: "Name",
-      dataField: "name",
-      dataType: "string",
+      accessorKey: "name",
+      header: "Name",
     },
     {
-      caption: "Type",
-      dataField: "type",
-      dataType: "string",
+      accessorKey: "type",
+      header: "Type",
     },
     {
-      caption: "Is Required",
-      dataField: "isRequired",
-      dataType: "boolean",
+      accessorKey: "isRequired",
+      header: "Is Required",
     },
     {
-      caption: "Default Value",
-      dataField: "defaultValue",
-      dataType: "string",
+      accessorKey: "defaultValue",
+      header: "Default Value",
     },
     {
-      caption: "Help Text",
-      dataField: "helpText",
-      dataType: "string",
+      accessorKey: "helpText",
+      header: "Help Text",
     },
     {
-      caption: "Format",
-      dataField: "validationRegex",
-      dataType: "string",
+      accessorKey: "validationRegex",
+      header: "Format",
     },
     {
-      caption: "Error Message",
-      dataField: "validationText",
-      dataType: "string",
+      accessorKey: "validationText",
+      header: "Error Message",
     },
   ];
 

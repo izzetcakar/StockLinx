@@ -1,35 +1,27 @@
-import { ISupplier } from "../../interfaces/serverInterfaces";
+import { useSupplier } from "@/hooks/query";
 import { useColumns } from "./columns";
 import { openSupplierModal } from "@/utils/modalUtils";
-import { useSupplier } from "@queryhooks";
-import PageHeader from "@/components/generic/PageHeader";
-import Gridtable from "@components/gridTable/GridTable";
+import BaseMantineTable from "@/components/mantine/BaseMantineTable";
 
-const Supplier = () => {
-  const { data: suppliers } = useSupplier.Filter();
-  const { mutate: filter } = useSupplier.ApplyFilters();
+const Suppliers = () => {
+  const { columns } = useColumns();
+  const { data, isRefetching, refetch } = useSupplier.GetAll();
   const { mutate: remove } = useSupplier.Remove();
   const { mutate: removeRange } = useSupplier.RemoveRange();
 
   return (
-    <>
-      <PageHeader title="Suppliers" />
-      <Gridtable
-        data={suppliers || []}
-        itemKey="id"
-        columns={useColumns().columns}
-        refreshData={() => filter([])}
-        onRowUpdate={(supplier) => openSupplierModal(supplier as ISupplier)}
-        onRowInsert={() => openSupplierModal()}
-        onRowRemove={(id) => remove(id)}
-        onRowRemoveRange={(ids) => removeRange(ids)}
-        onApplyFilters={(filters) => filter(filters)}
-        enableToolbar
-        enableEditActions
-        enableSelectActions
-      />
-    </>
+    <BaseMantineTable
+      data={data}
+      columns={columns}
+      isLoading={isRefetching}
+      refetch={refetch}
+      onAdd={() => openSupplierModal()}
+      onCopy={(value: any) => openSupplierModal({ ...value, id: "" })}
+      onUpdate={(value: any) => openSupplierModal(value)}
+      onRemove={(id: string) => remove(id)}
+      onRemoveRange={(ids: string[]) => removeRange(ids)}
+    />
   );
 };
 
-export default Supplier;
+export default Suppliers;

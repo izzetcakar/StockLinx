@@ -1,35 +1,27 @@
-import { ICompany } from "../../interfaces/serverInterfaces";
+import { useCompany } from "@/hooks/query";
 import { useColumns } from "./columns";
 import { openCompanyModal } from "@/utils/modalUtils";
-import { useCompany } from "@queryhooks";
-import PageHeader from "@/components/generic/PageHeader";
-import Gridtable from "@components/gridTable/GridTable";
+import BaseMantineTable from "@/components/mantine/BaseMantineTable";
 
-const Company = () => {
-  const { data: companies } = useCompany.Filter();
-  const { mutate: filter } = useCompany.ApplyFilters();
+const Companies = () => {
+  const { columns } = useColumns();
+  const { data, isRefetching, refetch } = useCompany.GetAll();
   const { mutate: remove } = useCompany.Remove();
   const { mutate: removeRange } = useCompany.RemoveRange();
 
   return (
-    <>
-      <PageHeader title="Companies" />
-      <Gridtable
-        data={companies || []}
-        itemKey="id"
-        columns={useColumns().columns}
-        refreshData={() => filter([])}
-        onRowUpdate={(company) => openCompanyModal(company as ICompany)}
-        onRowInsert={() => openCompanyModal()}
-        onRowRemove={(id) => remove(id)}
-        onRowRemoveRange={(ids) => removeRange(ids)}
-        onApplyFilters={(filters) => filter(filters)}
-        enableToolbar
-        enableEditActions
-        enableSelectActions
-      />
-    </>
+    <BaseMantineTable
+      data={data}
+      columns={columns}
+      isLoading={isRefetching}
+      refetch={refetch}
+      onAdd={() => openCompanyModal()}
+      onCopy={(value: any) => openCompanyModal({ ...value, id: "" })}
+      onUpdate={(value: any) => openCompanyModal(value)}
+      onRemove={(id: string) => remove(id)}
+      onRemoveRange={(ids: string[]) => removeRange(ids)}
+    />
   );
 };
 
-export default Company;
+export default Companies;

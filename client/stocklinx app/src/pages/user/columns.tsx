@@ -1,39 +1,34 @@
-import { DataColumn } from "@interfaces/gridTableInterfaces";
 import { IUser } from "@interfaces/serverInterfaces";
 import { EntityCardColumn } from "@/interfaces/clientInterfaces";
+import { MRT_ColumnDef } from "mantine-react-table";
 import UserForm from "@/forms/user/UserForm";
 import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
 
 export const useColumns = () => {
-  const columns: DataColumn[] = [
+  const columns: MRT_ColumnDef<IUser>[] = [
     {
-      dataField: "firstName",
-      dataType: "action",
-      caption: "Name",
-      renderComponent(e) {
-        const user = e as IUser;
-        return user?.firstName + user?.lastName;
-      },
+      header: "Full Name",
+      Cell: ({ row }) => row.original.firstName + " " + row.original.lastName,
     },
     {
-      caption: "Title",
-      dataField: "jobTitle",
-      dataType: "string",
+      accessorKey: "lastName",
+      header: "Last Name",
     },
     {
-      dataField: "email",
-      caption: "Email",
-      dataType: "string",
+      accessorKey: "jobTitle",
+      header: "Title",
     },
     {
-      dataField: "phoneNo",
-      caption: "Phone",
-      dataType: "string",
+      accessorKey: "email",
+      header: "Email",
     },
     {
-      dataField: "startDate",
-      caption: "Start Date",
-      dataType: "date",
+      accessorKey: "phoneNo",
+      header: "Phone",
+    },
+    {
+      accessorKey: "startDate",
+      header: "Start Date",
     },
   ];
 
