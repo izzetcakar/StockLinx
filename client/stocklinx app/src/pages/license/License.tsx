@@ -9,18 +9,10 @@ const License = () => {
   const { state } = useRouterLocation();
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-      }}
-    >
-      <EntityPanel
-        data={state?.licenses || licenses || []}
-        cardColumns={cardColumns}
-      />
-    </div>
+    <EntityPanel
+      data={state?.licenses || licenses || []}
+      cardColumns={cardColumns}
+    />
   );
 };
 

@@ -9,18 +9,7 @@ const User = () => {
   const { data: users } = useUser.GetAll();
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-      }}
-    >
-      <EntityPanel
-        data={state?.users || users || []}
-        cardColumns={cardColumns}
-      />
-    </div>
+    <EntityPanel data={state?.users || users || []} cardColumns={cardColumns} />
   );
 };
 

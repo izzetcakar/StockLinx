@@ -8,6 +8,8 @@ import {
 import base_asset from "@assets/baseProductImages/base_asset.jpg";
 import {
   useCompany,
+  useComponent,
+  useLicense,
   useModel,
   useProductStatus,
   useSupplier,
@@ -19,6 +21,7 @@ import EmployeeCheckInOutCell from "@/cells/EmployeeCheckInOutCell";
 import CheckedOutEmployeeCell from "@/cells/CheckedOutEmployeeCell";
 import AssetForm from "@/forms/asset/AssetForm";
 import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
+import AssetSeats from "@/components/dataGrid/productseats/AssetSeats";
 
 export const useColumns = () => {
   const {
@@ -41,8 +44,10 @@ export const useColumns = () => {
     isRefetching: supplierLoading,
     refetch: getSupplierLK,
   } = useSupplier.Lookup();
+  const { mutate: licenseCheckOut } = useLicense.AssetCheckOut();
+  const { mutate: componentCheckOut } = useComponent.CheckOut();
 
-  const checkIn = (asset: IAsset) => {
+  const assetCheckIn = (asset: IAsset) => {
     openAssetCheckInModal({
       employeeId: "",
       assetId: asset.id,
@@ -52,8 +57,9 @@ export const useColumns = () => {
     });
   };
 
-  const checkOut = (asset: IAsset, employeeProduct: IEmployeeProduct) => {
+  const assetCheckOut = (asset: IAsset, employeeProduct: IEmployeeProduct) => {
     openAssetCheckOutModal({
+      assetId: asset.id,
       employeeProductId: employeeProduct.id,
       productStatusId: asset.productStatusId,
       notes: employeeProduct.notes,
@@ -143,8 +149,8 @@ export const useColumns = () => {
       Cell: ({ row }) => (
         <EmployeeCheckInOutCell
           asset={row.original}
-          checkIn={checkIn}
-          checkOut={checkOut}
+          checkIn={assetCheckIn}
+          checkOut={assetCheckOut}
         />
       ),
     },
@@ -206,6 +212,26 @@ export const useColumns = () => {
     {
       title: "History",
       renderData: (e) => <HistoryLogs id={e.id} />,
+    },
+    {
+      title: "Licenses",
+      renderData: (e) => (
+        <AssetSeats
+          assetId={e.id}
+          productType="license"
+          checkOut={licenseCheckOut}
+        />
+      ),
+    },
+    {
+      title: "Components",
+      renderData: (e) => (
+        <AssetSeats
+          assetId={e.id}
+          productType="component"
+          checkOut={componentCheckOut}
+        />
+      ),
     },
   ];
 

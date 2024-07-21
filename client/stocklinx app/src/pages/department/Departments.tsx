@@ -1,13 +1,19 @@
 import { useDepartment } from "@/hooks/query";
 import { useColumns } from "./columns";
 import { openDepartmentModal } from "@/utils/modalUtils";
+import { useNavigate } from "react-router-dom";
 import BaseMantineTable from "@/components/mantine/BaseMantineTable";
 
 const Departments = () => {
+  const navigate = useNavigate();
   const { columns } = useColumns();
   const { data, isRefetching, refetch } = useDepartment.GetAll();
   const { mutate: remove } = useDepartment.Remove();
   const { mutate: removeRange } = useDepartment.RemoveRange();
+
+  const onDetails = (values: any[]) => {
+    navigate("/department", { state: { departments: values } });
+  };
 
   return (
     <BaseMantineTable
@@ -20,6 +26,7 @@ const Departments = () => {
       onUpdate={(value: any) => openDepartmentModal(value)}
       onRemove={(id: string) => remove(id)}
       onRemoveRange={(ids: string[]) => removeRange(ids)}
+      onDetails={(values: any[]) => onDetails(values)}
     />
   );
 };

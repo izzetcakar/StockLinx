@@ -4,16 +4,12 @@ import { MRT_ColumnDef } from "mantine-react-table";
 import { Loader } from "@mantine/core";
 
 export const useColumns = () => {
+  const { data: fieldSetCustomFields } = useFieldSetCustomField.GetAll();
   const {
-    data: fieldSets,
+    data: fieldSetLK,
     isRefetching: fieldSetLoading,
     refetch: getFields,
-  } = useFieldSet.GetAll();
-  const {
-    data: fieldSetCustomFields,
-    isRefetching: fieldSetCustomFieldLoading,
-    refetch: getFieldSetCustomFields,
-  } = useFieldSetCustomField.GetAll();
+  } = useFieldSet.Lookup();
 
   const fieldSetColumns: MRT_ColumnDef<IFieldSet>[] = [
     {
@@ -24,29 +20,28 @@ export const useColumns = () => {
 
   const customFieldColumns: MRT_ColumnDef<ICustomField>[] = [
     {
-      accessorKey: "fieldSetId",
       header: "FieldSets",
       filterVariant: "multi-select",
+      accessorFn: (originalRow) => {
+        return fieldSetCustomFields
+          ?.filter((fc) => fc.customFieldId === originalRow.id)
+          .map((fc) => fc.fieldSetId);
+      },
       Cell: ({ row }) => {
-        return fieldSets?.map((f) => {
-          const foundFc = fieldSetCustomFields?.find(
-            (fc) => fc.fieldSetId === (row.original as ICustomField).id
-          );
-          if (foundFc) {
-            return f.name;
-          }
-        });
+        const foundFieldSetsIds = fieldSetCustomFields?.filter(
+          (fc) => fc.customFieldId === row.original.id
+        );
+        const foundFieldSets = fieldSetLK?.filter((fs) =>
+          foundFieldSetsIds?.map((f) => f.fieldSetId).includes(fs.value)
+        );
+        return foundFieldSets
+          ? foundFieldSets.map((fs) => fs.label).join(", ")
+          : null;
       },
       mantineFilterMultiSelectProps: () => ({
-        data: fieldSets,
-        rightSection:
-          fieldSetLoading || fieldSetCustomFieldLoading ? null : (
-            <Loader size={16} />
-          ),
-        onDropdownOpen: () => {
-          getFields();
-          getFieldSetCustomFields();
-        },
+        data: fieldSetLK,
+        rightSection: fieldSetLoading ? null : <Loader size={16} />,
+        onDropdownOpen: () => getFields,
       }),
     },
     {

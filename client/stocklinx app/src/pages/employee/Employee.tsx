@@ -9,18 +9,10 @@ const Employee = () => {
   const { state } = useRouterLocation();
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-      }}
-    >
-      <EntityPanel
-        data={state?.employees || employees || []}
-        cardColumns={cardColumns}
-      />
-    </div>
+    <EntityPanel
+      data={state?.employees || employees || []}
+      cardColumns={cardColumns}
+    />
   );
 };
 

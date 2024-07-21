@@ -1,13 +1,19 @@
 import { useEmployee } from "@/hooks/query";
 import { useColumns } from "./columns";
 import { openEmployeeModal } from "@/utils/modalUtils";
+import { useNavigate } from "react-router-dom";
 import BaseMantineTable from "@/components/mantine/BaseMantineTable";
 
 const Employees = () => {
+  const navigate = useNavigate();
   const { columns } = useColumns();
   const { data, isRefetching, refetch } = useEmployee.GetAll();
   const { mutate: remove } = useEmployee.Remove();
   const { mutate: removeRange } = useEmployee.RemoveRange();
+
+  const onDetails = (values: any[]) => {
+    navigate("/employee", { state: { employees: values } });
+  };
 
   return (
     <BaseMantineTable
@@ -20,6 +26,7 @@ const Employees = () => {
       onUpdate={(value: any) => openEmployeeModal(value)}
       onRemove={(id: string) => remove(id)}
       onRemoveRange={(ids: string[]) => removeRange(ids)}
+      onDetails={(values: any[]) => onDetails(values)}
     />
   );
 };

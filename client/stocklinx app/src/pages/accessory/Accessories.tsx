@@ -1,13 +1,19 @@
 import { useAccessory } from "@/hooks/query";
 import { useColumns } from "./columns";
 import { openAccessoryModal } from "@/utils/modalUtils";
+import { useNavigate } from "react-router-dom";
 import BaseMantineTable from "@/components/mantine/BaseMantineTable";
 
 const Accessories = () => {
+  const navigate = useNavigate();
   const { columns } = useColumns();
   const { data, isRefetching, refetch } = useAccessory.GetAll();
   const { mutate: remove } = useAccessory.Remove();
   const { mutate: removeRange } = useAccessory.RemoveRange();
+
+  const onDetails = (values: any[]) => {
+    navigate("/accessory", { state: { accessories: values } });
+  };
 
   return (
     <BaseMantineTable
@@ -20,6 +26,7 @@ const Accessories = () => {
       onUpdate={(value: any) => openAccessoryModal(value)}
       onRemove={(id: string) => remove(id)}
       onRemoveRange={(ids: string[]) => removeRange(ids)}
+      onDetails={(values: any[]) => onDetails(values)}
     />
   );
 };

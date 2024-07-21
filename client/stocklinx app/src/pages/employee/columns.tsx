@@ -3,7 +3,8 @@ import {
   useDepartment,
   useAccessory,
   useConsumable,
-  useComponent,
+  useAsset,
+  useLicense,
 } from "@queryhooks";
 import { EntityCells } from "@/cells/Entity";
 import { EntityCardColumn } from "@/interfaces/clientInterfaces";
@@ -11,9 +12,7 @@ import { MRT_ColumnDef } from "mantine-react-table";
 import { Loader } from "@mantine/core";
 import EmployeeForm from "@/forms/employee/EmployeeForm";
 import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
-import EmployeeProductSeats from "@/components/dataGrid/productseats/EmployeeProductSeats";
-import AssetProductSeats from "@/components/dataGrid/productseats/AssetProductSeats";
-import LicenseEmployeeSeats from "@/components/dataGrid/productseats/License/LicenseEmployeeSeats";
+import EmployeeSeats from "@/components/dataGrid/productseats/EmployeeSeats";
 
 export const useColumns = () => {
   const {
@@ -22,8 +21,9 @@ export const useColumns = () => {
     refetch: getDepartmentLK,
   } = useDepartment.Lookup();
   const { mutate: checkOutAccessory } = useAccessory.CheckOut();
-  const { mutate: checkOutConumable } = useConsumable.CheckOut();
-  const { mutate: checkOutComponent } = useComponent.CheckOut();
+  const { mutate: checkOutAsset } = useAsset.CheckOut();
+  const { mutate: checkOutConsumable } = useConsumable.CheckOut();
+  const { mutate: checkOutLicense } = useLicense.EmployeeCheckOut();
 
   const columns: MRT_ColumnDef<IEmployee>[] = [
     {
@@ -81,9 +81,8 @@ export const useColumns = () => {
     {
       title: "Accessory",
       renderData: (e) => (
-        <EmployeeProductSeats
-          field="employeeId"
-          value={(e as IEmployee).id}
+        <EmployeeSeats
+          employeeId={e.id}
           productType="accessory"
           checkOut={checkOutAccessory}
         />
@@ -92,29 +91,31 @@ export const useColumns = () => {
     {
       title: "Consumable",
       renderData: (e) => (
-        <EmployeeProductSeats
-          field="employeeId"
-          value={(e as IEmployee).id}
+        <EmployeeSeats
+          employeeId={e.id}
           productType="consumable"
-          checkOut={checkOutConumable}
+          checkOut={checkOutConsumable}
         />
       ),
     },
-    {
-      title: "Component",
-      renderData: (e) => (
-        <AssetProductSeats
-          field="employeeId"
-          value={(e as IEmployee).id}
-          productType="component"
-          checkOut={checkOutComponent}
-        />
-      ),
-    },
+    // {
+    //   title: "Asset",
+    //   renderData: (e) => (
+    //     <EmployeeSeats
+    //       employeeId={e.id}
+    //       productType="asset"
+    //       checkOut={checkOutAsset}
+    //     />
+    //   ),
+    // },
     {
       title: "License",
       renderData: (e) => (
-        <LicenseEmployeeSeats employeeId={(e as IEmployee).id} />
+        <EmployeeSeats
+          employeeId={e.id}
+          productType="license"
+          checkOut={checkOutLicense}
+        />
       ),
     },
   ];

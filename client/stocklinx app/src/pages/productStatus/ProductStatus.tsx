@@ -1,46 +1,18 @@
-import { useParams } from "react-router-dom";
-import { ProductStatusType } from "@interfaces/enums";
+import { useColumns } from "./columns";
 import { useProductStatus } from "@queryhooks";
-import { Tabs } from "@mantine/core";
-import HistoryLogs from "@components/dataGrid/customLog/HistoryLogs";
+import { useLocation as useRouterLocation } from "react-router-dom";
+import EntityPanel from "@/components/entity/EntityPanel";
 
 const ProductStatus = () => {
-  const { id } = useParams();
-  const { data: productStatus } = useProductStatus.Get(id as string);
+  const { cardColumns } = useColumns();
+  const { data: productStatuses } = useProductStatus.GetAll();
+  const { state } = useRouterLocation();
 
   return (
-    <div className="product__container">
-      <div className="product__container__title">
-        Status - {productStatus?.name}
-      </div>
-      <Tabs defaultValue="info">
-        <Tabs.List grow>
-          <Tabs.Tab value="info">Info</Tabs.Tab>
-          <Tabs.Tab value="history">History</Tabs.Tab>
-        </Tabs.List>
-        <Tabs.Panel value="info">
-          <div className="product__content__container">
-            <div className="product__content">
-              <div className="product__content__title">Name</div>
-              <div className="product__content__value">
-                {productStatus?.name}
-              </div>
-            </div>
-            <div className="product__content">
-              <div className="product__content__title">Address</div>
-              <div className="product__content__value">
-                {productStatus?.type !== undefined
-                  ? ProductStatusType[productStatus?.type]
-                  : ""}
-              </div>
-            </div>
-          </div>
-        </Tabs.Panel>
-        <Tabs.Panel value="history">
-          <HistoryLogs id={id as string} />
-        </Tabs.Panel>
-      </Tabs>
-    </div>
+    <EntityPanel
+      data={state?.productStatuses || productStatuses || []}
+      cardColumns={cardColumns}
+    />
   );
 };
 

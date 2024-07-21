@@ -64,40 +64,6 @@ export const useColumns = () => {
     );
   };
 
-  const cardColumns: EntityCardColumn[] = [
-    {
-      title: (accessory: IAccessory) => {
-        return (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "5px",
-            }}
-          >
-            <div>Tag : {accessory.tag}</div>
-            <div>Name : {accessory.name}</div>
-          </div>
-        );
-      },
-      renderData: (e) => <AccessoryForm accessory={e as IAccessory} />,
-    },
-    {
-      title: "Seats",
-      renderData: (e) => (
-        <EmployeeProductSeats
-          field="accessoryId"
-          value={e.id}
-          checkOut={checkOut}
-        />
-      ),
-    },
-    {
-      title: "History",
-      renderData: (e) => <HistoryLogs id={e.id} />,
-    },
-  ];
-
   const columns: MRT_ColumnDef<IAccessory>[] = [
     {
       accessorKey: "companyId",
@@ -232,6 +198,40 @@ export const useColumns = () => {
     {
       accessorKey: "notes",
       header: "Notes",
+    },
+  ];
+
+  const cardColumns: EntityCardColumn[] = [
+    {
+      title: (accessory: IAccessory) => {
+        return (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "5px",
+            }}
+          >
+            <div>Tag : {accessory.tag}</div>
+            <div>Name : {accessory.name}</div>
+          </div>
+        );
+      },
+      renderData: (e) => <AccessoryForm accessory={e as IAccessory} />,
+    },
+    {
+      title: "Seats",
+      renderData: (e) => (
+        <EmployeeProductSeats
+          field="accessoryId"
+          value={e.id}
+          checkOut={checkOut}
+        />
+      ),
+    },
+    {
+      title: "History",
+      renderData: (e) => <HistoryLogs id={e.id} />,
     },
   ];
 

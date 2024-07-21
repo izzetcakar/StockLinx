@@ -55,7 +55,12 @@ export const useColumns = () => {
       mantineFilterMultiSelectProps: () => ({
         data: categoryLoading
           ? []
-          : categories?.filter((c) => c.type === CategoryType.ASSET),
+          : categories
+              ?.filter((c) => c.type === CategoryType.ASSET)
+              .map((c) => ({
+                value: c.id,
+                label: c.name,
+              })),
         rightSection: categoryLoading ? <Loader size={16} /> : null,
         onDropdownOpen: getCategories,
       }),

@@ -6,6 +6,11 @@ import { MRT_ColumnDef } from "mantine-react-table";
 import ProductStatusForm from "@/forms/productStatus/ProductStatusForm";
 import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
 
+const productStatusData = createDataFromEnum(ProductStatusType).map((e) => ({
+  value: e.value.toString(),
+  label: e.label,
+}));
+
 export const useColumns = () => {
   const columns: MRT_ColumnDef<IProductStatus>[] = [
     {
@@ -16,9 +21,15 @@ export const useColumns = () => {
       accessorKey: "type",
       header: "Type",
       filterVariant: "multi-select",
-      Cell: ({ row }) => ProductStatusType[row.original.type],
+      accessorFn: ({ type }) => {
+        return type !== null ? type.toString() : "";
+      },
+      Cell: ({ cell }) => {
+        return productStatusData.find((e) => e.value === cell.getValue())
+          ?.label;
+      },
       mantineFilterMultiSelectProps: () => ({
-        data: createDataFromEnum(ProductStatusType),
+        data: productStatusData,
       }),
     },
   ];

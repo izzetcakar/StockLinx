@@ -1,13 +1,19 @@
 import { useCompany } from "@/hooks/query";
 import { useColumns } from "./columns";
 import { openCompanyModal } from "@/utils/modalUtils";
+import { useNavigate } from "react-router-dom";
 import BaseMantineTable from "@/components/mantine/BaseMantineTable";
 
 const Companies = () => {
+  const navigate = useNavigate();
   const { columns } = useColumns();
   const { data, isRefetching, refetch } = useCompany.GetAll();
   const { mutate: remove } = useCompany.Remove();
   const { mutate: removeRange } = useCompany.RemoveRange();
+
+  const onDetails = (values: any[]) => {
+    navigate("/company", { state: { companies: values } });
+  };
 
   return (
     <BaseMantineTable
@@ -20,6 +26,7 @@ const Companies = () => {
       onUpdate={(value: any) => openCompanyModal(value)}
       onRemove={(id: string) => remove(id)}
       onRemoveRange={(ids: string[]) => removeRange(ids)}
+      onDetails={(values: any[]) => onDetails(values)}
     />
   );
 };
