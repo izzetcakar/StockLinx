@@ -334,12 +334,8 @@ namespace StockLinx.Repository.Repositories.EF_Core
                     Id = Guid.NewGuid(),
                     CreatedDate = DateTime.UtcNow,
                     Name = "Marka",
-                    DefaultValue = "Samsung",
-                    HelpText = "Telefon markası",
                     Type = "string",
                     IsRequired = true,
-                    ValidationRegex = null,
-                    ValidationText = "Telefon markası giriniz",
                     FieldSetCustomFields = new List<FieldSetCustomField>
                     {
                         new FieldSetCustomField
@@ -356,60 +352,40 @@ namespace StockLinx.Repository.Repositories.EF_Core
                     Id = Guid.NewGuid(),
                     CreatedDate = DateTime.UtcNow,
                     Name = "Model",
-                    DefaultValue = "Galaxy S10",
-                    HelpText = "Telefon modeli",
                     Type = "string",
                     IsRequired = true,
-                    ValidationRegex = null,
-                    ValidationText = "Telefon modeli giriniz",
                 },
                 new CustomField
                 {
                     Id = Guid.NewGuid(),
                     CreatedDate = DateTime.UtcNow,
                     Name = "CPU",
-                    DefaultValue = null,
-                    HelpText = "İşlemci",
                     Type = "string",
                     IsRequired = true,
-                    ValidationRegex = null,
-                    ValidationText = "İşlemci giriniz",
                 },
                 new CustomField
                 {
                     Id = Guid.NewGuid(),
                     CreatedDate = DateTime.UtcNow,
                     Name = "GPU",
-                    DefaultValue = null,
-                    HelpText = "Ekran kartı",
                     Type = "string",
                     IsRequired = true,
-                    ValidationRegex = null,
-                    ValidationText = "Ekran kartı giriniz",
                 },
                 new CustomField
                 {
                     Id = Guid.NewGuid(),
                     CreatedDate = DateTime.UtcNow,
                     Name = "RAM",
-                    DefaultValue = null,
-                    HelpText = "RAM",
                     Type = "number",
                     IsRequired = true,
-                    ValidationRegex = null,
-                    ValidationText = "RAM giriniz",
                 },
                 new CustomField
                 {
                     Id = Guid.NewGuid(),
                     CreatedDate = DateTime.UtcNow,
                     Name = "HDD",
-                    DefaultValue = null,
-                    HelpText = "HDD",
                     Type = "string",
                     IsRequired = true,
-                    ValidationRegex = null,
-                    ValidationText = "HDD giriniz",
                 },
             };
             dbContext.CustomFields.AddRange(newCustomFields);

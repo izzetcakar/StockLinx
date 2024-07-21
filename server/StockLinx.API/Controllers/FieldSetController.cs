@@ -50,8 +50,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                await _fieldSetService.CreateFieldSetAsync(dto);
-                return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+                FieldSetDto result = await _fieldSetService.CreateFieldSetAsync(dto);
+                return CreateActionResult(CustomResponseDto<FieldSetDto>.Success(201, result));
             }
             catch (Exception ex)
             {
@@ -64,8 +64,8 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                await _fieldSetService.CreateRangeFieldSetAsync(dtos);
-                return CreateActionResult(CustomResponseDto<NoContentDto>.Success(201));
+                List<FieldSetDto> result =  await _fieldSetService.CreateRangeFieldSetAsync(dtos);
+                return CreateActionResult(CustomResponseDto<List<FieldSetDto>>.Success(201, result));
             }
             catch (Exception ex)
             {

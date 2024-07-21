@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
 using StockLinx.Core.DTOs.Update;
@@ -34,7 +35,7 @@ namespace StockLinx.Service.Services
         public async Task<CustomFieldDto> GetDtoAsync(Guid id)
         {
             CustomField customField = await GetByIdAsync(id);
-            return _customFieldRepository.GetDto(customField);
+            return await _customFieldRepository.GetDtoAsync(customField);
         }
 
         public async Task<List<CustomFieldDto>> GetAllDtosAsync()
@@ -47,13 +48,17 @@ namespace StockLinx.Service.Services
             CustomField customField = _mapper.Map<CustomField>(dto);
             List<FieldSetCustomField> fcToAdd = new List<FieldSetCustomField>();
 
-            if (dto.FieldSetCustomFields != null && dto.FieldSetCustomFields.Any())
+            if (dto.FieldSets != null && dto.FieldSets.Any())
             {
-                foreach (FieldSetCustomFieldDto fieldSetCustomFieldDto in dto.FieldSetCustomFields)
+                foreach (Guid fieldSetId in dto.FieldSets)
                 {
-                    FieldSetCustomField fieldSetCustomField = _mapper.Map<FieldSetCustomField>(
-                        fieldSetCustomFieldDto
-                    );
+                    FieldSetCustomField fieldSetCustomField = new FieldSetCustomField
+                    {
+                        Id = Guid.NewGuid(),
+                        FieldSetId = fieldSetId,
+                        CustomFieldId = customField.Id,
+                        CreatedDate = DateTime.UtcNow,
+                    };
                     fcToAdd.Add(fieldSetCustomField);
                 }
                 await _fieldSetCustomFieldRepository.AddRangeAsync(fcToAdd);
@@ -80,9 +85,50 @@ namespace StockLinx.Service.Services
             CustomField customFieldInDb = await GetByIdAsync(dto.Id);
             CustomField customField = _mapper.Map<CustomField>(dto);
             customField.UpdatedDate = DateTime.UtcNow;
+            var fieldSetCustomFieldsInDb = await _fieldSetCustomFieldRepository.Where((fscf) => fscf.CustomFieldId == customField.Id).ToListAsync();
+            List<FieldSetCustomField> fcToAdd = new List<FieldSetCustomField>();
+            List<FieldSetCustomField> fcToRemove = new List<FieldSetCustomField>();
+            if (fieldSetCustomFieldsInDb.Any())
+            {
+                foreach (Guid id in fieldSetCustomFieldsInDb.Select(fscf => fscf.FieldSetId))
+                {
+                    if (!dto.FieldSets.Contains(id))
+                    {
+                        FieldSetCustomField fieldSetCustomField = fieldSetCustomFieldsInDb.FirstOrDefault(fscf => fscf.FieldSetId == id);
+                        fcToRemove.Add(fieldSetCustomField);
+                    }
+                }
+            }
+            if (dto.FieldSets != null && dto.FieldSets.Any())
+            {
+                foreach (Guid fieldSetId in dto.FieldSets)
+                {
+                    bool isExist = fieldSetCustomFieldsInDb.Any(fscf => fscf.FieldSetId == fieldSetId);
+                    if (!isExist)
+                    {
+                        FieldSetCustomField fieldSetCustomField = new FieldSetCustomField
+                        {
+                            Id = Guid.NewGuid(),
+                            FieldSetId = fieldSetId,
+                            CustomFieldId = customField.Id,
+                            CreatedDate = DateTime.UtcNow,
+                        };
+                        fcToAdd.Add(fieldSetCustomField);
+                    }
+                }
+            }
+            if (fcToAdd.Any())
+            {
+                await _fieldSetCustomFieldRepository.AddRangeAsync(fcToAdd);
+            }
+            if (fcToRemove.Any())
+            {
+                _fieldSetCustomFieldRepository.RemoveRange(fcToRemove);
+            }
+
             _customFieldRepository.Update(customFieldInDb, customField);
             await _unitOfWork.CommitAsync();
-            return _customFieldRepository.GetDto(customField);
+            return await _customFieldRepository.GetDtoAsync(customField);
         }
 
         public async Task DeleteCustomFieldAsync(Guid id)

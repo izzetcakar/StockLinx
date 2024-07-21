@@ -104,7 +104,6 @@ namespace StockLinx.Repository.Repositories.EF_Core
             {
                 Id = Guid.NewGuid(),
                 CreatedDate = DateTime.UtcNow,
-                UpdatedDate = null,
                 CategoryId = dto.CategoryId,
                 FieldSetId = dto.FieldSetId,
                 ImagePath = dto.ImagePath,
@@ -123,7 +122,6 @@ namespace StockLinx.Repository.Repositories.EF_Core
                     {
                         Id = Guid.NewGuid(),
                         CreatedDate = DateTime.UtcNow,
-                        UpdatedDate = null,
                         CustomFieldId = item.CustomFieldId,
                         ModelId = model.Id,
                         Value = item.Value,
@@ -132,7 +130,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
                 }
                 dbContext.ModelFieldDatas.AddRange(itemsToAdd);
             }
-            model.ModelFieldData = null;
+            model.ModelFieldDatas = null;
             dbContext.Models.Add(model);
             return GetDto(model);
         }

@@ -13,7 +13,7 @@ namespace StockLinx.Repository.Configurations
 
             builder
                 .HasOne(mfd => mfd.Model)
-                .WithMany(m => m.ModelFieldData)
+                .WithMany(m => m.ModelFieldDatas)
                 .HasForeignKey(mfd => mfd.ModelId)
                 .OnDelete(DeleteBehavior.Cascade);
             builder

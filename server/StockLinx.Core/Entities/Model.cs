@@ -15,6 +15,6 @@
         public Manufacturer? Manufacturer { get; set; }
         public Category? Category { get; set; }
         public ICollection<Asset>? Assets { get; set; }
-        public ICollection<ModelFieldData>? ModelFieldData { get; set; }
+        public ICollection<ModelFieldData>? ModelFieldDatas { get; set; }
     }
 }

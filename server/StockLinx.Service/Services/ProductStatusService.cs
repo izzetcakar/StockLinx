@@ -98,6 +98,7 @@ namespace StockLinx.Service.Services
 
         public async Task DeleteProductStatusAsync(Guid id)
         {
+            await _productStatusRepository.CanDeleteAsync(id);
             ProductStatus productStatus = await GetByIdAsync(id);
             _productStatusRepository.Remove(productStatus);
             await _customLogService.CreateCustomLog(
@@ -114,6 +115,7 @@ namespace StockLinx.Service.Services
             List<ProductStatus> productStatuses = new List<ProductStatus>();
             foreach (Guid id in ids)
             {
+                await _productStatusRepository.CanDeleteAsync(id);
                 ProductStatus productStatus = await GetByIdAsync(id);
                 productStatuses.Add(productStatus);
                 await _customLogService.CreateCustomLog(
