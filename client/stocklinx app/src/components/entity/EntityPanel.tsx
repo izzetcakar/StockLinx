@@ -1,6 +1,7 @@
-import { EntityCardColumn } from "@/interfaces/clientInterfaces";
 import React, { useState } from "react";
+import { EntityCardColumn } from "@/interfaces/clientInterfaces";
 import "./entitypanel.scss";
+
 interface EntityPanelProps {
   data: any[];
   cardColumns: EntityCardColumn[];

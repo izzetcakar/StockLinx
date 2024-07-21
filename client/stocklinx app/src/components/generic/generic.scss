@@ -6,7 +6,7 @@
   height: fit-content;
   align-items: center;
   justify-content: space-between;
-  padding-bottom: 0.5rem;
+  padding: $spacing-xl 0;
   .page__content__header__title {
     font-family: "Helvetica Neue", "Segoe UI", helvetica, verdana, sans-serif;
     text-overflow: ellipsis;

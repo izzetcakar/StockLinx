@@ -49,8 +49,8 @@ export const openNotificationError = (title: string, message: string) => {
     autoClose: 2000,
     withCloseButton: true,
     styles: () => ({
-      title: { fontSize: rem(13) },
-      description: { fontSize: rem(13) },
+      title: { fontSize: rem(16) },
+      description: { fontSize: rem(16) },
       root: {
         padding: rem(15),
         marginBottom: rem(20),

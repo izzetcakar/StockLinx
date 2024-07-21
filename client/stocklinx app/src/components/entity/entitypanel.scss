@@ -13,7 +13,7 @@
     width: 200px;
     height: 100%;
     padding: $spacing-lg;
-    gap: $spacing-lg;
+    gap: $spacing-xs;
     overflow-y: scroll;
     box-shadow: 0 0 5px #85848486;
     clip-path: inset(0px -5px 0px 0px);
@@ -26,6 +26,7 @@
       cursor: pointer;
       background-color: white;
       border-radius: 10px;
+      margin-bottom: 10px;
       padding: $spacing-lg;
 
       .card__title,

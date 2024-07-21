@@ -131,11 +131,13 @@ export const openManufacturerModal = (
     size: "lg",
   });
 
-export const openModelModal = (model?: IModel) =>
+export const openModelModal = (model?: IModel, canBack?: boolean) =>
   modals.open({
     modalId: "model-modal",
     title: model ? "Update Model" : "Create Model",
-    children: <ModelForm model={model} />,
+    children: (
+      <ModelForm model={model} {...getCanBack("model-modal", canBack)} />
+    ),
   });
 
 export const openAccessoryModal = (accessory?: IAccessory) =>
@@ -223,6 +225,7 @@ export const openFieldSetModal = (fieldSet?: IFieldSet) => {
     modalId: "fieldset-modal",
     title: fieldSet ? "Update FieldSet" : "Create FieldSet",
     children: <FieldSetForm fieldSet={fieldSet} />,
+    size: "lg",
   });
 };
 
@@ -231,6 +234,7 @@ export const openCustomFieldModal = (customField?: ICustomField) => {
     modalId: "customfield-modal",
     title: customField ? "Update CustomField" : "Create CustomField",
     children: <CustomFieldForm customField={customField} />,
+    size: "lg",
   });
 };
 
@@ -264,6 +268,7 @@ export const openAssetCheckInModal = (checkInDto: AssetCheckInDto) => {
     modalId: "asset-checkin-modal",
     title: "Check In",
     children: <AssetCheckInForm checkInDto={checkInDto} />,
+    size: "lg",
   });
 };
 
@@ -298,7 +303,7 @@ export const openEmployeeProductCheckOutModal = (
   employeeCheckOut: (data: EmployeeProductCheckOutDto) => void
 ) => {
   modals.open({
-    modalId: "user-product-checkout-modal",
+    modalId: "employee-product-checkout-modal",
     title: "Check Out",
     children: (
       <EmployeeProductCheckOutForm
