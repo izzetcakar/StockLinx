@@ -114,6 +114,7 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory }) => {
             label="Company"
             value={form.values.companyId}
             inputProps={form.getInputProps("companyId")}
+            disabled={!isCreate}
             required
           />
           <TextInput

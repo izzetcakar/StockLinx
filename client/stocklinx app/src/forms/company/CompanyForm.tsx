@@ -33,6 +33,17 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ company }) => {
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
       <FormCard>
         <TextInput
+          label="Company"
+          {...form.getInputProps("tag")}
+          onChange={(e) =>
+            form.setFieldValue("tag", e.target.value.toUpperCase())
+          }
+          maxLength={10}
+          disabled={!isCreate}
+          required
+          withAsterisk
+        />
+        <TextInput
           label="Name"
           placeholder="New Name"
           {...form.getInputProps("name")}

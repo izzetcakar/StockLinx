@@ -1,18 +1,17 @@
-import { Loader, Select } from "@mantine/core";
+import { Loader, MultiSelect } from "@mantine/core";
 
-interface FormSelectProps {
+interface MultiFormSelectProps {
   data?: { value: string; label: string }[] | undefined;
   label?: string;
   inputProps: object;
-  value: string | null;
+  value: string[];
   required?: boolean;
   loading?: boolean;
   disabled?: boolean;
-  onChange?: (value: string | null) => void;
   fetchData?: () => void;
 }
 
-const FormSelect: React.FC<FormSelectProps> = ({
+const MultiFormSelect: React.FC<MultiFormSelectProps> = ({
   data,
   label,
   inputProps,
@@ -21,24 +20,16 @@ const FormSelect: React.FC<FormSelectProps> = ({
   loading,
   disabled,
   fetchData,
-  onChange,
 }) => {
   const placeholder = label ? `Select ${label}` : "Select";
   const nothingFound = label ? `No ${label} found` : "Nothing found";
   return (
-    <Select
+    <MultiSelect
       data={loading || !data ? [] : data}
       label={label || ""}
       placeholder={placeholder}
       {...inputProps}
-      value={value || ""}
-      {...(onChange
-        ? {
-            onChange: (value) => {
-              onChange(value);
-            },
-          }
-        : {})}
+      value={value || []}
       nothingFoundMessage={nothingFound}
       comboboxProps={{
         position: "bottom",
@@ -56,4 +47,4 @@ const FormSelect: React.FC<FormSelectProps> = ({
   );
 };
 
-export default FormSelect;
+export default MultiFormSelect;

@@ -81,6 +81,7 @@ const ComponentForm: React.FC<ComponentFormProps> = ({ component }) => {
             label="Company"
             inputProps={form.getInputProps("companyId")}
             value={form.values.companyId}
+            disabled={!isCreate}
             required
           />
           <TextInput

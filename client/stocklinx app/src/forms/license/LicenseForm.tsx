@@ -88,6 +88,7 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license }) => {
             label="Company"
             inputProps={form.getInputProps("companyId")}
             value={form.values.companyId}
+            disabled={!isCreate}
             required
           />
           <TextInput

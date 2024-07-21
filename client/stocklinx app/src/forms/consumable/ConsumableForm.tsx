@@ -89,6 +89,7 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({ consumable }) => {
             label="Company"
             inputProps={form.getInputProps("companyId")}
             value={form.values.companyId}
+            disabled={!isCreate}
             required
           />
           <TextInput

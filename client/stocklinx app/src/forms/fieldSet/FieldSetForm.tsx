@@ -4,11 +4,14 @@ import { useForm } from "@mantine/form";
 import { IFieldSet } from "@interfaces/serverInterfaces";
 import { useFieldSet } from "@queryhooks";
 import uuid4 from "uuid4";
+import { useInitial } from "@/hooks/initial/useInitial";
 interface FieldSetFormProps {
   fieldSet?: IFieldSet;
 }
 
 const FieldSetForm: React.FC<FieldSetFormProps> = ({ fieldSet }) => {
+  const initialValues = useInitial().FieldSet(fieldSet);
+  const isCreate = initialValues.id === "";
   const { mutate: createFieldSet } = useFieldSet.Create();
   const { mutate: updateFieldSet } = useFieldSet.Update();
 
@@ -25,12 +28,12 @@ const FieldSetForm: React.FC<FieldSetFormProps> = ({ fieldSet }) => {
     },
   });
   const handleSubmit = (data: IFieldSet) => {
-    fieldSet ? updateFieldSet(data) : createFieldSet(data);
+    isCreate ? createFieldSet(data) : updateFieldSet(data);
   };
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-       <Flex direction="column" gap={10} px={20}>
+      <Flex direction="column" gap={10} px={20}>
         <TextInput
           label="Name"
           placeholder="New Name"

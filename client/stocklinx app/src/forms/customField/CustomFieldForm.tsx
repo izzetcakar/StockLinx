@@ -1,105 +1,41 @@
-import React, { useState } from "react";
-import {
-  TextInput,
-  Button,
-  Group,
-  Flex,
-  Select,
-  Switch,
-  MultiSelect,
-} from "@mantine/core";
+import React from "react";
+import { TextInput, Button, Group, Select, Switch } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import {
-  ICustomField,
-  IFieldSetCustomField,
-} from "@interfaces/serverInterfaces";
-import uuid4 from "uuid4";
-import {
-  useFieldSet,
-  useFieldSetCustomField,
-  useCustomField,
-} from "@queryhooks";
+import { ICustomField } from "@interfaces/serverInterfaces";
+import { useCustomField, useFieldSet } from "@queryhooks";
+import { useInitial } from "@/hooks/initial/useInitial";
+import MultiFormSelect from "../mantine/MultiFormSelect";
+import FormCard from "@/components/form/FormCard";
 interface CustomFieldFormProps {
   customField?: ICustomField;
 }
 
 const CustomFieldForm: React.FC<CustomFieldFormProps> = ({ customField }) => {
-  const { data: fieldSets } = useFieldSet.GetAll();
-  const { data: fieldSetCustomFields } = useFieldSetCustomField.GetAll();
-  const [value, setValue] = useState<IFieldSetCustomField[]>(
-    customField
-      ? fieldSetCustomFields?.filter(
-          (fc) => fc.customFieldId === customField.id
-        ) || []
-      : []
-  );
-  const { mutate: createFSCF } = useFieldSetCustomField.Create();
-  const { mutate: updateFSCF } = useFieldSetCustomField.Update();
-  const { mutate: updateCF } = useCustomField.Update();
+  const initialValues = useInitial().CustomField(customField);
+  const isCreate = initialValues.id === "";
+  const {
+    data: fieldSetLK,
+    isRefetching: fieldSetLoading,
+    refetch: getFieldSetLK,
+  } = useFieldSet.Lookup();
+  const { mutate: createCustomField } = useCustomField.Create();
+  const { mutate: updateCustomField } = useCustomField.Update();
 
   const form = useForm<ICustomField>({
-    initialValues: customField
-      ? { ...customField }
-      : {
-          id: uuid4(),
-          name: "",
-          type: "string",
-          defaultValue: null,
-          helpText: null,
-          isRequired: false,
-          validationRegex: null,
-          validationText: null,
-        },
+    initialValues: initialValues,
     validate: {
       name: (value: string) =>
         /(?!^$)([^\s])/.test(value) ? null : "Name should not be empty",
     },
   });
+
   const handleSubmit = (data: ICustomField) => {
-    if (customField) {
-      updateCF(data);
-      value.forEach((v) => {
-        if (!fieldSets?.map((f) => f.id).includes(v.fieldSetId)) {
-          updateFSCF(v);
-        }
-      });
-      fieldSets?.forEach((f) => {
-        const exist = value.some((v) => v.fieldSetId === f.id);
-        if (!exist) {
-          createFSCF({
-            id: uuid4(),
-            fieldSetId: f.id,
-            customFieldId: data.id,
-          });
-        }
-      });
-    }
-  };
-  const onFieldSetsChange = (e: any[]) => {
-    const filteredValue = value.filter((v) => e.includes(v.fieldSetId));
-    e.forEach((element) => {
-      const fieldSet = fieldSets?.find((f) => f.id === element);
-      if (fieldSet) {
-        const exist = filteredValue.some(
-          (v) =>
-            v.fieldSetId === fieldSet.id && v.customFieldId === form.values.id
-        );
-        if (!exist) {
-          const newValue = {
-            id: uuid4(),
-            fieldSetId: fieldSet.id,
-            customFieldId: form.values.id,
-          };
-          filteredValue.push(newValue);
-        }
-      }
-    });
-    setValue(filteredValue);
+    isCreate ? createCustomField(data) : updateCustomField(data);
   };
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-      <Flex direction="column" gap={10} px={20}>
+      <FormCard>
         <TextInput
           label="Name"
           placeholder="New Name"
@@ -108,25 +44,18 @@ const CustomFieldForm: React.FC<CustomFieldFormProps> = ({ customField }) => {
           withAsterisk
         />
         <Select
-          data={["string", "number", "boolean", "date"]}
+          data={[
+            { value: "string", label: "Text" },
+            { value: "number", label: "Number" },
+            { value: "boolean", label: "CheckBox" },
+            { value: "date", label: "Date" },
+          ]}
           label="Type"
           placeholder="Select Type"
           {...form.getInputProps("type")}
           comboboxProps={{ position: "bottom" }}
           required
           withAsterisk
-        />
-        <TextInput
-          label="Default Value"
-          placeholder="Default Value"
-          {...form.getInputProps("defaultValue")}
-          value={form.values.defaultValue || ""}
-        />
-        <TextInput
-          label="Help Text"
-          placeholder="Help Text"
-          {...form.getInputProps("helpText")}
-          value={form.values.helpText || ""}
         />
         <Switch
           label="Is Required"
@@ -135,35 +64,20 @@ const CustomFieldForm: React.FC<CustomFieldFormProps> = ({ customField }) => {
           radius={10}
           {...form.getInputProps("isRequired")}
         />
-        <TextInput
-          label="Validation Regex"
-          placeholder="Validation Regex"
-          {...form.getInputProps("validationRegex")}
-          value={form.values.validationRegex || ""}
-        />
-        <TextInput
-          label="Validation Text"
-          placeholder="Validation Text"
-          {...form.getInputProps("validationText")}
-          value={form.values.validationText || ""}
-        />
-        <MultiSelect
+        <MultiFormSelect
           label="Field Sets"
-          data={fieldSets?.map((f) => ({ value: f.id, label: f.name })) || []}
-          value={fieldSets
-            ?.filter((f) => value.map((x) => x.fieldSetId).includes(f.id))
-            .map((f) => f.id)}
-          onChange={onFieldSetsChange}
-          placeholder="Select Field Sets"
-          comboboxProps={{ position: "bottom" }}
-          nothingFoundMessage="No field sets found"
+          loading={fieldSetLoading}
+          data={fieldSetLK}
+          fetchData={getFieldSetLK}
+          inputProps={form.getInputProps("fieldSets")}
+          value={form.values.fieldSets || []}
         />
         <Group mt="md" justify="flex-end">
           <Button type="submit" color="dark">
             Submit
           </Button>
         </Group>
-      </Flex>
+      </FormCard>
     </form>
   );
 };

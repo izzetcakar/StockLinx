@@ -3,7 +3,6 @@ import {
   TextInput,
   Button,
   Group,
-  Flex,
   Textarea,
   Select,
   NumberInput,
@@ -27,11 +26,13 @@ import {
 import { CategoryType } from "@/interfaces/enums";
 import FormSelect from "../mantine/FormSelect";
 import { useInitial } from "@/hooks/initial/useInitial";
+import FormCard from "@/components/form/FormCard";
 interface ModelFormProps {
   model?: IModel;
+  onBack?: () => void;
 }
 
-const ModelForm: React.FC<ModelFormProps> = ({ model }) => {
+const ModelForm: React.FC<ModelFormProps> = ({ model, onBack }) => {
   const initialValues = useInitial().Model(model);
   const isCreate = initialValues.id === "";
   const { data: categories } = useCategory.GetAll();
@@ -61,12 +62,7 @@ const ModelForm: React.FC<ModelFormProps> = ({ model }) => {
             customField.type !== "boolean"
           )
             return "This field is required";
-          else if (customField.validationRegex) {
-            const regex = new RegExp(customField.validationRegex);
-            if (!regex.test(value.toString()))
-              return customField.validationText || "Not valid to regex";
-            else return null;
-          } else return null;
+          else return null;
         },
       },
     },
@@ -232,7 +228,7 @@ const ModelForm: React.FC<ModelFormProps> = ({ model }) => {
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-      <Flex direction="column" gap={10} px={20}>
+      <FormCard>
         <Image
           src={form.values.imagePath}
           mah={500}
@@ -302,12 +298,17 @@ const ModelForm: React.FC<ModelFormProps> = ({ model }) => {
             </div>
           </div>
         ) : null}
-        <Group mt="md" justify="flex-end">
+        <Group pt="xs" justify="flex-end">
+          {onBack ? (
+            <Button color="dark" onClick={onBack}>
+              Back
+            </Button>
+          ) : null}
           <Button type="submit" color="dark">
             Submit
           </Button>
         </Group>
-      </Flex>
+      </FormCard>
     </form>
   );
 };

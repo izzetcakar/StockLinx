@@ -134,6 +134,7 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
             label="Company"
             inputProps={form.getInputProps("companyId")}
             value={form.values.companyId}
+            disabled={!isCreate}
             required
           />
           <TextInput
@@ -162,7 +163,7 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
             value={form.values.serialNo || ""}
           />
         </FormCard>
-        <FormCard title="Model" onClick={openModelModal}>
+        <FormCard title="Model" onClick={() => openModelModal(undefined, true)}>
           <FormSelect
             data={modelLK}
             inputProps={form.getInputProps("modelId")}
