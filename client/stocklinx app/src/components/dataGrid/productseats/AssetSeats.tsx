@@ -4,53 +4,59 @@ import { AssetProductCheckOutDto } from "@/interfaces/dtos";
 import BaseMantineTable from "@/components/mantine/BaseMantineTable";
 
 interface AssetSeatProps {
-  field: string;
-  value: string;
+  assetId: string;
   productType?: "license" | "component";
   checkOut: (data: AssetProductCheckOutDto) => void;
 }
 
-const AssetProductSeats: React.FC<AssetSeatProps> = ({
-  field,
-  value,
+const AssetSeats: React.FC<AssetSeatProps> = ({
+  assetId,
   productType,
   checkOut,
 }) => {
-  const { columns, assetCell } = assetSeatColumns(checkOut);
+  const { columns, licenseCell, componentCell } = assetSeatColumns(checkOut);
   const {
     data: assetProducts,
     isRefetching: assetProductLoading,
     refetch: getAssetProductLK,
   } = useAssetProduct.GetAll();
 
+  const filterById = () => {
+    return assetProducts?.filter((u) => u.assetId === assetId) || [];
+  };
+
   const filterByProductType = () => {
     switch (productType) {
       case "license":
-        return assetProducts?.filter(
-          (u) => u.licenseId !== null && u[field] === value
-        );
+        return filterById().filter((u) => u.licenseId !== null);
       case "component":
-        return assetProducts?.filter(
-          (u) => u.componentId !== null && u[field] === value
-        );
+        return filterById().filter((u) => u.componentId !== null);
       default:
-        return assetProducts;
+        return filterById();
     }
   };
 
-  const getColumns = () => {
-    columns.splice(2, 0, assetCell);
-    return columns;
+  const handleColumnsByProductType = () => {
+    switch (productType) {
+      case "license":
+        columns.splice(2, 0, licenseCell);
+        return columns;
+      case "component":
+        columns.splice(2, 0, componentCell);
+        return columns;
+      default:
+        return columns;
+    }
   };
 
   return (
     <BaseMantineTable
       data={filterByProductType()}
-      columns={getColumns()}
+      columns={handleColumnsByProductType()}
       refetch={getAssetProductLK}
       isLoading={assetProductLoading}
     />
   );
 };
 
-export default AssetProductSeats;
+export default AssetSeats;
