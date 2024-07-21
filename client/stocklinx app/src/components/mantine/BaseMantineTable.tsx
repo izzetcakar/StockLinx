@@ -6,6 +6,7 @@ import {
   IconPlus,
   IconTrash,
   IconCopy,
+  IconLocationShare,
 } from "@tabler/icons-react";
 import { IAccessory } from "@/interfaces/serverInterfaces";
 import { openConfirmModal } from "@/components/gridTable/modals/modals";
@@ -15,11 +16,12 @@ interface BaseMantineTableProps {
   columns: any[];
   isLoading: boolean;
   refetch: () => void;
-  onAdd: () => void;
+  onAdd?: () => void;
   onCopy?: (value: any) => void;
   onUpdate?: (value: any) => void;
-  onRemove: (id: string) => void;
-  onRemoveRange: (ids: string[]) => void;
+  onRemove?: (id: string) => void;
+  onRemoveRange?: (ids: string[]) => void;
+  onDetails?: (value: any[]) => void;
 }
 
 const BaseMantineTable: React.FC<BaseMantineTableProps> = ({
@@ -32,6 +34,7 @@ const BaseMantineTable: React.FC<BaseMantineTableProps> = ({
   onUpdate,
   onRemove,
   onRemoveRange,
+  onDetails,
 }) => {
   const copyHandler = (value: any) => {
     if (!onCopy) return;
@@ -39,12 +42,14 @@ const BaseMantineTable: React.FC<BaseMantineTableProps> = ({
   };
 
   const removeHandler = (id: string) => {
+    if (!onRemove) return;
     openConfirmModal("Remove", "Are you sure want to remove this item?", () =>
       onRemove(id)
     );
   };
 
   const removeRangeHandler = (selectedKeys: string[]) => {
+    if (!onRemoveRange) return;
     if (selectedKeys.length === 0) return;
     openConfirmModal(
       "Remove Range",
@@ -53,18 +58,40 @@ const BaseMantineTable: React.FC<BaseMantineTableProps> = ({
     );
   };
 
+  const editable =
+    onAdd || onUpdate || onCopy || onRemove || onRemoveRange ? true : false;
+
   const table = useMantineReactTable<IAccessory>({
     columns,
     data: data || [],
     enableGlobalFilter: false,
     enableDensityToggle: false,
     enableColumnOrdering: true,
+    enablePinning: true,
+    enableStickyHeader: true,
+    enableStickyFooter: true,
     enableFacetedValues: true,
-    enableRowActions: true,
-    enableRowSelection: true,
+    enableRowActions: editable,
+    enableRowSelection: editable,
+    positionActionsColumn: "last",
     paginationDisplayMode: "pages",
     positionToolbarAlertBanner: "bottom",
-    enablePinning: true,
+    displayColumnDefOptions: {
+      "mrt-row-actions": {
+        header: "",
+        size: 0,
+        minSize: 0,
+        maxSize: 0,
+        grow: 0,
+      },
+      "mrt-row-select": {
+        size: 0,
+        minSize: 0,
+        maxSize: 0,
+        grow: 0,
+      },
+    },
+    mantineSelectCheckboxProps: { radius: "sm" },
     state: {
       showLoadingOverlay: isLoading,
       density: "xs",
@@ -74,32 +101,56 @@ const BaseMantineTable: React.FC<BaseMantineTableProps> = ({
       radius: "md",
       size: "sm",
     },
+    defaultColumn: {
+      size: 20,
+    },
+    mantineTableBodyRowProps: ({ row }) => ({
+      onClick: row.getToggleSelectedHandler(),
+      sx: { cursor: "pointer" },
+    }),
     renderTopToolbarCustomActions: ({ table }) => (
       <Flex align="center" gap="sm">
         <ActionIcon onClick={() => refetch()} variant="subtle" color="black">
           <IconRefresh />
         </ActionIcon>
-        <ActionIcon onClick={() => onAdd()} variant="subtle" color="black">
-          <IconPlus />
-        </ActionIcon>
-        <ActionIcon
-          onClick={() =>
-            removeRangeHandler(
-              table
-                .getSelectedRowModel()
-                .rows.map((row) => row.original)
-                .map((row) => row.id)
-            )
-          }
-          variant="subtle"
-          color="black"
-        >
-          <IconTrash />
-        </ActionIcon>
+        {onAdd ? (
+          <ActionIcon onClick={() => onAdd()} variant="subtle" color="black">
+            <IconPlus />
+          </ActionIcon>
+        ) : null}
+        {onRemoveRange ? (
+          <ActionIcon
+            onClick={() =>
+              removeRangeHandler(
+                table
+                  .getSelectedRowModel()
+                  .rows.map((row) => row.original)
+                  .map((row) => row.id)
+              )
+            }
+            variant="subtle"
+            color="black"
+          >
+            <IconTrash />
+          </ActionIcon>
+        ) : null}
+        {onDetails && table.getSelectedRowModel().rows.length >= 1 ? (
+          <ActionIcon
+            variant="subtle"
+            color="black"
+            onClick={() =>
+              onDetails(
+                table.getSelectedRowModel().rows.map((row) => row.original)
+              )
+            }
+          >
+            <IconLocationShare />
+          </ActionIcon>
+        ) : null}
       </Flex>
     ),
     renderRowActions: ({ row }) => (
-      <Flex gap={5}>
+      <Flex gap={5} style={{ width: "fit-content" }}>
         {onUpdate ? (
           <ActionIcon
             onClick={() => onUpdate(row.original)}
@@ -118,13 +169,15 @@ const BaseMantineTable: React.FC<BaseMantineTableProps> = ({
             <IconCopy size={15} />
           </ActionIcon>
         ) : null}
-        <ActionIcon
-          onClick={() => removeHandler(row.original.id)}
-          variant="subtle"
-          color="black"
-        >
-          <IconTrash size={15} />
-        </ActionIcon>
+        {onRemove ? (
+          <ActionIcon
+            onClick={() => removeHandler(row.original.id)}
+            variant="subtle"
+            color="black"
+          >
+            <IconTrash size={15} />
+          </ActionIcon>
+        ) : null}
       </Flex>
     ),
   });
