@@ -1,13 +1,13 @@
-import { DataColumn } from "@interfaces/gridTableInterfaces";
+import { ICustomLog } from "../../../interfaces/serverInterfaces";
+import { Loader } from "@mantine/core";
+import { useUser } from "@queryhooks";
+import { MRT_ColumnDef } from "mantine-react-table";
+import { EntityCells } from "@/cells/Entity";
 import icon_delete from "@assets/customLog/Delete.png";
 import icon_update from "@assets/customLog/Update.png";
 import icon_create from "@assets/customLog/Create.png";
 import icon_checkIn from "@assets/customLog/CheckIn.png";
 import icon_checkOut from "@assets/customLog/CheckOut.png";
-import { ICustomLog } from "../../../interfaces/serverInterfaces";
-import { Anchor } from "@mantine/core";
-import { useNavigate } from "react-router-dom";
-import { useUser } from "@queryhooks";
 
 const getActionIcon = (action: string) => {
   switch (action) {
@@ -26,76 +26,77 @@ const getActionIcon = (action: string) => {
   }
 };
 export const useColumns = () => {
-  const navigate = useNavigate();
-  const columns: DataColumn[] = [
+  const {
+    data: userLK,
+    isRefetching: userLoading,
+    refetch: getUserLK,
+  } = useUser.Lookup();
+
+  const columns: MRT_ColumnDef<ICustomLog>[] = [
     {
-      dataField: "action",
-      caption: "Action",
-      dataType: "action",
-      renderComponent(e) {
+      accessorKey: "action",
+      header: "Action",
+      filterVariant: "multi-select",
+      Cell: ({ row }) => {
         return (
           <div style={{ display: "flex", justifyContent: "center" }}>
             <img
-              src={getActionIcon((e as ICustomLog).action)}
+              src={getActionIcon(row.original.action)}
               height={16}
               width={16}
             />
           </div>
         );
       },
+      mantineFilterMultiSelectProps: () => ({
+        data: [
+          { value: "Create", label: "Create" },
+          { value: "Update", label: "Update" },
+          { value: "Delete", label: "Delete" },
+          { value: "CheckIn", label: "CheckIn" },
+          { value: "CheckOut", label: "CheckOut" },
+        ],
+      }),
     },
     {
-      dataField: "action",
-      caption: "Action",
-      dataType: "string",
+      accessorKey: "userId",
+      header: "User",
+      filterVariant: "multi-select",
+      Cell: ({ row }) => EntityCells.User(row.original.userId),
+      mantineFilterSelectProps: () => ({
+        data: userLoading ? [] : userLK,
+        rightSection: userLoading ? <Loader size={16} /> : null,
+        onDropdownOpen: getUserLK,
+      }),
     },
     {
-      dataField: "userId",
-      caption: "User",
-      dataType: "string",
-      renderComponent(e) {
-        const customLog = e as ICustomLog;
-        const { data: user } = useUser.Get(customLog.userId);
-        if (!user) {
-          return "Unknown";
-        }
-        return (
-          <Anchor
-            onClick={() => navigate(`/user/${user.id}`)}
-            target="_blank"
-            underline="always"
-          >
-            {user.firstName} {user.lastName}
-          </Anchor>
-        );
-      },
+      accessorKey: "date",
+      header: "Date",
+      filterVariant: "date-range",
+      accessorFn: (originalRow) =>
+        originalRow.date ? new Date(originalRow.date) : "",
+      Cell: ({ cell }) =>
+        cell.getValue() !== ""
+          ? cell.getValue<Date>().toLocaleDateString()
+          : "",
     },
     {
-      dataField: "date",
-      caption: "Date",
-      dataType: "date",
+      accessorKey: "itemController",
+      header: "Item Controller",
     },
     {
-      dataField: "itemController",
-      caption: "Item Controller",
-      dataType: "string",
+      accessorKey: "item",
+      header: "Item",
     },
     {
-      dataField: "item",
-      caption: "Item",
-      dataType: "string",
+      accessorKey: "targetController",
+      header: "Target Controller",
     },
     {
-      dataField: "targetController",
-      caption: "Target Controller",
-      dataType: "string",
-    },
-    {
-      dataField: "target",
-      caption: "Target",
-      dataType: "string",
+      accessorKey: "target",
+      header: "Target",
     },
   ];
 
-  return columns;
+  return { columns };
 };

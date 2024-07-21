@@ -1,11 +1,19 @@
 import { useColumns } from "./columns";
 import { useProduct } from "@queryhooks";
-import Gridtable from "../../gridTable/GridTable";
+import BaseMantineTable from "@/components/mantine/BaseMantineTable";
 
 const CustomLogs = () => {
-  const { data } = useProduct.GetCustomLogs();
+  const { columns } = useColumns();
+  const { data, isRefetching, refetch } = useProduct.GetCustomLogs();
 
-  return <Gridtable itemKey="id" data={data || []} columns={useColumns()} />;
+  return (
+    <BaseMantineTable
+      data={data}
+      columns={columns}
+      isLoading={isRefetching}
+      refetch={refetch}
+    />
+  );
 };
 
 export default CustomLogs;

@@ -1,20 +1,28 @@
 import { useColumns } from "./columns";
 import { useProduct } from "@queryhooks";
-import Gridtable from "../../gridTable/GridTable";
+import BaseMantineTable from "@/components/mantine/BaseMantineTable";
 
 interface HistoryLogsProps {
   id?: string;
   userId?: string;
 }
 const HistoryLogs: React.FC<HistoryLogsProps> = ({ id, userId }) => {
-  const { data } = useProduct.GetCustomLogs();
+  const { columns } = useColumns();
+  const { data, isRefetching, refetch } = useProduct.GetCustomLogs();
 
   const filterData =
     data?.filter(
       (cl) => cl.itemId === id || cl.targetId === id || cl.userId === userId
     ) || [];
 
-  return <Gridtable itemKey="id" data={filterData} columns={useColumns()} />;
+  return (
+    <BaseMantineTable
+      data={filterData}
+      columns={columns}
+      isLoading={isRefetching}
+      refetch={refetch}
+    />
+  );
 };
 
 export default HistoryLogs;
