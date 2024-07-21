@@ -17,6 +17,8 @@ import {
   IUser,
   IEmployeeProduct,
   IEmployee,
+  IFieldSet,
+  ICustomField,
 } from "@/interfaces/serverInterfaces";
 import { getImage } from "@/utils/imageUtils";
 
@@ -258,6 +260,36 @@ export const useInitial = () => {
     return initialValues;
   };
 
+  const FieldSet = (entity: IFieldSet | undefined) => {
+    let initialValues: IFieldSet = {
+      id: "",
+      name: "",
+    };
+
+    if (entity) {
+      initialValues = { ...entity };
+    }
+
+    return initialValues;
+  };
+
+  const CustomField = (entity: ICustomField | undefined) => {
+    let initialValues: ICustomField = {
+      id: "",
+      name: "",
+      type: "",
+      isRequired: false,
+    };
+
+    if (entity) {
+      initialValues = { ...entity };
+    } else {
+      initialValues = { ...initialValues, fieldSets: [] };
+    }
+
+    return initialValues;
+  };
+
   const ProductStatus = (entity: IProductStatus | undefined) => {
     let initialValues: IProductStatus = {
       id: "",
@@ -362,6 +394,8 @@ export const useInitial = () => {
     Location,
     Manufacturer,
     Model,
+    FieldSet,
+    CustomField,
     ProductStatus,
     Supplier,
     User,

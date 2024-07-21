@@ -112,7 +112,7 @@ const CheckOut = () => {
           return res;
         }
       );
-      closeModal("user_product_checkOut_modal");
+      closeModal("employee-product-checkOut-modal");
       openNotificationSuccess("Accessory Checked Out Successfully");
     },
   });

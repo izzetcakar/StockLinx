@@ -79,10 +79,10 @@ const CheckIn = () => {
       queryClient.setQueryData<IAsset[]>("FILTER_ASSET", (data) => {
         return data ? setAssetCheckStatus(data, req) : [];
       });
-      queryClient.setQueryData(["GET_ASSET", req.assetId], (data) => {
+      queryClient.setQueryData(["FETCH_ASSET", req.assetId], (data) => {
         return data ? { ...data, productStatusId: req.productStatusId } : data;
       });
-      closeModal("asset_checkIn_modal");
+      closeModal("asset-checkin-modal");
       openNotificationSuccess("Asset Checked In Successfully");
     },
   });
@@ -111,8 +111,8 @@ const CheckOut = () => {
       queryClient.setQueryData<IAsset[]>("FILTER_ASSET", (data) => {
         return data ? setAssetCheckStatus(data, req) : [];
       });
-      queryClient.invalidateQueries("GET_ASSET");
-      closeModal("asset_checkOut_modal");
+      queryClient.invalidateQueries("FETCH_ASSET");
+      closeModal("asset-checkout-modal");
       openNotificationSuccess("Asset Checked Out Successfully");
     },
   });

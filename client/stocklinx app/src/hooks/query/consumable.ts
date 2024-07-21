@@ -71,7 +71,7 @@ const CheckIn = () => {
       queryClient.setQueryData(["FETCH_EMPLOYEEPRODUCT", res.id], () => {
         return res;
       });
-      queryClient.setQueryData("FETCH_ALL_COnsumable", (data: any) => {
+      queryClient.setQueryData("FETCH_ALL_CONSUMABLE", (data: any) => {
         return data.map((x: any) => {
           if (x.id === res.consumableId) {
             x.availableQuantity -= res.quantity;
@@ -112,7 +112,7 @@ const CheckOut = () => {
           return res;
         }
       );
-      closeModal("user_product_checkOut_modal");
+      closeModal("employee-product-checkOut-modal");
       openNotificationSuccess("Consumable Checked Out Successfully");
     },
   });
