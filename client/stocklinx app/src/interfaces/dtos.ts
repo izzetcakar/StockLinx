@@ -67,6 +67,7 @@ export interface AssetProductCheckOutDto {
 }
 export interface AssetCheckOutDto {
   employeeId?: string;
+  assetId: string;
   employeeProductId: string;
   productStatusId: string;
   notes: string | null;

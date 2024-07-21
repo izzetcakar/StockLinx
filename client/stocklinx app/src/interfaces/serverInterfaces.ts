@@ -105,11 +105,7 @@ export interface ICustomField extends BaseEntity {
   name: string;
   type: string;
   isRequired: boolean;
-  helpText: string | null;
-  defaultValue: string | null;
-  validationRegex: string | null;
-  validationText: string | null;
-  fieldSetCustomFields?: IFieldSetCustomField[];
+  fieldSets?: string[];
 }
 export interface IModelFieldData extends BaseEntity {
   modelId: string;
