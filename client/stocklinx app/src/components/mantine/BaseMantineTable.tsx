@@ -79,10 +79,6 @@ const BaseMantineTable: React.FC<BaseMantineTableProps> = ({
     displayColumnDefOptions: {
       "mrt-row-actions": {
         header: "",
-        size: 0,
-        minSize: 0,
-        maxSize: 0,
-        grow: 0,
       },
       "mrt-row-select": {
         size: 0,
@@ -111,11 +107,11 @@ const BaseMantineTable: React.FC<BaseMantineTableProps> = ({
     renderTopToolbarCustomActions: ({ table }) => (
       <Flex align="center" gap="sm">
         <ActionIcon onClick={() => refetch()} variant="subtle" color="black">
-          <IconRefresh />
+          <IconRefresh size={18}/>
         </ActionIcon>
         {onAdd ? (
           <ActionIcon onClick={() => onAdd()} variant="subtle" color="black">
-            <IconPlus />
+            <IconPlus size={18} />
           </ActionIcon>
         ) : null}
         {onRemoveRange ? (
@@ -131,7 +127,7 @@ const BaseMantineTable: React.FC<BaseMantineTableProps> = ({
             variant="subtle"
             color="black"
           >
-            <IconTrash />
+            <IconTrash size={18} />
           </ActionIcon>
         ) : null}
         {onDetails && table.getSelectedRowModel().rows.length >= 1 ? (
@@ -144,13 +140,13 @@ const BaseMantineTable: React.FC<BaseMantineTableProps> = ({
               )
             }
           >
-            <IconLocationShare />
+            <IconLocationShare size={18} />
           </ActionIcon>
         ) : null}
       </Flex>
     ),
     renderRowActions: ({ row }) => (
-      <Flex gap={5} style={{ width: "fit-content" }}>
+      <Flex gap={5} justify="flex-end">
         {onUpdate ? (
           <ActionIcon
             onClick={() => onUpdate(row.original)}
