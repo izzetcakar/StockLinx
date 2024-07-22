@@ -55,22 +55,12 @@ export const useColumns = () => {
     {
       accessorKey: "isRequired",
       header: "Is Required",
+      filterVariant: "checkbox",
+      Cell: ({ row }) => (row.original.isRequired ? "Yes" : "No"),
     },
     {
       accessorKey: "defaultValue",
       header: "Default Value",
-    },
-    {
-      accessorKey: "helpText",
-      header: "Help Text",
-    },
-    {
-      accessorKey: "validationRegex",
-      header: "Format",
-    },
-    {
-      accessorKey: "validationText",
-      header: "Error Message",
     },
   ];
 

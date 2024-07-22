@@ -1,14 +1,14 @@
-import React, { useLayoutEffect } from "react";
+import React from "react";
 import {
   TextInput,
   Button,
   Group,
   Textarea,
-  Select,
   NumberInput,
   Switch,
   Image,
   FileInput,
+  Loader,
 } from "@mantine/core";
 import { FORM_INDEX, useForm } from "@mantine/form";
 import { IModel, IModelFieldData } from "@interfaces/serverInterfaces";
@@ -17,7 +17,6 @@ import { toBase64 } from "../../utils/imageUtils";
 import {
   useCategory,
   useModel,
-  useModelFieldData,
   useFieldSetCustomField,
   useCustomField,
   useFieldSet,
@@ -36,10 +35,15 @@ const ModelForm: React.FC<ModelFormProps> = ({ model, onBack }) => {
   const initialValues = useInitial().Model(model);
   const isCreate = initialValues.id === "";
   const { data: categories } = useCategory.GetAll();
-  const { data: modelFieldDatas } = useModelFieldData.GetAll();
-  const { data: fieldSetCustomFields } = useFieldSetCustomField.GetAll();
-  const { data: customFields } = useCustomField.GetAll();
-  const { data: fieldSetLK } = useFieldSet.Lookup();
+  const { data: fieldSetCustomFields, isRefetching: FCCFLoading } =
+    useFieldSetCustomField.GetAll();
+  const { data: customFields, isRefetching: customFieldLoading } =
+    useCustomField.GetAll();
+  const {
+    data: fieldSetLK,
+    isRefetching: fieldSetLoading,
+    refetch: getFieldSetLK,
+  } = useFieldSet.Lookup();
   const { data: manufacturerLK } = useManufacturer.Lookup();
   const { mutate: createModel } = useModel.Create();
   const { mutate: updateModel } = useModel.Update();
@@ -50,21 +54,6 @@ const ModelForm: React.FC<ModelFormProps> = ({ model, onBack }) => {
     validate: {
       name: (value: string) =>
         /(?!^$)([^\s])/.test(value) ? null : "Name should not be empty",
-      modelFieldData: {
-        value: (value, values, index) => {
-          const customFieldId =
-            values.modelFieldData[Number(index.split(".")[1])]?.customFieldId;
-          const customField = getCustomField(customFieldId);
-          if (!customField) return null;
-          else if (
-            customField.isRequired &&
-            !value &&
-            customField.type !== "boolean"
-          )
-            return "This field is required";
-          else return null;
-        },
-      },
     },
   });
 
@@ -72,33 +61,25 @@ const ModelForm: React.FC<ModelFormProps> = ({ model, onBack }) => {
     modelId: string,
     fieldSetId: string
   ): IModelFieldData[] => {
-    const oldModelFieldData = modelFieldDatas?.filter(
-      (m) => m.modelId === modelId
+    const customFieldIds = customFields
+      ?.filter(
+        (cf) =>
+          fieldSetCustomFields?.find((fscf) => fscf.customFieldId === cf.id)
+            ?.fieldSetId === fieldSetId
+      )
+      .map((cf) => cf.id);
+    if (!customFieldIds) return [];
+    const newModelFieldDatas: IModelFieldData[] = customFieldIds?.map(
+      (cfId) => {
+        return {
+          id: "",
+          modelId: modelId,
+          customFieldId: cfId,
+          value: getCustomField(cfId)?.defaultValue || "",
+        };
+      }
     );
-    const filteredFc = fieldSetCustomFields?.filter(
-      (f) => f.fieldSetId === fieldSetId
-    );
-    if (filteredFc?.length === 0) return [];
-    const cfIds = filteredFc?.map((fc) => fc.customFieldId);
-    const notExist = cfIds?.filter(
-      (item) => !oldModelFieldData?.map((x) => x.customFieldId).includes(item)
-    );
-    const extra = oldModelFieldData?.filter(
-      (item) => !cfIds?.includes(item.customFieldId)
-    );
-    const newArray = [...(oldModelFieldData || [])];
-    notExist?.forEach((element) => {
-      newArray.push({
-        id: "",
-        modelId: modelId,
-        customFieldId: element,
-        value: getCustomField(element)?.defaultValue || "",
-      });
-    });
-    extra?.forEach((element) => {
-      newArray.splice(newArray.indexOf(element), 1);
-    });
-    return newArray;
+    return newModelFieldDatas;
   };
 
   const convertValuesToString = () => {
@@ -115,17 +96,22 @@ const ModelForm: React.FC<ModelFormProps> = ({ model, onBack }) => {
   };
 
   const getBooleanValue = (value: string) => {
-    if (value === "true") return true;
-    else return false;
+    return value === "true";
+  };
+
+  const getDateValue = (value: string) => {
+    return value ? new Date(value) : new Date();
+  };
+
+  const getNumberValue = (value: string) => {
+    return value ? Number(value) : 0;
   };
 
   const getCustomFieldInput = (customFieldId: string, index: number) => {
-    const { data: customField } = useCustomField.Get(customFieldId);
+    const customField = getCustomField(customFieldId);
     if (!customField) return;
     const label = customField.name;
     const placeholder = customField.name;
-    const description = customField.helpText;
-    const error = customField.validationText;
     const defaultValue = customField.defaultValue;
 
     switch (customField.type) {
@@ -134,8 +120,6 @@ const ModelForm: React.FC<ModelFormProps> = ({ model, onBack }) => {
           <TextInput
             label={label}
             placeholder={placeholder}
-            description={description}
-            error={error}
             {...form.getInputProps(`modelFieldData.${index}.value`)}
             value={
               form.values.modelFieldData[index].value || defaultValue || ""
@@ -149,10 +133,8 @@ const ModelForm: React.FC<ModelFormProps> = ({ model, onBack }) => {
           <NumberInput
             label={label}
             placeholder={placeholder}
-            description={description}
-            error={error}
             {...form.getInputProps(`modelFieldData.${index}.value`)}
-            value={Number(form.values.modelFieldData[index].value)}
+            value={getNumberValue(form.values.modelFieldData[index].value)}
             onChange={(e) => {
               form.setFieldValue(`modelFieldData.${index}.value`, e.toString());
             }}
@@ -166,8 +148,6 @@ const ModelForm: React.FC<ModelFormProps> = ({ model, onBack }) => {
           <Switch
             label={label}
             placeholder={placeholder}
-            description={description}
-            error={error}
             defaultValue={defaultValue}
             {...form.getInputProps(`modelFieldData.${index}.value`)}
             labelPosition="left"
@@ -187,10 +167,8 @@ const ModelForm: React.FC<ModelFormProps> = ({ model, onBack }) => {
             clearable
             label={label}
             placeholder={placeholder}
-            description={description}
-            error={error}
             {...form.getInputProps(`modelFieldData.${index}.value`)}
-            value={new Date(form.values.modelFieldData[index].value)}
+            value={getDateValue(form.values.modelFieldData[index].value)}
             required={customField.isRequired}
             withAsterisk={customField.isRequired}
           />
@@ -205,12 +183,6 @@ const ModelForm: React.FC<ModelFormProps> = ({ model, onBack }) => {
     const newModelFieldData = handleModelFieldData(form.values.id, e as string);
     form.setFieldValue("modelFieldData", newModelFieldData);
   };
-
-  useLayoutEffect(() => {
-    if (model && model.fieldSetId) {
-      onFieldIdChange(model.fieldSetId);
-    }
-  }, [model]);
 
   const handleImageChange = async (e: File | null) => {
     if (!e) return;
@@ -254,14 +226,14 @@ const ModelForm: React.FC<ModelFormProps> = ({ model, onBack }) => {
           value={form.values.categoryId}
           required
         />
-        <Select
+        <FormSelect
           data={fieldSetLK}
+          fetchData={getFieldSetLK}
           label="Field Set"
-          placeholder="Select Field Set"
-          {...form.getInputProps("fieldSetId")}
-          comboboxProps={{ position: "bottom" }}
-          nothingFoundMessage="No field set found"
+          inputProps={form.getInputProps("fieldSetId")}
           onChange={(e) => onFieldIdChange(e as string)}
+          value={form.values.fieldSetId}
+          required
         />
         <FormSelect
           data={manufacturerLK}
@@ -286,18 +258,17 @@ const ModelForm: React.FC<ModelFormProps> = ({ model, onBack }) => {
           {...form.getInputProps("notes")}
           value={form.values.notes || ""}
         />
-        {form.values.modelFieldData.length > 0 ? (
-          <div>
-            <h3>Model Field Data</h3>
-            <div>
-              {form.values.modelFieldData.map((m, index) => (
-                <div key={index}>
-                  {getCustomFieldInput(m.customFieldId, index)}
-                </div>
-              ))}
-            </div>
-          </div>
-        ) : null}
+        <FormCard title="Model Field Data">
+          {FCCFLoading || customFieldLoading || fieldSetLoading ? (
+            <Loader size={16} />
+          ) : (
+            form.values.modelFieldData.map((m, index) => (
+              <div key={index}>
+                {getCustomFieldInput(m.customFieldId, index)}
+              </div>
+            ))
+          )}
+        </FormCard>
         <Group pt="xs" justify="flex-end">
           {onBack ? (
             <Button color="dark" onClick={onBack}>
