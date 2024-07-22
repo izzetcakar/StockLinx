@@ -23,8 +23,6 @@ import LicenseSeats from "@/components/dataGrid/productseats/License/LicenseSeat
 
 export const useColumns = () => {
   const initial = useInitial();
-  const { mutate: employeeCheckIn } = useLicense.EmployeeCheckIn();
-  const { mutate: assetCheckIn } = useLicense.AssetCheckIn();
   const {
     data: categories,
     isRefetching: categoryLoading,
@@ -45,6 +43,8 @@ export const useColumns = () => {
     isRefetching: manufacturerLoading,
     refetch: getManufacturerLK,
   } = useManufacturer.Lookup();
+  const { mutate: employeeCheckIn } = useLicense.EmployeeCheckIn();
+  const { mutate: assetCheckIn } = useLicense.AssetCheckIn();
 
   const onEmployeeCheckInHandler = (employeeProduct: IEmployeeProduct) => {
     employeeCheckIn({
@@ -139,8 +139,11 @@ export const useColumns = () => {
             color={"green"}
             variant="filled"
             size="xs"
+            disabled={
+              row.original.availableQuantity !== undefined &&
+              row.original?.availableQuantity < 1
+            }
             onClick={() => onHeadToModal(row.original)}
-            disabled={row.original.availableQuantity === 0}
           >
             Check In
           </Button>

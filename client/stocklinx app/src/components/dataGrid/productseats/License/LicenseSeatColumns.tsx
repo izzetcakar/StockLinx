@@ -1,4 +1,3 @@
-import { DataColumn } from "@/interfaces/gridTableInterfaces";
 import { IAssetProduct, IEmployeeProduct } from "@/interfaces/serverInterfaces";
 import { useLicense } from "@queryhooks";
 import {
@@ -6,6 +5,7 @@ import {
   openEmployeeProductCheckOutModal,
 } from "@/utils/modalUtils";
 import { EntityCells } from "@/cells/Entity";
+import { MRT_ColumnDef } from "mantine-react-table";
 import CheckOutButton from "@/cells/CheckOutBtnCell";
 
 const isEmployeeProduct = (
@@ -24,21 +24,19 @@ export const useColumns = () => {
   const { mutate: employeeCheckOut } = useLicense.EmployeeCheckOut();
   const { mutate: assetCheckOut } = useLicense.AssetCheckOut();
 
-  const columns: DataColumn[] = [
+  const columns: MRT_ColumnDef<IEmployeeProduct | IAssetProduct>[] = [
     {
-      caption: "Seat",
-      dataField: "id",
-      dataType: "action",
-      renderComponent: (_, index) => {
-        return "Seat " + (index + 1);
+      accessorKey: "id",
+      header: "Seat",
+      Cell: ({ row }) => {
+        return "Seat " + (row.index + 1);
       },
     },
     {
-      caption: "Employee",
-      dataField: "employeeId",
-      dataType: "action",
-      renderComponent: (e) => {
-        const checked = e as IEmployeeProduct | IAssetProduct;
+      accessorKey: "employeeId",
+      header: "Employee",
+      Cell: ({ row }) => {
+        const checked = row.original;
         if (isEmployeeProduct(checked)) {
           return EntityCells.Employee((checked as IEmployeeProduct).employeeId);
         }
@@ -46,11 +44,10 @@ export const useColumns = () => {
       },
     },
     {
-      caption: "Asset",
-      dataField: "assetId",
-      dataType: "action",
-      renderComponent: (e) => {
-        const checked = e as IEmployeeProduct | IAssetProduct;
+      accessorKey: "assetId",
+      header: "Asset",
+      Cell: ({ row }) => {
+        const checked = row.original;
         if (isAssetProduct(checked)) {
           return EntityCells.Asset((checked as IAssetProduct).assetId);
         }
@@ -58,46 +55,48 @@ export const useColumns = () => {
       },
     },
     {
-      caption: "Quantity",
-      dataField: "quantity",
-      dataType: "number",
+      accessorKey: "quantity",
+      header: "Quantity",
     },
     {
-      caption: "Check Out",
-      dataField: "id",
-      dataType: "action",
-      renderComponent: (e) => {
-        const checked = e as IEmployeeProduct | IAssetProduct;
+      header: "Check Out",
+      Cell: ({ row }) => {
+        const checked = row.original;
         if (isEmployeeProduct(checked)) {
           return (
             <CheckOutButton
-              checkOut={openEmployeeProductCheckOutModal(
-                {
-                  employeeProductId: checked.id,
-                  quantity: checked.quantity,
-                  notes: checked.notes,
-                  employeeId: checked.employeeId,
-                },
-                employeeCheckOut
-              )}
+              checkOut={() =>
+                openEmployeeProductCheckOutModal(
+                  {
+                    employeeProductId: checked.id,
+                    quantity: checked.quantity,
+                    notes: checked.notes,
+                    employeeId: checked.employeeId,
+                  },
+                  employeeCheckOut
+                )
+              }
             />
           );
         }
         return (
           <CheckOutButton
-            checkOut={openAssetProductCheckOutModal(
-              {
-                assetProductId: checked.id,
-                quantity: checked.quantity,
-                notes: checked.notes,
-                assetId: checked.assetId,
-              },
-              assetCheckOut
-            )}
+            checkOut={() =>
+              openAssetProductCheckOutModal(
+                {
+                  assetProductId: checked.id,
+                  quantity: checked.quantity,
+                  notes: checked.notes,
+                  assetId: checked.assetId,
+                },
+                assetCheckOut
+              )
+            }
           />
         );
       },
     },
   ];
+
   return { columns };
 };

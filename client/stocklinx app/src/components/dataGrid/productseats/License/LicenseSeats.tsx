@@ -1,7 +1,7 @@
 import { useAssetProduct, useEmployeeProduct } from "@queryhooks";
 import { ILicense } from "@/interfaces/serverInterfaces";
 import { useColumns } from "./LicenseSeatColumns";
-import Gridtable from "@/components/gridTable/GridTable";
+import BaseMantineTable from "@/components/mantine/BaseMantineTable";
 
 interface LicenseSeatsProps {
   license: ILicense;
@@ -9,8 +9,16 @@ interface LicenseSeatsProps {
 
 const LicenseSeats: React.FC<LicenseSeatsProps> = ({ license }) => {
   const columns = useColumns().columns;
-  const { data: employeeProducts } = useEmployeeProduct.GetAll();
-  const { data: assetProducts } = useAssetProduct.GetAll();
+  const {
+    data: assetProducts,
+    isRefetching: assetLoading,
+    refetch: getAssetProducts,
+  } = useAssetProduct.GetAll();
+  const {
+    data: employeeProducts,
+    isRefetching: employeeLoading,
+    refetch: getEmployeeProducts,
+  } = useEmployeeProduct.GetAll();
 
   const getData = () => {
     const filteredEmployeeProducts =
@@ -20,7 +28,17 @@ const LicenseSeats: React.FC<LicenseSeatsProps> = ({ license }) => {
     return [...filteredEmployeeProducts, ...filteredAssetProducts];
   };
 
-  return <Gridtable itemKey="id" data={getData()} columns={columns} />;
+  return (
+    <BaseMantineTable
+      data={getData()}
+      columns={columns}
+      isLoading={assetLoading || employeeLoading}
+      refetch={() => {
+        getAssetProducts();
+        getEmployeeProducts();
+      }}
+    />
+  );
 };
 
 export default LicenseSeats;
