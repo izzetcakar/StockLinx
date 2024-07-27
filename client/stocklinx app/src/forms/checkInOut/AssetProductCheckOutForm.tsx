@@ -3,7 +3,7 @@ import { Button, Group, Textarea, NumberInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { AssetProductCheckOutDto } from "../../interfaces/dtos";
 import { useAsset } from "@queryhooks";
-import { queryClient } from "@/main";
+import { useIsMutating } from "react-query";
 import FormSelect from "../mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";
 
@@ -21,7 +21,10 @@ const AssetProductCheckOutForm: React.FC<AssetProductCheckOutFormProps> = ({
     isLoading: assetLoading,
     refetch: assetRefetch,
   } = useAsset.Lookup();
-  const isMutating = queryClient.isMutating() > 0;
+ const isMutating =
+    useIsMutating({
+      predicate: (query) => query.state.status === "loading",
+    }) > 0;
 
   const form = useForm<AssetProductCheckOutDto>({
     initialValues: checkOutDto,

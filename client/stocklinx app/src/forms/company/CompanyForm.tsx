@@ -4,7 +4,7 @@ import { useForm } from "@mantine/form";
 import { ICompany } from "@interfaces/serverInterfaces";
 import { useInitial } from "@/hooks/initial/useInitial";
 import { useCompany, useLocation } from "@queryhooks";
-import { queryClient } from "@/main";
+import { useIsMutating } from "react-query";
 import FormSelect from "../mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";
 interface CompanyFormProps {
@@ -21,7 +21,10 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ company }) => {
     isRefetching: locationLoading,
     refetch: getLocationLK,
   } = useLocation.Lookup();
-  const isMutating = queryClient.isMutating() > 0;
+ const isMutating =
+    useIsMutating({
+      predicate: (query) => query.state.status === "loading",
+    }) > 0;
 
   const form = useForm<ICompany>({
     initialValues: initialValues,

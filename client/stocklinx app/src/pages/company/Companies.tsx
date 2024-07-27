@@ -3,6 +3,7 @@ import { useColumns } from "./columns";
 import { openCompanyModal } from "@/utils/modalUtils";
 import { useNavigate } from "react-router-dom";
 import BaseMantineTable from "@/components/mantine/BaseMantineTable";
+import PageHeader from "@/components/generic/PageHeader";
 
 const Companies = () => {
   const navigate = useNavigate();
@@ -16,18 +17,21 @@ const Companies = () => {
   };
 
   return (
-    <BaseMantineTable
-      data={data}
-      columns={columns}
-      isLoading={isRefetching}
-      refetch={refetch}
-      onAdd={() => openCompanyModal()}
-      onCopy={(value: any) => openCompanyModal({ ...value, id: "" })}
-      onUpdate={(value: any) => openCompanyModal(value)}
-      onRemove={(id: string) => remove(id)}
-      onRemoveRange={(ids: string[]) => removeRange(ids)}
-      onDetails={(values: any[]) => onDetails(values)}
-    />
+    <>
+      <PageHeader title="Companies" />
+      <BaseMantineTable
+        data={data}
+        columns={columns}
+        isLoading={isRefetching}
+        refetch={refetch}
+        onAdd={() => openCompanyModal()}
+        onCopy={(value: any) => openCompanyModal({ ...value, id: "" })}
+        onUpdate={(value: any) => openCompanyModal(value)}
+        onRemove={(id: string) => remove(id)}
+        onRemoveRange={(ids: string[]) => removeRange(ids)}
+        onDetails={(values: any[]) => onDetails(values)}
+      />
+    </>
   );
 };
 

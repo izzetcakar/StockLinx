@@ -4,7 +4,7 @@ import { useForm } from "@mantine/form";
 import { IEmployee } from "@interfaces/serverInterfaces";
 import { useEmployee, useDepartment, useCompany } from "@queryhooks";
 import { useInitial } from "@/hooks/initial/useInitial";
-import { queryClient } from "@/main";
+import { useIsMutating } from "react-query";
 import FormCard from "@/components/form/FormCard";
 import FormSelect from "../mantine/FormSelect";
 
@@ -28,7 +28,10 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({ employee }) => {
     refetch: getCompanyLK,
   } = useCompany.Lookup();
   const [company, setCompany] = React.useState<string>("");
-  const isMutating = queryClient.isMutating() > 0;
+ const isMutating =
+    useIsMutating({
+      predicate: (query) => query.state.status === "loading",
+    }) > 0;
 
   const form = useForm<IEmployee>({
     initialValues: initialValues,

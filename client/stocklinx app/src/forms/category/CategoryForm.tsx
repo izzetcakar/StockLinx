@@ -5,7 +5,7 @@ import { ICategory } from "@interfaces/serverInterfaces";
 import { useCategory } from "@queryhooks";
 import { CategoryType } from "@/interfaces/enums";
 import { useInitial } from "@/hooks/initial/useInitial";
-import { queryClient } from "@/main";
+import { useIsMutating } from "react-query";
 import FormSelect from "../mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";
 interface CategoryFormProps {
@@ -18,7 +18,10 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ category, onBack }) => {
   const isCreate = initialValues.id === "";
   const { mutate: createCategory } = useCategory.Create();
   const { mutate: updateCategory } = useCategory.Update();
-  const isMutating = queryClient.isMutating() > 0;
+ const isMutating =
+    useIsMutating({
+      predicate: (query) => query.state.status === "loading",
+    }) > 0;
 
   const form = useForm<ICategory>({
     initialValues: initialValues,

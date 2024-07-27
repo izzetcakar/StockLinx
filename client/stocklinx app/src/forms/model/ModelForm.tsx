@@ -24,7 +24,7 @@ import {
 } from "@queryhooks";
 import { CategoryType } from "@/interfaces/enums";
 import { useInitial } from "@/hooks/initial/useInitial";
-import { queryClient } from "@/main";
+import { useIsMutating } from "react-query";
 import FormSelect from "../mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";
 interface ModelFormProps {
@@ -56,7 +56,10 @@ const ModelForm: React.FC<ModelFormProps> = ({ model, onBack }) => {
   } = useManufacturer.Lookup();
   const { mutate: createModel } = useModel.Create();
   const { mutate: updateModel } = useModel.Update();
-  const isMutating = queryClient.isMutating() > 0;
+ const isMutating =
+    useIsMutating({
+      predicate: (query) => query.state.status === "loading",
+    }) > 0;
 
   const form = useForm<IModel>({
     validateInputOnChange: ["name", `modelFieldData.${FORM_INDEX}.value`],

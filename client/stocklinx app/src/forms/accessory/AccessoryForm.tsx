@@ -31,7 +31,7 @@ import {
 import base_accessory from "@assets/baseProductImages/base_accessory.png";
 import FormSelect from "../mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";
-import { queryClient } from "@/main";
+import { useIsMutating } from "react-query";
 
 interface AccessoryFormProps {
   accessory?: IAccessory;
@@ -61,7 +61,10 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory }) => {
     isRefetching: manufacturerLoading,
     refetch: getManufacturerLK,
   } = useManufacturer.Lookup();
-  const isMutating = queryClient.isMutating() > 0;
+ const isMutating =
+    useIsMutating({
+      predicate: (query) => query.state.status === "loading",
+    }) > 0;
 
   const form = useForm<IAccessory>({
     initialValues: initialValues,

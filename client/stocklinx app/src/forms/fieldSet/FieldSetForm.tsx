@@ -4,7 +4,7 @@ import { useForm } from "@mantine/form";
 import { IFieldSet } from "@interfaces/serverInterfaces";
 import { useFieldSet } from "@queryhooks";
 import { useInitial } from "@/hooks/initial/useInitial";
-import { queryClient } from "@/main";
+import { useIsMutating } from "react-query";
 import uuid4 from "uuid4";
 interface FieldSetFormProps {
   fieldSet?: IFieldSet;
@@ -15,7 +15,10 @@ const FieldSetForm: React.FC<FieldSetFormProps> = ({ fieldSet }) => {
   const isCreate = initialValues.id === "";
   const { mutate: createFieldSet } = useFieldSet.Create();
   const { mutate: updateFieldSet } = useFieldSet.Update();
-  const isMutating = queryClient.isMutating() > 0;
+ const isMutating =
+    useIsMutating({
+      predicate: (query) => query.state.status === "loading",
+    }) > 0;
 
   const form = useForm<IFieldSet>({
     initialValues: fieldSet

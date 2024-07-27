@@ -5,7 +5,7 @@ import { IProductStatus } from "@interfaces/serverInterfaces";
 import { useProductStatus } from "@queryhooks";
 import { ProductStatusType } from "@/interfaces/enums";
 import { useInitial } from "@/hooks/initial/useInitial";
-import { queryClient } from "@/main";
+import { useIsMutating } from "react-query";
 import FormSelect from "../mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";
 interface ProductStatusFormProps {
@@ -21,7 +21,10 @@ const ProductStatusForm: React.FC<ProductStatusFormProps> = ({
   const isCreate = initialValues.id === "";
   const { mutate: createProductStatus } = useProductStatus.Create();
   const { mutate: updateProductStatus } = useProductStatus.Update();
-  const isMutating = queryClient.isMutating() > 0;
+ const isMutating =
+    useIsMutating({
+      predicate: (query) => query.state.status === "loading",
+    }) > 0;
 
   const form = useForm<IProductStatus>({
     initialValues: initialValues,

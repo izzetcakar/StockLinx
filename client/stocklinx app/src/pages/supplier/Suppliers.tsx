@@ -3,6 +3,7 @@ import { useColumns } from "./columns";
 import { openSupplierModal } from "@/utils/modalUtils";
 import { useNavigate } from "react-router-dom";
 import BaseMantineTable from "@/components/mantine/BaseMantineTable";
+import PageHeader from "@/components/generic/PageHeader";
 
 const Suppliers = () => {
   const navigate = useNavigate();
@@ -16,18 +17,21 @@ const Suppliers = () => {
   };
 
   return (
-    <BaseMantineTable
-      data={data}
-      columns={columns}
-      isLoading={isRefetching}
-      refetch={refetch}
-      onAdd={() => openSupplierModal()}
-      onCopy={(value: any) => openSupplierModal({ ...value, id: "" })}
-      onUpdate={(value: any) => openSupplierModal(value)}
-      onRemove={(id: string) => remove(id)}
-      onRemoveRange={(ids: string[]) => removeRange(ids)}
-      onDetails={(values: any[]) => onDetails(values)}
-    />
+    <>
+      <PageHeader title="Suppliers" />
+      <BaseMantineTable
+        data={data}
+        columns={columns}
+        isLoading={isRefetching}
+        refetch={refetch}
+        onAdd={() => openSupplierModal()}
+        onCopy={(value: any) => openSupplierModal({ ...value, id: "" })}
+        onUpdate={(value: any) => openSupplierModal(value)}
+        onRemove={(id: string) => remove(id)}
+        onRemoveRange={(ids: string[]) => removeRange(ids)}
+        onDetails={(values: any[]) => onDetails(values)}
+      />
+    </>
   );
 };
 

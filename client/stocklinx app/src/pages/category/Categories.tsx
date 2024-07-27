@@ -3,6 +3,7 @@ import { useColumns } from "./columns";
 import { openCategoryModal } from "@/utils/modalUtils";
 import { useNavigate } from "react-router-dom";
 import BaseMantineTable from "@/components/mantine/BaseMantineTable";
+import PageHeader from "@/components/generic/PageHeader";
 
 const Categories = () => {
   const navigate = useNavigate();
@@ -16,18 +17,21 @@ const Categories = () => {
   };
 
   return (
-    <BaseMantineTable
-      data={data}
-      columns={columns}
-      isLoading={isRefetching}
-      refetch={refetch}
-      onAdd={() => openCategoryModal()}
-      onCopy={(value: any) => openCategoryModal({ ...value, id: "" })}
-      onUpdate={(value: any) => openCategoryModal(value)}
-      onRemove={(id: string) => remove(id)}
-      onRemoveRange={(ids: string[]) => removeRange(ids)}
-      onDetails={(values: any[]) => onDetails(values)}
-    />
+    <>
+      <PageHeader title="Categories" />
+      <BaseMantineTable
+        data={data}
+        columns={columns}
+        isLoading={isRefetching}
+        refetch={refetch}
+        onAdd={() => openCategoryModal()}
+        onCopy={(value: any) => openCategoryModal({ ...value, id: "" })}
+        onUpdate={(value: any) => openCategoryModal(value)}
+        onRemove={(id: string) => remove(id)}
+        onRemoveRange={(ids: string[]) => removeRange(ids)}
+        onDetails={(values: any[]) => onDetails(values)}
+      />
+    </>
   );
 };
 

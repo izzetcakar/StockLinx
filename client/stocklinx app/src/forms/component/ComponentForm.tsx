@@ -20,7 +20,7 @@ import {
 import { CategoryType } from "@/interfaces/enums";
 import { useInitial } from "@/hooks/initial/useInitial";
 import { openCategoryModal, openSupplierModal } from "@/utils/modalUtils";
-import { queryClient } from "@/main";
+import { useIsMutating } from "react-query";
 import FormSelect from "../mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";
 
@@ -48,7 +48,10 @@ const ComponentForm: React.FC<ComponentFormProps> = ({ component }) => {
     isRefetching: supplierLoading,
     refetch: getSupplier,
   } = useSupplier.Lookup();
-  const isMutating = queryClient.isMutating() > 0;
+ const isMutating =
+    useIsMutating({
+      predicate: (query) => query.state.status === "loading",
+    }) > 0;
 
   const form = useForm<IComponent>({
     initialValues: initialValues,

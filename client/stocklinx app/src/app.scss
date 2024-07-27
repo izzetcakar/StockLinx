@@ -17,6 +17,7 @@
     height: 100%;
     overflow: auto;
     padding: 0 $spacing-lg;
+    gap: $spacing-xl;
   }
   .page__content::-webkit-scrollbar {
     display: none;

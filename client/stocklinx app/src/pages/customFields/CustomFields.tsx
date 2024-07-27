@@ -31,7 +31,7 @@ const CustomFields = () => {
 
   return (
     <>
-      <PageHeader title="Custom Fields" />
+      <PageHeader title="Field Sets" />
       <BaseMantineTable
         data={fieldSets}
         columns={fieldSetColumns}

@@ -1,4 +1,4 @@
-import { queryClient } from "@/main";
+import { useIsMutating } from "react-query";
 import { Button } from "@mantine/core";
 import React from "react";
 
@@ -7,7 +7,10 @@ interface CheckOutButtonProps {
 }
 
 const CheckOutButton: React.FC<CheckOutButtonProps> = ({ checkOut }) => {
-  const isMutating = queryClient.isMutating() > 0;
+ const isMutating =
+    useIsMutating({
+      predicate: (query) => query.state.status === "loading",
+    }) > 0;
 
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>

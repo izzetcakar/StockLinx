@@ -1,7 +1,7 @@
 import { Button, Group } from "@mantine/core";
 import { useUser, useCompany, usePermission } from "@queryhooks";
 import { useForm } from "@mantine/form";
-import { queryClient } from "@/main";
+import { useIsMutating } from "react-query";
 import FormSelect from "../mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";
 import MultiFormSelect from "../mantine/MultiFormSelect";
@@ -24,7 +24,10 @@ const PermissionForm = () => {
   } = useCompany.Lookup();
   const { mutate: create } = usePermission.Create();
   const { mutate: createRange } = usePermission.CreateRange();
-  const isMutating = queryClient.isMutating() > 0;
+ const isMutating =
+    useIsMutating({
+      predicate: (query) => query.state.status === "loading",
+    }) > 0;
 
   const form = useForm<RangePermission>({
     initialValues: {

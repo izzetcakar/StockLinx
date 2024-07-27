@@ -10,7 +10,7 @@ import { useForm } from "@mantine/form";
 import { IUser } from "@interfaces/serverInterfaces";
 import { useUser } from "@queryhooks";
 import { useInitial } from "@/hooks/initial/useInitial";
-import { queryClient } from "@/main";
+import { useIsMutating } from "react-query";
 import FormCard from "@/components/form/FormCard";
 
 interface UserFormProps {
@@ -22,7 +22,10 @@ const UserForm: React.FC<UserFormProps> = ({ user }) => {
   const isCreate = initialValues.id === "";
   const { mutate: createUser } = useUser.Create();
   const { mutate: updateUser } = useUser.Update();
-  const isMutating = queryClient.isMutating() > 0;
+ const isMutating =
+    useIsMutating({
+      predicate: (query) => query.state.status === "loading",
+    }) > 0;
 
   const form = useForm<IUser>({
     initialValues: initialValues,

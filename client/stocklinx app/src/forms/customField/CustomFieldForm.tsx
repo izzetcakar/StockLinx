@@ -4,7 +4,7 @@ import { useForm } from "@mantine/form";
 import { ICustomField } from "@interfaces/serverInterfaces";
 import { useCustomField, useFieldSet } from "@queryhooks";
 import { useInitial } from "@/hooks/initial/useInitial";
-import { queryClient } from "@/main";
+import { useIsMutating } from "react-query";
 import MultiFormSelect from "../mantine/MultiFormSelect";
 import FormCard from "@/components/form/FormCard";
 interface CustomFieldFormProps {
@@ -21,7 +21,10 @@ const CustomFieldForm: React.FC<CustomFieldFormProps> = ({ customField }) => {
   } = useFieldSet.Lookup();
   const { mutate: createCustomField } = useCustomField.Create();
   const { mutate: updateCustomField } = useCustomField.Update();
-  const isMutating = queryClient.isMutating() > 0;
+ const isMutating =
+    useIsMutating({
+      predicate: (query) => query.state.status === "loading",
+    }) > 0;
 
   const form = useForm<ICustomField>({
     initialValues: initialValues,

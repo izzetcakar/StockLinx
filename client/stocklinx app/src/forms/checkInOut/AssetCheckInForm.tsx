@@ -3,9 +3,9 @@ import { Button, Group, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { AssetCheckInDto } from "../../interfaces/dtos";
 import { useEmployee, useProductStatus, useAsset } from "@queryhooks";
-import { queryClient } from "@/main";
 import FormSelect from "../mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";
+import { useIsMutating } from "react-query";
 
 interface AssetCheckInFormProps {
   checkInDto: AssetCheckInDto;
@@ -23,7 +23,10 @@ const AssetCheckInForm: React.FC<AssetCheckInFormProps> = ({ checkInDto }) => {
     refetch: statusRefetch,
   } = useProductStatus.GetAll();
   const { mutate: checkIn } = useAsset.CheckIn();
-  const isMutating = queryClient.isMutating() > 0;
+  const isMutating =
+    useIsMutating({
+      predicate: (query) => query.state.status === "loading",
+    }) > 0;
 
   const form = useForm<AssetCheckInDto>({
     initialValues: checkInDto,

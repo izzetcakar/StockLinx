@@ -5,8 +5,10 @@
   max-width: 100%;
   height: fit-content;
   align-items: center;
-  justify-content: space-between;
-  padding: $spacing-xl 0;
+  padding: $spacing-lg $spacing-lg;
+  margin-top: $spacing-lg;
+  background-color: white;
+  border-radius: 12px;
   .page__content__header__title {
     font-family: "Helvetica Neue", "Segoe UI", helvetica, verdana, sans-serif;
     text-overflow: ellipsis;

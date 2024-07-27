@@ -3,6 +3,7 @@ import { useColumns } from "./columns";
 import { openUserModal } from "@/utils/modalUtils";
 import { useNavigate } from "react-router-dom";
 import BaseMantineTable from "@/components/mantine/BaseMantineTable";
+import PageHeader from "@/components/generic/PageHeader";
 
 const Users = () => {
   const navigate = useNavigate();
@@ -16,18 +17,21 @@ const Users = () => {
   };
 
   return (
-    <BaseMantineTable
-      data={data}
-      columns={columns}
-      isLoading={isRefetching}
-      refetch={refetch}
-      onAdd={() => openUserModal()}
-      onCopy={(value: any) => openUserModal({ ...value, id: "" })}
-      onUpdate={(value: any) => openUserModal(value)}
-      onRemove={(id: string) => remove(id)}
-      onRemoveRange={(ids: string[]) => removeRange(ids)}
-      onDetails={(values: any[]) => onDetails(values)}
-    />
+    <>
+      <PageHeader title="Users" />
+      <BaseMantineTable
+        data={data}
+        columns={columns}
+        isLoading={isRefetching}
+        refetch={refetch}
+        onAdd={() => openUserModal()}
+        onCopy={(value: any) => openUserModal({ ...value, id: "" })}
+        onUpdate={(value: any) => openUserModal(value)}
+        onRemove={(id: string) => remove(id)}
+        onRemoveRange={(ids: string[]) => removeRange(ids)}
+        onDetails={(values: any[]) => onDetails(values)}
+      />
+    </>
   );
 };
 

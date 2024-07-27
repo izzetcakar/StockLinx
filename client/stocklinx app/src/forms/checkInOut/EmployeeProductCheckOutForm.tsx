@@ -3,7 +3,7 @@ import { Button, Group, Textarea, NumberInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { EmployeeProductCheckOutDto } from "../../interfaces/dtos";
 import { useEmployee } from "@queryhooks";
-import { queryClient } from "@/main";
+import { useIsMutating } from "react-query";
 import FormSelect from "../mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";
 
@@ -21,7 +21,10 @@ const EmployeeProductCheckOutForm: React.FC<
     isLoading: employeeLoading,
     refetch: employeeRefetch,
   } = useEmployee.Lookup();
-  const isMutating = queryClient.isMutating() > 0;
+ const isMutating =
+    useIsMutating({
+      predicate: (query) => query.state.status === "loading",
+    }) > 0;
 
   const form = useForm<EmployeeProductCheckOutDto>({
     initialValues: checkOutDto,

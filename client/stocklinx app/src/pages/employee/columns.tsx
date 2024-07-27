@@ -9,6 +9,7 @@ import { EntityCells } from "@/cells/Entity";
 import { EntityCardColumn } from "@/interfaces/clientInterfaces";
 import { MRT_ColumnDef } from "mantine-react-table";
 import { Loader } from "@mantine/core";
+import { openSubmissionForm } from "@/utils/submissionUtils";
 import EmployeeForm from "@/forms/employee/EmployeeForm";
 import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
 import EmployeeSeats from "@/components/dataGrid/productseats/EmployeeSeats";
@@ -109,6 +110,38 @@ export const useColumns = () => {
           productType="license"
           checkOut={checkOutLicense}
         />
+      ),
+    },
+    {
+      title: "Submissions",
+      renderData: () => (
+        <button
+          onClick={() =>
+            openSubmissionForm({
+              userFullName: "User Name Surname",
+              companyName: "Company Name",
+              department: "Company Department",
+              userStartDate: "2021-05-05",
+              userTitle: "User Title",
+              products: [
+                {
+                  category: "Asset",
+                  title: "A001",
+                  description: "Lenovo Thinkpad",
+                },
+                {
+                  category: "Component",
+                  title: "C001",
+                  description: "Lenovo Thinkpad Charger",
+                },
+              ],
+              assignDate: "2023-12-23T18:24:45.061183Z",
+              delivererFullName: "Deliverer Name Surname",
+            })
+          }
+        >
+          show
+        </button>
       ),
     },
   ];

@@ -25,7 +25,7 @@ import {
   openManufacturerModal,
   openSupplierModal,
 } from "@/utils/modalUtils";
-import { queryClient } from "@/main";
+import { useIsMutating } from "react-query";
 import FormSelect from "../mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";
 
@@ -59,7 +59,10 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({ consumable }) => {
   } = useManufacturer.Lookup();
   const { mutate: createConsumable } = useConsumable.Create();
   const { mutate: updateConsumable } = useConsumable.Update();
-  const isMutating = queryClient.isMutating() > 0;
+ const isMutating =
+    useIsMutating({
+      predicate: (query) => query.state.status === "loading",
+    }) > 0;
 
   const form = useForm<IConsumable>({
     initialValues: initialValues,

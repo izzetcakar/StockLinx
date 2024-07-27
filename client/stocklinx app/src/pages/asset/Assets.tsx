@@ -3,6 +3,7 @@ import { useColumns } from "./columns";
 import { openAssetModal } from "@/utils/modalUtils";
 import { useNavigate } from "react-router-dom";
 import BaseMantineTable from "@/components/mantine/BaseMantineTable";
+import PageHeader from "@/components/generic/PageHeader";
 
 const Assets = () => {
   const navigate = useNavigate();
@@ -16,18 +17,21 @@ const Assets = () => {
   };
 
   return (
-    <BaseMantineTable
-      data={data}
-      columns={columns}
-      isLoading={isRefetching}
-      refetch={refetch}
-      onAdd={() => openAssetModal()}
-      onCopy={(value: any) => openAssetModal({ ...value, id: "" })}
-      onUpdate={(value: any) => openAssetModal(value)}
-      onRemove={(id: string) => remove(id)}
-      onRemoveRange={(ids: string[]) => removeRange(ids)}
-      onDetails={(values: any[]) => onDetails(values)}
-    />
+    <>
+      <PageHeader title="Assets" />
+      <BaseMantineTable
+        data={data}
+        columns={columns}
+        isLoading={isRefetching}
+        refetch={refetch}
+        onAdd={() => openAssetModal()}
+        onCopy={(value: any) => openAssetModal({ ...value, id: "" })}
+        onUpdate={(value: any) => openAssetModal(value)}
+        onRemove={(id: string) => remove(id)}
+        onRemoveRange={(ids: string[]) => removeRange(ids)}
+        onDetails={(values: any[]) => onDetails(values)}
+      />
+    </>
   );
 };
 

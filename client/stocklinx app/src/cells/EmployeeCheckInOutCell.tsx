@@ -2,7 +2,7 @@ import React from "react";
 import { useEmployee, useEmployeeProduct } from "@queryhooks";
 import { IAsset } from "@/interfaces/serverInterfaces";
 import { Button } from "@mantine/core";
-import { queryClient } from "@/main";
+import { useIsMutating } from "react-query";
 
 interface EmployeeCheckInOutCellProps {
   asset: IAsset;
@@ -23,7 +23,10 @@ const EmployeeCheckInOutCell: React.FC<EmployeeCheckInOutCellProps> = ({
   const employee = employeeLK?.find(
     (employee) => employee.value === employeeProduct?.employeeId
   );
-  const isMutating = queryClient.isMutating() > 0;
+ const isMutating =
+    useIsMutating({
+      predicate: (query) => query.state.status === "loading",
+    }) > 0;
 
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>

@@ -9,7 +9,7 @@ import {
 import { useForm } from "@mantine/form";
 import { IAssetProduct, IEmployeeProduct } from "@interfaces/serverInterfaces";
 import { useEmployee, useAsset } from "@queryhooks";
-import { queryClient } from "@/main";
+import { useIsMutating } from "react-query";
 import FormSelect from "../mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";
 
@@ -42,7 +42,10 @@ const CheckInForm: React.FC<CheckInFormProps> = ({
     refetch: getAssetLK,
   } = useAsset.Lookup();
   const [type, setType] = useState(segment[0]);
-  const isMutating = queryClient.isMutating() > 0;
+  const isMutating =
+    useIsMutating({
+      predicate: (query) => query.state.status === "loading",
+    }) > 0;
 
   const employeeForm = useForm<IEmployeeProduct>({
     initialValues: employeeProduct,

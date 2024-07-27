@@ -4,7 +4,7 @@ import { useForm } from "@mantine/form";
 import { ILocation } from "@interfaces/serverInterfaces";
 import { useLocation } from "@queryhooks";
 import { useInitial } from "@/hooks/initial/useInitial";
-import { queryClient } from "@/main";
+import { useIsMutating } from "react-query";
 import FormCard from "@/components/form/FormCard";
 interface LocationFormProps {
   location?: ILocation;
@@ -16,7 +16,10 @@ const LocationForm: React.FC<LocationFormProps> = ({ location, onBack }) => {
   const isCreate = initialValues.id === "";
   const { mutate: createLocation } = useLocation.Create();
   const { mutate: updateLocation } = useLocation.Update();
-  const isMutating = queryClient.isMutating() > 0;
+ const isMutating =
+    useIsMutating({
+      predicate: (query) => query.state.status === "loading",
+    }) > 0;
 
   const form = useForm<ILocation>({
     initialValues: initialValues,

@@ -30,7 +30,7 @@ import {
   openProductStatusModal,
   openSupplierModal,
 } from "@/utils/modalUtils";
-import { queryClient } from "@/main";
+import { useIsMutating } from "react-query";
 
 interface AssetFormProps {
   asset?: IAsset;
@@ -62,7 +62,10 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
     isRefetching: productStatusLoading,
     refetch: getProductStatus,
   } = useProductStatus.Lookup();
-  const isMutating = queryClient.isMutating() > 0;
+ const isMutating =
+    useIsMutating({
+      predicate: (query) => query.state.status === "loading",
+    }) > 0;
 
   const form = useForm<IAsset>({
     initialValues: initialValues,
