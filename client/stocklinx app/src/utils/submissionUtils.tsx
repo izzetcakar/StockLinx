@@ -4,7 +4,7 @@ import SubmissionForm, {
 } from "../forms/submission/SubmissionForm";
 import { modals } from "@mantine/modals";
 
-export const handlePdf = async (submissionFormProps: SubmissionFormProps) => {
+export const openSubmissionForm = async (submissionFormProps: SubmissionFormProps) => {
   const blob = await pdf(SubmissionForm(submissionFormProps)).toBlob();
   const fileURL = URL.createObjectURL(blob);
   const pdfWindow = window.open();

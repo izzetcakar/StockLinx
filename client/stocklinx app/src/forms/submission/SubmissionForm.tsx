@@ -8,11 +8,19 @@ import {
 } from "@react-pdf/renderer";
 
 Font.register({
-  family: "Roboto",
-  src: "https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-light-webfont.ttf",
+  family: "Open Sans",
+  fonts: [
+    {
+      src: "https://cdn.jsdelivr.net/npm/open-sans-all@0.1.3/fonts/open-sans-regular.ttf",
+    },
+    {
+      src: "https://cdn.jsdelivr.net/npm/open-sans-all@0.1.3/fonts/open-sans-700.ttf",
+      fontWeight: 700,
+    },
+  ],
 });
 
-const padding = 8;
+const padding = 5;
 const borderColor = "#636363";
 
 const styles = StyleSheet.create({
@@ -26,7 +34,7 @@ const styles = StyleSheet.create({
   pageContainer: {
     fontSize: 9,
     padding: 40,
-    fontFamily: "Roboto",
+    fontFamily: "Open Sans",
   },
   pageContent: {
     display: "flex",
@@ -51,7 +59,7 @@ const styles = StyleSheet.create({
     display: "flex",
     textAlign: "center",
     width: "50%",
-    padding,
+    paddingVertical: 5,
     marginVertical: "auto",
     backgroundColor: "#dfdfdf70",
   },
@@ -68,7 +76,8 @@ const styles = StyleSheet.create({
     display: "flex",
     textAlign: "center",
     width: "100%",
-    padding,
+    paddingVertical: 4,
+    fontSize: 9,
     backgroundColor: "#dfdfdf70",
     borderBottom: `1px solid ${borderColor}`,
   },
@@ -106,6 +115,9 @@ const styles = StyleSheet.create({
     display: "flex",
     width: "100%",
     height: "auto",
+  },
+  boldText: {
+    fontWeight: "bold",
   },
   xWrapper: {
     width: "100%",
@@ -145,19 +157,19 @@ const Description = ({
   <View style={styles.signContainer}>
     <View style={styles.signContent}>
       <View style={styles.signElement}>
-        <Text>Teslim Alan Personel</Text>
+        <Text style={styles.boldText}>Teslim Alan Personel</Text>
       </View>
       <View style={styles.signElement}>
-        <Text>Teslim Eden Personel</Text>
+        <Text style={styles.boldText}>Teslim Eden Personel</Text>
       </View>
     </View>
     <View style={styles.signContent}>
       <View style={styles.signElement}>
-        <Text>İsim Soyisim : </Text>
+        <Text style={styles.boldText}>İsim Soyisim : </Text>
         <Text>{userFullName}</Text>
       </View>
       <View style={styles.signElement}>
-        <Text>İsim Soyisim : </Text>
+        <Text style={styles.boldText}>İsim Soyisim : </Text>
         <Text>{delivererFullName}</Text>
       </View>
     </View>
@@ -202,33 +214,37 @@ const SubmissionForm = ({
       <View style={styles.pageContent}>
         <Text style={styles.title_center}>Personel Zimmet Formu</Text>
         <View style={styles.content}>
-          <Text style={styles.title}>Personel Adı Soyadı</Text>
+          <Text style={[styles.title, styles.boldText]}>
+            Personel Adı Soyadı
+          </Text>
           <Text style={styles.value}>{userFullName}</Text>
         </View>
         <View style={styles.content}>
-          <Text style={styles.title}>Şube/Departman</Text>
+          <Text style={[styles.title, styles.boldText]}>Şube/Departman</Text>
           <Text style={styles.value}>{department}</Text>
         </View>
         <View style={styles.content}>
-          <Text style={styles.title}>İşe Giriş Tarihi</Text>
+          <Text style={[styles.title, styles.boldText]}>İşe Giriş Tarihi</Text>
           <Text style={styles.value}>{formatDate(userStartDate)}</Text>
         </View>
         <View style={styles.content}>
-          <Text style={styles.title}>Unvan</Text>
+          <Text style={[styles.title, styles.boldText]}>Unvan</Text>
           <Text style={styles.value}>{userTitle}</Text>
         </View>
         <Text style={styles.title_center}>Zimmetlenen Malzemeler</Text>
         <View style={styles.content}>
-          <Text style={styles.title_sm}>Ürün</Text>
+          <Text style={[styles.title_sm, styles.boldText]}>Ürün</Text>
           <View style={styles.titleContainer}>
-            <Text style={styles.title}>Model</Text>
-            <Text style={styles.title}>Açiklama</Text>
+            <Text style={[styles.title, styles.boldText]}>Model</Text>
+            <Text style={[styles.title, styles.boldText]}>Açiklama</Text>
           </View>
         </View>
         {products.map((product, index) => {
           return (
             <View style={styles.content} key={index}>
-              <Text style={styles.title_sm}>{product.category}</Text>
+              <Text style={[styles.title_sm, styles.boldText]}>
+                {product.category}
+              </Text>
               <Text style={styles.value}>{product.title}</Text>
               <Text style={styles.value}>{product.description}</Text>
             </View>
