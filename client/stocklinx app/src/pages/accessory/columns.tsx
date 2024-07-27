@@ -17,6 +17,7 @@ import AccessoryForm from "@/forms/accessory/AccessoryForm";
 import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
 import EmployeeProductSeats from "@/components/dataGrid/productseats/EmployeeProductSeats";
 import base_accessory from "@/assets/baseProductImages/base_accessory.png";
+import Barcode from "react-barcode";
 
 export const useColumns = () => {
   const initial = useInitial();
@@ -89,6 +90,12 @@ export const useColumns = () => {
             radius="md"
           />
         );
+      },
+    },
+    {
+      header: "Barcode",
+      Cell: ({ row }) => {
+        return <Barcode value={row.original.tag} height={20} width={1} displayValue={false} margin={0} />;
       },
     },
     {
