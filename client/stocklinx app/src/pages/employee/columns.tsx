@@ -3,7 +3,6 @@ import {
   useDepartment,
   useAccessory,
   useConsumable,
-  useAsset,
   useLicense,
 } from "@queryhooks";
 import { EntityCells } from "@/cells/Entity";
@@ -13,6 +12,7 @@ import { Loader } from "@mantine/core";
 import EmployeeForm from "@/forms/employee/EmployeeForm";
 import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
 import EmployeeSeats from "@/components/dataGrid/productseats/EmployeeSeats";
+import EmployeeAssetSeats from "@/components/dataGrid/productseats/EmployeeAssetSeats";
 
 export const useColumns = () => {
   const {
@@ -21,7 +21,6 @@ export const useColumns = () => {
     refetch: getDepartmentLK,
   } = useDepartment.Lookup();
   const { mutate: checkOutAccessory } = useAccessory.CheckOut();
-  const { mutate: checkOutAsset } = useAsset.CheckOut();
   const { mutate: checkOutConsumable } = useConsumable.CheckOut();
   const { mutate: checkOutLicense } = useLicense.EmployeeCheckOut();
 
@@ -98,16 +97,10 @@ export const useColumns = () => {
         />
       ),
     },
-    // {
-    //   title: "Asset",
-    //   renderData: (e) => (
-    //     <EmployeeSeats
-    //       employeeId={e.id}
-    //       productType="asset"
-    //       checkOut={checkOutAsset}
-    //     />
-    //   ),
-    // },
+    {
+      title: "Asset",
+      renderData: (e) => <EmployeeAssetSeats field="employeeId" value={e.id} />,
+    },
     {
       title: "License",
       renderData: (e) => (
