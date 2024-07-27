@@ -1,10 +1,12 @@
 import React from "react";
-import { TextInput, Button, Group, Textarea, Select } from "@mantine/core";
+import { TextInput, Button, Group, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IEmployee } from "@interfaces/serverInterfaces";
 import { useEmployee, useDepartment, useCompany } from "@queryhooks";
 import { useInitial } from "@/hooks/initial/useInitial";
+import { queryClient } from "@/main";
 import FormCard from "@/components/form/FormCard";
+import FormSelect from "../mantine/FormSelect";
 
 interface EmployeeFormProps {
   employee?: IEmployee;
@@ -15,9 +17,18 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({ employee }) => {
   const isCreate = initialValues.id === "";
   const { mutate: createEmployee } = useEmployee.Create();
   const { mutate: updateEmployee } = useEmployee.Update();
-  const { data: departments } = useDepartment.GetAll();
-  const { data: companyLK } = useCompany.Lookup();
+  const {
+    data: departments,
+    isRefetching: departmentLoading,
+    refetch: getDepartments,
+  } = useDepartment.GetAll();
+  const {
+    data: companyLK,
+    isRefetching: companyLoading,
+    refetch: getCompanyLK,
+  } = useCompany.Lookup();
   const [company, setCompany] = React.useState<string>("");
+  const isMutating = queryClient.isMutating() > 0;
 
   const form = useForm<IEmployee>({
     initialValues: initialValues,
@@ -48,15 +59,16 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({ employee }) => {
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
       <FormCard>
-        <Select
+        <FormSelect
           label="Company"
-          placeholder="Company"
-          data={companyLK || []}
+          data={companyLK}
+          loading={companyLoading}
+          fetchData={getCompanyLK}
           onChange={(e) => handleCompanyChane(e?.toString() || "")}
+          inputProps={form.getInputProps("companyId")}
           value={company}
-          withAsterisk
         />
-        <Select
+        <FormSelect
           label="Department"
           data={
             departments
@@ -66,8 +78,10 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({ employee }) => {
                 label: d.name,
               })) || []
           }
-          {...form.getInputProps("departmentId")}
-          required
+          loading={departmentLoading}
+          fetchData={getDepartments}
+          inputProps={form.getInputProps("departmentId")}
+          value={form.values.departmentId || ""}
         />
         <TextInput
           label="First Name"
@@ -102,7 +116,7 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({ employee }) => {
           value={form.values.notes || ""}
         />
         <Group pt="xs" justify="flex-end">
-          <Button type="submit" color="dark">
+          <Button type="submit" color="dark" loading={isMutating}>
             Submit
           </Button>
         </Group>

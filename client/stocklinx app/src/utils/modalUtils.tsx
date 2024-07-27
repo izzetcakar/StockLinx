@@ -56,6 +56,12 @@ export const closeModal = (modalId: string) => modals.close(modalId);
 const getCanBack = (modalId: string, canBack?: boolean) =>
   canBack ? { onBack: () => modals.close(modalId) } : {};
 
+const getTitle = (entity: any, title: string) => {
+  if (!entity) return "Create " + title;
+  if (entity && entity?.id == "") return "Copy " + title;
+  return "Update " + title;
+};
+
 export const genericConfirmModal = (onConfirm: () => void) =>
   modals.openConfirmModal({
     title: "Please confirm your action",
@@ -68,7 +74,7 @@ export const genericConfirmModal = (onConfirm: () => void) =>
 export const openCategoryModal = (category?: ICategory, canBack?: boolean) =>
   modals.open({
     modalId: "category-modal",
-    title: category ? "Edit Category" : "Create Category",
+    title: getTitle(category, "Category"),
     children: (
       <CategoryForm
         category={category}
@@ -81,7 +87,7 @@ export const openCategoryModal = (category?: ICategory, canBack?: boolean) =>
 export const openCompanyModal = (company?: ICompany) =>
   modals.open({
     modalId: "company-modal",
-    title: company ? "Update Company" : "Create Company",
+    title: getTitle(company, "Company"),
     children: <CompanyForm company={company} />,
     size: "md",
   });
@@ -92,7 +98,7 @@ export const openDepartmentModal = (
 ) =>
   modals.open({
     modalId: "department-modal",
-    title: department ? "Update Department" : "Create Department",
+    title: getTitle(department, "Department"),
     children: (
       <DepartmentForm
         department={department}
@@ -105,7 +111,7 @@ export const openDepartmentModal = (
 export const openLocationModal = (location?: ILocation, canBack?: boolean) =>
   modals.open({
     modalId: "location-modal",
-    title: location ? "Update Location" : "Create Location",
+    title: getTitle(location, "Location"),
     children: (
       <LocationForm
         location={location}
@@ -121,7 +127,7 @@ export const openManufacturerModal = (
 ) =>
   modals.open({
     modalId: "manufacturer-modal",
-    title: manufacturer ? "Update Manufacturer" : "Create Manufacturer",
+    title: getTitle(manufacturer, "Manufacturer"),
     children: (
       <ManufacturerForm
         manufacturer={manufacturer}
@@ -134,7 +140,7 @@ export const openManufacturerModal = (
 export const openModelModal = (model?: IModel, canBack?: boolean) =>
   modals.open({
     modalId: "model-modal",
-    title: model ? "Update Model" : "Create Model",
+    title: getTitle(model, "Model"),
     children: (
       <ModelForm model={model} {...getCanBack("model-modal", canBack)} />
     ),
@@ -143,35 +149,35 @@ export const openModelModal = (model?: IModel, canBack?: boolean) =>
 export const openAccessoryModal = (accessory?: IAccessory) =>
   modals.open({
     modalId: "accessory-modal",
-    title: accessory ? "Update Accessory" : "Create Accessory",
+    title: getTitle(accessory, "Accessory"),
     children: <AccessoryForm accessory={accessory} />,
   });
 
 export const openAssetModal = (asset?: IAsset) =>
   modals.open({
     modalId: "asset-modal",
-    title: asset ? "Update Asset" : "Create Asset",
+    title: getTitle(asset, "Asset"),
     children: <AssetForm asset={asset} />,
   });
 
 export const openComponentModal = (component?: IComponent) =>
   modals.open({
     modalId: "component-modal",
-    title: component ? "Update Component" : "Create Component",
+    title: getTitle(component, "Component"),
     children: <ComponentForm component={component} />,
   });
 
 export const openConsumableModal = (consumable?: IConsumable) =>
   modals.open({
     modalId: "consumable-modal",
-    title: consumable ? "Update Consumable" : "Create Consumable",
+    title: getTitle(consumable, "Consumable"),
     children: <ConsumableForm consumable={consumable} />,
   });
 
 export const openLicenseModal = (license?: ILicense) =>
   modals.open({
     modalId: "license-modal",
-    title: license ? "Update License" : "Create License",
+    title: getTitle(license, "License"),
     children: <LicenseForm license={license} />,
   });
 
@@ -181,7 +187,7 @@ export const openProductStatusModal = (
 ) =>
   modals.open({
     modalId: "productstatus-modal",
-    title: productStatus ? "Update ProductStatus" : "Create ProductStatus",
+    title: getTitle(productStatus, "Product Status"),
     children: (
       <ProductStatusForm
         productStatus={productStatus}
@@ -194,7 +200,7 @@ export const openProductStatusModal = (
 export const openSupplierModal = (supplier?: ISupplier, canBack?: boolean) =>
   modals.open({
     modalId: "supplier-modal",
-    title: supplier ? "Update Supplier" : "Create Supplier",
+    title: getTitle(supplier, "Supplier"),
     children: (
       <SupplierForm
         supplier={supplier}
@@ -207,7 +213,7 @@ export const openSupplierModal = (supplier?: ISupplier, canBack?: boolean) =>
 export const openUserModal = (user?: IUser) =>
   modals.open({
     modalId: "user-modal",
-    title: user ? "Update User" : "Create User",
+    title: getTitle(user, "User"),
     children: <UserForm user={user} />,
     size: "xl",
   });
@@ -215,7 +221,7 @@ export const openUserModal = (user?: IUser) =>
 export const openEmployeeModal = (employee?: IEmployee) =>
   modals.open({
     modalId: "employee-modal",
-    title: employee ? "Update Employee" : "Create Employee",
+    title: getTitle(employee, "Employee"),
     children: <EmployeeForm employee={employee} />,
     size: "xl",
   });
@@ -223,7 +229,7 @@ export const openEmployeeModal = (employee?: IEmployee) =>
 export const openFieldSetModal = (fieldSet?: IFieldSet) => {
   modals.open({
     modalId: "fieldset-modal",
-    title: fieldSet ? "Update FieldSet" : "Create FieldSet",
+    title: getTitle(fieldSet, "Field Set"),
     children: <FieldSetForm fieldSet={fieldSet} />,
     size: "lg",
   });
@@ -232,7 +238,7 @@ export const openFieldSetModal = (fieldSet?: IFieldSet) => {
 export const openCustomFieldModal = (customField?: ICustomField) => {
   modals.open({
     modalId: "customfield-modal",
-    title: customField ? "Update CustomField" : "Create CustomField",
+    title: getTitle(customField, "Custom Field"),
     children: <CustomFieldForm customField={customField} />,
     size: "lg",
   });

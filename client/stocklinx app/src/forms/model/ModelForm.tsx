@@ -23,8 +23,9 @@ import {
   useManufacturer,
 } from "@queryhooks";
 import { CategoryType } from "@/interfaces/enums";
-import FormSelect from "../mantine/FormSelect";
 import { useInitial } from "@/hooks/initial/useInitial";
+import { queryClient } from "@/main";
+import FormSelect from "../mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";
 interface ModelFormProps {
   model?: IModel;
@@ -34,7 +35,11 @@ interface ModelFormProps {
 const ModelForm: React.FC<ModelFormProps> = ({ model, onBack }) => {
   const initialValues = useInitial().Model(model);
   const isCreate = initialValues.id === "";
-  const { data: categories } = useCategory.GetAll();
+  const {
+    data: categories,
+    isRefetching: categoryLoading,
+    refetch: getCategory,
+  } = useCategory.GetAll();
   const { data: fieldSetCustomFields, isRefetching: FCCFLoading } =
     useFieldSetCustomField.GetAll();
   const { data: customFields, isRefetching: customFieldLoading } =
@@ -44,9 +49,14 @@ const ModelForm: React.FC<ModelFormProps> = ({ model, onBack }) => {
     isRefetching: fieldSetLoading,
     refetch: getFieldSetLK,
   } = useFieldSet.Lookup();
-  const { data: manufacturerLK } = useManufacturer.Lookup();
+  const {
+    data: manufacturerLK,
+    isRefetching: manufacturerLoading,
+    refetch: getManufacturer,
+  } = useManufacturer.Lookup();
   const { mutate: createModel } = useModel.Create();
   const { mutate: updateModel } = useModel.Update();
+  const isMutating = queryClient.isMutating() > 0;
 
   const form = useForm<IModel>({
     validateInputOnChange: ["name", `modelFieldData.${FORM_INDEX}.value`],
@@ -222,14 +232,17 @@ const ModelForm: React.FC<ModelFormProps> = ({ model, onBack }) => {
               label: category.name,
             }))}
           label="Category"
+          loading={categoryLoading}
+          fetchData={getCategory}
           inputProps={form.getInputProps("categoryId")}
           value={form.values.categoryId}
           required
         />
         <FormSelect
           data={fieldSetLK}
-          fetchData={getFieldSetLK}
           label="Field Set"
+          loading={fieldSetLoading}
+          fetchData={getFieldSetLK}
           inputProps={form.getInputProps("fieldSetId")}
           onChange={(e) => onFieldIdChange(e as string)}
           value={form.values.fieldSetId}
@@ -238,6 +251,8 @@ const ModelForm: React.FC<ModelFormProps> = ({ model, onBack }) => {
         <FormSelect
           data={manufacturerLK}
           label="Manufacturer"
+          loading={manufacturerLoading}
+          fetchData={getManufacturer}
           inputProps={form.getInputProps("manufacturerId")}
           value={form.values.manufacturerId}
         />
@@ -271,11 +286,11 @@ const ModelForm: React.FC<ModelFormProps> = ({ model, onBack }) => {
         </FormCard>
         <Group pt="xs" justify="flex-end">
           {onBack ? (
-            <Button color="dark" onClick={onBack}>
+            <Button color="dark" onClick={onBack} disabled={isMutating}>
               Back
             </Button>
           ) : null}
-          <Button type="submit" color="dark">
+          <Button type="submit" color="dark" loading={isMutating}>
             Submit
           </Button>
         </Group>

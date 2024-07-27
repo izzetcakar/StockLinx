@@ -30,13 +30,13 @@ const MultiFormSelect: React.FC<MultiFormSelectProps> = ({
       placeholder={placeholder}
       {...inputProps}
       value={value || []}
-      nothingFoundMessage={nothingFound}
+      nothingFoundMessage={loading ? <Loader size={16} /> : nothingFound}
       comboboxProps={{
         position: "bottom",
         middlewares: { flip: true, shift: false },
       }}
       onDropdownOpen={fetchData}
-      rightSection={loading ? <Loader size={16} /> : null}
+      // rightSection={loading ? <Loader size={16} /> : null}
       maxDropdownHeight={200}
       required={required}
       withAsterisk={required}

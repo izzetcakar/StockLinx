@@ -9,6 +9,7 @@ import {
 import { useForm } from "@mantine/form";
 import { IAssetProduct, IEmployeeProduct } from "@interfaces/serverInterfaces";
 import { useEmployee, useAsset } from "@queryhooks";
+import { queryClient } from "@/main";
 import FormSelect from "../mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";
 
@@ -30,9 +31,18 @@ const CheckInForm: React.FC<CheckInFormProps> = ({
   employeeCheckIn,
   assetCheckIn,
 }) => {
-  const { data: employees } = useEmployee.GetAll();
-  const { data: assetLK } = useAsset.Lookup();
+  const {
+    data: employees,
+    isRefetching: employeeLoading,
+    refetch: getEmployees,
+  } = useEmployee.GetAll();
+  const {
+    data: assetLK,
+    isRefetching: assetLoading,
+    refetch: getAssetLK,
+  } = useAsset.Lookup();
   const [type, setType] = useState(segment[0]);
+  const isMutating = queryClient.isMutating() > 0;
 
   const employeeForm = useForm<IEmployeeProduct>({
     initialValues: employeeProduct,
@@ -86,6 +96,8 @@ const CheckInForm: React.FC<CheckInFormProps> = ({
                   label: emp.firstName + " " + emp.lastName,
                 })) || []
             }
+            loading={employeeLoading}
+            fetchData={getEmployees}
             inputProps={employeeForm.getInputProps("employeeId")}
             value={employeeForm.values.employeeId}
           />
@@ -93,7 +105,9 @@ const CheckInForm: React.FC<CheckInFormProps> = ({
         {type === "Asset" ? (
           <FormSelect
             label="Asset"
-            data={assetLK || []}
+            data={assetLK}
+            loading={assetLoading}
+            fetchData={getAssetLK}
             inputProps={assetForm.getInputProps("assetId")}
             value={assetForm.values.assetId}
           />
@@ -112,7 +126,7 @@ const CheckInForm: React.FC<CheckInFormProps> = ({
           value={getForm().values.notes || ""}
         />
         <Group mt="md" justify="flex-end">
-          <Button type="submit" color="dark">
+          <Button type="submit" color="dark" loading={isMutating}>
             CheckIn
           </Button>
         </Group>

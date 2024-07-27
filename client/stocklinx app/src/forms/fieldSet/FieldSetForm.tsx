@@ -3,8 +3,9 @@ import { TextInput, Button, Group, Flex } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IFieldSet } from "@interfaces/serverInterfaces";
 import { useFieldSet } from "@queryhooks";
-import uuid4 from "uuid4";
 import { useInitial } from "@/hooks/initial/useInitial";
+import { queryClient } from "@/main";
+import uuid4 from "uuid4";
 interface FieldSetFormProps {
   fieldSet?: IFieldSet;
 }
@@ -14,6 +15,7 @@ const FieldSetForm: React.FC<FieldSetFormProps> = ({ fieldSet }) => {
   const isCreate = initialValues.id === "";
   const { mutate: createFieldSet } = useFieldSet.Create();
   const { mutate: updateFieldSet } = useFieldSet.Update();
+  const isMutating = queryClient.isMutating() > 0;
 
   const form = useForm<IFieldSet>({
     initialValues: fieldSet
@@ -42,7 +44,7 @@ const FieldSetForm: React.FC<FieldSetFormProps> = ({ fieldSet }) => {
           withAsterisk
         />
         <Group mt="md" justify="flex-end">
-          <Button type="submit" color="dark">
+          <Button type="submit" color="dark" loading={isMutating}>
             Submit
           </Button>
         </Group>

@@ -26,6 +26,7 @@ import {
 } from "@queryhooks";
 import { CategoryType } from "@/interfaces/enums";
 import { useInitial } from "@/hooks/initial/useInitial";
+import { queryClient } from "@/main";
 import FormSelect from "../mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";
 
@@ -38,10 +39,27 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license }) => {
   const isCreate = initialValues.id === "";
   const { mutate: createLicense } = useLicense.Create();
   const { mutate: updateLicense } = useLicense.Update();
-  const { data: categories } = useCategory.GetAll();
-  const { data: companyLK } = useCompany.Lookup();
-  const { data: manufacturerLK } = useManufacturer.Lookup();
-  const { data: supplierLK } = useSupplier.Lookup();
+  const {
+    data: categories,
+    isRefetching: categoryLoading,
+    refetch: getCategory,
+  } = useCategory.GetAll();
+  const {
+    data: companyLK,
+    isRefetching: companyLoading,
+    refetch: getCompanyLK,
+  } = useCompany.Lookup();
+  const {
+    data: manufacturerLK,
+    isRefetching: manufacturerLoading,
+    refetch: getManufacturerLK,
+  } = useManufacturer.Lookup();
+  const {
+    data: supplierLK,
+    isRefetching: supplierLoading,
+    refetch: getSupplier,
+  } = useSupplier.Lookup();
+  const isMutating = queryClient.isMutating() > 0;
 
   const form = useForm<ILicense>({
     initialValues: initialValues,
@@ -86,6 +104,8 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license }) => {
           <FormSelect
             data={companyLK}
             label="Company"
+            loading={companyLoading}
+            fetchData={getCompanyLK}
             inputProps={form.getInputProps("companyId")}
             value={form.values.companyId}
             disabled={!isCreate}
@@ -119,6 +139,8 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license }) => {
                 value: category.id,
                 label: category.name,
               }))}
+            loading={categoryLoading}
+            fetchData={getCategory}
             inputProps={form.getInputProps("categoryId")}
             value={form.values.categoryId}
             required
@@ -130,6 +152,8 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license }) => {
         >
           <FormSelect
             data={manufacturerLK}
+            loading={manufacturerLoading}
+            fetchData={getManufacturerLK}
             inputProps={form.getInputProps("manufacturerId")}
             value={form.values.manufacturerId}
           />
@@ -140,7 +164,8 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license }) => {
         >
           <FormSelect
             data={supplierLK}
-            label="Supplier"
+            loading={supplierLoading}
+            fetchData={getSupplier}
             inputProps={form.getInputProps("supplierId")}
             value={form.values.supplierId}
           />
@@ -244,7 +269,7 @@ const LicenseForm: React.FC<LicenseFormProps> = ({ license }) => {
           />
         </FormCard>
         <Group pt="xs" justify="flex-end">
-          <Button type="submit" color="dark">
+          <Button type="submit" color="dark" loading={isMutating}>
             Submit
           </Button>
         </Group>

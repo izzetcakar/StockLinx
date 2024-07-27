@@ -3,6 +3,7 @@ import { Button, Group, Textarea, NumberInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { EmployeeProductCheckOutDto } from "../../interfaces/dtos";
 import { useEmployee } from "@queryhooks";
+import { queryClient } from "@/main";
 import FormSelect from "../mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";
 
@@ -20,6 +21,8 @@ const EmployeeProductCheckOutForm: React.FC<
     isLoading: employeeLoading,
     refetch: employeeRefetch,
   } = useEmployee.Lookup();
+  const isMutating = queryClient.isMutating() > 0;
+
   const form = useForm<EmployeeProductCheckOutDto>({
     initialValues: checkOutDto,
     validate: {
@@ -38,10 +41,10 @@ const EmployeeProductCheckOutForm: React.FC<
         <FormSelect
           label="Employee"
           data={employees || []}
-          inputProps={form.getInputProps("employeeId")}
-          value={form.values.employeeId || ""}
           fetchData={employeeRefetch}
           loading={employeeLoading}
+          inputProps={form.getInputProps("employeeId")}
+          value={form.values.employeeId || ""}
         />
         {!isAsset ? (
           <NumberInput
@@ -58,7 +61,7 @@ const EmployeeProductCheckOutForm: React.FC<
           value={form.values.notes || ""}
         />
         <Group pt="xs" justify="flex-end">
-          <Button type="submit" color="dark">
+          <Button type="submit" color="dark" loading={isMutating}>
             CheckOut
           </Button>
         </Group>

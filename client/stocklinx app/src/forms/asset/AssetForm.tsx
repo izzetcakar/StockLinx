@@ -30,6 +30,7 @@ import {
   openProductStatusModal,
   openSupplierModal,
 } from "@/utils/modalUtils";
+import { queryClient } from "@/main";
 
 interface AssetFormProps {
   asset?: IAsset;
@@ -41,10 +42,27 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
   const { mutate: createAsset } = useAsset.Create();
   const { mutate: createAssetRange } = useAsset.CreateRange();
   const { mutate: updateAsset } = useAsset.Update();
-  const { data: companyLK } = useCompany.Lookup();
-  const { data: modelLK } = useModel.Lookup();
-  const { data: supplierLK } = useSupplier.Lookup();
-  const { data: productStatusLK } = useProductStatus.Lookup();
+  const {
+    data: companyLK,
+    isRefetching: companyLoading,
+    refetch: getCompanyLK,
+  } = useCompany.Lookup();
+  const {
+    data: modelLK,
+    isRefetching: modelLoading,
+    refetch: getModelLK,
+  } = useModel.Lookup();
+  const {
+    data: supplierLK,
+    isRefetching: supplierLoading,
+    refetch: getSupplier,
+  } = useSupplier.Lookup();
+  const {
+    data: productStatusLK,
+    isRefetching: productStatusLoading,
+    refetch: getProductStatus,
+  } = useProductStatus.Lookup();
+  const isMutating = queryClient.isMutating() > 0;
 
   const form = useForm<IAsset>({
     initialValues: initialValues,
@@ -132,6 +150,8 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
           <FormSelect
             data={companyLK}
             label="Company"
+            loading={companyLoading}
+            fetchData={getCompanyLK}
             inputProps={form.getInputProps("companyId")}
             value={form.values.companyId}
             disabled={!isCreate}
@@ -166,6 +186,8 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
         <FormCard title="Model" onClick={() => openModelModal(undefined, true)}>
           <FormSelect
             data={modelLK}
+            loading={modelLoading}
+            fetchData={getModelLK}
             inputProps={form.getInputProps("modelId")}
             value={form.values.modelId}
           />
@@ -176,6 +198,8 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
         >
           <FormSelect
             data={productStatusLK}
+            loading={productStatusLoading}
+            fetchData={getProductStatus}
             inputProps={form.getInputProps("productStatusId")}
             value={form.values.productStatusId}
           />
@@ -186,6 +210,8 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
         >
           <FormSelect
             data={supplierLK}
+            loading={supplierLoading}
+            fetchData={getSupplier}
             inputProps={form.getInputProps("supplierId")}
             value={form.values.supplierId}
           />
@@ -223,7 +249,7 @@ const AssetForm: React.FC<AssetFormProps> = ({ asset }) => {
           />
         </FormCard>
         <Group pt="xs" justify="flex-end">
-          <Button type="submit" color="dark" size="md">
+          <Button type="submit" color="dark" size="md" loading={isMutating}>
             Submit
           </Button>
         </Group>

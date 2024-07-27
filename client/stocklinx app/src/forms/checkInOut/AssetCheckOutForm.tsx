@@ -3,6 +3,7 @@ import { Button, Group, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { AssetCheckOutDto } from "../../interfaces/dtos";
 import { useAsset, useEmployee, useProductStatus } from "@queryhooks";
+import { queryClient } from "@/main";
 import FormSelect from "../mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";
 
@@ -19,7 +20,12 @@ const AssetCheckOutForm: React.FC<AssetCheckOutFormProps> = ({
     isLoading: employeeLoading,
     refetch: employeeRefetch,
   } = useEmployee.Lookup();
-  const { data: productStatusLK } = useProductStatus.Lookup();
+  const {
+    data: productStatusLK,
+    isLoading: statusLoading,
+    refetch: statusRefetch,
+  } = useProductStatus.Lookup();
+  const isMutating = queryClient.isMutating() > 0;
 
   const form = useForm<AssetCheckOutDto>({
     initialValues: checkOutDto,
@@ -35,14 +41,16 @@ const AssetCheckOutForm: React.FC<AssetCheckOutFormProps> = ({
         <FormSelect
           label="Employee"
           data={employees || []}
+          loading={employeeLoading}
+          fetchData={employeeRefetch}
           inputProps={form.getInputProps("employeeId")}
           value={form.values.employeeId || ""}
-          fetchData={employeeRefetch}
-          loading={employeeLoading}
         />
         <FormSelect
           label="Product Status"
           data={productStatusLK}
+          loading={statusLoading}
+          fetchData={statusRefetch}
           inputProps={form.getInputProps("productStatusId")}
           value={form.values.productStatusId}
         />
@@ -53,7 +61,7 @@ const AssetCheckOutForm: React.FC<AssetCheckOutFormProps> = ({
           value={form.values.notes || ""}
         />
         <Group pt="xs" justify="flex-end">
-          <Button type="submit" color="dark">
+          <Button type="submit" color="dark" loading={isMutating}>
             CheckOut
           </Button>
         </Group>

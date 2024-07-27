@@ -20,6 +20,7 @@ import {
 import { CategoryType } from "@/interfaces/enums";
 import { useInitial } from "@/hooks/initial/useInitial";
 import { openCategoryModal, openSupplierModal } from "@/utils/modalUtils";
+import { queryClient } from "@/main";
 import FormSelect from "../mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";
 
@@ -32,9 +33,22 @@ const ComponentForm: React.FC<ComponentFormProps> = ({ component }) => {
   const isCreate = initialValues.id === "";
   const { mutate: createComponent } = useComponent.Create();
   const { mutate: updateComponent } = useComponent.Update();
-  const { data: categories } = useCategory.GetAll();
-  const { data: companyLK } = useCompany.Lookup();
-  const { data: supplierLK } = useSupplier.Lookup();
+  const {
+    data: categories,
+    isRefetching: categoryLoading,
+    refetch: getCategory,
+  } = useCategory.GetAll();
+  const {
+    data: companyLK,
+    isRefetching: companyLoading,
+    refetch: getCompanyLK,
+  } = useCompany.Lookup();
+  const {
+    data: supplierLK,
+    isRefetching: supplierLoading,
+    refetch: getSupplier,
+  } = useSupplier.Lookup();
+  const isMutating = queryClient.isMutating() > 0;
 
   const form = useForm<IComponent>({
     initialValues: initialValues,
@@ -79,6 +93,8 @@ const ComponentForm: React.FC<ComponentFormProps> = ({ component }) => {
           <FormSelect
             data={companyLK}
             label="Company"
+            loading={companyLoading}
+            fetchData={getCompanyLK}
             inputProps={form.getInputProps("companyId")}
             value={form.values.companyId}
             disabled={!isCreate}
@@ -112,6 +128,8 @@ const ComponentForm: React.FC<ComponentFormProps> = ({ component }) => {
                 value: category.id,
                 label: category.name,
               }))}
+            loading={categoryLoading}
+            fetchData={getCategory}
             inputProps={form.getInputProps("categoryId")}
             value={form.values.categoryId}
             required
@@ -123,6 +141,8 @@ const ComponentForm: React.FC<ComponentFormProps> = ({ component }) => {
         >
           <FormSelect
             data={supplierLK}
+            loading={supplierLoading}
+            fetchData={getSupplier}
             inputProps={form.getInputProps("supplierId")}
             value={form.values.supplierId}
           />
@@ -177,7 +197,7 @@ const ComponentForm: React.FC<ComponentFormProps> = ({ component }) => {
           />
         </FormCard>
         <Group pt="xs" justify="flex-end">
-          <Button type="submit" color="dark">
+          <Button type="submit" color="dark" loading={isMutating}>
             Submit
           </Button>
         </Group>

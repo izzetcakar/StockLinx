@@ -4,6 +4,7 @@ import { useForm } from "@mantine/form";
 import { ISupplier } from "@interfaces/serverInterfaces";
 import { useSupplier, useLocation } from "@queryhooks";
 import { useInitial } from "@/hooks/initial/useInitial";
+import { queryClient } from "@/main";
 import FormSelect from "../mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";
 
@@ -15,9 +16,14 @@ interface SupplierFormProps {
 const SupplierForm: React.FC<SupplierFormProps> = ({ supplier, onBack }) => {
   const initialValues = useInitial().Supplier(supplier);
   const isCreate = initialValues.id === "";
+  const {
+    data: locationLK,
+    isRefetching: locationLoading,
+    refetch: getLocationLK,
+  } = useLocation.Lookup();
   const { mutate: createSupplier } = useSupplier.Create();
   const { mutate: updateSupplier } = useSupplier.Update();
-  const { data: locationLK } = useLocation.Lookup();
+  const isMutating = queryClient.isMutating() > 0;
 
   const form = useForm<ISupplier>({
     initialValues: initialValues,
@@ -44,6 +50,8 @@ const SupplierForm: React.FC<SupplierFormProps> = ({ supplier, onBack }) => {
         <FormSelect
           data={locationLK}
           label="Location"
+          loading={locationLoading}
+          fetchData={getLocationLK}
           inputProps={form.getInputProps("locationId")}
           value={form.values.locationId}
         />
@@ -85,11 +93,11 @@ const SupplierForm: React.FC<SupplierFormProps> = ({ supplier, onBack }) => {
         />
         <Group pt="xs" justify="flex-end">
           {onBack ? (
-            <Button color="dark" onClick={onBack}>
+            <Button color="dark" onClick={onBack} disabled={isMutating}>
               Back
             </Button>
           ) : null}
-          <Button type="submit" color="dark">
+          <Button type="submit" color="dark" loading={isMutating}>
             Submit
           </Button>
         </Group>

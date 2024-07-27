@@ -4,6 +4,7 @@ import { useForm } from "@mantine/form";
 import { ICustomField } from "@interfaces/serverInterfaces";
 import { useCustomField, useFieldSet } from "@queryhooks";
 import { useInitial } from "@/hooks/initial/useInitial";
+import { queryClient } from "@/main";
 import MultiFormSelect from "../mantine/MultiFormSelect";
 import FormCard from "@/components/form/FormCard";
 interface CustomFieldFormProps {
@@ -20,6 +21,7 @@ const CustomFieldForm: React.FC<CustomFieldFormProps> = ({ customField }) => {
   } = useFieldSet.Lookup();
   const { mutate: createCustomField } = useCustomField.Create();
   const { mutate: updateCustomField } = useCustomField.Update();
+  const isMutating = queryClient.isMutating() > 0;
 
   const form = useForm<ICustomField>({
     initialValues: initialValues,
@@ -73,7 +75,7 @@ const CustomFieldForm: React.FC<CustomFieldFormProps> = ({ customField }) => {
           value={form.values.fieldSets || []}
         />
         <Group mt="md" justify="flex-end">
-          <Button type="submit" color="dark">
+          <Button type="submit" color="dark" loading={isMutating}>
             Submit
           </Button>
         </Group>

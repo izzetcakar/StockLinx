@@ -1,8 +1,10 @@
-import { Button, Group, MultiSelect } from "@mantine/core";
+import { Button, Group } from "@mantine/core";
 import { useUser, useCompany, usePermission } from "@queryhooks";
 import { useForm } from "@mantine/form";
+import { queryClient } from "@/main";
 import FormSelect from "../mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";
+import MultiFormSelect from "../mantine/MultiFormSelect";
 
 interface RangePermission {
   companyId: string;
@@ -10,10 +12,19 @@ interface RangePermission {
 }
 
 const PermissionForm = () => {
-  const { data: userLK } = useUser.Lookup();
-  const { data: companyLK } = useCompany.Lookup();
+  const {
+    data: userLK,
+    isRefetching: userLoading,
+    refetch: getUserLK,
+  } = useUser.Lookup();
+  const {
+    data: companyLK,
+    isRefetching: companyLoading,
+    refetch: getCompanyLK,
+  } = useCompany.Lookup();
   const { mutate: create } = usePermission.Create();
   const { mutate: createRange } = usePermission.CreateRange();
+  const isMutating = queryClient.isMutating() > 0;
 
   const form = useForm<RangePermission>({
     initialValues: {
@@ -57,18 +68,23 @@ const PermissionForm = () => {
         <FormSelect
           data={companyLK}
           label="Company"
+          loading={companyLoading}
+          fetchData={getCompanyLK}
           inputProps={form.getInputProps("companyId")}
           value={form.values.companyId}
           required
         />
-        <MultiSelect
+        <MultiFormSelect
           data={userLK}
           label="User"
-          {...form.getInputProps("userIds")}
+          loading={userLoading}
+          fetchData={getUserLK}
+          inputProps={form.getInputProps("userIds")}
+          value={form.values.userIds}
           required
         />
         <Group pt="xs" justify="flex-end">
-          <Button type="submit" color="dark" size="md">
+          <Button type="submit" color="dark" size="md" loading={isMutating}>
             Submit
           </Button>
         </Group>

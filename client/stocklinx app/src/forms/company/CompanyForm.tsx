@@ -4,6 +4,7 @@ import { useForm } from "@mantine/form";
 import { ICompany } from "@interfaces/serverInterfaces";
 import { useInitial } from "@/hooks/initial/useInitial";
 import { useCompany, useLocation } from "@queryhooks";
+import { queryClient } from "@/main";
 import FormSelect from "../mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";
 interface CompanyFormProps {
@@ -15,7 +16,12 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ company }) => {
   const isCreate = initialValues.id === "";
   const { mutate: createCompany } = useCompany.Create();
   const { mutate: updateCompany } = useCompany.Update();
-  const { data: locationLK } = useLocation.Lookup();
+  const {
+    data: locationLK,
+    isRefetching: locationLoading,
+    refetch: getLocationLK,
+  } = useLocation.Lookup();
+  const isMutating = queryClient.isMutating() > 0;
 
   const form = useForm<ICompany>({
     initialValues: initialValues,
@@ -53,6 +59,8 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ company }) => {
         <FormSelect
           data={locationLK}
           label="Location"
+          loading={locationLoading}
+          fetchData={getLocationLK}
           inputProps={form.getInputProps("locationId")}
           value={form.values.locationId}
         />
@@ -63,7 +71,7 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ company }) => {
           value={form.values.email || ""}
         />
         <Group pt="xs" justify="flex-end">
-          <Button type="submit" color="dark">
+          <Button type="submit" color="dark" loading={isMutating}>
             Submit
           </Button>
         </Group>

@@ -31,6 +31,7 @@ import {
 import base_accessory from "@assets/baseProductImages/base_accessory.png";
 import FormSelect from "../mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";
+import { queryClient } from "@/main";
 
 interface AccessoryFormProps {
   accessory?: IAccessory;
@@ -40,10 +41,27 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory }) => {
   const isCreate = initialValues.id === "";
   const { mutate: createAccessory } = useAccessory.Create();
   const { mutate: updateAccessory } = useAccessory.Update();
-  const { data: companyLK } = useCompany.Lookup();
-  const { data: categories } = useCategory.GetAll();
-  const { data: supplierLk } = useSupplier.Lookup();
-  const { data: manufacturerLk } = useManufacturer.Lookup();
+  const {
+    data: categories,
+    isRefetching: categoryLoading,
+    refetch: getCategory,
+  } = useCategory.GetAll();
+  const {
+    data: companyLK,
+    isRefetching: companyLoading,
+    refetch: getCompanyLK,
+  } = useCompany.Lookup();
+  const {
+    data: supplierLk,
+    isRefetching: supplierLoading,
+    refetch: getSupplierLK,
+  } = useSupplier.Lookup();
+  const {
+    data: manufacturerLk,
+    isRefetching: manufacturerLoading,
+    refetch: getManufacturerLK,
+  } = useManufacturer.Lookup();
+  const isMutating = queryClient.isMutating() > 0;
 
   const form = useForm<IAccessory>({
     initialValues: initialValues,
@@ -113,6 +131,8 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory }) => {
             data={companyLK}
             label="Company"
             value={form.values.companyId}
+            loading={companyLoading}
+            fetchData={getCompanyLK}
             inputProps={form.getInputProps("companyId")}
             disabled={!isCreate}
             required
@@ -146,6 +166,8 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory }) => {
                 value: category.id,
                 label: category.name,
               }))}
+            loading={categoryLoading}
+            fetchData={getCategory}
             inputProps={form.getInputProps("categoryId")}
             value={form.values.categoryId}
           />
@@ -157,6 +179,8 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory }) => {
           <FormSelect
             data={supplierLk}
             value={form.values.supplierId}
+            loading={supplierLoading}
+            fetchData={getSupplierLK}
             inputProps={form.getInputProps("supplierId")}
           />
         </FormCard>
@@ -166,6 +190,8 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory }) => {
         >
           <FormSelect
             data={manufacturerLk}
+            loading={manufacturerLoading}
+            fetchData={getManufacturerLK}
             inputProps={form.getInputProps("manufacturerId")}
             value={form.values.manufacturerId}
           />
@@ -223,7 +249,7 @@ const AccessoryForm: React.FC<AccessoryFormProps> = ({ accessory }) => {
           />
         </FormCard>
         <Group pt="xs" justify="flex-end">
-          <Button type="submit" color="dark" size="md">
+          <Button type="submit" color="dark" size="md" loading={isMutating}>
             Submit
           </Button>
         </Group>

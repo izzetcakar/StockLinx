@@ -4,6 +4,7 @@ import { useForm } from "@mantine/form";
 import { IDepartment } from "@interfaces/serverInterfaces";
 import { useLocation, useCompany, useDepartment } from "@queryhooks";
 import { useInitial } from "@/hooks/initial/useInitial";
+import { queryClient } from "@/main";
 import FormSelect from "../mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";
 interface DepartmentFormProps {
@@ -19,8 +20,17 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
   const isCreate = initialValues.id === "";
   const { mutate: createDepartment } = useDepartment.Create();
   const { mutate: updateDepartment } = useDepartment.Update();
-  const { data: companyLK } = useCompany.Lookup();
-  const { data: locationLK } = useLocation.Lookup();
+  const {
+    data: companyLK,
+    isRefetching: companyLoading,
+    refetch: getCompanyLK,
+  } = useCompany.Lookup();
+  const {
+    data: locationLK,
+    isRefetching: locationLoading,
+    refetch: getLocationLK,
+  } = useLocation.Lookup();
+  const isMutating = queryClient.isMutating() > 0;
 
   const form = useForm<IDepartment>({
     initialValues: initialValues,
@@ -47,12 +57,16 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
           <FormSelect
             data={companyLK}
             label="Company"
+            loading={companyLoading}
+            fetchData={getCompanyLK}
             inputProps={form.getInputProps("companyId")}
             value={form.values.companyId}
           />
           <FormSelect
             data={locationLK}
             label="Location"
+            loading={locationLoading}
+            fetchData={getLocationLK}
             inputProps={form.getInputProps("locationId")}
             value={form.values.locationId}
           />
@@ -65,11 +79,11 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
         </Flex>
         <Group pt="xs" justify="flex-end">
           {onBack ? (
-            <Button color="dark" onClick={onBack}>
+            <Button color="dark" onClick={onBack} disabled={isMutating}>
               Back
             </Button>
           ) : null}
-          <Button type="submit" color="dark">
+          <Button type="submit" color="dark" loading={isMutating}>
             Submit
           </Button>
         </Group>

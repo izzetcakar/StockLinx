@@ -4,6 +4,7 @@ import { useForm } from "@mantine/form";
 import { IManufacturer } from "@interfaces/serverInterfaces";
 import { useManufacturer } from "@queryhooks";
 import { useInitial } from "@/hooks/initial/useInitial";
+import { queryClient } from "@/main";
 import FormCard from "@/components/form/FormCard";
 
 interface ManufacturerFormProps {
@@ -19,6 +20,7 @@ const ManufacturerForm: React.FC<ManufacturerFormProps> = ({
   const isCreate = initialValues.id === "";
   const { mutate: createManufacturer } = useManufacturer.Create();
   const { mutate: updateManufacturer } = useManufacturer.Update();
+  const isMutating = queryClient.isMutating() > 0;
 
   const form = useForm<IManufacturer>({
     initialValues: initialValues,
@@ -74,11 +76,11 @@ const ManufacturerForm: React.FC<ManufacturerFormProps> = ({
         />
         <Group pt="xs" justify="flex-end">
           {onBack ? (
-            <Button color="dark" onClick={onBack}>
+            <Button color="dark" onClick={onBack} disabled={isMutating}>
               Back
             </Button>
           ) : null}
-          <Button type="submit" color="dark">
+          <Button type="submit" color="dark" loading={isMutating}>
             Submit
           </Button>
         </Group>

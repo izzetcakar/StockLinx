@@ -3,6 +3,7 @@ import { Button, Group, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { AssetCheckInDto } from "../../interfaces/dtos";
 import { useEmployee, useProductStatus, useAsset } from "@queryhooks";
+import { queryClient } from "@/main";
 import FormSelect from "../mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";
 
@@ -22,6 +23,7 @@ const AssetCheckInForm: React.FC<AssetCheckInFormProps> = ({ checkInDto }) => {
     refetch: statusRefetch,
   } = useProductStatus.GetAll();
   const { mutate: checkIn } = useAsset.CheckIn();
+  const isMutating = queryClient.isMutating() > 0;
 
   const form = useForm<AssetCheckInDto>({
     initialValues: checkInDto,
@@ -46,10 +48,10 @@ const AssetCheckInForm: React.FC<AssetCheckInFormProps> = ({ checkInDto }) => {
               label: employee.firstName + " " + employee.lastName,
             })) || []
           }
+          loading={employeeLoading}
+          fetchData={employeeRefetch}
           inputProps={form.getInputProps("employeeId")}
           value={form.values.employeeId}
-          fetchData={employeeRefetch}
-          loading={employeeLoading}
           required
         />
         <FormSelect
@@ -58,10 +60,10 @@ const AssetCheckInForm: React.FC<AssetCheckInFormProps> = ({ checkInDto }) => {
             value: status.id,
             label: status.name,
           }))}
+          loading={statusLoading}
+          fetchData={statusRefetch}
           inputProps={form.getInputProps("productStatusId")}
           value={form.values.productStatusId}
-          fetchData={statusRefetch}
-          loading={statusLoading}
           required
         />
         <Textarea
@@ -71,7 +73,7 @@ const AssetCheckInForm: React.FC<AssetCheckInFormProps> = ({ checkInDto }) => {
           value={form.values.notes || ""}
         />
         <Group pt="xs" justify="flex-end">
-          <Button type="submit" color="dark">
+          <Button type="submit" color="dark" loading={isMutating}>
             CheckIn
           </Button>
         </Group>

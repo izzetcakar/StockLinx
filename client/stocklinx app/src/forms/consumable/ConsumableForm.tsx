@@ -20,13 +20,14 @@ import {
 } from "@queryhooks";
 import { CategoryType } from "@/interfaces/enums";
 import { useInitial } from "@/hooks/initial/useInitial";
-import FormSelect from "../mantine/FormSelect";
-import FormCard from "@/components/form/FormCard";
 import {
   openCategoryModal,
   openManufacturerModal,
   openSupplierModal,
 } from "@/utils/modalUtils";
+import { queryClient } from "@/main";
+import FormSelect from "../mantine/FormSelect";
+import FormCard from "@/components/form/FormCard";
 
 interface ConsumableFormProps {
   consumable?: IConsumable;
@@ -36,12 +37,29 @@ interface ConsumableFormProps {
 const ConsumableForm: React.FC<ConsumableFormProps> = ({ consumable }) => {
   const initialValues = useInitial().Consumable(consumable);
   const isCreate = initialValues.id === "";
-  const { data: categories } = useCategory.GetAll();
+  const {
+    data: categories,
+    isRefetching: categoryLoading,
+    refetch: getCategories,
+  } = useCategory.GetAll();
+  const {
+    data: companyLK,
+    isRefetching: companyLoading,
+    refetch: getCompanyLK,
+  } = useCompany.Lookup();
+  const {
+    data: supplierLK,
+    isRefetching: supplierLoading,
+    refetch: getSupplierLK,
+  } = useSupplier.Lookup();
+  const {
+    data: manufacturerLK,
+    isRefetching: manufacturerLoading,
+    refetch: getManufacturer,
+  } = useManufacturer.Lookup();
   const { mutate: createConsumable } = useConsumable.Create();
   const { mutate: updateConsumable } = useConsumable.Update();
-  const { data: companyLK } = useCompany.Lookup();
-  const { data: supplierLK } = useSupplier.Lookup();
-  const { data: manufacturerLK } = useManufacturer.Lookup();
+  const isMutating = queryClient.isMutating() > 0;
 
   const form = useForm<IConsumable>({
     initialValues: initialValues,
@@ -87,6 +105,8 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({ consumable }) => {
           <FormSelect
             data={companyLK}
             label="Company"
+            loading={companyLoading}
+            fetchData={getCompanyLK}
             inputProps={form.getInputProps("companyId")}
             value={form.values.companyId}
             disabled={!isCreate}
@@ -122,6 +142,8 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({ consumable }) => {
                 value: category.id,
                 label: category.name,
               }))}
+            loading={categoryLoading}
+            fetchData={getCategories}
             inputProps={form.getInputProps("categoryId")}
             value={form.values.categoryId}
             required
@@ -133,6 +155,8 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({ consumable }) => {
         >
           <FormSelect
             data={supplierLK}
+            loading={supplierLoading}
+            fetchData={getSupplierLK}
             inputProps={form.getInputProps("supplierId")}
             value={form.values.supplierId}
           />
@@ -143,6 +167,8 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({ consumable }) => {
         >
           <FormSelect
             data={manufacturerLK}
+            loading={manufacturerLoading}
+            fetchData={getManufacturer}
             inputProps={form.getInputProps("manufacturerId")}
             value={form.values.manufacturerId}
           />
@@ -197,7 +223,7 @@ const ConsumableForm: React.FC<ConsumableFormProps> = ({ consumable }) => {
           />
         </FormCard>
         <Group pt="xs" justify="flex-end">
-          <Button type="submit" color="dark">
+          <Button type="submit" color="dark" loading={isMutating}>
             Submit
           </Button>
         </Group>
