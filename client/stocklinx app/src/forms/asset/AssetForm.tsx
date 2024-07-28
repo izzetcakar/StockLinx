@@ -23,7 +23,7 @@ import {
 } from "@queryhooks";
 import { useInitial } from "@/hooks/initial/useInitial";
 import base_asset from "@assets/baseProductImages/base_asset.jpg";
-import FormSelect from "../mantine/FormSelect";
+import FormSelect from "@/components/mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";
 import {
   openModelModal,

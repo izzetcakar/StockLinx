@@ -29,7 +29,7 @@ import {
   openSupplierModal,
 } from "@/utils/modalUtils";
 import base_accessory from "@assets/baseProductImages/base_accessory.png";
-import FormSelect from "../mantine/FormSelect";
+import FormSelect from "@/components/mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";
 import { useIsMutating } from "react-query";
 

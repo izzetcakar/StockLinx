@@ -10,7 +10,7 @@ import { useForm } from "@mantine/form";
 import { IAssetProduct, IEmployeeProduct } from "@interfaces/serverInterfaces";
 import { useEmployee, useAsset } from "@queryhooks";
 import { useIsMutating } from "react-query";
-import FormSelect from "../mantine/FormSelect";
+import FormSelect from "@/components/mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";
 
 interface CheckInFormProps {

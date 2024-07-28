@@ -4,7 +4,7 @@ import { useForm } from "@mantine/form";
 import { AssetCheckOutDto } from "../../interfaces/dtos";
 import { useAsset, useEmployee, useProductStatus } from "@queryhooks";
 import { useIsMutating } from "react-query";
-import FormSelect from "../mantine/FormSelect";
+import FormSelect from "@/components/mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";
 
 interface AssetCheckOutFormProps {

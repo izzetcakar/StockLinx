@@ -5,7 +5,7 @@ import { ISupplier } from "@interfaces/serverInterfaces";
 import { useSupplier, useLocation } from "@queryhooks";
 import { useInitial } from "@/hooks/initial/useInitial";
 import { useIsMutating } from "react-query";
-import FormSelect from "../mantine/FormSelect";
+import FormSelect from "@/components/mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";
 
 interface SupplierFormProps {

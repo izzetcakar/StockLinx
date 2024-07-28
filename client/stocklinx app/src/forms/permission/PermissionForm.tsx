@@ -2,9 +2,9 @@ import { Button, Group } from "@mantine/core";
 import { useUser, useCompany, usePermission } from "@queryhooks";
 import { useForm } from "@mantine/form";
 import { useIsMutating } from "react-query";
-import FormSelect from "../mantine/FormSelect";
+import FormSelect from "@/components/mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";
-import MultiFormSelect from "../mantine/MultiFormSelect";
+import MultiFormSelect from "../../components/mantine/MultiFormSelect";
 
 interface RangePermission {
   companyId: string;

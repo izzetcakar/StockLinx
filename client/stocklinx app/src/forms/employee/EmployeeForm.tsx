@@ -1,12 +1,18 @@
 import React from "react";
-import { TextInput, Button, Group, Textarea } from "@mantine/core";
+import {
+  TextInput,
+  Button,
+  Group,
+  Textarea,
+  Select,
+  Loader,
+} from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IEmployee } from "@interfaces/serverInterfaces";
 import { useEmployee, useDepartment, useCompany } from "@queryhooks";
 import { useInitial } from "@/hooks/initial/useInitial";
 import { useIsMutating } from "react-query";
 import FormCard from "@/components/form/FormCard";
-import FormSelect from "../mantine/FormSelect";
 
 interface EmployeeFormProps {
   employee?: IEmployee;
@@ -28,7 +34,7 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({ employee }) => {
     refetch: getCompanyLK,
   } = useCompany.Lookup();
   const [company, setCompany] = React.useState<string>("");
- const isMutating =
+  const isMutating =
     useIsMutating({
       predicate: (query) => query.state.status === "loading",
     }) > 0;
@@ -47,13 +53,13 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({ employee }) => {
     isCreate ? createEmployee(data) : updateEmployee(data);
   };
 
-  const handleCompanyChane = (newCompany: string) => {
+  const handleCompanyChange = (newCompany: string) => {
     if (form.values.departmentId === "") {
       setCompany(newCompany);
       return;
     }
     if (newCompany !== company && company !== "" && newCompany !== "") {
-      console.log("diffentCompany");
+      console.log("Company change detected");
       form.setFieldValue("departmentId", null);
       setCompany(newCompany);
     }
@@ -62,30 +68,40 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({ employee }) => {
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
       <FormCard>
-        <FormSelect
+        <Select
           label="Company"
-          data={companyLK}
-          loading={companyLoading}
-          fetchData={getCompanyLK}
-          onChange={(e) => handleCompanyChane(e?.toString() || "")}
-          inputProps={form.getInputProps("companyId")}
+          placeholder="Select Company"
+          data={companyLoading ? [] : companyLK}
+          onChange={(e) => handleCompanyChange(e?.toString() || "")}
+          onDropdownOpen={getCompanyLK}
+          nothingFoundMessage={
+            companyLoading ? <Loader size={16} /> : "No company found"
+          }
           value={company}
         />
-        <FormSelect
+        <Select
           label="Department"
+          placeholder="Select department"
           data={
-            departments
-              ?.filter((d) => d.companyId === company)
-              .map((d) => ({
-                value: d.id,
-                label: d.name,
-              })) || []
+            departmentLoading
+              ? []
+              : departments
+                  ?.filter((d) => d.companyId === company)
+                  .map((d) => ({
+                    value: d.id,
+                    label: d.name,
+                  }))
           }
-          loading={departmentLoading}
-          fetchData={getDepartments}
-          inputProps={form.getInputProps("departmentId")}
-          value={form.values.departmentId || ""}
+          onDropdownOpen={getDepartments}
+          nothingFoundMessage={
+            departmentLoading ? <Loader size={16} /> : "No department found"
+          }
+          {...form.getInputProps("departmentId")}
+          value={form.values.departmentId}
+          required
+          withAsterisk
         />
+
         <TextInput
           label="First Name"
           placeholder="First Name"

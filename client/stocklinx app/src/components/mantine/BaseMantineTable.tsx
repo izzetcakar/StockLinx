@@ -1,5 +1,10 @@
-import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
-import { ActionIcon, Flex } from "@mantine/core";
+import {
+  MantineReactTable,
+  MRT_Row,
+  MRT_TableInstance,
+  useMantineReactTable,
+} from "mantine-react-table";
+import { ActionIcon, Flex, Menu } from "@mantine/core";
 import {
   IconRefresh,
   IconEdit,
@@ -7,9 +12,12 @@ import {
   IconTrash,
   IconCopy,
   IconLocationShare,
+  IconTableExport,
 } from "@tabler/icons-react";
-import { IAccessory } from "@/interfaces/serverInterfaces";
 import { openConfirmModal } from "@/components/gridTable/modals/modals";
+import { jsPDF } from "jspdf";
+import { mkConfig, generateCsv, download } from "export-to-csv";
+import autoTable, { RowInput } from "jspdf-autotable";
 
 interface BaseMantineTableProps {
   data: undefined | any[];
@@ -22,7 +30,14 @@ interface BaseMantineTableProps {
   onRemove?: (id: string) => void;
   onRemoveRange?: (ids: string[]) => void;
   onDetails?: (value: any[]) => void;
+  getExportData?: (ids: string[]) => Promise<any[]>;
 }
+
+const csvConfig = mkConfig({
+  fieldSeparator: ",",
+  decimalSeparator: ".",
+  useKeysAsHeaders: true,
+});
 
 const BaseMantineTable: React.FC<BaseMantineTableProps> = ({
   data,
@@ -35,6 +50,7 @@ const BaseMantineTable: React.FC<BaseMantineTableProps> = ({
   onRemove,
   onRemoveRange,
   onDetails,
+  getExportData,
 }) => {
   const copyHandler = (value: any) => {
     if (!onCopy) return;
@@ -58,10 +74,45 @@ const BaseMantineTable: React.FC<BaseMantineTableProps> = ({
     );
   };
 
+  const handleExportRowsPdf = async (rows: MRT_Row<any>[]) => {
+    const doc = new jsPDF();
+    let exportData = rows.map((row) => row.original);
+    if (getExportData) {
+      exportData = await getExportData(rows.map((row) => row.original?.id));
+    }
+    const tableHeaders = columns.map((c) => c.header);
+
+    autoTable(doc, {
+      head: [tableHeaders],
+      body: exportData.map((row) => Object.values(row)),
+      theme: "plain",
+      alternateRowStyles: {
+        overflow: "hidden",
+        cellWidth: "wrap",
+      },
+    });
+
+    doc.save("mrt-pdf-example.pdf");
+  };
+
+  const handleExportRowsCsv = async (
+    rows: MRT_Row<any>[],
+    table: MRT_TableInstance<any>
+  ) => {
+    const visibleColumns = table.getVisibleFlatColumns().slice(2, 9);
+    // const visibleColumnsKeys = visibleColumns.map((c) => c.id);
+    let exportData = rows.map((row) => row.original);
+    if (getExportData) {
+      exportData = await getExportData(rows.map((row) => row.original?.id));
+    }
+    const csv = generateCsv(csvConfig)(exportData);
+    download(csvConfig)(csv);
+  };
+
   const editable =
     onAdd || onUpdate || onCopy || onRemove || onRemoveRange ? true : false;
 
-  const table = useMantineReactTable<IAccessory>({
+  const table = useMantineReactTable<any>({
     columns,
     data: data || [],
     enableGlobalFilter: false,
@@ -107,7 +158,7 @@ const BaseMantineTable: React.FC<BaseMantineTableProps> = ({
     renderTopToolbarCustomActions: ({ table }) => (
       <Flex align="center" gap="sm">
         <ActionIcon onClick={() => refetch()} variant="subtle" color="black">
-          <IconRefresh size={18}/>
+          <IconRefresh size={18} />
         </ActionIcon>
         {onAdd ? (
           <ActionIcon onClick={() => onAdd()} variant="subtle" color="black">
@@ -143,6 +194,50 @@ const BaseMantineTable: React.FC<BaseMantineTableProps> = ({
             <IconLocationShare size={18} />
           </ActionIcon>
         ) : null}
+        <Menu position="bottom-start" width="auto">
+          <Menu.Target>
+            <ActionIcon variant="subtle" color="black">
+              <IconTableExport size={18} />
+            </ActionIcon>
+          </Menu.Target>
+          <Menu.Dropdown>
+            <Menu.Item
+              disabled={table.getPrePaginationRowModel().rows.length === 0}
+              onClick={() =>
+                handleExportRowsCsv(
+                  table.getPrePaginationRowModel().rows,
+                  table
+                )
+              }
+            >
+              Export All Csv
+            </Menu.Item>
+            <Menu.Item
+              disabled={table.getSelectedRowModel().rows.length === 0}
+              onClick={() =>
+                handleExportRowsCsv(table.getSelectedRowModel().rows, table)
+              }
+            >
+              Export Selected Csv
+            </Menu.Item>
+            <Menu.Item
+              disabled={table.getPrePaginationRowModel().rows.length === 0}
+              onClick={() =>
+                handleExportRowsPdf(table.getPrePaginationRowModel().rows)
+              }
+            >
+              Export PDF
+            </Menu.Item>
+            <Menu.Item
+              disabled={table.getSelectedRowModel().rows.length === 0}
+              onClick={() =>
+                handleExportRowsPdf(table.getSelectedRowModel().rows)
+              }
+            >
+              Export Selected PDF
+            </Menu.Item>
+          </Menu.Dropdown>
+        </Menu>
       </Flex>
     ),
     renderRowActions: ({ row }) => (

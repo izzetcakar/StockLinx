@@ -5,7 +5,7 @@ import { ICustomField } from "@interfaces/serverInterfaces";
 import { useCustomField, useFieldSet } from "@queryhooks";
 import { useInitial } from "@/hooks/initial/useInitial";
 import { useIsMutating } from "react-query";
-import MultiFormSelect from "../mantine/MultiFormSelect";
+import MultiFormSelect from "../../components/mantine/MultiFormSelect";
 import FormCard from "@/components/form/FormCard";
 interface CustomFieldFormProps {
   customField?: ICustomField;

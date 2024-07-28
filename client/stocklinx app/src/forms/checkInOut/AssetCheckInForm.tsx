@@ -3,7 +3,7 @@ import { Button, Group, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { AssetCheckInDto } from "../../interfaces/dtos";
 import { useEmployee, useProductStatus, useAsset } from "@queryhooks";
-import FormSelect from "../mantine/FormSelect";
+import FormSelect from "@/components/mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";
 import { useIsMutating } from "react-query";
 

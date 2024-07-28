@@ -25,7 +25,7 @@ import {
 import { CategoryType } from "@/interfaces/enums";
 import { useInitial } from "@/hooks/initial/useInitial";
 import { useIsMutating } from "react-query";
-import FormSelect from "../mantine/FormSelect";
+import FormSelect from "@/components/mantine/FormSelect";
 import FormCard from "@/components/form/FormCard";
 interface ModelFormProps {
   model?: IModel;
