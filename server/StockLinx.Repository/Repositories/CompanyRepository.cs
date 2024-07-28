@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Generic;
+using StockLinx.Core.DTOs.Generic.Display;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 
@@ -68,6 +69,20 @@ namespace StockLinx.Repository.Repositories.EF_Core
             {
                 throw new Exception("Cannot delete company because it has permissions.");
             }
+        }
+
+        public async Task<List<CompanyDisplayDto>> GetDisplayDtos(List<Guid> ids)
+        {
+            var query = dbContext
+                .Companies.Where(c => ids.Contains(c.Id))
+                .Select(c => new CompanyDisplayDto
+                {
+                    Name = c.Name,
+                    Tag = c.Tag,
+                    Email = c.Email,
+                    Location = c.Location.Name,
+                });
+            return await query.ToListAsync();
         }
     }
 }

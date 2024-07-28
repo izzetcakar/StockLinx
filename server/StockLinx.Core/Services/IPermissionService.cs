@@ -1,5 +1,6 @@
 ﻿using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
+using StockLinx.Core.DTOs.Generic.Display;
 using StockLinx.Core.Entities;
 
 namespace StockLinx.Core.Services
@@ -16,5 +17,6 @@ namespace StockLinx.Core.Services
         Task<List<Company>> GetUserCompaniesAsync();
         Task<bool> VerifyCompanyAccessAsync(Guid companyId);
         Task<List<Guid>> GetCompanyIdsAsync();
+        Task<List<PermissionDisplayDto>> GetDisplayDtos(List<Guid> ids);
     }
 }

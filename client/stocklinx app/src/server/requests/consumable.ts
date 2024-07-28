@@ -46,6 +46,10 @@ const lookup = () => {
   return baseRequests.lookup(requestUrl, ["tag", "name"]);
 };
 
+const getDtos = async (ids: string[]) => {
+  return baseRequests.getDtos(requestUrl, ids);
+};
+
 const checkIn = async (
   checkInDto: EmployeeProductCheckInDto
 ): Promise<EmployeeProductDto> => {
@@ -80,6 +84,7 @@ export default {
   removeRange,
   filter,
   lookup,
+  getDtos,
   checkIn,
   checkOut,
 };

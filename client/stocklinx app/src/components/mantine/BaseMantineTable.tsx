@@ -1,7 +1,6 @@
 import {
   MantineReactTable,
   MRT_Row,
-  MRT_TableInstance,
   useMantineReactTable,
 } from "mantine-react-table";
 import { ActionIcon, Flex, Menu } from "@mantine/core";
@@ -17,7 +16,7 @@ import {
 import { openConfirmModal } from "@/components/gridTable/modals/modals";
 import { jsPDF } from "jspdf";
 import { mkConfig, generateCsv, download } from "export-to-csv";
-import autoTable, { RowInput } from "jspdf-autotable";
+import autoTable from "jspdf-autotable";
 
 interface BaseMantineTableProps {
   data: undefined | any[];
@@ -95,12 +94,7 @@ const BaseMantineTable: React.FC<BaseMantineTableProps> = ({
     doc.save("mrt-pdf-example.pdf");
   };
 
-  const handleExportRowsCsv = async (
-    rows: MRT_Row<any>[],
-    table: MRT_TableInstance<any>
-  ) => {
-    const visibleColumns = table.getVisibleFlatColumns().slice(2, 9);
-    // const visibleColumnsKeys = visibleColumns.map((c) => c.id);
+  const handleExportRowsCsv = async (rows: MRT_Row<any>[]) => {
     let exportData = rows.map((row) => row.original);
     if (getExportData) {
       exportData = await getExportData(rows.map((row) => row.original?.id));
@@ -204,10 +198,7 @@ const BaseMantineTable: React.FC<BaseMantineTableProps> = ({
             <Menu.Item
               disabled={table.getPrePaginationRowModel().rows.length === 0}
               onClick={() =>
-                handleExportRowsCsv(
-                  table.getPrePaginationRowModel().rows,
-                  table
-                )
+                handleExportRowsCsv(table.getPrePaginationRowModel().rows)
               }
             >
               Export All Csv
@@ -215,7 +206,7 @@ const BaseMantineTable: React.FC<BaseMantineTableProps> = ({
             <Menu.Item
               disabled={table.getSelectedRowModel().rows.length === 0}
               onClick={() =>
-                handleExportRowsCsv(table.getSelectedRowModel().rows, table)
+                handleExportRowsCsv(table.getSelectedRowModel().rows)
               }
             >
               Export Selected Csv

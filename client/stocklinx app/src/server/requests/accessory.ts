@@ -46,6 +46,10 @@ const lookup = () => {
   return baseRequests.lookup(requestUrl, ["tag", "name"]);
 };
 
+const getDtos = async (ids: string[]) => {
+  return baseRequests.getDtos(requestUrl, ids);
+};
+
 const checkIn = async (
   checkInDto: EmployeeProductCheckInDto
 ): Promise<EmployeeProductDto> => {
@@ -70,16 +74,6 @@ const checkOut = async (
   ).data as EmployeeProductDto[];
 };
 
-const getDtos = async (ids: string[]) => {
-  return (
-    await request<IAccessory>({
-      requestUrl: requestUrl + "display",
-      apiType: "post",
-      queryData: ids,
-    })
-  ).data as IAccessory[];
-};
-
 export default {
   getAll,
   get,
@@ -90,7 +84,7 @@ export default {
   removeRange,
   filter,
   lookup,
+  getDtos,
   checkIn,
   checkOut,
-  getDtos,
 };

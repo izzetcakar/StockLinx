@@ -1,4 +1,5 @@
 ﻿using StockLinx.Core.DTOs.Generic;
+using StockLinx.Core.DTOs.Generic.Display;
 using StockLinx.Core.Entities;
 
 namespace StockLinx.Core.Repositories
@@ -8,5 +9,6 @@ namespace StockLinx.Core.Repositories
         SupplierDto GetDto(Supplier entity);
         List<SupplierDto> GetDtos(List<Supplier> entities);
         Task<List<SupplierDto>> GetAllDtosAsync();
+        Task<List<SupplierDisplayDto>> GetDisplayDtos(List<Guid> ids);
     }
 }

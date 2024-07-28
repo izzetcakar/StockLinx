@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
+using StockLinx.Core.DTOs.Generic.Display;
 using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.Services;
 
@@ -119,6 +120,23 @@ namespace StockLinx.API.Controllers
                 List<PermissionDto> result = await _permissionService.FilterAllAsync(filter);
                 return CreateActionResult(
                     CustomResponseDto<List<PermissionDto>>.Success(200, result)
+                );
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
+        }
+
+        [HttpPost("display")]
+        public async Task<IActionResult> Display(List<Guid> ids)
+        {
+            try
+            {
+                List<PermissionDisplayDto> result = await _permissionService.GetDisplayDtos(ids);
+
+                return CreateActionResult(
+                    CustomResponseDto<List<PermissionDisplayDto>>.Success(200, result)
                 );
             }
             catch (Exception ex)

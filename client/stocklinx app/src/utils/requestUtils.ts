@@ -89,6 +89,16 @@ const lookup = async <T>(
   });
 };
 
+const getDtos = async (requestUrl: string, ids: string[]) => {
+  return (
+    await request<any>({
+      requestUrl: requestUrl + "display",
+      apiType: "post",
+      queryData: ids,
+    })
+  ).data;
+};
+
 export const baseRequests = {
   getAll,
   get,
@@ -99,4 +109,5 @@ export const baseRequests = {
   removeRange,
   filter,
   lookup,
+  getDtos,
 };

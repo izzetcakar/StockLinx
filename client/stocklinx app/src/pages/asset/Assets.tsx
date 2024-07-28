@@ -2,6 +2,7 @@ import { useAsset } from "@/hooks/query";
 import { useColumns } from "./columns";
 import { openAssetModal } from "@/utils/modalUtils";
 import { useNavigate } from "react-router-dom";
+import { assetRequests } from "@/server/requests";
 import BaseMantineTable from "@/components/mantine/BaseMantineTable";
 import PageHeader from "@/components/generic/PageHeader";
 
@@ -30,6 +31,7 @@ const Assets = () => {
         onRemove={(id: string) => remove(id)}
         onRemoveRange={(ids: string[]) => removeRange(ids)}
         onDetails={(values: any[]) => onDetails(values)}
+        getExportData={(ids: string[]) => assetRequests.getDtos(ids)}
       />
     </>
   );

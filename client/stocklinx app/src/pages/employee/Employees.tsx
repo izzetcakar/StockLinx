@@ -2,6 +2,7 @@ import { useEmployee } from "@/hooks/query";
 import { useColumns } from "./columns";
 import { openEmployeeModal } from "@/utils/modalUtils";
 import { useNavigate } from "react-router-dom";
+import { employeeRequests } from "@/server/requests";
 import BaseMantineTable from "@/components/mantine/BaseMantineTable";
 import PageHeader from "@/components/generic/PageHeader";
 
@@ -30,6 +31,7 @@ const Employees = () => {
         onRemove={(id: string) => remove(id)}
         onRemoveRange={(ids: string[]) => removeRange(ids)}
         onDetails={(values: any[]) => onDetails(values)}
+        getExportData={(ids: string[]) => employeeRequests.getDtos(ids)}
       />
     </>
   );

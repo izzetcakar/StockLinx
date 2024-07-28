@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
+using StockLinx.Core.DTOs.Generic.Display;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
@@ -133,6 +134,11 @@ namespace StockLinx.Service.Services
         {
             var result = await _filterService.FilterAsync(filter);
             return _productStatusRepository.GetDtos(result.ToList());
+        }
+
+        public async Task<List<ProductStatusDisplayDto>> GetDisplayDtos(List<Guid> ids)
+        {
+            return await _productStatusRepository.GetDisplayDtos(ids);
         }
     }
 }

@@ -2,6 +2,7 @@ import { useCompany } from "@/hooks/query";
 import { useColumns } from "./columns";
 import { openCompanyModal } from "@/utils/modalUtils";
 import { useNavigate } from "react-router-dom";
+import { companyRequests } from "@/server/requests";
 import BaseMantineTable from "@/components/mantine/BaseMantineTable";
 import PageHeader from "@/components/generic/PageHeader";
 
@@ -30,6 +31,7 @@ const Companies = () => {
         onRemove={(id: string) => remove(id)}
         onRemoveRange={(ids: string[]) => removeRange(ids)}
         onDetails={(values: any[]) => onDetails(values)}
+        getExportData={(ids: string[]) => companyRequests.getDtos(ids)}
       />
     </>
   );

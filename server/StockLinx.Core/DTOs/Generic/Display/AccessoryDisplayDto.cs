@@ -1,4 +1,4 @@
-﻿namespace StockLinx.Core.DTOs.Generic
+﻿namespace StockLinx.Core.DTOs.Generic.Display
 {
     public class AccessoryDisplayDto : BaseProductDisplayDto
     {

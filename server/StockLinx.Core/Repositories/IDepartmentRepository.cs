@@ -1,4 +1,5 @@
 ﻿using StockLinx.Core.DTOs.Generic;
+using StockLinx.Core.DTOs.Generic.Display;
 using StockLinx.Core.Entities;
 
 namespace StockLinx.Core.Repositories
@@ -10,5 +11,6 @@ namespace StockLinx.Core.Repositories
         Task<List<DepartmentDto>> GetAllDtosAsync();
         Task<List<DepartmentDto>> GetAllDtosAsync(List<Guid> companyIds);
         Task CanDeleteAsync(Guid id);
+        Task<List<DepartmentDisplayDto>> GetDisplayDtos(List<Guid> ids);
     }
 }

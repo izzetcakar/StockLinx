@@ -1,5 +1,6 @@
 ﻿using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
+using StockLinx.Core.DTOs.Generic.Display;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 
@@ -15,5 +16,6 @@ namespace StockLinx.Core.Services
         Task DeleteSupplierAsync(Guid id);
         Task DeleteRangeSupplierAsync(List<Guid> ids);
         Task<List<SupplierDto>> FilterAllAsync(string filter);
+        Task<List<SupplierDisplayDto>> GetDisplayDtos(List<Guid> ids);
     }
 }

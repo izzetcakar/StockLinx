@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
+using StockLinx.Core.DTOs.Generic.Display;
 using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
@@ -314,6 +315,12 @@ namespace StockLinx.Service.Services
         public async Task CreateCheckLogAsync(string action, Asset asset)
         {
             await _customLogService.CreateCustomLog(action, "Asset", asset.Id, asset.Name);
+        }
+
+        
+        public async Task<List<AssetDisplayDto>> GetDisplayDtos(List<Guid> ids)
+        {
+            return await _assetRepository.GetDisplayDtos(ids);
         }
     }
 }

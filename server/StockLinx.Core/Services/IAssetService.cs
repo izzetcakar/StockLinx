@@ -1,5 +1,6 @@
 ﻿using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
+using StockLinx.Core.DTOs.Generic.Display;
 using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
@@ -20,5 +21,6 @@ namespace StockLinx.Core.Services
         Task CheckTagExistAsync(string tag);
         Task CheckTagExistAsync(List<string> tags);
         Task<List<AssetDto>> FilterAllAsync(string filter);
+        Task<List<AssetDisplayDto>> GetDisplayDtos(List<Guid> ids);
     }
 }

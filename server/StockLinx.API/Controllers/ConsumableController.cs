@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
+using StockLinx.Core.DTOs.Generic.Display;
 using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
@@ -129,7 +130,9 @@ namespace StockLinx.API.Controllers
             try
             {
                 EmployeeProductDto result = await _consumableService.CheckInAsync(dto);
-                return CreateActionResult(CustomResponseDto<EmployeeProductDto>.Success(200, result));
+                return CreateActionResult(
+                    CustomResponseDto<EmployeeProductDto>.Success(200, result)
+                );
             }
             catch (Exception ex)
             {
@@ -143,7 +146,9 @@ namespace StockLinx.API.Controllers
             try
             {
                 List<EmployeeProductDto> result = await _consumableService.CheckOutAsync(dto);
-                return CreateActionResult(CustomResponseDto<List<EmployeeProductDto>>.Success(200, result));
+                return CreateActionResult(
+                    CustomResponseDto<List<EmployeeProductDto>>.Success(200, result)
+                );
             }
             catch (Exception ex)
             {
@@ -163,6 +168,23 @@ namespace StockLinx.API.Controllers
                 List<ConsumableDto> result = await _consumableService.FilterAllAsync(filter);
                 return CreateActionResult(
                     CustomResponseDto<List<ConsumableDto>>.Success(200, result)
+                );
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
+        }
+
+        [HttpPost("display")]
+        public async Task<IActionResult> Display(List<Guid> ids)
+        {
+            try
+            {
+                List<ConsumableDisplayDto> result = await _consumableService.GetDisplayDtos(ids);
+
+                return CreateActionResult(
+                    CustomResponseDto<List<ConsumableDisplayDto>>.Success(200, result)
                 );
             }
             catch (Exception ex)

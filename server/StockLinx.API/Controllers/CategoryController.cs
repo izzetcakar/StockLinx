@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
+using StockLinx.Core.DTOs.Generic.Display;
 using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Services;
+using StockLinx.Service.Services;
 
 namespace StockLinx.API.Controllers
 {
@@ -132,6 +134,23 @@ namespace StockLinx.API.Controllers
                 List<CategoryDto> result = await _categoryService.FilterAllAsync(filter);
                 return CreateActionResult(
                     CustomResponseDto<List<CategoryDto>>.Success(200, result)
+                );
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
+        }
+
+        [HttpPost("display")]
+        public async Task<IActionResult> Display(List<Guid> ids)
+        {
+            try
+            {
+                List<CategoryDisplayDto> result = await _categoryService.GetDisplayDtos(ids);
+
+                return CreateActionResult(
+                    CustomResponseDto<List<CategoryDisplayDto>>.Success(200, result)
                 );
             }
             catch (Exception ex)

@@ -1,6 +1,7 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Generic;
+using StockLinx.Core.DTOs.Generic.Display;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 
@@ -75,6 +76,25 @@ namespace StockLinx.Repository.Repositories.EF_Core
                 )
                 .Select(b => b.CompanyId)
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<List<EmployeeDisplayDto>> GetDisplayDtos(List<Guid> ids)
+        {
+            var query = dbContext
+                .Employees.Where(e => ids.Contains(e.Id))
+                .Select(e => new EmployeeDisplayDto
+                {
+                    FirstName = e.FirstName,
+                    LastName = e.LastName,
+                    Company = e.Department.Company.Name,
+                    Department = e.Department.Name,
+                    JobTitle = e.JobTitle,
+                    StartDate = e.StartDate,
+                    EndDate = e.EndDate,
+                    PhoneNo = e.PhoneNo,
+                    Notes = e.Notes
+                });
+            return await query.ToListAsync();
         }
     }
 }

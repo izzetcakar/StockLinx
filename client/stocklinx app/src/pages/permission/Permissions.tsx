@@ -1,6 +1,7 @@
 import { usePermission } from "@/hooks/query";
 import { useColumns } from "./columns";
 import { openPermissionModal } from "@/utils/modalUtils";
+import { permissionRequests } from "@/server/requests";
 import BaseMantineTable from "@/components/mantine/BaseMantineTable";
 import PageHeader from "@/components/generic/PageHeader";
 
@@ -21,6 +22,7 @@ const Permissions = () => {
         onAdd={() => openPermissionModal()}
         onRemove={(id: string) => remove(id)}
         onRemoveRange={(ids: string[]) => removeRange(ids)}
+        getExportData={(ids: string[]) => permissionRequests.getDtos(ids)}
       />
     </>
   );

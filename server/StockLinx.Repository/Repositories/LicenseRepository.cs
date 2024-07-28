@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Generic;
+using StockLinx.Core.DTOs.Generic.Display;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 
@@ -54,8 +55,8 @@ namespace StockLinx.Repository.Repositories.EF_Core
 
         public async Task<List<LicenseDto>> GetAllDtosAsync(List<Guid> companyIds)
         {
-            var entities = await dbContext.Licenses
-                .Where(a => companyIds.Contains(a.CompanyId))
+            var entities = await dbContext
+                .Licenses.Where(a => companyIds.Contains(a.CompanyId))
                 .AsNoTracking()
                 .ToListAsync();
             return await GetDtosAsync(entities);
@@ -112,6 +113,38 @@ namespace StockLinx.Repository.Repositories.EF_Core
                 .Select(d => d.Tag)
                 .ToList();
             throw new Exception($"Tags {string.Join("\n", existingTags)} already exist.");
+        }
+
+        public async Task<List<LicenseDisplayDto>> GetDisplayDtos(List<Guid> ids)
+        {
+            var query = dbContext
+                .Licenses.Where(a => ids.Contains(a.Id))
+                .Select(a => new LicenseDisplayDto
+                {
+                    Name = a.Name,
+                    Tag = a.Tag,
+                    Quantity = a.Quantity,
+                    AvailableQuantity =
+                        a.Quantity
+                        - a.EmployeeProducts.Sum(up => up.Quantity)
+                        - a.AssetProducts.Sum(ap => ap.Quantity),
+                    Category = a.Category.Name,
+                    Company = a.Company.Name,
+                    Supplier = a.Supplier.Name,
+                    Manufacturer = a.Manufacturer.Name,
+                    ExpirationDate = a.ExpirationDate,
+                    PurchaseCost = a.PurchaseCost,
+                    LicensedTo = a.LicensedTo,
+                    LicenseEmail = a.LicenseEmail,
+                    LicenseKey = a.LicenseKey,
+                    Maintained = a.Maintained,
+                    Notes = a.Notes,
+                    OrderNo = a.OrderNo,
+                    PurchaseDate = a.PurchaseDate,
+                    Reassignable = a.Reassignable,
+                    TerminationDate = a.TerminationDate,
+                });
+            return await query.ToListAsync();
         }
     }
 }

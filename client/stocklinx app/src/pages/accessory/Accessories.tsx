@@ -2,9 +2,9 @@ import { useAccessory } from "@/hooks/query";
 import { useColumns } from "./columns";
 import { openAccessoryModal } from "@/utils/modalUtils";
 import { useNavigate } from "react-router-dom";
+import { accessoryRequests } from "@/server/requests";
 import BaseMantineTable from "@/components/mantine/BaseMantineTable";
 import PageHeader from "@/components/generic/PageHeader";
-import { accessoryRequests } from "@/server/requests";
 
 const Accessories = () => {
   const navigate = useNavigate();

@@ -2,6 +2,7 @@ import { useDepartment } from "@/hooks/query";
 import { useColumns } from "./columns";
 import { openDepartmentModal } from "@/utils/modalUtils";
 import { useNavigate } from "react-router-dom";
+import { departmentRequests } from "@/server/requests";
 import BaseMantineTable from "@/components/mantine/BaseMantineTable";
 
 const Departments = () => {
@@ -27,6 +28,7 @@ const Departments = () => {
       onRemove={(id: string) => remove(id)}
       onRemoveRange={(ids: string[]) => removeRange(ids)}
       onDetails={(values: any[]) => onDetails(values)}
+      getExportData={(ids: string[]) => departmentRequests.getDtos(ids)}
     />
   );
 };

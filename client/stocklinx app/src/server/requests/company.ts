@@ -40,6 +40,10 @@ const lookup = () => {
   return baseRequests.lookup(requestUrl);
 };
 
+const getDtos = async (ids: string[]) => {
+  return baseRequests.getDtos(requestUrl, ids);
+};
+
 export default {
   getAll,
   get,
@@ -48,6 +52,7 @@ export default {
   update,
   remove,
   removeRange,
+  getDtos,
   filter,
   lookup,
 };

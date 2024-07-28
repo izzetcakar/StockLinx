@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Generic;
+using StockLinx.Core.DTOs.Generic.Display;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 
@@ -41,7 +42,10 @@ namespace StockLinx.Repository.Repositories.EF_Core
 
         public async Task<List<AssetDto>> GetAllDtosAsync(List<Guid> companyIds)
         {
-            List<Asset> entities = await dbContext.Assets.Where(a => companyIds.Contains(a.CompanyId)).AsNoTracking().ToListAsync();
+            List<Asset> entities = await dbContext
+                .Assets.Where(a => companyIds.Contains(a.CompanyId))
+                .AsNoTracking()
+                .ToListAsync();
             return GetDtos(entities);
         }
 
@@ -59,6 +63,27 @@ namespace StockLinx.Repository.Repositories.EF_Core
             {
                 throw new Exception("Cannot delete asset because it has products.");
             }
+        }
+
+        public Task<List<AssetDisplayDto>> GetDisplayDtos(List<Guid> ids)
+        {
+            var query = dbContext
+                .Assets.Where(a => ids.Contains(a.Id))
+                .Select(a => new AssetDisplayDto
+                {
+                    Name = a.Name,
+                    Company = a.Company.Name,
+                    Model = a.Model.Name,
+                    Supplier = a.Supplier.Name,
+                    ProductStatus = a.ProductStatus.Name,
+                    OrderNo = a.OrderNo,
+                    SerialNo = a.SerialNo,
+                    PurchaseCost = a.PurchaseCost,
+                    PurchaseDate = a.PurchaseDate,
+                    Tag = a.Tag,
+                    Notes = a.Notes,
+                });
+            return query.ToListAsync();
         }
     }
 }

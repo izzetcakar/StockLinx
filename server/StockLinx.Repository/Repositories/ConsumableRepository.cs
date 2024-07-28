@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Generic;
+using StockLinx.Core.DTOs.Generic.Display;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 
@@ -48,8 +49,8 @@ namespace StockLinx.Repository.Repositories.EF_Core
 
         public async Task<List<ConsumableDto>> GetAllDtosAsync(List<Guid> companyIds)
         {
-            var entities = await dbContext.Consumables
-                .Where(a => companyIds.Contains(a.CompanyId))
+            var entities = await dbContext
+                .Consumables.Where(a => companyIds.Contains(a.CompanyId))
                 .AsNoTracking()
                 .ToListAsync();
             return await GetDtosAsync(entities);
@@ -96,6 +97,30 @@ namespace StockLinx.Repository.Repositories.EF_Core
                 .Select(d => d.Tag)
                 .ToList();
             throw new Exception($"Tags {string.Join("\n", existingTags)} already exist.");
+        }
+
+        public async Task<List<ConsumableDisplayDto>> GetDisplayDtos(List<Guid> ids)
+        {
+            var query = dbContext
+                .Consumables.Where(c => ids.Contains(c.Id))
+                .Select(c => new ConsumableDisplayDto
+                {
+                    Tag = c.Tag,
+                    Name = c.Name,
+                    Category = c.Category.Name,
+                    Company = c.Company.Name,
+                    Supplier = c.Supplier.Name,
+                    Manufacturer = c.Manufacturer.Name,
+                    ModelNo = c.ModelNo,
+                    ItemNo = c.ItemNo,
+                    OrderNo = c.OrderNo,
+                    PurchaseCost = c.PurchaseCost,
+                    PurchaseDate = c.PurchaseDate,
+                    Quantity = c.Quantity,
+                    AvailableQuantity = c.Quantity - c.EmployeeProducts.Sum(up => up.Quantity),
+                    Notes = c.Notes,
+                });
+            return await query.ToListAsync();
         }
     }
 }

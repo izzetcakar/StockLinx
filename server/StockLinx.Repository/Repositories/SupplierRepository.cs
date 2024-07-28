@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Generic;
+using StockLinx.Core.DTOs.Generic.Display;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 
@@ -32,6 +33,24 @@ namespace StockLinx.Repository.Repositories.EF_Core
         {
             var entities = await dbContext.Suppliers.AsNoTracking().ToListAsync();
             return GetDtos(entities);
+        }
+
+        public async Task<List<SupplierDisplayDto>> GetDisplayDtos(List<Guid> ids)
+        {
+            var query = dbContext
+                .Suppliers.Where(d => ids.Contains(d.Id))
+                .Select(d => new SupplierDisplayDto
+                {
+                    Name = d.Name,
+                    Location = d.Location.Name,
+                    ContactName = d.ContactName,
+                    ContactEmail = d.ContactEmail,
+                    ContactPhone = d.ContactPhone,
+                    Fax = d.Fax,
+                    Website = d.Website,
+                    Notes = d.Notes
+                });
+            return await query.ToListAsync();
         }
     }
 }

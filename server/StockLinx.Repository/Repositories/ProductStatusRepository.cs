@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Generic;
+using StockLinx.Core.DTOs.Generic.Display;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 
@@ -41,6 +42,17 @@ namespace StockLinx.Repository.Repositories.EF_Core
             {
                 throw new Exception("Product Status is in use");
             }
+        }
+
+        public async Task<List<ProductStatusDisplayDto>> GetDisplayDtos(List<Guid> ids) {
+            var query = dbContext
+                .ProductStatuses.Where(d => ids.Contains(d.Id))
+                .Select(d => new ProductStatusDisplayDto
+                {
+                    Name = d.Name,
+                    Type = d.Type.ToString(),
+        });
+            return await query.ToListAsync();
         }
     }
 }

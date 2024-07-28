@@ -2,6 +2,7 @@ import { useConsumable } from "@/hooks/query";
 import { useColumns } from "./columns";
 import { openConsumableModal } from "@/utils/modalUtils";
 import { useNavigate } from "react-router-dom";
+import { consumableRequests } from "@/server/requests";
 import BaseMantineTable from "@/components/mantine/BaseMantineTable";
 import PageHeader from "@/components/generic/PageHeader";
 
@@ -30,6 +31,7 @@ const Consumables = () => {
         onRemove={(id: string) => remove(id)}
         onRemoveRange={(ids: string[]) => removeRange(ids)}
         onDetails={(values: any[]) => onDetails(values)}
+        getExportData={(ids: string[]) => consumableRequests.getDtos(ids)}
       />
     </>
   );

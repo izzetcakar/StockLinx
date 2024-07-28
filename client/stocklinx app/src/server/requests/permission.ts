@@ -31,6 +31,10 @@ const filter = (queryFilters: QueryFilter[]) => {
   return baseRequests.filter<IPermission>(requestUrl, queryFilters);
 };
 
+const getDtos = async (ids: string[]) => {
+  return baseRequests.getDtos(requestUrl, ids);
+};
+
 export default {
   getAll,
   get,
@@ -39,4 +43,5 @@ export default {
   remove,
   removeRange,
   filter,
+  getDtos,
 };

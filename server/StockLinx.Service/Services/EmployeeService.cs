@@ -1,6 +1,7 @@
 using AutoMapper;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
+using StockLinx.Core.DTOs.Generic.Display;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 using StockLinx.Core.Services;
@@ -120,6 +121,12 @@ namespace StockLinx.Service.Services
                 employee.Id,
                 employee.FirstName + " " + employee.LastName
             );
+        }
+
+        
+        public async Task<List<EmployeeDisplayDto>> GetDisplayDtos(List<Guid> ids)
+        {
+            return await _employeeRepository.GetDisplayDtos(ids);
         }
     }
 }

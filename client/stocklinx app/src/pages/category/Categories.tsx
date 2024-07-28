@@ -1,6 +1,7 @@
 import { useCategory } from "@/hooks/query";
 import { useColumns } from "./columns";
 import { openCategoryModal } from "@/utils/modalUtils";
+import { categoryRequests } from "@/server/requests";
 import { useNavigate } from "react-router-dom";
 import BaseMantineTable from "@/components/mantine/BaseMantineTable";
 import PageHeader from "@/components/generic/PageHeader";
@@ -30,6 +31,7 @@ const Categories = () => {
         onRemove={(id: string) => remove(id)}
         onRemoveRange={(ids: string[]) => removeRange(ids)}
         onDetails={(values: any[]) => onDetails(values)}
+        getExportData={(ids: string[]) => categoryRequests.getDtos(ids)}
       />
     </>
   );

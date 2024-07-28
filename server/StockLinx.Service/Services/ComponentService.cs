@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
+using StockLinx.Core.DTOs.Generic.Display;
 using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
@@ -328,6 +329,12 @@ namespace StockLinx.Service.Services
                 company.Id,
                 company.Name
             );
+        }
+
+        
+        public async Task<List<ComponentDisplayDto>> GetDisplayDtos(List<Guid> ids)
+        {
+            return await _componentRepository.GetDisplayDtos(ids);
         }
     }
 }
