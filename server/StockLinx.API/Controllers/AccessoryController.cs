@@ -171,5 +171,23 @@ namespace StockLinx.API.Controllers
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
             }
         }
+
+        [HttpPost("display")]
+        public async Task<IActionResult> Display(List<Guid> ids)
+        {
+            try
+            {
+                List<AccessoryDisplayDto> result = await _accessoryService.GetDisplayDtos(ids);
+
+                return CreateActionResult(
+                    CustomResponseDto<List<AccessoryDisplayDto>>.Success(200, result)
+                );
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
+        }
+
     }
 }

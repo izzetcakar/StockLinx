@@ -92,5 +92,30 @@ namespace StockLinx.Repository.Repositories.EF_Core
                 .ToList();
             throw new Exception($"Tags {string.Join("\n", existingTags)} already exist.");
         }
+
+        public Task<List<AccessoryDisplayDto>> GetDisplayDtos(List<Guid> ids)
+        {
+            var query = dbContext.Accessories
+                .Where(d => ids.Contains(d.Id))
+                .Select(d => new AccessoryDisplayDto
+                {
+                    Name = d.Name,
+                    Tag = d.Tag,
+                    Quantity = d.Quantity,
+                    Company = d.Company.Name,
+                    AvailableQuantity = d.Quantity - d.EmployeeProducts.Sum(up => up.Quantity),
+                    Category = d.Category.Name,
+                    Manufacturer = d.Manufacturer.Name,
+                    Supplier = d.Supplier.Name,
+                    PurchaseCost = d.PurchaseCost,
+                    PurchaseDate = d.PurchaseDate,
+                    OrderNo = d.OrderNo,
+                    Notes = d.Notes,
+                    ModelNo = d.ModelNo
+
+                }
+                );
+            return query.ToListAsync();
+        }
     }
 }

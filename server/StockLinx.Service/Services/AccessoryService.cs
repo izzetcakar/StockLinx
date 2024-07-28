@@ -358,5 +358,10 @@ namespace StockLinx.Service.Services
                 company.Name
             );
         }
+
+        public async Task<List<AccessoryDisplayDto>> GetDisplayDtos(List<Guid> ids)
+        {
+            return await _accessoryRepository.GetDisplayDtos(ids);
+        }
     }
 }

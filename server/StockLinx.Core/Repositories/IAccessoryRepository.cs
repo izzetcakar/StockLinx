@@ -11,5 +11,6 @@ namespace StockLinx.Core.Repositories
         Task<List<AccessoryDto>> GetAllDtosAsync(List<Guid> companyIds);
         Task CanDeleteAsync(Guid id);
         Task<int> GetAvaliableQuantityAsync(Accessory entity);
+        Task<List<AccessoryDisplayDto>> GetDisplayDtos(List<Guid> ids);
     }
 }

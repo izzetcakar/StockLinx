@@ -4,6 +4,7 @@ import { openAccessoryModal } from "@/utils/modalUtils";
 import { useNavigate } from "react-router-dom";
 import BaseMantineTable from "@/components/mantine/BaseMantineTable";
 import PageHeader from "@/components/generic/PageHeader";
+import { accessoryRequests } from "@/server/requests";
 
 const Accessories = () => {
   const navigate = useNavigate();
@@ -30,6 +31,7 @@ const Accessories = () => {
         onRemove={(id: string) => remove(id)}
         onRemoveRange={(ids: string[]) => removeRange(ids)}
         onDetails={(values: any[]) => onDetails(values)}
+        getExportData={(ids: string[]) => accessoryRequests.getDtos(ids)}
       />
     </>
   );

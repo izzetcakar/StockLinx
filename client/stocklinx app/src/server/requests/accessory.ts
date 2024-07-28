@@ -70,6 +70,16 @@ const checkOut = async (
   ).data as EmployeeProductDto[];
 };
 
+const getDtos = async (ids: string[]) => {
+  return (
+    await request<IAccessory>({
+      requestUrl: requestUrl + "display",
+      apiType: "post",
+      queryData: ids,
+    })
+  ).data as IAccessory[];
+};
+
 export default {
   getAll,
   get,
@@ -82,4 +92,5 @@ export default {
   lookup,
   checkIn,
   checkOut,
+  getDtos,
 };
