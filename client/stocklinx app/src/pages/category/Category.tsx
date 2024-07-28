@@ -5,7 +5,7 @@ import EntityPanel from "@/components/entity/EntityPanel";
 
 const Category = () => {
   const { cardColumns } = useColumns();
-  const { data: categories } = useCategory.Filter();
+  const { data: categories } = useCategory.GetAll();
   const { state } = useRouterLocation();
 
   return (

@@ -1,7 +1,8 @@
 import { useColumns } from "./columns";
 import { useAsset } from "@queryhooks";
-import { useLocation as useRouterLocation } from "react-router-dom";
+import { useParams, useLocation as useRouterLocation } from "react-router-dom";
 import EntityPanel from "@/components/entity/EntityPanel";
+import CenterLoader from "@/components/mantine/CenterLoader";
 
 const Asset = () => {
   const { cardColumns } = useColumns();
@@ -16,4 +17,14 @@ const Asset = () => {
   );
 };
 
-export default Asset;
+const SingleAsset = () => {
+  const { id } = useParams();
+  const { cardColumns } = useColumns();
+  const { data: asset, isRefetching } = useAsset.Get(id as string);
+
+  if (isRefetching) return <CenterLoader />;
+
+  return <EntityPanel data={[asset]} cardColumns={cardColumns} />;
+};
+
+export { Asset, SingleAsset };

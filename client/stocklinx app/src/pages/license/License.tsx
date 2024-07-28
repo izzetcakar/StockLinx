@@ -1,7 +1,8 @@
-import { useLicense } from "@queryhooks";
-import { useLocation as useRouterLocation } from "react-router-dom";
 import { useColumns } from "./columns";
+import { useLicense } from "@queryhooks";
+import { useParams, useLocation as useRouterLocation } from "react-router-dom";
 import EntityPanel from "@/components/entity/EntityPanel";
+import CenterLoader from "@/components/mantine/CenterLoader";
 
 const License = () => {
   const { cardColumns } = useColumns();
@@ -16,4 +17,14 @@ const License = () => {
   );
 };
 
-export default License;
+const SingleLicense = () => {
+  const { id } = useParams();
+  const { cardColumns } = useColumns();
+  const { data: license, isRefetching } = useLicense.Get(id as string);
+
+  if (isRefetching) return <CenterLoader />;
+
+  return <EntityPanel data={[license]} cardColumns={cardColumns} />;
+};
+
+export { License, SingleLicense };

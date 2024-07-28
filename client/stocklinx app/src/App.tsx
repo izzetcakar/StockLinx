@@ -20,14 +20,14 @@ import Login from "./pages/user/Login";
 import Header from "./components/Header/Header";
 import Sidebar from "./components/sidebar/Sidebar";
 import Generic from "./pages/generic/Generic";
-import Accessory from "./pages/accessory/Accessory";
-import Asset from "./pages/asset/Asset";
+import { Accessory, SingleAccessory } from "./pages/accessory/Accessory";
+import { Asset, SingleAsset } from "./pages/asset/Asset";
+import { Component, SingleComponent } from "./pages/component/Component";
+import { Consumable, SingleConsumable } from "./pages/consumable/Consumable";
+import { License, SingleLicense } from "./pages/license/License";
 import Category from "./pages/category/Category";
 import Company from "./pages/company/Company";
-import Component from "./pages/component/Component";
-import Consumable from "./pages/consumable/Consumable";
 import Department from "./pages/department/Department";
-import License from "./pages/license/License";
 import Location from "./pages/location/Location";
 import Manufacturer from "./pages/manufacturer/Manufacturer";
 import Model from "./pages/model/Model";
@@ -44,7 +44,7 @@ import "mantine-react-table/styles.css";
 import "@mantine/dates/styles.css";
 import "./app.scss";
 import "./base.scss";
- 
+
 const Layout = () => {
   const { data: user } = useUser.GetWithToken();
 
@@ -79,20 +79,40 @@ const router = createBrowserRouter([
         element: <Accessories />,
       },
       {
+        path: "/accessory/:id",
+        element: <SingleAccessory />,
+      },
+      {
         path: "/assets",
         element: <Assets />,
+      },
+      {
+        path: "/asset/:id",
+        element: <SingleAsset />,
       },
       {
         path: "/components",
         element: <Components />,
       },
       {
+        path: "/component/:id",
+        element: <SingleComponent />,
+      },
+      {
         path: "/consumables",
         element: <Consumables />,
       },
       {
+        path: "/consumable/:id",
+        element: <SingleConsumable />,
+      },
+      {
         path: "/licenses",
         element: <Licenses />,
+      },
+      {
+        path: "/license/:id",
+        element: <SingleLicense />,
       },
       {
         path: "/models",
