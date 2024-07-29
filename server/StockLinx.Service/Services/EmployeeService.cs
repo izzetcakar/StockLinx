@@ -122,11 +122,15 @@ namespace StockLinx.Service.Services
                 employee.FirstName + " " + employee.LastName
             );
         }
-
         
         public async Task<List<EmployeeDisplayDto>> GetDisplayDtos(List<Guid> ids)
         {
             return await _employeeRepository.GetDisplayDtos(ids);
+        }
+
+        public async Task<SubmissionDto> GetSubmissionDto(Guid employeeId)
+        {
+            return await _employeeRepository.GetSubmissionDto(employeeId);
         }
     }
 }

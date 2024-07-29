@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using StockLinx.Core.DTOs.Create;
 using StockLinx.Core.DTOs.Generic;
+using StockLinx.Core.DTOs.Generic.Display;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 using StockLinx.Core.Services;
@@ -10,7 +11,7 @@ namespace StockLinx.Service.Services
 {
     public class EmployeeProductService : Service<EmployeeProduct>, IEmployeeProductService
     {
-        private readonly IEmployeeProductRepository _EmployeeProductRepository;
+        private readonly IEmployeeProductRepository _employeeProductRepository;
         private readonly IFilterService<EmployeeProduct> _filterService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
@@ -24,7 +25,7 @@ namespace StockLinx.Service.Services
         )
             : base(repository, unitOfWork)
         {
-            _EmployeeProductRepository = EmployeeProductRepository;
+            _employeeProductRepository = EmployeeProductRepository;
             _filterService = filterService;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
@@ -33,12 +34,12 @@ namespace StockLinx.Service.Services
         public async Task<EmployeeProductDto> GetDtoAsync(Guid id)
         {
             EmployeeProduct EmployeeProduct = await GetByIdAsync(id);
-            return await _EmployeeProductRepository.GetDtoAsync(EmployeeProduct);
+            return await _employeeProductRepository.GetDtoAsync(EmployeeProduct);
         }
 
         public async Task<List<EmployeeProductDto>> GetAllDtosAsync()
         {
-            return await _EmployeeProductRepository.GetAllDtosAsync();
+            return await _employeeProductRepository.GetAllDtosAsync();
         }
 
         public async Task<EmployeeProductDto> CreateEmployeeProductAsync(
@@ -46,9 +47,9 @@ namespace StockLinx.Service.Services
         )
         {
             EmployeeProduct EmployeeProduct = _mapper.Map<EmployeeProduct>(dto);
-            await _EmployeeProductRepository.AddAsync(EmployeeProduct);
+            await _employeeProductRepository.AddAsync(EmployeeProduct);
             await _unitOfWork.CommitAsync();
-            return await _EmployeeProductRepository.GetDtoAsync(EmployeeProduct);
+            return await _employeeProductRepository.GetDtoAsync(EmployeeProduct);
         }
 
         public async Task<List<EmployeeProductDto>> CreateRangeEmployeeProductAsync(
@@ -61,22 +62,27 @@ namespace StockLinx.Service.Services
                 EmployeeProduct EmployeeProduct = _mapper.Map<EmployeeProduct>(dto);
                 EmployeeProducts.Add(EmployeeProduct);
             }
-            await _EmployeeProductRepository.AddRangeAsync(EmployeeProducts);
+            await _employeeProductRepository.AddRangeAsync(EmployeeProducts);
             await _unitOfWork.CommitAsync();
-            return await _EmployeeProductRepository.GetDtosAsync(EmployeeProducts);
+            return await _employeeProductRepository.GetDtosAsync(EmployeeProducts);
         }
 
         public async Task DeleteEmployeeProductAsync(Guid id)
         {
             EmployeeProduct EmployeeProduct = await GetByIdAsync(id);
-            _EmployeeProductRepository.Remove(EmployeeProduct);
+            _employeeProductRepository.Remove(EmployeeProduct);
             await _unitOfWork.CommitAsync();
         }
 
         public async Task<List<EmployeeProductDto>> FilterAllAsync(string filter)
         {
             var result = await _filterService.FilterAsync(filter);
-            return await _EmployeeProductRepository.GetDtosAsync(result.ToList());
+            return await _employeeProductRepository.GetDtosAsync(result.ToList());
+        }
+
+        public async Task<List<EmployeeProductDisplayDto>> GetDisplayDtos(List<Guid> ids)
+        {
+            return await _employeeProductRepository.GetDisplayDtos(ids);
         }
     }
 }

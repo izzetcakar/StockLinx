@@ -53,6 +53,16 @@ const getDtos = async (ids: string[]) => {
   return baseRequests.getDtos(requestUrl, ids);
 };
 
+const getProductDtos = async (ids: string[]) => {
+  return (
+    await request<any>({
+      requestUrl: requestUrl + "productdisplay",
+      apiType: "post",
+      queryData: ids,
+    })
+  ).data;
+};
+
 const employeeCheckIn = async (
   checkInDto: EmployeeProductCheckInDto
 ): Promise<EmployeeProductDto> => {
@@ -112,6 +122,7 @@ export default {
   filter,
   lookup,
   getDtos,
+  getProductDtos,
   employeeCheckIn,
   assetCheckIn,
   employeeCheckOut,

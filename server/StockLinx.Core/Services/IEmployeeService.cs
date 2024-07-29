@@ -16,5 +16,6 @@ namespace StockLinx.Core.Services
         Task DeleteRangeEmployeeAsync(List<Guid> ids);
         Task<List<EmployeeDto>> FilterAllAsync(string filter);
         Task<List<EmployeeDisplayDto>> GetDisplayDtos(List<Guid> ids);
+        Task<SubmissionDto> GetSubmissionDto(Guid employeeId);
     }
 }

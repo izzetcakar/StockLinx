@@ -146,5 +146,71 @@ namespace StockLinx.Repository.Repositories.EF_Core
                 });
             return await query.ToListAsync();
         }
+
+        public async Task<string> GetEmployeeName(EmployeeProduct employeeProduct)
+        {
+            return await dbContext.Employees
+                .Where(a => a.Id == employeeProduct.EmployeeId)
+                .Select(a => a.FirstName + " " + a.LastName)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<string> GetAssetTag(AssetProduct assetProduct)
+        {
+            return await dbContext.Assets
+                .Where(a => a.Id == assetProduct.AssetId)
+                .Select(a => a.Tag)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<List<LicenseProductDisplayDto>> GetProductDisplayDtos(List<Guid> ids)
+        {
+            var assetProducts = await dbContext.AssetProducts
+              .Where(a => ids.Contains(a.Id))
+              .ToListAsync();
+            var employeeProducts = await dbContext.EmployeeProducts
+              .Where(a => ids.Contains(a.Id))
+              .ToListAsync();
+            var displayDtos = new List<LicenseProductDisplayDto>();
+
+            foreach (var item in assetProducts)
+            {
+                var assetTag = await GetAssetTag(item);
+                var license = await dbContext.Licenses
+                    .Where(a => a.Id == item.LicenseId)
+                    .FirstOrDefaultAsync();
+                displayDtos.Add(new LicenseProductDisplayDto
+                {
+                    License = license.Tag,
+                    Owner = assetTag,
+                    Quantity = item.Quantity,
+                    Seat = "Seat 1",
+                    AssignDate = item.AssignDate,
+                    Notes = item.Notes,
+                });
+            }
+            foreach (var item in employeeProducts)
+            {
+                var employeeName = await GetEmployeeName(item);
+                var license = await dbContext.Licenses
+                    .Where(a => a.Id == item.LicenseId)
+                    .FirstOrDefaultAsync();
+                displayDtos.Add(new LicenseProductDisplayDto
+                {
+                    License = license.Tag,
+                    Owner = employeeName,
+                    Quantity = item.Quantity,
+                    Seat = "Seat 1",
+                    AssignDate = item.AssignDate,
+                    Notes = item.Notes,
+                });
+            }
+            displayDtos = displayDtos.OrderBy(d => d.AssignDate).Select((d, i) =>
+            {
+                d.Seat = $"Seat {i + 1}";
+                return d;
+            }).ToList();
+            return displayDtos;
+        }
     }
 }

@@ -6,6 +6,7 @@ using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Services;
+using StockLinx.Service.Services;
 
 namespace StockLinx.API.Controllers
 {
@@ -207,6 +208,23 @@ namespace StockLinx.API.Controllers
 
                 return CreateActionResult(
                     CustomResponseDto<List<LicenseDisplayDto>>.Success(200, result)
+                );
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
+        }
+
+        [HttpPost("productdisplay")]
+        public async Task<IActionResult> ProductDisplay(List<Guid> ids)
+        {
+            try
+            {
+                List<LicenseProductDisplayDto> result = await _licenseService.GetProductDisplayDtos(ids);
+
+                return CreateActionResult(
+                    CustomResponseDto<List<LicenseProductDisplayDto>>.Success(200, result)
                 );
             }
             catch (Exception ex)

@@ -14,5 +14,6 @@ namespace StockLinx.Core.Repositories
         Task CanDeleteAsync(Guid id);
         Task<Guid> GetCompanyIdAsync(Guid employeeId);
         Task<List<EmployeeDisplayDto>> GetDisplayDtos(List<Guid> ids);
+        Task<SubmissionDto> GetSubmissionDto(Guid employeeId);
     }
 }

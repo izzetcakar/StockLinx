@@ -36,6 +36,10 @@ const filter = (queryFilters: QueryFilter[]) => {
   return baseRequests.filter<IEmployeeProduct>(requestUrl, queryFilters);
 };
 
+const getDtos = async (ids: string[]) => {
+  return baseRequests.getDtos(requestUrl, ids);
+};
+
 export default {
   getAll,
   get,
@@ -45,4 +49,5 @@ export default {
   remove,
   removeRange,
   filter,
+  getDtos,
 };

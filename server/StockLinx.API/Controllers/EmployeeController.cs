@@ -156,5 +156,22 @@ namespace StockLinx.API.Controllers
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
             }
         }
+
+        [HttpGet("submission/{id}")]
+        public async Task<IActionResult> Display(Guid id)
+        {
+            try
+            {
+                SubmissionDto result = await _employeeService.GetSubmissionDto(id);
+
+                return CreateActionResult(
+                    CustomResponseDto<SubmissionDto>.Success(200, result)
+                );
+            }
+            catch (Exception ex)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(401, ex.Message));
+            }
+        }
     }
 }

@@ -450,5 +450,10 @@ namespace StockLinx.Service.Services
         {
             return await _licenseRepository.GetDisplayDtos(ids);
         }
+
+        public async Task<List<LicenseProductDisplayDto>> GetProductDisplayDtos(List<Guid> ids)
+        {
+            return await _licenseRepository.GetProductDisplayDtos(ids);
+        }
     }
 }

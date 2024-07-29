@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using StockLinx.Core.DTOs.Generic;
+using StockLinx.Core.DTOs.Generic.Display;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
 
@@ -38,31 +39,39 @@ namespace StockLinx.Repository.Repositories.EF_Core
 
             if (entity.AccessoryId != null)
             {
-                Accessory accessory = await _accessoryRepository.GetByIdAsync(
-                    (Guid)entity.AccessoryId
-                );
+                var tag = await dbContext.Accessories
+                    .Where(a => a.Id == entity.AccessoryId)
+                    .Select(a => a.Tag)
+                    .FirstOrDefaultAsync();
                 productType = "Accessory";
-                productTag = accessory.Tag;
+                productTag = tag;
             }
             else if (entity.AssetId != null)
             {
-                Asset asset = await _assetRepository.GetByIdAsync((Guid)entity.AssetId);
+                var tag = await dbContext.Assets
+                    .Where(a => a.Id == entity.AssetId)
+                    .Select(a => a.Tag)
+                    .FirstOrDefaultAsync();
                 productType = "Asset";
-                productTag = asset.Tag;
+                productTag = tag;
             }
             else if (entity.ConsumableId != null)
             {
-                Consumable consumable = await _consumableRepository.GetByIdAsync(
-                    (Guid)entity.ConsumableId
-                );
+                var tag = await dbContext.Consumables
+                    .Where(a => a.Id == entity.ConsumableId)
+                    .Select(a => a.Tag)
+                    .FirstOrDefaultAsync();
                 productType = "Consumable";
-                productTag = consumable.Tag;
+                productTag = tag;
             }
             else if (entity.LicenseId != null)
             {
-                License license = await _licenseRepository.GetByIdAsync((Guid)entity.LicenseId);
+                var tag = await dbContext.Licenses
+                    .Where(a => a.Id == entity.LicenseId)
+                    .Select(a => a.Tag)
+                    .FirstOrDefaultAsync();
                 productType = "License";
-                productTag = license.Tag;
+                productTag = tag;
             }
             return new EmployeeProductDto()
             {
@@ -97,6 +106,91 @@ namespace StockLinx.Repository.Repositories.EF_Core
         {
             var entities = await dbContext.EmployeeProducts.ToListAsync();
             return await GetDtosAsync(entities);
+        }
+
+        public async Task<string> GetProductTag(EmployeeProduct employeeProduct)
+        {
+            if (employeeProduct.AccessoryId != null)
+            {
+                return await _accessoryRepository.GetByIdAsync((Guid)employeeProduct.AccessoryId)
+                    .ContinueWith(a => a.Result.Tag);
+            }
+            else if (employeeProduct.AssetId != null)
+            {
+                return await _assetRepository.GetByIdAsync((Guid)employeeProduct.AssetId)
+                    .ContinueWith(a => a.Result.Tag);
+            }
+            else if (employeeProduct.ConsumableId != null)
+            {
+                return await _consumableRepository.GetByIdAsync((Guid)employeeProduct.ConsumableId)
+                    .ContinueWith(a => a.Result.Tag);
+            }
+            else if (employeeProduct.LicenseId != null)
+            {
+                return await _licenseRepository.GetByIdAsync((Guid)employeeProduct.LicenseId)
+                    .ContinueWith(a => a.Result.Tag);
+            }
+            return string.Empty;
+        }
+
+        public async Task<string> GetroductDescription(EmployeeProduct employeeProduct)
+        {
+            if (employeeProduct.AccessoryId != null)
+            {
+                var res = await _accessoryRepository.GetByIdAsync((Guid)employeeProduct.AccessoryId);
+                return res.Name + "-" + res.ModelNo;
+            }
+            else if (employeeProduct.AssetId != null)
+            {
+                var res = await _assetRepository.GetByIdAsync((Guid)employeeProduct.AssetId);
+                return res.Name + "-" + res.SerialNo;
+            }
+            else if (employeeProduct.ConsumableId != null)
+            {
+                var res = await _consumableRepository.GetByIdAsync((Guid)employeeProduct.ConsumableId);
+                return res.Name + "-" + res.ModelNo + "-" + res.ItemNo;
+            }
+            else if (employeeProduct.LicenseId != null)
+            {
+                var res = await _licenseRepository.GetByIdAsync((Guid)employeeProduct.LicenseId);
+                return res.Name + "-" + res.LicenseKey + "-" + res.ExpirationDate?.ToString("MM/dd/yyyy");
+            }
+            return string.Empty;
+        }
+
+        public async Task<string> GetEmployeeName(EmployeeProduct employeeProduct)
+        {
+            return await dbContext.Employees
+                .Where(a => a.Id == employeeProduct.EmployeeId)
+                .Select(a => a.FirstName + " " + a.LastName)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<List<EmployeeProductDisplayDto>> GetDisplayDtos(List<Guid> ids)
+        {
+            var employeeProducts = await dbContext.EmployeeProducts
+                .Where(a => ids.Contains(a.Id))
+                .ToListAsync();
+
+            var displayDtos = new List<EmployeeProductDisplayDto>();
+
+            foreach (var employeeProduct in employeeProducts)
+            {
+                var employeeName = await GetEmployeeName(employeeProduct);
+                var productTag = await GetProductTag(employeeProduct);
+                var dto = new EmployeeProductDisplayDto
+                {
+                    Employee = employeeName,
+                    Product = productTag,
+                    Quantity = employeeProduct.Quantity,
+                    Seat = $"Seat {displayDtos.Count + 1}",
+                    AssignDate = employeeProduct.AssignDate,
+                    Notes = employeeProduct.Notes,
+                };
+                displayDtos.Add(dto);
+            }
+
+            return displayDtos;
         }
     }
 }

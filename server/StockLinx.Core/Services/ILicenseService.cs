@@ -24,5 +24,6 @@ namespace StockLinx.Core.Services
         Task CheckTagExistAsync(List<string> tags);
         Task<List<LicenseDto>> FilterAllAsync(string filter);
         Task<List<LicenseDisplayDto>> GetDisplayDtos(List<Guid> ids);
+        Task<List<LicenseProductDisplayDto>> GetProductDisplayDtos(List<Guid> ids);
     }
 }

@@ -1,6 +1,7 @@
 import { QueryFilter } from "@/interfaces/gridTableInterfaces";
-import { IEmployee } from "@interfaces/serverInterfaces";
+import { IEmployee, ISubmissionDto } from "@interfaces/serverInterfaces";
 import { baseRequests } from "@/utils/requestUtils";
+import { request } from "../api";
 
 const requestUrl = "Employee/";
 
@@ -44,6 +45,15 @@ const getDtos = async (ids: string[]) => {
   return baseRequests.getDtos(requestUrl, ids);
 };
 
+const getSubmission = async (employeeId: string): Promise<ISubmissionDto> => {
+  return (
+    await request<any>({
+      requestUrl: requestUrl + "submission/" + employeeId,
+      apiType: "get",
+    })
+  ).data;
+};
+
 export default {
   getAll,
   get,
@@ -55,4 +65,5 @@ export default {
   filter,
   lookup,
   getDtos,
+  getSubmission,
 };

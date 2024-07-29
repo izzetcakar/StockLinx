@@ -13,5 +13,6 @@ namespace StockLinx.Core.Repositories
         Task CanDeleteAsync(Guid id);
         Task<int> GetAvaliableQuantityAsync(License entity);
         Task<List<LicenseDisplayDto>> GetDisplayDtos(List<Guid> ids);
+        Task<List<LicenseProductDisplayDto>> GetProductDisplayDtos(List<Guid> ids);
     }
 }
