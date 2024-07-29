@@ -112,7 +112,7 @@ const CheckOut = () => {
           return res;
         }
       );
-      closeModal("employee-product-checkOut-modal");
+      closeModal("employee-product-checkout-modal");
       openNotificationSuccess("Consumable Checked Out Successfully");
     },
   });

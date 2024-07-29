@@ -244,11 +244,11 @@ namespace StockLinx.Service.Services
                     await _unitOfWork.CommitAsync();
                     ;
                     return await _employeeProductRepository.GetDtosAsync(employeeProducts);
-                case > 0:
+                case < 0:
                     throw new Exception(
                         "Quantity must be less than or equal to the quantity in stock"
                     );
-                case < 0:
+                case > 0:
                     employeeProduct.Quantity -= checkOutDto.Quantity;
                     _employeeProductRepository.Update(employeeProduct, employeeProduct);
                     await CreateCheckLogAsync("CheckOut", license, checkOutDto.Quantity);
@@ -315,11 +315,11 @@ namespace StockLinx.Service.Services
                     await _unitOfWork.CommitAsync();
                     ;
                     return await _assetProductRepository.GetDtosAsync(assetProducts);
-                case > 0:
+                case < 0:
                     throw new Exception(
                         "Quantity must be less than or equal to the quantity in stock"
                     );
-                case < 0:
+                case > 0:
                     assetProduct.Quantity -= checkOutDto.Quantity;
                     _assetProductRepository.Update(assetProduct, assetProduct);
                     await CreateCheckLogAsync("CheckOut", license, checkOutDto.Quantity);

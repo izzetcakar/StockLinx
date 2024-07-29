@@ -115,7 +115,7 @@ const EmployeeCheckOut = () => {
           return res;
         }
       );
-      closeModal("employee-product-checkOut-modal");
+      closeModal("employee-product-checkout-modal");
       openNotificationSuccess("License Checked Out Successfully");
     },
   });
@@ -177,7 +177,7 @@ const AssetCheckOut = () => {
           return res;
         }
       );
-      closeModal("asset-product-checkOut-modal");
+      closeModal("asset-product-checkout-modal");
       openNotificationSuccess("License Checked Out Successfully");
     },
   });

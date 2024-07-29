@@ -111,7 +111,7 @@ const CheckOut = () => {
           return res;
         }
       );
-      closeModal("asset-product-checkOut-modal");
+      closeModal("asset-product-checkout-modal");
       openNotificationSuccess("Component Checked Out Successfully");
     },
   });
