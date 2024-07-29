@@ -11,7 +11,13 @@ const License = () => {
 
   return (
     <EntityPanel
-      data={state?.licenses || licenses || []}
+      data={
+        licenses?.filter((license) =>
+          state?.licenses?.map((e: any) => e.id).includes(license.id)
+        ) ||
+        licenses ||
+        []
+      }
       cardColumns={cardColumns}
     />
   );

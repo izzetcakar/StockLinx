@@ -2,6 +2,7 @@ import { useAssetProduct, useEmployeeProduct } from "@queryhooks";
 import { ILicense } from "@/interfaces/serverInterfaces";
 import { useColumns } from "./LicenseSeatColumns";
 import BaseMantineTable from "@/components/mantine/BaseMantineTable";
+import { licenseRequests } from "@/server/requests";
 
 interface LicenseSeatsProps {
   license: ILicense;
@@ -37,6 +38,7 @@ const LicenseSeats: React.FC<LicenseSeatsProps> = ({ license }) => {
         getAssetProducts();
         getEmployeeProducts();
       }}
+      getExportData={(ids: string[]) => licenseRequests.getProductDtos(ids)}
     />
   );
 };

@@ -13,6 +13,7 @@ import { useEmployee, useDepartment, useCompany } from "@queryhooks";
 import { useInitial } from "@/hooks/initial/useInitial";
 import { useIsMutating } from "react-query";
 import FormCard from "@/components/form/FormCard";
+import { DateInput } from "@mantine/dates";
 
 interface EmployeeFormProps {
   employee?: IEmployee;
@@ -127,6 +128,16 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({ employee }) => {
           placeholder="Phone Number"
           {...form.getInputProps("phoneNo")}
           value={form.values.phoneNo || ""}
+        />
+        <DateInput
+          clearable
+          label="Start Date"
+          placeholder="Start Date"
+          valueFormat="DD/MM/YYYY"
+          {...form.getInputProps("startDate")}
+          value={
+            form.values.startDate ? new Date(form.values.startDate) : null
+          }
         />
         <Textarea
           placeholder="Your notes here"

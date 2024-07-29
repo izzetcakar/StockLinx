@@ -10,7 +10,13 @@ const Manufacturer = () => {
 
   return (
     <EntityPanel
-      data={state?.manufacturers || manufacturers || []}
+      data={
+        manufacturers?.filter((manufacturer) =>
+          state?.manufacturers?.map((e: any) => e.id).includes(manufacturer.id)
+        ) ||
+        manufacturers ||
+        []
+      }
       cardColumns={cardColumns}
     />
   );

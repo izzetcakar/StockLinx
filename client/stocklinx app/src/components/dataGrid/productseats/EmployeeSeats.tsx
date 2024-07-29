@@ -1,6 +1,7 @@
 import { useEmployeeProduct } from "@queryhooks";
 import { employeeSeatColumns } from "./EmployeeSeatColumns";
 import { EmployeeProductCheckOutDto } from "@/interfaces/dtos";
+import { employeeProductRequests } from "@/server/requests";
 import BaseMantineTable from "@/components/mantine/BaseMantineTable";
 
 interface EmployeeSeatProps {
@@ -66,6 +67,7 @@ const EmployeeSeats: React.FC<EmployeeSeatProps> = ({
       columns={handleColumnsByProductType()}
       refetch={getEmployeeProductLK}
       isLoading={employeeProductLoading}
+      getExportData={(ids: string[]) => employeeProductRequests.getDtos(ids)}
     />
   );
 };

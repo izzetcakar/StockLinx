@@ -9,7 +9,16 @@ const User = () => {
   const { data: users } = useUser.GetAll();
 
   return (
-    <EntityPanel data={state?.users || users || []} cardColumns={cardColumns} />
+    <EntityPanel
+      data={
+        users?.filter((user) =>
+          state?.users?.map((e: any) => e.id).includes(user.id)
+        ) ||
+        users ||
+        []
+      }
+      cardColumns={cardColumns}
+    />
   );
 };
 

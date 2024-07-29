@@ -11,7 +11,13 @@ const Accessory = () => {
 
   return (
     <EntityPanel
-      data={state?.accessories || accessories || []}
+      data={
+        accessories?.filter((accessory) =>
+          state?.accessories?.map((e: any) => e.id).includes(accessory.id)
+        ) ||
+        accessories ||
+        []
+      }
       cardColumns={cardColumns}
     />
   );

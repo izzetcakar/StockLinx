@@ -10,7 +10,13 @@ const Category = () => {
 
   return (
     <EntityPanel
-      data={state?.categories || categories || []}
+    data={
+      categories?.filter((category) =>
+        state?.categories?.map((e: any) => e.id).includes(category.id)
+      ) ||
+      categories ||
+      []
+    }
       cardColumns={cardColumns}
     />
   );

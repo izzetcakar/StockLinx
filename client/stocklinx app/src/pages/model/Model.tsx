@@ -10,7 +10,13 @@ const Model = () => {
 
   return (
     <EntityPanel
-      data={state?.models || models || []}
+      data={
+        models?.filter((model) =>
+          state?.models?.map((e: any) => e.id).includes(model.id)
+        ) ||
+        models ||
+        []
+      }
       cardColumns={cardColumns}
     />
   );

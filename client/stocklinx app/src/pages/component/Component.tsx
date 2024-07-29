@@ -11,7 +11,13 @@ const Component = () => {
 
   return (
     <EntityPanel
-      data={state?.components || components || []}
+      data={
+        components?.filter((component) =>
+          state?.components?.map((e: any) => e.id).includes(component.id)
+        ) ||
+        components ||
+        []
+      }
       cardColumns={cardColumns}
     />
   );

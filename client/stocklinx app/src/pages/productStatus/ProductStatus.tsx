@@ -10,7 +10,15 @@ const ProductStatus = () => {
 
   return (
     <EntityPanel
-      data={state?.productStatuses || productStatuses || []}
+      data={
+        productStatuses?.filter((productStatus) =>
+          state?.productStatuses
+            ?.map((e: any) => e.id)
+            .includes(productStatus.id)
+        ) ||
+        productStatuses ||
+        []
+      }
       cardColumns={cardColumns}
     />
   );

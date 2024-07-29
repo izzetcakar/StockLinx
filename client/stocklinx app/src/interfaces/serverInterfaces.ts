@@ -168,6 +168,7 @@ export interface IEmployee extends BaseEntity {
   lastName: string;
   jobTitle: string | null;
   phoneNo: string | null;
+  startDate: Date | null;
   notes: string | null;
 }
 export interface IToken {
@@ -208,4 +209,19 @@ export interface ICustomLog {
 export interface IPermission extends BaseEntity {
   companyId: string;
   userId: string;
+}
+export interface ISubmissionProductDto {
+  type: string;
+  tag: string;
+  quantity: number;
+  description: string;
+}
+export interface ISubmissionDto {
+  user: string;
+  company: string;
+  department: string;
+  employee: string;
+  employeeTitle: string;
+  employeeStartDate: string;
+  products: ISubmissionProductDto[];
 }

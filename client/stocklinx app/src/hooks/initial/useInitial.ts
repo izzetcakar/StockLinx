@@ -350,6 +350,7 @@ export const useInitial = () => {
       jobTitle: null,
       phoneNo: null,
       notes: null,
+      startDate: null,
     };
 
     if (entity) {

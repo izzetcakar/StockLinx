@@ -135,6 +135,7 @@ export interface ProductProps {
   category: string;
   title: string;
   description: string;
+  quantity: number;
 }
 export interface SubmissionFormProps {
   userFullName: string;
@@ -204,75 +205,82 @@ const SubmissionForm = ({
   department,
   products,
   assignDate,
-}: SubmissionFormProps) => (
-  <Document
-    style={styles.document}
-    pageLayout="singlePage"
-    title="Personel Zimmet Formu"
-  >
-    <Page size="A4" style={styles.pageContainer}>
-      <View style={styles.pageContent}>
-        <Text style={styles.title_center}>Personel Zimmet Formu</Text>
-        <View style={styles.content}>
-          <Text style={[styles.title, styles.boldText]}>
-            Personel Adı Soyadı
-          </Text>
-          <Text style={styles.value}>{userFullName}</Text>
-        </View>
-        <View style={styles.content}>
-          <Text style={[styles.title, styles.boldText]}>Şube/Departman</Text>
-          <Text style={styles.value}>{department}</Text>
-        </View>
-        <View style={styles.content}>
-          <Text style={[styles.title, styles.boldText]}>İşe Giriş Tarihi</Text>
-          <Text style={styles.value}>{formatDate(userStartDate)}</Text>
-        </View>
-        <View style={styles.content}>
-          <Text style={[styles.title, styles.boldText]}>Unvan</Text>
-          <Text style={styles.value}>{userTitle}</Text>
-        </View>
-        <Text style={styles.title_center}>Zimmetlenen Malzemeler</Text>
-        <View style={styles.content}>
-          <Text style={[styles.title_sm, styles.boldText]}>Ürün</Text>
-          <View style={styles.titleContainer}>
-            <Text style={[styles.title, styles.boldText]}>Model</Text>
-            <Text style={[styles.title, styles.boldText]}>Açiklama</Text>
+}: SubmissionFormProps) => {
+  console.log("giren", products);
+  return (
+    <Document
+      style={styles.document}
+      pageLayout="singlePage"
+      title="Personel Zimmet Formu"
+    >
+      <Page size="A4" style={styles.pageContainer}>
+        <View style={styles.pageContent}>
+          <Text style={styles.title_center}>Personel Zimmet Formu</Text>
+          <View style={styles.content}>
+            <Text style={[styles.title, styles.boldText]}>
+              Personel Adı Soyadı
+            </Text>
+            <Text style={styles.value}>{userFullName}</Text>
+          </View>
+          <View style={styles.content}>
+            <Text style={[styles.title, styles.boldText]}>Şube/Departman</Text>
+            <Text style={styles.value}>{department}</Text>
+          </View>
+          <View style={styles.content}>
+            <Text style={[styles.title, styles.boldText]}>
+              İşe Giriş Tarihi
+            </Text>
+            <Text style={styles.value}>{formatDate(userStartDate)}</Text>
+          </View>
+          <View style={styles.content}>
+            <Text style={[styles.title, styles.boldText]}>Unvan</Text>
+            <Text style={styles.value}>{userTitle}</Text>
+          </View>
+          <Text style={styles.title_center}>Zimmetlenen Malzemeler</Text>
+          <View style={styles.content}>
+            <Text style={[styles.title_sm, styles.boldText]}>Ürün</Text>
+            <View style={styles.titleContainer}>
+              <Text style={[styles.title, styles.boldText]}>Model</Text>
+              <Text style={[styles.title, styles.boldText]}>Açiklama</Text>
+              <Text style={[styles.title, styles.boldText]}>Adet</Text>
+            </View>
+          </View>
+          {products.map((product, index) => {
+            return (
+              <View style={styles.content} key={index}>
+                <Text style={[styles.title_sm, styles.boldText]}>
+                  {product.category}
+                </Text>
+                <Text style={styles.value}>{product.title}</Text>
+                <Text style={styles.value}>{product.description}</Text>
+                <Text style={styles.value}>{product.quantity}</Text>
+              </View>
+            );
+          })}
+          <View style={styles.content}>
+            <Text style={styles.description}>
+              Yukarıda yazılı malzemeleri {formatDate(assignDate)} tarihinde
+              teslim aldım. Bu tarihten itibaren verilen ürüne gelecek olan
+              zarardan şahsım sorumludur.
+            </Text>
+          </View>
+          <View style={styles.content}>
+            {Description({ delivererFullName, userFullName })}
+          </View>
+          <Text style={styles.title_center}>Teslim Beyanı</Text>
+          <View style={styles.content}>
+            <Text style={styles.description}>
+              {formatDate(assignDate)} tarihinde işten ayrıldığımı ve işe giriş
+              tarihinde şahsıma zimmetlenmiş , yukarıda belirtilmiş malzemeleri
+              eksiksiz ve sorunsuz teslim ettiğimi beyan ederim.
+            </Text>
+          </View>
+          <View style={[styles.content, { borderBottom: "none" }]}>
+            {Description({ delivererFullName, userFullName })}
           </View>
         </View>
-        {products.map((product, index) => {
-          return (
-            <View style={styles.content} key={index}>
-              <Text style={[styles.title_sm, styles.boldText]}>
-                {product.category}
-              </Text>
-              <Text style={styles.value}>{product.title}</Text>
-              <Text style={styles.value}>{product.description}</Text>
-            </View>
-          );
-        })}
-        <View style={styles.content}>
-          <Text style={styles.description}>
-            Yukarıda yazılı malzemeleri {formatDate(assignDate)} tarihinde
-            teslim aldım. Bu tarihten itibaren verilen ürüne gelecek olan
-            zarardan şahsım sorumludur.
-          </Text>
-        </View>
-        <View style={styles.content}>
-          {Description({ delivererFullName, userFullName })}
-        </View>
-        <Text style={styles.title_center}>Teslim Beyanı</Text>
-        <View style={styles.content}>
-          <Text style={styles.description}>
-            {formatDate(assignDate)} tarihinde işten ayrıldığımı ve işe giriş
-            tarihinde şahsıma zimmetlenmiş , yukarıda belirtilmiş malzemeleri
-            eksiksiz ve sorunsuz teslim ettiğimi beyan ederim.
-          </Text>
-        </View>
-        <View style={[styles.content, { borderBottom: "none" }]}>
-          {Description({ delivererFullName, userFullName })}
-        </View>
-      </View>
-    </Page>
-  </Document>
-);
+      </Page>
+    </Document>
+  );
+};
 export default SubmissionForm;

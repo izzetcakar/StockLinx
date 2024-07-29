@@ -22,6 +22,7 @@ interface BaseMantineTableProps {
   data: undefined | any[];
   columns: any[];
   isLoading: boolean;
+  disableSelection?: boolean;
   refetch: () => void;
   onAdd?: () => void;
   onCopy?: (value: any) => void;
@@ -42,6 +43,7 @@ const BaseMantineTable: React.FC<BaseMantineTableProps> = ({
   data,
   columns,
   isLoading,
+  disableSelection,
   refetch,
   onAdd,
   onCopy,
@@ -117,7 +119,7 @@ const BaseMantineTable: React.FC<BaseMantineTableProps> = ({
     enableStickyFooter: true,
     enableFacetedValues: true,
     enableRowActions: editable,
-    enableRowSelection: editable,
+    enableRowSelection: !disableSelection,
     positionActionsColumn: "last",
     paginationDisplayMode: "pages",
     positionToolbarAlertBanner: "bottom",
@@ -141,6 +143,11 @@ const BaseMantineTable: React.FC<BaseMantineTableProps> = ({
     mantinePaginationProps: {
       radius: "md",
       size: "sm",
+    },
+    mantinePaperProps: {
+      shadow: "0",
+      radius: "md",
+      withBorder: false,
     },
     defaultColumn: {
       size: 20,
@@ -264,7 +271,19 @@ const BaseMantineTable: React.FC<BaseMantineTableProps> = ({
     ),
   });
 
-  return <MantineReactTable table={table} />;
+  return (
+    <div
+      aria-modal="true"
+      style={{
+        border: "1px solid #ebebebbc",
+        maxHeight: "100%",
+        maxWidth: "100%",
+        borderRadius: "0.5rem",
+      }}
+    >
+      <MantineReactTable table={table} />
+    </div>
+  );
 };
 
 export default BaseMantineTable;

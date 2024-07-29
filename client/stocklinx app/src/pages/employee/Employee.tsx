@@ -10,7 +10,13 @@ const Employee = () => {
 
   return (
     <EntityPanel
-      data={state?.employees || employees || []}
+      data={
+        employees?.filter((employee) =>
+          state?.employees?.map((e: any) => e.id).includes(employee.id)
+        ) ||
+        employees ||
+        []
+      }
       cardColumns={cardColumns}
     />
   );

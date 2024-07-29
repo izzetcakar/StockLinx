@@ -10,7 +10,13 @@ const Location = () => {
 
   return (
     <EntityPanel
-      data={state?.locations || locations || []}
+      data={
+        locations?.filter((location) =>
+          state?.locations?.map((e: any) => e.id).includes(location.id)
+        ) ||
+        locations ||
+        []
+      }
       cardColumns={cardColumns}
     />
   );

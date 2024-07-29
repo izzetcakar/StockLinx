@@ -2,6 +2,7 @@ import { useAssetProduct } from "@queryhooks";
 import { assetSeatColumns } from "./AssetSeatColumns";
 import { AssetProductCheckOutDto } from "@/interfaces/dtos";
 import BaseMantineTable from "@/components/mantine/BaseMantineTable";
+import { assetProductRequests } from "@/server/requests";
 
 interface AssetSeatProps {
   assetId: string;
@@ -55,6 +56,7 @@ const AssetSeats: React.FC<AssetSeatProps> = ({
       columns={handleColumnsByProductType()}
       refetch={getAssetProductLK}
       isLoading={assetProductLoading}
+      getExportData={(ids: string[]) => assetProductRequests.getDtos(ids)}
     />
   );
 };

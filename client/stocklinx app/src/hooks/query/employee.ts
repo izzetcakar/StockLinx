@@ -1,5 +1,6 @@
 import { employeeRequests } from "@requests";
 import { baseHooks } from "./baseHooks";
+import { useQuery } from "react-query";
 
 const hooks = baseHooks("EMPLOYEE");
 
@@ -42,6 +43,14 @@ const ApplyFilters = () => {
 const Lookup = () => {
   return hooks.Lookup(employeeRequests.lookup);
 };
+
+const Submission = (employeeId: string) => {
+  return useQuery({
+    queryKey: "EMPLOYEE_SUBMISSION",
+    queryFn: () => employeeRequests.getSubmission(employeeId),
+  });
+};
+
 export default {
   GetAll,
   Get,
@@ -53,4 +62,5 @@ export default {
   Filter,
   ApplyFilters,
   Lookup,
+  Submission,
 };
