@@ -35,14 +35,20 @@
     align-items: center;
     text-align: center;
     cursor: pointer;
+
+    .iconNav {
+      margin-right: 10px;
+      transition: all ease 0.3s;
+    }
+    .iconNav.expanded {
+      transform: rotate(-90deg);
+    }
   }
   .navigation__item.selected {
     background-color: $primary-color-light;
     border-right: 5px solid $primary-color;
   }
   .navigation__element__container {
-    margin-left: 22px;
-    border-left: 1px solid $border-color;
     transition: all ease 0.5s;
   }
   .navigation__element {
@@ -92,7 +98,7 @@
 .sidebar__container .navigation__element:hover {
   background-color: $primary-color-light-2;
 }
-@media screen and (max-width: 450px) {
+@media screen and (max-width: 600px) {
   .sidebar__container {
     width: 100vw;
   }

@@ -1,11 +1,17 @@
 import { Select } from "@mantine/core";
 import { useContext } from "react";
 import { useUser } from "@/hooks/query";
+import { useNavigate } from "react-router-dom";
 import logo from "@assets/logo.png";
 import GenericContext from "@/context/GenericContext";
 import "./header.scss";
+import {
+  adminNavigationList,
+  baseNavigationList,
+} from "@/utils/navigationUtils";
 
 const Header = () => {
+  const navigate = useNavigate();
   const { isSidebarCollapsed, setIsSidebarCollapsed, hideAllDisplayElements } =
     useContext(GenericContext);
 
@@ -16,6 +22,10 @@ const Header = () => {
     hideAllDisplayElements();
   };
 
+  const getNavigationMenu = () => {
+    return user?.isAdmin ? adminNavigationList : baseNavigationList;
+  };
+
   return (
     <div className="page__header">
       <div className="page__header__item">
@@ -23,10 +33,9 @@ const Header = () => {
           <img src={logo} className="logo" alt="Logo" />
         </div>
         <Select
-          data={[
-            { value: "en", label: "English" },
-            { value: "ru", label: "Russian" },
-          ]}
+          data={getNavigationMenu().map((item) => {
+            return { value: item.target, label: item.title };
+          })}
           placeholder="Search"
           searchable
           clearable

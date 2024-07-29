@@ -13,9 +13,7 @@ const Company = () => {
       data={
         companies?.filter((company) =>
           state?.companies?.map((e: any) => e.id).includes(company.id)
-        ) ||
-        companies ||
-        []
+        ) || []
       }
       cardColumns={cardColumns}
     />

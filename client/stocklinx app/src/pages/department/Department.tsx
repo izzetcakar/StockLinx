@@ -13,9 +13,7 @@ const Department = () => {
       data={
         departments?.filter((department) =>
           state?.departments?.map((e: any) => e.id).includes(department.id)
-        ) ||
-        departments ||
-        []
+        ) || []
       }
       cardColumns={cardColumns}
     />

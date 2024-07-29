@@ -15,9 +15,7 @@ const ProductStatus = () => {
           state?.productStatuses
             ?.map((e: any) => e.id)
             .includes(productStatus.id)
-        ) ||
-        productStatuses ||
-        []
+        ) || []
       }
       cardColumns={cardColumns}
     />

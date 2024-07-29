@@ -4,6 +4,7 @@ import {
   NavigationItem,
   NavigationSubItem,
 } from "@/interfaces/clientInterfaces";
+import { IconChevronDown } from "@tabler/icons-react";
 import GenericContext from "@/context/GenericContext";
 import "./sidebar.scss";
 
@@ -58,6 +59,12 @@ const Sidebar: React.FC = () => {
           >
             <img src={item.icon} className={getSelectedClass(item, "icon")} />
             <div className="title">{item.title}</div>
+            {item.subItems && item?.subItems?.length > 0 ? (
+              <IconChevronDown
+                className={item.isExpanded ? "iconNav expanded" : "iconNav"}
+                size={18}
+              />
+            ) : null}
           </div>
           {item?.isExpanded && item.subItems ? (
             <div className="navigation__element__container">

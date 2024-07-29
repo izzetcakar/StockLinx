@@ -13,9 +13,7 @@ const Model = () => {
       data={
         models?.filter((model) =>
           state?.models?.map((e: any) => e.id).includes(model.id)
-        ) ||
-        models ||
-        []
+        ) || []
       }
       cardColumns={cardColumns}
     />

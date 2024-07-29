@@ -14,9 +14,7 @@ const Component = () => {
       data={
         components?.filter((component) =>
           state?.components?.map((e: any) => e.id).includes(component.id)
-        ) ||
-        components ||
-        []
+        ) || []
       }
       cardColumns={cardColumns}
     />

@@ -14,9 +14,7 @@ const License = () => {
       data={
         licenses?.filter((license) =>
           state?.licenses?.map((e: any) => e.id).includes(license.id)
-        ) ||
-        licenses ||
-        []
+        ) || []
       }
       cardColumns={cardColumns}
     />

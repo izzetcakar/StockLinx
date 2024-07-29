@@ -13,9 +13,7 @@ const User = () => {
       data={
         users?.filter((user) =>
           state?.users?.map((e: any) => e.id).includes(user.id)
-        ) ||
-        users ||
-        []
+        ) || []
       }
       cardColumns={cardColumns}
     />

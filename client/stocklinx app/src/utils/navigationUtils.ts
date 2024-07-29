@@ -17,92 +17,32 @@ export const baseNavigationList: NavigationItem[] = [
   {
     title: "Assets",
     icon: icon_barcode,
-    target: "/*",
-    subItems: [
-      {
-        title: "Assets",
-        target: "/assets",
-      },
-      {
-        title: "Asset",
-        target: "/asset",
-      },
-    ],
+    target: "/assets",
   },
   {
     title: "Licenses",
     icon: icon_disk,
-    target: "/*",
-    subItems: [
-      {
-        title: "Licenses",
-        target: "/licenses",
-      },
-      {
-        title: "License",
-        target: "/license",
-      },
-    ],
+    target: "/licenses",
   },
   {
     title: "Accessories",
     icon: icon_keybord,
-    target: "/*",
-    subItems: [
-      {
-        title: "Accessories",
-        target: "/accessories",
-      },
-      {
-        title: "Accessory",
-        target: "/accessory",
-      },
-    ],
+    target: "/accessories",
   },
   {
     title: "Consumables",
     icon: icon_drop,
-    target: "/*",
-    subItems: [
-      {
-        title: "Consumables",
-        target: "/consumables",
-      },
-      {
-        title: "Consumable",
-        target: "/consumable",
-      },
-    ],
+    target: "/consumables",
   },
   {
     title: "Components",
     icon: icon_harddisk,
-    target: "/*",
-    subItems: [
-      {
-        title: "Components",
-        target: "/components",
-      },
-      {
-        title: "Component",
-        target: "/component",
-      },
-    ],
+    target: "/components",
   },
   {
     title: "Employees",
     icon: icon_group,
-    target: "/*",
-    subItems: [
-      {
-        title: "Employees",
-        target: "/employees",
-      },
-      {
-        title: "Employee",
-        target: "/employee",
-      },
-    ],
+    target: "/employees",
   },
   {
     title: "Settings",
@@ -158,17 +98,7 @@ const adminNavigationItems: NavigationItem[] = [
   {
     title: "Users",
     icon: icon_group,
-    target: "/*",
-    subItems: [
-      {
-        title: "Users",
-        target: "/users",
-      },
-      {
-        title: "User",
-        target: "/user",
-      },
-    ],
+    target: "/users",
   },
   {
     icon: "",

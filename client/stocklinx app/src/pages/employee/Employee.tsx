@@ -13,9 +13,7 @@ const Employee = () => {
       data={
         employees?.filter((employee) =>
           state?.employees?.map((e: any) => e.id).includes(employee.id)
-        ) ||
-        employees ||
-        []
+        ) || []
       }
       cardColumns={cardColumns}
     />

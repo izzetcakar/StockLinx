@@ -13,9 +13,7 @@ const Supplier = () => {
       data={
         suppliers?.filter((supplier) =>
           state?.suppliers?.map((e: any) => e.id).includes(supplier.id)
-        ) ||
-        suppliers ||
-        []
+        ) || []
       }
       cardColumns={cardColumns}
     />

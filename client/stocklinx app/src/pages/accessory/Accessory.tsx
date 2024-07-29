@@ -14,9 +14,7 @@ const Accessory = () => {
       data={
         accessories?.filter((accessory) =>
           state?.accessories?.map((e: any) => e.id).includes(accessory.id)
-        ) ||
-        accessories ||
-        []
+        ) || []
       }
       cardColumns={cardColumns}
     />

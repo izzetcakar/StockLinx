@@ -14,9 +14,7 @@ const Consumable = () => {
       data={
         consumables?.filter((consumable) =>
           state?.consumables?.map((e: any) => e.id).includes(consumable.id)
-        ) ||
-        consumables ||
-        []
+        ) || []
       }
       cardColumns={cardColumns}
     />
