@@ -1,6 +1,6 @@
 import { SubmissionSeatColumns } from "./SubmissionsSeatColumns";
 import { useEmployee } from "@/hooks/query";
-import { openSubmissionForm } from "@/utils/submissionUtils";
+import { openSignCanvaModal } from "@/utils/modalUtils";
 import BaseMantineTable from "@/components/mantine/BaseMantineTable";
 import React from "react";
 
@@ -18,7 +18,7 @@ const SubmissionSeats: React.FC<SubmissionSeatsProps> = ({ employeeId }) => {
   const columns = SubmissionSeatColumns();
 
   const handleSubmission = (products: any[]) => {
-    openSubmissionForm({
+    openSignCanvaModal({
       userFullName: submission?.employee || "",
       companyName: submission?.company || "",
       department: submission?.department || "",
@@ -32,6 +32,8 @@ const SubmissionSeats: React.FC<SubmissionSeatsProps> = ({ employeeId }) => {
       })) as any,
       assignDate: new Date().toDateString(),
       delivererFullName: submission?.user || "",
+      userSign: new Blob(),
+      employeeSign: new Blob(),
     });
   };
 

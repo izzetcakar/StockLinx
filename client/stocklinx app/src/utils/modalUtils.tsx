@@ -1,3 +1,4 @@
+import SignCanva from "@/components/generic/SignCanva";
 import AccessoryForm from "@/forms/accessory/AccessoryForm";
 import AssetForm from "@/forms/asset/AssetForm";
 import CategoryForm from "@/forms/category/CategoryForm";
@@ -19,6 +20,7 @@ import ManufacturerForm from "@/forms/manufacturer/ManufacturerForm";
 import ModelForm from "@/forms/model/ModelForm";
 import PermissionForm from "@/forms/permission/PermissionForm";
 import ProductStatusForm from "@/forms/productStatus/ProductStatusForm";
+import { SubmissionFormProps } from "@/forms/submission/SubmissionForm";
 import SupplierForm from "@/forms/supplier/SupplierForm";
 import UserForm from "@/forms/user/UserForm";
 import {
@@ -327,5 +329,12 @@ export const openPermissionModal = () => {
     title: "Permission",
     children: <PermissionForm />,
     size: "lg",
+  });
+};
+
+export const openSignCanvaModal = (formProps: SubmissionFormProps) => {
+  modals.open({
+    modalId: "sign-canva-modal",
+    children: <SignCanva formProps={formProps} />,
   });
 };

@@ -5,6 +5,7 @@ import {
   View,
   StyleSheet,
   Font,
+  Image,
 } from "@react-pdf/renderer";
 
 Font.register({
@@ -146,14 +147,20 @@ export interface SubmissionFormProps {
   userTitle: string;
   products: ProductProps[];
   assignDate: string;
+  userSign: Blob;
+  employeeSign: Blob;
 }
 
 const Description = ({
   delivererFullName,
   userFullName,
+  userSign,
+  employeeSign,
 }: {
   delivererFullName: string;
   userFullName: string;
+  userSign: Blob;
+  employeeSign: Blob;
 }) => (
   <View style={styles.signContainer}>
     <View style={styles.signContent}>
@@ -177,11 +184,17 @@ const Description = ({
     <View style={styles.signContent}>
       <View style={styles.signElement}>
         <Text>İmza : </Text>
-        <Text></Text>
+        <Image
+          style={{ width: 100, height: 50 }}
+          source={URL.createObjectURL(employeeSign)}
+        />
       </View>
       <View style={styles.signElement}>
         <Text>İmza</Text>
-        <Text></Text>
+        <Image
+          style={{ width: 100, height: 50 }}
+          source={URL.createObjectURL(userSign)}
+        />
       </View>
     </View>
   </View>
@@ -205,8 +218,9 @@ const SubmissionForm = ({
   department,
   products,
   assignDate,
+  userSign,
+  employeeSign,
 }: SubmissionFormProps) => {
-  console.log("giren", products);
   return (
     <Document
       style={styles.document}
@@ -265,7 +279,12 @@ const SubmissionForm = ({
             </Text>
           </View>
           <View style={styles.content}>
-            {Description({ delivererFullName, userFullName })}
+            {Description({
+              delivererFullName,
+              userFullName,
+              userSign,
+              employeeSign,
+            })}
           </View>
           <Text style={styles.title_center}>Teslim Beyanı</Text>
           <View style={styles.content}>
@@ -276,7 +295,12 @@ const SubmissionForm = ({
             </Text>
           </View>
           <View style={[styles.content, { borderBottom: "none" }]}>
-            {Description({ delivererFullName, userFullName })}
+            {Description({
+              delivererFullName,
+              userFullName,
+              userSign,
+              employeeSign,
+            })}
           </View>
         </View>
       </Page>

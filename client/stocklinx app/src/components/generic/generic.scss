@@ -88,3 +88,27 @@
     transition: transform 0.3s ease;
   }
 }
+
+.sign__submit__btn {
+  border-radius: 8px;
+  border: none;
+  background-color: #228be6;
+  padding: 4px 0;
+  color: white;
+  cursor: pointer;
+  &:hover {
+    background-color: #339af0;
+  }
+}
+
+.canvas {
+  height: 100%;
+  border: 1px solid #ebebebbc;
+  padding: 1px;
+  margin: 0 1rem;
+}
+.canvas__title{
+  font-size: $fontsize-xl;
+  font-weight: 500;
+  margin-left: 1rem;
+}
