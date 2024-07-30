@@ -49,10 +49,6 @@ export const baseNavigationList: NavigationItem[] = [
     icon: icon_settings,
     subItems: [
       {
-        title: "Custom Fields",
-        target: "/customfields",
-      },
-      {
         title: "Status Labels",
         target: "/productstatuses",
       },

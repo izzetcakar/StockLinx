@@ -1,7 +1,7 @@
 import { Image, Loader } from "@mantine/core";
 import { IModel } from "@interfaces/serverInterfaces";
 import { getImage } from "../../utils/imageUtils";
-import { useCategory, useFieldSet, useManufacturer } from "@queryhooks";
+import { useCategory, useManufacturer } from "@queryhooks";
 import { EntityCells } from "@/cells/Entity";
 import { EntityCardColumn } from "@/interfaces/clientInterfaces";
 import { MRT_ColumnDef } from "mantine-react-table";
@@ -20,11 +20,6 @@ export const useColumns = () => {
     isRefetching: manufacturerLoading,
     refetch: getManufacturerLK,
   } = useManufacturer.Lookup();
-  const {
-    data: fieldSetLK,
-    isRefetching: fieldSetLoading,
-    refetch: getFieldSetLK,
-  } = useFieldSet.Lookup();
 
   const columns: MRT_ColumnDef<IModel>[] = [
     {
@@ -79,17 +74,6 @@ export const useColumns = () => {
     {
       accessorKey: "modelNo",
       header: "Model No",
-    },
-    {
-      accessorKey: "fieldSetId",
-      header: "FieldSet",
-      filterVariant: "multi-select",
-      Cell: ({ row }) => EntityCells.FieldSet(row.original.fieldSetId),
-      mantineFilterMultiSelectProps: () => ({
-        data: fieldSetLoading ? [] : fieldSetLK,
-        rightSection: fieldSetLoading ? <Loader size={16} /> : null,
-        onDropdownOpen: getFieldSetLK,
-      }),
     },
     {
       accessorKey: "notes",

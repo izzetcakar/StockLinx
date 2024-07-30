@@ -122,7 +122,7 @@ const BaseMantineTable: React.FC<BaseMantineTableProps> = ({
     enableRowSelection: !disableSelection,
     positionActionsColumn: "last",
     paginationDisplayMode: "pages",
-    positionToolbarAlertBanner: "bottom",
+    positionToolbarAlertBanner: "none",
     displayColumnDefOptions: {
       "mrt-row-actions": {
         header: "",

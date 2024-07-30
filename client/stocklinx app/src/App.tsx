@@ -1,5 +1,10 @@
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import { useUser } from "@queryhooks";
+import { Accessory, SingleAccessory } from "./pages/accessory/Accessory";
+import { Asset, SingleAsset } from "./pages/asset/Asset";
+import { Component, SingleComponent } from "./pages/component/Component";
+import { Consumable, SingleConsumable } from "./pages/consumable/Consumable";
+import { License, SingleLicense } from "./pages/license/License";
 import Accessories from "./pages/accessory/Accessories";
 import Assets from "./pages/asset/Assets";
 import Components from "./pages/component/Components";
@@ -14,17 +19,11 @@ import Suppliers from "./pages/supplier/Suppliers";
 import Locations from "./pages/location/Locations";
 import ProductStatuses from "./pages/productStatus/ProductStatuses";
 import Users from "./pages/user/Users";
-import CustomFields from "./pages/customFields/CustomFields";
 import Home from "./pages/home/Home";
 import Login from "./pages/user/Login";
 import Header from "./components/Header/Header";
 import Sidebar from "./components/sidebar/Sidebar";
 import Generic from "./pages/generic/Generic";
-import { Accessory, SingleAccessory } from "./pages/accessory/Accessory";
-import { Asset, SingleAsset } from "./pages/asset/Asset";
-import { Component, SingleComponent } from "./pages/component/Component";
-import { Consumable, SingleConsumable } from "./pages/consumable/Consumable";
-import { License, SingleLicense } from "./pages/license/License";
 import Category from "./pages/category/Category";
 import Company from "./pages/company/Company";
 import Department from "./pages/department/Department";
@@ -157,10 +156,6 @@ const router = createBrowserRouter([
       {
         path: "/employees",
         element: <Employees />,
-      },
-      {
-        path: "/customfields",
-        element: <CustomFields />,
       },
       {
         path: "/accessory",

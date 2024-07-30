@@ -311,84 +311,6 @@ namespace StockLinx.Repository.Repositories.EF_Core
                 },
             };
             dbContext.Suppliers.AddRange(newSuppliers);
-            var newFieldSets = new List<FieldSet>
-            {
-                new FieldSet
-                {
-                    Id = Guid.NewGuid(),
-                    CreatedDate = DateTime.UtcNow,
-                    Name = "Laptop ve Masaüstü",
-                },
-                new FieldSet
-                {
-                    Id = Guid.NewGuid(),
-                    CreatedDate = DateTime.UtcNow,
-                    Name = "Telefon",
-                },
-            };
-            dbContext.FieldSets.AddRange(newFieldSets);
-            var newCustomFields = new List<CustomField>
-            {
-                new CustomField
-                {
-                    Id = Guid.NewGuid(),
-                    CreatedDate = DateTime.UtcNow,
-                    Name = "Marka",
-                    Type = "string",
-                    IsRequired = true,
-                    FieldSetCustomFields = new List<FieldSetCustomField>
-                    {
-                        new FieldSetCustomField
-                        {
-                            Id = Guid.NewGuid(),
-                            CreatedDate = DateTime.UtcNow,
-                            FieldSetId = newFieldSets[1].Id,
-                            CustomFieldId = Guid.NewGuid()
-                        }
-                    }
-                },
-                new CustomField
-                {
-                    Id = Guid.NewGuid(),
-                    CreatedDate = DateTime.UtcNow,
-                    Name = "Model",
-                    Type = "string",
-                    IsRequired = true,
-                },
-                new CustomField
-                {
-                    Id = Guid.NewGuid(),
-                    CreatedDate = DateTime.UtcNow,
-                    Name = "CPU",
-                    Type = "string",
-                    IsRequired = true,
-                },
-                new CustomField
-                {
-                    Id = Guid.NewGuid(),
-                    CreatedDate = DateTime.UtcNow,
-                    Name = "GPU",
-                    Type = "string",
-                    IsRequired = true,
-                },
-                new CustomField
-                {
-                    Id = Guid.NewGuid(),
-                    CreatedDate = DateTime.UtcNow,
-                    Name = "RAM",
-                    Type = "number",
-                    IsRequired = true,
-                },
-                new CustomField
-                {
-                    Id = Guid.NewGuid(),
-                    CreatedDate = DateTime.UtcNow,
-                    Name = "HDD",
-                    Type = "string",
-                    IsRequired = true,
-                },
-            };
-            dbContext.CustomFields.AddRange(newCustomFields);
             var newProductStatuses = new List<ProductStatus>
             {
                 new ProductStatus
@@ -439,8 +361,6 @@ namespace StockLinx.Repository.Repositories.EF_Core
             dbContext.RemoveRange(dbContext.Categories);
             dbContext.RemoveRange(dbContext.Manufacturers);
             dbContext.RemoveRange(dbContext.Suppliers);
-            dbContext.RemoveRange(dbContext.FieldSets);
-            dbContext.RemoveRange(dbContext.CustomFields);
             dbContext.RemoveRange(dbContext.ProductStatuses);
         }
 

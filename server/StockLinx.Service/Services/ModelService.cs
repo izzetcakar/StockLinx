@@ -47,11 +47,30 @@ namespace StockLinx.Service.Services
 
         public async Task<ModelDto> CreateModelAsync(ModelCreateDto dto)
         {
-            ModelDto added = _modelRepository.CreateModel(dto);
-            Model model = _mapper.Map<Model>(dto);
+            Model model = new Model()
+            {
+                Id = Guid.NewGuid(),
+                Name = dto.Name,
+                CreatedDate = DateTime.UtcNow,
+                CategoryId = dto.CategoryId,
+                ManufacturerId = dto.ManufacturerId,
+                ModelNo = dto.ModelNo,
+                ImagePath = dto.ImagePath,
+                Notes = dto.Notes,
+                UpdatedDate = null,
+            };
+            if (model.ImagePath != null)
+            {
+                if (model.ImagePath.Contains("base64,"))
+                {
+                    ImageUtils.UploadBase64AsJpg(model.ImagePath, $"{model.Id}", "Models");
+                    model.ImagePath = $"Models/{model.Id}.jpg";
+                }
+            }
+            await _modelRepository.AddAsync(model);
+            await _customLogService.CreateCustomLog("Create", "Model", model.Id, model.Name);
             await _unitOfWork.CommitAsync();
-            await CreateCheckLogAsync("Create", model);
-            return added;
+            return _modelRepository.GetDto(model);
         }
 
         public async Task<List<ModelDto>> CreateRangeModelAsync(List<ModelCreateDto> dtos)
@@ -59,28 +78,50 @@ namespace StockLinx.Service.Services
             List<Model> models = new List<Model>();
             foreach (ModelCreateDto dto in dtos)
             {
-                Model model = _mapper.Map<Model>(dto);
+                Model model = new Model()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = dto.Name,
+                    CreatedDate = DateTime.UtcNow,
+                    CategoryId = dto.CategoryId,
+                    ManufacturerId = dto.ManufacturerId,
+                    ModelNo = dto.ModelNo,
+                    ImagePath = dto.ImagePath,
+                    Notes = dto.Notes,
+                    UpdatedDate = null,
+                };
+                if (model.ImagePath != null)
+                {
+                    if (model.ImagePath.Contains("base64,"))
+                    {
+                        ImageUtils.UploadBase64AsJpg(model.ImagePath, $"{model.Id}", "Models");
+                        model.ImagePath = $"Models/{model.Id}.jpg";
+                    }
+                }
                 models.Add(model);
-                await CreateCheckLogAsync("Create", model);
+                await _customLogService.CreateCustomLog("Create", "Model", model.Id, model.Name);
             }
             await _modelRepository.AddRangeAsync(models);
-            await _unitOfWork.CommitAsync();
             return _modelRepository.GetDtos(models);
         }
 
-        public async Task UpdateModelAsync(ModelUpdateDto dto)
+        public async Task<ModelDto> UpdateModelAsync(ModelUpdateDto dto)
         {
             Model modelInDb = await GetByIdAsync(dto.Id);
-            _modelRepository.UpdateModel(dto);
-            await CreateCheckLogAsync("Update", modelInDb);
+            Model model = _mapper.Map<Model>(dto);
+            model.UpdatedDate = DateTime.UtcNow;
+
+            _modelRepository.Update(modelInDb, model);
+            await _customLogService.CreateCustomLog("Update", "Model", model.Id, model.Name);
             await _unitOfWork.CommitAsync();
+            return _modelRepository.GetDto(model);
         }
 
         public async Task DeleteModelAsync(Guid id)
         {
             Model model = await GetByIdAsync(id);
             _modelRepository.Remove(model);
-            await CreateCheckLogAsync("Delete", model);
+            await _customLogService.CreateCustomLog("Delete", "Model", model.Id, model.Name);
             await _unitOfWork.CommitAsync();
         }
 
@@ -91,7 +132,7 @@ namespace StockLinx.Service.Services
             {
                 Model model = await GetByIdAsync(id);
                 models.Add(model);
-                await CreateCheckLogAsync("Delete", model);
+                await _customLogService.CreateCustomLog("Delete", "Model", model.Id, model.Name);
             }
             _modelRepository.RemoveRange(models);
             await _unitOfWork.CommitAsync();
@@ -101,11 +142,6 @@ namespace StockLinx.Service.Services
         {
             var result = await _filterService.FilterAsync(filter);
             return _modelRepository.GetDtos(result.ToList());
-        }
-
-        public async Task CreateCheckLogAsync(string action, Model model)
-        {
-            await _customLogService.CreateCustomLog(action, "Model", model.Id, model.Name);
         }
     }
 }

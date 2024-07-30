@@ -5,9 +5,7 @@ import {
   useCompany,
   useComponent,
   useConsumable,
-  useCustomField,
   useDepartment,
-  useFieldSet,
   useLicense,
   useLocation,
   useManufacturer,
@@ -48,19 +46,9 @@ const Consumable = (id: string | null) => {
   return <div>{consumable?.tag || ""}</div>;
 };
 
-const CustomField = (id: string | null) => {
-  const { data: customField } = useCustomField.Get(id || "");
-  return <div>{customField?.name || ""}</div>;
-};
-
 const Department = (id: string | null) => {
   const { data: department } = useDepartment.Get(id || "");
   return <div>{department?.name || ""}</div>;
-};
-
-const FieldSet = (id: string | null) => {
-  const { data: fieldSet } = useFieldSet.Get(id || "");
-  return <div>{fieldSet?.name || ""}</div>;
 };
 
 const License = (id: string | null) => {
@@ -111,9 +99,7 @@ export const EntityCells = {
   Company,
   Component,
   Consumable,
-  CustomField,
   Department,
-  FieldSet,
   License,
   Location,
   Manufacturer,

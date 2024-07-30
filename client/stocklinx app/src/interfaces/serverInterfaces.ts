@@ -91,30 +91,10 @@ export interface IConsumable extends IBaseProduct {
 export interface IModel extends BaseEntity {
   categoryId: string | null;
   manufacturerId: string | null;
-  fieldSetId: string | null;
   name: string;
   imagePath: string | null;
   modelNo: string | null;
-  modelFieldData: IModelFieldData[];
   notes: string | null;
-}
-export interface IFieldSet extends BaseEntity {
-  name: string;
-}
-export interface ICustomField extends BaseEntity {
-  name: string;
-  type: string;
-  isRequired: boolean;
-  fieldSets?: string[];
-}
-export interface IModelFieldData extends BaseEntity {
-  modelId: string;
-  customFieldId: string;
-  value: string;
-}
-export interface IFieldSetCustomField extends BaseEntity {
-  fieldSetId: string;
-  customFieldId: string;
 }
 export interface IEmployeeProduct extends BaseEntity {
   employeeId: string;

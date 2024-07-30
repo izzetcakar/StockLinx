@@ -22,10 +22,6 @@ namespace StockLinx.Repository
         public DbSet<Location> Locations { get; set; }
         public DbSet<Manufacturer> Manufacturers { get; set; }
         public DbSet<Model> Models { get; set; }
-        public DbSet<FieldSet> FieldSets { get; set; }
-        public DbSet<CustomField> CustomFields { get; set; }
-        public DbSet<FieldSetCustomField> FieldSetCustomFields { get; set; }
-        public DbSet<ModelFieldData> ModelFieldDatas { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }
         public DbSet<ProductStatus> ProductStatuses { get; set; }
         public DbSet<User> Users { get; set; }

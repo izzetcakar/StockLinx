@@ -4,17 +4,14 @@
     {
         public Guid? CategoryId { get; set; }
         public Guid? ManufacturerId { get; set; }
-        public Guid? FieldSetId { get; set; }
         public string Name { get; set; }
         public string? ImagePath { get; set; }
         public string? ModelNo { get; set; }
         public string? Notes { get; set; }
 
         //Relates
-        public FieldSet? FieldSet { get; set; }
         public Manufacturer? Manufacturer { get; set; }
         public Category? Category { get; set; }
         public ICollection<Asset>? Assets { get; set; }
-        public ICollection<ModelFieldData>? ModelFieldDatas { get; set; }
     }
 }

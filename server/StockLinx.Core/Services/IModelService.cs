@@ -11,7 +11,7 @@ namespace StockLinx.Core.Services
         Task<List<ModelDto>> GetAllDtosAsync();
         Task<ModelDto> CreateModelAsync(ModelCreateDto dto);
         Task<List<ModelDto>> CreateRangeModelAsync(List<ModelCreateDto> dtos);
-        Task UpdateModelAsync(ModelUpdateDto dto);
+        Task<ModelDto> UpdateModelAsync(ModelUpdateDto dto);
         Task DeleteModelAsync(Guid id);
         Task DeleteRangeModelAsync(List<Guid> ids);
         Task<List<ModelDto>> FilterAllAsync(string filter);

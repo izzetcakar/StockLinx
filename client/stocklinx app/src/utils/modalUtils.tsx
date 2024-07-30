@@ -10,19 +10,17 @@ import EmployeeProductCheckOutForm from "@/forms/checkInOut/EmployeeProductCheck
 import CompanyForm from "@/forms/company/CompanyForm";
 import ComponentForm from "@/forms/component/ComponentForm";
 import ConsumableForm from "@/forms/consumable/ConsumableForm";
-import CustomFieldForm from "@/forms/customField/CustomFieldForm";
 import DepartmentForm from "@/forms/department/DepartmentForm";
 import EmployeeForm from "@/forms/employee/EmployeeForm";
-import FieldSetForm from "@/forms/fieldSet/FieldSetForm";
 import LicenseForm from "@/forms/license/LicenseForm";
 import LocationForm from "@/forms/location/LocationForm";
 import ManufacturerForm from "@/forms/manufacturer/ManufacturerForm";
 import ModelForm from "@/forms/model/ModelForm";
 import PermissionForm from "@/forms/permission/PermissionForm";
 import ProductStatusForm from "@/forms/productStatus/ProductStatusForm";
-import { SubmissionFormProps } from "@/forms/submission/SubmissionForm";
 import SupplierForm from "@/forms/supplier/SupplierForm";
 import UserForm from "@/forms/user/UserForm";
+import { SubmissionFormProps } from "@/forms/submission/SubmissionForm";
 import {
   AssetCheckInDto,
   AssetCheckOutDto,
@@ -37,9 +35,7 @@ import {
   ICompany,
   IComponent,
   IConsumable,
-  ICustomField,
   IDepartment,
-  IFieldSet,
   ILicense,
   ILocation,
   IManufacturer,
@@ -227,24 +223,6 @@ export const openEmployeeModal = (employee?: IEmployee) =>
     children: <EmployeeForm employee={employee} />,
     size: "xl",
   });
-
-export const openFieldSetModal = (fieldSet?: IFieldSet) => {
-  modals.open({
-    modalId: "fieldset-modal",
-    title: getTitle(fieldSet, "Field Set"),
-    children: <FieldSetForm fieldSet={fieldSet} />,
-    size: "lg",
-  });
-};
-
-export const openCustomFieldModal = (customField?: ICustomField) => {
-  modals.open({
-    modalId: "customfield-modal",
-    title: getTitle(customField, "Custom Field"),
-    children: <CustomFieldForm customField={customField} />,
-    size: "lg",
-  });
-};
 
 export const openCheckInModal = (
   companyId: string,
