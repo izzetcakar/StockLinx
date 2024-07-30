@@ -1,3 +1,7 @@
+import {
+  adminNavigationList,
+  baseNavigationList,
+} from "@/utils/navigationUtils";
 import { Select } from "@mantine/core";
 import { useContext } from "react";
 import { useUser } from "@/hooks/query";
@@ -5,10 +9,6 @@ import { useNavigate } from "react-router-dom";
 import logo from "@assets/logo.png";
 import GenericContext from "@/context/GenericContext";
 import "./header.scss";
-import {
-  adminNavigationList,
-  baseNavigationList,
-} from "@/utils/navigationUtils";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -26,6 +26,11 @@ const Header = () => {
     return user?.isAdmin ? adminNavigationList : baseNavigationList;
   };
 
+  const navigateTo = (target: string | null) => {
+    if (!target) return;
+    navigate(target);
+  };
+
   return (
     <div className="page__header">
       <div className="page__header__item">
@@ -36,10 +41,16 @@ const Header = () => {
           data={getNavigationMenu().map((item) => {
             return { value: item.target, label: item.title };
           })}
+          onChange={(value) => navigateTo(value)}
           placeholder="Search"
+          className="header__search"
+          styles={{
+            section: {
+              display: "none",
+            },
+          }}
           searchable
           clearable
-          style={{ width: 300 }}
         />
       </div>
       <div className="page__header__item">

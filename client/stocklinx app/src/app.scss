@@ -9,15 +9,15 @@
     display: flex;
     width: 100%;
     height: calc(100% - 45px);
-  }
-  .page__content {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    padding: 0 $spacing-lg;
-    gap: $spacing-lg;
+    .page__content {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      padding: 0 $spacing-lg;
+      gap: $spacing-lg;
+    }
   }
   .page__content::-webkit-scrollbar {
     display: none;
@@ -26,6 +26,22 @@
     display: none;
   }
 }
-.MRT_BottomToolbar-module_root__VDeWo{
+.MRT_BottomToolbar-module_root__VDeWo {
   border-top: none;
+}
+@media screen and (max-width: 600px) {
+  .page {
+    position: relative;
+  }
+  .sidebar__container {
+    position: absolute;
+    width: 100%;
+    z-index: 2;
+  }
+  .sidebar__container.collapsed {
+    position: relative;
+  }
+  .page__content {
+    z-index: 1;
+  }
 }

@@ -12,11 +12,6 @@ namespace StockLinx.Repository.Configurations
             builder.Property(x => x.Name).IsRequired();
 
             builder
-                .HasOne(x => x.FieldSet)
-                .WithMany(x => x.Models)
-                .HasForeignKey(x => x.FieldSetId)
-                .OnDelete(DeleteBehavior.SetNull);
-            builder
                 .HasOne(x => x.Category)
                 .WithMany(x => x.Models)
                 .HasForeignKey(x => x.CategoryId)

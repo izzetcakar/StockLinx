@@ -14,9 +14,6 @@
     display: none;
   }
 }
-.sidebar__container::-webkit-scrollbar {
-  display: none;
-}
 
 .sidebar__container {
   display: flex;
@@ -87,6 +84,10 @@
   }
 }
 
+.sidebar__container::-webkit-scrollbar {
+  display: none;
+}
+
 .navigation__item.logout {
   margin-top: auto;
   margin-bottom: 1rem;
@@ -97,9 +98,4 @@
 }
 .sidebar__container .navigation__element:hover {
   background-color: $primary-color-light-2;
-}
-@media screen and (max-width: 600px) {
-  .sidebar__container {
-    width: 100vw;
-  }
 }
