@@ -458,19 +458,22 @@ namespace StockLinx.Repository.Repositories.EF_Core
             var consumables = dbContext.Consumables.Where(c => companyIds.Contains(c.CompanyId));
             var licenses = dbContext.Licenses.Where(l => companyIds.Contains(l.CompanyId));
             var employeeProductCounts = _employeeProductRepository.GetProductCounts(employeeProducts);
-            var assetProductCounts = _assetProductRepository.GetProductCounts(assetProducts);  
+            var assetProductCounts = _assetProductRepository.GetProductCounts(assetProducts);
 
-            productCompanyCounts = companies
-                .Select(c => new ProductCompanyCounterDto
+
+            foreach (var company in companies)
+            {
+                var productCounts = await employeeProductCounts() + assetProductCounts()
+                var productCompany = new ProductCompanyCounterDto
                 {
                     Company = c.Tag,
                     ProductCount = c.Components.Sum(x => x.Quantity)
-                    + c.Licenses.Sum(x => x.Quantity) + c.Assets.Count()
-                    + c.Consumables.Sum(x => x.Quantity)
-                    + c.Accessories.Sum(x => x.Quantity),
+                  + company.Licenses.Sum(x => x.Quantity) + c.Assets.Count()
+                  + company.Consumables.Sum(x => x.Quantity)
+                  + company.Accessories.Sum(x => x.Quantity),
                     AssignedCount = employeeProductCounts + assetProductCounts
-                })
-                .ToList();
+                }
+            }
 
             return productCompanyCounts;
         }
