@@ -23,6 +23,8 @@ interface BaseMantineTableProps {
   columns: any[];
   isLoading: boolean;
   disableSelection?: boolean;
+  disablePagination?: boolean;
+  wrapperStyle?: object;
   refetch: () => void;
   onAdd?: () => void;
   onCopy?: (value: any) => void;
@@ -42,8 +44,10 @@ const csvConfig = mkConfig({
 const BaseMantineTable: React.FC<BaseMantineTableProps> = ({
   data,
   columns,
+  disablePagination,
   isLoading,
   disableSelection,
+  wrapperStyle,
   refetch,
   onAdd,
   onCopy,
@@ -118,6 +122,9 @@ const BaseMantineTable: React.FC<BaseMantineTableProps> = ({
     enableStickyHeader: true,
     enableStickyFooter: true,
     enableFacetedValues: true,
+    enablePagination: !disablePagination,
+    enableBottomToolbar: !disablePagination,
+    enableRowVirtualization: disablePagination,
     enableRowActions: editable,
     enableRowSelection: !disableSelection,
     positionActionsColumn: "last",
@@ -133,6 +140,9 @@ const BaseMantineTable: React.FC<BaseMantineTableProps> = ({
         maxSize: 0,
         grow: 0,
       },
+    },
+    mantineTableContainerProps: {
+      style: { height: disablePagination ? "500px" : "100%" },
     },
     mantineSelectCheckboxProps: { radius: "sm" },
     state: {
@@ -279,6 +289,7 @@ const BaseMantineTable: React.FC<BaseMantineTableProps> = ({
         maxHeight: "100%",
         maxWidth: "100%",
         borderRadius: "0.5rem",
+        ...wrapperStyle,
       }}
     >
       <MantineReactTable table={table} />

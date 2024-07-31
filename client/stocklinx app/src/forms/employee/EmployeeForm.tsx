@@ -60,7 +60,6 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({ employee }) => {
       return;
     }
     if (newCompany !== company && company !== "" && newCompany !== "") {
-      console.log("Company change detected");
       form.setFieldValue("departmentId", null);
       setCompany(newCompany);
     }

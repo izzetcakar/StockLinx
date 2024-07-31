@@ -1,7 +1,4 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -11,6 +8,8 @@ using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Services;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace StockLinx.API.Controllers
 {
@@ -33,7 +32,7 @@ namespace StockLinx.API.Controllers
             _configuration = configuration;
         }
 
-        [HttpGet]
+        [HttpGet, Authorize]
         public async Task<IActionResult> All()
         {
             try
@@ -47,7 +46,7 @@ namespace StockLinx.API.Controllers
             }
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), Authorize]
         public async Task<IActionResult> Get(Guid id)
         {
             try
@@ -61,7 +60,7 @@ namespace StockLinx.API.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPut, Authorize]
         public async Task<IActionResult> Update(UserUpdateDto dto)
         {
             try
@@ -75,7 +74,7 @@ namespace StockLinx.API.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize]
         public async Task<IActionResult> Delete(Guid id)
         {
             try
@@ -167,9 +166,7 @@ namespace StockLinx.API.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-
-
-        [HttpPost]
+        [HttpPost, Authorize]
         public async Task<IActionResult> Add(UserCreateDto dto)
         {
             try
@@ -183,7 +180,7 @@ namespace StockLinx.API.Controllers
             }
         }
 
-        [HttpPost("range")]
+        [HttpPost("range"), Authorize]
         public async Task<IActionResult> AddRangeUsers(List<UserCreateDto> dtos)
         {
             try
@@ -197,7 +194,7 @@ namespace StockLinx.API.Controllers
             }
         }
 
-        [HttpDelete("range")]
+        [HttpDelete("range"), Authorize]
         public async Task<IActionResult> DeleteRangeUsers(List<Guid> ids)
         {
             try
@@ -211,7 +208,7 @@ namespace StockLinx.API.Controllers
             }
         }
 
-        [HttpGet("filter")]
+        [HttpGet("filter"), Authorize]
         public async Task<IActionResult> Filter([FromQuery] string? filter)
         {
             try

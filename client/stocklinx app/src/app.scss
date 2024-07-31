@@ -39,7 +39,7 @@
     z-index: 2;
   }
   .sidebar__container.collapsed {
-    position: relative;
+    width: 0;
   }
   .page__content {
     z-index: 1;

@@ -14,6 +14,10 @@ namespace StockLinx.Repository.Configurations
             builder.Property(x => x.Name).IsRequired();
 
             builder
+                .HasOne(x => x.Company)
+                .WithMany(x => x.Assets)
+                .HasForeignKey(x => x.CompanyId);
+            builder
                 .HasOne(x => x.ProductStatus)
                 .WithMany(x => x.Assets)
                 .HasForeignKey(x => x.ProductStatusId);

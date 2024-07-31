@@ -7,9 +7,9 @@ namespace StockLinx.Core.Services
     {
         Task CreateBaseEntities();
         Task ClearBaseEntities();
-        IEnumerable<ProductStatusCounter> GetProductStatusCounts();
-        IEnumerable<EntityCounter> GetEntityCounts();
-        IEnumerable<ProductLocationCounterDto> GetProductLocationCounts();
+        Task<IEnumerable<ProductStatusCounter>> GetProductStatusCounts();
+        Task<IEnumerable<EntityCounter>> GetEntityCounts();
+        Task<IEnumerable<ProductCompanyCounterDto>> GetProductCompanyCounts();
         IEnumerable<ProductCategoryCounterDto> GetProductCategoryCounts();
     }
 }

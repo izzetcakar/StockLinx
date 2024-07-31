@@ -2,7 +2,7 @@ import {
   ICustomLog,
   IEntityCount,
   IProductCategoryCount,
-  IProductLocationCount,
+  IProductCompanyCount,
   IProductStatusCount,
 } from "@interfaces/serverInterfaces";
 import { request } from "@request";
@@ -12,7 +12,7 @@ const requestUrl = "Generic/";
 const getEntityCounts = async (): Promise<IEntityCount[]> => {
   return (
     await request<IEntityCount>({
-      requestUrl: requestUrl + "entityCount",
+      requestUrl: requestUrl + "entitycount",
       apiType: "get",
     })
   ).data as IEntityCount[];
@@ -21,25 +21,25 @@ const getEntityCounts = async (): Promise<IEntityCount[]> => {
 const getProductStatusCounts = async (): Promise<IProductStatusCount[]> => {
   return (
     await request<IProductStatusCount>({
-      requestUrl: requestUrl + "productStatusCount",
+      requestUrl: requestUrl + "product/statuscount",
       apiType: "get",
     })
   ).data as IProductStatusCount[];
 };
 
-const getProductLocationCounts = async (): Promise<IProductLocationCount[]> => {
+const getProductLocationCounts = async (): Promise<IProductCompanyCount[]> => {
   return (
-    await request<IProductLocationCount>({
-      requestUrl: requestUrl + "productLocationCount",
+    await request<IProductCompanyCount>({
+      requestUrl: requestUrl + "product/companycount",
       apiType: "get",
     })
-  ).data as IProductLocationCount[];
+  ).data as IProductCompanyCount[];
 };
 
 const getProductCategoryCounts = async (): Promise<IProductCategoryCount[]> => {
   return (
     await request<IProductCategoryCount>({
-      requestUrl: requestUrl + "productCategoryCount",
+      requestUrl: requestUrl + "product/categorycount",
       apiType: "get",
     })
   ).data as IProductCategoryCount[];

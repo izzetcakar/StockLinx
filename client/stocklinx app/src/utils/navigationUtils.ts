@@ -6,12 +6,13 @@ import icon_disk from "@assets/icon_disk.png";
 import icon_harddisk from "@assets/icon_harddisk.png";
 import icon_settings from "@assets/icon_setting.png";
 import icon_group from "@assets/icon_group.png";
+import icon_privacy from "@assets/icon_privacy.png";
 import { NavigationItem } from "@/interfaces/clientInterfaces";
 
 export const baseNavigationList: NavigationItem[] = [
   {
-    title: "Test",
-    target: "/test",
+    title: "Home",
+    target: "/",
     icon: icon_home,
   },
   {
@@ -97,7 +98,7 @@ const adminNavigationItems: NavigationItem[] = [
     target: "/users",
   },
   {
-    icon: "",
+    icon: icon_privacy,
     title: "Permissions",
     target: "/permissions",
   },

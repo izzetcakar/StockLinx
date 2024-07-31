@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "@mantine/form";
 import { IUserLoginDto } from "@interfaces/dtos";
 import {
@@ -18,8 +18,10 @@ import "./user.scss";
 
 const Login = () => {
   const captchaSiteKey = import.meta.env.VITE_CAPTCHA_SITE_KEY;
+  const navigate = useNavigate();
+  const { mutate: signIn, isLoading: signLoading } = useUser.SignIn();
   const [recaptcha, setRecaptcha] = useState(false);
-  const { mutate: signIn } = useUser.SignIn();
+
   const signForm = useForm<IUserLoginDto>({
     initialValues: {
       email: "",
@@ -36,11 +38,17 @@ const Login = () => {
     signIn(signForm.values);
   };
 
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      navigate("/");
+    }
+  }, [localStorage.getItem("token")]);
+
   return (
     <Flex w="100%" h="100vh" justify={"center"} align={"center"} bg={"#f4f0f0"}>
       <Paper shadow="xs" py="md" px={40} mah="90%" maw="90%">
         <Flex direction="column" gap={10} mah="100%" maw="100%" bg={"white"}>
-          <Image alt="..." src={logo} h={100} fit="contain" />
+          <Image alt="..." src={logo} mah={350} fit="contain" />
           <form
             className="sign-form"
             onSubmit={signForm.onSubmit(() => {
@@ -65,23 +73,14 @@ const Login = () => {
                 sitekey={captchaSiteKey}
                 onChange={() => setRecaptcha(true)}
               />
-              <Button type="submit" color="dark" disabled={!recaptcha}>
+              <Button
+                type="submit"
+                color="dark"
+                disabled={!recaptcha}
+                loading={signLoading}
+              >
                 Login
               </Button>
-              <Flex
-                dir="row"
-                justify="space-between"
-                align="center"
-                w="100%"
-                h="fit-content"
-              >
-                <Link className="sign-bottom-container-text" to="/register">
-                  Register
-                </Link>
-                <div className="sign-bottom-container-text">
-                  Forgot Password?
-                </div>
-              </Flex>
             </Flex>
           </form>
         </Flex>

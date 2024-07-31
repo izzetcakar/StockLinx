@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Services;
 
 namespace StockLinx.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CustomLogController : CustomBaseController

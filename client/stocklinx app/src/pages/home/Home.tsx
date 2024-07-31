@@ -9,16 +9,23 @@ import icon_harddisk from "@assets/icon_harddisk.png";
 import icon_group from "@assets/icon_group.png";
 import icon_minus from "@assets/icon_minus.png";
 import ProductCard from "@components/product/ProductCard";
-import LocationsCounts from "@components/dataGrid/location/LocationsCounts";
-import CategoryCounts from "@components/dataGrid/category/CategoryCounts";
 import CustomLogs from "@components/dataGrid/customLog/CustomLogs";
 import PageHeader from "@/components/generic/PageHeader";
+import CompanyProductCounts from "@/components/dataGrid/product/CompanyProductCounts";
+import AssetCategoryCounts from "@/components/dataGrid/product/AssetCategoryCounts";
 import "chart.js/auto";
 import "./home.scss";
+import { Grid } from "@mantine/core";
 
 const Home = () => {
   const { data: entityCounts } = useProduct.GetEntityCounts();
-  const { data: productStatusCounts } = useProduct.GetProductStatusCounts();
+  const { data: productStatusCounts } = useProduct.GetStatusCounts();
+  const [cards, setCards] = useState([
+    { show: true },
+    { show: true },
+    { show: true },
+    { show: true },
+  ]);
 
   const entityData = [
     {
@@ -80,7 +87,16 @@ const Home = () => {
     });
   };
 
-  const [show, setShow] = useState<boolean>(true);
+  const handleCardClick = (index: number) => {
+    const newCards = cards.map((item, i) => {
+      if (i === index) {
+        return { ...item, show: !item.show };
+      } else {
+        return item;
+      }
+    });
+    setCards(newCards);
+  };
 
   return (
     <>
@@ -99,99 +115,91 @@ const Home = () => {
           );
         })}
       </div>
-      <div className="home">
-        <div className="home-item">
-          <div className="home-item__header">
-            <div className="home-item__header__title">Recent Activity</div>
-            <img
-              className="home-item__header-icon"
-              src={icon_minus}
-              onClick={() => setShow((prev) => !prev)}
-            />
+      <Grid gutter="xl" align="start">
+        <Grid.Col span={{ base: 12, md: 6, lg: 12 }}>
+          <div className={cards[0].show ? "home-item" : "home-item passive"}>
+            <div className="home-item__header">
+              <div className="home-item__header__title">Recent Activity</div>
+              <img
+                className="home-item__header-icon"
+                src={icon_minus}
+                onClick={() => handleCardClick(0)}
+              />
+            </div>
+            <div
+              className={
+                cards[0].show
+                  ? "home-item-content"
+                  : "home-item-content-collapsed"
+              }
+            >
+              <CustomLogs
+                style={{ borderTopLeftRadius: 0, borderTopRightRadius: 0 }}
+              />
+            </div>
           </div>
-          <hr className="home-item-wrapper" />
-          <div
-            className={
-              show ? "home-item-content" : "home-item-content-collapsed"
-            }
-          >
-            <CustomLogs />
-          </div>
-        </div>
-        <div className="home-item">
-          <div className="home-item__header">
-            <div className="home-item__header__title">Assets by Status</div>
-            <img
-              className="home-item__header-icon"
-              src={icon_minus}
-              onClick={() => setShow((prev) => !prev)}
-            />
-          </div>
-          <hr className="home-item-wrapper" />
-          <div
-            className={
-              show
-                ? "home-item-content withBorder"
-                : "home-item-content-collapsed"
-            }
-          >
-            <Pie
-              data={{
-                labels: productStatusCounts?.map((item) => item.status),
-                datasets: [
-                  {
-                    data: productStatusCounts?.map((item) => item.count),
-                    backgroundColor: [
-                      "#36A2EB",
-                      "#8542b2",
-                      "#FFCE56",
-                      "#db3d44",
-                      "#FF6384",
-                      "#FFCE56",
+        </Grid.Col>
+        <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
+          <div className="home-item">
+            <div className="home-item__header">
+              <div className="home-item__header__title">Assets by Status</div>
+              <img
+                className="home-item__header-icon"
+                src={icon_minus}
+                onClick={() => handleCardClick(1)}
+              />
+            </div>
+            {cards[1].show && (
+              <div className="home-item-chart">
+                <Pie
+                  data={{
+                    labels: productStatusCounts?.map((item) => item.status),
+                    datasets: [
+                      {
+                        data: productStatusCounts?.map((item) => item.count),
+                        backgroundColor: [
+                          "#36A2EB",
+                          "#8542b2",
+                          "#FFCE56",
+                          "#db3d44",
+                          "#FF6384",
+                          "#FFCE56",
+                        ],
+                      },
                     ],
-                  },
-                ],
-              }}
-            />
+                  }}
+                />
+              </div>
+            )}
           </div>
-        </div>
-        <div className="home-item">
-          <div className="home-item__header">
-            <div className="home-item__header__title">Asset Locations</div>
-            <img
-              className="home-item__header-icon"
-              src={icon_minus}
-              onClick={() => setShow((prev) => !prev)}
-            />
+        </Grid.Col>
+        <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
+          <div className="home-item">
+            <div className="home-item__header">
+              <div className="home-item__header__title">Asset Locations</div>
+              <img
+                className="home-item__header-icon"
+                src={icon_minus}
+                onClick={() => handleCardClick(2)}
+              />
+            </div>
+            {cards[2].show && <CompanyProductCounts />}
           </div>
-          <hr className="home-item-wrapper" />
-          <div
-            className={
-              show ? "home-item-content" : "home-item-content-collapsed"
-            }
-          >
-            <LocationsCounts />
+        </Grid.Col>
+        <Grid.Col span={{ base: 12, md: 6, lg: 12 }}>
+          <div className="home-item">
+            <div className="home-item__header">
+              <div className="home-item__header__title">Asset Categories</div>
+              <img
+                className="home-item__header-icon"
+                src={icon_minus}
+                onClick={() => handleCardClick(3)}
+              />
+            </div>
+            {cards[3].show && <AssetCategoryCounts />}
           </div>
-        </div>
-        <div className="home-item">
-          <div className="home-item__header">
-            <div className="home-item__header__title">Asset Categories</div>
-            <img
-              className="home-item__header-icon"
-              src={icon_minus}
-              onClick={() => setShow((prev) => !prev)}
-            />
-          </div>
-          <hr className="home-item-wrapper" />
-          <div
-            className={
-              show ? "home-item-content" : "home-item-content-collapsed"
-            }
-          >
-            <CategoryCounts />
-          </div>
-        </div>
-      </div>
+        </Grid.Col>
+      </Grid>
     </>
   );
 };

@@ -162,15 +162,13 @@ export interface IProductStatusCount {
   status: string;
   count: number;
 }
-export interface IProductLocationCount {
-  locationId: string;
-  locationName: string;
-  productCount: number;
-  assignedCount: number;
+export interface IProductCompanyCount {
+  company : string;
+  productCount : number;
+  assignedCount : number;
 }
 export interface IProductCategoryCount {
   categoryId: string;
-  categoryName: string;
   productName: string;
   productCount: number;
 }

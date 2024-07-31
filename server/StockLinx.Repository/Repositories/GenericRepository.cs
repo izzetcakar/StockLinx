@@ -1,13 +1,26 @@
-﻿using StockLinx.Core.DTOs.Others;
+﻿using Microsoft.EntityFrameworkCore;
+using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.Entities;
 using StockLinx.Core.Repositories;
+using StockLinx.Core.Services;
 
 namespace StockLinx.Repository.Repositories.EF_Core
 {
     public class GenericRepository : Repository<User>, IGenericRepository
     {
-        public GenericRepository(AppDbContext dbContext)
-            : base(dbContext) { }
+        private readonly IUserService _userService;
+        private readonly IPermissionRepository _permissionRepository;
+
+        public GenericRepository(
+            AppDbContext dbContext,
+            IUserService userService,
+            IPermissionRepository permissionRepository
+        )
+            : base(dbContext)
+        {
+            _userService = userService;
+            _permissionRepository = permissionRepository;
+        }
 
         public void CreateBaseEntities()
         {
@@ -364,15 +377,21 @@ namespace StockLinx.Repository.Repositories.EF_Core
             dbContext.RemoveRange(dbContext.ProductStatuses);
         }
 
-        public IEnumerable<EntityCounter> GetEntityCounts()
+        public async Task<IEnumerable<EntityCounter>> GetEntityCounts()
         {
             var entityCounts = new List<EntityCounter>();
-            var accessoryCount = dbContext.Accessories.Count();
-            var licenseCount = dbContext.Licenses.Count();
-            var consumableCount = dbContext.Consumables.Count();
-            var assetCount = dbContext.Assets.Count();
-            var componentCount = dbContext.Components.Count();
-            var userCount = dbContext.Users.Count();
+            var user = await _userService.GetCurrentUser();
+            var companyIds = await _permissionRepository.GetCompanyIdsAsync(user.Id);
+            var accessoryCount = dbContext.Accessories.Count(a => companyIds.Contains(a.CompanyId));
+            var assetCount = dbContext.Assets.Count(a => companyIds.Contains(a.CompanyId));
+            var licenseCount = dbContext.Licenses.Count(l => companyIds.Contains(l.CompanyId));
+            var componentCount = dbContext.Components.Count(c => companyIds.Contains(c.CompanyId));
+            var consumableCount = dbContext.Consumables.Count(c =>
+                companyIds.Contains(c.CompanyId)
+            );
+            var employeeCount = dbContext.Employees.Count(e =>
+                companyIds.Contains(e.Department.CompanyId)
+            );
             entityCounts.Add(
                 new EntityCounter { EntityName = "Accessory", Count = accessoryCount }
             );
@@ -384,68 +403,99 @@ namespace StockLinx.Repository.Repositories.EF_Core
             entityCounts.Add(
                 new EntityCounter { EntityName = "Component", Count = componentCount }
             );
-            entityCounts.Add(new EntityCounter { EntityName = "User", Count = userCount });
+            entityCounts.Add(new EntityCounter { EntityName = "Employee", Count = employeeCount });
             return entityCounts;
         }
 
-        public IEnumerable<ProductStatusCounter> GetProductStatusCounts()
+        public async Task<IEnumerable<ProductStatusCounter>> GetProductStatusCounts()
         {
             var productStatusCounts = new List<ProductStatusCounter>();
-            var assets = dbContext.Assets;
+            var user = await _userService.GetCurrentUser();
+            var companyIds = await _permissionRepository.GetCompanyIdsAsync(user.Id);
+            var assets = await dbContext
+                .Assets.Where(a => companyIds.Contains(a.CompanyId))
+                .ToListAsync();
             var productStatuses = dbContext.ProductStatuses;
 
-            productStatusCounts = productStatuses
-                .Select(status => new ProductStatusCounter { Count = 0, Status = status.Name })
-                .ToList();
+            foreach (var status in productStatuses)
+            {
+                var count = assets.Where(a => a.ProductStatusId == status.Id).Count();
+                productStatusCounts.Add(
+                    new ProductStatusCounter { Count = count, Status = status.Name }
+                );
+            }
             return productStatusCounts;
         }
 
-        public IEnumerable<ProductLocationCounterDto> GetProductLocationCounts()
+        public async Task<IEnumerable<ProductCompanyCounterDto>> GetProductCompanyCounts()
         {
-            var productLocationCounts = new List<ProductLocationCounterDto>();
-            var locations = dbContext.Locations;
-            var assets = dbContext.Assets;
-            // var deployedAssets = dbContext.DeployedProducts;
-            productLocationCounts = locations
-                .Select(l => new ProductLocationCounterDto
+            var productCompanyCounts = new List<ProductCompanyCounterDto>();
+            var user = await _userService.GetCurrentUser();
+            var companyIds = await _permissionRepository.GetCompanyIdsAsync(user.Id);
+            var employeeProducts = await dbContext
+                .EmployeeProducts.Include(ep => ep.Employee)
+                .ThenInclude(e => e.Department)
+                .ThenInclude(d => d.Company)
+                .ToListAsync();
+            var assetProducts = await dbContext.AssetProducts.Include(ap => ap.Asset).ToListAsync();
+            var companies = await dbContext
+                .Companies.Where(c => companyIds.Contains(c.Id))
+                .Include(c => c.Components)
+                .Include(c => c.Licenses)
+                .Include(c => c.Assets)
+                .Include(c => c.Consumables)
+                .Include(c => c.Accessories)
+                .ToListAsync();
+            var assets = dbContext.Assets.Where(a => companyIds.Contains(a.CompanyId));
+            var accessories = dbContext.Accessories.Where(a => companyIds.Contains(a.CompanyId));
+            var components = dbContext.Components.Where(c => companyIds.Contains(c.CompanyId));
+            var consumables = dbContext.Consumables.Where(c => companyIds.Contains(c.CompanyId));
+            var licenses = dbContext.Licenses.Where(l => companyIds.Contains(l.CompanyId));
+            var assetProductCounts = assetProducts.Count(ap =>
+                companyIds.Contains(ap.Asset.CompanyId)
+            );
+            productCompanyCounts = companies
+                .Select(c => new ProductCompanyCounterDto
                 {
-                    LocationId = l.Id,
-                    LocationName = l.Name,
-                    ProductCount = assets.Where(a => a.Company.LocationId == l.Id).Count(),
-                    AssignedCount = 0
+                    Company = c.Tag,
+                    ProductCount = c.Components.Sum(x => x.Quantity)
+                    + c.Licenses.Sum(x => x.Quantity) + c.Assets.Count()
+                    + c.Consumables.Sum(x => x.Quantity)
+                    + c.Accessories.Sum(x => x.Quantity),
+                    AssignedCount = employeeProducts
+                        .Where(ep => ep.Employee.Department.CompanyId == c.Id)
+                        .Count()
                 })
                 .ToList();
-            return productLocationCounts;
+
+            return productCompanyCounts;
         }
 
         public IEnumerable<ProductCategoryCounterDto> GetProductCategoryCounts()
         {
             var productCategoryCounts = new List<ProductCategoryCounterDto>();
 
-            var assetCount = dbContext
-                .Models.Where(m => m.Category.Type == CategoryType.ASSET)
-                .Count();
-            var accessoryCount = dbContext
-                .Accessories.Where(m => m.Category.Type == CategoryType.ACCESSORY)
-                .Count();
-            var componentCount = dbContext
-                .Components.Where(m => m.Category.Type == CategoryType.COMPONENT)
-                .Count();
-            var consumableCount = dbContext
-                .Consumables.Where(m => m.Category.Type == CategoryType.CONSUMABLE)
-                .Count();
-            var licenseCount = dbContext
-                .Licenses.Where(m => m.Category.Type == CategoryType.LICENSE)
-                .Count();
+            var modelCount = dbContext.Models.Count(m => m.Category.Type == CategoryType.ASSET);
+            var accessoryCount = dbContext.Accessories.Count(m =>
+                m.Category.Type == CategoryType.ACCESSORY
+            );
+            var componentCount = dbContext.Components.Count(m =>
+                m.Category.Type == CategoryType.COMPONENT
+            );
+            var consumableCount = dbContext.Consumables.Count(m =>
+                m.Category.Type == CategoryType.CONSUMABLE
+            );
+            var licenseCount = dbContext.Licenses.Count(m =>
+                m.Category.Type == CategoryType.LICENSE
+            );
 
-            var assets = dbContext
+            var models = dbContext
                 .Models.Where(m => m.Category.Type == CategoryType.ASSET)
                 .Select(m => new ProductCategoryCounterDto
                 {
                     CategoryId = (Guid)m.CategoryId,
-                    CategoryName = m.Category.Name,
-                    ProductName = "Asset",
-                    ProductCount = assetCount,
+                    ProductName = "Model",
+                    ProductCount = modelCount,
                 })
                 .ToList();
             var accessories = dbContext
@@ -453,7 +503,6 @@ namespace StockLinx.Repository.Repositories.EF_Core
                 .Select(a => new ProductCategoryCounterDto
                 {
                     CategoryId = (Guid)a.CategoryId,
-                    CategoryName = a.Category.Name,
                     ProductName = "Accessory",
                     ProductCount = accessoryCount,
                 })
@@ -463,7 +512,6 @@ namespace StockLinx.Repository.Repositories.EF_Core
                 .Select(c => new ProductCategoryCounterDto
                 {
                     CategoryId = (Guid)c.CategoryId,
-                    CategoryName = c.Category.Name,
                     ProductName = "Component",
                     ProductCount = componentCount,
                 })
@@ -473,7 +521,6 @@ namespace StockLinx.Repository.Repositories.EF_Core
                 .Select(c => new ProductCategoryCounterDto
                 {
                     CategoryId = (Guid)c.CategoryId,
-                    CategoryName = c.Category.Name,
                     ProductName = "Consumable",
                     ProductCount = consumableCount,
                 })
@@ -483,13 +530,12 @@ namespace StockLinx.Repository.Repositories.EF_Core
                 .Select(l => new ProductCategoryCounterDto
                 {
                     CategoryId = (Guid)l.CategoryId,
-                    CategoryName = l.Category.Name,
                     ProductName = "License",
                     ProductCount = licenseCount,
                 })
                 .ToList();
             return productCategoryCounts
-                .Concat(assets)
+                .Concat(models)
                 .Concat(accessories)
                 .Concat(components)
                 .Concat(consumables)

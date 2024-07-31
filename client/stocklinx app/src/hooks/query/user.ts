@@ -58,7 +58,10 @@ const SignIn = () => {
 };
 
 const GetWithToken = () => {
-  return useQuery(userKeys.GET_WITH_TOKEN_USER, userRequests.getWithToken);
+  return useQuery({
+    queryKey: userKeys.GET_WITH_TOKEN_USER,
+    queryFn: userRequests.getWithToken,
+  });
 };
 
 export default {

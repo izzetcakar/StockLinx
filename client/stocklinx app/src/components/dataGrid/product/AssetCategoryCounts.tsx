@@ -1,27 +1,22 @@
 import { useColumns } from "./columns";
 import { useProduct } from "@queryhooks";
 import BaseMantineTable from "@/components/mantine/BaseMantineTable";
-import React from "react";
 
-interface CustomLogsProps {
-  style?: object;
-}
-
-const CustomLogs: React.FC<CustomLogsProps> = ({ style }) => {
-  const { columns } = useColumns();
-  const { data, isRefetching, refetch } = useProduct.GetCustomLogs();
+const AssetCategoryCounts = () => {
+  const { data, refetch, isRefetching } = useProduct.GetCategoryCounts();
+  const { assetCategoryColumns } = useColumns();
 
   return (
     <BaseMantineTable
       data={data}
-      columns={columns}
+      columns={assetCategoryColumns}
       isLoading={isRefetching}
+      wrapperStyle={{ borderTopLeftRadius: 0, borderTopRightRadius: 0 }}
       refetch={refetch}
       disableSelection
       disablePagination
-      wrapperStyle={style}
     />
   );
 };
 
-export default CustomLogs;
+export default AssetCategoryCounts;

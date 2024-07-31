@@ -4,9 +4,10 @@ import {
   NavigationItem,
   NavigationSubItem,
 } from "@/interfaces/clientInterfaces";
-import { IconChevronDown } from "@tabler/icons-react";
+import { IconChevronDown, IconLogout2 } from "@tabler/icons-react";
 import GenericContext from "@/context/GenericContext";
 import "./sidebar.scss";
+import { Button } from "@mantine/core";
 
 const Sidebar: React.FC = () => {
   const location = useLocation();
@@ -81,11 +82,18 @@ const Sidebar: React.FC = () => {
           ) : null}
         </React.Fragment>
       ))}
-      <div
-        className="navigation__item logout"
-        onClick={() => localStorage.removeItem("token")}
-      >
-        <div className="title">Logout</div>
+      <div className="navigation__item logout">
+        <Button
+          onClick={() => {
+            localStorage.removeItem("token");
+            navigate("/login");
+          }}
+          color="gray"
+          leftSection={<IconLogout2 size={24} />}
+          variant="subtle"
+        >
+          Logout
+        </Button>
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 import {
   IEntityCount,
   IProductStatusCount,
-  IProductLocationCount,
+  IProductCompanyCount,
   IProductCategoryCount,
   ICustomLog,
 } from "@/interfaces/serverInterfaces";
@@ -16,21 +16,21 @@ const GetEntityCounts = () => {
   );
 };
 
-const GetProductStatusCounts = () => {
+const GetStatusCounts = () => {
   return useQuery<IProductStatusCount[]>(
     productKeys.FETCH_PRODUCT_STATUS_COUNTS,
     productRequests.getProductStatusCounts
   );
 };
 
-const GetProductLocationCounts = () => {
-  return useQuery<IProductLocationCount[]>(
+const GetCompanyCounts = () => {
+  return useQuery<IProductCompanyCount[]>(
     productKeys.FETCH_PRODUCT_LOCATION_COUNTS,
     productRequests.getProductLocationCounts
   );
 };
 
-const GetProductCategoryCounts = () => {
+const GetCategoryCounts = () => {
   return useQuery<IProductCategoryCount[]>(
     productKeys.FETCH_PRODUCT_CATEGORY_COUNTS,
     productRequests.getProductCategoryCounts
@@ -46,9 +46,9 @@ const GetCustomLogs = () => {
 
 export default {
   GetEntityCounts,
-  GetProductStatusCounts,
-  GetProductLocationCounts,
-  GetProductCategoryCounts,
+  GetStatusCounts,
+  GetCompanyCounts,
+  GetCategoryCounts,
   GetCustomLogs,
   productKeys,
 };

@@ -72,9 +72,6 @@ export const lookupRequest = async <T>({
       };
     });
   } catch (error: any) {
-    const message: string =
-      (error.response?.data.error as string) ?? "Network Error";
-    console.log("Error in lookupRequest: ", message);
     return [];
   }
   return data;
@@ -166,6 +163,11 @@ export const request = async <T>({
       status,
     };
   } catch (error: any) {
+    if (error.response?.status === 401) {
+      localStorage.removeItem("token");
+      const url = window.location.href;
+      if (url.indexOf("/login") === -1) window.location.href = "/login";
+    }
     const message: string =
       (error.response?.data.error as string) ?? "Network Error";
     status = error.response?.status ?? 500;

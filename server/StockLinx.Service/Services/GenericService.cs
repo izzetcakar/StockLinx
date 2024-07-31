@@ -41,19 +41,19 @@ namespace StockLinx.Service.Services
             }
         }
 
-        public IEnumerable<EntityCounter> GetEntityCounts()
+        public async Task<IEnumerable<EntityCounter>> GetEntityCounts()
         {
-            return _repository.GetEntityCounts();
+            return await _repository.GetEntityCounts();
         }
 
-        public IEnumerable<ProductStatusCounter> GetProductStatusCounts()
+        public async Task<IEnumerable<ProductStatusCounter>> GetProductStatusCounts()
         {
-            return _repository.GetProductStatusCounts();
+            return await _repository.GetProductStatusCounts();
         }
 
-        public IEnumerable<ProductLocationCounterDto> GetProductLocationCounts()
+        public async Task<IEnumerable<ProductCompanyCounterDto>> GetProductCompanyCounts()
         {
-            return _repository.GetProductLocationCounts();
+            return await _repository.GetProductCompanyCounts();
         }
 
         public IEnumerable<ProductCategoryCounterDto> GetProductCategoryCounts()
