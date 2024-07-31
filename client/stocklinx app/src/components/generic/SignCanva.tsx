@@ -1,6 +1,6 @@
 import { SubmissionFormProps } from "@/forms/submission/SubmissionForm";
 import { openSubmissionForm } from "@/utils/submissionUtils";
-import { Flex } from "@mantine/core";
+import { Flex, Select } from "@mantine/core";
 import { useState } from "react";
 import { Editor, exportToBlob, Tldraw, TLUiComponents } from "tldraw";
 import "tldraw/tldraw.css";
@@ -8,6 +8,7 @@ import "tldraw/tldraw.css";
 const SignCanva = ({ formProps }: { formProps: SubmissionFormProps }) => {
   const [userEditor, setUserEditor] = useState<Editor>();
   const [employeeEditor, setEmployeeEditor] = useState<Editor>();
+  const [checkType, setCheckType] = useState<string>("CHECKIN");
 
   const handleSignImages = async () => {
     if (!userEditor || !employeeEditor) return;
@@ -29,6 +30,7 @@ const SignCanva = ({ formProps }: { formProps: SubmissionFormProps }) => {
       ...formProps,
       userSign,
       employeeSign,
+      checkType,
     });
   };
 
@@ -64,9 +66,27 @@ const SignCanva = ({ formProps }: { formProps: SubmissionFormProps }) => {
           components={components}
         />
       </div>
-      <button className="sign__submit__btn" onClick={() => handleSignImages()}>
-        Submit
-      </button>
+      <Flex align="center" gap="sm" w="100%">
+        <Select
+          value={checkType}
+          data={[
+            { value: "CHECKIN", label: "Check In" },
+            { value: "CHECKOUT", label: "Check Out" },
+          ]}
+          color="gray"
+          variant="filled"
+          onChange={(value) => setCheckType(value as string)}
+          style={{
+            width: "50%",
+          }}
+        />
+        <button
+          className="sign__submit__btn"
+          onClick={() => handleSignImages()}
+        >
+          Submit
+        </button>
+      </Flex>
     </Flex>
   );
 };

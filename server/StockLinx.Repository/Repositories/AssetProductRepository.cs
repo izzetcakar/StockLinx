@@ -123,5 +123,15 @@ namespace StockLinx.Repository.Repositories.EF_Core
 
             return displayDtos;
         }
+
+        public Task<int> GetProductCount(EmployeeProduct employeeProduct)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<int> GetProductCounts(List<EmployeeProduct> employeeProducts)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

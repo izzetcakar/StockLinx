@@ -141,7 +141,11 @@ builder
             {
                 "https://localhost:7000",
                 "https://localhost:7001",
-                "http://localhost:5173"
+                "http://localhost:5173",
+                "http://192.168.1.144",
+                "http://172.28.208.1",
+                "http://192.168.35.163",
+                "http://172.28.48.1",
             },
             RequireExpirationTime = true,
         };
@@ -162,7 +166,7 @@ builder.Services.AddCors(options =>
         policy =>
         {
             policy
-                .WithOrigins("http://localhost:5173", "http://192.168.1.104:5173")
+                .WithOrigins("http://localhost:5173", "http://192.168.1.104")
                 .AllowAnyMethod()
                 .AllowAnyHeader();
         }

@@ -149,6 +149,7 @@ export interface SubmissionFormProps {
   assignDate: string;
   userSign: Blob;
   employeeSign: Blob;
+  checkType: string;
 }
 
 const Description = ({
@@ -165,10 +166,10 @@ const Description = ({
   <View style={styles.signContainer}>
     <View style={styles.signContent}>
       <View style={styles.signElement}>
-        <Text style={styles.boldText}>Teslim Alan Personel</Text>
+        <Text style={styles.boldText}>Teslim Eden Personel</Text>
       </View>
       <View style={styles.signElement}>
-        <Text style={styles.boldText}>Teslim Eden Personel</Text>
+        <Text style={styles.boldText}>Teslim Alan Personel</Text>
       </View>
     </View>
     <View style={styles.signContent}>
@@ -220,6 +221,7 @@ const SubmissionForm = ({
   assignDate,
   userSign,
   employeeSign,
+  checkType,
 }: SubmissionFormProps) => {
   return (
     <Document
@@ -271,37 +273,44 @@ const SubmissionForm = ({
               </View>
             );
           })}
-          <View style={styles.content}>
-            <Text style={styles.description}>
-              Yukarıda yazılı malzemeleri {formatDate(assignDate)} tarihinde
-              teslim aldım. Bu tarihten itibaren verilen ürüne gelecek olan
-              zarardan şahsım sorumludur.
-            </Text>
-          </View>
-          <View style={styles.content}>
-            {Description({
-              delivererFullName,
-              userFullName,
-              userSign,
-              employeeSign,
-            })}
-          </View>
-          <Text style={styles.title_center}>Teslim Beyanı</Text>
-          <View style={styles.content}>
-            <Text style={styles.description}>
-              {formatDate(assignDate)} tarihinde işten ayrıldığımı ve işe giriş
-              tarihinde şahsıma zimmetlenmiş , yukarıda belirtilmiş malzemeleri
-              eksiksiz ve sorunsuz teslim ettiğimi beyan ederim.
-            </Text>
-          </View>
-          <View style={[styles.content, { borderBottom: "none" }]}>
-            {Description({
-              delivererFullName,
-              userFullName,
-              userSign,
-              employeeSign,
-            })}
-          </View>
+          {checkType === "CHECKIN" ? (
+            <View>
+              <View style={styles.content}>
+                <Text style={styles.description}>
+                  Yukarıda yazılı malzemeleri {formatDate(assignDate)} tarihinde
+                  teslim aldım. Bu tarihten itibaren verilen ürüne gelecek olan
+                  zarardan şahsım sorumludur.
+                </Text>
+              </View>
+              <View style={styles.content}>
+                {Description({
+                  delivererFullName,
+                  userFullName,
+                  userSign,
+                  employeeSign,
+                })}
+              </View>
+            </View>
+          ) : (
+            <View>
+              <Text style={styles.title_center}>Teslim Beyanı</Text>
+              <View style={styles.content}>
+                <Text style={styles.description}>
+                  {formatDate(assignDate)} tarihinde işten ayrıldığımı ve işe
+                  giriş tarihinde şahsıma zimmetlenmiş , yukarıda belirtilmiş
+                  malzemeleri eksiksiz ve sorunsuz teslim ettiğimi beyan ederim.
+                </Text>
+              </View>
+              <View style={[styles.content, { borderBottom: "none" }]}>
+                {Description({
+                  delivererFullName,
+                  userFullName,
+                  userSign,
+                  employeeSign,
+                })}
+              </View>
+            </View>
+          )}
         </View>
       </Page>
     </Document>

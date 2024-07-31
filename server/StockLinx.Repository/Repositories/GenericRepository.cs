@@ -10,16 +10,22 @@ namespace StockLinx.Repository.Repositories.EF_Core
     {
         private readonly IUserService _userService;
         private readonly IPermissionRepository _permissionRepository;
+        private readonly IEmployeeProductRepository _employeeProductRepository;
+        private readonly IAssetProductRepository _assetProductRepository;
 
         public GenericRepository(
             AppDbContext dbContext,
             IUserService userService,
-            IPermissionRepository permissionRepository
+            IPermissionRepository permissionRepository,
+            IEmployeeProductRepository employeeProductRepository,
+            IAssetProductRepository assetProductRepository
         )
             : base(dbContext)
         {
             _userService = userService;
             _permissionRepository = permissionRepository;
+            _employeeProductRepository = employeeProductRepository;
+            _assetProductRepository = assetProductRepository;
         }
 
         public void CreateBaseEntities()
@@ -451,9 +457,9 @@ namespace StockLinx.Repository.Repositories.EF_Core
             var components = dbContext.Components.Where(c => companyIds.Contains(c.CompanyId));
             var consumables = dbContext.Consumables.Where(c => companyIds.Contains(c.CompanyId));
             var licenses = dbContext.Licenses.Where(l => companyIds.Contains(l.CompanyId));
-            var assetProductCounts = assetProducts.Count(ap =>
-                companyIds.Contains(ap.Asset.CompanyId)
-            );
+            var employeeProductCounts = _employeeProductRepository.GetProductCounts(employeeProducts);
+            var assetProductCounts = _assetProductRepository.GetProductCounts(assetProducts);  
+
             productCompanyCounts = companies
                 .Select(c => new ProductCompanyCounterDto
                 {
@@ -462,9 +468,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
                     + c.Licenses.Sum(x => x.Quantity) + c.Assets.Count()
                     + c.Consumables.Sum(x => x.Quantity)
                     + c.Accessories.Sum(x => x.Quantity),
-                    AssignedCount = employeeProducts
-                        .Where(ep => ep.Employee.Department.CompanyId == c.Id)
-                        .Count()
+                    AssignedCount = employeeProductCounts + assetProductCounts
                 })
                 .ToList();
 

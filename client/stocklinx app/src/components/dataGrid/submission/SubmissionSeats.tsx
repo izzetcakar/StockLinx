@@ -34,6 +34,7 @@ const SubmissionSeats: React.FC<SubmissionSeatsProps> = ({ employeeId }) => {
       delivererFullName: submission?.user || "",
       userSign: new Blob(),
       employeeSign: new Blob(),
+      checkType: "CHECKIN",
     });
   };
 

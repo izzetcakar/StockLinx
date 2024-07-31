@@ -34,7 +34,6 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({ employee }) => {
     isRefetching: companyLoading,
     refetch: getCompanyLK,
   } = useCompany.Lookup();
-  const [company, setCompany] = React.useState<string>("");
   const isMutating =
     useIsMutating({
       predicate: (query) => query.state.status === "loading",
@@ -54,45 +53,28 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({ employee }) => {
     isCreate ? createEmployee(data) : updateEmployee(data);
   };
 
-  const handleCompanyChange = (newCompany: string) => {
-    if (form.values.departmentId === "") {
-      setCompany(newCompany);
-      return;
-    }
-    if (newCompany !== company && company !== "" && newCompany !== "") {
-      form.setFieldValue("departmentId", null);
-      setCompany(newCompany);
-    }
+  const getCompanyTag = (departmentId: string) => {
+    return companyLK?.find((c) => c.value === departmentId)?.label || "";
   };
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
       <FormCard>
         <Select
-          label="Company"
-          placeholder="Select Company"
-          data={companyLoading ? [] : companyLK}
-          onChange={(e) => handleCompanyChange(e?.toString() || "")}
-          onDropdownOpen={getCompanyLK}
-          nothingFoundMessage={
-            companyLoading ? <Loader size={16} /> : "No company found"
-          }
-          value={company}
-        />
-        <Select
           label="Department"
           placeholder="Select department"
           data={
-            departmentLoading
+            departmentLoading || companyLoading
               ? []
-              : departments
-                  ?.filter((d) => d.companyId === company)
-                  .map((d) => ({
-                    value: d.id,
-                    label: d.name,
-                  }))
+              : departments?.map((d) => ({
+                  value: d.id,
+                  label: getCompanyTag(d.companyId) + " - " + d.name,
+                }))
           }
-          onDropdownOpen={getDepartments}
+          onDropdownOpen={() => {
+            getCompanyLK();
+            getDepartments();
+          }}
           nothingFoundMessage={
             departmentLoading ? <Loader size={16} /> : "No department found"
           }
@@ -134,9 +116,7 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({ employee }) => {
           placeholder="Start Date"
           valueFormat="DD/MM/YYYY"
           {...form.getInputProps("startDate")}
-          value={
-            form.values.startDate ? new Date(form.values.startDate) : null
-          }
+          value={form.values.startDate ? new Date(form.values.startDate) : null}
         />
         <Textarea
           placeholder="Your notes here"
