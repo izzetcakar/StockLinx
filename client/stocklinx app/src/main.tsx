@@ -88,8 +88,9 @@ const components = {
   },
   Accordion: {
     defaultProps: {
-      variant: "filled",
-      chevronPosition: "left",
+      variant: "contained",
+      chevronPosition: "right",
+      radius: "md",
       chevron: <IconCaretDownFilled />,
     },
     classNames: {
