@@ -461,19 +461,19 @@ namespace StockLinx.Repository.Repositories.EF_Core
             var assetProductCounts = _assetProductRepository.GetProductCounts(assetProducts);
 
 
-            foreach (var company in companies)
-            {
-                var productCounts = await employeeProductCounts() + assetProductCounts()
-                var productCompany = new ProductCompanyCounterDto
-                {
-                    Company = c.Tag,
-                    ProductCount = c.Components.Sum(x => x.Quantity)
-                  + company.Licenses.Sum(x => x.Quantity) + c.Assets.Count()
-                  + company.Consumables.Sum(x => x.Quantity)
-                  + company.Accessories.Sum(x => x.Quantity),
-                    AssignedCount = employeeProductCounts + assetProductCounts
-                }
-            }
+            //foreach (var company in companies)
+            //{
+            //    var productCounts = await employeeProductCounts() + assetProductCounts()
+            //    var productCompany = new ProductCompanyCounterDto
+            //    {
+            //        Company = c.Tag,
+            //        ProductCount = c.Components.Sum(x => x.Quantity)
+            //      + company.Licenses.Sum(x => x.Quantity) + c.Assets.Count()
+            //      + company.Consumables.Sum(x => x.Quantity)
+            //      + company.Accessories.Sum(x => x.Quantity),
+            //        AssignedCount = employeeProductCounts + assetProductCounts
+            //    }
+            //}
 
             return productCompanyCounts;
         }

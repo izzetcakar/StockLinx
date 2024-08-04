@@ -1,7 +1,4 @@
-﻿using System.Reflection;
-using System.Text;
-using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +14,9 @@ using StockLinx.Repository.UnitOfWork;
 using StockLinx.Service.Mapping;
 using StockLinx.Service.Services;
 using Swashbuckle.AspNetCore.Filters;
+using System.Reflection;
+using System.Text;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,10 +24,13 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(
         "CORSPolicy",
-        builder =>
-        {
-            builder.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin();
-        }
+           policy =>
+           {
+               policy
+                   .AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+           }
     );
 });
 
@@ -135,17 +138,12 @@ builder
                 )
             ),
             ValidateIssuer = true,
-            ValidIssuer = "https://localhost:7000",
+            ValidIssuer = "http://localhost:5000",
             ValidateAudience = true,
             ValidAudiences = new[]
             {
-                "https://localhost:7000",
-                "https://localhost:7001",
-                "http://localhost:5173",
-                "http://192.168.1.144",
-                "http://172.28.208.1",
-                "http://192.168.35.163",
-                "http://172.28.48.1",
+                "http://localhost:5000",
+                "https://localhost:5001"
             },
             RequireExpirationTime = true,
         };
@@ -160,18 +158,6 @@ builder.Services.AddAuthorization(auth =>
             .Build()
     );
 });
-builder.Services.AddCors(options =>
-    options.AddPolicy(
-        name: "NgOrigins",
-        policy =>
-        {
-            policy
-                .WithOrigins("http://localhost:5173", "http://192.168.1.104")
-                .AllowAnyMethod()
-                .AllowAnyHeader();
-        }
-    )
-);
 
 var app = builder.Build();
 
@@ -180,6 +166,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.ApplyMigrations();
 }
 
 app.UseCors("CORSPolicy");
