@@ -9,6 +9,7 @@ export default defineConfig(
     plugins: [tsconfigPaths(), react()],
     server: {
       host: true,
+      strictPort: true,
     },
     resolve: {
       alias: {

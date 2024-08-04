@@ -6,6 +6,8 @@
 /appsettings.json
 **/StockLinx.Repository/Migrations/*
 
+.containers
+
 # User-specific files
 *.rsuser
 *.suo

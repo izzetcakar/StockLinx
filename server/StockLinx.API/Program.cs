@@ -26,7 +26,7 @@ builder.Services.AddCors(options =>
         "CORSPolicy",
         builder =>
         {
-            builder.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin();
+            builder.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:5173");
         }
     );
 });
@@ -124,7 +124,7 @@ builder
     .Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.Authority = "http://localhost:7000";
+        options.Authority = "http://localhost:5007";
         options.RequireHttpsMetadata = false;
         options.TokenValidationParameters = new TokenValidationParameters
         {
@@ -135,17 +135,12 @@ builder
                 )
             ),
             ValidateIssuer = true,
-            ValidIssuer = "https://localhost:7000",
+            ValidIssuer = "https://localhost:5008",
             ValidateAudience = true,
             ValidAudiences = new[]
             {
-                "https://localhost:7000",
-                "https://localhost:7001",
-                "http://localhost:5173",
-                "http://192.168.1.144",
-                "http://172.28.208.1",
-                "http://192.168.35.163",
-                "http://172.28.48.1",
+                "http://localhost:5007",
+                "https://localhost:5008"
             },
             RequireExpirationTime = true,
         };
@@ -160,18 +155,6 @@ builder.Services.AddAuthorization(auth =>
             .Build()
     );
 });
-builder.Services.AddCors(options =>
-    options.AddPolicy(
-        name: "NgOrigins",
-        policy =>
-        {
-            policy
-                .WithOrigins("http://localhost:5173", "http://192.168.1.104")
-                .AllowAnyMethod()
-                .AllowAnyHeader();
-        }
-    )
-);
 
 var app = builder.Build();
 
@@ -180,6 +163,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.ApplyMigrations();
 }
 
 app.UseCors("CORSPolicy");
