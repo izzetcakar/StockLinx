@@ -10,6 +10,7 @@ using StockLinx.Service.Services;
 
 namespace StockLinx.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CategoryController : CustomBaseController
