@@ -64,7 +64,7 @@ namespace StockLinx.Service.Services
         public async Task<AssetDto> CreateAssetAsync(AssetCreateDto dto)
         {
             await _permissionService.VerifyCompanyAccessAsync(dto.CompanyId);
-            await CheckTagExistAsync(dto.Tag);
+            await CheckTagExistAsync(dto.CompanyId, dto.Tag);
             Asset newAsset = _mapper.Map<Asset>(dto);
             Company company = await _companyRepository.GetByIdAsync(newAsset.CompanyId);
             await _customLogService.CreateCustomLog(
@@ -101,7 +101,7 @@ namespace StockLinx.Service.Services
 
         public async Task<List<AssetDto>> CreateRangeAssetAsync(List<AssetCreateDto> dtos)
         {
-            await CheckTagExistAsync(dtos.Select(x => x.Tag).ToList());
+            await CheckTagExistAsync(dtos[0].CompanyId, dtos.Select(x => x.Tag).ToList());
             List<Asset> newAssets = new List<Asset>();
             Company company = await _companyRepository.GetByIdAsync(dtos[0].CompanyId);
             foreach (AssetCreateDto createDto in dtos)
@@ -261,20 +261,22 @@ namespace StockLinx.Service.Services
             return list.Where(x => companyIds.Contains(x.CompanyId)).ToList();
         }
 
-        public async Task CheckTagExistAsync(string tag)
+        public async Task CheckTagExistAsync(Guid companyId, string tag)
         {
             tag = TagUtils.Check(tag);
-            bool isExist = await AnyAsync(d => d.Tag == tag);
+            bool isExist = await AnyAsync(ac => ac.Tag == tag && ac.CompanyId == companyId);
             if (isExist)
             {
                 throw new Exception($"Tag {tag} already exist.");
             }
         }
 
-        public async Task CheckTagExistAsync(List<string> tags)
+        public async Task CheckTagExistAsync(Guid companyId, List<string> tags)
         {
             tags = TagUtils.Check(tags);
-            var existingTags = await Where(d => tags.Contains(d.Tag));
+            var existingTags = await Where(ac =>
+                tags.Contains(ac.Tag) && ac.CompanyId == companyId
+            );
             if (existingTags.Count() > 0)
             {
                 var existingTagNames = existingTags.Select(x => x.Tag).ToList();
@@ -317,7 +319,6 @@ namespace StockLinx.Service.Services
             await _customLogService.CreateCustomLog(action, "Asset", asset.Id, asset.Name);
         }
 
-        
         public async Task<List<AssetDisplayDto>> GetDisplayDtos(List<Guid> ids)
         {
             return await _assetRepository.GetDisplayDtos(ids);

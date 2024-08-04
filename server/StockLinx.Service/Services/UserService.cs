@@ -42,12 +42,18 @@ namespace StockLinx.Service.Services
 
         public async Task<UserDto> GetDtoAsync(Guid id)
         {
+            bool isAdmin = await CheckCurrentUserAdmin();
+            if (!isAdmin)
+                return null;
             User user = await GetByIdAsync(id);
             return _userRepository.GetDto(user);
         }
 
         public async Task<List<UserDto>> GetAllDtosAsync()
         {
+            bool isAdmin = await CheckCurrentUserAdmin();
+            if (!isAdmin)
+                return new List<UserDto>();
             return await _userRepository.GetAllDtosAsync();
         }
 
@@ -91,6 +97,8 @@ namespace StockLinx.Service.Services
 
         public async Task<UserDto> CreateUserAsync(UserCreateDto dto)
         {
+            await ValidateUserAdmin();
+            await CheckEmailExist(dto.Email);
             User user = _mapper.Map<User>(dto);
             await _userRepository.AddAsync(user);
             await _customLogService.CreateCustomLog(
@@ -105,9 +113,11 @@ namespace StockLinx.Service.Services
 
         public async Task<List<UserDto>> CreateRangeUserAsync(List<UserCreateDto> dtos)
         {
+            await ValidateUserAdmin();
             List<User> users = new List<User>();
             foreach (UserCreateDto dto in dtos)
             {
+                await CheckEmailExist(dto.Email);
                 User user = _mapper.Map<User>(dto);
                 users.Add(user);
                 await _customLogService.CreateCustomLog(
@@ -124,6 +134,8 @@ namespace StockLinx.Service.Services
 
         public async Task<UserDto> UpdateUserAsync(UserUpdateDto dto)
         {
+            await ValidateUserAdmin();
+            await CheckEmailExist(dto.Email);
             User userInDb = await GetByIdAsync(dto.Id);
             User user = _mapper.Map<User>(dto);
             user.UpdatedDate = DateTime.UtcNow;
@@ -140,6 +152,7 @@ namespace StockLinx.Service.Services
 
         public async Task DeleteUserAsync(Guid id)
         {
+            await ValidateUserAdmin();
             User user = await GetByIdAsync(id);
             await _customLogService.CreateCustomLog(
                 "Delete",
@@ -153,6 +166,7 @@ namespace StockLinx.Service.Services
 
         public async Task DeleteRangeUserAsync(List<Guid> ids)
         {
+            await ValidateUserAdmin();
             List<User> users = new List<User>();
             foreach (Guid id in ids)
             {
@@ -171,6 +185,9 @@ namespace StockLinx.Service.Services
 
         public async Task<List<UserDto>> FilterAllAsync(string filter)
         {
+            bool isAdmin = await CheckCurrentUserAdmin();
+            if (!isAdmin)
+                return new List<UserDto>();
             var result = await _filterService.FilterAsync(filter);
             return _userRepository.GetDtos(result.ToList());
         }
@@ -179,6 +196,24 @@ namespace StockLinx.Service.Services
         {
             User user = await GetCurrentUser();
             return user.IsAdmin;
+        }
+
+        private async Task ValidateUserAdmin()
+        {
+            bool isAdmin = await CheckCurrentUserAdmin();
+            if (!isAdmin)
+            {
+                throw new Exception("User does not have permission");
+            }
+        }
+
+        private async Task CheckEmailExist(string email)
+        {
+            bool isEmailExist = await AnyAsync(u => u.Email == email);
+            if (isEmailExist)
+            {
+                throw new Exception($"{email} is already in use");
+            }
         }
     }
 }

@@ -49,7 +49,10 @@ namespace StockLinx.Repository.Repositories.EF_Core
 
         public async Task<List<AccessoryDto>> GetAllDtosAsync(List<Guid> companyIds)
         {
-            List<Accessory> entities = await dbContext.Accessories.Where(a => companyIds.Contains(a.CompanyId)).AsNoTracking().ToListAsync();
+            List<Accessory> entities = await dbContext
+                .Accessories.Where(a => companyIds.Contains(a.CompanyId))
+                .AsNoTracking()
+                .ToListAsync();
             return await GetDtosAsync(entities);
         }
 
@@ -74,30 +77,10 @@ namespace StockLinx.Repository.Repositories.EF_Core
             return availableQuantity;
         }
 
-        public async Task CheckTagExistAsync(string tag)
-        {
-            tag = TagUtils.Check(tag);
-            bool isExist = await dbContext.Accessories.AnyAsync(d => d.Tag == tag);
-            if (isExist)
-            {
-                throw new Exception($"Tag {tag} already exist.");
-            }
-        }
-
-        public Task CheckTagExistAsync(List<string> tags)
-        {
-            tags = TagUtils.Check(tags);
-            var existingTags = dbContext
-                .Accessories.Where(d => tags.Contains(d.Tag))
-                .Select(d => d.Tag)
-                .ToList();
-            throw new Exception($"Tags {string.Join("\n", existingTags)} already exist.");
-        }
-
         public Task<List<AccessoryDisplayDto>> GetDisplayDtos(List<Guid> ids)
         {
-            var query = dbContext.Accessories
-                .Where(d => ids.Contains(d.Id))
+            var query = dbContext
+                .Accessories.Where(d => ids.Contains(d.Id))
                 .Select(d => new AccessoryDisplayDto
                 {
                     Name = d.Name,
@@ -113,9 +96,7 @@ namespace StockLinx.Repository.Repositories.EF_Core
                     OrderNo = d.OrderNo,
                     Notes = d.Notes,
                     ModelNo = d.ModelNo
-
-                }
-                );
+                });
             return query.ToListAsync();
         }
     }

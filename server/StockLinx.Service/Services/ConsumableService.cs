@@ -64,7 +64,7 @@ namespace StockLinx.Service.Services
         public async Task<ConsumableDto> CreateConsumableAsync(ConsumableCreateDto dto)
         {
             await _permissionService.VerifyCompanyAccessAsync(dto.CompanyId);
-            await CheckTagExistAsync(dto.Tag);
+            await CheckTagExistAsync(dto.CompanyId, dto.Tag);
             Consumable newConsumable = _mapper.Map<Consumable>(dto);
             await _consumableRepository.AddAsync(newConsumable);
             await CreateCheckLogAsync(
@@ -80,7 +80,7 @@ namespace StockLinx.Service.Services
             List<ConsumableCreateDto> dtos
         )
         {
-            await CheckTagExistAsync(dtos.Select(dto => dto.Tag).ToList());
+            await CheckTagExistAsync(dtos[0].CompanyId, dtos.Select(dto => dto.Tag).ToList());
             List<Consumable> newAccessories = new List<Consumable>();
             foreach (ConsumableCreateDto dto in dtos)
             {
@@ -256,20 +256,22 @@ namespace StockLinx.Service.Services
             }
         }
 
-        public async Task CheckTagExistAsync(string tag)
+        public async Task CheckTagExistAsync(Guid companyId, string tag)
         {
             tag = TagUtils.Check(tag);
-            bool isExist = await AnyAsync(d => d.Tag == tag);
+            bool isExist = await AnyAsync(ac => ac.Tag == tag && ac.CompanyId == companyId);
             if (isExist)
             {
                 throw new Exception($"Tag {tag} already exist.");
             }
         }
 
-        public async Task CheckTagExistAsync(List<string> tags)
+        public async Task CheckTagExistAsync(Guid companyId, List<string> tags)
         {
             tags = TagUtils.Check(tags);
-            var existingTags = await Where(d => tags.Contains(d.Tag));
+            var existingTags = await Where(ac =>
+                tags.Contains(ac.Tag) && ac.CompanyId == companyId
+            );
             if (existingTags.Count() > 0)
             {
                 var existingTagNames = existingTags.Select(x => x.Tag).ToList();
@@ -338,7 +340,6 @@ namespace StockLinx.Service.Services
             );
         }
 
-        
         public async Task<List<ConsumableDisplayDto>> GetDisplayDtos(List<Guid> ids)
         {
             return await _consumableRepository.GetDisplayDtos(ids);

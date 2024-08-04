@@ -79,16 +79,6 @@ namespace StockLinx.Repository.Repositories.EF_Core
             return availableQuantity;
         }
 
-        public async Task CheckTagExistAsync(string tag)
-        {
-            tag = TagUtils.Check(tag);
-            bool isExist = await dbContext.Components.AnyAsync(d => d.Tag == tag);
-            if (isExist)
-            {
-                throw new Exception($"Tag {tag} already exist.");
-            }
-        }
-
         public Task CheckTagExistAsync(List<string> tags)
         {
             tags = TagUtils.Check(tags);

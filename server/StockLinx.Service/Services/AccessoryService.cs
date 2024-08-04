@@ -64,7 +64,7 @@ namespace StockLinx.Service.Services
         public async Task<AccessoryDto> CreateAccessoryAsync(AccessoryCreateDto dto)
         {
             await _permissionService.VerifyCompanyAccessAsync(dto.CompanyId);
-            await CheckTagExistAsync(dto.Tag);
+            await CheckTagExistAsync(dto.CompanyId, dto.Tag);
             Accessory newAccessory = _mapper.Map<Accessory>(dto);
 
             if (newAccessory.ImagePath != null)
@@ -94,7 +94,7 @@ namespace StockLinx.Service.Services
             List<AccessoryCreateDto> dtos
         )
         {
-            await CheckTagExistAsync(dtos.Select(dto => dto.Tag).ToList());
+            await CheckTagExistAsync(dtos[0].CompanyId, dtos.Select(dto => dto.Tag).ToList());
             List<Accessory> newAccessories = new List<Accessory>();
             foreach (AccessoryCreateDto dto in dtos)
             {
@@ -278,20 +278,22 @@ namespace StockLinx.Service.Services
             }
         }
 
-        public async Task CheckTagExistAsync(string tag)
+        public async Task CheckTagExistAsync(Guid companyId, string tag)
         {
             tag = TagUtils.Check(tag);
-            bool isExist = await AnyAsync(d => d.Tag == tag);
+            bool isExist = await AnyAsync(ac => ac.Tag == tag && ac.CompanyId == companyId);
             if (isExist)
             {
                 throw new Exception($"Tag {tag} already exist.");
             }
         }
 
-        public async Task CheckTagExistAsync(List<string> tags)
+        public async Task CheckTagExistAsync(Guid companyId, List<string> tags)
         {
             tags = TagUtils.Check(tags);
-            var existingTags = await Where(d => tags.Contains(d.Tag));
+            var existingTags = await Where(ac =>
+                tags.Contains(ac.Tag) && ac.CompanyId == companyId
+            );
             if (existingTags.Count() > 0)
             {
                 var existingTagNames = existingTags.Select(x => x.Tag).ToList();

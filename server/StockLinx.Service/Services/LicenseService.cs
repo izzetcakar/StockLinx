@@ -70,7 +70,7 @@ namespace StockLinx.Service.Services
         public async Task<LicenseDto> CreateLicenseAsync(LicenseCreateDto dto)
         {
             await _permissionService.VerifyCompanyAccessAsync(dto.CompanyId);
-            await CheckTagExistAsync(dto.Tag);
+            await CheckTagExistAsync(dto.CompanyId, dto.Tag);
             License license = _mapper.Map<License>(dto);
             await _licenseRepository.AddAsync(license);
             await CreateCheckLogAsync(
@@ -86,7 +86,10 @@ namespace StockLinx.Service.Services
             List<LicenseCreateDto> createDtos
         )
         {
-            await CheckTagExistAsync(createDtos.Select(dto => dto.Tag).ToList());
+            await CheckTagExistAsync(
+                createDtos[0].CompanyId,
+                createDtos.Select(dto => dto.Tag).ToList()
+            );
             List<License> licenses = new List<License>();
             foreach (LicenseCreateDto createDto in createDtos)
             {
@@ -350,20 +353,22 @@ namespace StockLinx.Service.Services
             }
         }
 
-        public async Task CheckTagExistAsync(string tag)
+        public async Task CheckTagExistAsync(Guid companyId, string tag)
         {
             tag = TagUtils.Check(tag);
-            bool isExist = await AnyAsync(d => d.Tag == tag);
+            bool isExist = await AnyAsync(ac => ac.Tag == tag && ac.CompanyId == companyId);
             if (isExist)
             {
                 throw new Exception($"Tag {tag} already exist.");
             }
         }
 
-        public async Task CheckTagExistAsync(List<string> tags)
+        public async Task CheckTagExistAsync(Guid companyId, List<string> tags)
         {
             tags = TagUtils.Check(tags);
-            var existingTags = await Where(d => tags.Contains(d.Tag));
+            var existingTags = await Where(ac =>
+                tags.Contains(ac.Tag) && ac.CompanyId == companyId
+            );
             if (existingTags.Count() > 0)
             {
                 var existingTagNames = existingTags.Select(x => x.Tag).ToList();

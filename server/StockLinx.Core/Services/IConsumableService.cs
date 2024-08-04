@@ -18,8 +18,8 @@ namespace StockLinx.Core.Services
         Task DeleteRangeConsumableAsync(List<Guid> ids);
         Task<EmployeeProductDto> CheckInAsync(EmployeeProductCheckInDto checkInDto);
         Task<List<EmployeeProductDto>> CheckOutAsync(EmployeeProductCheckOutDto checkOutDto);
-        Task CheckTagExistAsync(string tag);
-        Task CheckTagExistAsync(List<string> tags);
+        Task CheckTagExistAsync(Guid companyId, string tag);
+        Task CheckTagExistAsync(Guid companyId, List<string> tags);
         Task<List<ConsumableDto>> FilterAllAsync(string filter);
         Task<List<ConsumableDisplayDto>> GetDisplayDtos(List<Guid> ids);
     }
