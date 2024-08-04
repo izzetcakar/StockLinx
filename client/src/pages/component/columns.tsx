@@ -12,6 +12,7 @@ import { CategoryType } from "@/interfaces/enums";
 import { useInitial } from "@/hooks/initial/useInitial";
 import { EntityCardColumn } from "@/interfaces/clientInterfaces";
 import { MRT_ColumnDef } from "mantine-react-table";
+import { formatDate } from "@/utils/dateUtils";
 import ComponentForm from "@/forms/component/ComponentForm";
 import AssetProductSeats from "@/components/dataGrid/productseats/AssetProductSeats";
 import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
@@ -134,10 +135,7 @@ export const useColumns = () => {
       accessorFn: (originalRow) =>
         originalRow.purchaseDate ? new Date(originalRow.purchaseDate) : "",
       filterVariant: "date-range",
-      Cell: ({ cell }) =>
-        cell.getValue() !== ""
-          ? cell.getValue<Date>().toLocaleDateString()
-          : "",
+      Cell: ({ row }) => formatDate(row.original.purchaseDate),
     },
     {
       accessorKey: "purchaseCost",

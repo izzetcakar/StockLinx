@@ -124,14 +124,13 @@ namespace StockLinx.Repository.Repositories.EF_Core
             return displayDtos;
         }
 
-        public Task<int> GetProductCount(AssetProduct assetProduct)
+        public async Task<List<AssetProduct>> GetAllByCompanies(List<Guid> companyIds)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<int> GetProductCounts(List<AssetProduct> assetProducts)
-        {
-            throw new NotImplementedException();
+            var assetProducts = await dbContext.AssetProducts.Include(ep => ep.Asset)
+                .Where(ap => companyIds.Contains(ap.Asset.CompanyId))
+                .AsNoTracking()
+                .ToListAsync();
+            return assetProducts;
         }
     }
 }

@@ -6,7 +6,7 @@ import { useSelectRow } from "./hooks/selectRow";
 import { UseGridTableContext } from "./context/GenericStateContext";
 import { useColumns } from "./hooks/columns";
 import { MemoizedRow } from "./utils/cellUtils";
-import "./gridtable.scss";
+// import "./gridtable.scss";
 
 const GridtableContent: React.FC<GridtableProps> = ({
   data = [],

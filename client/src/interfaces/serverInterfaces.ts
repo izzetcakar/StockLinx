@@ -163,9 +163,9 @@ export interface IProductStatusCount {
   count: number;
 }
 export interface IProductCompanyCount {
-  company : string;
-  productCount : number;
-  assignedCount : number;
+  company: string;
+  productCount: number;
+  assignedCount: number;
 }
 export interface IProductCategoryCount {
   categoryId: string;
@@ -183,6 +183,7 @@ export interface ICustomLog {
   itemController: string;
   target: string | null;
   targetController: string | null;
+  notes: string | null;
 }
 export interface IPermission extends BaseEntity {
   companyId: string;

@@ -10,6 +10,6 @@ namespace StockLinx.Core.Repositories
         Task<IEnumerable<ProductStatusCounter>> GetProductStatusCounts();
         Task<IEnumerable<EntityCounter>> GetEntityCounts();
         Task<IEnumerable<ProductCompanyCounterDto>> GetProductCompanyCounts();
-        IEnumerable<ProductCategoryCounterDto> GetProductCategoryCounts();
+        Task<IEnumerable<ProductCategoryCounterDto>> GetProductCategoryCounts();
     }
 }

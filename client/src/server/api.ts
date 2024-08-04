@@ -164,9 +164,10 @@ export const request = async <T>({
     };
   } catch (error: any) {
     if (error.response?.status === 401) {
-      localStorage.removeItem("token");
-      const url = window.location.href;
-      if (url.indexOf("/login") === -1) window.location.href = "/login";
+      console.log("AUTH ERROR : ", requestUrl);
+      // localStorage.removeItem("token");
+      // const url = window.location.href;
+      // if (url.indexOf("/login") === -1) window.location.href = "/login";
     }
     const message: string =
       (error.response?.data.error as string) ?? "Network Error";

@@ -127,18 +127,18 @@ const handleCheckOutData = (
     if (res) {
       return [res];
     }
-  }
-  if (res) {
+  } else if (data && res) {
     const filtered = data?.filter(
       (employeeProduct: EmployeeProductDto) =>
         employeeProduct.id !== req.employeeProductId
     );
     return [...filtered, res];
+  } else {
+    return data?.filter(
+      (employeeProduct: EmployeeProductDto) =>
+        employeeProduct.id !== req.employeeProductId
+    );
   }
-  return data.filter(
-    (employeeProduct: EmployeeProductDto) =>
-      employeeProduct.id !== req.employeeProductId
-  );
 };
 
 export default {

@@ -1,6 +1,11 @@
 import { Loader } from "@mantine/core";
+import React from "react";
 
-const CenterLoader = () => {
+interface CenterLoaderProps {
+  color?: string;
+}
+
+const CenterLoader: React.FC<CenterLoaderProps> = ({ color }) => {
   return (
     <div
       style={{
@@ -11,7 +16,7 @@ const CenterLoader = () => {
         alignItems: "center",
       }}
     >
-      <Loader />
+      <Loader color={color ? color : "blue"} />
     </div>
   );
 };

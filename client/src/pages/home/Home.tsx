@@ -105,7 +105,7 @@ const Home = () => {
             alignItems: "center",
           }}
         >
-          {entityLoading || productStatusLoading ? (
+          {productStatusLoading ? (
             <div style={{ height: "560px" }}>
               <CenterLoader />
             </div>
@@ -170,6 +170,7 @@ const Home = () => {
               count={item.count}
               title={item.title}
               image={item.image}
+              loading={entityLoading}
               nav={item.nav}
             />
           );

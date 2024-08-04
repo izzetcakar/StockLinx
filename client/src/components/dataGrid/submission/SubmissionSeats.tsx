@@ -20,10 +20,11 @@ const SubmissionSeats: React.FC<SubmissionSeatsProps> = ({ employeeId }) => {
   const handleSubmission = (products: any[]) => {
     openSignCanvaModal({
       userFullName: submission?.employee || "",
+      employeeFullName: submission?.user || "",
+      employeeStartDate: submission?.employeeStartDate || "",
+      employeeTitle: submission?.employeeTitle || "",
       companyName: submission?.company || "",
       department: submission?.department || "",
-      userStartDate: submission?.employeeStartDate || "",
-      userTitle: submission?.employeeTitle || "",
       products: products.map((product) => ({
         category: product.type,
         title: product.tag,
@@ -31,7 +32,6 @@ const SubmissionSeats: React.FC<SubmissionSeatsProps> = ({ employeeId }) => {
         description: product.description,
       })) as any,
       assignDate: new Date().toDateString(),
-      delivererFullName: submission?.user || "",
       userSign: new Blob(),
       employeeSign: new Blob(),
       checkType: "CHECKIN",

@@ -46,7 +46,6 @@ import "./base.scss";
 
 const Layout = () => {
   const { data: user } = useUser.GetWithToken();
-
   if (user) {
     return (
       <div className="main__container">

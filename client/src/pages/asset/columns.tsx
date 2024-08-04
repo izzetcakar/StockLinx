@@ -17,6 +17,7 @@ import {
 import { EntityCells } from "@/cells/Entity";
 import { EntityCardColumn } from "@/interfaces/clientInterfaces";
 import { MRT_ColumnDef } from "mantine-react-table";
+import { formatDate } from "@/utils/dateUtils";
 import EmployeeCheckInOutCell from "@/cells/EmployeeCheckInOutCell";
 import CheckedOutEmployeeCell from "@/cells/CheckedOutEmployeeCell";
 import AssetForm from "@/forms/asset/AssetForm";
@@ -180,10 +181,7 @@ export const useColumns = () => {
       accessorFn: (originalRow) =>
         originalRow.purchaseDate ? new Date(originalRow.purchaseDate) : "",
       filterVariant: "date-range",
-      Cell: ({ cell }) =>
-        cell.getValue() !== ""
-          ? cell.getValue<Date>().toLocaleDateString()
-          : "",
+      Cell: ({ row }) => formatDate(row.original.purchaseDate),
     },
     {
       accessorKey: "notes",

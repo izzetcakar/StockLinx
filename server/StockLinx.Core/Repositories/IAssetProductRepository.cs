@@ -12,7 +12,6 @@ namespace StockLinx.Core.Repositories
         Task<List<AssetProductDisplayDto>> GetDisplayDtos(List<Guid> ids);
         Task<string> GetProductTag(AssetProduct assetProduct);
         Task<string> GetProductDescription(AssetProduct assetProduct);
-        Task<int> GetProductCount(AssetProduct assetProduct);
-        Task<int> GetProductCounts(List<AssetProduct> assetProducts);
+        Task<List<AssetProduct>> GetAllByCompanies(List<Guid> companyIds);
     }
 }

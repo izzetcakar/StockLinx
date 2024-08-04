@@ -5,7 +5,7 @@ using StockLinx.Core.Services;
 
 namespace StockLinx.API.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class GenericController : CustomBaseController
@@ -77,7 +77,7 @@ namespace StockLinx.API.Controllers
         {
             try
             {
-                var res = _service.GetProductCategoryCounts();
+                var res = await _service.GetProductCategoryCounts();
                 return CreateActionResult(CustomResponseDto<IEnumerable<ProductCategoryCounterDto>>.Success(200, res));
             }
             catch (Exception ex)

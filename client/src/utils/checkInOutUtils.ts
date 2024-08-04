@@ -63,7 +63,7 @@ export const handleCheckOutAssetProduct = (
 };
 
 export const setAssetCheckStatus = (data: any, dto: any) => {
-  return data.map((asset: any) =>
+  return data?.map((asset: any) =>
     asset.id === dto.assetId
       ? { ...asset, productStatusId: dto.productStatusId }
       : asset

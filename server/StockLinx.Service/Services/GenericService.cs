@@ -56,9 +56,9 @@ namespace StockLinx.Service.Services
             return await _repository.GetProductCompanyCounts();
         }
 
-        public IEnumerable<ProductCategoryCounterDto> GetProductCategoryCounts()
+        public async Task<IEnumerable<ProductCategoryCounterDto>> GetProductCategoryCounts()
         {
-            return _repository.GetProductCategoryCounts();
+            return await _repository.GetProductCategoryCounts();
         }
     }
 }

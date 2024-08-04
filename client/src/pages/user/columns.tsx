@@ -26,10 +26,6 @@ export const useColumns = () => {
       accessorKey: "phoneNo",
       header: "Phone",
     },
-    {
-      accessorKey: "startDate",
-      header: "Start Date",
-    },
   ];
 
   const cardColumns: EntityCardColumn[] = [

@@ -140,11 +140,11 @@ export interface ProductProps {
 }
 export interface SubmissionFormProps {
   userFullName: string;
-  delivererFullName: string;
+  employeeFullName: string;
   companyName: string;
   department: string;
-  userStartDate: string;
-  userTitle: string;
+  employeeStartDate: string;
+  employeeTitle: string;
   products: ProductProps[];
   assignDate: string;
   userSign: Blob;
@@ -153,12 +153,12 @@ export interface SubmissionFormProps {
 }
 
 const Description = ({
-  delivererFullName,
+  employeeFullName,
   userFullName,
   userSign,
   employeeSign,
 }: {
-  delivererFullName: string;
+  employeeFullName: string;
   userFullName: string;
   userSign: Blob;
   employeeSign: Blob;
@@ -179,7 +179,7 @@ const Description = ({
       </View>
       <View style={styles.signElement}>
         <Text style={styles.boldText}>İsim Soyisim : </Text>
-        <Text>{delivererFullName}</Text>
+        <Text>{employeeFullName}</Text>
       </View>
     </View>
     <View style={styles.signContent}>
@@ -187,14 +187,14 @@ const Description = ({
         <Text>İmza : </Text>
         <Image
           style={{ width: 100, height: 50 }}
-          source={URL.createObjectURL(employeeSign)}
+          source={URL.createObjectURL(userSign)}
         />
       </View>
       <View style={styles.signElement}>
         <Text>İmza</Text>
         <Image
           style={{ width: 100, height: 50 }}
-          source={URL.createObjectURL(userSign)}
+          source={URL.createObjectURL(employeeSign)}
         />
       </View>
     </View>
@@ -212,10 +212,10 @@ const formatDate = (dateString: string) => {
 };
 
 const SubmissionForm = ({
-  delivererFullName,
   userFullName,
-  userTitle,
-  userStartDate,
+  employeeFullName,
+  employeeTitle,
+  employeeStartDate,
   department,
   products,
   assignDate,
@@ -246,11 +246,11 @@ const SubmissionForm = ({
             <Text style={[styles.title, styles.boldText]}>
               İşe Giriş Tarihi
             </Text>
-            <Text style={styles.value}>{formatDate(userStartDate)}</Text>
+            <Text style={styles.value}>{formatDate(employeeStartDate)}</Text>
           </View>
           <View style={styles.content}>
             <Text style={[styles.title, styles.boldText]}>Unvan</Text>
-            <Text style={styles.value}>{userTitle}</Text>
+            <Text style={styles.value}>{employeeTitle}</Text>
           </View>
           <Text style={styles.title_center}>Zimmetlenen Malzemeler</Text>
           <View style={styles.content}>
@@ -284,8 +284,8 @@ const SubmissionForm = ({
               </View>
               <View style={styles.content}>
                 {Description({
-                  delivererFullName,
                   userFullName,
+                  employeeFullName,
                   userSign,
                   employeeSign,
                 })}
@@ -303,10 +303,10 @@ const SubmissionForm = ({
               </View>
               <View style={[styles.content, { borderBottom: "none" }]}>
                 {Description({
-                  delivererFullName,
-                  userFullName,
-                  userSign,
-                  employeeSign,
+                  userFullName: employeeFullName,
+                  employeeFullName: userFullName,
+                  userSign: employeeSign,
+                  employeeSign: userSign,
                 })}
               </View>
             </View>

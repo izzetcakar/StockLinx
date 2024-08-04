@@ -13,6 +13,7 @@ import { Button, Image, Loader } from "@mantine/core";
 import { openCheckInModal } from "@/utils/modalUtils";
 import { useInitial } from "@/hooks/initial/useInitial";
 import { getImage } from "@/utils/imageUtils";
+import { formatDate } from "@/utils/dateUtils";
 import AccessoryForm from "@/forms/accessory/AccessoryForm";
 import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
 import EmployeeProductSeats from "@/components/dataGrid/productseats/EmployeeProductSeats";
@@ -95,7 +96,15 @@ export const useColumns = () => {
     {
       header: "Barcode",
       Cell: ({ row }) => {
-        return <Barcode value={row.original.tag} height={20} width={1} displayValue={false} margin={0} />;
+        return (
+          <Barcode
+            value={row.original.tag}
+            height={20}
+            width={1}
+            displayValue={false}
+            margin={0}
+          />
+        );
       },
     },
     {
@@ -197,10 +206,7 @@ export const useColumns = () => {
       accessorFn: (originalRow) =>
         originalRow.purchaseDate ? new Date(originalRow.purchaseDate) : "",
       filterVariant: "date-range",
-      Cell: ({ cell }) =>
-        cell.getValue() !== ""
-          ? cell.getValue<Date>().toLocaleDateString()
-          : "",
+      Cell: ({ row }) => formatDate(row.original.purchaseDate),
     },
     {
       accessorKey: "notes",

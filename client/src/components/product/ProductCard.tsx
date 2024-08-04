@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
-// import icon_next from "@assets/icon_next.png";
 import "./product.scss";
+import CenterLoader from "../mantine/CenterLoader";
 
 interface ProductCardProps {
   color: string;
@@ -8,6 +8,7 @@ interface ProductCardProps {
   title: string;
   image: string;
   nav: string;
+  loading: boolean;
 }
 const ProductCard: React.FC<ProductCardProps> = ({
   color = "#39cccc",
@@ -15,26 +16,29 @@ const ProductCard: React.FC<ProductCardProps> = ({
   title = "title",
   image = "",
   nav = "/",
+  loading = false,
 }) => {
   const navigate = useNavigate();
 
   return (
     <div
-      className="product-card"
+      className="product__card"
       style={{ backgroundColor: color }}
       onClick={() => navigate(nav)}
     >
-      <div className="product-card-content">
-        <div className="product-card-content-count">{count}</div>
-        <div className="product-card-content__title">{title}</div>
-      </div>
-      {/* <div className="product-card-action">
-        <div className="product-card-action__title">view all</div>
-        <img className="product-card-action-icon" src={icon_next} />
-      </div> */}
-      <div className="product-card-image">
-        <img src={image}></img>
-      </div>
+      {loading ? (
+        <CenterLoader color="white" />
+      ) : (
+        <div>
+          <div className="product__card__content">
+            <div className="content__title">{title}</div>
+            <div className="content__count">{count}</div>
+          </div>
+          <div className="product__card__image">
+            <img src={image}></img>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -3,6 +3,7 @@ import { useCompany, useUser } from "@queryhooks";
 import { IPermission } from "@/interfaces/serverInterfaces";
 import { MRT_ColumnDef } from "mantine-react-table";
 import { Loader } from "@mantine/core";
+import { formatDate } from "@/utils/dateUtils";
 
 export const useColumns = () => {
   const {
@@ -42,6 +43,10 @@ export const useColumns = () => {
     {
       accessorKey: "createdDate",
       header: "Date",
+      filterVariant: "date-range",
+      accessorFn: (originalRow) =>
+        originalRow.createdDate ? new Date(originalRow.createdDate) : "",
+      Cell: ({ row }) => formatDate(row.original.createdDate),
     },
   ];
 

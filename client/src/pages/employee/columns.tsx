@@ -9,6 +9,7 @@ import { EntityCells } from "@/cells/Entity";
 import { EntityCardColumn } from "@/interfaces/clientInterfaces";
 import { MRT_ColumnDef } from "mantine-react-table";
 import { Loader } from "@mantine/core";
+import { formatDate } from "@/utils/dateUtils";
 import EmployeeForm from "@/forms/employee/EmployeeForm";
 import HistoryLogs from "@/components/dataGrid/customLog/HistoryLogs";
 import EmployeeSeats from "@/components/dataGrid/productseats/EmployeeSeats";
@@ -60,6 +61,10 @@ export const useColumns = () => {
     {
       accessorKey: "startDate",
       header: "Start Date",
+      filterVariant: "date-range",
+      accessorFn: (originalRow) =>
+        originalRow.startDate ? new Date(originalRow.startDate) : "",
+      Cell: ({ row }) => formatDate(row.original.startDate),
     },
   ];
 

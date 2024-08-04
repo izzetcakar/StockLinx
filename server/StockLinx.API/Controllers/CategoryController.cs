@@ -6,7 +6,6 @@ using StockLinx.Core.DTOs.Generic.Display;
 using StockLinx.Core.DTOs.Others;
 using StockLinx.Core.DTOs.Update;
 using StockLinx.Core.Services;
-using StockLinx.Service.Services;
 
 namespace StockLinx.API.Controllers
 {
