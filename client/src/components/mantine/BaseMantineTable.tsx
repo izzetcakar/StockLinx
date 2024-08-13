@@ -3,7 +3,7 @@ import {
   MRT_Row,
   useMantineReactTable,
 } from "mantine-react-table";
-import { ActionIcon, Flex, Menu } from "@mantine/core";
+import { ActionIcon, Flex, Menu, Text } from "@mantine/core";
 import {
   IconRefresh,
   IconEdit,
@@ -13,10 +13,10 @@ import {
   IconLocationShare,
   IconTableExport,
 } from "@tabler/icons-react";
-import { openConfirmModal } from "@/components/gridTable/modals/modals";
 import { jsPDF } from "jspdf";
 import { mkConfig, generateCsv, download } from "export-to-csv";
 import autoTable from "jspdf-autotable";
+import { modals } from "@mantine/modals";
 
 interface BaseMantineTableProps {
   data: undefined | any[];
@@ -64,19 +64,27 @@ const BaseMantineTable: React.FC<BaseMantineTableProps> = ({
 
   const removeHandler = (id: string) => {
     if (!onRemove) return;
-    openConfirmModal("Remove", "Are you sure want to remove this item?", () =>
-      onRemove(id)
-    );
+    modals.openConfirmModal({
+      title: "Remove",
+      children: <Text size="sm">Are you sure want to remove this item?</Text>,
+      labels: { confirm: "Confirm", cancel: "Cancel" },
+      onCancel: () => console.log("Cancel"),
+      onConfirm: () => onRemove(id),
+    });
   };
 
   const removeRangeHandler = (selectedKeys: string[]) => {
     if (!onRemoveRange) return;
     if (selectedKeys.length === 0) return;
-    openConfirmModal(
-      "Remove Range",
-      "Are you sure want to remove selected items?",
-      () => onRemoveRange(selectedKeys)
-    );
+    modals.openConfirmModal({
+      title: "Remove Range",
+      children: (
+        <Text size="sm">Are you sure want to remove selected items?</Text>
+      ),
+      labels: { confirm: "Confirm", cancel: "Cancel" },
+      onCancel: () => console.log("Cancel"),
+      onConfirm: () => onRemoveRange(selectedKeys),
+    });
   };
 
   const handleExportRowsPdf = async (rows: MRT_Row<any>[]) => {

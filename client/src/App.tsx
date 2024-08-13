@@ -36,7 +36,6 @@ import User from "./pages/user/User";
 import Permissions from "./pages/permission/Permissions";
 import Employees from "./pages/employee/Employees";
 import Employee from "./pages/employee/Employee";
-import Test from "./pages/test/Test";
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
 import "mantine-react-table/styles.css";
@@ -219,10 +218,6 @@ const router = createBrowserRouter([
       {
         path: "/permissions",
         element: <Permissions />,
-      },
-      {
-        path: "/test",
-        element: <Test />,
       },
     ],
   },

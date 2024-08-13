@@ -27,14 +27,6 @@ const RemoveRange = () => {
   return hooks.RemoveRange(permissionRequests.removeRange);
 };
 
-const Filter = () => {
-  return hooks.Filter();
-};
-
-const ApplyFilters = () => {
-  return hooks.ApplyFilter(permissionRequests.filter);
-};
-
 export default {
   GetAll,
   Get,
@@ -42,6 +34,4 @@ export default {
   CreateRange,
   Remove,
   RemoveRange,
-  Filter,
-  ApplyFilters,
 };

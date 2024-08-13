@@ -43,14 +43,6 @@ const RemoveRange = () => {
   return hooks.RemoveRange(assetRequests.removeRange);
 };
 
-const Filter = () => {
-  return hooks.Filter();
-};
-
-const ApplyFilters = () => {
-  return hooks.ApplyFilter(assetRequests.filter);
-};
-
 const Lookup = () => {
   return hooks.Lookup(assetRequests.lookup);
 };
@@ -149,8 +141,6 @@ export default {
   Update,
   Remove,
   RemoveRange,
-  Filter,
-  ApplyFilters,
   Lookup,
   CheckIn,
   CheckOut,

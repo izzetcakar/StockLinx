@@ -1,4 +1,5 @@
-import { LookupData, QueryFilter } from "@/interfaces/gridTableInterfaces";
+
+import { LookupData } from "@/interfaces/clientInterfaces";
 import { queryClient } from "@/main";
 import { closeModal } from "@/utils/modalUtils";
 import { openNotificationSuccess } from "@/utils/notificationUtils";
@@ -141,10 +142,10 @@ export const baseHooks = (entity: string) => {
     });
   };
 
-  const ApplyFilter = (request: (filters: QueryFilter[]) => Promise<any[]>) => {
+  const ApplyFilter = (request: (filters: any[]) => Promise<any[]>) => {
     return useMutation({
       mutationKey: "APPLY_FILTER_" + entity,
-      mutationFn: (filters: QueryFilter[]) => request(filters),
+      mutationFn: (filters: any[]) => request(filters),
       onSuccess: (res) => {
         queryClient.setQueryData("FILTER_" + entity, res);
       },

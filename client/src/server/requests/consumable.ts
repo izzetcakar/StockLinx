@@ -1,4 +1,3 @@
-import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 import {
   EmployeeProductCheckInDto,
   EmployeeProductCheckOutDto,
@@ -36,10 +35,6 @@ const remove = (id: string) => {
 
 const removeRange = (ids: string[]) => {
   return baseRequests.removeRange(requestUrl, ids);
-};
-
-const filter = (queryFilters: QueryFilter[]) => {
-  return baseRequests.filter<IConsumable>(requestUrl, queryFilters);
 };
 
 const lookup = () => {
@@ -82,7 +77,6 @@ export default {
   update,
   remove,
   removeRange,
-  filter,
   lookup,
   getDtos,
   checkIn,

@@ -4,7 +4,15 @@ import {
   EmployeeProductCheckInDto,
   EmployeeProductCheckOutDto,
 } from "./dtos";
-import { Column, Filter } from "./gridTableInterfaces";
+
+export interface LookupData {
+  value: any;
+  label: string;
+}
+export interface Lookup {
+  data?: LookupData[];
+  dataSource?: () => Promise<any> | any;
+}
 
 export interface NavigationSubItem {
   title: string;
@@ -61,11 +69,6 @@ export interface AssetProductCheckOutPayload {
 export interface EmployeeProductCheckOutPayload {
   checkOutDto: EmployeeProductCheckOutDto;
   onSubmit?: () => void;
-}
-export interface FilterInputProps {
-  filter: Filter;
-  setFilter: (value: any) => void;
-  column: Column;
 }
 export interface EntityCardColumn {
   title: string | ((e: any) => any);

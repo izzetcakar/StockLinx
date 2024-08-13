@@ -1,6 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { ApiResponse } from "../interfaces/clientInterfaces";
-import { LookupData } from "@/interfaces/gridTableInterfaces";
+import { ApiResponse, LookupData } from "../interfaces/clientInterfaces";
 
 const BASE_URL: string = import.meta.env.VITE_REACT_APP_BASE_URL as string;
 

@@ -31,14 +31,6 @@ const RemoveRange = () => {
   return hooks.RemoveRange(supplierRequests.removeRange);
 };
 
-const Filter = () => {
-  return hooks.Filter();
-};
-
-const ApplyFilters = () => {
-  return hooks.ApplyFilter(supplierRequests.filter);
-};
-
 const Lookup = () => {
   return hooks.Lookup(supplierRequests.lookup);
 };
@@ -50,7 +42,5 @@ export default {
   Update,
   Remove,
   RemoveRange,
-  Filter,
-  ApplyFilters,
   Lookup,
 };

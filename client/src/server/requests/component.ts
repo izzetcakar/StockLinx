@@ -1,4 +1,3 @@
-import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 import {
   AssetProductCheckInDto,
   AssetProductCheckOutDto,
@@ -38,10 +37,6 @@ const removeRange = (ids: string[]) => {
   return baseRequests.removeRange(requestUrl, ids);
 };
 
-const filter = (queryFilters: QueryFilter[]) => {
-  return baseRequests.filter<IComponent>(requestUrl, queryFilters);
-};
-
 const lookup = () => {
   return baseRequests.lookup(requestUrl, ["tag", "name"]);
 };
@@ -74,7 +69,6 @@ const checkOut = async (
   ).data as AssetProductDto[];
 };
 
-
 export default {
   getAll,
   get,
@@ -83,7 +77,6 @@ export default {
   update,
   remove,
   removeRange,
-  filter,
   lookup,
   getDtos,
   checkIn,

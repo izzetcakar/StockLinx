@@ -5,7 +5,6 @@ import {
 } from "@interfaces/dtos";
 import { IAsset, IEmployeeProduct } from "@interfaces/serverInterfaces";
 import { request } from "@request";
-import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 import { baseRequests } from "@/utils/requestUtils";
 
 const requestUrl = "Asset/";
@@ -36,10 +35,6 @@ const remove = (id: string) => {
 
 const removeRange = (ids: string[]) => {
   return baseRequests.removeRange(requestUrl, ids);
-};
-
-const filter = (queryFilters: QueryFilter[]) => {
-  return baseRequests.filter<IAsset>(requestUrl, queryFilters);
 };
 
 const lookup = () => {
@@ -74,7 +69,6 @@ const checkOut = async (
   ).data as EmployeeProductDto | null;
 };
 
-
 export default {
   getAll,
   get,
@@ -83,7 +77,6 @@ export default {
   update,
   remove,
   removeRange,
-  filter,
   lookup,
   getDtos,
   checkIn,

@@ -1,4 +1,3 @@
-import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 import { IPermission } from "@interfaces/serverInterfaces";
 import { baseRequests } from "@/utils/requestUtils";
 const requestUrl = "Permission/";
@@ -27,10 +26,6 @@ const removeRange = (ids: string[]) => {
   return baseRequests.removeRange(requestUrl, ids);
 };
 
-const filter = (queryFilters: QueryFilter[]) => {
-  return baseRequests.filter<IPermission>(requestUrl, queryFilters);
-};
-
 const getDtos = async (ids: string[]) => {
   return baseRequests.getDtos(requestUrl, ids);
 };
@@ -42,6 +37,5 @@ export default {
   createRange,
   remove,
   removeRange,
-  filter,
   getDtos,
 };

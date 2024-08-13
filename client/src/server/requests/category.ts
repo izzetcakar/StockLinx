@@ -1,4 +1,3 @@
-import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 import { ICategory } from "@interfaces/serverInterfaces";
 import { baseRequests } from "@/utils/requestUtils";
 
@@ -32,10 +31,6 @@ const removeRange = (ids: string[]) => {
   return baseRequests.removeRange(requestUrl, ids);
 };
 
-const filter = (queryFilters: QueryFilter[]) => {
-  return baseRequests.filter<ICategory>(requestUrl, queryFilters);
-};
-
 const lookup = () => {
   return baseRequests.lookup(requestUrl);
 };
@@ -52,7 +47,6 @@ export default {
   update,
   remove,
   removeRange,
-  filter,
   lookup,
   getDtos,
 };

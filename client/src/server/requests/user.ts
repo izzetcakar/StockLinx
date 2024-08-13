@@ -1,4 +1,3 @@
-import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 import { IUser } from "@interfaces/serverInterfaces";
 import { IUserLoginDto, TokenDto } from "@/interfaces/dtos";
 import { request } from "@request";
@@ -34,10 +33,6 @@ const removeRange = (ids: string[]) => {
   return baseRequests.removeRange(requestUrl, ids);
 };
 
-const filter = (queryFilters: QueryFilter[]) => {
-  return baseRequests.filter<IUser>(requestUrl, queryFilters);
-};
-
 const lookup = () => {
   return baseRequests.lookup(requestUrl, ["firstName", "lastName"]);
 };
@@ -71,6 +66,5 @@ export default {
   update,
   remove,
   removeRange,
-  filter,
   lookup,
 };

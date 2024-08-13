@@ -1,4 +1,3 @@
-import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 import {
   AssetProductCheckInDto,
   AssetProductCheckOutDto,
@@ -39,10 +38,6 @@ const remove = (id: string) => {
 
 const removeRange = (ids: string[]) => {
   return baseRequests.removeRange(requestUrl, ids);
-};
-
-const filter = (queryFilters: QueryFilter[]) => {
-  return baseRequests.filter<ILicense>(requestUrl, queryFilters);
 };
 
 const lookup = () => {
@@ -119,7 +114,6 @@ export default {
   update,
   remove,
   removeRange,
-  filter,
   lookup,
   getDtos,
   getProductDtos,

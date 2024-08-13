@@ -35,14 +35,6 @@ const RemoveRange = () => {
   return hooks.RemoveRange(userRequests.removeRange);
 };
 
-const Filter = () => {
-  return hooks.Filter();
-};
-
-const ApplyFilters = () => {
-  return hooks.ApplyFilter(userRequests.filter);
-};
-
 const Lookup = () => {
   return hooks.Lookup(userRequests.lookup);
 };
@@ -72,8 +64,6 @@ export default {
   Update,
   Remove,
   RemoveRange,
-  Filter,
-  ApplyFilters,
   Lookup,
   SignIn,
   GetWithToken,

@@ -1,4 +1,3 @@
-import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 import { IEmployeeProduct } from "@interfaces/serverInterfaces";
 import { baseRequests } from "@/utils/requestUtils";
 
@@ -17,7 +16,10 @@ const create = (employeeProduct: IEmployeeProduct) => {
 };
 
 const createRange = (employeeProducts: IEmployeeProduct[]) => {
-  return baseRequests.createRange<IEmployeeProduct>(requestUrl, employeeProducts);
+  return baseRequests.createRange<IEmployeeProduct>(
+    requestUrl,
+    employeeProducts
+  );
 };
 
 const update = (employeeProduct: IEmployeeProduct) => {
@@ -32,10 +34,6 @@ const removeRange = (ids: string[]) => {
   return baseRequests.removeRange(requestUrl, ids);
 };
 
-const filter = (queryFilters: QueryFilter[]) => {
-  return baseRequests.filter<IEmployeeProduct>(requestUrl, queryFilters);
-};
-
 const getDtos = async (ids: string[]) => {
   return baseRequests.getDtos(requestUrl, ids);
 };
@@ -48,6 +46,5 @@ export default {
   update,
   remove,
   removeRange,
-  filter,
   getDtos,
 };

@@ -10,7 +10,6 @@ import { GenericProvider } from "./context/GenericContext.tsx";
 import { defaultInputProps } from "./mantineModules/defaultInputProps.ts";
 import { IconCaretDownFilled, IconCalendar } from "@tabler/icons-react";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { GenericStateProvider } from "./components/gridTable/context/GenericStateContext.tsx";
 import { openNotificationError } from "./utils/notificationUtils.tsx";
 
 const components = {
@@ -153,12 +152,10 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       }}
     >
       <GenericProvider>
-        <GenericStateProvider>
-          <ModalsProvider>
-            <Notifications w={"fit-content"} position="bottom-right" />
-            <App />
-          </ModalsProvider>
-        </GenericStateProvider>
+        <ModalsProvider>
+          <Notifications w={"fit-content"} position="bottom-right" />
+          <App />
+        </ModalsProvider>
       </GenericProvider>
     </MantineProvider>
   </QueryClientProvider>

@@ -31,14 +31,6 @@ const RemoveRange = () => {
   return hooks.RemoveRange(assetProductRequests.removeRange);
 };
 
-const Filter = () => {
-  return hooks.Filter();
-};
-
-const ApplyFilters = () => {
-  return hooks.ApplyFilter(assetProductRequests.filter);
-};
-
 export default {
   GetAll,
   Get,
@@ -47,6 +39,4 @@ export default {
   Update,
   Remove,
   RemoveRange,
-  Filter,
-  ApplyFilters,
 };

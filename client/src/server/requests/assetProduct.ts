@@ -1,4 +1,3 @@
-import { QueryFilter } from "@/interfaces/gridTableInterfaces";
 import { IAssetProduct } from "@/interfaces/serverInterfaces";
 import { baseRequests } from "@/utils/requestUtils";
 
@@ -32,10 +31,6 @@ const removeRange = (ids: string[]) => {
   return baseRequests.removeRange(requestUrl, ids);
 };
 
-const filter = (queryFilters: QueryFilter[]) => {
-  return baseRequests.filter<IAssetProduct>(requestUrl, queryFilters);
-};
-
 const getDtos = async (ids: string[]) => {
   return baseRequests.getDtos(requestUrl, ids);
 };
@@ -48,6 +43,5 @@ export default {
   update,
   remove,
   removeRange,
-  filter,
   getDtos,
 };
