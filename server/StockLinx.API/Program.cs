@@ -124,7 +124,7 @@ builder
     .Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.Authority = "http://localhost:5007";
+        options.Authority = "https://localhost:5008";
         options.RequireHttpsMetadata = false;
         options.TokenValidationParameters = new TokenValidationParameters
         {
@@ -139,7 +139,6 @@ builder
             ValidateAudience = true,
             ValidAudiences = new[]
             {
-                "http://localhost:5007",
                 "https://localhost:5008"
             },
             RequireExpirationTime = true,
